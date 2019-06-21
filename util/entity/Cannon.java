@@ -10,12 +10,12 @@ import common.util.entity.attack.ContMove;
 import common.util.entity.attack.ContWaveCanon;
 import common.util.pack.NyCastle;
 import common.util.system.P;
+import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
 import common.util.unit.Form;
 import common.util.unit.UnitStore;
 import io.BCMusic;
-import page.battle.BattleBox;
 
 public class Cannon extends AtkModelAb {
 
@@ -52,7 +52,7 @@ public class Cannon extends AtkModelAb {
 
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleBox.BBPainter.ratio;
+		double rat = BattleConst.ratio;
 		int h = (int) (640 * rat * siz);
 		g.setColor(FakeGraphics.MAGENTA);
 		double d0 = pos, ra = NYRAN[id];

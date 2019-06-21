@@ -5,9 +5,9 @@ import common.util.anim.EAnimD;
 import common.util.entity.AbEntity;
 import common.util.entity.Entity;
 import common.util.system.P;
+import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
-import page.battle.BattleBox;
 
 public abstract class ContWaveAb extends ContAb {
 
@@ -61,7 +61,7 @@ public abstract class ContWaveAb extends ContAb {
 
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleBox.BBPainter.ratio;
+		double rat = BattleConst.ratio;
 		int h = (int) (640 * rat * siz);
 		gra.setColor(FakeGraphics.MAGENTA);
 		double d0 = Math.min(atk.sta, atk.end);

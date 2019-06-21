@@ -3,11 +3,11 @@ package common.util.anim;
 import common.util.Res;
 import common.util.system.MultiLangFile;
 import common.util.system.VImg;
+import common.util.system.fake.CommonStatic;
 import common.util.system.fake.FakeImage;
 import common.util.system.files.AssetData;
 import common.util.system.files.VFile;
 import main.Printer;
-import page.MainLocale;
 
 public class AnimU extends AnimD implements MultiLangFile {
 
@@ -26,9 +26,9 @@ public class AnimU extends AnimD implements MultiLangFile {
 		String s5 = "under";
 		String s6 = "up";
 		String s7 = "entry";
-		strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
-		strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
-		strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
+		strs0 = CommonStatic.getLoc(0, s0, s1, s2, s3);
+		strs1 = CommonStatic.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
+		strs2 = CommonStatic.getLoc(0, s0, s1, s2, s3, s7);
 
 	}
 

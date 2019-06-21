@@ -11,6 +11,7 @@ import java.util.Stack;
 
 import common.util.Res;
 import common.util.system.VImg;
+import common.util.system.fake.CommonStatic.EditLink;
 import common.util.system.fake.FakeImage;
 import common.util.system.files.FDByte;
 import common.util.system.files.FileData;
@@ -21,7 +22,6 @@ import io.Writer;
 import main.MainBCU;
 import main.Opts;
 import main.Printer;
-import page.anim.EditHead;
 
 public class AnimC extends AnimU {
 
@@ -40,7 +40,7 @@ public class AnimC extends AnimU {
 
 	private boolean saved = false;
 	public boolean inPool;
-	public EditHead link;
+	public EditLink link;
 	public Stack<History> history = new Stack<>();
 	public String name = "";
 	public String prev;

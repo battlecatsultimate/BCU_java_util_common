@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import common.util.system.MultiLangCont;
 import common.util.system.MultiLangFile;
 import common.util.system.fake.FakeImage;
-import page.MainLocale;
+import common.util.system.fake.CommonStatic;
 
 public interface AssetData extends FileData {
 
@@ -88,7 +88,7 @@ class MultiLangAsset implements AssetData {
 	}
 
 	private AssetData getData() {
-		String loc = MainLocale.LOC_CODE[MainLocale.lang];
+		String loc = CommonStatic.LOC_CODE[CommonStatic.lang];
 		AssetData ad = map.get(loc);
 		if (ad == null)
 			ad = map.values().iterator().next();

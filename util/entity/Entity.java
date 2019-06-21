@@ -20,10 +20,10 @@ import common.util.pack.EffAnim;
 import common.util.pack.Soul;
 import common.util.pack.SoulStore;
 import common.util.system.P;
+import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
 import io.BCMusic;
-import page.battle.BattleBox;
 
 /** Entity class for units and enemies */
 public abstract class Entity extends AbEntity {
@@ -1229,7 +1229,7 @@ public abstract class Entity extends AbEntity {
 	private void drawAxis(FakeGraphics gra, P p, double siz) {
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleBox.BBPainter.ratio;
+		double rat = BattleConst.ratio;
 		double poa = p.x - pos * rat * siz;
 		int py = (int) p.y;
 		int h = (int) (640 * rat * siz);
