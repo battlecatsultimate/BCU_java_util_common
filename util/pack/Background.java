@@ -1,8 +1,5 @@
 package common.util.pack;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -12,13 +9,13 @@ import common.util.anim.EAnimD;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
+import common.util.system.P;
 import common.util.system.VImg;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeImage;
 import common.util.system.files.AssetData;
 import common.util.system.files.VFile;
 import main.Printer;
-import utilpc.awt.FG2D;
 
 public class Background extends AnimI {
 
@@ -27,7 +24,7 @@ public class Background extends AnimI {
 
 	private static final List<ImgCut> iclist = new ArrayList<>();
 
-	private static final int BG = 0, TOP = 20, shift = 65; // in pix
+	public static final int BG = 0, TOP = 20, shift = 65; // in pix
 
 	public static void read() {
 		String path = "./org/battle/bg/";
@@ -65,7 +62,7 @@ public class Background extends AnimI {
 	public int ic;
 	public boolean top;
 
-	protected FakeImage[] parts = null;
+	public FakeImage[] parts = null;
 
 	protected Background(Pack p, VImg vimg, int ID) {
 		pack = p;
@@ -112,13 +109,13 @@ public class Background extends AnimI {
 		return bg;
 	}
 
-	public void draw(FakeGraphics g, Point rect, final int pos, final int h, final double siz) {
+	public void draw(FakeGraphics g, P rect, final int pos, final int h, final double siz) {
 		check();
 		final int off = (int) (pos - shift * siz);
 		final int fw = (int) (768 * siz);
 		final int fh = (int) (510 * siz);
 
-		g.gradRect(0, h, rect.x, rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
+		g.gradRect(0, h, (int) rect.x, (int) rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
 
 		if (h > fh) {
 			int y = h - fh * 2;
@@ -127,33 +124,12 @@ public class Background extends AnimI {
 					if (x + fw > 0)
 						g.drawImage(parts[TOP], x, y, fw, fh);
 			} else {
-				g.gradRect(0, 0, rect.x, fh + y, 0, y, cs[0], 0, y + fh, cs[1]);
+				g.gradRect(0, 0, (int) rect.x, fh + y, 0, y, cs[0], 0, y + fh, cs[1]);
 			}
 		}
 		for (int x = off; x < rect.x; x += fw)
 			if (x + fw > 0)
 				g.drawImage(parts[BG], x, h - fh, fw, fh);
-	}
-
-	public BufferedImage getBg(int w, int h) {
-		double r = h / 1100.0;
-		int fw = (int) (768 * r);
-		int fh = (int) (510 * r);
-		check();
-		BufferedImage temp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = (Graphics2D) temp.getGraphics();
-		FG2D fg = new FG2D(g);
-		if (top && parts.length > TOP)
-			for (int i = 0; i * fw < w; i++)
-				fg.drawImage(parts[TOP], fw * i, 0, fw, fh);
-		else {
-			fg.gradRect(0, 0, w, fh, 0, 0, cs[0], 0, fh, cs[1]);
-		}
-		for (int i = 0; i * fw < w; i++)
-			fg.drawImage(parts[BG], fw * i, fh, fw, fh);
-		fg.gradRect(0, fh * 2, w, h - fh * 2, 0, fh * 2, cs[2], 0, fh * 3, cs[3]);
-		g.dispose();
-		return temp;
 	}
 
 	@Override

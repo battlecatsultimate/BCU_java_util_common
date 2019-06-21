@@ -1,29 +1,11 @@
 package common.util.system;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
 import common.util.BattleObj;
 
 public strictfp class P extends BattleObj {
 
 	public static P polar(double r, double t) {
 		return new P(r * Math.cos(t), r * Math.sin(t));
-	}
-
-	public static Polygon polygon(P[] ps) {
-		int n = ps.length;
-		int[] x = new int[n];
-		int[] y = new int[n];
-		for (int i = 0; i < n; i++) {
-			x[i] = (int) ps[i].x;
-			y[i] = (int) ps[i].y;
-		}
-		return new Polygon(x, y, n);
 	}
 
 	public static float reg(float cx) {
@@ -36,24 +18,9 @@ public strictfp class P extends BattleObj {
 
 	public double x, y;
 
-	public P(Dimension d) {
-		x = d.getWidth();
-		y = d.getHeight();
-	}
-
 	public P(double X, double Y) {
 		x = X;
 		y = Y;
-	}
-
-	public P(Point p) {
-		x = p.getX();
-		y = p.getY();
-	}
-
-	public P(Point2D p) {
-		x = p.getX();
-		y = p.getY();
 	}
 
 	public double abs() {
@@ -217,30 +184,6 @@ public strictfp class P extends BattleObj {
 		x *= p.x;
 		y *= p.y;
 		return this;
-	}
-
-	public Dimension toDimension() {
-		return new Dimension((int) x, (int) y);
-	}
-
-	public Point toPoint() {
-		return new Point((int) x, (int) y);
-	}
-
-	public Point2D toPoint2D() {
-		return new Point2D.Double(x, y);
-	}
-
-	public Rectangle toRectangle(int w, int h) {
-		return new Rectangle((int) x, (int) y, w, h);
-	}
-
-	public Rectangle toRectangle(P p) {
-		return new Rectangle((int) x, (int) y, (int) p.x, (int) p.y);
-	}
-
-	public Rectangle2D toRectangle2D(P p) {
-		return new Rectangle2D.Double(x, y, p.x, p.y);
 	}
 
 	@Override
