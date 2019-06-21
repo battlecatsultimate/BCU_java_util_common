@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import common.CommonStatic.BattleConst;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.ImgCore;
@@ -20,7 +21,6 @@ import common.util.pack.EffAnim;
 import common.util.pack.Soul;
 import common.util.pack.SoulStore;
 import common.util.system.P;
-import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
 import io.BCMusic;

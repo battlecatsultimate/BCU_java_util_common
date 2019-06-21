@@ -1,6 +1,5 @@
 package common.util.pack;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
+import common.CommonStatic;
 import common.util.Data;
 import common.util.system.FixIndexList;
 import common.util.system.VImg;
@@ -168,15 +166,9 @@ public class BGStore extends FixIndexList<Background> {
 					e.printStackTrace();
 					continue;
 				}
-				BufferedImage bimg = null;
-				try {
-					bimg = ImageIO.read(fi);
-				} catch (IOException e) {
-					e.printStackTrace();
-					continue;
-				}
+				VImg bimg = CommonStatic.def.readReal(fi);
 				if (val >= 0 && bimg != null)
-					set(val, new Background(pack, new VImg(bimg), val));
+					set(val, new Background(pack, bimg, val));
 			}
 		}
 		int n = is.nextInt();

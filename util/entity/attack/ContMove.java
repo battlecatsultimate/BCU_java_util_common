@@ -1,8 +1,8 @@
 package common.util.entity.attack;
 
+import common.CommonStatic.BattleConst;
 import common.util.ImgCore;
 import common.util.system.P;
-import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 
 public class ContMove extends ContAb {

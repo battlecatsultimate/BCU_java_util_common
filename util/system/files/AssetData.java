@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
 
+import common.CommonStatic;
 import common.util.system.MultiLangCont;
 import common.util.system.MultiLangFile;
 import common.util.system.fake.FakeImage;
-import common.util.system.fake.CommonStatic;
 
 public interface AssetData extends FileData {
 

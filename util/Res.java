@@ -1,7 +1,5 @@
 package common.util;
 
-import java.awt.image.BufferedImage;
-
 import common.util.anim.ImgCut;
 import common.util.entity.AbEntity;
 import common.util.system.P;
@@ -17,8 +15,7 @@ public class Res extends ImgCore {
 	public static VImg[][] ico = new VImg[2][];
 	public static VImg[][] num = new VImg[9][11];
 	public static VImg[][] battle = new VImg[3][];
-
-	private static VImg[][] icon = new VImg[4][];
+	public static VImg[][] icon = new VImg[4][];
 
 	public static P getBase(AbEntity ae, SymCoord coor) {
 		long h = ae.health;
@@ -43,14 +40,6 @@ public class Res extends ImgCore {
 		for (int i = 0; i < val.length; i++)
 			input[i] = num[enable ? 3 : 4][val[i]].getImg();
 		return coor.draw(input);
-	}
-
-	public static BufferedImage getIcon(int type, int id) {
-		type += id / 100;
-		id %= 100;
-		if (icon[type][id] == null)
-			return null;
-		return (BufferedImage) icon[type][id].getImg().bimg();
 	}
 
 	public static P getMoney(int mon, int max, SymCoord coor) {

@@ -1,13 +1,11 @@
 package common.util.pack;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
+import common.CommonStatic;
 import common.util.Data;
 import common.util.stage.AbCastle;
 import common.util.stage.Castles;
@@ -103,21 +101,16 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 				if (!str.endsWith(".png"))
 					continue;
 				int val = -1;
-				BufferedImage bimg = null;
+
 				try {
 					val = Integer.parseInt(str.substring(0, 3));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 					continue;
 				}
-				try {
-					bimg = ImageIO.read(fi);
-				} catch (IOException e) {
-					e.printStackTrace();
-					continue;
-				}
+				VImg bimg = CommonStatic.def.readReal(fi);
 				if (val >= 0 && bimg != null)
-					set(val, new VImg(bimg));
+					set(val, bimg);
 			}
 		}
 	}

@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 import com.google.common.io.Files;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.anim.AnimC;
 import common.util.entity.data.CustomEnemy;
@@ -42,7 +43,6 @@ import io.Reader;
 import io.Writer;
 import main.MainBCU;
 import main.Opts;
-import page.LoadPage;
 
 public class Pack extends Data {
 
@@ -142,7 +142,7 @@ public class Pack extends Data {
 					if (!map.containsKey(pre) || map.get(pre).res != null)
 						all = false;
 				if (all) {
-					LoadPage.prog("reading packs: " + (tot - list.size() + rem) + "/" + tot);
+					CommonStatic.def.prog("reading packs: " + (tot - list.size() + rem) + "/" + tot);
 					if (p.bcuver > MainBCU.ver)
 						Opts.verErr("BCU", revVer(p.bcuver));
 					else

@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.CommonStatic;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.system.fake.CommonStatic;
 import common.util.system.files.AssetData;
 import common.util.unit.Enemy;
 import common.util.unit.Form;

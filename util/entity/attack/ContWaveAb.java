@@ -1,11 +1,11 @@
 package common.util.entity.attack;
 
+import common.CommonStatic.BattleConst;
 import common.util.ImgCore;
 import common.util.anim.EAnimD;
 import common.util.entity.AbEntity;
 import common.util.entity.Entity;
 import common.util.system.P;
-import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
 

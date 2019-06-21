@@ -3,11 +3,11 @@ package common.util.basis;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.CommonStatic.FakeKey;
 import common.util.BattleObj;
 import common.util.stage.EStage;
 import common.util.stage.Recd;
 import common.util.stage.Stage;
-import common.util.system.fake.FakeKey;
 import io.OutStream;
 
 public class SBCtrl extends BattleField {

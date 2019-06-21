@@ -1,9 +1,6 @@
 package common.util.system;
 
-import java.awt.Image;
 import java.io.IOException;
-
-import javax.swing.ImageIcon;
 
 import common.util.ImgCore;
 import common.util.anim.ImgCut;
@@ -17,7 +14,8 @@ public class VImg extends ImgCore {
 
 	public String name = "";
 
-	private FakeImage bimg = null;
+	public FakeImage bimg = null;
+
 	private boolean loaded = false;
 	private ImgCut ic;
 	private String marker;
@@ -42,13 +40,6 @@ public class VImg extends ImgCore {
 	public synchronized void check() {
 		if (!loaded)
 			load();
-	}
-
-	public ImageIcon getIcon() {
-		check();
-		if (bimg == null || bimg.bimg() == null)
-			return null;
-		return new ImageIcon((Image) bimg.bimg());
 	}
 
 	public FakeImage getImg() {

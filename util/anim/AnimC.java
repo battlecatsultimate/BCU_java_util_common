@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
+import common.CommonStatic.EditLink;
 import common.util.Res;
 import common.util.system.VImg;
-import common.util.system.fake.CommonStatic.EditLink;
 import common.util.system.fake.FakeImage;
 import common.util.system.files.FDByte;
 import common.util.system.files.FileData;

@@ -1,5 +1,6 @@
 package common.util.entity;
 
+import common.CommonStatic.BattleConst;
 import common.util.ImgCore;
 import common.util.anim.EAnimD;
 import common.util.basis.StageBasis;
@@ -10,7 +11,6 @@ import common.util.entity.attack.ContMove;
 import common.util.entity.attack.ContWaveCanon;
 import common.util.pack.NyCastle;
 import common.util.system.P;
-import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
 import common.util.unit.Form;
