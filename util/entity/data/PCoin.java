@@ -44,16 +44,18 @@ public class PCoin extends Data {
 	public DataUnit improve(int[] lvs) {
 		DataUnit ans = du.clone();
 		for (int i = 0; i < 5; i++) {
+			if(lvs[i+1]==0)
+				continue;
 			int maxlv = info[i][1];
 			int[] modifs = new int[4];
-			if (maxlv > 1 && lvs[i + 1] > 0) {
+			if (maxlv > 1) {
 				for (int j = 0; j < 4; j++) {
 					int v0 = info[i][2 + j * 2];
 					int v1 = info[i][3 + j * 2];
 					modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
 				}
 			}
-			if (maxlv == 0 && lvs[i + 1] > 0)
+			if (maxlv == 0)
 				for (int j = 0; j < 4; j++)
 					modifs[j] = info[i][3 + j * 2];
 
@@ -84,9 +86,9 @@ public class PCoin extends Data {
 					ans.price -= modifs[0];
 				else
 					;
-			else if (type[0] == PC_IMU && lvs[i + 1] > 0)
+			else if (type[0] == PC_IMU)
 				ans.proc[type[1]][0] = 100;
-			else if (type[0] == PC_TRAIT && lvs[i + 1] > 0)
+			else if (type[0] == PC_TRAIT)
 				ans.type |= type[1];
 
 		}

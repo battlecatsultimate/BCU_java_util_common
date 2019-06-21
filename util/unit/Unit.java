@@ -24,6 +24,7 @@ public class Unit extends Data implements Comparable<Unit> {
 
 		public int[][] evo;
 		public int[] price = new int[10];
+		public String[][] explanation;
 		public int type;
 
 		protected void fillBuy(String[] strs) {
