@@ -7,24 +7,24 @@ import common.util.BattleObj;
 import common.util.stage.EStage;
 import common.util.stage.Recd;
 import common.util.stage.Stage;
+import common.util.system.fake.FakeKey;
 import io.OutStream;
-import page.KeyHandler;
 
 public class SBCtrl extends BattleField {
 
-	private final KeyHandler keys;
+	private final FakeKey keys;
 
 	public final List<Integer> action = new ArrayList<>();
 
 	public final Recd re;
 
-	public SBCtrl(KeyHandler kh, Stage stage, int star, BasisLU bas, int[] ints, long seed) {
+	public SBCtrl(FakeKey kh, Stage stage, int star, BasisLU bas, int[] ints, long seed) {
 		super(new EStage(stage, star), bas, ints, seed);
 		re = new Recd(bas, stage, star, ints, seed);
 		keys = kh;
 	}
 
-	protected SBCtrl(KeyHandler kh, StageBasis sb, Recd r) {
+	protected SBCtrl(FakeKey kh, StageBasis sb, Recd r) {
 		super(sb);
 		keys = kh;
 		re = r.clone();

@@ -15,10 +15,10 @@ import common.util.anim.MaModel;
 import common.util.system.VImg;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeImage;
-import common.util.system.fake.awt.FG2D;
 import common.util.system.files.AssetData;
 import common.util.system.files.VFile;
 import main.Printer;
+import utilpc.awt.FG2D;
 
 public class Background extends AnimI {
 

@@ -2,8 +2,8 @@ package common.util.basis;
 
 import common.util.stage.EStage;
 import common.util.stage.Recd;
+import common.util.system.fake.FakeKey;
 import io.InStream;
-import page.KeyHandler;
 
 public class SBRply extends Mirror {
 
@@ -42,7 +42,7 @@ public class SBRply extends Mirror {
 		return mir.size - 1;
 	}
 
-	public SBCtrl transform(KeyHandler kh) {
+	public SBCtrl transform(FakeKey kh) {
 		return new SBCtrl(kh, (StageBasis) sb.clone(), r);
 	}
 
