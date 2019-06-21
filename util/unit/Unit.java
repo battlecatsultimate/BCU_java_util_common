@@ -15,7 +15,7 @@ import common.util.system.FixIndexList;
 import common.util.system.MultiLangCont;
 import common.util.system.files.AssetData;
 import common.util.system.files.VFile;
-import io.Reader;
+import common.CommonStatic;
 import main.MainBCU;
 
 public class Unit extends Data implements Comparable<Unit> {
@@ -96,7 +96,7 @@ public class Unit extends Data implements Comparable<Unit> {
 
 	public Unit(VFile<AssetData> p) {
 		pack = Pack.def;
-		id = Reader.parseIntN(p.getName());
+		id = CommonStatic.parseIntN(p.getName());
 		Pack.def.us.ulist.add(this);
 		String str = "./org/unit/" + trio(id) + "/";
 		Queue<String> qs = VFile.readLine(str + "unit" + trio(id) + ".csv");

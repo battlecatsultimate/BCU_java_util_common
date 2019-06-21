@@ -14,6 +14,10 @@ import java.util.TreeMap;
 import com.google.common.io.Files;
 
 import common.CommonStatic;
+import common.CommonStatic.Account;
+import common.io.BCUException;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.anim.AnimC;
 import common.util.entity.data.CustomEnemy;
@@ -35,12 +39,6 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
 import common.util.unit.UnitStore;
-import io.BCJSON;
-import io.InStream;
-import io.OutStream;
-import io.BCUException;
-import io.Reader;
-import io.Writer;
 import main.MainBCU;
 import main.Opts;
 
@@ -102,11 +100,11 @@ public class Pack extends Data {
 							+ " instead of " + op + "?";
 					if (!Opts.packConf(msg)) {
 						if (Opts.conf("Do you want to delete " + np + "?"))
-							Writer.delete(file);
+							CommonStatic.def.delete(file);
 						continue;
 					}
 					if (Opts.conf("Do you want to delete " + op + "?"))
-						Writer.delete(fmap.get(pack.id));
+						CommonStatic.def.delete(fmap.get(pack.id));
 				}
 				fmap.put(pack.id, file);
 				map.put(pack.id, pack);
@@ -124,7 +122,7 @@ public class Pack extends Data {
 					continue;
 				Pack pac;
 				try {
-					pac = new Pack(Reader.readBytes(file), true);
+					pac = new Pack(CommonStatic.def.readBytes(file), true);
 				} catch (Exception e) {
 					e.printStackTrace();
 					Opts.loadErr("Error in reading pack " + str + " at initialization");
@@ -193,7 +191,7 @@ public class Pack extends Data {
 			f.mkdirs();
 		for (Pack p : map.values())
 			if (p.editable)
-				Writer.writeBytes(p.write(), "./res/enemy/" + hex(p.id) + ".bcuenemy");
+				CommonStatic.def.writeBytes(p.write(), "./res/enemy/" + hex(p.id) + ".bcuenemy");
 	}
 
 	private static boolean contains(String str) {
@@ -253,7 +251,7 @@ public class Pack extends Data {
 
 	private Pack(File f) {
 		file = f;
-		InStream is = Reader.readBytes(f);
+		InStream is = CommonStatic.def.readBytes(f);
 		editable = false;
 		ver = getVer(is.nextString());
 		res = is;
@@ -301,8 +299,8 @@ public class Pack extends Data {
 	public void delete() {
 		if (!canDelete())
 			return;
-		Writer.delete(new File("./res/enemy/" + id + ".bcuenemy"));
-		Writer.delete(new File("./res/img/" + id + "/"));
+		CommonStatic.def.delete(new File("./res/enemy/" + id + ".bcuenemy"));
+		CommonStatic.def.delete(new File("./res/img/" + id + "/"));
 		map.remove(id);
 		Castles.map.remove(id);
 	}
@@ -414,7 +412,7 @@ public class Pack extends Data {
 			bg.add(ent.getValue().copy(this, bgid));
 			inds[M_BG][ent.getKey()] = bgid;
 			File f = new File("./res/img/" + hex(id) + "/bg/" + trio(bgid) + ".png");
-			Writer.check(f);
+			CommonStatic.def.check(f);
 			try {
 				FakeImage.write(ent.getValue().img.getImg(), "PNG", f);
 			} catch (IOException e1) {
@@ -428,7 +426,7 @@ public class Pack extends Data {
 			cs.add(new VImg(ent.getValue().getImg()));
 			inds[M_CS][ent.getKey()] = csid;
 			File f = new File("./res/img/" + hex(id) + "/cas/" + trio(csid) + ".png");
-			Writer.check(f);
+			CommonStatic.def.check(f);
 			try {
 				FakeImage.write(ent.getValue().getImg(), "PNG", f);
 			} catch (IOException e1) {
@@ -480,7 +478,7 @@ public class Pack extends Data {
 		head.writeInt(MainBCU.ver);
 		head.writeString(editable ? time = MainBCU.getTime() : time);
 		head.writeInt(version);
-		head.writeString(BCJSON.USERNAME);
+		head.writeString(Account.USERNAME);
 		head.terminate();
 		os.accept(head);
 		os.writeString(name);
@@ -491,7 +489,7 @@ public class Pack extends Data {
 		os.accept(ms.packup());
 		mc.write(os);
 		os.terminate();
-		Writer.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
+		CommonStatic.def.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
 	}
 
 	public int relyOn(int p) {

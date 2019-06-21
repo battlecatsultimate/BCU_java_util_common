@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Animable;
 import common.util.anim.AnimC;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimI;
 import common.util.pack.Pack;
-import io.InStream;
-import io.OutStream;
 import main.Opts;
 import main.Printer;
 

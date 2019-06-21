@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
@@ -12,9 +14,6 @@ import common.util.unit.Unit;
 import common.util.unit.UnitStore;
 
 import java.util.TreeMap;
-
-import io.InStream;
-import io.OutStream;
 
 public class LineUp extends Data {
 

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import common.CommonStatic;
 import common.util.BattleObj;
 import common.util.CopRand;
 import common.util.entity.AbEntity;
@@ -25,7 +26,6 @@ import common.util.stage.EStage;
 import common.util.stage.Stage;
 import common.util.unit.EForm;
 import common.util.unit.EneRand;
-import io.BCMusic;
 
 public class StageBasis extends BattleObj {
 
@@ -254,7 +254,7 @@ public class StageBasis extends BattleObj {
 					if (e.dire == -1 && (e.touchable() & TCH_N) > 0)
 						e.interrupt(INT_SW, KB_DIS[INT_SW]);
 				lea.add(new EAnimCont(700, 9, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
-				BCMusic.setSE(SE_BOSS);
+				CommonStatic.def.setSE(SE_BOSS);
 				shock = false;
 			}
 

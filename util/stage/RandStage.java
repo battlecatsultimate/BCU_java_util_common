@@ -7,7 +7,7 @@ import java.util.Queue;
 import common.util.basis.BasisLU;
 import common.util.basis.BasisSet;
 import common.util.system.files.VFile;
-import io.Reader;
+import common.CommonStatic;
 
 public class RandStage {
 
@@ -36,7 +36,7 @@ public class RandStage {
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/stage/D/RandomDungeon_000.csv");
 		for (int i = 0; i < 5; i++)
-			randRep[i] = Reader.parseIntsN(qs.poll());
+			randRep[i] = CommonStatic.parseIntsN(qs.poll());
 	}
 
 }

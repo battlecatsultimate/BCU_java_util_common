@@ -3,6 +3,8 @@ package common.util.unit;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.EREnt;
 import common.util.EntRand;
 import common.util.Res;
@@ -10,8 +12,6 @@ import common.util.basis.StageBasis;
 import common.util.entity.EEnemy;
 import common.util.pack.Pack;
 import common.util.system.VImg;
-import io.InStream;
-import io.OutStream;
 
 public class EneRand extends EntRand<Integer> implements AbEnemy {
 

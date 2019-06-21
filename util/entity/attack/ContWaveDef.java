@@ -1,6 +1,6 @@
 package common.util.entity.attack;
 
-import io.BCMusic;
+import common.CommonStatic;
 
 public class ContWaveDef extends ContWaveAb {
 
@@ -14,7 +14,7 @@ public class ContWaveDef extends ContWaveAb {
 		double np = pos + W_PROG * dire;
 		int wid = dire == 1 ? W_E_WID : W_U_WID;
 		new ContWaveDef(new AttackWave(atk, np, wid), np, layer);
-		BCMusic.setSE(SE_WAVE);
+		CommonStatic.def.setSE(SE_WAVE);
 	}
 
 }

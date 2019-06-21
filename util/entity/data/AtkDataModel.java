@@ -1,9 +1,9 @@
 package common.util.entity.data;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.system.BasedCopable;
-import io.InStream;
-import io.OutStream;
 
 public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataModel, CustomEntity> {
 

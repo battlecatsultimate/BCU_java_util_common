@@ -3,9 +3,9 @@ package common.util.basis;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.system.Copable;
-import io.InStream;
-import io.OutStream;
 import main.Opts;
 
 public class BasisSet extends Basis implements Copable<BasisSet> {

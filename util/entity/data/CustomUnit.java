@@ -1,8 +1,8 @@
 package common.util.entity.data;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.unit.Form;
-import io.InStream;
-import io.OutStream;
 
 public class CustomUnit extends CustomEntity implements MaskUnit {
 

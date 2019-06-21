@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.pack.Pack;
@@ -12,9 +14,7 @@ import common.util.system.MultiLangCont;
 import common.util.system.files.AssetData;
 import common.util.system.files.VFile;
 import common.util.unit.Enemy;
-import io.InStream;
-import io.OutStream;
-import io.Reader;
+import common.CommonStatic;
 import main.MainBCU;
 
 public class Stage extends Data implements BasedCopable<Stage, StageMap>, BattleStatic {
@@ -55,7 +55,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		if (type == 0) {
 			temp = qs.poll();
 			String[] strs = temp.split(",");
-			castle = Reader.parseIntN(strs[0]);
+			castle = CommonStatic.parseIntN(strs[0]);
 			non_con = strs[1].equals("1");
 		} else {
 			castle = -1;
@@ -92,7 +92,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		for (int i = 0; i < ll.size(); i++)
 			scd.datas[i] = ll.get(scd.datas.length - i - 1);
 		if (strs.length > 6) {
-			int ano = Reader.parseIntN(strs[6]);
+			int ano = CommonStatic.parseIntN(strs[6]);
 			if (ano == 317)
 				scd.datas[ll.size() - 1][5] = 0;
 		}

@@ -8,7 +8,7 @@ import common.util.Data;
 import common.util.system.BasedCopable;
 import common.util.system.MultiLangCont;
 import common.util.system.files.AssetData;
-import io.Reader;
+import common.CommonStatic;
 
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 
@@ -47,7 +47,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 			return;
 		list.add(s);
 		if (qs != null) {
-			int[] ints = Reader.parseIntsN(qs.poll());
+			int[] ints = CommonStatic.parseIntsN(qs.poll());
 			if (ints.length <= 4)
 				return;
 			s.mus0 = ints[2];

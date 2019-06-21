@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.CommonStatic;
 import common.util.Animable;
 import common.util.anim.AnimC;
 import common.util.anim.AnimU;
@@ -24,7 +25,6 @@ import common.util.system.MultiLangCont;
 import common.util.system.VImg;
 import common.util.system.files.AssetData;
 import common.util.system.files.VFile;
-import io.Reader;
 
 public class Enemy extends Animable<AnimU> implements AbEnemy {
 
@@ -63,7 +63,7 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 	}
 
 	public Enemy(VFile<AssetData> f) {
-		id = Reader.parseIntN(f.getName());
+		id = CommonStatic.parseIntN(f.getName());
 		Pack.def.es.add(this);
 		pac = Pack.def;
 		String str = "./org/enemy/" + trio(id) + "/";

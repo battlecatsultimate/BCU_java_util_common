@@ -6,14 +6,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.system.files.VFile;
 import common.util.unit.Unit;
 import common.util.unit.UnitStore;
-import io.InStream;
-import io.OutStream;
-import io.Reader;
+import common.CommonStatic;
 
 public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
@@ -31,11 +31,11 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		qs.poll();
 		for (String str : qs) {
 			String[] strs = str.split(",");
-			int id = Reader.parseIntN(strs[0]);
-			int type = Reader.parseIntN(strs[2]);
+			int id = CommonStatic.parseIntN(strs[0]);
+			int type = CommonStatic.parseIntN(strs[2]);
 			int[] units = new int[strs.length - 3];
 			for (int i = 3; i < strs.length; i++)
-				units[i - 3] = Reader.parseIntN(strs[i]);
+				units[i - 3] = CommonStatic.parseIntN(strs[i]);
 			map.put(id, new CharaGroup(Pack.def, id, type, units));
 		}
 	}

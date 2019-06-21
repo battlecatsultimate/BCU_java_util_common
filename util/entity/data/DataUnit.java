@@ -2,7 +2,7 @@ package common.util.entity.data;
 
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import io.Reader;
+import common.CommonStatic;
 import main.Printer;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
@@ -19,7 +19,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		unit = u;
 		int[] ints = new int[data.length];
 		for (int i = 0; i < data.length; i++)
-			ints[i] = Reader.parseIntN(data[i]);
+			ints[i] = CommonStatic.parseIntN(data[i]);
 		hp = ints[0];
 		hb = ints[1];
 		speed = ints[2];

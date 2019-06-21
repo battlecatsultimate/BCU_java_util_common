@@ -1,8 +1,8 @@
 package common.util.basis;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
-import io.InStream;
-import io.OutStream;
 
 public class Treasure extends Data {
 

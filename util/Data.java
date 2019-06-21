@@ -5,13 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.function.Function;
-
-import common.util.system.files.BackupData;
-import common.util.system.files.FileData;
-import common.util.system.files.VFile;
-import io.Reader;
-import main.Opts;
 
 public class Data {
 
@@ -34,11 +27,10 @@ public class Data {
 	public static final int SE_BARRIER_NON = 71;
 	public static final int SE_BARRIER_ATK = 72;
 
-	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 },
-			{ 86 } };
+	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 } };
 
-	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65,
-			73, 74, 83, 84, 85, 86 };
+	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65, 73,
+			74, 83, 84, 85, 86 };
 
 	public static final int RARITY_TOT = 6;
 
@@ -460,41 +452,6 @@ public class Data {
 		if (i < 10)
 			str += "0";
 		return str + i;
-	}
-
-	public static <T> T readSave(String path, Function<Queue<String>, T> func) {
-		VFile<? extends FileData> f = VFile.getFile(path);
-		VFile<BackupData> b = Reader.alt == null ? null : Reader.alt.find(path);
-		int ind = 0;
-		while (true) {
-			if (f != null && f.getData() != null) {
-				T ic = null;
-				Queue<String> qs = f.getData().readLine();
-				if (qs != null)
-					try {
-						ic = func.apply(qs);
-					} catch (Exception e) {
-						e.printStackTrace();
-						ic = null;
-					}
-				if (ic != null)
-					return ic;
-			}
-			if (b == null)
-				break;
-			if (b.list() == null)
-				if (b != f)
-					f = b;
-				else
-					break;
-			else if (ind < b.list().size())
-				f = b.list().get(ind++);
-			else
-				break;
-		}
-		if (f != null)
-			Opts.animErr(path);
-		return func.apply(null);
 	}
 
 }

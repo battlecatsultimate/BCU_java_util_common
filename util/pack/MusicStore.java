@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import common.CommonStatic;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.system.FixIndexList;
-import io.InStream;
-import io.OutStream;
-import io.Writer;
 
 public class MusicStore extends FixIndexList<File> {
 
@@ -126,7 +126,7 @@ public class MusicStore extends FixIndexList<File> {
 				set(id, f);
 				if (f.exists())
 					continue;
-				Writer.check(f);
+				CommonStatic.def.check(f);
 				try {
 					Files.write(f.toPath(), bs);
 				} catch (IOException e) {

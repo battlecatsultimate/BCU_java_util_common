@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.CommonStatic;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.basis.BasisLU;
 import common.util.pack.Pack;
-import io.InStream;
-import io.OutStream;
-import io.Reader;
-import io.Writer;
 import main.Opts;
 
 public class Recd extends Data {
@@ -54,7 +53,7 @@ public class Recd extends Data {
 			String str = fi.getName();
 			if (str.endsWith(".replay")) {
 				String name = str.substring(0, str.length() - 7);
-				InStream is = Reader.readBytes(fi);
+				InStream is = CommonStatic.def.readBytes(fi);
 				Recd rec = getRecd(is, name);
 				if (rec != null)
 					map.put(name, rec);
@@ -229,7 +228,7 @@ public class Recd extends Data {
 	}
 
 	public void write() {
-		marked = !Writer.writeBytes(toOS(), "./replay/" + name + ".replay");
+		marked = !CommonStatic.def.writeBytes(toOS(), "./replay/" + name + ".replay");
 	}
 
 	protected OutStream toOS() {

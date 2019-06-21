@@ -3,8 +3,8 @@ package common.util.entity.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.InStream;
-import io.OutStream;
+import common.io.InStream;
+import common.io.OutStream;
 
 public abstract class CustomEntity extends DataEntity {
 

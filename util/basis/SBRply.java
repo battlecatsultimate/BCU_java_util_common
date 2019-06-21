@@ -1,9 +1,9 @@
 package common.util.basis;
 
 import common.CommonStatic.FakeKey;
+import common.io.InStream;
 import common.util.stage.EStage;
 import common.util.stage.Recd;
-import io.InStream;
 
 public class SBRply extends Mirror {
 

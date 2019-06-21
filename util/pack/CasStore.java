@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.util.Map;
 
 import common.CommonStatic;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.stage.AbCastle;
 import common.util.stage.Castles;
 import common.util.system.FixIndexList;
 import common.util.system.VImg;
 import common.util.system.fake.FakeImage;
-import io.InStream;
-import io.OutStream;
 
 public class CasStore extends FixIndexList<VImg> implements AbCastle {
 

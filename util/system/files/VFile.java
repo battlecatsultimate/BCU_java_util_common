@@ -15,7 +15,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	}
 
 	public static VFile<? extends FileData> getFile(String path) {
-		if (path.startsWith("./org/")||path.startsWith("./lang/"))
+		if (path.startsWith("./org/") || path.startsWith("./lang/"))
 			return root.find(path);
 		if (path.startsWith("./res/")) {
 			File f = new File(path);

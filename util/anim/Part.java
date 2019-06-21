@@ -3,8 +3,8 @@ package common.util.anim;
 import java.io.PrintStream;
 import java.util.Queue;
 
-import io.InStream;
-import io.OutStream;
+import common.io.InStream;
+import common.io.OutStream;
 
 public class Part implements Cloneable, Comparable<Part> {
 

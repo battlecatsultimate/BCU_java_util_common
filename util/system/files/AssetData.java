@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
 
-import common.CommonStatic;
+import common.CommonStatic.Lang;
 import common.util.system.MultiLangCont;
 import common.util.system.MultiLangFile;
 import common.util.system.fake.FakeImage;
@@ -56,7 +56,7 @@ class FileAsset extends FDFile implements AssetData {
 
 }
 
-class MultiLangAsset implements AssetData {
+class MultiLangAsset extends Lang implements AssetData {
 
 	private Map<String, AssetData> map = new TreeMap<>();
 
@@ -88,7 +88,7 @@ class MultiLangAsset implements AssetData {
 	}
 
 	private AssetData getData() {
-		String loc = CommonStatic.LOC_CODE[CommonStatic.lang];
+		String loc = LOC_CODE[lang];
 		AssetData ad = map.get(loc);
 		if (ad == null)
 			ad = map.values().iterator().next();

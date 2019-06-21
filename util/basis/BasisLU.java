@@ -2,13 +2,13 @@ package common.util.basis;
 
 import java.util.List;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.BattleStatic;
 import common.util.pack.Pack;
 import common.util.system.Copable;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import io.InStream;
-import io.OutStream;
 
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 

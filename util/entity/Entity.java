@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.util.BattleObj;
 import common.util.Data;
@@ -23,7 +24,6 @@ import common.util.pack.SoulStore;
 import common.util.system.P;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
-import io.BCMusic;
 
 /** Entity class for units and enemies */
 public abstract class Entity extends AbEntity {
@@ -179,13 +179,13 @@ public abstract class Entity extends AbEntity {
 				AnimD ea = EffAnim.effas[id];
 				status[P_LETHAL][1] = ea.len(0);
 				effs[id] = ea.getEAnim(0);
-				BCMusic.setSE(SE_LETHAL);
+				CommonStatic.def.setSE(SE_LETHAL);
 			}
 			if (t == P_WARP) {
 				AnimD ea = EffAnim.effas[A_W];
 				int pa = status[P_WARP][2];
 				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim));
-				BCMusic.setSE(pa == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
+				CommonStatic.def.setSE(pa == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
 				status[P_WARP][pa] = ea.len(pa);
 
 			}
@@ -194,19 +194,19 @@ public abstract class Entity extends AbEntity {
 				int id = dire == -1 ? A_U_E_B : A_E_B;
 				effs[id] = EffAnim.effas[id].getEAnim(0);
 				status[P_BREAK][0] = effs[id].len();
-				BCMusic.setSE(SE_BARRIER_ABI);
+				CommonStatic.def.setSE(SE_BARRIER_ABI);
 			}
 			if (t == BREAK_ATK) {
 				int id = dire == -1 ? A_U_E_B : A_E_B;
 				effs[id] = EffAnim.effas[id].getEAnim(1);
 				status[P_BREAK][0] = effs[id].len();
-				BCMusic.setSE(SE_BARRIER_ATK);
+				CommonStatic.def.setSE(SE_BARRIER_ATK);
 			}
 			if (t == BREAK_NON) {
 				int id = dire == -1 ? A_U_B : A_B;
 				effs[id] = EffAnim.effas[id].getEAnim(4);
 				status[P_BREAK][0] = effs[id].len();
-				BCMusic.setSE(SE_BARRIER_NON);
+				CommonStatic.def.setSE(SE_BARRIER_NON);
 			}
 		}
 
@@ -292,7 +292,7 @@ public abstract class Entity extends AbEntity {
 			if (e.health <= 0 && e.zx.tempZK && e.zx.canRevive() > 0) {
 				EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
 				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
-				BCMusic.setSE(SE_ZKILL);
+				CommonStatic.def.setSE(SE_ZKILL);
 			}
 		}
 
@@ -300,7 +300,7 @@ public abstract class Entity extends AbEntity {
 		private void kill() {
 			Soul s = SoulStore.getSoul(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
-			BCMusic.setSE(e.basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
+			CommonStatic.def.setSE(e.basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
 		}
 
 		private int setAnim(int t) {
@@ -877,14 +877,14 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 		}
-		BCMusic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
+		CommonStatic.def.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
 		damage += dmg;
 		zx.damaged(atk);
 		tempearn |= (atk.abi & AB_EARN) > 0;
 		if (atk.getProc(P_CRIT)[0] > 0) {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_CRIT].getEAnim(0)));
-			BCMusic.setSE(SE_CRIT);
+			CommonStatic.def.setSE(SE_CRIT);
 		}
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type))

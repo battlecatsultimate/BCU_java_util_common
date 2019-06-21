@@ -3,11 +3,12 @@ package common.util.anim;
 import java.io.PrintStream;
 import java.util.Queue;
 
+import common.CommonStatic;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.system.files.FileData;
-import io.InStream;
-import io.OutStream;
 import main.Opts;
 
 public class MaAnim extends Data implements BattleStatic {
@@ -23,7 +24,7 @@ public class MaAnim extends Data implements BattleStatic {
 	}
 
 	public static MaAnim newIns(String str) {
-		return readSave(str, f -> f == null ? new MaAnim() : new MaAnim(f));
+		return CommonStatic.def.readSave(str, f -> f == null ? new MaAnim() : new MaAnim(f));
 	}
 
 	public int n;

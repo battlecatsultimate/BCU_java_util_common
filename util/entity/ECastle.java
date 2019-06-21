@@ -1,10 +1,10 @@
 package common.util.entity;
 
+import common.CommonStatic;
 import common.util.basis.BasisLU;
 import common.util.basis.StageBasis;
 import common.util.entity.attack.AttackAb;
 import common.util.pack.EffAnim;
-import io.BCMusic;
 
 public class ECastle extends AbEntity {
 
@@ -28,9 +28,9 @@ public class ECastle extends AbEntity {
 		if (atk.getProc(P_CRIT)[0] > 0) {
 			ans *= 0.01 * atk.getProc(P_CRIT)[0];
 			sb.lea.add(new EAnimCont(pos, 9, EffAnim.effas[A_CRIT].getEAnim(0)));
-			BCMusic.setSE(SE_CRIT);
+			CommonStatic.def.setSE(SE_CRIT);
 		} else
-			BCMusic.setSE(SE_HIT_BASE);
+			CommonStatic.def.setSE(SE_HIT_BASE);
 		health -= ans;
 		if (health > maxH)
 			health = maxH;

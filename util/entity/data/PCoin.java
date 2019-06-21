@@ -5,7 +5,7 @@ import java.util.Queue;
 import common.util.Data;
 import common.util.system.files.VFile;
 import common.util.unit.UnitStore;
-import io.Reader;
+import common.CommonStatic;
 
 public class PCoin extends Data {
 
@@ -27,11 +27,11 @@ public class PCoin extends Data {
 	public final int[][] info = new int[5][12];
 
 	private PCoin(String[] strs) {
-		id = Reader.parseIntN(strs[0]);
+		id = CommonStatic.parseIntN(strs[0]);
 		max = new int[6];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 12; j++)
-				info[i][j] = Reader.parseIntN(strs[2 + i * 12 + j]);
+				info[i][j] = CommonStatic.parseIntN(strs[2 + i * 12 + j]);
 			max[i + 1] = info[i][1];
 			if (max[i + 1] == 0)
 				max[i + 1] = 1;
@@ -44,7 +44,7 @@ public class PCoin extends Data {
 	public DataUnit improve(int[] lvs) {
 		DataUnit ans = du.clone();
 		for (int i = 0; i < 5; i++) {
-			if(lvs[i+1]==0)
+			if (lvs[i + 1] == 0)
 				continue;
 			int maxlv = info[i][1];
 			int[] modifs = new int[4];

@@ -78,6 +78,13 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 		return anim.getEAnim(t);
 	}
 
+	public String[] getExplanation() {
+		String[] exp = MultiLangCont.FEXP.getCont(this);
+		if (exp != null)
+			return exp;
+		return new String[0];
+	}
+
 	public PCoin getPCoin() {
 		if (du instanceof DataUnit)
 			return ((DataUnit) du).pcoin;

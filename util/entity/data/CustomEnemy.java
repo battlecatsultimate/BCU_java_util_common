@@ -3,12 +3,12 @@ package common.util.entity.data;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.basis.Basis;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
-import io.InStream;
-import io.OutStream;
 
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
 

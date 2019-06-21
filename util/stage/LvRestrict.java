@@ -3,12 +3,12 @@ package common.util.stage;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.basis.LineUp;
 import common.util.pack.Pack;
 import common.util.unit.Form;
-import io.InStream;
-import io.OutStream;
 
 public class LvRestrict extends Data {
 

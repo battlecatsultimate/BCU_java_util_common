@@ -1,5 +1,6 @@
 package common.util.entity;
 
+import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.util.ImgCore;
 import common.util.anim.EAnimD;
@@ -15,7 +16,6 @@ import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeTransform;
 import common.util.unit.Form;
 import common.util.unit.UnitStore;
-import io.BCMusic;
 
 public class Cannon extends AtkModelAb {
 
@@ -35,7 +35,7 @@ public class Cannon extends AtkModelAb {
 	public void activate() {
 		anim = NyCastle.atks[id].getEAnim(0);
 		preTime = NYPRE[id];
-		BCMusic.setSE(SE_CANNON[id][0]);
+		CommonStatic.def.setSE(SE_CANNON[id][0]);
 	}
 
 	/** attack part of animation */
@@ -98,7 +98,7 @@ public class Cannon extends AtkModelAb {
 			anim = null;
 			if (id > 2 && id < 5) {
 				atka = NyCastle.atks[id].getEAnim(1);
-				BCMusic.setSE(SE_CANNON[id][1]);
+				CommonStatic.def.setSE(SE_CANNON[id][1]);
 			}
 		}
 		if (atka != null && atka.done())

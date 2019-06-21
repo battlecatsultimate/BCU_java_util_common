@@ -3,12 +3,12 @@ package common.util.unit;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.anim.AnimC;
 import common.util.entity.data.CustomEnemy;
 import common.util.pack.Pack;
 import common.util.system.FixIndexList;
-import io.InStream;
-import io.OutStream;
 
 public class EnemyStore extends FixIndexList<Enemy> {
 

@@ -3,17 +3,18 @@ package common.util.anim;
 import java.io.PrintStream;
 import java.util.Queue;
 
+import common.CommonStatic;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Data;
 import common.util.system.fake.FakeImage;
 import common.util.system.files.FileData;
-import io.InStream;
-import io.OutStream;
 import main.Opts;
 
 public class ImgCut extends Data implements Cloneable {
 
 	public static ImgCut newIns(String path) {
-		return readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
+		return CommonStatic.def.readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
 	}
 
 	protected static ImgCut newIns(FileData f) {

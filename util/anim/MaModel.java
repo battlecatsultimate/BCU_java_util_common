@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import common.CommonStatic;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.system.files.FileData;
-import io.InStream;
-import io.OutStream;
 import main.Opts;
 import main.Printer;
 
@@ -29,7 +30,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 	}
 
 	public static MaModel newIns(String path) {
-		return readSave(path, f -> f == null ? new MaModel() : new MaModel(f));
+		return CommonStatic.def.readSave(path, f -> f == null ? new MaModel() : new MaModel(f));
 	}
 
 	public int n, m;
