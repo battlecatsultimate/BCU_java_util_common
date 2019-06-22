@@ -48,8 +48,9 @@ public class AtkModelUnit extends AtkModelEntity {
 
 		int atk = atks[ind];
 		if (abis[ind] == 1) {
-			proc[P_KB][0] = proc[P_KB][0] * (100 + bas.getInc(C_KB)) / 100;
 			setProc(ind, proc);
+			proc[P_KB][0] = proc[P_KB][0] * (100 + bas.getInc(C_KB)) / 100;
+			extraAtk(ind);
 		}
 
 		if (e.status[P_WEAK][1] != 0)

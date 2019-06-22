@@ -48,6 +48,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 	@Override
 	protected int getAttack(int ind, int[][] proc) {
 		int atk = atks[ind];
+		extraAtk(ind);
 		if (abis[ind] == 1)
 			setProc(ind, proc);
 		if (e.status[P_WEAK][1] != 0)
