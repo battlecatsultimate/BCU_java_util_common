@@ -11,25 +11,14 @@ import main.Printer;
 
 public class AnimU extends AnimD implements MultiLangFile {
 
-	private static String[] strs0, strs1, strs2;
+	public static String[] strs0, strs1, strs2;
 
 	static {
 		redefine();
 	}
 
 	public static void redefine() {
-		String s0 = "move";
-		String s1 = "wait";
-		String s2 = "atk";
-		String s3 = "kb";
-		String s4 = "down";
-		String s5 = "under";
-		String s6 = "up";
-		String s7 = "entry";
-		strs0 = CommonStatic.def.getLoc(0, s0, s1, s2, s3);
-		strs1 = CommonStatic.def.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
-		strs2 = CommonStatic.def.getLoc(0, s0, s1, s2, s3, s7);
-
+		CommonStatic.def.redefine(AnimU.class);
 	}
 
 	public FakeImage num;

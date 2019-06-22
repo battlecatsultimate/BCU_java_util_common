@@ -51,15 +51,6 @@ public class CommonStatic {
 		/** exit */
 		public void exit(boolean save);
 
-		/** get description of name s */
-		public String get(int i, String s);
-
-		/** get descriptions of name s0~sn */
-		public String[] get(int i, String s, int n);
-
-		/** get descriptions of name s */
-		public String[] getLoc(int i, String... s);
-
 		/** show loading progress, empty is fine */
 		public void prog(String str);
 
@@ -77,6 +68,8 @@ public class CommonStatic {
 
 		/** write OutStream into file */
 		public boolean writeBytes(OutStream os, String path);
+
+		public void redefine(Class<?> class1);
 
 	}
 

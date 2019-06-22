@@ -1,6 +1,6 @@
 package common.util.unit;
 
-import static common.util.Interpret.PCTX;
+import static utilpc.Interpret.PCTX;
 
 import common.util.Animable;
 import common.util.anim.AnimC;
