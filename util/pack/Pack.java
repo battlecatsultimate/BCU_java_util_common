@@ -141,8 +141,10 @@ public class Pack extends Data {
 						all = false;
 				if (all) {
 					CommonStatic.def.prog("reading packs: " + (tot - list.size() + rem) + "/" + tot);
-					if (p.bcuver > MainBCU.ver)
+					if (p.bcuver > MainBCU.ver) {
 						Opts.verErr("BCU", revVer(p.bcuver));
+						//TODO
+					}
 					else
 						try {
 							if (p.editable)
