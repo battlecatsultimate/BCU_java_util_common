@@ -28,6 +28,7 @@ import common.util.stage.Castles;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
 import common.util.stage.MapColc;
+import common.util.stage.Recd;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.system.VImg;
@@ -697,6 +698,14 @@ public class Pack extends Data {
 		err("backgrounds", () -> bg.zreadt(ver, is.subStream()));
 		err("units", () -> us.zreadt(is.subStream()));
 
+	}
+
+	public List<Recd> getReplays() {
+		List<Recd> ans=new ArrayList<>();
+		for(StageMap sm:mc.maps)
+			for(Stage st:sm.list)
+				ans.addAll(st.recd);
+		return ans;
 	}
 
 }
