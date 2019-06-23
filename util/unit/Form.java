@@ -1,7 +1,5 @@
 package common.util.unit;
 
-import static utilpc.Interpret.PCTX;
-
 import common.battle.data.CustomUnit;
 import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
@@ -89,22 +87,6 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 		if (du instanceof DataUnit)
 			return ((DataUnit) du).pcoin;
 		return null;
-	}
-
-	public String[] lvText(int[] lvs) {
-		PCoin pc = getPCoin();
-		if (pc == null)
-			return new String[] { "Lv." + lvs[0], "" };
-		else {
-			String lab = PCTX[pc.info[0][0]];
-			String str = "Lv." + lvs[0] + ", {";
-			for (int i = 1; i < 5; i++) {
-				str += lvs[i] + ",";
-				lab += ", " + PCTX[pc.info[i][0]];
-			}
-			str += lvs[5] + "}";
-			return new String[] { str, lab };
-		}
 	}
 
 	public MaskUnit maxu() {
