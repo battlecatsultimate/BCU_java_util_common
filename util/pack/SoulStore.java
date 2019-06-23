@@ -3,7 +3,7 @@ package common.util.pack;
 import java.util.ArrayList;
 import java.util.List;
 
-import common.util.system.FixIndexList;
+import common.system.FixIndexList;
 
 public class SoulStore extends FixIndexList<Soul> {
 

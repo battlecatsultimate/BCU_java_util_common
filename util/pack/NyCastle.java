@@ -1,12 +1,12 @@
 package common.util.pack;
 
+import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimD;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
-import common.util.system.VImg;
-import common.util.system.fake.FakeImage;
 
 public class NyCastle extends AnimI {
 

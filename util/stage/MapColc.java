@@ -8,12 +8,12 @@ import java.util.TreeMap;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.FixIndexList;
+import common.system.MultiLangCont;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 import common.util.Data;
 import common.util.pack.Pack;
-import common.util.system.FixIndexList;
-import common.util.system.MultiLangCont;
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
 
 public class MapColc extends Data {
 

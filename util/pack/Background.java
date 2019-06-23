@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import common.system.P;
+import common.system.VImg;
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimD;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
-import common.util.system.P;
-import common.util.system.VImg;
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
 import main.Printer;
 
 public class Background extends AnimI {

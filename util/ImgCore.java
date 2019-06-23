@@ -1,8 +1,8 @@
 package common.util;
 
-import common.util.system.P;
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
+import common.system.P;
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
 
 public class ImgCore extends Data {
 

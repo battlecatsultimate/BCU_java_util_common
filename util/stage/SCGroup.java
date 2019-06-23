@@ -1,7 +1,7 @@
 package common.util.stage;
 
+import common.system.BasedCopable;
 import common.util.Data;
-import common.util.system.BasedCopable;
 
 public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 

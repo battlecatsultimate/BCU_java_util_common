@@ -2,18 +2,18 @@ package common.util.unit;
 
 import static utilpc.Interpret.PCTX;
 
+import common.battle.data.CustomUnit;
+import common.battle.data.DataUnit;
+import common.battle.data.MaskUnit;
+import common.battle.data.PCoin;
+import common.system.BasedCopable;
+import common.system.MultiLangCont;
+import common.system.VImg;
 import common.util.Animable;
 import common.util.anim.AnimC;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimU;
 import common.util.anim.ImgCut;
-import common.util.entity.data.CustomUnit;
-import common.util.entity.data.DataUnit;
-import common.util.entity.data.MaskUnit;
-import common.util.entity.data.PCoin;
-import common.util.system.BasedCopable;
-import common.util.system.MultiLangCont;
-import common.util.system.VImg;
 
 public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 

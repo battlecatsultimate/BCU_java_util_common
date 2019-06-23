@@ -1,7 +1,7 @@
 package common.util.anim;
 
-import common.util.system.P;
-import common.util.system.fake.FakeGraphics;
+import common.system.P;
+import common.system.fake.FakeGraphics;
 
 public class EAnimD extends EAnimI {
 

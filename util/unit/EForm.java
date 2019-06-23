@@ -1,10 +1,10 @@
 package common.util.unit;
 
+import common.battle.StageBasis;
+import common.battle.data.MaskUnit;
+import common.battle.data.PCoin;
+import common.battle.entity.EUnit;
 import common.util.Data;
-import common.util.basis.StageBasis;
-import common.util.entity.EUnit;
-import common.util.entity.data.MaskUnit;
-import common.util.entity.data.PCoin;
 
 public class EForm extends Data {
 

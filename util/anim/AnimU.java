@@ -1,12 +1,12 @@
 package common.util.anim;
 
 import common.CommonStatic;
+import common.system.MultiLangFile;
+import common.system.VImg;
+import common.system.fake.FakeImage;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 import common.util.Res;
-import common.util.system.MultiLangFile;
-import common.util.system.VImg;
-import common.util.system.fake.FakeImage;
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
 import main.Printer;
 
 public class AnimU extends AnimD implements MultiLangFile {

@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import common.CommonStatic;
+import common.battle.BasisLU;
 import common.io.InStream;
 import common.io.OutStream;
 import common.util.Data;
-import common.util.basis.BasisLU;
 import common.util.pack.Pack;
 import main.Opts;
 

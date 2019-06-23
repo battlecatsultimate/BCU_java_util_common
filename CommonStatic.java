@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import common.io.InStream;
 import common.io.OutStream;
-import common.util.system.VImg;
+import common.system.VImg;
 
 public class CommonStatic {
 

@@ -3,9 +3,9 @@ package common.util.anim;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.system.P;
+import common.system.fake.FakeGraphics;
 import common.util.BattleObj;
-import common.util.system.P;
-import common.util.system.fake.FakeGraphics;
 
 public abstract class EAnimI extends BattleObj {
 

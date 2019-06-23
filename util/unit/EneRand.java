@@ -3,15 +3,15 @@ package common.util.unit;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.battle.StageBasis;
+import common.battle.entity.EEnemy;
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.VImg;
 import common.util.EREnt;
 import common.util.EntRand;
 import common.util.Res;
-import common.util.basis.StageBasis;
-import common.util.entity.EEnemy;
 import common.util.pack.Pack;
-import common.util.system.VImg;
 
 public class EneRand extends EntRand<Integer> implements AbEnemy {
 

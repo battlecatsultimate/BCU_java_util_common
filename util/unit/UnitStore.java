@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import common.battle.data.CustomUnit;
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.FixIndexList;
 import common.util.Data;
 import common.util.anim.AnimC;
-import common.util.entity.data.CustomUnit;
 import common.util.pack.Pack;
-import common.util.system.FixIndexList;
 import main.Opts;
 
 public class UnitStore extends Data {

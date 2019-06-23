@@ -10,7 +10,7 @@ import java.util.Map;
 import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
-import common.util.system.FixIndexList;
+import common.system.FixIndexList;
 
 public class MusicStore extends FixIndexList<File> {
 

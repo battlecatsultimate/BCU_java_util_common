@@ -8,23 +8,23 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import common.CommonStatic;
+import common.battle.StageBasis;
+import common.battle.data.CustomEnemy;
+import common.battle.data.DataEnemy;
+import common.battle.data.MaskEnemy;
+import common.battle.entity.EEnemy;
+import common.system.MultiLangCont;
+import common.system.VImg;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 import common.util.Animable;
 import common.util.anim.AnimC;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimU;
-import common.util.basis.StageBasis;
-import common.util.entity.EEnemy;
-import common.util.entity.data.CustomEnemy;
-import common.util.entity.data.DataEnemy;
-import common.util.entity.data.MaskEnemy;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.system.MultiLangCont;
-import common.util.system.VImg;
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
 
 public class Enemy extends Animable<AnimU> implements AbEnemy {
 

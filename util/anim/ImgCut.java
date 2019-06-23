@@ -6,9 +6,9 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.fake.FakeImage;
+import common.system.files.FileData;
 import common.util.Data;
-import common.util.system.fake.FakeImage;
-import common.util.system.files.FileData;
 import main.Opts;
 
 public class ImgCut extends Data implements Cloneable {

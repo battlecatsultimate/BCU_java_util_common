@@ -1,10 +1,10 @@
 package common.util.anim;
 
+import common.system.P;
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
+import common.system.fake.FakeTransform;
 import common.util.ImgCore;
-import common.util.system.P;
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.FakeTransform;
 import main.Printer;
 
 public class EPart extends ImgCore implements Comparable<EPart> {

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import common.util.basis.BasisLU;
-import common.util.basis.BasisSet;
-import common.util.system.files.VFile;
 import common.CommonStatic;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
+import common.system.files.VFile;
 
 public class RandStage {
 

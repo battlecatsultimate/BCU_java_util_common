@@ -10,10 +10,10 @@ import java.util.Map;
 import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.FixIndexList;
+import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.util.Data;
-import common.util.system.FixIndexList;
-import common.util.system.VImg;
-import common.util.system.fake.FakeImage;
 
 public class BGStore extends FixIndexList<Background> {
 

@@ -1,6 +1,6 @@
 package common.util;
 
-import common.util.system.Copable;
+import common.system.Copable;
 
 public class EREnt<X> implements BattleStatic, Copable<EREnt<X>> {
 

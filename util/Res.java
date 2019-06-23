@@ -1,12 +1,12 @@
 package common.util;
 
+import common.battle.entity.AbEntity;
+import common.system.P;
+import common.system.SymCoord;
+import common.system.VImg;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.util.anim.ImgCut;
-import common.util.entity.AbEntity;
-import common.util.system.P;
-import common.util.system.SymCoord;
-import common.util.system.VImg;
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.ImageBuilder;
 import common.util.unit.Form;
 
 public class Res extends ImgCore {

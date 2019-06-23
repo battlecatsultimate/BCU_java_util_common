@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import common.util.system.VImg;
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
+import common.system.VImg;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 
 public class Castles implements AbCastle {
 

@@ -5,13 +5,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import common.battle.StageBasis;
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.Copable;
+import common.system.FixIndexList;
 import common.util.Data;
-import common.util.basis.StageBasis;
 import common.util.pack.Pack;
-import common.util.system.Copable;
-import common.util.system.FixIndexList;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;

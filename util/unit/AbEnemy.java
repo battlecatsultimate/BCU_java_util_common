@@ -2,9 +2,9 @@ package common.util.unit;
 
 import java.util.Set;
 
-import common.util.basis.StageBasis;
-import common.util.entity.EEnemy;
-import common.util.system.VImg;
+import common.battle.StageBasis;
+import common.battle.entity.EEnemy;
+import common.system.VImg;
 
 public interface AbEnemy extends Comparable<AbEnemy> {
 

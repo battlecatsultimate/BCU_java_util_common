@@ -6,13 +6,13 @@ import java.util.Queue;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.BasedCopable;
+import common.system.MultiLangCont;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.pack.Pack;
-import common.util.system.BasedCopable;
-import common.util.system.MultiLangCont;
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
 import common.util.unit.Enemy;
 import common.CommonStatic;
 import main.MainBCU;

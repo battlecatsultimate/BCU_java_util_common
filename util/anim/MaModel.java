@@ -10,9 +10,9 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.files.FileData;
 import common.util.BattleStatic;
 import common.util.Data;
-import common.util.system.files.FileData;
 import main.Opts;
 import main.Printer;
 

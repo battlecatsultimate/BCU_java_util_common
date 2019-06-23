@@ -1,8 +1,8 @@
 package common.util.anim;
 
+import common.system.fake.FakeImage;
 import common.util.Animable;
 import common.util.BattleStatic;
-import common.util.system.fake.FakeImage;
 
 public abstract class AnimI extends Animable<AnimI> implements BattleStatic {
 

@@ -2,7 +2,7 @@ package common.util.stage;
 
 import java.util.List;
 
-import common.util.system.VImg;
+import common.system.VImg;
 
 public interface AbCastle {
 

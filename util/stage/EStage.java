@@ -14,9 +14,9 @@ import static common.util.stage.SCDef.R1;
 import static common.util.stage.SCDef.S0;
 import static common.util.stage.SCDef.S1;
 
+import common.battle.StageBasis;
+import common.battle.entity.EEnemy;
 import common.util.BattleObj;
-import common.util.basis.StageBasis;
-import common.util.entity.EEnemy;
 import common.util.unit.AbEnemy;
 import common.util.unit.EnemyStore;
 

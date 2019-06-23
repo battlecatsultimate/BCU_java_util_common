@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import common.util.basis.StageBasis;
+import common.battle.StageBasis;
 
 public abstract class EntRand<X> extends Data {
 

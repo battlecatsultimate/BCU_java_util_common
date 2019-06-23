@@ -4,9 +4,9 @@ import java.util.Queue;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
-import common.util.system.files.VFile;
 
 public class Limit extends Data implements BattleStatic {
 
