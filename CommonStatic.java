@@ -63,13 +63,13 @@ public class CommonStatic {
 		/** read strings from path */
 		public <T> T readSave(String path, Function<Queue<String>, T> func);
 
+		public void redefine(Class<?> class1);
+
 		/** play sound effect */
 		public void setSE(int ind);
 
 		/** write OutStream into file */
 		public boolean writeBytes(OutStream os, String path);
-
-		public void redefine(Class<?> class1);
 
 	}
 

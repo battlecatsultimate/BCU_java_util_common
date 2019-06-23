@@ -341,6 +341,14 @@ public class Pack extends Data {
 				}
 	}
 
+	public List<Recd> getReplays() {
+		List<Recd> ans = new ArrayList<>();
+		for (StageMap sm : mc.maps)
+			for (Stage st : sm.list)
+				ans.addAll(st.recd);
+		return ans;
+	}
+
 	public void merge(Pack p) {
 		int[][] inds = new int[8][1000];
 
@@ -698,14 +706,6 @@ public class Pack extends Data {
 		err("backgrounds", () -> bg.zreadt(ver, is.subStream()));
 		err("units", () -> us.zreadt(is.subStream()));
 
-	}
-
-	public List<Recd> getReplays() {
-		List<Recd> ans=new ArrayList<>();
-		for(StageMap sm:mc.maps)
-			for(Stage st:sm.list)
-				ans.addAll(st.recd);
-		return ans;
 	}
 
 }
