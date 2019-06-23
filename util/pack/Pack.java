@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.TreeMap;
 
-import com.google.common.io.Files;
-
 import common.CommonStatic;
 import common.CommonStatic.Account;
 import common.battle.data.CustomEnemy;
@@ -573,12 +571,7 @@ public class Pack extends Data {
 		ms.forEach((i, c) -> {
 			String src = "./pack/music/" + hex(id) + "/" + trio(i) + ".ogg";
 			String dst = "./res/img/" + hex(id) + "/music/" + trio(i) + ".ogg";
-
-			try {
-				Files.move(new File(src), new File(dst));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			new File(src).renameTo(new File(dst));
 		});
 	}
 
