@@ -377,7 +377,7 @@ public class MapColc extends Data {
 				sm.add(new Stage(sm, ver, sub));
 			}
 			m = is.nextInt();
-			for (int j = 0; j < m; i++)
+			for (int j = 0; j < m; j++)
 				sm.lim.add(new Limit(this, 307, is));
 		}
 
