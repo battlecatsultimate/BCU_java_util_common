@@ -35,12 +35,19 @@ public class Unit extends Data implements Comparable<Unit> {
 				evo = new int[6][2];
 				evo[0][0] = Integer.parseInt(strs[27]);
 				for (int i = 0; i < 5; i++) {
-					evo[i+1][0] = Integer.parseInt(strs[28 + i * 2]);
-					evo[i+1][1] = Integer.parseInt(strs[29 + i * 2]);
+					evo[i + 1][0] = Integer.parseInt(strs[28 + i * 2]);
+					evo[i + 1][1] = Integer.parseInt(strs[29 + i * 2]);
 				}
 			}
 		}
 
+		public String[] getExplanation() {
+			String[] exp = MultiLangCont.CFEXP.getCont(this);
+			if (exp != null)
+				return exp;
+			return new String[0];
+		}
+		
 	}
 
 	public static void readData() throws IOException {

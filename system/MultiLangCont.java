@@ -11,6 +11,7 @@ import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
+import common.util.unit.Unit;
 
 public class MultiLangCont<I, T> extends Lang {
 
@@ -18,8 +19,10 @@ public class MultiLangCont<I, T> extends Lang {
 	public static final MultiLangCont<StageMap, String> SMNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
-	public static final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
+
+	public static final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
+	public static final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
 
 	public static final Map<MultiLangFile, AssetData> VFILE = new HashMap<>();
 
