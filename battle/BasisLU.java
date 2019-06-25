@@ -9,6 +9,7 @@ import common.util.BattleStatic;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import common.util.unit.UnitStore;
 
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
@@ -96,6 +97,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
 		List<Unit> list = Pack.def.us.ulist.getList();
+		list.remove(UnitStore.get(339, false));
 		for (Form[] fs : ans.lu.fs)
 			for (Form f : fs)
 				if (f != null)

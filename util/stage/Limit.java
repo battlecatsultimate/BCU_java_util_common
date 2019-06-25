@@ -19,6 +19,7 @@ public class Limit extends Data implements BattleStatic {
 
 	public int star = -1, sid = -1;
 	public int rare, num, line, min, max;
+	public String name = "";
 	public CharaGroup group;
 	public LvRestrict lvr;
 
@@ -87,7 +88,10 @@ public class Limit extends Data implements BattleStatic {
 	}
 
 	public void write(OutStream os) {
-		os.writeString("0.3.7");
+		os.writeString("0.3.8");
+		os.writeString(name);
+		os.writeInt(sid);
+		os.writeInt(star);
 		os.writeInt(rare);
 		os.writeByte((byte) num);
 		os.writeByte((byte) line);
@@ -106,7 +110,9 @@ public class Limit extends Data implements BattleStatic {
 	private void zread(MapColc mc, int ver, InStream is) {
 		if (ver >= 307)
 			ver = getVer(is.nextString());
-		if (ver >= 307)
+		if (ver >= 308)
+			zread$000308(mc, is);
+		else if (ver >= 307)
 			zread$000307(mc, is);
 		else
 			zread$000000(is);
@@ -129,6 +135,13 @@ public class Limit extends Data implements BattleStatic {
 		int l = is.nextInt();
 		if (l >= 0)
 			lvr = mc.lvrs.get(l);
+	}
+
+	private void zread$000308(MapColc mc, InStream is) {
+		name = is.nextString();
+		sid = is.nextInt();
+		star = is.nextInt();
+		zread$000307(mc, is);
 	}
 
 }
