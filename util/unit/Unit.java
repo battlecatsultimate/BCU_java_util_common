@@ -26,6 +26,13 @@ public class Unit extends Data implements Comparable<Unit> {
 		public String[][] explanation;
 		public int type;
 
+		public String[] getExplanation() {
+			String[] exp = MultiLangCont.CFEXP.getCont(this);
+			if (exp != null)
+				return exp;
+			return new String[0];
+		}
+
 		protected void fillBuy(String[] strs) {
 			for (int i = 0; i < 10; i++)
 				price[i] = Integer.parseInt(strs[2 + i]);
@@ -41,13 +48,6 @@ public class Unit extends Data implements Comparable<Unit> {
 			}
 		}
 
-		public String[] getExplanation() {
-			String[] exp = MultiLangCont.CFEXP.getCont(this);
-			if (exp != null)
-				return exp;
-			return new String[0];
-		}
-		
 	}
 
 	public static void readData() throws IOException {
