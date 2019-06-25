@@ -19,7 +19,7 @@ import main.MainBCU;
 
 public class Unit extends Data implements Comparable<Unit> {
 
-	static class UnitInfo {
+	public static class UnitInfo {
 
 		public int[][] evo;
 		public int[] price = new int[10];
