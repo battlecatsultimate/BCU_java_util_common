@@ -81,6 +81,11 @@ public class Limit extends Data implements BattleStatic {
 				lvr = l.lvr;
 	}
 
+	@Override
+	public String toString() {
+		return (sid == -1 ? "all stages" : ("" + sid)) + " - " + (star == -1 ? "all stars" : (star + 1) + " star");
+	}
+
 	public void write(OutStream os) {
 		os.writeString("0.3.7");
 		os.writeInt(rare);
