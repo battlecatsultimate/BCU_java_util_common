@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -65,14 +66,11 @@ public class MapColc extends Data {
 				continue;
 			if (fi.getName().equals("D"))
 				continue;
-			VFile<AssetData> stage, map;
-			if (fi.list().get(0).getName().startsWith("stage")) {
-				stage = fi.list().get(0);
-				map = fi.list().get(1);
-			} else {
-				stage = fi.list().get(1);
-				map = fi.list().get(0);
-			}
+			VFile<AssetData> map = fi.list().get(0);
+			List<VFile<AssetData>> stage = new ArrayList<>();
+			for (int i = 1; i < fi.list().size(); i++)
+				if (fi.list().get(i).list() != null)
+					stage.addAll(fi.list().get(i).list());
 			new MapColc(fi.getName(), idmap.get(fi.getName()), stage, map);
 		}
 		new MapColc();
@@ -216,7 +214,7 @@ public class MapColc extends Data {
 		maps[9].stars = new int[] { 100, 200, 400 };
 	}
 
-	private MapColc(String st, int ID, VFile<AssetData> stage, VFile<AssetData> map) {
+	private MapColc(String st, int ID, List<VFile<AssetData>> stage, VFile<AssetData> map) {
 		pack = Pack.def;
 		name = st;
 		MAPS.put(id = ID, this);
@@ -235,7 +233,7 @@ public class MapColc extends Data {
 		}
 		maps = sms;
 
-		for (VFile<AssetData> s : stage.list()) {
+		for (VFile<AssetData> s : stage) {
 			String str = s.getName();
 			int len = str.length();
 			int id0 = -1, id1 = -1;

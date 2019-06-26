@@ -40,17 +40,18 @@ public class Background extends AnimI {
 		ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
-		for (VFile<AssetData> vf : VFile.get("./org/img/bg/").list()) {
-			int[] ints = new int[15];
-			try {
-				String[] strs = qs.poll().split(",");
-				for (int i = 0; i < 15; i++)
-					ints[i] = Integer.parseInt(strs[i]);
-			} catch (Exception e) {
-				Printer.p("BG", 53, e + "");
+		for (VFile<AssetData> vf : VFile.get("./org/img/bg/").list())
+			if (vf.getName().length() == 9) {
+				int[] ints = new int[15];
+				try {
+					String[] strs = qs.poll().split(",");
+					for (int i = 0; i < 15; i++)
+						ints[i] = Integer.parseInt(strs[i]);
+				} catch (Exception e) {
+					Printer.p("BG", 53, "error in reading BG " + vf.name);
+				}
+				new Background(new VImg(vf), ints);
 			}
-			new Background(new VImg(vf), ints);
-		}
 	}
 
 	public final Pack pack;
