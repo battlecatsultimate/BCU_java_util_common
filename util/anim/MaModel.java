@@ -225,6 +225,8 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 		if (parts[p][0] == -1)
 			return temp[p] = 1;
 		temp[p] = 2;
+		if (parts[p][0] >= parts.length)
+			parts[p][0] = 0;
 		return temp[p] = check(temp, parts[p][0]);
 	}
 

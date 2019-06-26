@@ -152,7 +152,7 @@ public class Pack extends Data {
 						} catch (Exception e) {
 							Opts.loadErr("Error in loading custom pack: " + p.id + ", unknown cause");
 							e.printStackTrace();
-							System.exit(0);
+							CommonStatic.def.exit(false);
 						}
 					rem++;
 

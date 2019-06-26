@@ -194,7 +194,7 @@ public class AnimC extends AnimU {
 		} catch (Exception e) {
 			Opts.loadErr("Error in loading custom animation: " + name);
 			e.printStackTrace();
-			System.exit(0);
+			CommonStatic.def.exit(false);
 		}
 		validate();
 	}
