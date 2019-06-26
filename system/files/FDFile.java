@@ -1,7 +1,10 @@
 package common.system.files;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -38,7 +41,15 @@ public class FDFile implements FileData {
 	@Override
 	public Queue<String> readLine() {
 		try {
-			return new ArrayDeque<String>(Files.readAllLines(file.toPath()));
+			ArrayDeque<String> result = new ArrayDeque<>();
+
+			FileInputStream fis = new FileInputStream(file);
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(fis));
+			String line;
+			while((line = bfr.readLine()) != null) {
+				result.add(line);
+			}
+			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
