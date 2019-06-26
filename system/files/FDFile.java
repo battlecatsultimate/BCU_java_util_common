@@ -46,9 +46,10 @@ public class FDFile implements FileData {
 			FileInputStream fis = new FileInputStream(file);
 			BufferedReader bfr = new BufferedReader(new InputStreamReader(fis));
 			String line;
-			while((line = bfr.readLine()) != null) {
+			while ((line = bfr.readLine()) != null) {
 				result.add(line);
 			}
+			bfr.close();
 			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
