@@ -26,11 +26,13 @@ public class EStage extends BattleObj {
 	public final Limit lim;
 	public final int[] num, rem;
 	public final double mul;
+	public final int star;
 
 	private StageBasis b;
 
-	public EStage(Stage st, int star) {
+	public EStage(Stage st, int stars) {
 		s = st;
+		star = stars;
 		st.validate();
 		int[][] datas = s.data.getSimple();
 		rem = new int[datas.length];

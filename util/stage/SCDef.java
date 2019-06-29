@@ -27,6 +27,24 @@ public class SCDef implements Copable<SCDef> {
 		int t = is.nextInt();
 		int ver = Data.getVer(is.nextString());
 		if (t == 0) {
+			if (ver >= 402) {
+				int n = is.nextInt();
+				int m = is.nextInt();
+				SCDef scd = new SCDef(n);
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < m; j++)
+						scd.datas[i][j] = is.nextInt();
+				scd.sdef = is.nextInt();
+				n = is.nextInt();
+				for (int i = 0; i < n; i++)
+					scd.smap.put(is.nextInt(), is.nextInt());
+				n = is.nextInt();
+				for (int i = 0; i < n; i++) {
+					SCGroup scg = SCGroup.zread(is);
+					scd.sub.set(scg.id, scg);
+				}
+				return scd;
+			}
 			if (ver >= 401) {
 				int n = is.nextInt();
 				int m = is.nextInt();
@@ -100,7 +118,7 @@ public class SCDef implements Copable<SCDef> {
 		if (val < 0 || val > 1000 || sub.get(val) == null)
 			return true;
 		SCGroup g = sub.get(val);
-		return sb.entityCount(1, val) < g.max;
+		return sb.entityCount(1, val) < g.getMax(sb.est.star);
 	}
 
 	public boolean contains(Enemy e) {
@@ -215,7 +233,7 @@ public class SCDef implements Copable<SCDef> {
 	public OutStream write() {
 		OutStream os = OutStream.getIns();
 		os.writeInt(0);
-		os.writeString("0.4.1");
+		os.writeString("0.4.2");
 		os.writeInt(datas.length);
 		os.writeInt(SIZE);
 		for (int i = 0; i < datas.length; i++)
@@ -225,7 +243,7 @@ public class SCDef implements Copable<SCDef> {
 		os.writeInt(smap.size());
 		smap.forEach((e, i) -> os.writeIntsN(e, i));
 		os.writeInt(sub.size());
-		sub.forEach((i, e) -> os.writeIntsN(i, e.max));
+		sub.forEach((i, e) -> e.write(os));
 		os.terminate();
 		return os;
 	}

@@ -23,7 +23,7 @@ public class MultiLangCont<I, T> extends Lang {
 
 	public static final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
 	public static final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
-	public static final MultiLangCont<Enemy,String[]> EEXP = new MultiLangCont<>();
+	public static final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
 
 	public static final Map<MultiLangFile, AssetData> VFILE = new HashMap<>();
 
