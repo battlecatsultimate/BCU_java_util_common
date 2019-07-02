@@ -11,8 +11,10 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 		int ver = getVer(is.nextString());
 		if (ver == 404) {
 			int id = is.nextInt();
-			is.nextInt();
-			int max = is.nextInt();
+			int n = is.nextInt();
+			int[] max = new int[n];
+			for (int i = 0; i < n; i++)
+				max[i] = is.nextInt();
 			is.nextInt();
 			return new SCGroup(id, max);
 		}
@@ -20,11 +22,12 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 	}
 
 	public final int id;
-	private int max;
+	private int[] max = { -1, -1, -1, -1 };
 
-	public SCGroup(int ID, int n) {
+	public SCGroup(int ID, int... ns) {
 		id = ID;
-		max = n;
+		for (int i = 0; i < ns.length; i++)
+			max[i] = ns[i];
 	}
 
 	@Override
@@ -33,23 +36,39 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 	}
 
 	public int getMax(int star) {
-		return max;
+		if (max[star] == -1 && star > 0)
+			return getMax(star - 1);
+		return max[star];
 	}
 
 	public void setMax(int val, int star) {
-		max = val;
+		max[star] = val;
+		if (star > 0 && max[star - 1] < 0)
+			setMax(val, star - 1);
 	}
 
 	@Override
 	public String toString() {
-		return trio(id) + " - " + max;
+		String str = trio(id) + " - " + max[0];
+		String temp = "";
+		for (int i = 1; i < 4; i++)
+			if (max[i] == -1)
+				return str;
+			else if (max[i] == max[i - 1])
+				temp += "," + max[i];
+			else {
+				str += temp + "," + max[i];
+				temp = "";
+			}
+		return str;
 	}
 
 	protected void write(OutStream os) {
 		os.writeString("0.4.4");
 		os.writeInt(id);
-		os.writeInt(1);// stars
-		os.writeInt(max);
+		os.writeInt(4);// stars
+		for (int i = 0; i < 4; i++)
+			os.writeInt(max[i]);
 		os.writeInt(0);// parents
 	}
 
