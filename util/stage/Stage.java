@@ -68,6 +68,30 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 				drop[0] = new int[] { data[5], data[6], data[7] };
 		}
 
+		public String getHTML() {
+			String ans = "<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ";
+			if (drop.length == 0)
+				ans += "none";
+			else if (drop.length == 1)
+				ans += "{chance: " + drop[0][0] + "%, item ID: " + drop[0][1] + ", number: " + drop[0][2] + "}, once: "
+						+ once;
+			else {
+				ans += "count: " + drop.length + ", rand mode: " + rand + ", once: " + once + "<br>";
+				ans += "<table><tr><th>chance</th><th>item ID</th><th>number</th></tr>";
+				for (int[] dp : drop)
+					ans += "<tr><td>" + dp[0] + "%</td><td>" + dp[1] + "</td><td>" + dp[2] + "</td><tr>";
+				ans += "</table>";
+			}
+			if (time.length > 0) {
+				ans += "<br> time scores: count: " + time.length + "<br>";
+				ans += "<table><tr><th>score</th><th>item ID</th><th>number</th></tr>";
+				for (int[] tm : time)
+					ans += "<tr><td>" + tm[0] + "</td><td>" + tm[1] + "</td><td>" + tm[2] + "</td><tr>";
+				ans += "</table>";
+			}
+			return ans;
+		}
+
 	}
 
 	public static final MapColc clipmc = new MapColc("clip", -1);
