@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.util.Data;
 
 public class Part implements Cloneable, Comparable<Part> {
 
@@ -28,6 +29,8 @@ public class Part implements Cloneable, Comparable<Part> {
 		if (ss.length == 6)
 			name = ss[5];
 		else
+			name = "";
+		if (Data.clear_name)
 			name = "";
 		n = Integer.parseInt(qs.poll().trim());
 		moves = new int[n][4];

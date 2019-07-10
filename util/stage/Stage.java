@@ -19,11 +19,64 @@ import main.MainBCU;
 
 public class Stage extends Data implements BasedCopable<Stage, StageMap>, BattleStatic {
 
+	public static class StageInfo {
+
+		public final Stage st;
+		public final StageMap.StageMapInfo map;
+		public final int energy, xp, once, rand;
+		public final int[][] drop;
+		public final int[][] time;
+
+		protected StageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
+			map = info;
+			st = s;
+
+			energy = data[0];
+			xp = data[1];
+			s.mus0 = data[2];
+			s.mush = data[3];
+			s.mus1 = data[4];
+
+			once = data[data.length - 1];
+			boolean isTime = data.length > 15;
+			if (isTime)
+				for (int i = 8; i < 15; i++)
+					if (data[i] != -2)
+						isTime = false;
+			if (isTime) {
+				time = new int[(data.length - 17) / 3][3];
+				for (int i = 0; i < time.length; i++)
+					for (int j = 0; j < 3; j++)
+						time[i][j] = data[16 + i * 3 + j];
+			} else
+				time = new int[0][3];
+			boolean isMulti = !isTime && data.length > 9;
+			if (data.length == 6) {
+				drop = new int[0][];
+				rand = 0;
+			} else if (!isMulti) {
+				drop = new int[1][];
+				rand = 0;
+			} else {
+				drop = new int[(data.length - 7) / 3][3];
+				rand = data[8];
+				for (int i = 1; i < drop.length; i++)
+					for (int j = 0; j < 3; j++)
+						drop[i][j] = data[6 + i * 3 + j];
+			}
+			if (drop.length > 0)
+				drop[0] = new int[] { data[5], data[6], data[7] };
+		}
+
+	}
+
 	public static final MapColc clipmc = new MapColc("clip", -1);
 	public static final StageMap clipsm = clipmc.maps[0];
 
-	public String name = "";
 	public final StageMap map;
+
+	public StageInfo info;
+	public String name = "";
 	public boolean non_con, trail;
 	public int len, health, max;
 	public int bg, mus0 = -1, mush, mus1 = -1;
@@ -48,6 +101,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	}
 
 	protected Stage(StageMap sm, int id, VFile<AssetData> f, int type) {
+		if (sm.info != null)
+			sm.info.getData(this);
 		Queue<String> qs = f.getData().readLine();
 		name = "" + id;
 		map = sm;

@@ -12,17 +12,45 @@ import common.util.Data;
 
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 
+	public static class StageMapInfo {
+
+		public final StageMap sm;
+
+		private Queue<String> qs;
+
+		public int rand, time, lim;
+
+		private StageMapInfo(StageMap map, AssetData ad) {
+			sm = map;
+			qs = ad.readLine();
+			int[] ints = CommonStatic.parseIntsN(qs.poll().split("//")[0]);
+			if (ints.length > 3) {
+				rand = ints[1];
+				time = ints[2];
+				lim = ints[3];
+			}
+			qs.poll();
+		}
+
+		protected void getData(Stage s) {
+			int[] ints = CommonStatic.parseIntsN(qs.poll().split("//")[0]);
+			if (ints.length <= 4)
+				return;
+			s.info = new Stage.StageInfo(this, s, ints);
+		}
+
+	}
+
+	public final MapColc mc;
 	public final List<Stage> list = new ArrayList<>();
 	public final List<Limit> lim = new ArrayList<>();
 
+	public StageMapInfo info;
 	public String name = "";
 	public int id;
 	public int price = 1, retyp, pllim, set;
-	public final MapColc mc;
 	public int cast = -1;
 	public int[] stars = new int[] { 100 };
-
-	private Queue<String> qs;
 
 	public StageMap(MapColc map) {
 		mc = map;
@@ -30,11 +58,10 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 	}
 
 	protected StageMap(MapColc map, int ID, AssetData m) {
+		info = new StageMapInfo(this, m);
 		mc = map;
 		id = ID;
-		qs = m.readLine();
-		qs.poll();
-		qs.poll();
+
 	}
 
 	protected StageMap(MapColc map, int ID, AssetData m, int cas) {
@@ -46,14 +73,6 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 		if (s == null)
 			return;
 		list.add(s);
-		if (qs != null) {
-			int[] ints = CommonStatic.parseIntsN(qs.poll());
-			if (ints.length <= 4)
-				return;
-			s.mus0 = ints[2];
-			s.mush = ints[3];
-			s.mus1 = ints[4];
-		}
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import java.util.Queue;
 
 public class Data {
 
+	public static boolean clear_name = false;
+
 	public static final int SE_HIT_0 = 20;
 	public static final int SE_HIT_1 = 21;
 	public static final int SE_DEATH_0 = 23;
