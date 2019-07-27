@@ -44,7 +44,7 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 	public void setMax(int val, int star) {
 		if (star == -1) {
 			for (int i = 0; i < max.length; i++)
-				max[star] = val;
+				max[i] = val;
 			return;
 		}
 		max[star] = val;

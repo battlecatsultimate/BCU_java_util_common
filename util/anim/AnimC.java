@@ -217,6 +217,21 @@ public class AnimC extends AnimU {
 		unSave("rename (not applicapable for undo)");
 	}
 
+	public void resize(double d) {
+		for (int[] l : imgcut.cuts)
+			for (int i = 0; i < l.length; i++)
+				l[i] *= d;
+		for (int[] l : mamodel.parts) {
+			l[6] *= d;
+			l[7] *= d;
+		}
+		for (MaAnim ma : anims)
+			for (Part p : ma.parts)
+				if (p.ints[1] == 6 || p.ints[1] == 7)
+					for (int[] x : p.moves)
+						x[1] *= d;
+	}
+
 	public void restore() {
 		history.pop();
 		InStream is = history.peek().data.translate();
