@@ -48,7 +48,7 @@ public class Data {
 	public static final int TB_EVA = 512;
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
-	
+
 	// trait index
 	public static final int TRAIT_WHITE = 0;
 	public static final int TRAIT_RED = 1;
@@ -72,7 +72,7 @@ public class Data {
 	public static final int T_METAL = 4;
 	public static final int T_ALIEN = 5;
 	public static final int T_ZOMBIE = 6;
-	
+
 	// default tech value
 	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10 };
 
@@ -125,7 +125,7 @@ public class Data {
 	public static final int AB_IMUSW = 1 << 19;
 	public static final int AB_RESISTS = 1 << 20;
 	public static final int AB_MASSIVES = 1 << 21;
-	
+
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
 	public static final int AB_ELIMINATOR = 0x7ae17f;
@@ -381,7 +381,7 @@ public class Data {
 	public static final int[] KB_PRI = new int[] { 2, 4, 5, 1, 3 };
 	public static final int[] KB_TIME = new int[] { 11, 23, 47, 11, -1 };
 	public static final int[] KB_DIS = new int[] { 165, 345, 705, 55, -1 };
-	
+
 	public static final int W_E_INI = -33;
 	public static final int W_U_INI = -67;
 	public static final int W_PROG = 200;
@@ -391,7 +391,7 @@ public class Data {
 	public static final int E_IMU = -1;
 	public static final int E_IWAVE = -2;
 	public static final int E_SWAVE = -3;
-	
+
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10 };// not sure
 	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// not sure
 	public static final int SNIPER_CD = 300;// not sure
