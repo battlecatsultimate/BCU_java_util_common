@@ -221,13 +221,17 @@ public class AnimC extends AnimU {
 		for (int[] l : imgcut.cuts)
 			for (int i = 0; i < l.length; i++)
 				l[i] *= d;
+		mamodel.parts[0][8] /= d;
+		mamodel.parts[0][9] /= d;
 		for (int[] l : mamodel.parts) {
+			l[4] *= d;
+			l[5] *= d;
 			l[6] *= d;
 			l[7] *= d;
 		}
 		for (MaAnim ma : anims)
 			for (Part p : ma.parts)
-				if (p.ints[1] == 6 || p.ints[1] == 7)
+				if (p.ints[1] >= 4 && p.ints[1] <= 7)
 					for (int[] x : p.moves)
 						x[1] *= d;
 	}
