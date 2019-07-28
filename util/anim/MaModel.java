@@ -62,10 +62,8 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 			for (int j = 0; j < 13; j++)
 				parts[i][j] = Integer.parseInt(ss[j].trim());
 			if (ss.length == 14)
-				strs0[i] = ss[13];
+				strs0[i] = restrict(ss[13]);
 			else
-				strs0[i] = "";
-			if (Data.clear_name)
 				strs0[i] = "";
 		}
 		String[] ss = qs.poll().trim().split(",");
@@ -79,10 +77,8 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 			for (int j = 0; j < 6; j++)
 				confs[i][j] = Integer.parseInt(ss[j].trim());
 			if (ss.length == 7)
-				strs1[i] = ss[6];
+				strs1[i] = restrict(ss[6]);
 			else
-				strs1[i] = "";
-			if (Data.clear_name)
 				strs1[i] = "";
 		}
 	}

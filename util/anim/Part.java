@@ -7,7 +7,7 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.util.Data;
 
-public class Part implements Cloneable, Comparable<Part> {
+public class Part extends Data implements Cloneable, Comparable<Part> {
 
 	public int[] ints = new int[5];
 	public String name;
@@ -27,10 +27,8 @@ public class Part implements Cloneable, Comparable<Part> {
 		for (int i = 0; i < 5; i++)
 			ints[i] = Integer.parseInt(ss[i].trim());
 		if (ss.length == 6)
-			name = ss[5];
+			name = restrict(ss[5]);
 		else
-			name = "";
-		if (Data.clear_name)
 			name = "";
 		n = Integer.parseInt(qs.poll().trim());
 		moves = new int[n][4];

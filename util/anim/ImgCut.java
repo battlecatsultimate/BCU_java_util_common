@@ -41,9 +41,7 @@ public class ImgCut extends Data implements Cloneable {
 	protected ImgCut(Queue<String> qs) {
 		qs.poll();
 		qs.poll();
-		name = qs.poll();
-		if (Data.clear_name)
-			name = "";
+		name = restrict(qs.poll());
 		n = Integer.parseInt(qs.poll().trim());
 		cuts = new int[n][4];
 		strs = new String[n];
@@ -52,10 +50,8 @@ public class ImgCut extends Data implements Cloneable {
 			for (int j = 0; j < 4; j++)
 				cuts[i][j] = Integer.parseInt(ss[j].trim());
 			if (ss.length == 5)
-				strs[i] = ss[4];
+				strs[i] = restrict(ss[4]);
 			else
-				strs[i] = "";
-			if (Data.clear_name)
 				strs[i] = "";
 		}
 	}

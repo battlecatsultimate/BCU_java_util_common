@@ -8,7 +8,7 @@ import java.util.Queue;
 
 public class Data {
 
-	public static boolean clear_name = false;
+	public static final int restrict_name = 32;
 
 	public static final int SE_HIT_0 = 20;
 	public static final int SE_HIT_1 = 21;
@@ -28,7 +28,6 @@ public class Data {
 	public static final int SE_BARRIER_ABI = 70;
 	public static final int SE_BARRIER_NON = 71;
 	public static final int SE_BARRIER_ATK = 72;
-
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 } };
 
 	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65, 73,
@@ -49,7 +48,7 @@ public class Data {
 	public static final int TB_EVA = 512;
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
-
+	
 	// trait index
 	public static final int TRAIT_WHITE = 0;
 	public static final int TRAIT_RED = 1;
@@ -63,7 +62,6 @@ public class Data {
 	public static final int TRAIT_EVA = 9;
 	public static final int TRAIT_WITCH = 10;
 	public static final int TRAIT_INFH = 11;
-
 	public static final int TRAIT_TOT = 12;
 
 	// treasure
@@ -74,7 +72,7 @@ public class Data {
 	public static final int T_METAL = 4;
 	public static final int T_ALIEN = 5;
 	public static final int T_ZOMBIE = 6;
-
+	
 	// default tech value
 	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10 };
 
@@ -87,7 +85,6 @@ public class Data {
 	public static final int LV_RECH = 5;
 	public static final int LV_CATK = 6;
 	public static final int LV_CRG = 7;
-
 	public static final int LV_TOT = 8;
 
 	// default treasure value
@@ -103,7 +100,6 @@ public class Data {
 	public static final int T_RECH = 6;
 	public static final int T_CATK = 7;
 	public static final int T_BASE = 8;
-
 	public static final int T_TOT = 9;
 
 	// abi bit filter
@@ -129,7 +125,7 @@ public class Data {
 	public static final int AB_IMUSW = 1 << 19;
 	public static final int AB_RESISTS = 1 << 20;
 	public static final int AB_MASSIVES = 1 << 21;
-
+	
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
 	public static final int AB_ELIMINATOR = 0x7ae17f;
@@ -157,7 +153,6 @@ public class Data {
 	public static final int ABI_IMUSW = 19;
 	public static final int ABI_RESISTS = 20;
 	public static final int ABI_MASSIVES = 21;
-
 	public static final int ABI_TOT = 30;// 20 currently
 
 	// proc index
@@ -181,7 +176,6 @@ public class Data {
 	 * others
 	 */
 	public static final int P_REVIVE = 12;
-
 	public static final int P_IMUKB = 13;
 	public static final int P_IMUSTOP = 14;
 	public static final int P_IMUSLOW = 15;
@@ -189,7 +183,6 @@ public class Data {
 	public static final int P_IMUWEAK = 17;
 	public static final int P_IMUWARP = 18;
 	public static final int P_IMUCURSE = 19;
-
 	public static final int P_SNIPER = 20;
 	public static final int P_TIME = 21;
 	public static final int P_SEAL = 22;
@@ -211,19 +204,17 @@ public class Data {
 	 */
 	public static final int P_POISON = 26;
 	public static final int P_BOSS = 27;
-
 	/**
 	 * body proc: 1: type: protect itself only (0) or effect the attack also (1)
 	 */
 	public static final int P_CRITI = 28;
 
 	public static final int PROC_TOT = 40;// 30
-	public static final int PROC_WIDTH = 6;
 
+	public static final int PROC_WIDTH = 6;
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;
 	public static final int WT_CANN = 2;
-
 	public static final int PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
 
 	public static final int PC2_HP = 0;
@@ -231,7 +222,6 @@ public class Data {
 	public static final int PC2_SPEED = 2;
 	public static final int PC2_COST = 3;
 	public static final int PC2_CD = 4;
-
 	public static final int[][] PC_CORRES = new int[][] { // NP value table
 			{ -1, 0 }, // 0:
 			{ 0, P_WEAK }, // 1: weak, reversed health
@@ -282,7 +272,6 @@ public class Data {
 	public static final int BREAK_ABI = -4;
 	public static final int BREAK_ATK = -5;
 	public static final int BREAK_NON = -6;
-
 	// Combo index
 	public static final int C_ATK = 0;
 	public static final int C_DEF = 1;
@@ -308,7 +297,6 @@ public class Data {
 	public static final int C_RESP = 11;
 	public static final int C_MEAR = 12;
 	public static final int C_XP = 13;// abandoned
-
 	public static final int C_TOT = 25;
 
 	// Effects Anim index
@@ -356,7 +344,6 @@ public class Data {
 	public static final int A_POI6 = 41;
 	public static final int A_POI7 = 42;
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-
 	public static final int A_TOT = 43;
 
 	// atk type index used in filter page
@@ -364,7 +351,6 @@ public class Data {
 	public static final int ATK_AREA = 1;
 	public static final int ATK_LD = 2;
 	public static final int ATK_OMNI = 4;
-
 	public static final int ATK_TOT = 6;
 
 	// base and canon level
@@ -375,7 +361,6 @@ public class Data {
 	public static final int BASE_WATER = 4;
 	public static final int BASE_GROUND = 5;
 	public static final int BASE_BARRIER = 6;
-
 	public static final int BASE_TOT = 7;
 
 	// touchable ID
@@ -386,35 +371,32 @@ public class Data {
 	public static final int TCH_SOUL = 16;
 	public static final int TCH_EX = 32;
 	public static final int TCH_ZOMBX = 64;
-
-	// After this line all number is game data
-
 	public static final String[] A_PATH = new String[] { "down", "up", "slow", "stop", "shield", "farattack",
 			"wave_invalid", "wave_stop", "waveguard" };
 
+	// After this line all number is game data
+
 	public static final int INT_KB = 0, INT_HB = 1, INT_SW = 2, INT_ASS = 3, INT_WARP = 4;
+
 	public static final int[] KB_PRI = new int[] { 2, 4, 5, 1, 3 };
 	public static final int[] KB_TIME = new int[] { 11, 23, 47, 11, -1 };
 	public static final int[] KB_DIS = new int[] { 165, 345, 705, 55, -1 };
-
+	
 	public static final int W_E_INI = -33;
 	public static final int W_U_INI = -67;
 	public static final int W_PROG = 200;
 	public static final int W_E_WID = 500;
 	public static final int W_U_WID = 400;
 	public static final int W_TIME = 3;
-
 	public static final int E_IMU = -1;
 	public static final int E_IWAVE = -2;
 	public static final int E_SWAVE = -3;
-
+	
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10 };// not sure
 	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// not sure
-
 	public static final int SNIPER_CD = 300;// not sure
 	public static final int SNIPER_PRE = 5;// not sure
 	public static final int SNIPER_POS = -500;// not sure
-
 	public static final int REVIVE_SHOW_TIME = 16;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
@@ -440,6 +422,12 @@ public class Data {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static String restrict(String str) {
+		if (str.length() < restrict_name)
+			return str;
+		return str.substring(0, restrict_name);
 	}
 
 	public static String revVer(int ver) {
