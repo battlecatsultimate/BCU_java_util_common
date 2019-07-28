@@ -150,6 +150,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				a |= AB_RESISTS;
 			if (ints[81] == 1)
 				a |= AB_MASSIVES;
+			proc[P_SATK][0] = ints[82];
+			proc[P_SATK][1] = ints[83];
 
 		} catch (IndexOutOfBoundsException e) {
 		}

@@ -221,6 +221,9 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			else
 				proc[P_SUMMON] = sprc;
 		}
+		if (getProc(ind, P_SATK, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_SATK, 0)) {
+			proc[P_SATK][0] = getProc(ind, P_SATK, 1);
+		}
 	}
 
 	protected abstract void summon(int[] proc, Entity ent, Object acs);

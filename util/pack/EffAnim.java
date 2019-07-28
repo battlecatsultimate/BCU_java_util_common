@@ -68,6 +68,35 @@ public class EffAnim extends AnimD {
 		effas[A_SNIPER] = new EffAnim(strs + "000_snyaipa", vis, ics, temp);
 		temp = new String[] { "" };
 		effas[A_CURSE] = new EffAnim(stfs[3] + ski + "curse", vfs[3], icfs[3], temp);
+
+		readCustom(stfs, icfs);
+
+		VImg vsatk = new VImg("./org/battle/s6/skill006.png");
+		ImgCut icsatk = ImgCut.newIns("./org/battle/s6/skill006.imgcut");
+		effas[A_SATK] = new EffAnim("./org/battle/s6/strong_attack", vsatk, icsatk, temp);
+	}
+
+	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
+		fimg.mark("recolor");
+		int w = fimg.getWidth();
+		int h = fimg.getHeight();
+		for (int i = 0; i < w; i++)
+			for (int j = 0; j < h; j++) {
+				int p = fimg.getRGB(i, j);
+				int b = p & 255;
+				int g = p >> 8 & 255;
+				int r = p >> 16 & 255;
+				int a = p >> 24;
+				p = f.apply(new int[] { a, r, g, b });
+				fimg.setRGB(i, j, p);
+			}
+		fimg.mark("recolor-finished");
+	}
+
+	private static void readCustom(String[] stfs, ImgCut[] icfs) {
+		String ski = "skill00";
+		String[] temp = new String[] { "" };
+
 		VImg vseal = new VImg(stfs[3] + "skill003.png");
 		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
 		effas[A_SEAL] = new EffAnim(stfs[3] + ski + "curse", vseal, icfs[3], temp);
@@ -108,23 +137,6 @@ public class EffAnim extends AnimD {
 		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[3] << 16 | is[2] << 8 | is[1]));
 		effas[A_POI7] = new EffAnim(strpb, vpois, icpois, temp);
 		effas[A_POI7].name = "poison_pink";
-	}
-
-	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
-		fimg.mark("recolor");
-		int w = fimg.getWidth();
-		int h = fimg.getHeight();
-		for (int i = 0; i < w; i++)
-			for (int j = 0; j < h; j++) {
-				int p = fimg.getRGB(i, j);
-				int b = p & 255;
-				int g = p >> 8 & 255;
-				int r = p >> 16 & 255;
-				int a = p >> 24;
-				p = f.apply(new int[] { a, r, g, b });
-				fimg.setRGB(i, j, p);
-			}
-		fimg.mark("recolor-finished");
 	}
 
 	private VImg vimg;

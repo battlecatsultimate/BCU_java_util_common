@@ -153,6 +153,7 @@ public class Res extends ImgCore {
 		icon[1][P_IMUWARP] = new VImg(parts[262]);
 		icon[1][P_BREAK] = new VImg(parts[264]);
 		icon[1][P_WARP] = new VImg(parts[266]);
+		icon[1][P_SATK] = new VImg(parts[229]);
 		icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
 		icon[0][ABI_IMUSW] = new VImg("./org/page/icons/BossWaveX.png");
@@ -173,6 +174,7 @@ public class Res extends ImgCore {
 		icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
+		icon[1][P_CRITI] = new VImg("./org/page/icons/CritX.png");
 		ImageBuilder.icon = false;
 	}
 

@@ -886,6 +886,10 @@ public abstract class Entity extends AbEntity {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_CRIT].getEAnim(0)));
 			CommonStatic.def.setSE(SE_CRIT);
 		}
+		if (atk.getProc(P_SATK)[0] > 0) {
+			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_SATK].getEAnim(0)));
+			CommonStatic.def.setSE(SE_SATK);// TODO
+		}
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type))
 			return;
@@ -1161,6 +1165,9 @@ public abstract class Entity extends AbEntity {
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
+		int satk = atk.getProc(P_SATK)[0];
+		if (satk > 0)
+			ans *= (100 + satk) * 0.01;
 		int crit = atk.getProc(P_CRIT)[0];
 		if (getProc(P_CRITI, 0) == 1)
 			crit = 0;

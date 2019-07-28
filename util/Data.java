@@ -17,6 +17,7 @@ public class Data {
 	public static final int SE_HIT_BASE = 22;
 	public static final int SE_ZKILL = 59;
 	public static final int SE_CRIT = 44;
+	public static final int SE_SATK = 90;
 	public static final int SE_WAVE = 26;
 	public static final int SE_LETHAL = 50;
 	public static final int SE_WARP_ENTER = 73;
@@ -208,6 +209,7 @@ public class Data {
 	 * body proc: 1: type: protect itself only (0) or effect the attack also (1)
 	 */
 	public static final int P_CRITI = 28;
+	public static final int P_SATK = 29;
 
 	public static final int PROC_TOT = 40;// 30
 
@@ -343,8 +345,10 @@ public class Data {
 	public static final int A_POI5 = 40;
 	public static final int A_POI6 = 41;
 	public static final int A_POI7 = 42;
+	public static final int A_SATK = 43;
+
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 43;
+	public static final int A_TOT = 44;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;
