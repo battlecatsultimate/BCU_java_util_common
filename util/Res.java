@@ -175,6 +175,7 @@ public class Res extends ImgCore {
 		icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
 		icon[1][P_CRITI] = new VImg("./org/page/icons/CritX.png");
+		icon[3][TRAIT_WHITE] = new VImg("./org/page/icons/White.png");
 		ImageBuilder.icon = false;
 	}
 
