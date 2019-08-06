@@ -54,7 +54,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		MaskAtk am = me.getAtkModel(i);
 		if (dat[i][2] == 1)
 			for (int j = 0; j < PROC_TOT; j++)
-				proc[j] = am.getProc(j);
+				proc[j] = am.getProc(j).clone();
 		ld0 = am.getShortPoint();
 		ld1 = am.getLongPoint();
 		pre = dat[i][1];

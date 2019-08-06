@@ -124,7 +124,7 @@ public abstract class CustomEntity extends DataEntity {
 		shield = de.getShield();
 		tba = de.getTBA();
 		touch = de.getTouch();
-
+		death = de.getDeathAnim();
 		if (de instanceof CustomEntity) {
 			importData$1((CustomEntity) de);
 			return;
@@ -180,7 +180,7 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.3");
+		os.writeString("0.4.4");
 		os.writeInt(hp);
 		os.writeInt(hb);
 		os.writeInt(speed);
@@ -193,6 +193,7 @@ public abstract class CustomEntity extends DataEntity {
 		os.writeInt(base);
 		os.writeInt(touch);
 		os.writeInt(loop);
+		os.writeInt(death);
 		os.writeInt(common ? 1 : 0);
 		rep.write(os);
 		List<AtkDataModel> temp = new ArrayList<>();
@@ -217,7 +218,9 @@ public abstract class CustomEntity extends DataEntity {
 
 	protected void zreada(InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 403)
+		if (ver >= 404)
+			zreada$000404(is);
+		else if (ver >= 403)
 			zreada$000403(is);
 		else if (ver >= 402)
 			zreada$000402(is);
@@ -368,6 +371,37 @@ public abstract class CustomEntity extends DataEntity {
 		base = is.nextInt();
 		touch = is.nextInt();
 		loop = is.nextInt();
+		common = is.nextInt() > 0;
+		rep = new AtkDataModel(this, is);
+		int m = is.nextInt();
+		AtkDataModel[] set = new AtkDataModel[m];
+		for (int i = 0; i < m; i++)
+			set[i] = new AtkDataModel(this, is);
+		int n = is.nextInt();
+		atks = new AtkDataModel[n];
+		for (int i = 0; i < n; i++)
+			atks[i] = set[is.nextInt()];
+		int adi = is.nextInt();
+		if ((adi & 1) > 0)
+			rev = new AtkDataModel(this, is);
+		if ((adi & 2) > 0)
+			res = new AtkDataModel(this, is);
+	}
+
+	private void zreada$000404(InStream is) {
+		hp = is.nextInt();
+		hb = is.nextInt();
+		speed = is.nextInt();
+		range = is.nextInt();
+		abi = is.nextInt();
+		type = is.nextInt();
+		width = is.nextInt();
+		shield = is.nextInt();
+		tba = is.nextInt();
+		base = is.nextInt();
+		touch = is.nextInt();
+		loop = is.nextInt();
+		death = is.nextInt();
 		common = is.nextInt() > 0;
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();
