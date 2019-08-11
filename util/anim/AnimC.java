@@ -384,37 +384,6 @@ public class AnimC extends AnimU {
 			ICedited();
 	}
 
-	public void standardize() {
-		int[] dat = mamodel.parts[0];
-		int[] con = mamodel.confs[0];
-		dat[6] -= con[2];
-		dat[7] -= con[3];
-		con[2] = con[3] = 0;
-
-		int[] std = mamodel.ints;
-		for (int[] data : mamodel.parts) {
-			data[8] = data[8] * 1000 / std[0];
-			data[9] = data[9] * 1000 / std[0];
-			data[10] = data[10] * 3600 / std[1];
-			data[11] = data[11] * 1000 / std[2];
-		}
-		for (MaAnim ma : anims)
-			for (Part p : ma.parts) {
-				if (p.ints[1] >= 8 && p.ints[1] <= 10)
-					for (int[] data : p.moves)
-						data[1] = data[1] * 1000 / std[0];
-				if (p.ints[1] == 11)
-					for (int[] data : p.moves)
-						data[1] = data[1] * 3600 / std[1];
-				if (p.ints[1] == 12)
-					for (int[] data : p.moves)
-						data[1] = data[1] * 1000 / std[2];
-			}
-		std[0] = 1000;
-		std[1] = 3600;
-		std[2] = 1000;
-	}
-
 	@Override
 	public String toString() {
 		return name;
@@ -572,6 +541,39 @@ public class AnimC extends AnimU {
 			save$mm(pre);
 		if (type == 2)
 			save$ma(pre, para);
+	}
+
+	private void standardize() {
+		if (mamodel.parts.length == 0 || mamodel.confs.length == 0)
+			return;
+		int[] dat = mamodel.parts[0];
+		int[] con = mamodel.confs[0];
+		dat[6] -= con[2];
+		dat[7] -= con[3];
+		con[2] = con[3] = 0;
+
+		int[] std = mamodel.ints;
+		for (int[] data : mamodel.parts) {
+			data[8] = data[8] * 1000 / std[0];
+			data[9] = data[9] * 1000 / std[0];
+			data[10] = data[10] * 3600 / std[1];
+			data[11] = data[11] * 1000 / std[2];
+		}
+		for (MaAnim ma : anims)
+			for (Part p : ma.parts) {
+				if (p.ints[1] >= 8 && p.ints[1] <= 10)
+					for (int[] data : p.moves)
+						data[1] = data[1] * 1000 / std[0];
+				if (p.ints[1] == 11)
+					for (int[] data : p.moves)
+						data[1] = data[1] * 3600 / std[1];
+				if (p.ints[1] == 12)
+					for (int[] data : p.moves)
+						data[1] = data[1] * 1000 / std[2];
+			}
+		std[0] = 1000;
+		std[1] = 3600;
+		std[2] = 1000;
 	}
 
 }
