@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -77,6 +78,7 @@ public class AnimC extends AnimU {
 			uni.mark("uni");
 		if (edi != null)
 			edi.mark("edi");
+		standardize();
 		history("initial");
 	}
 
@@ -129,6 +131,7 @@ public class AnimC extends AnimU {
 		}
 		saveIcon();
 		saveUni();
+		standardize();
 		history("initial");
 	}
 
@@ -197,6 +200,64 @@ public class AnimC extends AnimU {
 			CommonStatic.def.exit(false);
 		}
 		validate();
+	}
+
+	public void merge(AnimC a, int x, int y) {
+		ImgCut ic0 = imgcut;
+		ImgCut ic1 = a.imgcut;
+		int icn = ic0.n;
+		ic0.n += ic1.n;
+		ic0.cuts = Arrays.copyOf(ic0.cuts, ic0.n);
+		for (int i = 0; i < icn; i++)
+			ic0.cuts[i] = ic0.cuts[i].clone();
+		ic0.strs = Arrays.copyOf(ic0.strs, ic0.n);
+		for (int i = 0; i < ic1.n; i++) {
+			int[] data = ic0.cuts[i + icn] = ic1.cuts[i].clone();
+			data[0] += x;
+			data[1] += y;
+			ic0.strs[i + icn] = ic1.strs[i];
+		}
+
+		MaModel mm0 = mamodel;
+		MaModel mm1 = a.mamodel;
+		int mmn = mm0.n;
+		mm0.n += mm1.n;
+		mm0.parts = Arrays.copyOf(mm0.parts, mm0.n);
+		for (int i = 0; i < mmn; i++)
+			mm0.parts[i] = mm0.parts[i].clone();
+		mm0.strs0 = Arrays.copyOf(mm0.strs0, mm0.n);
+		int[] fir = mm0.parts[0];
+		for (int i = 0; i < mm1.n; i++) {
+			int[] data = mm0.parts[i + mmn] = mm1.parts[i].clone();
+			if (data[0] != -1)
+				data[0] += mmn;
+			else {
+				data[0] = 0;
+				data[8] = data[8] * 1000 / fir[8];
+				data[9] = data[9] * 1000 / fir[9];
+				data[4] = data[6] * data[8] / 1000 - fir[6];
+				data[5] = data[7] * data[9] / 1000 - fir[7];
+			}
+			data[2] += icn;
+			mm0.strs0[i + mmn] = mm1.strs0[i];
+		}
+
+		for (int i = 0; i < 7; i++) {
+			MaAnim ma0 = anims[i];
+			MaAnim ma1 = a.anims[i];
+			int man = ma0.n;
+			ma0.n += ma1.n;
+			ma0.parts = Arrays.copyOf(ma0.parts, ma0.n);
+			for (int j = 0; j < man; j++)
+				ma0.parts[j] = ma0.parts[j].clone();
+			for (int j = 0; j < ma1.n; j++) {
+				Part p = ma0.parts[j + man] = ma1.parts[j].clone();
+				p.ints[0] += mmn;
+				if (p.ints[1] == 2)
+					for (int[] data : p.moves)
+						data[1] += icn;
+			}
+		}
 	}
 
 	public void reloImg() {
@@ -323,6 +384,37 @@ public class AnimC extends AnimU {
 			ICedited();
 	}
 
+	public void standardize() {
+		int[] dat = mamodel.parts[0];
+		int[] con = mamodel.confs[0];
+		dat[6] -= con[2];
+		dat[7] -= con[3];
+		con[2] = con[3] = 0;
+
+		int[] std = mamodel.ints;
+		for (int[] data : mamodel.parts) {
+			data[8] = data[8] * 1000 / std[0];
+			data[9] = data[9] * 1000 / std[0];
+			data[10] = data[10] * 3600 / std[1];
+			data[11] = data[11] * 1000 / std[2];
+		}
+		for (MaAnim ma : anims)
+			for (Part p : ma.parts) {
+				if (p.ints[1] >= 8 && p.ints[1] <= 10)
+					for (int[] data : p.moves)
+						data[1] = data[1] * 1000 / std[0];
+				if (p.ints[1] == 11)
+					for (int[] data : p.moves)
+						data[1] = data[1] * 3600 / std[1];
+				if (p.ints[1] == 12)
+					for (int[] data : p.moves)
+						data[1] = data[1] * 1000 / std[2];
+			}
+		std[0] = 1000;
+		std[1] = 3600;
+		std[2] = 1000;
+	}
+
 	@Override
 	public String toString() {
 		return name;
@@ -414,6 +506,7 @@ public class AnimC extends AnimU {
 				anims[i] = MaAnim.newIns(pre + "0" + i + ".maanim");
 			for (int i = 0; i < 3; i++)
 				anims[i + 4] = MaAnim.newIns(pre + "_zombie0" + i + ".maanim");
+			standardize();
 		}
 	}
 
