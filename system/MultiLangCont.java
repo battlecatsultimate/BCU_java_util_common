@@ -69,4 +69,8 @@ public class MultiLangCont<I, T> extends Lang {
 		return ans;
 	}
 
+	public void clear() {
+		map.clear();
+	}
+
 }
