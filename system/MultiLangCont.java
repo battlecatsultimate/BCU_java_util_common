@@ -18,6 +18,7 @@ public class MultiLangCont<I, T> extends Lang {
 	public static final MultiLangCont<MapColc, String> MCNAME = new MultiLangCont<>();
 	public static final MultiLangCont<StageMap, String> SMNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
+	public static final MultiLangCont<Integer,String> RWNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
 
