@@ -145,6 +145,9 @@ public abstract class Entity extends AbEntity {
 				int id = dire == -1 ? A_STOP : A_E_STOP;
 				effs[id] = EffAnim.effas[id].getEAnim(0);
 			}
+			if (t == P_IMUATK) {
+				effs[A_IMUATK] = EffAnim.effas[A_IMUATK].getEAnim(0);
+			}
 			if (t == P_SLOW) {
 				int id = dire == -1 ? A_SLOW : A_E_SLOW;
 				effs[id] = EffAnim.effas[id].getEAnim(0);
@@ -229,6 +232,10 @@ public abstract class Entity extends AbEntity {
 			}
 			if (status[P_CURSE][0] == 0) {
 				int id = A_CURSE;
+				effs[id] = null;
+			}
+			if (status[P_IMUATK][0] == 0) {
+				int id = A_IMUATK;
 				effs[id] = null;
 			}
 			if (status[P_POISON][0] == 0) {
@@ -847,6 +854,7 @@ public abstract class Entity extends AbEntity {
 	/** accept attack */
 	@Override
 	public void damaged(AttackAb atk) {
+
 		int dmg = getDamage(atk, atk.atk);
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0) {
@@ -863,7 +871,19 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_WAVE);
 				return;
 			}
+
 		tokens.add(atk);
+
+		int[] imuatk = data.getProc(P_IMUATK);
+		if ((atk.type == -1 || receive(atk.type)) && imuatk[0] > 0) {
+			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk[0]) {
+				status[P_IMUATK][0] = imuatk[1];
+				anim.getEff(P_IMUATK);
+			}
+			if (status[P_IMUATK][0] > 0)
+				return;
+		}
+
 		if (barrier > 0) {
 			if (atk.getProc(P_BREAK)[0] > 0) {
 				barrier = 0;
@@ -877,6 +897,7 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 		}
+
 		CommonStatic.def.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
 		damage += dmg;
@@ -1325,6 +1346,8 @@ public abstract class Entity extends AbEntity {
 			status[P_CURSE][0]--;
 		if (status[P_SEAL][0] > 0)
 			status[P_SEAL][0]--;
+		if (status[P_IMUATK][0] > 0)
+			status[P_IMUATK][0]--;
 		// update tokens
 		weaks.update();
 		pois.update();
