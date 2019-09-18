@@ -58,6 +58,11 @@ public class EUnit extends Entity {
 	}
 
 	@Override
+	protected int traitType() {
+		return -1;
+	}
+
+	@Override
 	protected boolean updateMove(double maxl, double extmov) {
 		if (status[P_SLOW][0] == 0)
 			extmov += data.getSpeed() * basis.b.getInc(C_SPE) / 200.0;

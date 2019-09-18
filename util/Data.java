@@ -75,7 +75,7 @@ public class Data {
 	public static final int T_ZOMBIE = 6;
 
 	// default tech value
-	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10 };
+	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10, 30 };
 
 	// tech index
 	public static final int LV_RES = 0;
@@ -86,10 +86,11 @@ public class Data {
 	public static final int LV_RECH = 5;
 	public static final int LV_CATK = 6;
 	public static final int LV_CRG = 7;
-	public static final int LV_TOT = 8;
+	public static final int LV_XP = 8;
+	public static final int LV_TOT = 9;
 
 	// default treasure value
-	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600 };
+	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600, 600 };
 
 	// treasure index
 	public static final int T_ATK = 0;
@@ -101,7 +102,8 @@ public class Data {
 	public static final int T_RECH = 6;
 	public static final int T_CATK = 7;
 	public static final int T_BASE = 8;
-	public static final int T_TOT = 9;
+	public static final int T_XP = 9;
+	public static final int T_TOT = 10;
 
 	// abi bit filter
 	public static final int AB_GOOD = 1 << 0;

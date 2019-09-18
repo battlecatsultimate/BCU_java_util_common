@@ -247,6 +247,12 @@ public class Treasure extends Data {
 		return 10.0 / (100 + b.getInc(C_WKILL));
 	}
 
+	public double getXPMult() {
+		int txp = trea[T_XP];
+		double tm = txp < 300 ? txp * 0.005 : 0.75 + txp * 0.0025;
+		return 0.95 + tech[LV_XP] * 0.05 + tm;
+	}
+
 	/** get canon recharge time */
 	protected int CanonTime(int map) {
 		int base = 1503 + 50 * (tech[LV_CATK] - tech[LV_RECH]);

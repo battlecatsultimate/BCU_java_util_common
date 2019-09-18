@@ -68,11 +68,6 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	protected double getFruit() {
-		return basis.b.t().getFruit(type);
-	}
-
-	@Override
 	protected double getLim() {
 		double ans = 0;
 		if (mark == 1)
@@ -83,8 +78,8 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	protected boolean receive(int t) {
-		return (type & t) > 0;
+	protected int traitType() {
+		return 1;
 	}
 
 }

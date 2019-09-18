@@ -875,9 +875,9 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		int[] imuatk = data.getProc(P_IMUATK);
-		if ((atk.type == -1 || receive(atk.type)) && imuatk[0] > 0) {
+		if ((atk.type == -1 || receive(atk.type, -1)) && imuatk[0] > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk[0]) {
-				status[P_IMUATK][0] = imuatk[1];
+				status[P_IMUATK][0] = (int) (imuatk[1] * (1 + 0.2 / 3 * getFruit(atk.type, -1)));
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
@@ -909,12 +909,12 @@ public abstract class Entity extends AbEntity {
 		}
 		if (atk.getProc(P_SATK)[0] > 0) {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_SATK].getEAnim(0)));
-			CommonStatic.def.setSE(SE_SATK);// TODO
+			CommonStatic.def.setSE(SE_SATK);
 		}
 		// process proc part
-		if (atk.type != -1 && !receive(atk.type))
+		if (atk.type != -1 && !receive(atk.type, 1))
 			return;
-		double f = getFruit();
+		double f = getFruit(atk.type, 1);
 		double time = 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
 		if (atk.type < 0 || atk.canon != -2)
@@ -1209,18 +1209,10 @@ public abstract class Entity extends AbEntity {
 	/** determine the amount of damage received from this attack */
 	protected abstract int getDamage(AttackAb atk, int ans);
 
-	/** get the extra proc time due to fruits, for EEnemy only */
-	protected double getFruit() {
-		return 0;
-	}
-
 	/** get max distance to go back */
 	protected abstract double getLim();
 
-	/** can be effected by the ability targeting trait t */
-	protected boolean receive(int t) {
-		return true;
-	}
+	protected abstract int traitType();
 
 	/**
 	 * move forward <br>
@@ -1286,11 +1278,25 @@ public abstract class Entity extends AbEntity {
 		atkm.tempAtk = -1;
 	}
 
+	/** get the extra proc time due to fruits, for EEnemy only */
+	private double getFruit(int atktype, int dire) {
+		if (traitType() != dire)
+			return 0;
+		return basis.b.t().getFruit(atktype & type);
+	}
+
 	/** called when last KB reached */
 	private void preKill() {
 		if (zx.prekill())
 			return;
 		kill();
+	}
+
+	/** can be effected by the ability targeting trait t */
+	private boolean receive(int t, int dire) {
+		if (traitType() != dire)
+			return true;
+		return (type & t) > 0;
 	}
 
 	/** update burrow state */
