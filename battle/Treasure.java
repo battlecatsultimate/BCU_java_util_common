@@ -248,8 +248,9 @@ public class Treasure extends Data {
 	}
 
 	public double getXPMult() {
-		int txp = trea[T_XP];
-		double tm = txp < 300 ? txp * 0.005 : 0.75 + txp * 0.0025;
+		int txp1 = trea[T_XP1];
+		int txp2 = trea[T_XP2];
+		double tm = txp1*0.005+txp2*0.0025;
 		return 0.95 + tech[LV_XP] * 0.05 + tm;
 	}
 

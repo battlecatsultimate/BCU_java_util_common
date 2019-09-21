@@ -90,7 +90,7 @@ public class Data {
 	public static final int LV_TOT = 9;
 
 	// default treasure value
-	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600, 600 };
+	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600, 300, 300 };
 
 	// treasure index
 	public static final int T_ATK = 0;
@@ -102,8 +102,9 @@ public class Data {
 	public static final int T_RECH = 6;
 	public static final int T_CATK = 7;
 	public static final int T_BASE = 8;
-	public static final int T_XP = 9;
-	public static final int T_TOT = 10;
+	public static final int T_XP1 = 9;
+	public static final int T_XP2 = 10;
+	public static final int T_TOT = 11;
 
 	// abi bit filter
 	public static final int AB_GOOD = 1 << 0;
