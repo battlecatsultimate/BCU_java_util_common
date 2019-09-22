@@ -148,12 +148,13 @@ public class Res extends ImgCore {
 		icon[0][ABI_WKILL] = new VImg(parts[258]);
 		icon[0][ABI_RESISTS] = new VImg(parts[122]);
 		icon[0][ABI_MASSIVES] = new VImg(parts[114]);
-
 		icon[0][ABI_ZKILL] = new VImg(parts[260]);
 		icon[1][P_IMUWARP] = new VImg(parts[262]);
 		icon[1][P_BREAK] = new VImg(parts[264]);
 		icon[1][P_WARP] = new VImg(parts[266]);
 		icon[1][P_SATK] = new VImg(parts[229]);
+		icon[1][P_IMUATK] = new VImg(parts[231]);
+
 		icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
 		icon[0][ABI_IMUSW] = new VImg("./org/page/icons/BossWaveX.png");

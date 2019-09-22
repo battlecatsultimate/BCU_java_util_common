@@ -196,6 +196,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		ans.data = data.copy();
 		if (lim != null)
 			ans.lim = lim.clone();
+		ans.mus0 = mus0;
+		ans.mus1 = mus1;
+		ans.mush = mush;
 		return ans;
 	}
 
