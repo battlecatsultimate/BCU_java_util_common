@@ -233,15 +233,15 @@ public class Data {
 			{ 0, P_WEAK }, // 1: weak, reversed health
 			{ 0, P_STOP }, // 2: stop
 			{ 0, P_SLOW }, // 3: slow
-			{ -1, 0 }, // 4:
-			{ -1, 0 }, // 5:
-			{ -1, 0 }, // 6:
-			{ -1, 0 }, // 7:
+			{ 1, AB_ONLY, 0 }, // 4:
+			{ 1, AB_GOOD, 0 }, // 5:
+			{ 1, AB_RESIST, 0 }, // 6:
+			{ 1, AB_MASSIVE, 0 }, // 7:
 			{ 0, P_KB }, // 8: kb
-			{ -1, 0 }, // 9:
+			{ 0, P_WARP, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ -1, 0 }, // 12:
+			{ 1, AB_BASE, 0 }, // 12:
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
@@ -252,8 +252,8 @@ public class Data {
 			{ 0, P_IMUSLOW }, // 20: res slow
 			{ 0, P_IMUKB }, // 21: res kb
 			{ 0, P_IMUWAVE }, // 22: res wave
-			{ -1, 0 }, // 23:
-			{ -1, 0 }, // 24:
+			{ 1, AB_WAVES, 0 }, // 23:
+			{ 0, P_IMUWARP, 0 }, // 24:
 			{ 2, PC2_COST }, // 25: reduce cost
 			{ 2, PC2_CD }, // 26: reduce cooldown
 			{ 2, PC2_SPEED }, // 27: inc speed
@@ -262,14 +262,26 @@ public class Data {
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK
 			{ 2, PC2_HP }, // 32: inc HP
-			{ -1, 0 }, // 33:
-			{ -1, 0 }, // 34:
-			{ -1, 0 }, // 35:
-			{ -1, 0 }, // 36:
+			{ 4, TB_RED, 0 }, // 33:
+			{ 4, TB_FLOAT, 0 }, // 34:
+			{ 4, TB_BLACK, 0 }, // 35:
+			{ 4, TB_METAL, 0 }, // 36:
 			{ 4, TB_ANGEL }, // 37: targeting angle
 			{ 4, TB_ALIEN }, // 38: targeting alien
 			{ 4, TB_ZOMBIE }, // 39: targeting zombie
-			{ 4, TB_RELIC } }; // 40: targeting relic
+			{ 4, TB_RELIC }, // 40: targeting relic
+			{ 4, TB_WHITE, 0 }, // 41:
+			{ -1, 0 }, // 42:
+			{ -1, 0 }, // 43:
+			{ -1, 0 }, // 44:
+			{ -1, 0 }, // 45:
+			{ -1, 0 }, // 46:
+			{ -1, 0 }, // 47:
+			{ 3, P_IMUWAVE }, // 48: immune to wave
+			{ 3, P_IMUWARP }, // 49: immune to warp
+			{ -1, 0 }, // 50:
+			{ 0, P_IMUATK }, // 51: immune to attack
+			{ -1, 0 } };
 
 	// foot icon index used in battle
 	public static final int INV = -1;

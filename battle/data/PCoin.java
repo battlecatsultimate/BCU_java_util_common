@@ -6,6 +6,7 @@ import common.CommonStatic;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.unit.UnitStore;
+import main.Opts;
 
 public class PCoin extends Data {
 
@@ -46,6 +47,16 @@ public class PCoin extends Data {
 		for (int i = 0; i < 5; i++) {
 			if (lvs[i + 1] == 0)
 				continue;
+			if (info[i][0] >= PC_CORRES.length) {
+				Opts.pop("warning: new PCoin ability not yet included in BCU: " + info[i][0], "warning");
+				continue;
+			}
+			int[] type = PC_CORRES[info[i][0]];
+			if (type.length > 2 || type[0] == -1) {
+				Opts.pop("warning: new PCoin ability not yet included in BCU: " + info[i][0], "warning");
+				continue;
+			}
+
 			int maxlv = info[i][1];
 			int[] modifs = new int[4];
 			if (maxlv > 1) {
@@ -59,7 +70,6 @@ public class PCoin extends Data {
 				for (int j = 0; j < 4; j++)
 					modifs[j] = info[i][3 + j * 2];
 
-			int[] type = PC_CORRES[info[i][0]];
 			if (type[0] == PC_P) {
 				int[] tar = ans.proc[type[1]];
 				for (int j = 0; j < Math.min(tar.length, 4); j++)
