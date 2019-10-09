@@ -98,7 +98,7 @@ public class EffAnim extends AnimD {
 	}
 
 	private static void readCustom(String[] stfs, ImgCut[] icfs) {
-		String ski = "skill00";
+		String ski = "skill_";
 		String[] temp = new String[] { "" };
 
 		VImg vseal = new VImg(stfs[3] + "skill003.png");
