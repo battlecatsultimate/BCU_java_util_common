@@ -11,7 +11,7 @@ import common.util.anim.MaModel;
 
 public class EffAnim extends AnimD {
 
-	public static EffAnim[] effas = new EffAnim[A_TOT];
+	public static final EffAnim[] effas = new EffAnim[A_TOT];
 
 	public static void read() {
 		String stre = "./org/battle/e1/set_enemy001_zombie";

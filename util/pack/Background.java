@@ -22,7 +22,7 @@ public class Background extends AnimI {
 	public static MaModel ewavm, uwavm;
 	public static MaAnim ewava, uwava;
 
-	private static final List<ImgCut> iclist = new ArrayList<>();
+	public static final List<ImgCut> iclist = new ArrayList<>();
 
 	public static final int BG = 0, TOP = 20, shift = 65; // in pix
 

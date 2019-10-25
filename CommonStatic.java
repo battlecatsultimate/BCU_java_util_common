@@ -10,6 +10,13 @@ import java.util.function.Function;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
+import common.util.pack.Background;
+import common.util.pack.Pack;
+import common.util.stage.Castles;
+import common.util.stage.CharaGroup;
+import common.util.stage.MapColc;
+import common.util.stage.Recd;
+import common.util.unit.DIYAnim;
 
 public class CommonStatic {
 
@@ -84,6 +91,18 @@ public class CommonStatic {
 	}
 
 	public static Itf def;
+
+	public static void clearData() {
+		Pack.map.clear();
+		MapColc.MAPS.clear();
+		Background.iclist.clear();
+		Castles.defcas.clear();
+		Castles.map.clear();
+		CharaGroup.map.clear();
+		Recd.map.clear();
+		DIYAnim.map.clear();
+		Pack.def = new Pack();
+	}
 
 	public static int parseIntN(String str) {
 		int ans;

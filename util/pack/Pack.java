@@ -45,7 +45,7 @@ public class Pack extends Data {
 
 	public static final Map<Integer, Pack> map = new TreeMap<>();
 
-	public static final Pack def = new Pack();
+	public static Pack def = new Pack();
 
 	public static final int RELY_DEF = 0, RELY_CAS = 1, RELY_BG = 2, RELY_MUS = 3, RELY_ENE = 4, RELY_UNI = 5,
 			RELY_CG = 6, RELY_LR = 7, RELY_ABI = 8;
@@ -220,6 +220,15 @@ public class Pack extends Data {
 
 	private int ver, bcuver;
 
+	public Pack() {
+		map.put(id = 0, this);
+		name = "default";
+		editable = false;
+		mc = null;
+		cs = new CasStore(this, false);
+
+	}
+
 	public Pack(InStream is, boolean reg) {
 		ver = getVer(is.nextString());
 		id = is.nextInt();
@@ -238,15 +247,6 @@ public class Pack extends Data {
 		mc = new MapColc(this);
 		rely.add(0);
 		cs = new CasStore(this, true);
-	}
-
-	private Pack() {
-		map.put(id = 0, this);
-		name = "default";
-		editable = false;
-		mc = null;
-		cs = new CasStore(this, false);
-
 	}
 
 	private Pack(File f) {
