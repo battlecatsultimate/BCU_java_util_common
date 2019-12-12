@@ -27,10 +27,10 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		range = ints[5];
 		earn = ints[6];
 		if (ints[7] != 0)
-			Printer.p("DataEnemy", 32, enemy.id + "-new 0: " + ints[7]);
+			Printer.p("DataEnemy", 32, enemy.id + "-new 7: " + ints[7]);
 		width = ints[8];
 		if (ints[9] != 0)
-			Printer.p("DataEnemy", 32, enemy.id + "-new 2: " + ints[9]);
+			Printer.p("DataEnemy", 32, enemy.id + "-new 9: " + ints[9]);
 		int t = 0;
 		if (ints[10] == 1)
 			t |= TB_RED;
@@ -92,13 +92,13 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if (ints[49] == 1)
 			t |= TB_INFH;
 		if (ints[50] != -1)
-			Printer.p("DataEnemy", 89, enemy.id + "-new 3: " + ints[50]);
+			Printer.p("DataEnemy", 89, enemy.id + "-new 50: " + ints[50]);
 		if (ints[51] != -1)
-			Printer.p("DataEnemy", 91, enemy.id + "-new 4: " + ints[51]);
+			Printer.p("DataEnemy", 91, enemy.id + "-new 51: " + ints[51]);
 		if (ints[52] != 0)
-			Printer.p("DataEnemy", 93, enemy.id + "-new 5: " + ints[52]);
+			Printer.p("DataEnemy", 93, enemy.id + "-new 52: " + ints[52]);
 		if (ints[53] != -1)
-			Printer.p("DataEnemy", 95, enemy.id + "-new 6: " + ints[53]);
+			Printer.p("DataEnemy", 95, enemy.id + "-new 53: " + ints[53]);
 		death = ints[54];
 		atk1 = ints[55];
 		atk2 = ints[56];
@@ -107,25 +107,28 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		abi0 = ints[59];
 		abi1 = ints[60];
 		abi2 = ints[61];
-		if (ints[62] != 0)
-			Printer.p("DataEnemy", 105, enemy.id + "-new 7: " + ints[62]);
-		if (ints[63] != 0)
-			Printer.p("DataEnemy", 107, enemy.id + "-new 8: " + ints[63]);
+		if (ints[62] != 0 || ints[63] != 0)
+			Printer.p("DataEnemy", 105, enemy.id + "-new 62,63: " + ints[62] + "," + ints[63]);
 		shield = ints[64];
 		proc[P_WARP][0] = ints[65];
 		proc[P_WARP][1] = ints[66];
 		proc[P_WARP][2] = ints[67] / 4;
 		if (ints[67] != ints[68])
-			Printer.p("DataEnemy", 111, enemy.id + "-new 9: " + ints[67] + "," + ints[68]);
+			Printer.p("DataEnemy", 111, enemy.id + "-new 67,68: " + ints[67] + "," + ints[68]);
 		star = ints[69];
 		if (ints[70] != 0)
-			Printer.p("DataEnemy", 114, enemy.id + "-new 10: " + ints[70]);
+			Printer.p("DataEnemy", 114, enemy.id + "-new 70: " + ints[70]);
 		if (ints[71] == 1)
 			t |= TB_EVA;
 		if (ints[72] == 1)
 			t |= TB_RELIC;
 		proc[P_CURSE][0] = ints[73];
 		proc[P_CURSE][1] = ints[74];
+		if (ints[75] != 0 || ints[76] != 0 || ints[77] != 0 || ints[78] != 0)
+			Printer.p("DataEnemy", 114,
+					enemy.id + "-new 75-78: " + ints[75] + "," + ints[76] + "," + ints[77] + "," + ints[78]);
+		proc[P_POIATK][0] = ints[79];
+		proc[P_POIATK][1] = ints[80];
 		abi = a;
 		type = t;
 	}

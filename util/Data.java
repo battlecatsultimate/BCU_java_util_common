@@ -214,8 +214,10 @@ public class Data {
 	public static final int P_CRITI = 28;
 	public static final int P_SATK = 29;
 	public static final int P_IMUATK = 30;
+	/** official poison */
+	public static final int P_POIATK = 31;
 
-	public static final int PROC_TOT = 40;// 31
+	public static final int PROC_TOT = 40;// 32
 
 	public static final int PROC_WIDTH = 6;
 	public static final int WT_WAVE = 1;
@@ -363,9 +365,10 @@ public class Data {
 	public static final int A_POI7 = 42;
 	public static final int A_SATK = 43;
 	public static final int A_IMUATK = 44;
+	public static final int A_POISON = 45;
 
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 45;
+	public static final int A_TOT = 46;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;

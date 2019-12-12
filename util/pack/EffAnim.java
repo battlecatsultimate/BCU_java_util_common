@@ -78,6 +78,10 @@ public class EffAnim extends AnimD {
 		VImg viatk = new VImg("./org/battle/s7/skill007.png");
 		ImgCut iciatk = ImgCut.newIns("./org/battle/s7/skill007.imgcut");
 		effas[A_IMUATK] = new EffAnim("./org/battle/s7/skill_attack_invalid", viatk, iciatk, temp);
+
+		VImg vip = new VImg("./org/battle/s8/skill008.png");
+		ImgCut icp = ImgCut.newIns("./org/battle/s8/skill008.imgcut");
+		effas[A_POISON] = new EffAnim("./org/battle/s8/skill_percentage_attack", vip, icp, temp);
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
