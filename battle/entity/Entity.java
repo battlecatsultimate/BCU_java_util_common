@@ -911,6 +911,11 @@ public abstract class Entity extends AbEntity {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_SATK].getEAnim(0)));
 			CommonStatic.def.setSE(SE_SATK);
 		}
+		if (atk.getProc(P_POIATK)[0] > 0) {
+			damage += maxH * atk.getProc(P_POIATK)[0] / 100;
+			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_POISON].getEAnim(0)));
+			CommonStatic.def.setSE(SE_POISON);
+		}
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type, 1))
 			return;
