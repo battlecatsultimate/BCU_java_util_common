@@ -16,7 +16,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private final EPart[] ent;
 	private EPart fa, para;
 	private int id, img, gsca;
-	private P pos = new P(0,0), piv = new P(0,0), sca = new P(0,0);
+	private P pos = new P(0, 0), piv = new P(0, 0), sca = new P(0, 0);
 	private int z, angle, opacity, glow, extend;
 	private int hf, vf;
 	protected EAnimI ea;
@@ -42,10 +42,9 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			id = v;
 		else if (m == 2)
 			img = v;
-		else if (m == 3) {
+		else if (m == 3)
 			z = v;
-			ea.order.sort(null);
-		} else if (m == 4)
+		else if (m == 4)
 			pos.x = args[4] + v;
 		else if (m == 5)
 			pos.y = args[5] + v;
@@ -130,7 +129,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		int h = bimg.getHeight();
 		P p0 = getSize();
 		P tpiv = P.newP(piv).times(p0).times(base);
-		P sc = P.newP(w,h).times(p0).times(base);
+		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
 		drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
 		P.delete(tpiv);
@@ -148,7 +147,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		int h = bimg.getHeight();
 		P p0 = getSize();
 		P tpiv = P.newP(piv).times(p0).times(base);
-		P sc = P.newP(w,h).times(p0).times(base);
+		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
 		drawSca(g, tpiv, sc);
 		P.delete(tpiv);
@@ -173,9 +172,9 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		id = args[1];
 		img = args[2];
 		z = args[3];
-		pos = pos.setTo(args[4],args[5]);
-		piv = piv.setTo(args[6],args[7]);
-		sca = sca.setTo(args[8],args[9]);
+		pos = pos.setTo(args[4], args[5]);
+		piv = piv.setTo(args[6], args[7]);
+		sca = sca.setTo(args[8], args[9]);
 		angle = args[10];
 		opacity = args[11];
 		glow = args[12];
@@ -233,7 +232,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 		P.delete(tpos);
 
-		if(fa != null)
+		if (fa != null)
 			P.delete(siz);
 	}
 

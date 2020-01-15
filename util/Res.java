@@ -92,9 +92,10 @@ public class Res extends ImgCore {
 	private static int[] getLab(long cost) {
 		if (cost < 0)
 			cost = 0;
-		int len = (int) Math.log10(cost)+1;
+		int len = (int) Math.log10(cost) + 1;
 
-		if(len < 0) len = 0;
+		if (len < 0)
+			len = 0;
 
 		int[] input = new int[len];
 		for (int i = 0; i < len; i++) {

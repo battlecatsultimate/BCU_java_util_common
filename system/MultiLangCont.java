@@ -9,7 +9,6 @@ import common.system.files.AssetData;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -22,7 +21,7 @@ public class MultiLangCont<I, T> extends Lang {
 	public static final MultiLangCont<Integer, String> RWNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
-	public static final MultiLangCont<Integer,String> COMNAME = new MultiLangCont<>();
+	public static final MultiLangCont<Integer, String> COMNAME = new MultiLangCont<>();
 
 	public static final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
 	public static final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();

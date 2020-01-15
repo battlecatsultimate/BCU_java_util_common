@@ -37,9 +37,9 @@ public class EAnimU extends EAnimD {
 		FakeTransform at = g.getTransform();
 		g.translate(ori.x, ori.y);
 		if (ref && !battle) {
-			P p0 = P.newP(-200,0).times(siz);
-			P p1 = P.newP(400,100).times(siz);
-			P p2 = P.newP(0,-300).times(siz);
+			P p0 = P.newP(-200, 0).times(siz);
+			P p1 = P.newP(400, 100).times(siz);
+			P p2 = P.newP(0, -300).times(siz);
 			g.drawRect((int) p0.x, (int) p0.y, (int) p1.x, (int) p1.y);
 			g.setColor(FakeGraphics.RED);
 			g.drawLine(0, 0, (int) p2.x, (int) p2.y);
@@ -49,12 +49,12 @@ public class EAnimU extends EAnimD {
 			P.delete(p2);
 		}
 		for (EPart e : order) {
-			P p = P.newP(siz,siz);
+			P p = P.newP(siz, siz);
 			e.drawPart(g, p);
 			P.delete(p);
 		}
 		if (sele >= 0 && sele < ent.length) {
-			P p = P.newP(siz,siz);
+			P p = P.newP(siz, siz);
 			ent[sele].drawScale(g, p);
 			P.delete(p);
 		}

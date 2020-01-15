@@ -114,7 +114,7 @@ public strictfp abstract class DataIO {
 	public static int[] translate(byte[] datas) {
 		int[] ans = new int[datas.length];
 		for (int i = 0; i < ans.length; i++)
-			ans[i] = ((int) datas[i]) & 0xff;
+			ans[i] = (datas[i]) & 0xff;
 		return ans;
 	}
 

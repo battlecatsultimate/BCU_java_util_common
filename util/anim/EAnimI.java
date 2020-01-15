@@ -1,8 +1,6 @@
 package common.util.anim;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Arrays;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.BattleObj;
@@ -14,7 +12,7 @@ public abstract class EAnimI extends BattleObj {
 
 	protected final AnimI a;
 	protected final MaModel mamodel;
-	protected List<EPart> order;
+	protected EPart[] order;
 
 	public EAnimI(AnimI ia, MaModel mm) {
 		a = ia;
@@ -34,12 +32,12 @@ public abstract class EAnimI extends BattleObj {
 
 	public void organize() {
 		ent = mamodel.arrange(this);
-		order = new ArrayList<>();
-		for (EPart e : ent) {
-			e.ea = this;
-			order.add(e);
+		order = new EPart[ent.length];
+		for (int i = 0; i < ent.length; i++) {
+			ent[i].ea = this;
+			order[i] = ent[i];
 		}
-		order.sort(null);
+		sort();
 	}
 
 	public abstract void setTime(int value);
@@ -49,6 +47,10 @@ public abstract class EAnimI extends BattleObj {
 	@Override
 	protected void performDeepCopy() {
 		((EAnimI) copy).organize();
+	}
+
+	protected void sort() {
+		Arrays.parallelSort(order);
 	}
 
 	@Override

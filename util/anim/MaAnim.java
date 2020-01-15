@@ -100,7 +100,6 @@ public class MaAnim extends Data implements BattleStatic {
 		if (f == 0 || rotate && f % max == 0) {
 			for (EPart e : eAnim.ent)
 				e.setValue();
-			eAnim.order.sort(null);
 		}
 		for (int i = 0; i < n; i++) {
 			int loop = parts[i].ints[2];
@@ -141,6 +140,7 @@ public class MaAnim extends Data implements BattleStatic {
 			}
 			parts[i].update(frame, eAnim.ent);
 		}
+		eAnim.sort();
 	}
 
 	protected void write(OutStream os) {
