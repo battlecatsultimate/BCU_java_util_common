@@ -26,6 +26,7 @@ public class WaprCont extends EAnimCont {
 		ent.paraTo(chara);
 		ent.draw(gra, p, psiz);
 		ent.paraTo(null);
+		gra.delete(at);
 	}
 
 	@Override

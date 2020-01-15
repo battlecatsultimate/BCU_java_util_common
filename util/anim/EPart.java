@@ -135,6 +135,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);
+		g.delete(at);
 	}
 
 	protected void drawScale(FakeGraphics g, P base) {
@@ -153,6 +154,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);
+		g.delete(at);
 	}
 
 	protected void setPara(EPart p) {

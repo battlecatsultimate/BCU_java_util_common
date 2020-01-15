@@ -60,6 +60,7 @@ public class EAnimU extends EAnimD {
 		}
 
 		g.setTransform(at);
+		g.delete(at);
 	}
 
 	/** make this animation a component of another, used in warp and kb */

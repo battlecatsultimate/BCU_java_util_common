@@ -47,8 +47,10 @@ public class Cannon extends AtkModelAb {
 		if (exta != null)
 			exta.draw(g, ori, siz);
 		g.setTransform(at);
-		if (!ImgCore.ref || id == BASE_H || id == BASE_SLOW || id == BASE_GROUND)
+		if (!ImgCore.ref || id == BASE_H || id == BASE_SLOW || id == BASE_GROUND) {
+			g.delete(at);
 			return;
+		}
 
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
@@ -67,6 +69,8 @@ public class Cannon extends AtkModelAb {
 			g.fillRect(x, y, w, h);
 		else
 			g.drawRect(x, y, w, h);
+
+		g.delete(at);
 	}
 
 	/** base part of animation */

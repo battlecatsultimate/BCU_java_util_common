@@ -84,8 +84,10 @@ public abstract class Entity extends AbEntity {
 					gra.setTransform(at);
 					anim.changeAnim(0);
 				}
-			} else
+			} else {
+				gra.delete(at);
 				return;
+			}
 
 			anim.paraTo(back);
 			if (e.kbTime == 0 || e.kb.kbType != INT_WARP)
@@ -94,6 +96,7 @@ public abstract class Entity extends AbEntity {
 			gra.setTransform(at);
 			if (ImgCore.ref)
 				e.drawAxis(gra, p, siz);
+			gra.delete(at);
 		}
 
 		/** draw the effect icons */
@@ -113,6 +116,7 @@ public abstract class Entity extends AbEntity {
 				eae.draw(g, new P(x, p.y), siz);
 				x -= EWID * e.dire * siz;
 			}
+			g.delete(at);
 		}
 
 		/** get a effect icon */

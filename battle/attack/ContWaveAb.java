@@ -30,6 +30,7 @@ public abstract class ContWaveAb extends ContAb {
 		anim.draw(gra, p, siz);
 		gra.setTransform(at);
 		drawAxis(gra, p, siz);
+		gra.delete(at);
 	}
 
 	@Override

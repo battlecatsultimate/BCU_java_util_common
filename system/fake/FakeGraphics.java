@@ -39,4 +39,7 @@ public interface FakeGraphics {
 
 	public void translate(double x, double y);
 
+	public default void delete(FakeTransform at) {
+
+	};
 }
