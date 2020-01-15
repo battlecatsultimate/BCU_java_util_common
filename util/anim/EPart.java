@@ -16,7 +16,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private final EPart[] ent;
 	private EPart fa, para;
 	private int id, img, gsca;
-	private P pos, piv, sca;
+	private P pos = new P(0,0), piv = new P(0,0), sca = new P(0,0);
 	private int z, angle, opacity, glow, extend;
 	private int hf, vf;
 	protected EAnimI ea;
@@ -128,9 +128,13 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		FakeImage bimg = a.parts(img);
 		int w = bimg.getWidth();
 		int h = bimg.getHeight();
-		P tpiv = piv.copy().times(getSize()).times(base);
-		P sc = new P(w, h).times(getSize()).times(base);
+		P p0 = getSize();
+		P tpiv = P.newP(piv).times(p0).times(base);
+		P sc = P.newP(w,h).times(p0).times(base);
+		P.delete(p0);
 		drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
+		P.delete(tpiv);
+		P.delete(sc);
 		g.setTransform(at);
 	}
 
@@ -142,9 +146,13 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		transform(g, base);
 		int w = bimg.getWidth();
 		int h = bimg.getHeight();
-		P tpiv = piv.copy().times(getSize()).times(base);
-		P sc = new P(w, h).times(getSize()).times(base);
+		P p0 = getSize();
+		P tpiv = P.newP(piv).times(p0).times(base);
+		P sc = P.newP(w,h).times(p0).times(base);
+		P.delete(p0);
 		drawSca(g, tpiv, sc);
+		P.delete(tpiv);
+		P.delete(sc);
 		g.setTransform(at);
 	}
 
@@ -165,9 +173,9 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		id = args[1];
 		img = args[2];
 		z = args[3];
-		pos = new P(args[4], args[5]);
-		piv = new P(args[6], args[7]);
-		sca = new P(args[8], args[9]);
+		pos = pos.setTo(args[4],args[5]);
+		piv = piv.setTo(args[6],args[7]);
+		sca = sca.setTo(args[8],args[9]);
 		angle = args[10];
 		opacity = args[11];
 		glow = args[12];
@@ -179,7 +187,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private P getSize() {
 		double mi = 1.0 / model.ints[0];
 		if (fa == null)
-			return sca.copy().times(gsca * mi * mi);
+			return P.newP(sca).times(gsca * mi * mi);
 		return fa.getSize().times(sca).times(gsca * mi * mi);
 	}
 
@@ -197,22 +205,36 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			fa.transform(g, sizer);
 			siz = fa.getSize().times(sizer);
 		}
-		P tpos = pos.copy().times(siz);
+		P tpos = P.newP(pos).times(siz);
+
 		if (ent[0] != this) {
 			g.translate(tpos.x, tpos.y);
 			g.scale(hf, vf);
 		} else {
 			if (model.confs.length > 0) {
 				int[] data = model.confs[0];
-				P shi = new P(data[2], data[3]).times(getSize());
+				P p0 = getSize();
+				P shi = P.newP(data[2], data[3]).times(p0);
+				P.delete(p0);
 				P p3 = shi.times(sizer);
 				g.translate(-p3.x, -p3.y);
+
+				P.delete(shi);
 			}
-			P p = piv.copy().times(getSize()).times(sizer);
+			P p0 = getSize();
+			P p = P.newP(piv).times(p0).times(sizer);
+			P.delete(p0);
 			g.translate(p.x, p.y);
+
+			P.delete(p);
 		}
 		if (angle != 0)
 			g.rotate(Math.PI * 2 * angle / model.ints[1]);
+
+		P.delete(tpos);
+
+		if(fa != null)
+			P.delete(siz);
 	}
 
 }

@@ -1,11 +1,36 @@
 package common.system;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import common.util.BattleObj;
 
 public strictfp class P extends BattleObj {
 
+	public static Deque<P> stack = new ArrayDeque<>();
+
 	public static P polar(double r, double t) {
 		return new P(r * Math.cos(t), r * Math.sin(t));
+	}
+
+	public static P newP(double x, double y) {
+		if(!stack.isEmpty()) {
+			return stack.pollFirst().setTo(x, y);
+		}
+
+		return new P(x,y);
+	}
+
+	public static P newP(P p) {
+		if(!stack.isEmpty()) {
+			return stack.pollFirst().setTo(p);
+		}
+
+		return new P(p.x,p.y);
+	}
+
+	public static void delete(P p) {
+		stack.add(p);
 	}
 
 	public static float reg(float cx) {

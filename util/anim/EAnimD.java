@@ -26,8 +26,11 @@ public class EAnimD extends EAnimI {
 		}
 		set(g);
 		g.translate(ori.x, ori.y);
-		for (EPart e : order)
-			e.drawPart(g, new P(siz, siz));
+		for (EPart e : order) {
+			P p = P.newP(siz,siz);
+			e.drawPart(g, p);
+			P.delete(p);
+		}
 	}
 
 	@Override

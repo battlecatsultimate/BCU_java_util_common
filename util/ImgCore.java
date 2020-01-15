@@ -26,7 +26,7 @@ public class ImgCore extends Data {
 			if (!glow)
 				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256));
 			else
-				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), glow ? 1 : 0);
+				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), 1);
 		else if (glow)
 			g.setComposite(FakeGraphics.BLEND, 256, 1);
 		else

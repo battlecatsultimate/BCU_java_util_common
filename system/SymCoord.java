@@ -5,9 +5,12 @@ import common.system.fake.FakeImage;
 
 public class SymCoord {
 
-	public final FakeGraphics g;
-	public final double r, x, y;
-	public final int type;
+	public FakeGraphics g;
+	public double r, x, y;
+	public int type;
+
+	private P size = new P(0,0);
+	private P pos = new P(0,0);
 
 	public SymCoord(FakeGraphics fg, double R, double X, double Y, int t) {
 		g = fg;
@@ -18,13 +21,13 @@ public class SymCoord {
 	}
 
 	public P draw(FakeImage... fis) {
-		P size = new P(0, 0);
+		setSize(0,0);
 		for (FakeImage f : fis) {
 			size.x += f.getWidth();
 			size.y = Math.max(size.y, f.getHeight());
 		}
 		size.times(r);
-		P pos = new P(x, y);
+		setPos(x,y);
 		if ((type & 1) > 0)
 			pos.x -= size.x;
 		if ((type & 2) > 0)
@@ -37,6 +40,16 @@ public class SymCoord {
 			pos.x += f.getWidth() * r;
 		}
 		return size;
+	}
+
+	private void setSize(double x, double y) {
+		size.x = x;
+		size.y = y;
+	}
+
+	private void setPos(double x, double y) {
+		pos.x = x;
+		pos.y = y;
 	}
 
 }
