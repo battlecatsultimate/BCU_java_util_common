@@ -367,9 +367,11 @@ public class Data {
 	public static final int A_SATK = 43;
 	public static final int A_IMUATK = 44;
 	public static final int A_POISON = 45;
+	public static final int A_VOLC = 46;
+	public static final int A_E_VOLC = 47;
 
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 46;
+	public static final int A_TOT = 48;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;
