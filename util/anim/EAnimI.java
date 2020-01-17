@@ -1,5 +1,7 @@
 package common.util.anim;
 
+import java.util.Arrays;
+
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.BattleObj;
@@ -70,7 +72,8 @@ public abstract class EAnimI extends BattleObj {
 	}
 
 	protected void sort() {
-		sort(order, 0, order.length - 1);
+		//sort(order, 0, order.length - 1);
+		Arrays.sort(order);
 	}
 
 	@Override
