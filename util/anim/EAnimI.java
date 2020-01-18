@@ -11,23 +11,26 @@ public abstract class EAnimI extends BattleObj {
 	private static void sort(EPart[] arr, int low, int high) {
 		if (low < high) {
 			EPart pivot = arr[(low + high) / 2];
-			int i = (low - 1);
-			for (int j = low; j < high; j++) {
-				if (arr[j].compareTo(pivot) < 0) {
-					i++;
-					EPart temp = arr[i];
-					arr[i] = arr[j];
-					arr[j] = temp;
-				}
+			int i = low - 1;
+			int j = high + 1;
+			while (i < j) {
+				while (arr[++i].compareTo(pivot) < 0)
+					;
+				while (arr[--j].compareTo(pivot) > 0)
+					;
+				if (i >= j)
+					break;
+
+				EPart tmp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = tmp;
+
 			}
-			EPart temp = arr[i + 1];
-			arr[i + 1] = arr[high];
-			arr[high] = temp;
-			int pi = i + 1;
-			sort(arr, low, pi - 1);
-			sort(arr, pi + 1, high);
+			sort(arr, low, j);
+			sort(arr, j + 1, high);
 		}
 	}
+
 	public int sele = -1;
 
 	public EPart[] ent = null;
