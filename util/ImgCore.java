@@ -24,13 +24,13 @@ public class ImgCore extends Data {
 			double extend) {
 		if (opa < fullOpa * 0.01 - 1e-5)
 			if (!glow)
-				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256));
+				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
 			else
 				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), 1);
 		else if (glow)
 			g.setComposite(FakeGraphics.BLEND, 256, 1);
 		else
-			g.setComposite(FakeGraphics.DEF);
+			g.setComposite(FakeGraphics.DEF, 0, 0);
 		if (extend == 0)
 			drawImage(g, bimg, -piv.x, -piv.y, sc.x, sc.y);
 		else {
@@ -47,7 +47,7 @@ public class ImgCore extends Data {
 				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
 			}
 		}
-		g.setComposite(FakeGraphics.DEF);
+		g.setComposite(FakeGraphics.DEF, 0, 0);
 	}
 
 	protected static void drawSca(FakeGraphics g, P piv, P sc) {

@@ -428,7 +428,9 @@ public class Data {
 	public static final int SNIPER_POS = -500;// not sure
 	public static final int REVIVE_SHOW_TIME = 16;
 
-	private static Deque<int[][]> queue = new ArrayDeque<>();
+	private static final Deque<int[][]> queue = new ArrayDeque<>();
+
+	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
 	public static int[][] get() {
 		if (queue.size() > 0) {
@@ -439,12 +441,6 @@ public class Data {
 		}
 		return new int[PROC_TOT][PROC_WIDTH];
 	}
-
-	public static void ret(int[][] proc) {
-		queue.push(proc);
-	}
-
-	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
 	public static int getVer(String ver) {
 		int ans = 0;
@@ -473,6 +469,10 @@ public class Data {
 		if (str.length() < restrict_name)
 			return str;
 		return str.substring(0, restrict_name);
+	}
+
+	public static void ret(int[][] proc) {
+		queue.push(proc);
 	}
 
 	public static String revVer(int ver) {

@@ -7,6 +7,10 @@ public interface FakeGraphics {
 
 	public void colRect(int x, int y, int w, int h, int r, int g, int b, int... a);
 
+	public default void delete(FakeTransform at) {
+
+	}
+
 	public void drawImage(FakeImage bimg, double x, double y);
 
 	public void drawImage(FakeImage bimg, double x, double y, double d, double e);
@@ -31,15 +35,11 @@ public interface FakeGraphics {
 
 	public void setColor(int c);
 
-	public void setComposite(int mode, int... para);
+	public void setComposite(int mode, int p0, int p1);
 
 	public void setRenderingHint(int key, int object);
 
 	public void setTransform(FakeTransform at);
 
-	public void translate(double x, double y);
-
-	public default void delete(FakeTransform at) {
-
-	};
+	public void translate(double x, double y);;
 }

@@ -56,13 +56,13 @@ public abstract class AttackAb extends BattleObj {
 	/** apply this attack to the entities captured */
 	public abstract void excuse();
 
+	public int[] getProc(int type) {
+		return proc[type];
+	}
+
 	public final void recycle() {
 		if (recyc)
 			ret(proc);
-	}
-
-	public int[] getProc(int type) {
-		return proc[type];
 	}
 
 	protected void process() {
