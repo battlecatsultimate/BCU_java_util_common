@@ -170,7 +170,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 	protected EPart[] arrange(EAnimI e) {
 		EPart[] ents = new EPart[n];
 		for (int i = 0; i < n; i++)
-			ents[i] = new EPart(this, e.anim(), parts[i], strs0[i], ents);
+			ents[i] = new EPart(this, e.anim(), parts[i], strs0[i], i, ents);
 		return ents;
 	}
 

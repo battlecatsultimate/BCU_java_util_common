@@ -14,6 +14,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private final AnimI a;
 	private final int[] args;
 	private final EPart[] ent;
+	private final int ind;
 	private EPart fa, para;
 	private int id, img, gsca;
 	private P pos = new P(0, 0), piv = new P(0, 0), sca = new P(0, 0);
@@ -23,12 +24,13 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	public int par;// temp
 
-	protected EPart(MaModel mm, AnimI aa, int[] part, String str, EPart[] ents) {
+	protected EPart(MaModel mm, AnimI aa, int[] part, String str, int i, EPart[] ents) {
 		model = mm;
 		a = aa;
 		args = part;
 		ent = ents;
 		name = str;
+		ind = i;
 		setValue();
 	}
 
@@ -43,7 +45,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 2)
 			img = v;
 		else if (m == 3)
-			z = v;
+			z = v * ent.length + ind;
 		else if (m == 4)
 			pos.x = args[4] + v;
 		else if (m == 5)
@@ -173,7 +175,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		fa = args[0] <= -1 ? null : ent[args[0]];
 		id = args[1];
 		img = args[2];
-		z = args[3];
+		z = args[3] * ent.length + ind;
 		pos = pos.setTo(args[4], args[5]);
 		piv = piv.setTo(args[6], args[7]);
 		sca = sca.setTo(args[8], args[9]);
