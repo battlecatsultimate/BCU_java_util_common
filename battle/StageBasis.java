@@ -276,6 +276,7 @@ public class StageBasis extends BattleObj {
 			tlw.clear();
 		}
 		la.forEach(a -> a.excuse());
+		la.forEach(a->a.recycle());
 		la.clear();
 		if (s_stop == 0) {
 			ebase.postUpdate();

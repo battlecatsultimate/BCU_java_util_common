@@ -69,7 +69,7 @@ public class Sniper extends AtkModelAb {
 			if (preTime == 0) {
 				// attack
 				int atk = b.b.t().getBaseHealth() / 20;
-				int[][] proc = new int[PROC_TOT][PROC_WIDTH];
+				int[][] proc = get();
 				proc[P_SNIPER][0] = 1;
 				AttackAb a = new AttackSimple(this, atk, -1, 0, proc, 0, getPos(), false);
 				a.canon = -1;

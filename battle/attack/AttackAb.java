@@ -19,6 +19,8 @@ public abstract class AttackAb extends BattleObj {
 	protected final List<AbEntity> capt = new ArrayList<>();
 	protected double sta, end;
 
+	private boolean recyc;
+
 	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1) {
 		dire = ent.getDire();
 		origin = this;
@@ -29,6 +31,7 @@ public abstract class AttackAb extends BattleObj {
 		abi = eab;
 		sta = p0;
 		end = p1;
+		recyc = true;
 	}
 
 	protected AttackAb(AttackAb a, double mid, double wid) {
@@ -43,6 +46,8 @@ public abstract class AttackAb extends BattleObj {
 		canon = a.canon;
 		sta = mid - wid / 2;
 		end = mid + wid / 2;
+		recyc = false;
+		a.recyc = false;
 	}
 
 	/** capture the entities */
@@ -50,6 +55,11 @@ public abstract class AttackAb extends BattleObj {
 
 	/** apply this attack to the entities captured */
 	public abstract void excuse();
+
+	public final void recycle() {
+		if (recyc)
+			ret(proc);
+	}
 
 	public int[] getProc(int type) {
 		return proc[type];

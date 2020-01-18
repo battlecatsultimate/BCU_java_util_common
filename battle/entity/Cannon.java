@@ -143,10 +143,10 @@ public class Cannon extends AtkModelAb {
 		}
 		if (preTime > 0) {
 			preTime--;
-			if (preTime == 0)
+			if (preTime == 0) {
+				int[][] proc = get();
 				if (id == 0) {
 					// basic canon
-					int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 					proc[P_WAVE][0] = 12;
 					proc[P_SNIPER][0] = 1;
 					double wid = NYRAN[0];
@@ -156,7 +156,6 @@ public class Cannon extends AtkModelAb {
 					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
 				} else if (id == 1) {
 					// slow canon
-					int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 					proc[P_SLOW][0] = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_SLOW)) / 100;
 					int wid = NYRAN[1];
 					int spe = 137;
@@ -171,7 +170,6 @@ public class Cannon extends AtkModelAb {
 				} else if (id == 3) {
 					// freeze canon
 					tempAtk = true;
-					int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 					proc[P_STOP][0] = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_STOP)) / 100;
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCanonMulti(id) / 100);
 					int rad = NYRAN[3] / 2;
@@ -179,13 +177,11 @@ public class Cannon extends AtkModelAb {
 				} else if (id == 4) {
 					// water canon
 					tempAtk = true;
-					int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 					proc[P_CRIT][0] = -(int) (b.b.t().getCanonMulti(id) / 10);
 					int rad = NYRAN[4] / 2;
 					b.getAttack(new AttackCanon(this, 1, 0, 0, proc, pos - rad, pos + rad));
 				} else if (id == 5) {
 					// zombie canon
-					int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 					proc[P_WAVE][0] = 12;
 					double wid = NYRAN[5];
 					proc[P_STOP][0] = b.b.t().getCanonProcTime(5) * (100 + b.b.getInc(C_STOP)) / 100;
@@ -196,7 +192,6 @@ public class Cannon extends AtkModelAb {
 				} else if (id == 6) {
 					// barrier canon
 					tempAtk = true;
-					int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 					proc[P_BREAK][0] = 1;
 					proc[P_KB][0] = KB_DIS[INT_KB];
 					proc[P_KB][1] = KB_TIME[INT_KB];
@@ -207,6 +202,7 @@ public class Cannon extends AtkModelAb {
 					atka = NyCastle.atks[id].getEAnim(1);
 					exta = NyCastle.atks[id].getEAnim(2);
 				}
+			}
 		}
 
 	}

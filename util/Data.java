@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
 import java.util.Queue;
 
 public class Data {
@@ -425,6 +427,22 @@ public class Data {
 	public static final int SNIPER_PRE = 5;// not sure
 	public static final int SNIPER_POS = -500;// not sure
 	public static final int REVIVE_SHOW_TIME = 16;
+
+	private static Deque<int[][]> queue = new ArrayDeque<>();
+
+	public static int[][] get() {
+		if (queue.size() > 0) {
+			int[][] ans = queue.pop();
+			for (int[] a : ans)
+				Arrays.fill(a, 0);
+			return ans;
+		}
+		return new int[PROC_TOT][PROC_WIDTH];
+	}
+
+	public static void ret(int[][] proc) {
+		queue.push(proc);
+	}
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 

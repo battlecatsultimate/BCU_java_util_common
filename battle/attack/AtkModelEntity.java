@@ -86,7 +86,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (act[ind] == 0)
 			return null;
 		act[ind]--;
-		int[][] proc = new int[PROC_TOT][PROC_WIDTH];
+		int[][] proc = get();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
 		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind));
