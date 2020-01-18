@@ -109,16 +109,16 @@ public class StageBasis extends BattleObj {
 
 	public int entityCount(int d) {
 		int ans = 0;
-		for (Entity e : le)
-			if (e.dire == d)
+		for (int i = 0; i < le.size(); i++)
+			if (le.get(i).dire == d)
 				ans++;
 		return ans;
 	}
 
 	public int entityCount(int d, int g) {
 		int ans = 0;
-		for (Entity e : le)
-			if (e.dire == d && e.group == g)
+		for (int i = 0; i < le.size(); i++)
+			if (le.get(i).dire == d && le.get(i).group == g)
 				ans++;
 		return ans;
 	}
@@ -148,9 +148,9 @@ public class StageBasis extends BattleObj {
 		List<AbEntity> ans = new ArrayList<>();
 		if (dire == 0)
 			return ans;
-		for (Entity ee : le)
-			if (ee.dire * dire == -1 && (ee.touchable() & touch) > 0 && (ee.pos - d0) * (ee.pos - d1) <= 0)
-				ans.add(ee);
+		for (int i = 0; i < le.size(); i++)
+			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0 && (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
+				ans.add(le.get(i));
 		AbEntity b = dire == 1 ? ubase : ebase;
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
 			ans.add(b);
@@ -250,9 +250,9 @@ public class StageBasis extends BattleObj {
 
 			est.update();
 			if (shock) {
-				for (Entity e : le)
-					if (e.dire == -1 && (e.touchable() & TCH_N) > 0)
-						e.interrupt(INT_SW, KB_DIS[INT_SW]);
+				for (int i = 0; i < le.size(); i++)
+					if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0)
+						le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
 				lea.add(new EAnimCont(700, 9, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
 				CommonStatic.def.setSE(SE_BOSS);
 				shock = false;
@@ -265,9 +265,9 @@ public class StageBasis extends BattleObj {
 
 			tempe.forEach(ec -> ec.update());
 		}
-		for (Entity e : le)
-			if (s_stop == 0 || (e.getAbi() & AB_TIMEI) != 0)
-				e.update();
+		for (int i = 0; i < le.size(); i++)
+			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update();
 
 		if (s_stop == 0) {
 			lw.forEach(wc -> wc.update());
@@ -285,17 +285,17 @@ public class StageBasis extends BattleObj {
 				ebase.health = 1;
 			}
 			if (ebase.health <= 0)
-				for (Entity e : le)
-					if (e.dire == 1)
-						e.kill();
+				for (int i = 0; i < le.size(); i++)
+					if (le.get(i).dire == 1)
+						le.get(i).kill();
 			if (ubase.health <= 0)
-				for (Entity e : le)
-					if (e.dire == -1)
-						e.kill();
+				for (int i = 0; i < le.size(); i++)
+					if (le.get(i).dire == -1)
+						le.get(i).kill();
 		}
-		for (Entity e : le)
-			if (s_stop == 0 || (e.getAbi() & AB_TIMEI) != 0)
-				e.postUpdate();
+		for (int i = 0; i < le.size(); i++)
+			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).postUpdate();
 
 		if (s_stop == 0) {
 			le.removeIf(e -> e.anim.dead == 0);

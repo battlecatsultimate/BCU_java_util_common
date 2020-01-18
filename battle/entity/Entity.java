@@ -541,8 +541,8 @@ public abstract class Entity extends AbEntity {
 
 		private void getMax() {
 			int max = 0;
-			for (int[] ws : list)
-				max |= 1 << type(ws);
+			for (int i = 0; i < list.size(); i++)
+				max |= 1 << type(list.get(i));
 			e.status[P_POISON][0] = max;
 		}
 
@@ -551,7 +551,8 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void update() {
-			for (int[] ws : list)
+			for (int i = 0; i < list.size(); i++) {
+				int [] ws = list.get(i);
 				if (ws[0] > 0) {
 					ws[0]--;
 					ws[3]--;
@@ -560,6 +561,7 @@ public abstract class Entity extends AbEntity {
 						ws[3] += ws[2];
 					}
 				}
+			}
 			list.removeIf(w -> w[0] <= 0);
 			getMax();
 		}
@@ -584,7 +586,8 @@ public abstract class Entity extends AbEntity {
 		private void getMax() {
 			int max = 0;
 			int val = 100;
-			for (int[] ws : list) {
+			for (int i = 0; i < list.size(); i++) {
+				int[] ws = list.get(i);
 				max = Math.max(max, ws[0]);
 				val = Math.min(val, ws[1]);
 			}
@@ -593,8 +596,8 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void update() {
-			for (int[] ws : list)
-				ws[0]--;
+			for (int i = 0; i < list.size(); i++)
+				list.get(i)[0]--;
 			list.removeIf(w -> w[0] <= 0);
 			getMax();
 		}
@@ -724,10 +727,10 @@ public abstract class Entity extends AbEntity {
 				return true;
 			});
 			List<AbEntity> lm = e.basis.inRange(TCH_ZOMBX, -e.dire, 0, e.basis.st.len);
-			for (AbEntity m : lm) {
-				if (m == e)
+			for (int i = 0; i < lm.size(); i++) {
+				if (lm.get(i) == e)
 					continue;
-				Entity em = ((Entity) m);
+				Entity em = ((Entity) lm.get(i));
 				double d0 = em.pos + em.getProc(P_REVIVE, 3);
 				double d1 = em.pos + em.getProc(P_REVIVE, 4);
 				if ((d0 - e.pos) * (d1 - e.pos) > 0)
@@ -1090,8 +1093,8 @@ public abstract class Entity extends AbEntity {
 			status[P_LETHAL][0]++;
 		}
 
-		for (AttackAb atk : tokens)
-			atk.model.invokeLater(atk, this);
+		for (int i = 0; i < tokens.size(); i++)
+			tokens.get(i).model.invokeLater(tokens.get(i), this);
 		tokens.clear();
 
 		kb.doInterrupt();
@@ -1390,8 +1393,8 @@ public abstract class Entity extends AbEntity {
 		touchEnemy = touch;
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
-			for (AbEntity e : le)
-				if (e.targetable(type))
+			for (int i = 0; i < le.size(); i++)
+				if (le.get(i).targetable(type))
 					touchEnemy = true;
 		}
 	}
