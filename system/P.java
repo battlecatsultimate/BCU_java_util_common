@@ -15,7 +15,12 @@ public strictfp class P extends BattleObj {
 
 	public static P newP(double x, double y) {
 		if (!stack.isEmpty()) {
-			return stack.pollFirst().setTo(x, y);
+			P p = stack.pollFirst();
+
+			if(p == null)
+				return new P(x,y);
+
+			return p.setTo(x, y);
 		}
 
 		return new P(x, y);
@@ -23,7 +28,12 @@ public strictfp class P extends BattleObj {
 
 	public static P newP(P p) {
 		if (!stack.isEmpty()) {
-			return stack.pollFirst().setTo(p);
+			P p1 = stack.pollFirst();
+
+			if(p1 == null)
+				return new P(p.x,p.y);
+
+			return p1.setTo(p.x, p.y);
 		}
 
 		return new P(p.x, p.y);
