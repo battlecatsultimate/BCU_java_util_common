@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.util.Animable;
@@ -50,12 +51,12 @@ public class DIYAnim extends Animable<AnimC> {
 
 	public static void read() {
 		map.clear();
-		File f = new File("./res/anim/");
+		File f = CommonStatic.def.route("./res/anim/");
 		if (f.exists())
 			for (File fi : f.listFiles()) {
 				if (!fi.isDirectory())
 					continue;
-				File check = new File("./res/anim/" + fi.getName() + "/" + fi.getName() + ".png");
+				File check = CommonStatic.def.route("./res/anim/" + fi.getName() + "/" + fi.getName() + ".png");
 				if (!check.exists())
 					continue;
 				new DIYAnim(fi.getName());

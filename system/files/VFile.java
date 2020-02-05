@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.Predicate;
 
+import common.CommonStatic;
+
 public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	public static final VFileRoot<AssetData> root = new VFileRoot<>(".");
@@ -18,7 +20,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		if (path.startsWith("./org/") || path.startsWith("./lang/"))
 			return root.find(path);
 		if (path.startsWith("./res/")) {
-			File f = new File(path);
+			File f = CommonStatic.def.route(path);
 			if (!f.exists())
 				return null;
 			return new VFile<FDFile>(null, f.getName(), new FDFile(f));

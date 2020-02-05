@@ -17,8 +17,8 @@ public strictfp class P extends BattleObj {
 		if (!stack.isEmpty()) {
 			P p = stack.pollFirst();
 
-			if(p == null)
-				return new P(x,y);
+			if (p == null)
+				return new P(x, y);
 
 			return p.setTo(x, y);
 		}
@@ -30,8 +30,8 @@ public strictfp class P extends BattleObj {
 		if (!stack.isEmpty()) {
 			P p1 = stack.pollFirst();
 
-			if(p1 == null)
-				return new P(p.x,p.y);
+			if (p1 == null)
+				return new P(p.x, p.y);
 
 			return p1.setTo(p.x, p.y);
 		}

@@ -27,10 +27,10 @@ import main.Printer;
 public class AnimC extends AnimU {
 
 	public static String getAvailable(String str) {
-		File folder = new File("./res/anim/");
+		File folder = CommonStatic.def.route("./res/anim/");
 		if (!folder.exists())
 			return str;
-		File[] fs = new File("./res/anim/").listFiles();
+		File[] fs = CommonStatic.def.route("./res/anim/").listFiles();
 		Set<String> strs = new HashSet<>();
 		for (int i = 0; i < fs.length; i++)
 			strs.add(fs[i].getName());
@@ -116,7 +116,7 @@ public class AnimC extends AnimU {
 				anims[i] = new MaAnim();
 		num = ori.getNum();
 		parts = imgcut.cut(num);
-		File f = new File(prev + name + "/" + name + ".png");
+		File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
 		CommonStatic.def.check(f);
 		try {
 			FakeImage.write(num, "PNG", f);
@@ -147,7 +147,7 @@ public class AnimC extends AnimU {
 	}
 
 	public void delete() {
-		CommonStatic.def.delete(new File(prev + name + "/"));
+		CommonStatic.def.delete(CommonStatic.def.route(prev + name + "/"));
 	}
 
 	public String getUndo() {
@@ -270,7 +270,7 @@ public class AnimC extends AnimU {
 			uni.check();
 		if (edi != null)
 			edi.check();
-		CommonStatic.def.delete(new File(prev + name + "/"));
+		CommonStatic.def.delete(CommonStatic.def.route(prev + name + "/"));
 		name = str;
 		saveImg();
 		saveIcon();
@@ -345,7 +345,7 @@ public class AnimC extends AnimU {
 		if (edi == null || edi.getImg() == null || prev == null)
 			return;
 		try {
-			File f = new File(prev + name + "/edi.png");
+			File f = CommonStatic.def.route(prev + name + "/edi.png");
 			CommonStatic.def.check(f);
 			FakeImage.write(edi.getImg(), "PNG", f);
 		} catch (IOException e) {
@@ -355,7 +355,7 @@ public class AnimC extends AnimU {
 
 	public void saveImg() {
 		try {
-			File f = new File(prev + name + "/" + name + ".png");
+			File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
 			CommonStatic.def.check(f);
 			if (!FakeImage.write(num, "PNG", f))
 				if (Opts.writeErr0(f.getPath()))
@@ -370,7 +370,7 @@ public class AnimC extends AnimU {
 		if (uni == null || uni.getImg() == null)
 			return;
 		try {
-			File f = new File(prev + name + "/uni.png");
+			File f = CommonStatic.def.route(prev + name + "/uni.png");
 			CommonStatic.def.check(f);
 			FakeImage.write(uni.getImg(), "PNG", f);
 		} catch (IOException e) {
@@ -508,7 +508,7 @@ public class AnimC extends AnimU {
 	}
 
 	private void save$ic(String pre) throws Exception {
-		File f = new File(pre + ".imgcut");
+		File f = CommonStatic.def.route(pre + ".imgcut");
 		CommonStatic.def.check(f);
 		PrintStream ps = new PrintStream(f, "UTF-8");
 		imgcut.write(ps);
@@ -517,7 +517,7 @@ public class AnimC extends AnimU {
 	}
 
 	private void save$ma(String pre, int i) throws Exception {
-		File f = new File(pre + ".maanim");
+		File f = CommonStatic.def.route(pre + ".maanim");
 		CommonStatic.def.check(f);
 		PrintStream ps = new PrintStream(f, "UTF-8");
 		anims[i].write(ps);
@@ -526,7 +526,7 @@ public class AnimC extends AnimU {
 	}
 
 	private void save$mm(String pre) throws Exception {
-		File f = new File(pre + ".mamodel");
+		File f = CommonStatic.def.route(pre + ".mamodel");
 		CommonStatic.def.check(f);
 		PrintStream ps = new PrintStream(f, "UTF-8");
 		mamodel.write(ps);

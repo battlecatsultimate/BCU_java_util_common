@@ -72,6 +72,8 @@ public class CommonStatic {
 
 		public void redefine(Class<?> class1);
 
+		public File route(String path);
+
 		/** play sound effect */
 		public void setSE(int ind);
 

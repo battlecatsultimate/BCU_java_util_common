@@ -91,7 +91,7 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 	protected void zread$t000306(InStream is) {
 		is.nextInt();
 
-		File f = new File("./res/img/" + pack.id + "/cas/");
+		File f = CommonStatic.def.route("./res/img/" + pack.id + "/cas/");
 		if (f.exists()) {
 			File[] fs = f.listFiles();
 			for (File fi : fs) {

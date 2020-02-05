@@ -150,7 +150,7 @@ public class BGStore extends FixIndexList<Background> {
 	}
 
 	private void zreadt$000400(InStream is) {
-		File f = new File("./res/img/" + pack.id + "/bg/");
+		File f = CommonStatic.def.route("./res/img/" + pack.id + "/bg/");
 		if (f.exists()) {
 			File[] fs = f.listFiles();
 			for (File fi : fs) {

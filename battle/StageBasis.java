@@ -149,7 +149,8 @@ public class StageBasis extends BattleObj {
 		if (dire == 0)
 			return ans;
 		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0 && (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
+			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0
+					&& (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
 				ans.add(le.get(i));
 		AbEntity b = dire == 1 ? ubase : ebase;
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
