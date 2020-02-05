@@ -16,7 +16,6 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Res;
@@ -25,6 +24,26 @@ import main.Opts;
 import main.Printer;
 
 public class AnimC extends AnimU {
+
+	public static interface AnimLoader {
+
+		VImg getEdi();
+
+		FileData getIC();
+
+		FileData[] getMA();
+
+		FileData getMM();
+
+		String getName();
+
+		FakeImage getNum();
+
+		int getStatus();
+
+		VImg getUni();
+
+	}
 
 	public static String getAvailable(String str) {
 		File folder = CommonStatic.def.route("./res/anim/");
@@ -40,50 +59,35 @@ public class AnimC extends AnimU {
 	}
 
 	private boolean saved = false;
-	public boolean inPool;
+	public int inPool;
 	public EditLink link;
 	public Stack<History> history = new Stack<>();
 	public String name = "";
 	public String prev;
 
 	public AnimC(InStream is) {
-		name = "local animation";
-		inPool = false;
+		AnimLoader al = CommonStatic.def.loadAnim(is);
+		name = al.getName();
+		inPool = al.getStatus();
 		loaded = true;
 		partial = true;
 		saved = true;
-		try {
-			num = FakeImage.read(is.nextBytesI());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
-		mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
-		int n = is.nextInt();
-		anims = new MaAnim[n];
-		for (int i = 0; i < n; i++)
-			anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
+		num = al.getNum();
+		imgcut = ImgCut.newIns(al.getIC());
+		mamodel = MaModel.newIns(al.getMM());
+		FileData[] fd = al.getMA();
+		anims = new MaAnim[fd.length];
+		for (int i = 0; i < fd.length; i++)
+			anims[i] = MaAnim.newIns(fd[i]);
 		parts = imgcut.cut(num);
-		if (!is.end()) {
-			VImg vimg = new VImg(is.nextBytesI());
-			vimg.mark("uni or edi");
-			if (vimg.getImg().getHeight() == 32)
-				edi = vimg;
-			else
-				uni = vimg;
-		}
-		if (!is.end())
-			uni = new VImg(is.nextBytesI());
-		if (uni != null && uni != Res.slot[0])
-			uni.mark("uni");
-		if (edi != null)
-			edi.mark("edi");
+		uni = al.getUni();
+		edi = al.getEdi();
 		standardize();
 		history("initial");
 	}
 
 	public AnimC(String st) {
-		inPool = true;
+		inPool = 0;
 		prev = "./res/anim/";
 		name = st;
 		VFile<? extends FileData> f = VFile.getFile(prev + name + "/edi.png");
@@ -99,7 +103,7 @@ public class AnimC extends AnimU {
 	}
 
 	public AnimC(String str, AnimD ori) {
-		inPool = true;
+		inPool = 0;
 		prev = "./res/anim/";
 		name = str;
 		loaded = true;

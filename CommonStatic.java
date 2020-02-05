@@ -10,6 +10,7 @@ import java.util.function.Function;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
+import common.util.anim.AnimC;
 import common.util.pack.Background;
 import common.util.pack.Pack;
 import common.util.stage.Castles;
@@ -57,6 +58,8 @@ public class CommonStatic {
 
 		/** exit */
 		public void exit(boolean save);
+
+		public AnimC.AnimLoader loadAnim(InStream is);
 
 		/** show loading progress, empty is fine */
 		public void prog(String str);
