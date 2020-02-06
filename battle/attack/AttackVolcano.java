@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import common.battle.entity.Entity;
 
 public class AttackVolcano extends AttackAb {
 	protected final HashMap<Entity,Integer> vcapt;
+	
+	protected boolean attacked = false;
 
 	public AttackVolcano(AttackSimple a, double p0, double wid, double sta, double end) {
 		super(a, p0, wid);
@@ -47,15 +50,16 @@ public class AttackVolcano extends AttackAb {
 				if(vcapt.containsKey(e)) {					
 					if(vcapt.get(e) <= 0) {
 						e.damaged(this);
+						attacked = true;
 						vcapt.put((Entity)e,30);
 					} else
 						vcapt.put((Entity)e, vcapt.get(e)-1);
 				} else {
 					e.damaged(this);
+					attacked = true;
 					vcapt.put((Entity)e, 30);
 				}
 			}
 		}
 	}
-
 }
