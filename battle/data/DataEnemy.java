@@ -129,6 +129,10 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 					enemy.id + "-new 75-78: " + ints[75] + "," + ints[76] + "," + ints[77] + "," + ints[78]);
 		proc[P_POIATK][0] = ints[79];
 		proc[P_POIATK][1] = ints[80];
+		proc[P_VOLC][0] = ints[81];
+		proc[P_VOLC][1] = ints[82] / 4;
+		proc[P_VOLC][2] = ints[83] / 4 + proc[P_VOLC][1];
+		proc[P_VOLC][3] = ints[84] * 30;
 		abi = a;
 		type = t;
 	}

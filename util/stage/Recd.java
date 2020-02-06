@@ -45,7 +45,7 @@ public class Recd extends Data {
 	}
 
 	public static void read() {
-		File f = new File("./replay/");
+		File f = CommonStatic.def.route("./replay/");
 		if (!f.exists())
 			return;
 		File[] fs = f.listFiles();

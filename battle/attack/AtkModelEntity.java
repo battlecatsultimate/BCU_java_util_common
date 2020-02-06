@@ -228,6 +228,13 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (getProc(ind, P_POIATK, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_POIATK, 0)) {
 			proc[P_POIATK][0] = getProc(ind, P_POIATK, 1);
 		}
+
+		if (getProc(ind, P_VOLC, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_VOLC, 0)) {
+			proc[P_VOLC][0] = 1;
+			proc[P_VOLC][1] = getProc(ind, P_VOLC, 1);
+			proc[P_VOLC][2] = getProc(ind, P_VOLC, 2);
+			proc[P_VOLC][3] = getProc(ind, P_VOLC, 3);
+		}
 	}
 
 	protected abstract void summon(int[] proc, Entity ent, Object acs);

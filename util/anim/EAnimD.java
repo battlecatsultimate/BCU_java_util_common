@@ -5,6 +5,8 @@ import common.system.fake.FakeGraphics;
 
 public class EAnimD extends EAnimI {
 
+	public int type;
+
 	protected MaAnim ma;
 
 	protected int f = -1;
@@ -12,6 +14,14 @@ public class EAnimD extends EAnimI {
 	public EAnimD(AnimI ia, MaModel mm, MaAnim anim) {
 		super(ia, mm);
 		ma = anim;
+	}
+
+	public void changeAnim(int t) {
+		if (t >= ((AnimD) anim()).anims.length)
+			return;
+		f = -1;
+		ma = ((AnimD) anim()).anims[t];
+		type = t;
 	}
 
 	public boolean done() {

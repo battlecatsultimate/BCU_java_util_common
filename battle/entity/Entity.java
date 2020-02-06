@@ -552,7 +552,7 @@ public abstract class Entity extends AbEntity {
 
 		private void update() {
 			for (int i = 0; i < list.size(); i++) {
-				int [] ws = list.get(i);
+				int[] ws = list.get(i);
 				if (ws[0] > 0) {
 					ws[0]--;
 					ws[3]--;
@@ -971,7 +971,6 @@ public abstract class Entity extends AbEntity {
 			else
 				anim.getEff(INV);
 		}
-
 		if (atk.getProc(P_KB)[0] != 0) {
 			int rst = getProc(P_IMUKB, 0);
 			if (rst < 100) {

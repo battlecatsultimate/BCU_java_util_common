@@ -75,7 +75,7 @@ public class Pack extends Data {
 	}
 
 	public static void read() {
-		File f = new File("./pack/");
+		File f = CommonStatic.def.route("./pack/");
 		Map<Integer, File> fmap = new TreeMap<>();
 		if (f.exists()) {
 			for (File file : f.listFiles()) {
@@ -113,7 +113,7 @@ public class Pack extends Data {
 		List<Pack> list = new ArrayList<>();
 		list.addAll(map.values());
 		list.remove(def);
-		f = new File("./res/enemy/");
+		f = CommonStatic.def.route("./res/enemy/");
 		if (f.exists())
 			for (File file : f.listFiles()) {
 				String str = file.getName();
@@ -186,7 +186,7 @@ public class Pack extends Data {
 	}
 
 	public static void writeAll() {
-		File f = new File("./res/enemy/");
+		File f = CommonStatic.def.route("./res/enemy/");
 		if (!f.exists())
 			f.mkdirs();
 		for (Pack p : map.values())
@@ -299,8 +299,8 @@ public class Pack extends Data {
 	public void delete() {
 		if (!canDelete())
 			return;
-		CommonStatic.def.delete(new File("./res/enemy/" + id + ".bcuenemy"));
-		CommonStatic.def.delete(new File("./res/img/" + id + "/"));
+		CommonStatic.def.delete(CommonStatic.def.route("./res/enemy/" + id + ".bcuenemy"));
+		CommonStatic.def.delete(CommonStatic.def.route("./res/img/" + id + "/"));
 		map.remove(id);
 		Castles.map.remove(id);
 	}
@@ -419,7 +419,7 @@ public class Pack extends Data {
 			int bgid = bg.nextInd();
 			bg.add(ent.getValue().copy(this, bgid));
 			inds[M_BG][ent.getKey()] = bgid;
-			File f = new File("./res/img/" + hex(id) + "/bg/" + trio(bgid) + ".png");
+			File f = CommonStatic.def.route("./res/img/" + hex(id) + "/bg/" + trio(bgid) + ".png");
 			CommonStatic.def.check(f);
 			try {
 				FakeImage.write(ent.getValue().img.getImg(), "PNG", f);
@@ -433,7 +433,7 @@ public class Pack extends Data {
 			int csid = cs.nextInd();
 			cs.add(new VImg(ent.getValue().getImg()));
 			inds[M_CS][ent.getKey()] = csid;
-			File f = new File("./res/img/" + hex(id) + "/cas/" + trio(csid) + ".png");
+			File f = CommonStatic.def.route("./res/img/" + hex(id) + "/cas/" + trio(csid) + ".png");
 			CommonStatic.def.check(f);
 			try {
 				FakeImage.write(ent.getValue().getImg(), "PNG", f);
@@ -552,7 +552,7 @@ public class Pack extends Data {
 		cs.forEach((i, c) -> {
 			String path = "./res/img/" + hex(id) + "/cas/" + trio(i) + ".png";
 			try {
-				FakeImage.write(c.getImg(), "PNG", new File(path));
+				FakeImage.write(c.getImg(), "PNG", CommonStatic.def.route(path));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -560,18 +560,18 @@ public class Pack extends Data {
 		bg.forEach((i, c) -> {
 			String path = "./res/img/" + hex(id) + "/bg/" + trio(i) + ".png";
 			try {
-				FakeImage.write(c.img.getImg(), "PNG", new File(path));
+				FakeImage.write(c.img.getImg(), "PNG", CommonStatic.def.route(path));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		File mf = new File("./res/img/" + hex(id) + "/music/");
+		File mf = CommonStatic.def.route("./res/img/" + hex(id) + "/music/");
 		if (!mf.exists())
 			mf.mkdirs();
 		ms.forEach((i, c) -> {
 			String src = "./pack/music/" + hex(id) + "/" + trio(i) + ".ogg";
 			String dst = "./res/img/" + hex(id) + "/music/" + trio(i) + ".ogg";
-			new File(src).renameTo(new File(dst));
+			CommonStatic.def.route(src).renameTo(CommonStatic.def.route(dst));
 		});
 	}
 

@@ -52,7 +52,7 @@ public class MusicStore extends FixIndexList<File> {
 
 	public void load() {
 		clear();
-		File f = new File("./res/img/" + pack.id + "/music/");
+		File f = CommonStatic.def.route("./res/img/" + pack.id + "/music/");
 		if (f.exists() && f.isDirectory()) {
 			File[] fs = f.listFiles();
 			for (File fi : fs) {
@@ -122,7 +122,7 @@ public class MusicStore extends FixIndexList<File> {
 				int id = is.nextInt();
 				InStream data = is.subStream();
 				byte[] bs = data.nextBytesI();
-				File f = new File(prev + trio(id) + ".ogg");
+				File f = CommonStatic.def.route(prev + trio(id) + ".ogg");
 				set(id, f);
 				if (f.exists())
 					continue;

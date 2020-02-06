@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.util.Animable;
@@ -50,12 +51,12 @@ public class DIYAnim extends Animable<AnimC> {
 
 	public static void read() {
 		map.clear();
-		File f = new File("./res/anim/");
+		File f = CommonStatic.def.route("./res/anim/");
 		if (f.exists())
 			for (File fi : f.listFiles()) {
 				if (!fi.isDirectory())
 					continue;
-				File check = new File("./res/anim/" + fi.getName() + "/" + fi.getName() + ".png");
+				File check = CommonStatic.def.route("./res/anim/" + fi.getName() + "/" + fi.getName() + ".png");
 				if (!check.exists())
 					continue;
 				new DIYAnim(fi.getName());
@@ -65,12 +66,13 @@ public class DIYAnim extends Animable<AnimC> {
 	public static OutStream writeAnim(AnimC anim) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
-		if (anim.inPool) {
-			os.writeInt(0);
+		os.writeInt(anim.inPool);
+		if (anim.inPool == 0)
 			os.writeString(anim.toString());
-		} else {
-			os.writeInt(1);
+		else if (anim.inPool == 1)
 			os.accept(anim.write());
+		else if (anim.inPool == 2) {
+			// TODO
 		}
 		os.terminate();
 		return os;
@@ -87,7 +89,12 @@ public class DIYAnim extends Animable<AnimC> {
 		int type = is.nextInt();
 		if (type == 0)
 			return getAnim(is.nextString(), ene);
-		return new AnimC(is.subStream());
+		else if (type == 1)
+			return new AnimC(is.subStream());
+		else if (type == 2)
+			return null; // TODO
+		else
+			return null;
 	}
 
 	public DIYAnim(AnimC ac) {

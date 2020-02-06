@@ -10,6 +10,7 @@ import java.util.function.Function;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
+import common.util.anim.AnimC;
 import common.util.pack.Background;
 import common.util.pack.Pack;
 import common.util.stage.Castles;
@@ -58,6 +59,8 @@ public class CommonStatic {
 		/** exit */
 		public void exit(boolean save);
 
+		public AnimC.AnimLoader loadAnim(InStream is);
+
 		/** show loading progress, empty is fine */
 		public void prog(String str);
 
@@ -71,6 +74,8 @@ public class CommonStatic {
 		public <T> T readSave(String path, Function<Queue<String>, T> func);
 
 		public void redefine(Class<?> class1);
+
+		public File route(String path);
 
 		/** play sound effect */
 		public void setSE(int ind);
