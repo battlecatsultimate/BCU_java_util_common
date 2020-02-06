@@ -13,7 +13,7 @@ public strictfp class P extends BattleObj {
 		stack.add(p);
 	}
 
-	public static P newP(double x, double y) {
+	public static synchronized P newP(double x, double y) {
 		if (!stack.isEmpty()) {
 			P p = stack.pollFirst();
 
@@ -26,7 +26,7 @@ public strictfp class P extends BattleObj {
 		return new P(x, y);
 	}
 
-	public static P newP(P p) {
+	public static synchronized P newP(P p) {
 		if (!stack.isEmpty()) {
 			P p1 = stack.pollFirst();
 
