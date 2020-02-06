@@ -78,8 +78,12 @@ public class AttackSimple extends AttackAb {
 
 		if (capt.size() > 0 && proc[P_VOLC][0] > 0) {
 			int dire = model.getDire();
-			int wid = W_VOLC;
-			// TODO
+			int addp = proc[P_VOLC][1] + (int)(model.b.r.nextDouble()*(proc[P_VOLC][2]-proc[P_VOLC][1]));
+			double p0 = model.getPos() + dire*addp;
+			double sta = p0 - (dire==1?W_VOLC_PIERCE:W_VOLC_INNER);
+			double end = p0 + (dire==1?W_VOLC_INNER:W_VOLC_PIERCE);
+			
+			new ContVolcano(new AttackVolcano(this, sta, end), p0, layer, proc[P_VOLC][3]);
 		}
 	}
 
