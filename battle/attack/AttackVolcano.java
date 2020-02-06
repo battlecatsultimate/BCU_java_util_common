@@ -20,12 +20,6 @@ public class AttackVolcano extends AttackAb {
 
 	@Override
 	public void capture() {
-		vcapt.entrySet().removeIf(ent -> {
-			int n = ent.getValue() - 1;
-			if (n > 0)
-				ent.setValue(n);
-			return n == 0;
-		});
 
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
 
@@ -44,8 +38,15 @@ public class AttackVolcano extends AttackAb {
 			if (e instanceof Entity) {
 				e.damaged(this);
 				vcapt.put((Entity) e, VOLC_ITV);
+				attacked = true;
 			}
-
 		}
+
+		vcapt.entrySet().removeIf(ent -> {
+			int n = ent.getValue() - 1;
+			if (n > 0)
+				ent.setValue(n);
+			return n == 0;
+		});
 	}
 }

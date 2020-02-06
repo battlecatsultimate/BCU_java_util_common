@@ -971,7 +971,6 @@ public abstract class Entity extends AbEntity {
 			else
 				anim.getEff(INV);
 		}
-
 		if (atk.getProc(P_KB)[0] != 0) {
 			int rst = getProc(P_IMUKB, 0);
 			if (rst < 100) {
