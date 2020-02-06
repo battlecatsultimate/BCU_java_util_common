@@ -6,8 +6,6 @@ import common.system.fake.FakeTransform;
 
 public class EAnimU extends EAnimD {
 
-	public int type;
-
 	protected EAnimU(AnimU ani, int i) {
 		super(ani, ani.mamodel, ani.anims[i]);
 		type = i;
@@ -19,6 +17,7 @@ public class EAnimU extends EAnimD {
 	}
 
 	/** change the animation state, for entities only */
+	@Override
 	public void changeAnim(int t) {
 		if (t >= anim().anims.length)
 			return;

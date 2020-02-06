@@ -4,6 +4,8 @@ import common.system.P;
 import common.system.fake.FakeGraphics;
 
 public class EAnimD extends EAnimI {
+	
+	public int type;
 
 	protected MaAnim ma;
 
@@ -16,6 +18,14 @@ public class EAnimD extends EAnimI {
 
 	public boolean done() {
 		return f > ma.max;
+	}
+	
+	public void changeAnim(int t) {
+		if (t >= ((AnimD)anim()).anims.length)
+			return;
+		f = -1;
+		ma = ((AnimD)anim()).anims[t];
+		type = t;
 	}
 
 	@Override
