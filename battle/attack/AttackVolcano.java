@@ -1,13 +1,12 @@
 package common.battle.attack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 
 public class AttackVolcano extends AttackAb {
-	
+
 	protected boolean attacked = false;
 
 	protected final HashMap<Entity, Integer> vcapt;
@@ -17,11 +16,6 @@ public class AttackVolcano extends AttackAb {
 		vcapt = new HashMap<>();
 		this.sta = sta;
 		this.end = end;
-	}
-
-	public AttackVolcano(AttackVolcano a) {
-		super(a, a.sta, a.end);
-		vcapt = a.vcapt;
 	}
 
 	@Override

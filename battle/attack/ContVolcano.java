@@ -35,19 +35,12 @@ public class ContVolcano extends ContAb {
 	public void update() {
 		System.out.println("Volcano Frame : " + t);
 		System.out.println(aliveTime);
-		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime) {
-			if (anim.type != 1) {
-				anim.changeAnim(1);
-				anim.setTime(1);
-			}
-		} else if (t > VOLC_PRE + aliveTime) {
-			if (anim.type != 2) {
-				anim.changeAnim(2);
-				anim.setTime(1);
-			}
-		}
+		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != 1)
+			anim.changeAnim(1);
+		else if (t > VOLC_PRE + aliveTime && anim.type != 2)
+			anim.changeAnim(2);
 
-		if (aliveTime + VOLC_POST + VOLC_PRE - t <= 0) {
+		if (aliveTime + VOLC_POST + VOLC_PRE <= t) {
 			activate = false;
 		} else {
 			v.capture();
