@@ -2,59 +2,53 @@ package common.battle.attack;
 
 import java.util.HashMap;
 import java.util.List;
-
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 
 public class AttackVolcano extends AttackAb {
-	protected final HashMap<Entity,Integer> vcapt;
 
-	public AttackVolcano(AttackSimple a, double p0, double wid, double sta, double end) {
-		super(a, p0, wid);
+	protected final HashMap<Entity, Integer> vcapt;
+
+	public AttackVolcano(AttackSimple a, double sta, double end) {
+		super(a, sta, end);
 		vcapt = new HashMap<>();
-		proc[P_VOLC][0] = 0;
 		this.sta = sta;
 		this.end = end;
 	}
-	
-	public AttackVolcano(AttackVolcano a, double p0, double wid, double sta, double end) {
-		super(a, p0, wid);
+
+	public AttackVolcano(AttackVolcano a) {
+		super(a, a.sta, a.end);
 		vcapt = a.vcapt;
-		proc[P_VOLC][0] = 0;
 	}
 
 	@Override
 	public void capture() {
+		vcapt.entrySet().removeIf(ent -> {
+			int n = ent.getValue() - 1;
+			if (n > 0)
+				ent.setValue(n);
+			return n == 0;
+		});
+
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
 
 		capt.clear();
-		if((abi & AB_ONLY) == 0)
-			capt.addAll(le);
-		else
-			for(AbEntity e : le)
-				if(e.targetable(type))
-					capt.add(e);
+		for (AbEntity e : le)
+			if (((abi & AB_ONLY) == 0 || e.targetable(type)) && e instanceof Entity && !vcapt.containsKey(e))
+				capt.add(e);
 	}
 
 	@Override
 	public void excuse() {
 		process();
 		for (AbEntity e : capt) {
-			if(e.isBase())
+			if (e.isBase())
 				continue;
-			
-			if(e instanceof Entity) {
-				if(vcapt.containsKey(e)) {					
-					if(vcapt.get(e) <= 0) {
-						e.damaged(this);
-						vcapt.put((Entity)e,30);
-					} else
-						vcapt.put((Entity)e, vcapt.get(e)-1);
-				} else {
-					e.damaged(this);
-					vcapt.put((Entity)e, 30);
-				}
+			if (e instanceof Entity) {
+				e.damaged(this);
+				vcapt.put((Entity) e, VOLC_ITV);
 			}
+
 		}
 	}
 

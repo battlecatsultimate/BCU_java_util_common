@@ -34,7 +34,7 @@ public abstract class AttackAb extends BattleObj {
 		recyc = true;
 	}
 
-	protected AttackAb(AttackAb a, double mid, double wid) {
+	protected AttackAb(AttackAb a, double STA, double END) {
 		dire = a.dire;
 		origin = a.origin;
 		model = a.model;
@@ -44,8 +44,8 @@ public abstract class AttackAb extends BattleObj {
 		proc = a.proc;
 		touch = a.touch;
 		canon = a.canon;
-		sta = mid - wid / 2;
-		end = mid + wid / 2;
+		sta = STA;
+		end = END;
 		recyc = false;
 		a.recyc = false;
 	}

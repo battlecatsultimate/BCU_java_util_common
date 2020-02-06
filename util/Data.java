@@ -421,13 +421,14 @@ public class Data {
 	public static final int E_IMU = -1;
 	public static final int E_IWAVE = -2;
 	public static final int E_SWAVE = -3;
-	
+
 	public static final int W_VOLC = 375;
-	public static final int W_VOLC_INNER = 125; //volcano inner width
-	public static final int W_VOLC_PIERCE = 250; //volcano pierce width
-	
-	public static final int VOLC_PRE = 15; //volcano pre-atk
-	public static final int VOLC_POST = 10; //volcano post-atk
+	public static final int W_VOLC_INNER = 125; // volcano inner width
+	public static final int W_VOLC_PIERCE = 250; // volcano pierce width
+	public static final int VOLC_ITV = 30;
+
+	public static final int VOLC_PRE = 15; // volcano pre-atk
+	public static final int VOLC_POST = 10; // volcano post-atk
 
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10 };// not sure
 	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// not sure

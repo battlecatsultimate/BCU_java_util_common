@@ -75,10 +75,11 @@ public class AttackSimple extends AttackAb {
 
 			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0, layer);
 		}
-		
-		if(capt.size() > 0 && proc[P_VOLC][0] > 0) {
+
+		if (capt.size() > 0 && proc[P_VOLC][0] > 0) {
 			int dire = model.getDire();
 			int wid = W_VOLC;
+			// TODO
 		}
 	}
 

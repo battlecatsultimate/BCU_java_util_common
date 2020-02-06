@@ -12,14 +12,14 @@ public class AttackWave extends AttackAb {
 	protected final Set<Entity> incl;
 
 	public AttackWave(AttackSimple a, double p0, double wid, int wt) {
-		super(a, p0, wid);
+		super(a, p0 - wid / 2, p0 + wid / 2);
 		waveType = wt;
 		incl = new HashSet<>();
 		proc[P_WAVE][0]--;
 	}
 
 	public AttackWave(AttackWave a, double p0, double wid) {
-		super(a, p0, wid);
+		super(a, p0 - wid / 2, p0 + wid / 2);
 		waveType = a.waveType;
 		incl = a.incl;
 		proc[P_WAVE][0]--;
