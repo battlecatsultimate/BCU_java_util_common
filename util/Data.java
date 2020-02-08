@@ -425,7 +425,7 @@ public class Data {
 	public static final int W_VOLC = 375;
 	public static final int W_VOLC_INNER = 250; // volcano inner width
 	public static final int W_VOLC_PIERCE = 125; // volcano pierce width
-	public static final int VOLC_ITV = 30;
+	public static final int VOLC_ITV = 20;
 
 	public static final int VOLC_PRE = 15; // volcano pre-atk
 	public static final int VOLC_POST = 10; // volcano post-atk

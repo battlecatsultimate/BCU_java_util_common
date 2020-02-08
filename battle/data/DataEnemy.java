@@ -132,7 +132,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc[P_VOLC][0] = ints[81];
 		proc[P_VOLC][1] = ints[82] / 4;
 		proc[P_VOLC][2] = ints[83] / 4 + proc[P_VOLC][1];
-		proc[P_VOLC][3] = ints[84] * 30;
+		proc[P_VOLC][3] = ints[84] * VOLC_ITV;
 		abi = a;
 		type = t;
 	}
