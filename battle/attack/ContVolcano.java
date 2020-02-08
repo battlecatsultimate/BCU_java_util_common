@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -19,8 +20,10 @@ public class ContVolcano extends ContAb {
 	protected ContVolcano(AttackVolcano v, double p, int lay, int alive) {
 		super(v.model.b, p, lay);
 		anim = EffAnim.effas[v.dire == 1 ? A_E_VOLC : A_VOLC].getEAnim(1);
+		anim.changeAnim(0);
 		this.v = v;
 		aliveTime = alive;
+		CommonStatic.def.setSE(SE_VOLC_START);
 	}
 
 	@Override
@@ -33,10 +36,15 @@ public class ContVolcano extends ContAb {
 
 	@Override
 	public void update() {
-		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != 1)
+		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != 1) {
 			anim.changeAnim(1);
-		else if (t > VOLC_PRE + aliveTime && anim.type != 2)
+			CommonStatic.def.setSE(SE_VOLC_LOOP);
+		} else if (t > VOLC_PRE + aliveTime && anim.type != 2)
 			anim.changeAnim(2);
+
+		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && (t-VOLC_PRE) % VOLC_SE == 0) {
+			CommonStatic.def.setSE(SE_VOLC_LOOP);
+		}
 
 		if (t >= aliveTime + VOLC_POST + VOLC_PRE) {
 			activate = false;

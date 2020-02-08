@@ -32,6 +32,8 @@ public class Data {
 	public static final int SE_BARRIER_NON = 71;
 	public static final int SE_BARRIER_ATK = 72;
 	public static final int SE_POISON = 110;
+	public static final int SE_VOLC_START = 111;
+	public static final int SE_VOLC_LOOP = 112;
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 } };
 
 	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65, 73,
@@ -429,6 +431,8 @@ public class Data {
 
 	public static final int VOLC_PRE = 15; // volcano pre-atk
 	public static final int VOLC_POST = 10; // volcano post-atk
+
+	public static final int VOLC_SE = 30; // volcano se loop duration
 
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10 };// not sure
 	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// not sure
