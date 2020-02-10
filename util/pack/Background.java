@@ -79,8 +79,8 @@ public class Background extends AnimI {
 		pack = Pack.def;
 		id = pack.bg.size();
 		img = vimg;
-		top = ints[14] == 1;
-		ic = ints[13];
+		top = ints[14] == 1 || ints[13] == 8;
+		ic = ints[13] == 8 ? 1 : ints[13];
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		Pack.def.bg.add(this);
@@ -114,7 +114,7 @@ public class Background extends AnimI {
 		check();
 		final int off = (int) (pos - shift * siz);
 		final int fw = (int) (768 * siz);
-		final int fh = (int) (510 * siz);
+		final int fh =(int) (510 * siz);
 
 		g.gradRect(0, h, (int) rect.x, (int) rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
 
