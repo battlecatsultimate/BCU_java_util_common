@@ -37,7 +37,7 @@ public class Data {
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 } };
 
 	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65, 73,
-			74, 83, 84, 85, 86, 90, 110 };
+			74, 83, 84, 85, 86, 90, 110, 111, 112 };
 
 	public static final int RARITY_TOT = 6;
 
@@ -490,6 +490,11 @@ public class Data {
 
 	public static String revVer(int ver) {
 		return ver / 1000000 % 100 + "-" + ver / 10000 % 100 + "-" + ver / 100 % 100 + "-" + ver % 100;
+	}
+
+	public static void set(int[] dst, int[] src) {
+		for (int i = 0; i < Math.min(dst.length, src.length); i++)
+			dst[i] = src[i];
 	}
 
 	public static String trio(int i) {

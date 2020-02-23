@@ -219,7 +219,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			if ((conf & 192) == 0)
 				summon(sprc, e, acs[ind]);
 			else
-				proc[P_SUMMON] = sprc;
+				set(proc[P_SUMMON], sprc);
 		}
 		if (getProc(ind, P_SATK, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_SATK, 0)) {
 			proc[P_SATK][0] = getProc(ind, P_SATK, 1);

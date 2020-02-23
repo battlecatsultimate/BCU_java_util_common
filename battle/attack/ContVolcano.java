@@ -42,7 +42,7 @@ public class ContVolcano extends ContAb {
 		} else if (t > VOLC_PRE + aliveTime && anim.type != 2)
 			anim.changeAnim(2);
 
-		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && (t-VOLC_PRE) % VOLC_SE == 0) {
+		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
 			CommonStatic.def.setSE(SE_VOLC_LOOP);
 		}
 

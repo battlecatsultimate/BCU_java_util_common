@@ -114,7 +114,7 @@ public class Background extends AnimI {
 		check();
 		final int off = (int) (pos - shift * siz);
 		final int fw = (int) (768 * siz);
-		final int fh =(int) (510 * siz);
+		final int fh = (int) (510 * siz);
 
 		g.gradRect(0, h, (int) rect.x, (int) rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
 
