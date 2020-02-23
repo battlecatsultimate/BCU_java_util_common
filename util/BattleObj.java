@@ -155,6 +155,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 			if (f.getName().startsWith(NONC))
 				continue;
 			try {
+				f.setAccessible(true);
 				f.set(copy, hardCopy(f.get(this)));
 			} catch (IllegalAccessException e3) {
 				e3.printStackTrace();
