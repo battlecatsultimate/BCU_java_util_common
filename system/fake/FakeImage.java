@@ -29,4 +29,5 @@ public interface FakeImage {
 
 	public void setRGB(int i, int j, int p);
 
+	public void unload();
 }

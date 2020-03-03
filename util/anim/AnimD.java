@@ -81,4 +81,15 @@ public abstract class AnimD extends AnimI {
 		}
 	}
 
+	public void unload() {
+		for(int i = 0; i < parts.length; i++) {
+			parts[i].unload();
+			parts[i] = null;
+		}
+
+		parts = null;
+
+		loaded = false;
+	}
+
 }

@@ -113,4 +113,12 @@ public class AnimU extends AnimD implements MultiLangFile {
 		}
 	}
 
+	@Override
+	public void unload() {
+		num.unload();
+
+		num = null;
+
+		super.unload();
+	}
 }
