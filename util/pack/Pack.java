@@ -204,7 +204,7 @@ public class Pack extends Data {
 	public final int id;
 
 	public final CasStore cs;
-	public final EnemyStore es = new EnemyStore(this);
+	public final EnemyStore es;
 	public final BGStore bg = new BGStore(this);
 	public final UnitStore us = new UnitStore(this);
 	public final SoulStore ss = new SoulStore(this);
@@ -225,6 +225,7 @@ public class Pack extends Data {
 		name = "default";
 		editable = false;
 		mc = null;
+		es = new EnemyStore(this,1000);
 		cs = new CasStore(this, false);
 
 	}
@@ -238,6 +239,8 @@ public class Pack extends Data {
 			rely.add(is.nextInt());
 		if (reg)
 			map.put(id, this);
+
+		es = new EnemyStore(this);
 		cs = new CasStore(this, reg);
 	}
 
@@ -246,6 +249,8 @@ public class Pack extends Data {
 		name = getAvailable(name);
 		mc = new MapColc(this);
 		rely.add(0);
+
+		es = new EnemyStore(this);
 		cs = new CasStore(this, true);
 	}
 
@@ -277,6 +282,8 @@ public class Pack extends Data {
 			for (int i = 0; i < n; i++)
 				rely.add(is.nextInt());
 		}
+
+		es = new EnemyStore(this);
 		cs = new CasStore(this, true);
 	}
 

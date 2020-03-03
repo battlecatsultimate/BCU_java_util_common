@@ -61,11 +61,18 @@ public class EnemyStore extends FixIndexList<Enemy> {
 
 	public final Pack pack;
 
-	public final FixIndexList<EneRand> ers = new FixIndexList<>(new EneRand[500]);
+	public final FixIndexList<EneRand> ers;
 
 	public EnemyStore(Pack p) {
 		super(new Enemy[500]);
 		pack = p;
+		ers = new FixIndexList<>(new EneRand[500]);
+	}
+
+	public EnemyStore(Pack p, int size) {
+		super(new Enemy[size]);
+		pack = p;
+		ers = null;
 	}
 
 	public Enemy addEnemy(DIYAnim da, CustomEnemy ce) {
