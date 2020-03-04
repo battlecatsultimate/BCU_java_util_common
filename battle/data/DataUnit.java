@@ -158,6 +158,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			proc[P_VOLC][1] = ints[87] / 4;
 			proc[P_VOLC][2] = ints[88] / 4 + proc[P_VOLC][1];
 			proc[P_VOLC][3] = ints[89] * VOLC_ITV;
+			if(ints[90] == 1)
+				proc[P_IMUPOIATK][0] = 100;
 		} catch (IndexOutOfBoundsException e) {
 		}
 

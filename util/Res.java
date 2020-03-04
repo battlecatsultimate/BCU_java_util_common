@@ -160,6 +160,7 @@ public class Res extends ImgCore {
 		icon[1][P_SATK] = new VImg(parts[229]);
 		icon[1][P_IMUATK] = new VImg(parts[231]);
 		icon[1][P_VOLC] = new VImg(parts[239]);
+		icon[1][P_IMUPOIATK] = new VImg(parts[237]);
 
 		icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");

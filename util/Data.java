@@ -222,6 +222,7 @@ public class Data {
 	/** official poison */
 	public static final int P_POIATK = 31;
 	public static final int P_VOLC = 32;
+	public static final int P_IMUPOIATK = 33;
 
 	public static final int PROC_TOT = 40;// 32
 
