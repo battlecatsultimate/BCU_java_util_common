@@ -12,7 +12,7 @@ public class Soul extends AnimD {
 	public static void read() {
 		String pre = "./org/battle/soul/";
 		String mid = "/battle_soul_";
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 13; i++)
 			Pack.def.ss.add(new Soul(pre + trio(i) + mid + trio(i), i));
 	}
 
