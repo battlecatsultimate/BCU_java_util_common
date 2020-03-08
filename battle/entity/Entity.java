@@ -882,7 +882,7 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		int[] imuatk = data.getProc(P_IMUATK);
-		if ((atk.type == -1 || receive(atk.type, -1)) && imuatk[0] > 0) {
+		if ((atk.dire == -1 || atk.type == -1 || receive(atk.type, -1)) && imuatk[0] > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk[0]) {
 				status[P_IMUATK][0] = (int) (imuatk[1] * (1 + 0.2 / 3 * getFruit(atk.type, -1)));
 				anim.getEff(P_IMUATK);

@@ -124,9 +124,10 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 			t |= TB_RELIC;
 		proc[P_CURSE][0] = ints[73];
 		proc[P_CURSE][1] = ints[74];
-		if (ints[75] != 0 || ints[76] != 0 || ints[77] != 0 || ints[78] != 0)
-			Printer.p("DataEnemy", 114,
-					enemy.id + "-new 75-78: " + ints[75] + "," + ints[76] + "," + ints[77] + "," + ints[78]);
+		proc[P_SATK][0] = ints[75];
+		proc[P_SATK][1] = ints[76];
+		proc[P_IMUATK][0] = ints[77];
+		proc[P_IMUATK][1] = ints[78];
 		proc[P_POIATK][0] = ints[79];
 		proc[P_POIATK][1] = ints[80];
 		proc[P_VOLC][0] = ints[81];
