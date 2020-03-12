@@ -141,6 +141,7 @@ public class AnimC extends AnimU {
 
 	public void createNew() {
 		loaded = true;
+		partial = true;
 		imgcut = new ImgCut();
 		mamodel = new MaModel();
 		anims = new MaAnim[7];
