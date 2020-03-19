@@ -76,7 +76,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 
 	public void validate() {
 		int doff = 0;
-		if (n != 0 && moves[0][0] - off != 0)
+		if (n != 0 && moves[0][0] - off < 0)
 			doff -= moves[0][0];
 		for (int i = 0; i < n; i++)
 			moves[i][0] += doff;
@@ -138,7 +138,15 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 							ti = Math.sin(ti * Math.PI / 2);
 						else
 							ti = (1 - Math.cos(ti * Math.PI)) / 2;
-					vd = (int) Math.ceil((v1 - v0) * ti + v0);
+					
+					if(ints[1] == 2)
+						if(v1 - v0 < 0)
+							vd = (int) Math.ceil((v1 - v0) * ti + v0);
+						else
+							vd = (int) ((v1 - v0) * ti + v0);
+					else
+						vd = (int) ((v1 - v0) * ti + v0);
+					
 					es[ints[0]].alter(ints[1], vd);
 					break;
 				}
