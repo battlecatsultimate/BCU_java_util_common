@@ -9,7 +9,8 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.system.FixIndexList;
 import common.util.Data;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCI;
+import common.util.anim.AnimCE;
 import common.util.pack.Pack;
 import main.Opts;
 
@@ -107,7 +108,7 @@ public class UnitStore extends Data {
 			os.writeInt(u.forms.length);
 			for (Form f : u.forms) {
 				os.writeString(f.name);
-				os.accept(((AnimC) f.anim).write());
+				os.accept(((AnimCI) f.anim).write());
 				((CustomUnit) f.du).write(os);
 			}
 		}
@@ -141,7 +142,7 @@ public class UnitStore extends Data {
 			os.writeInt(u.forms.length);
 			for (Form f : u.forms) {
 				os.writeString(f.name);
-				os.accept(DIYAnim.writeAnim((AnimC) f.anim));
+				os.accept(DIYAnim.writeAnim((AnimCE) f.anim));
 				((CustomUnit) f.du).write(os);
 			}
 		}
@@ -189,7 +190,7 @@ public class UnitStore extends Data {
 			u.forms = new Form[m];
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
-				AnimC ac = new AnimC(is.subStream());
+				AnimCI ac = new AnimCI(is.subStream());
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
 				u.forms[j] = new Form(u, j, name, ac, cu);
@@ -218,7 +219,7 @@ public class UnitStore extends Data {
 			u.forms = new Form[m];
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
-				AnimC ac = DIYAnim.getAnim(is.nextString(), false);
+				AnimCE ac = DIYAnim.getAnim(is.nextString(), false);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
 				u.forms[j] = new Form(u, j, name, ac, cu);
@@ -247,7 +248,7 @@ public class UnitStore extends Data {
 			u.forms = new Form[m];
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
-				AnimC ac = DIYAnim.zread(is.subStream(), false);
+				AnimCE ac = DIYAnim.zread(is.subStream(), false);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
 				u.forms[j] = new Form(u, j, name, ac, cu);

@@ -7,7 +7,8 @@ import common.battle.data.CustomEnemy;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.FixIndexList;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
+import common.util.anim.AnimCI;
 import common.util.pack.Pack;
 
 public class EnemyStore extends FixIndexList<Enemy> {
@@ -91,7 +92,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			os.writeInt(e.id);
 			os.writeString(e.name);
 			((CustomEnemy) e.de).write(os);
-			os.accept(((AnimC) e.anim).write());
+			os.accept(((AnimCI) e.anim).write());
 		}
 
 		List<EneRand> lis = ers.getList();
@@ -112,7 +113,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		for (Enemy e : list) {
 			((CustomEnemy) e.de).write(os);
 			os.writeInt(e.id % 1000);
-			os.accept(DIYAnim.writeAnim((AnimC) e.anim));
+			os.accept(DIYAnim.writeAnim((AnimCE) e.anim));
 			os.writeString(e.name);
 		}
 		List<EneRand> lis = ers.getList();
@@ -146,7 +147,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 
 	private void addEnemy(int hash, CustomEnemy ce, InStream nam, String na) {
 		hash = pack.id * 1000 + hash % 1000;
-		AnimC ac = DIYAnim.zread(nam, true);
+		AnimCE ac = DIYAnim.zread(nam, true);
 		Enemy e = new Enemy(hash, ac, ce);
 		e.name = na;
 		set(hash % 1000, e);
@@ -154,7 +155,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 
 	private void addEnemy(int hash, CustomEnemy ce, String nam, String na) {
 		hash = pack.id * 1000 + hash % 1000;
-		AnimC ac = DIYAnim.getAnim(nam, true);
+		AnimCE ac = DIYAnim.getAnim(nam, true);
 		Enemy e = new Enemy(hash, ac, ce);
 		e.name = na;
 		set(hash % 1000, e);
@@ -167,7 +168,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimC ac = new AnimC(is.subStream());
+			AnimCI ac = new AnimCI(is.subStream());
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
 			set(hash % 1000, e);
@@ -181,7 +182,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimC ac = new AnimC(is.subStream());
+			AnimCI ac = new AnimCI(is.subStream());
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
 			set(hash % 1000, e);

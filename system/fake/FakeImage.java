@@ -4,6 +4,10 @@ import java.io.IOException;
 
 public interface FakeImage {
 
+	public static enum Marker {
+		BG, EDI, UNI, RECOLOR, RECOLORED
+	}
+
 	public static FakeImage read(Object o) throws IOException {
 		return ImageBuilder.builder.build(o);
 	}
@@ -24,7 +28,7 @@ public interface FakeImage {
 
 	public Object gl();
 
-	public default void mark(Object o) {
+	public default void mark(Marker m) {
 	}
 
 	public void setRGB(int i, int j, int p);

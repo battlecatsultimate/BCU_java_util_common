@@ -34,7 +34,7 @@ public interface MaskEntity extends BattleStatic {
 	public int getItv();
 
 	/** get the Enemy/Form this data represents */
-	public Animable<AnimU> getPack();
+	public Animable<AnimU<?>> getPack();
 
 	public int getPost();
 

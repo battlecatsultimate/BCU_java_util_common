@@ -13,7 +13,7 @@ import common.system.MultiLangCont;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Data;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.pack.Pack;
 import main.MainBCU;
 
@@ -111,7 +111,7 @@ public class Unit extends Data implements Comparable<Unit> {
 			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
 		if (MainBCU.preload)
 			for (Form f : forms)
-				f.anim.edi.check();
+				f.anim.getEdi().check();
 	}
 
 	protected Unit(Pack p, DIYAnim da, CustomUnit cu) {
@@ -141,8 +141,8 @@ public class Unit extends Data implements Comparable<Unit> {
 		lv.units.add(u);
 		forms = new Form[u.forms.length];
 		for (int i = 0; i < forms.length; i++) {
-			String str = AnimC.getAvailable(id + "-" + i);
-			AnimC ac = new AnimC(str, u.forms[i].anim);
+			String str = AnimCE.getAvailable(id + "-" + i);
+			AnimCE ac = new AnimCE(str, u.forms[i].anim);
 			DIYAnim da = new DIYAnim(str, ac);
 			DIYAnim.map.put(str, da);
 			CustomUnit cu = new CustomUnit();

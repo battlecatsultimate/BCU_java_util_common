@@ -8,12 +8,12 @@ import common.system.BasedCopable;
 import common.system.MultiLangCont;
 import common.system.VImg;
 import common.util.Animable;
-import common.util.anim.AnimC;
 import common.util.anim.AnimU;
+import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.ImgCut;
 
-public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
+public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
 
 	public static ImgCut unicut, udicut;
 
@@ -33,7 +33,7 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 
 	public String name = "";
 
-	public Form(Unit u, int f, String str, AnimC ac, CustomUnit cu) {
+	public Form(Unit u, int f, String str, AnimU<?> ac, CustomUnit cu) {
 		unit = u;
 		uid = u.id;
 		fid = f;
@@ -49,10 +49,9 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 		uid = u.id;
 		fid = f;
 		String nam = trio(unit.id) + "_" + SUFX[fid];
-		anim = new AnimU(str, nam, "edi" + nam + ".png");
-		anim.uni = new VImg(str + "uni" + nam + "00.png");
+		anim = new AnimUD(str, nam, "edi" + nam + ".png", "uni" + nam + "00.png");
 		udi = new VImg(str + "udi" + nam + ".png");
-		anim.uni.setCut(unicut);
+		anim.getUni().setCut(unicut);
 		udi.setCut(udicut);
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
@@ -62,7 +61,7 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 	public Form copy(Unit b) {
 		CustomUnit cu = new CustomUnit();
 		cu.importData(du);
-		return new Form(b, fid, name, (AnimC) anim, cu);
+		return new Form(b, fid, name, anim, cu);
 	}
 
 	public int getDefaultPrice(int sta) {

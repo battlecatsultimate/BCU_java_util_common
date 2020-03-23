@@ -1,15 +1,32 @@
 package common.util.anim;
 
 import common.CommonStatic;
-import common.system.MultiLangFile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.AssetData;
-import common.system.files.VFile;
-import common.util.Res;
 import main.Printer;
 
-public class AnimU extends AnimD implements MultiLangFile {
+public abstract class AnimU<T extends AnimU.ImageLoader> extends AnimD {
+
+	public static interface ImageLoader {
+
+		public VImg getEdi();
+
+		public ImgCut getIC();
+
+		public MaAnim[] getMA();
+
+		public MaModel getMM();
+
+		public FakeImage getNum();
+
+		public VImg getUni();
+
+		public void reload(AssetData data);
+
+		public void unload();
+
+	}
 
 	public static String[] strs0, strs1, strs2;
 
@@ -21,20 +38,17 @@ public class AnimU extends AnimD implements MultiLangFile {
 		CommonStatic.def.redefine(AnimU.class);
 	}
 
-	public FakeImage num;
-
-	public VImg uni = Res.slot[0], edi;
-
 	protected boolean partial = false;
+	protected final T loader;
 
-	public AnimU(String st, String ed0, String ed1) {
-		super(st + ed0);
-		edi = new VImg(st + ed1);
-		edi.mark("edi");
+	protected AnimU(String path, T load) {
+		super(path);
+		loader = load;
 	}
 
-	protected AnimU() {
+	protected AnimU(T load) {
 		super("");
+		loader = load;
 	}
 
 	public int getAtkLen() {
@@ -50,25 +64,31 @@ public class AnimU extends AnimD implements MultiLangFile {
 		return new EAnimU(this, t);
 	}
 
+	public VImg getEdi() {
+		return loader.getEdi();
+	}
+
 	@Override
 	public FakeImage getNum() {
-		check();
-		return num;
+		return loader.getNum();
+	}
+
+	public VImg getUni() {
+		return loader.getUni();
 	}
 
 	@Override
 	public void load() {
 		loaded = true;
 		try {
-			num = VFile.get(str + ".png").getData().getImg(this);
-			imgcut = ImgCut.newIns(str + ".imgcut");
-			if (num == null) {
+			imgcut = loader.getIC();
+			if (getNum() == null) {
 				Printer.e("AnimU", 70, "can't read png: " + str);
 				mamodel = null;
 				mismatch = true;
 				return;
 			}
-			parts = imgcut.cut(num);
+			parts = imgcut.cut(getNum());
 			partial();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -86,40 +106,17 @@ public class AnimU extends AnimD implements MultiLangFile {
 	}
 
 	@Override
-	public void reload(AssetData ad) {
-		if (!loaded)
-			return;
-		num = ad.getImg(this);
-		parts = imgcut.cut(num);
+	public void unload() {
+		loader.unload();
+		super.unload();
 	}
 
 	protected void partial() {
 		if (!partial) {
 			partial = true;
-			mamodel = MaModel.newIns(str + ".mamodel");
-			if (VFile.getFile(str + "_zombie00.maanim") != null)
-				anims = new MaAnim[7];
-			else if (VFile.getFile(str + "_entry.maanim") != null)
-				anims = new MaAnim[5];
-			else
-				anims = new MaAnim[4];
-			for (int i = 0; i < 4; i++)
-				anims[i] = MaAnim.newIns(str + "0" + i + ".maanim");
-			if (anims.length == 5)
-				anims[4] = MaAnim.newIns(str + "_entry.maanim");
-			if (anims.length == 7)
-				for (int i = 0; i < 3; i++)
-					anims[i + 4] = MaAnim.newIns(str + "_zombie0" + i + ".maanim");
+			mamodel = loader.getMM();
+			anims = loader.getMA();
 		}
 	}
 
-	@Override
-	public void unload() {
-		if(num != null) {
-			num.unload();
-			num = null;
-		}
-
-		super.unload();
-	}
 }

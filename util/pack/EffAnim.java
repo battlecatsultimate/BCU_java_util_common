@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.fake.FakeImage.Marker;
 import common.util.anim.AnimD;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -93,7 +94,7 @@ public class EffAnim extends AnimD {
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
-		fimg.mark("recolor");
+		fimg.mark(Marker.RECOLOR);
 		int w = fimg.getWidth();
 		int h = fimg.getHeight();
 		for (int i = 0; i < w; i++)
@@ -106,7 +107,7 @@ public class EffAnim extends AnimD {
 				p = f.apply(new int[] { a, r, g, b });
 				fimg.setRGB(i, j, p);
 			}
-		fimg.mark("recolor-finished");
+		fimg.mark(Marker.RECOLORED);
 	}
 
 	private static void readCustom(String[] stfs, ImgCut[] icfs) {

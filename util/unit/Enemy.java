@@ -18,15 +18,15 @@ import common.system.VImg;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Animable;
-import common.util.anim.AnimC;
 import common.util.anim.AnimU;
+import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 
-public class Enemy extends Animable<AnimU> implements AbEnemy {
+public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 
 	public static void readData() throws IOException {
 		VFile.get("./org/enemy/").list().forEach(p -> new Enemy(p));
@@ -46,7 +46,7 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 	public String name = "";
 	public boolean inDic = false;
 
-	public Enemy(int hash, AnimC ac, CustomEnemy ce) {
+	public Enemy(int hash, AnimU<?> ac, CustomEnemy ce) {
 		id = hash;
 		de = ce;
 		ce.pack = this;
@@ -68,8 +68,8 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 		pac = Pack.def;
 		String str = "./org/enemy/" + trio(id) + "/";
 		de = new DataEnemy(this);
-		anim = new AnimU(str, trio(id) + "_e", "edi_" + trio(id) + ".png");
-		anim.edi.check();
+		anim = new AnimUD(str, trio(id) + "_e", "edi_" + trio(id) + ".png", null);
+		anim.getEdi().check();
 	}
 
 	public List<Stage> findApp() {
@@ -123,7 +123,7 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 
 	@Override
 	public VImg getIcon() {
-		return anim.edi;
+		return anim.getEdi();
 	}
 
 	@Override

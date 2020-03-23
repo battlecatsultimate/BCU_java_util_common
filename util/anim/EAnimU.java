@@ -6,14 +6,14 @@ import common.system.fake.FakeTransform;
 
 public class EAnimU extends EAnimD {
 
-	protected EAnimU(AnimU ani, int i) {
+	protected EAnimU(AnimU<?> ani, int i) {
 		super(ani, ani.mamodel, ani.anims[i]);
 		type = i;
 	}
 
 	@Override
-	public AnimU anim() {
-		return (AnimU) a;
+	public AnimU<?> anim() {
+		return (AnimU<?>) a;
 	}
 
 	/** change the animation state, for entities only */

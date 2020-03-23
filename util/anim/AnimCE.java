@@ -1,10 +1,8 @@
 package common.util.anim;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,32 +14,90 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.files.FileData;
 import common.system.files.VFile;
-import common.util.Res;
 import main.MainBCU;
 import main.Opts;
-import main.Printer;
 
-public class AnimC extends AnimU {
+public class AnimCE extends AnimCI {
 
 	public static interface AnimLoader {
+		public VImg getEdi();
 
-		VImg getEdi();
+		public ImgCut getIC();
 
-		FileData getIC();
+		public MaAnim[] getMA();
 
-		FileData[] getMA();
+		public MaModel getMM();
 
-		FileData getMM();
+		public String getName();
 
-		String getName();
+		public FakeImage getNum();
 
-		FakeImage getNum();
+		public int getStatus();
 
-		int getStatus();
+		public VImg getUni();
+	}
 
-		VImg getUni();
+	static class AnimCELoader implements AnimCI.AnimLoader {
+
+		private static VImg optional(String str) {
+			VFile<?> fv = VFile.getFile(str);
+			if (fv == null)
+				return null;
+			return new VImg(fv);
+		}
+
+		private final String pre, name;
+
+		private AnimCELoader(String str) {
+			name = str;
+			pre = "./res/anim/" + str + "/";
+		}
+
+		@Override
+		public VImg getEdi() {
+			return optional(pre + "edi.png");
+		}
+
+		@Override
+		public ImgCut getIC() {
+			return ImgCut.newIns(pre + name + ".imgcut");
+		}
+
+		@Override
+		public MaAnim[] getMA() {
+			MaAnim[] anims = new MaAnim[7];
+			for (int i = 0; i < 4; i++)
+				anims[i] = MaAnim.newIns(pre + name + "0" + i + ".maanim");
+			for (int i = 0; i < 3; i++)
+				anims[i + 4] = MaAnim.newIns(pre + name + "_zombie0" + i + ".maanim");
+			return anims;
+		}
+
+		@Override
+		public MaModel getMM() {
+			return MaModel.newIns(pre + name + ".mamodel");
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public FakeImage getNum() {
+			return VFile.getFile(pre + name + ".png").getData().getImg();
+		}
+
+		@Override
+		public int getStatus() {
+			return 0;
+		}
+
+		@Override
+		public VImg getUni() {
+			return optional(pre + "uni.png");
+		}
 
 	}
 
@@ -62,49 +118,23 @@ public class AnimC extends AnimU {
 	public int inPool;
 	public EditLink link;
 	public Stack<History> history = new Stack<>();
-	public String name = "";
-	public String prev;
+	public String prev = "./res/anim/";
 
-	public AnimC(InStream is) {
-		AnimLoader al = CommonStatic.def.loadAnim(is);
-		name = al.getName();
-		inPool = al.getStatus();
-		loaded = true;
-		partial = true;
-		saved = true;
-		num = al.getNum();
-		imgcut = ImgCut.newIns(al.getIC());
-		mamodel = MaModel.newIns(al.getMM());
-		FileData[] fd = al.getMA();
-		anims = new MaAnim[fd.length];
-		for (int i = 0; i < fd.length; i++)
-			anims[i] = MaAnim.newIns(fd[i]);
-		parts = imgcut.cut(num);
-		uni = al.getUni();
-		edi = al.getEdi();
-		standardize();
-		history("initial");
+	public AnimCE(InStream is) {
+		super(CommonStatic.def.loadAnim(is));
+		name = loader.getName();
+		inPool = loader.getStatus();
 	}
 
-	public AnimC(String st) {
+	public AnimCE(String st) {
+		super(new AnimCELoader(st));
 		inPool = 0;
-		prev = "./res/anim/";
 		name = st;
-		VFile<? extends FileData> f = VFile.getFile(prev + name + "/edi.png");
-		if (f != null)
-			edi = new VImg(f);
-		f = VFile.getFile(prev + name + "/uni.png");
-		if (f != null)
-			uni = new VImg(f);
-		if (uni != null && uni != Res.slot[0])
-			uni.mark("uni");
-		if (edi != null)
-			edi.mark("edi");
 	}
 
-	public AnimC(String str, AnimD ori) {
+	public AnimCE(String str, AnimD ori) {
+		super(new AnimCELoader(str));
 		inPool = 0;
-		prev = "./res/anim/";
 		name = str;
 		loaded = true;
 		partial = true;
@@ -118,20 +148,20 @@ public class AnimC extends AnimU {
 				anims[i] = ori.anims[i].clone();
 			else
 				anims[i] = new MaAnim();
-		num = ori.getNum();
-		parts = imgcut.cut(num);
+		loader.setNum(ori.getNum());
+		parts = imgcut.cut(ori.getNum());
 		File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
 		CommonStatic.def.check(f);
 		try {
-			FakeImage.write(num, "PNG", f);
+			FakeImage.write(ori.getNum(), "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		reloImg();
-		if (ori instanceof AnimU) {
-			AnimU au = (AnimU) ori;
-			edi = au.edi;
-			uni = au.uni;
+		if (ori instanceof AnimU<?>) {
+			AnimU<?> au = (AnimU<?>) ori;
+			setEdi(au.getEdi());
+			setUni(au.getUni());
 		}
 		saveIcon();
 		saveUni();
@@ -147,7 +177,7 @@ public class AnimC extends AnimU {
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
 			anims[i] = new MaAnim();
-		parts = imgcut.cut(num);
+		parts = imgcut.cut(getNum());
 		history("initial");
 	}
 
@@ -163,7 +193,7 @@ public class AnimC extends AnimU {
 		if (prev == null)
 			prev = "./res/anim/";
 		if (name == null)
-			name = AnimC.getAvailable(MainBCU.validate(str));
+			name = AnimCE.getAvailable(MainBCU.validate(str));
 		saved = false;
 		save();
 		saveImg();
@@ -173,7 +203,7 @@ public class AnimC extends AnimU {
 
 	public void ICedited() {
 		check();
-		parts = imgcut.cut(num);
+		parts = imgcut.cut(getNum());
 	}
 
 	public boolean isSaved() {
@@ -182,22 +212,8 @@ public class AnimC extends AnimU {
 
 	@Override
 	public void load() {
-		loaded = true;
 		try {
-			String pre = prev + name + "/" + name;
-			num = VFile.getFile(pre + ".png").getData().getImg();
-			imgcut = ImgCut.newIns(pre + ".imgcut");
-			if (num == null) {
-				Printer.e("AnimC", 147, "can't read png: " + pre);
-				Opts.loadErr("sprite missing: " + pre + ".png");
-				CommonStatic.def.exit(false);
-			}
-			parts = imgcut.cut(num);
-			partial();
-			if (edi != null)
-				edi.check();
-			if (uni != null)
-				uni.check();
+			super.load();
 			history("initial");
 		} catch (Exception e) {
 			Opts.loadErr("Error in loading custom animation: " + name);
@@ -207,7 +223,7 @@ public class AnimC extends AnimU {
 		validate();
 	}
 
-	public void merge(AnimC a, int x, int y) {
+	public void merge(AnimCE a, int x, int y) {
 		ImgCut ic0 = imgcut;
 		ImgCut ic1 = a.imgcut;
 		int icn = ic0.n;
@@ -266,15 +282,15 @@ public class AnimC extends AnimU {
 	}
 
 	public void reloImg() {
-		num = VFile.getFile(prev + name + "/" + name + ".png").getData().getImg();
+		setNum(VFile.getFile(prev + name + "/" + name + ".png").getData().getImg());
 		ICedited();
 	}
 
 	public void renameTo(String str) {
-		if (uni != null)
-			uni.check();
-		if (edi != null)
-			edi.check();
+		if (getUni() != null)
+			getUni().check();
+		if (getEdi() != null)
+			getEdi().check();
 		CommonStatic.def.delete(CommonStatic.def.route(prev + name + "/"));
 		name = str;
 		saveImg();
@@ -347,12 +363,12 @@ public class AnimC extends AnimU {
 	}
 
 	public void saveIcon() {
-		if (edi == null || edi.getImg() == null || prev == null)
+		if (getEdi() == null || getEdi().getImg() == null || prev == null)
 			return;
 		try {
 			File f = CommonStatic.def.route(prev + name + "/edi.png");
 			CommonStatic.def.check(f);
-			FakeImage.write(edi.getImg(), "PNG", f);
+			FakeImage.write(getEdi().getImg(), "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -362,9 +378,9 @@ public class AnimC extends AnimU {
 		try {
 			File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
 			CommonStatic.def.check(f);
-			if (!FakeImage.write(num, "PNG", f))
+			if (!FakeImage.write(getNum(), "PNG", f))
 				if (Opts.writeErr0(f.getPath()))
-					if (FakeImage.write(num, "PNG", f))
+					if (FakeImage.write(getNum(), "PNG", f))
 						Opts.ioErr("failed to write");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -372,26 +388,29 @@ public class AnimC extends AnimU {
 	}
 
 	public void saveUni() {
-		if (uni == null || uni.getImg() == null)
+		if (getUni() == null || getUni().getImg() == null)
 			return;
 		try {
 			File f = CommonStatic.def.route(prev + name + "/uni.png");
 			CommonStatic.def.check(f);
-			FakeImage.write(uni.getImg(), "PNG", f);
+			FakeImage.write(getUni().getImg(), "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void setEdi(VImg uni) {
+		loader.setEdi(uni);
+	}
+
 	public void setNum(FakeImage fimg) {
-		num = fimg;
+		loader.setNum(fimg);
 		if (loaded)
 			ICedited();
 	}
 
-	@Override
-	public String toString() {
-		return name;
+	public void setUni(VImg uni) {
+		loader.setUni(uni);
 	}
 
 	public void unSave(String str) {
@@ -416,72 +435,10 @@ public class AnimC extends AnimU {
 		history.peek().mms = mms;
 	}
 
-	public OutStream write() {
-		OutStream osi = OutStream.getIns();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			FakeImage.write(num, "PNG", baos);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			osi.terminate();
-			return osi;
-		}
-		osi.writeBytesI(baos.toByteArray());
-		try {
-			baos = new ByteArrayOutputStream();
-			imgcut.write(new PrintStream(baos, true, "UTF-8"));
-			osi.writeBytesI(baos.toByteArray());
-			baos = new ByteArrayOutputStream();
-			mamodel.write(new PrintStream(baos, true, "UTF-8"));
-			osi.writeBytesI(baos.toByteArray());
-			osi.writeInt(anims.length);
-			for (MaAnim ani : anims) {
-				baos = new ByteArrayOutputStream();
-				ani.write(new PrintStream(baos, true, "UTF-8"));
-				osi.writeBytesI(baos.toByteArray());
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		if (edi != null && edi.getImg() != null) {
-			baos = new ByteArrayOutputStream();
-			try {
-				FakeImage.write(edi.getImg(), "PNG", baos);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				osi.terminate();
-				return osi;
-			}
-			osi.writeBytesI(baos.toByteArray());
-		}
-		if (uni != null && uni.getImg() != null) {
-			baos = new ByteArrayOutputStream();
-			try {
-				FakeImage.write(uni.getImg(), "PNG", baos);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				osi.terminate();
-				return osi;
-			}
-			osi.writeBytesI(baos.toByteArray());
-		}
-		osi.terminate();
-		return osi;
-	}
-
 	@Override
 	protected void partial() {
-		if (!partial) {
-			partial = true;
-			String pre = prev + name + "/" + name;
-			mamodel = MaModel.newIns(pre + ".mamodel");
-			anims = new MaAnim[7];
-			for (int i = 0; i < 4; i++)
-				anims[i] = MaAnim.newIns(pre + "0" + i + ".maanim");
-			for (int i = 0; i < 3; i++)
-				anims[i + 4] = MaAnim.newIns(pre + "_zombie0" + i + ".maanim");
-			standardize();
-		}
+		super.partial();
+		standardize();
 	}
 
 	private void history(String str) {

@@ -920,8 +920,8 @@ public abstract class Entity extends AbEntity {
 		}
 		if (atk.getProc(P_POIATK)[0] > 0) {
 			int rst = getProc(P_IMUPOIATK, 0);
-			
-			if(rst == 100) {
+
+			if (rst == 100) {
 				anim.getEff(INV);
 			} else {
 				damage += maxH * atk.getProc(P_POIATK)[0] / 100;

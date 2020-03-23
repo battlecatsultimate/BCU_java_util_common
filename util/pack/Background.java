@@ -8,6 +8,7 @@ import common.system.P;
 import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
+import common.system.fake.FakeImage.Marker;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.anim.AnimI;
@@ -145,7 +146,7 @@ public class Background extends AnimI {
 
 	@Override
 	public void load() {
-		img.mark("BG");
+		img.mark(Marker.BG);
 		parts = iclist.get(ic).cut(img.getImg());
 	}
 

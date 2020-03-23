@@ -11,18 +11,18 @@ import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.util.Animable;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimI;
 import common.util.pack.Pack;
 import main.Opts;
 import main.Printer;
 
-public class DIYAnim extends Animable<AnimC> {
+public class DIYAnim extends Animable<AnimCE> {
 
 	public static final Map<String, DIYAnim> map = new TreeMap<>();
 
-	public static AnimC getAnim(String str, boolean ene) {
+	public static AnimCE getAnim(String str, boolean ene) {
 		DIYAnim ai = DIYAnim.map.get(str);
 		if (ai == null) {
 			Collection<DIYAnim> cd = DIYAnim.map.values();
@@ -32,18 +32,18 @@ public class DIYAnim extends Animable<AnimC> {
 			Opts.loadErr("Animation Missing: " + str);
 		}
 		if (ai == null) {
-			AnimU au;
+			AnimU<?> au;
 			if (ene)
 				au = EnemyStore.getEnemy(0).anim;
 			else
 				au = Pack.def.us.ulist.get(0).forms[0].anim;
-			return new AnimC("error", au);
+			return new AnimCE("error", au);
 		}
 		return ai.getAnimC();
 	}
 
-	public static List<AnimC> getAnims() {
-		List<AnimC> ans = new ArrayList<AnimC>();
+	public static List<AnimCE> getAnims() {
+		List<AnimCE> ans = new ArrayList<>();
 		for (DIYAnim da : map.values())
 			ans.add(da.anim);
 		return ans;
@@ -63,7 +63,7 @@ public class DIYAnim extends Animable<AnimC> {
 			}
 	}
 
-	public static OutStream writeAnim(AnimC anim) {
+	public static OutStream writeAnim(AnimCE anim) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeInt(anim.inPool);
@@ -78,36 +78,36 @@ public class DIYAnim extends Animable<AnimC> {
 		return os;
 	}
 
-	public static AnimC zread(InStream nam, boolean ene) {
+	public static AnimCE zread(InStream nam, boolean ene) {
 		int ver = getVer(nam.nextString());
 		if (ver >= 000401)
 			return zread$000401(nam, ene);
 		return null;
 	}
 
-	private static AnimC zread$000401(InStream is, boolean ene) {
+	private static AnimCE zread$000401(InStream is, boolean ene) {
 		int type = is.nextInt();
 		if (type == 0)
 			return getAnim(is.nextString(), ene);
 		else if (type == 1)
-			return new AnimC(is.subStream());
+			return new AnimCE(is.subStream());
 		else if (type == 2)
 			return null; // TODO
 		else
 			return null;
 	}
 
-	public DIYAnim(AnimC ac) {
+	public DIYAnim(AnimCE ac) {
 		anim = ac;
 	}
 
 	public DIYAnim(String str) {
 		map.put(str, this);
-		anim = new AnimC(str);
+		anim = new AnimCE(str);
 		anim.load();
 	}
 
-	public DIYAnim(String str, AnimC ac) {
+	public DIYAnim(String str, AnimCE ac) {
 		map.put(str, this);
 		anim = ac;
 	}
@@ -125,7 +125,7 @@ public class DIYAnim extends Animable<AnimC> {
 		return true;
 	}
 
-	public AnimC getAnimC() {
+	public AnimCE getAnimC() {
 		return anim;
 	}
 

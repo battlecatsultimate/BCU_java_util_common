@@ -3,6 +3,7 @@ package common.system;
 import java.io.IOException;
 
 import common.system.fake.FakeImage;
+import common.system.fake.FakeImage.Marker;
 import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.ImgCore;
@@ -18,7 +19,7 @@ public class VImg extends ImgCore {
 
 	private boolean loaded = false;
 	private ImgCut ic;
-	private String marker;
+	private Marker marker;
 
 	public VImg(Object o) {
 		if (o instanceof String)
@@ -47,10 +48,11 @@ public class VImg extends ImgCore {
 		return bimg;
 	}
 
-	public void mark(String string) {
+	public VImg mark(Marker string) {
 		marker = string;
 		if (bimg != null)
 			bimg.mark(string);
+		return this;
 	}
 
 	public void setCut(ImgCut cut) {

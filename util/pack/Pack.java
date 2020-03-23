@@ -22,7 +22,7 @@ import common.io.OutStream;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.Data;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCI;
 import common.util.stage.AbCastle;
 import common.util.stage.Castles;
 import common.util.stage.CharaGroup;
@@ -225,7 +225,7 @@ public class Pack extends Data {
 		name = "default";
 		editable = false;
 		mc = null;
-		es = new EnemyStore(this,1000);
+		es = new EnemyStore(this, 1000);
 		cs = new CasStore(this, false);
 
 	}
@@ -654,7 +654,7 @@ public class Pack extends Data {
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimC ac = new AnimC(is.subStream());
+			AnimCI ac = new AnimCI(is.subStream());
 			Enemy e = new Enemy(hash, ac, ce);
 			e.name = str;
 			es.set(hash % 1000, e);

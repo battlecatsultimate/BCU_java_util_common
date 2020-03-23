@@ -13,11 +13,7 @@ import main.Opts;
 
 public class ImgCut extends Data implements Cloneable {
 
-	public static ImgCut newIns(String path) {
-		return CommonStatic.def.readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
-	}
-
-	protected static ImgCut newIns(FileData f) {
+	public static ImgCut newIns(FileData f) {
 		try {
 			return new ImgCut(f.readLine());
 		} catch (Exception e) {
@@ -25,6 +21,10 @@ public class ImgCut extends Data implements Cloneable {
 			Opts.animErr(f.toString());
 			return new ImgCut();
 		}
+	}
+
+	public static ImgCut newIns(String path) {
+		return CommonStatic.def.readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
 	}
 
 	public String name;
