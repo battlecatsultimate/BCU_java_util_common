@@ -7,11 +7,10 @@ import common.system.fake.FakeImage.Marker;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Res;
-import common.util.anim.AnimU.ImageLoader;
 
 public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile {
 
-	static class DefImgLoader implements ImageLoader {
+	static class DefImgLoader implements AnimU.ImageLoader {
 
 		private final String spath;
 		private final VFile<AssetData> fnum, fedi, funi;

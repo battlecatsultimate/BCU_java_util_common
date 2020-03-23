@@ -49,11 +49,10 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		@Override
 		public VImg getEdi() {
-			if (edi != null)
+			if (edi.isPresent())
 				return edi.orElse(null);
 			edi = Optional.ofNullable(loader.getEdi());
-			if (edi.isPresent())
-				edi.get().mark(Marker.EDI);
+			edi.ifPresent(vImg -> vImg.mark(Marker.EDI));
 			return edi.orElse(null);
 		}
 
