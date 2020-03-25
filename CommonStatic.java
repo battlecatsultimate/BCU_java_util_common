@@ -2,7 +2,9 @@ package common;
 
 import static java.lang.Character.isDigit;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.function.Function;
@@ -10,6 +12,7 @@ import java.util.function.Function;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.util.anim.AnimCI;
 import common.util.pack.Background;
 import common.util.pack.Pack;
@@ -48,6 +51,70 @@ public class CommonStatic {
 
 	}
 
+	public static interface ImgReader {
+
+		public static File loadMusicFile(InStream is, ImgReader r, int pid, int mid) {
+			if (r == null)
+				r = CommonStatic.def.getMusicReader(pid, mid);
+			return r.readFile(is);
+		}
+
+		public static VImg readImg(InStream is, ImgReader r) {
+			if (r != null)
+				return r.readImgOptional(is.nextString());
+			return new VImg(is.nextBytesI());
+		}
+
+		public File readFile(InStream is);
+
+		public FakeImage readImg(String str);
+
+		public VImg readImgOptional(String str);
+
+	}
+
+	public static interface ImgWriter {
+
+		public static boolean saveFile(OutStream os, ImgWriter w, File file) {
+			if (w != null)
+				os.writeString(w.saveFile(file));
+			else
+				try {
+					OutStream data = OutStream.getIns();
+					byte[] bs = Files.readAllBytes(file.toPath());
+					data.writeBytesI(bs);
+					data.terminate();
+					os.accept(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			return true;
+		}
+
+		public static boolean writeImg(OutStream os, ImgWriter w, FakeImage img) {
+			if (w != null)
+				os.writeString(w.writeImg(img));
+			else
+				try {
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					FakeImage.write(img, "PNG", baos);
+					os.writeBytesI(baos.toByteArray());
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			return true;
+		}
+
+		public String saveFile(File f);
+
+		public String writeImg(FakeImage img);
+
+		public String writeImgOptional(VImg img);
+
+	}
+
 	public static interface Itf {
 
 		/** create a file if not exist */
@@ -59,7 +126,11 @@ public class CommonStatic {
 		/** exit */
 		public void exit(boolean save);
 
-		public AnimCI.AnimLoader loadAnim(InStream is);
+		public ImgReader getMusicReader(int pid, int mid);
+
+		public ImgReader getReader(File f);
+
+		public AnimCI.AnimLoader loadAnim(InStream is, ImgReader r);
 
 		/** show loading progress, empty is fine */
 		public void prog(String str);

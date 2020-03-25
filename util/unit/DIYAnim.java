@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import common.CommonStatic;
+import common.CommonStatic.ImgReader;
 import common.io.InStream;
 import common.io.OutStream;
 import common.util.Animable;
@@ -78,19 +79,19 @@ public class DIYAnim extends Animable<AnimCE> {
 		return os;
 	}
 
-	public static AnimCE zread(InStream nam, boolean ene) {
+	public static AnimCE zread(InStream nam, ImgReader r, boolean ene) {
 		int ver = getVer(nam.nextString());
 		if (ver >= 000401)
-			return zread$000401(nam, ene);
+			return zread$000401(nam, r, ene);
 		return null;
 	}
 
-	private static AnimCE zread$000401(InStream is, boolean ene) {
+	private static AnimCE zread$000401(InStream is, ImgReader r, boolean ene) {
 		int type = is.nextInt();
 		if (type == 0)
 			return getAnim(is.nextString(), ene);
 		else if (type == 1)
-			return new AnimCE(is.subStream());
+			return new AnimCE(is.subStream(), r);
 		else if (type == 2)
 			return null; // TODO
 		else

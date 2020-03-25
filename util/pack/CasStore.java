@@ -1,16 +1,15 @@
 package common.util.pack;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import common.CommonStatic;
+import common.CommonStatic.ImgReader;
+import common.CommonStatic.ImgWriter;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.FixIndexList;
 import common.system.VImg;
-import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.stage.AbCastle;
 import common.util.stage.Castles;
@@ -50,21 +49,14 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 		return pack.toString();
 	}
 
-	protected OutStream packup() {
+	protected OutStream packup(ImgWriter w) {
 		OutStream cas = OutStream.getIns();
 		cas.writeString("0.3.7");
 		Map<Integer, VImg> mcas = getMap();
 		cas.writeInt(mcas.size());
 		for (int ind : mcas.keySet()) {
 			cas.writeInt(ind);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			try {
-				FakeImage.write(mcas.get(ind).getImg(), "PNG", baos);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				break;
-			}
-			cas.writeBytesI(baos.toByteArray());
+			ImgWriter.writeImg(cas, w, mcas.get(ind).getImg());
 		}
 		cas.terminate();
 		return cas;
@@ -78,11 +70,11 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 		return os;
 	}
 
-	protected void zread$p000306(InStream cas) {
+	protected void zread$p000306(InStream cas, ImgReader r) {
 		int n = cas.nextInt();
 		for (int i = 0; i < n; i++) {
 			int val = cas.nextInt();
-			VImg vimg = new VImg(cas.nextBytesI());
+			VImg vimg = ImgReader.readImg(cas, r);
 			vimg.name = Data.trio(val);
 			set(val, vimg);
 		}
@@ -115,18 +107,16 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 		}
 	}
 
-	protected void zreadp(int ver, InStream cas) {
+	protected void zreadp(int ver, InStream cas, ImgReader r) {
 		if (ver >= 307)
 			ver = getVer(cas.nextString());
-
 		if (ver >= 306)
-			zread$p000306(cas);
+			zread$p000306(cas, r);
 	}
 
 	protected void zreadt(int ver, InStream cas) {
 		if (ver >= 307)
 			ver = getVer(cas.nextString());
-
 		if (ver >= 306)
 			zread$t000306(cas);
 	}

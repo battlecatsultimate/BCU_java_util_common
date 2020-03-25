@@ -1,18 +1,17 @@
 package common.util.pack;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import common.CommonStatic;
+import common.CommonStatic.ImgReader;
+import common.CommonStatic.ImgWriter;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.FixIndexList;
 import common.system.VImg;
-import common.system.fake.FakeImage;
 import common.util.Data;
 
 public class BGStore extends FixIndexList<Background> {
@@ -69,22 +68,14 @@ public class BGStore extends FixIndexList<Background> {
 		return pack.toString();
 	}
 
-	protected OutStream packup() {
+	protected OutStream packup(ImgWriter w) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.0");
 		Map<Integer, Background> mbg = getMap();
 		os.writeInt(mbg.size());
 		for (int ind : mbg.keySet()) {
 			os.writeInt(ind);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			try {
-				FakeImage.write(mbg.get(ind).img.getImg(), "PNG", baos);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				break;
-			}
-			os.writeBytesI(baos.toByteArray());
-
+			ImgWriter.writeImg(os, w, mbg.get(ind).img.getImg());
 			Background bg = mbg.get(ind);
 			os.writeInt(bg.top ? 1 : 0);
 			os.writeInt(bg.ic);
@@ -112,11 +103,11 @@ public class BGStore extends FixIndexList<Background> {
 		return os;
 	}
 
-	protected void zreadp(int ver, InStream is) {
+	protected void zreadp(int ver, InStream is, ImgReader r) {
 		if (ver >= 309)
 			ver = getVer(is.nextString());
 		if (ver >= 400)
-			zreadp$000400(is);
+			zreadp$000400(is, r);
 		else if (ver >= 306)
 			is.nextInt();
 	}
@@ -132,11 +123,11 @@ public class BGStore extends FixIndexList<Background> {
 			is.nextInt();
 	}
 
-	private void zreadp$000400(InStream is) {
+	private void zreadp$000400(InStream is, ImgReader r) {
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
 			int ind = is.nextInt();
-			VImg vimg = new VImg(is.nextBytesI());
+			VImg vimg = ImgReader.readImg(is, r);
 			vimg.name = Data.trio(ind);
 			Background bg = new Background(pack, vimg, ind);
 			set(ind, bg);

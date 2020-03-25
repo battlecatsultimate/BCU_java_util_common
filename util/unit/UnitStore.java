@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import common.CommonStatic;
+import common.CommonStatic.ImgReader;
 import common.battle.data.CustomUnit;
 import common.io.InStream;
 import common.io.OutStream;
@@ -87,7 +89,7 @@ public class UnitStore extends Data {
 		return ans;
 	}
 
-	public OutStream packup() {
+	public OutStream packup(CommonStatic.ImgWriter w) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeInt(lvlist.size());
@@ -108,7 +110,7 @@ public class UnitStore extends Data {
 			os.writeInt(u.forms.length);
 			for (Form f : u.forms) {
 				os.writeString(f.name);
-				os.accept(((AnimCI) f.anim).write());
+				os.accept(((AnimCI) f.anim).writeData(w));
 				((CustomUnit) f.du).write(os);
 			}
 		}
@@ -156,10 +158,10 @@ public class UnitStore extends Data {
 		return os;
 	}
 
-	public void zreadp(InStream is) {
+	public void zreadp(InStream is, ImgReader r) {
 		int val = getVer(is.nextString());
 		if (val >= 401)
-			zreadp$000401(val, is);
+			zreadp$000401(val, is, r);
 	}
 
 	public void zreadt(InStream is) {
@@ -170,7 +172,7 @@ public class UnitStore extends Data {
 			zreadt$000000(val, is);
 	}
 
-	private void zreadp$000401(int ver, InStream is) {
+	private void zreadp$000401(int ver, InStream is, ImgReader r) {
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
 			int ind = is.nextInt();
@@ -190,7 +192,7 @@ public class UnitStore extends Data {
 			u.forms = new Form[m];
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
-				AnimCI ac = new AnimCI(is.subStream());
+				AnimCI ac = new AnimCI(is.subStream(), r);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
 				u.forms[j] = new Form(u, j, name, ac, cu);
@@ -248,7 +250,7 @@ public class UnitStore extends Data {
 			u.forms = new Form[m];
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
-				AnimCE ac = DIYAnim.zread(is.subStream(), false);
+				AnimCE ac = DIYAnim.zread(is.subStream(), null, false);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
 				u.forms[j] = new Form(u, j, name, ac, cu);

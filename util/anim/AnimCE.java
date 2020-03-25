@@ -120,8 +120,8 @@ public class AnimCE extends AnimCI {
 	public Stack<History> history = new Stack<>();
 	public String prev = "./res/anim/";
 
-	public AnimCE(InStream is) {
-		super(CommonStatic.def.loadAnim(is));
+	public AnimCE(InStream is, CommonStatic.ImgReader r) {
+		super(CommonStatic.def.loadAnim(is, r));
 		name = loader.getName();
 		inPool = loader.getStatus();
 	}

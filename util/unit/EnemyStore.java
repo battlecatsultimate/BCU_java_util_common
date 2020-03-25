@@ -3,6 +3,8 @@ package common.util.unit;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.CommonStatic;
+import common.CommonStatic.ImgReader;
 import common.battle.data.CustomEnemy;
 import common.io.InStream;
 import common.io.OutStream;
@@ -83,7 +85,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		return e;
 	}
 
-	public OutStream packup() {
+	public OutStream packup(CommonStatic.ImgWriter w) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.2");
 		List<Enemy> list = getList();
@@ -92,7 +94,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			os.writeInt(e.id);
 			os.writeString(e.name);
 			((CustomEnemy) e.de).write(os);
-			os.accept(((AnimCI) e.anim).write());
+			os.accept(((AnimCI) e.anim).writeData(w));
 		}
 
 		List<EneRand> lis = ers.getList();
@@ -126,28 +128,28 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		return os;
 	}
 
-	public void zreadp(InStream is) {
+	public void zreadp(InStream is, ImgReader r) {
 		int val = getVer(is.nextString());
 		if (val >= 402)
-			zreadp$000402(val, is);
+			zreadp$000402(val, is, r);
 		else if (val >= 401)
-			zreadp$000401(val, is);
+			zreadp$000401(val, is, r);
 	}
 
 	public void zreadt(int ver, InStream is) {
 		if (ver >= 401)
 			ver = getVer(is.nextString());
 		if (ver >= 402)
-			zreadt$000402(ver, is);
+			zreadt$000402(ver, is, null);
 		else if (ver >= 401)
-			zreadt$000401(ver, is);
+			zreadt$000401(ver, is, null);
 		else if (ver >= 302)
 			zreadt$000302(ver, is);
 	}
 
-	private void addEnemy(int hash, CustomEnemy ce, InStream nam, String na) {
+	private void addEnemy(int hash, CustomEnemy ce, InStream nam, ImgReader r, String na) {
 		hash = pack.id * 1000 + hash % 1000;
-		AnimCE ac = DIYAnim.zread(nam, true);
+		AnimCE ac = DIYAnim.zread(nam, r, true);
 		Enemy e = new Enemy(hash, ac, ce);
 		e.name = na;
 		set(hash % 1000, e);
@@ -161,28 +163,28 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		set(hash % 1000, e);
 	}
 
-	private void zreadp$000401(int ver, InStream is) {
+	private void zreadp$000401(int ver, InStream is, ImgReader r) {
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
 			int hash = is.nextInt();
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimCI ac = new AnimCI(is.subStream());
+			AnimCI ac = new AnimCI(is.subStream(), r);
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
 			set(hash % 1000, e);
 		}
 	}
 
-	private void zreadp$000402(int ver, InStream is) {
+	private void zreadp$000402(int ver, InStream is, ImgReader r) {
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
 			int hash = is.nextInt();
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimCI ac = new AnimCI(is.subStream());
+			AnimCI ac = new AnimCI(is.subStream(), r);
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
 			set(hash % 1000, e);
@@ -208,7 +210,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		}
 	}
 
-	private void zreadt$000401(int ver, InStream is) {
+	private void zreadt$000401(int ver, InStream is, ImgReader r) {
 		int len = is.nextInt();
 		for (int i = 0; i < len; i++) {
 			CustomEnemy ce = new CustomEnemy();
@@ -216,11 +218,11 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			int hash = is.nextInt();
 			InStream anim = is.subStream();
 			String na = is.nextString();
-			addEnemy(hash, ce, anim, na);
+			addEnemy(hash, ce, anim, r, na);
 		}
 	}
 
-	private void zreadt$000402(int ver, InStream is) {
+	private void zreadt$000402(int ver, InStream is, ImgReader r) {
 		int len = is.nextInt();
 		for (int i = 0; i < len; i++) {
 			CustomEnemy ce = new CustomEnemy();
@@ -228,7 +230,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			int hash = is.nextInt();
 			InStream anim = is.subStream();
 			String na = is.nextString();
-			addEnemy(hash, ce, anim, na);
+			addEnemy(hash, ce, anim, r, na);
 		}
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {

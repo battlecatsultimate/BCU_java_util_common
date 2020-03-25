@@ -4,9 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Optional;
-
 import common.CommonStatic;
+import common.CommonStatic.ImgReader;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
@@ -40,7 +39,8 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		private final AnimCI.AnimLoader loader;
 		private FakeImage num;
-		private Optional<VImg> edi;
+		private boolean ediLoaded = false;
+		private VImg edi;
 		private VImg uni;
 
 		private AnimCILoader(AnimCI.AnimLoader al) {
@@ -49,11 +49,13 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		@Override
 		public VImg getEdi() {
-			if (edi.isPresent())
-				return edi.orElse(null);
-			edi = Optional.ofNullable(loader.getEdi());
-			edi.ifPresent(vImg -> vImg.mark(Marker.EDI));
-			return edi.orElse(null);
+			if (ediLoaded)
+				return edi;
+			ediLoaded = true;
+			edi = loader.getEdi();
+			if (edi != null)
+				edi.mark(Marker.EDI);
+			return edi;
 		}
 
 		@Override
@@ -103,7 +105,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		}
 
 		public void setEdi(VImg vedi) {
-			edi = Optional.of(vedi);
+			edi = vedi;
 			vedi.mark(Marker.EDI);
 		}
 
@@ -129,8 +131,8 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		name = loader.getName();
 	}
 
-	public AnimCI(InStream is) {
-		this(CommonStatic.def.loadAnim(is));
+	public AnimCI(InStream is, ImgReader r) {
+		this(CommonStatic.def.loadAnim(is, r));
 	}
 
 	@Override
@@ -206,6 +208,36 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		}
 		osi.terminate();
 		return osi;
+	}
+
+	public OutStream writeData(CommonStatic.ImgWriter w) {
+		if (w == null)
+			return write();
+		check();
+		OutStream os = OutStream.getIns();
+		os.writeString("0.4.9");
+		os.writeString(w.writeImg(getNum()));
+		os.writeString(w.writeImgOptional(getEdi()));
+		os.writeString(w.writeImgOptional(getUni()));
+		ByteArrayOutputStream baos;
+		try {
+			baos = new ByteArrayOutputStream();
+			imgcut.write(new PrintStream(baos, true, "UTF-8"));
+			os.writeBytesI(baos.toByteArray());
+			baos = new ByteArrayOutputStream();
+			mamodel.write(new PrintStream(baos, true, "UTF-8"));
+			os.writeBytesI(baos.toByteArray());
+			os.writeInt(anims.length);
+			for (MaAnim ani : anims) {
+				baos = new ByteArrayOutputStream();
+				ani.write(new PrintStream(baos, true, "UTF-8"));
+				os.writeBytesI(baos.toByteArray());
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		os.terminate();
+		return os;
 	}
 
 }

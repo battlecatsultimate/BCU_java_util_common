@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 import common.CommonStatic;
 import common.CommonStatic.Account;
+import common.CommonStatic.ImgReader;
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
@@ -121,7 +122,7 @@ public class Pack extends Data {
 					continue;
 				Pack pac;
 				try {
-					pac = new Pack(CommonStatic.def.readBytes(file), true);
+					pac = new Pack(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(f), true);
 				} catch (Exception e) {
 					e.printStackTrace();
 					Opts.loadErr("Error in reading pack " + str + " at initialization");
@@ -217,6 +218,7 @@ public class Pack extends Data {
 	public File file;
 	public int version;
 	private InStream res;
+	private ImgReader reader;
 
 	private int ver, bcuver;
 
@@ -230,10 +232,11 @@ public class Pack extends Data {
 
 	}
 
-	public Pack(InStream is, boolean reg) {
+	public Pack(InStream is, ImgReader r, boolean reg) {
 		ver = getVer(is.nextString());
 		id = is.nextInt();
 		res = is;
+		reader = r;
 		int n = is.nextByte();
 		for (int i = 0; i < n; i++)
 			rely.add(is.nextInt());
@@ -260,6 +263,7 @@ public class Pack extends Data {
 		editable = false;
 		ver = getVer(is.nextString());
 		res = is;
+		reader = CommonStatic.def.getReader(f);
 		if (ver >= 400) {
 			InStream head = is.subStream();
 			id = head.nextInt();
@@ -482,7 +486,7 @@ public class Pack extends Data {
 		// FIXME music
 	}
 
-	public void packUp() {
+	public void packUp(CommonStatic.ImgWriter w) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.2");
 		OutStream head = OutStream.getIns();
@@ -497,11 +501,11 @@ public class Pack extends Data {
 		head.terminate();
 		os.accept(head);
 		os.writeString(name);
-		os.accept(es.packup());
-		os.accept(us.packup());
-		os.accept(cs.packup());
-		os.accept(bg.packup());
-		os.accept(ms.packup());
+		os.accept(es.packup(w));
+		os.accept(us.packup(w));
+		os.accept(cs.packup(w));
+		os.accept(bg.packup(w));
+		os.accept(ms.packup(w));
 		mc.write(os);
 		os.terminate();
 		CommonStatic.def.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
@@ -635,18 +639,18 @@ public class Pack extends Data {
 
 	private void zreadp() {
 		if (ver == 402)
-			zreadp$000402(res);
+			zreadp$000402(res, reader);
 		else if (ver == 401)
-			zreadp$000401(res);
+			zreadp$000401(res, reader);
 		else if (ver >= 306)
-			zreadp$000306(res);
+			zreadp$000306(res, reader);
 		else if (ver >= 303)
-			zreadp$000303(res);
+			zreadp$000303(res, reader);
 		mc = new MapColc(this, res);
 		res = null;
 	}
 
-	private void zreadp$000303(InStream is) {
+	private void zreadp$000303(InStream is, ImgReader r) {
 		name = is.nextString();
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
@@ -654,34 +658,34 @@ public class Pack extends Data {
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimCI ac = new AnimCI(is.subStream());
+			AnimCI ac = new AnimCI(is.subStream(), r);
 			Enemy e = new Enemy(hash, ac, ce);
 			e.name = str;
 			es.set(hash % 1000, e);
 		}
 	}
 
-	private void zreadp$000306(InStream is) {
-		zreadp$000303(res);
-		cs.zreadp(ver, is.subStream());
-		bg.zreadp(ver, is.subStream());
+	private void zreadp$000306(InStream is, ImgReader r) {
+		zreadp$000303(res, r);
+		cs.zreadp(ver, is.subStream(), r);
+		bg.zreadp(ver, is.subStream(), r);
 	}
 
-	private void zreadp$000401(InStream is) {
+	private void zreadp$000401(InStream is, ImgReader r) {
 		name = is.nextString();
-		err("enemies", () -> es.zreadp(is.subStream()));
-		err("units", () -> us.zreadp(is.subStream()));
-		err("castles", () -> cs.zreadp(ver, is.subStream()));
-		err("backgrounds", () -> bg.zreadp(ver, is.subStream()));
+		err("enemies", () -> es.zreadp(is.subStream(), r));
+		err("units", () -> us.zreadp(is.subStream(), r));
+		err("castles", () -> cs.zreadp(ver, is.subStream(), r));
+		err("backgrounds", () -> bg.zreadp(ver, is.subStream(), r));
 	}
 
-	private void zreadp$000402(InStream is) {
+	private void zreadp$000402(InStream is, ImgReader r) {
 		name = is.nextString();
-		err("enemies", () -> es.zreadp(is.subStream()));
-		err("units", () -> us.zreadp(is.subStream()));
-		err("castles", () -> cs.zreadp(ver, is.subStream()));
-		err("backgrounds", () -> bg.zreadp(ver, is.subStream()));
-		err("music", () -> ms.zreadp(is.subStream()));
+		err("enemies", () -> es.zreadp(is.subStream(), r));
+		err("units", () -> us.zreadp(is.subStream(), r));
+		err("castles", () -> cs.zreadp(ver, is.subStream(), r));
+		err("backgrounds", () -> bg.zreadp(ver, is.subStream(), r));
+		err("music", () -> ms.zreadp(is.subStream(), r));
 	}
 
 	private void zreadt$000306(InStream is) {

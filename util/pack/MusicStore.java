@@ -1,13 +1,13 @@
 package common.util.pack;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import common.CommonStatic;
+import common.CommonStatic.ImgReader;
+import common.CommonStatic.ImgWriter;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.FixIndexList;
@@ -83,23 +83,14 @@ public class MusicStore extends FixIndexList<File> {
 		return pack.toString();
 	}
 
-	protected OutStream packup() {
+	protected OutStream packup(ImgWriter w) {
 		OutStream mus = OutStream.getIns();
 		mus.writeString("0.3.7");
 		Map<Integer, File> mcas = getMap();
 		mus.writeInt(mcas.size());
 		for (int ind : mcas.keySet()) {
 			mus.writeInt(ind);
-			OutStream data = OutStream.getIns();
-			try {
-				byte[] bs = Files.readAllBytes(mcas.get(ind).toPath());
-				data.writeBytesI(bs);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			data.terminate();
-			mus.accept(data);
-
+			ImgWriter.saveFile(mus, w, mcas.get(ind));
 		}
 		mus.terminate();
 		return mus;
@@ -113,25 +104,14 @@ public class MusicStore extends FixIndexList<File> {
 		return os;
 	}
 
-	protected void zreadp(InStream is) {
+	protected void zreadp(InStream is, ImgReader r) {
 		int ver = getVer(is.nextString());
 		if (ver == 307) {
 			int n = is.nextInt();
-			String prev = "./pack/music/" + hex(pack.id) + "/";
 			for (int i = 0; i < n; i++) {
 				int id = is.nextInt();
-				InStream data = is.subStream();
-				byte[] bs = data.nextBytesI();
-				File f = CommonStatic.def.route(prev + trio(id) + ".ogg");
+				File f = ImgReader.loadMusicFile(is, r, pack.id, id);
 				set(id, f);
-				if (f.exists())
-					continue;
-				CommonStatic.def.check(f);
-				try {
-					Files.write(f.toPath(), bs);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 	}
