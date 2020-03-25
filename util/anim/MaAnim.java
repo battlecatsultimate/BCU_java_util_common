@@ -97,6 +97,8 @@ public class MaAnim extends Data implements BattleStatic {
 	}
 
 	protected void update(int f, EAnimD eAnim, boolean rotate) {
+		if (rotate)
+			f %= max;
 		if (f == 0 || rotate && f % max == 0) {
 			for (EPart e : eAnim.ent)
 				e.setValue();

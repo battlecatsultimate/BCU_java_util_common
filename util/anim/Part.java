@@ -76,7 +76,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 
 	public void validate() {
 		int doff = 0;
-		if (n != 0 && moves[0][0] - off < 0)
+		if (n != 0 && (moves[0][0] - off < 0 || ints[2] > 1))
 			doff -= moves[0][0];
 		for (int i = 0; i < n; i++)
 			moves[i][0] += doff;
