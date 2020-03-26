@@ -106,7 +106,9 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		public void setEdi(VImg vedi) {
 			edi = vedi;
-			vedi.mark(Marker.EDI);
+			
+			if(vedi != null)
+				vedi.mark(Marker.EDI);
 		}
 
 		public void setNum(FakeImage fimg) {
