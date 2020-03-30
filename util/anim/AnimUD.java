@@ -88,8 +88,11 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 		@Override
 		public void unload() {
 			dnum = null;
-			num.unload();
-			num = null;
+
+			if(num != null) {
+				num.unload();
+				num = null;
+			}
 		}
 
 		private void setAnim(AnimUD a) {

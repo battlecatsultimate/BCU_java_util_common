@@ -70,10 +70,12 @@ public abstract class AnimD extends AnimI {
 	}
 
 	public void unload() {
-		for (int i = 0; i < parts.length; i++) {
-			if (parts[i] != null) {
-				parts[i].unload();
-				parts[i] = null;
+		if(parts != null) {
+			for (int i = 0; i < parts.length; i++) {
+				if (parts[i] != null) {
+					parts[i].unload();
+					parts[i] = null;
+				}
 			}
 		}
 
