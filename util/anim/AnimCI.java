@@ -215,7 +215,19 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 	public OutStream writeData(CommonStatic.ImgWriter w) {
 		if (w == null)
 			return write();
-		check();
+
+		if(imgcut == null) {
+			imgcut = loader.getIC();
+		}
+
+		if(mamodel == null) {
+			mamodel = loader.getMM();
+		}
+
+		if(anims == null) {
+			anims = loader.getMA();
+		}
+
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.9");
 		os.writeString(w.writeImg(getNum()));

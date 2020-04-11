@@ -85,12 +85,25 @@ public class Pack extends Data {
 					continue;
 
 				Pack pack;
-				try {
-					pack = new Pack(file);
-				} catch (Exception e) {
-					e.printStackTrace();
-					Opts.loadErr("Error in reading pack " + str + " at initialization");
-					continue;
+
+				File g = CommonStatic.def.route("./res/data/"+str.replace(".bcupack",".bcudata"));
+
+				if(!g.exists()) {
+					try {
+						pack = new Pack(file);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Opts.loadErr("Error in reading pack " + str + " at initialization");
+						continue;
+					}
+				} else {
+					try {
+						pack = new Pack(g);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Opts.loadErr("Error in reading pack " + g.getName() + "at initialization");
+						continue;
+					}
 				}
 
 				if (fmap.containsKey(pack.id)) {
@@ -508,7 +521,7 @@ public class Pack extends Data {
 		os.accept(ms.packup(w));
 		mc.write(os);
 		os.terminate();
-		CommonStatic.def.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
+		CommonStatic.def.writeBytes(os, "./res/data/" + hex(id) + ".bcudata");
 	}
 
 	public int relyOn(int p) {

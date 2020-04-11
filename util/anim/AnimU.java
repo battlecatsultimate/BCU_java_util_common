@@ -39,7 +39,7 @@ public abstract class AnimU<T extends AnimU.ImageLoader> extends AnimD {
 	}
 
 	protected boolean partial = false;
-	protected final T loader;
+	public final T loader;
 
 	protected AnimU(String path, T load) {
 		super(path);

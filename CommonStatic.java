@@ -60,7 +60,7 @@ public class CommonStatic {
 		}
 
 		public static VImg readImg(InStream is, ImgReader r) {
-			if (r != null)
+			if (r != null && !r.isNull())
 				return r.readImgOptional(is.nextString());
 			return new VImg(is.nextBytesI());
 		}
@@ -71,6 +71,9 @@ public class CommonStatic {
 
 		public VImg readImgOptional(String str);
 
+		public default boolean isNull() {
+			return true;
+		}
 	}
 
 	public static interface ImgWriter {
