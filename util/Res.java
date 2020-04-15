@@ -161,6 +161,8 @@ public class Res extends ImgCore {
 		icon[1][P_IMUATK] = new VImg(parts[231]);
 		icon[1][P_VOLC] = new VImg(parts[239]);
 		icon[1][P_IMUPOIATK] = new VImg(parts[237]);
+		icon[1][P_IMUVOLC] = new VImg(parts[243]);
+		icon[1][P_CURSE] = new VImg(parts[289]);
 
 		icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
@@ -178,7 +180,6 @@ public class Res extends ImgCore {
 		icon[1][P_MOVEWAVE] = new VImg("./org/page/icons/Moving.png");
 		icon[1][P_SUMMON] = new VImg("./org/page/icons/Summon.png");
 		icon[0][ABI_MOVEI] = new VImg("./org/page/icons/MovingX.png");
-		icon[1][P_CURSE] = new VImg("./org/page/icons/Curse.png");
 		icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");

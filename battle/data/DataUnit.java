@@ -1,6 +1,7 @@
 package common.battle.data;
 
 import common.CommonStatic;
+import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.Printer;
@@ -160,6 +161,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			proc[P_VOLC][3] = ints[89] * VOLC_ITV;
 			if (ints[90] == 1)
 				proc[P_IMUPOIATK][0] = 100;
+			if(ints[91] == 1)
+				proc[P_IMUVOLC][0] = 100;
+			proc[P_CURSE][0] = ints[92];
+			proc[P_CURSE][1] = ints[93];
 		} catch (IndexOutOfBoundsException e) {
 		}
 

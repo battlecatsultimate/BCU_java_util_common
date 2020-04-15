@@ -223,6 +223,7 @@ public class Data {
 	public static final int P_POIATK = 31;
 	public static final int P_VOLC = 32;
 	public static final int P_IMUPOIATK = 33;
+	public static final int P_IMUVOLC = 34;
 
 	public static final int PROC_TOT = 40;// 32
 
@@ -230,6 +231,7 @@ public class Data {
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;
 	public static final int WT_CANN = 2;
+	public static final int WT_VOLC = 3;
 	public static final int PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
 
 	public static final int PC2_HP = 0;
@@ -375,9 +377,10 @@ public class Data {
 	public static final int A_POISON = 45;
 	public static final int A_VOLC = 46;
 	public static final int A_E_VOLC = 47;
+	public static final int A_E_CURSE = 48;
 
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 48;
+	public static final int A_TOT = 49;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;

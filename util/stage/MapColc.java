@@ -58,6 +58,7 @@ public class MapColc extends Data {
 		idmap.put("B", 14);
 		idmap.put("RA", 24);
 		idmap.put("H", 25);
+		idmap.put("CA", 27);
 		for (int i = 0; i < strs.length; i++)
 			new Castles(i, strs[i]);
 		VFile<AssetData> f = VFile.get("./org/stage/");

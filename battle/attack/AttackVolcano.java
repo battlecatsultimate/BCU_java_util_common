@@ -16,6 +16,7 @@ public class AttackVolcano extends AttackAb {
 		vcapt = new HashMap<>();
 		this.sta = sta;
 		this.end = end;
+		this.waveType = WT_VOLC;
 	}
 
 	@Override

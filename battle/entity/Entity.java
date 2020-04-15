@@ -161,7 +161,7 @@ public abstract class Entity extends AbEntity {
 				effs[id] = EffAnim.effas[id].getEAnim(0);
 			}
 			if (t == P_CURSE) {
-				int id = A_CURSE;
+				int id = dire == -1 ? A_CURSE : A_E_CURSE;
 				effs[id] = EffAnim.effas[id].getEAnim(0);
 			}
 			if (t == P_POISON) {
@@ -235,7 +235,7 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 			if (status[P_CURSE][0] == 0) {
-				int id = A_CURSE;
+				int id = dire == -1 ? A_CURSE : A_E_CURSE;
 				effs[id] = null;
 			}
 			if (status[P_IMUATK][0] == 0) {
@@ -878,6 +878,12 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_WAVE);
 				return;
 			}
+		
+		
+		if((atk.waveType & WT_VOLC) > 0) {
+			if(getProc(P_IMUVOLC, 0) > 0)
+				anim.getEff(INV);
+		}
 
 		tokens.add(atk);
 
