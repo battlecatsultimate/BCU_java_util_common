@@ -18,7 +18,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private EPart fa, para;
 	private int id, img, gsca;
 	private P pos = new P(0, 0), piv = new P(0, 0), sca = new P(0, 0);
-	private int z, angle, opacity, glow, extend;
+	private int z, angle, opacity, glow, extend, extType; // extType - 0 : Slow, 1 : Curse
 	private int hf, vf;
 	protected EAnimI ea;
 
@@ -42,9 +42,19 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 				fa = ent[par = 0];
 		else if (m == 1)
 			id = v;
-		else if (m == 2)
+		else if (m == 2) {
+			if(extType == 1 && img != v)
+				for(int i = 0; i < randSeries.size(); i++) {
+					int r = randSeries.get(i);
+					
+					r += 1;
+					r = r > 3 ? 0 : r;
+					
+					randSeries.set(i, r);
+				}
+			
 			img = v;
-		else if (m == 3)
+		} else if (m == 3)
 			z = v * ent.length + ind;
 		else if (m == 4)
 			pos.x = args[4] + v;
@@ -68,9 +78,13 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			hf = v == 0 ? 1 : -1;
 		else if (m == 14)
 			vf = v == 0 ? 1 : -1;
-		else if (m == 50)
+		else if (m == 50) {
 			extend = v;
-		else
+			extType = 0;
+		} else if(m == 51) {
+			extend = v;
+			extType = 1;
+		} else
 			Printer.p("EPart", 74, "modification can be: " + m);
 
 	}
@@ -133,7 +147,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P tpiv = P.newP(piv).times(p0).times(base);
 		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
-		drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
+		if(extType == 0)
+			drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
+		else if(extType == 1)
+			drawRandom(g, new FakeImage [] {a.parts(3), a.parts(4), a.parts(5), a.parts(6)}, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);

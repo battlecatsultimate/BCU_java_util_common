@@ -1,5 +1,8 @@
 package common.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -12,6 +15,8 @@ public class ImgCore extends Data {
 	public static int deadOpa = 10, fullOpa = 90;
 	public static int[] ints = new int[] { 1, 1, 1, 1 };
 	public static boolean ref = true, battle = false;
+
+	protected static List<Integer> randSeries = new ArrayList<Integer>();
 
 	public static void set(FakeGraphics g) {
 		if (battle)
@@ -44,6 +49,52 @@ public class ImgCore extends Data {
 			int h = bimg.getHeight();
 			if (w > 0) {
 				FakeImage par = bimg.getSubimage(0, 0, w, h);
+				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
+			}
+		}
+		g.setComposite(FakeGraphics.DEF, 0, 0);
+	}
+	
+	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, double opa, boolean glow,
+			double extend) {
+		if (opa < fullOpa * 0.01 - 1e-5)
+			if (!glow)
+				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
+			else
+				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), 1);
+		else if (glow)
+			g.setComposite(FakeGraphics.BLEND, 256, 1);
+		else
+			g.setComposite(FakeGraphics.DEF, 0, 0);
+		if (extend == 0)
+			drawImage(g, bimg[0], -piv.x, -piv.y, sc.x, sc.y);
+		else {
+			double x = -piv.x;
+			int i = 0;
+			while (extend > 1) {
+				int data;
+				
+				if(i >= randSeries.size()) {
+					data = (int) (Math.random() * 3);
+					
+					randSeries.add(data);
+				} else {
+					data = randSeries.get(i);
+				}
+				
+				FakeImage ranImage = bimg[data];
+				drawImage(g, ranImage, x, -piv.y, sc.x, sc.y);
+				x += sc.x;
+				extend--;
+				i++;
+			}
+			
+			int w = (int) (bimg[0].getWidth() * extend);
+			int h = bimg[0].getHeight();
+			if (w > 0) {
+				FakeImage par;
+				par = bimg[0].getSubimage(0, 0, w, h);
+				
 				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
 			}
 		}

@@ -44,7 +44,7 @@ public class NyCastle extends AnimI {
 		ic = ImgCut.newIns(str + t + "_00.imgcut");
 		model = MaModel.newIns(str + t + "_01.mamodel");
 		manim = MaAnim.newIns(str + t + "_01.maanim");
-		if (t != 1 && t != 2) {
+		if (t != 1 && t != 2 && t != 7) {
 			atkm = MaModel.newIns(str + t + "_00.mamodel");
 			atka = MaAnim.newIns(str + t + "_00.maanim");
 		} else {
