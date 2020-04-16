@@ -397,7 +397,8 @@ public class Data {
 	public static final int BASE_WATER = 4;
 	public static final int BASE_GROUND = 5;
 	public static final int BASE_BARRIER = 6;
-	public static final int BASE_TOT = 7;
+	public static final int BASE_CURSE = 7;
+	public static final int BASE_TOT = 8;
 
 	// touchable ID
 	public static final int TCH_N = 1;
