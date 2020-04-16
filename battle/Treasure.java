@@ -129,6 +129,7 @@ public class Treasure extends Data {
 				return 250 + 15 * (bslv[6] - 10);
 			else
 				return 200 + 5 * bslv[6];
+
 		return 0;
 	}
 

@@ -521,6 +521,31 @@ public class Pack extends Data {
 		os.accept(ms.packup(w));
 		mc.write(os);
 		os.terminate();
+		CommonStatic.def.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
+	}
+	
+	public void packData(CommonStatic.ImgWriter w) {
+		OutStream os = OutStream.getIns();
+		os.writeString("0.4.2");
+		OutStream head = OutStream.getIns();
+		head.writeInt(id);
+		head.writeByte((byte) rely.size());
+		for (int val : rely)
+			head.writeInt(val);
+		head.writeInt(MainBCU.ver);
+		head.writeString(editable ? time = MainBCU.getTime() : time);
+		head.writeInt(version);
+		head.writeString(Account.USERNAME);
+		head.terminate();
+		os.accept(head);
+		os.writeString(name);
+		os.accept(es.packup(w));
+		os.accept(us.packup(w));
+		os.accept(cs.packup(w));
+		os.accept(bg.packup(w));
+		os.accept(ms.packup(w));
+		mc.write(os);
+		os.terminate();
 		CommonStatic.def.writeBytes(os, "./res/data/" + hex(id) + ".bcudata");
 	}
 

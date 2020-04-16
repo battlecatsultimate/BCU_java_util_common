@@ -10,7 +10,7 @@ import common.util.anim.MaModel;
 
 public class NyCastle extends AnimI {
 
-	public static final int TOT = 7;
+	public static final int TOT = 8;
 
 	public static final VImg[][] main = new VImg[3][TOT];
 	public static final NyCastle[] atks = new NyCastle[TOT];
