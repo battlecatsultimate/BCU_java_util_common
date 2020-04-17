@@ -109,10 +109,19 @@ public class Cannon extends AtkModelAb {
 			atka = null;
 		if (exta != null && exta.done())
 			exta = null;
-		if (anim != null)
-			anim.update(false);
+		if (anim != null) {
+			if(id == 7) {
+				if(anim.ind() < 32) {
+					anim.update(false);
+				} else {
+					anim = null;
+				}
+			} else {
+				anim.update(false);
+			}
+		}
 		if (atka != null)
-			atka.update(false);
+				atka.update(false);
 		if (exta != null)
 			exta.update(false);
 
@@ -201,6 +210,15 @@ public class Cannon extends AtkModelAb {
 
 					atka = NyCastle.atks[id].getEAnim(1);
 					exta = NyCastle.atks[id].getEAnim(2);
+				} else if (id == 7) {
+					//curse cannon
+					tempAtk = true;
+					proc[P_CURSE][0] = (int) (b.b.t().getCanonProcTime(id));
+					int wid = NYRAN[7];
+					int spe = 137;
+					double p = b.ubase.pos - wid / 2 + spe;
+					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0);
+					new ContMove(eatk, p, wid, spe, 1, 31, 0, 9);
 				}
 			}
 		}

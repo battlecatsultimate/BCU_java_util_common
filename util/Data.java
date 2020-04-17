@@ -440,7 +440,7 @@ public class Data {
 	public static final int VOLC_SE = 30; // volcano se loop duration
 
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10, 2 };// not sure
-	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// not sure
+	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100, 600 };// not sure
 	public static final int SNIPER_CD = 300;// not sure
 	public static final int SNIPER_PRE = 5;// not sure
 	public static final int SNIPER_POS = -500;// not sure
