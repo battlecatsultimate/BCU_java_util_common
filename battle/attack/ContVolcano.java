@@ -1,5 +1,8 @@
 package common.battle.attack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.system.P;
@@ -14,6 +17,8 @@ public class ContVolcano extends ContAb {
 	protected final AttackVolcano v;
 
 	private final int aliveTime;
+	
+	private List<Integer> seTime = new ArrayList<Integer>();
 
 	private int t = 0;
 
@@ -42,7 +47,7 @@ public class ContVolcano extends ContAb {
 		} else if (t > VOLC_PRE + aliveTime && anim.type != 2)
 			anim.changeAnim(2);
 
-		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
+		if (t > VOLC_PRE && t < VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
 			CommonStatic.def.setSE(SE_VOLC_LOOP);
 		}
 
