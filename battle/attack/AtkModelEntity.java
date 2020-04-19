@@ -107,7 +107,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		int dire = e.dire;
 		double d0, d1;
 		d0 = d1 = e.pos;
-		if (!data.isLD()) {
+		if (!data.isLD() && !data.isOmni()) {
 			d0 += data.getRange() * dire;
 			d1 -= data.getWidth() * dire;
 		} else {

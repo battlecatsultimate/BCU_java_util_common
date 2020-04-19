@@ -69,7 +69,7 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 
 	@Override
 	public boolean isLD() {
-		return lds > 0;
+		return lds > 0 && ldr * lds >= 0;
 	}
 
 	@Override

@@ -1388,7 +1388,7 @@ public abstract class Entity extends AbEntity {
 		double[] ds = aam.touchRange();
 		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1]);
 		boolean blds = false;
-		if (data.isLD()) {
+		if (data.isLD() || data.isOmni()) {
 			double bpos = basis.getBase(dire).pos;
 			blds = (bpos - pos) * dire > data.touchBase();
 			if (blds)
