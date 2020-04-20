@@ -194,6 +194,8 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_spawn(int i, int j, boolean boo) {
+		if(ubase.health == 0)
+			return false;
 		if (elu.cool[i][j] > 0)
 			return false;
 		if (elu.price[i][j] == -1)

@@ -14,7 +14,7 @@ public class Sniper extends AtkModelAb {
 	private EAnimD anim = EffAnim.effas[A_SNIPER].getEAnim(0);
 	private EAnimD atka = EffAnim.effas[A_SNIPER].getEAnim(1);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0, angle = 0;
-	public boolean enabled = true;
+	public boolean enabled = true, canDo = true;
 	public double pos, height, updown;
 
 	public Sniper(StageBasis sb) {
@@ -55,10 +55,13 @@ public class Sniper extends AtkModelAb {
 	}
 
 	public void update() {
+		if(canDo && b.ubase.health <= 0) {
+			canDo = false;
+		}
 
 		if (enabled && coolTime > 0)
 			coolTime--;
-		if (coolTime == 0 && enabled && pos > 0) {
+		if (coolTime == 0 && enabled && pos > 0 && canDo) {
 			coolTime = SNIPER_CD;
 			preTime = SNIPER_PRE;
 			atkTime = atka.len();
@@ -90,7 +93,7 @@ public class Sniper extends AtkModelAb {
 				pos = e.pos;
 
 		// Get angle of cannon and bullet
-		angle = -(int) (Math.atan2(height, getPos() - pos + 300) * 1800);
+		angle = -(int) (Math.toDegrees(Math.atan(height/(getPos() - pos)))) * 10;
 
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);
