@@ -106,6 +106,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		public void setEdi(VImg vedi) {
 			edi = vedi;
+			ediLoaded = true;
 			
 			if(vedi != null)
 				vedi.mark(Marker.EDI);
