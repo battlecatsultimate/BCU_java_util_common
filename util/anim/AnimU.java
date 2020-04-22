@@ -18,7 +18,7 @@ public abstract class AnimU<T extends AnimU.ImageLoader> extends AnimD {
 
 		public MaModel getMM();
 
-		public FakeImage getNum();
+		public FakeImage getNum(boolean load);
 
 		public VImg getUni();
 
@@ -69,8 +69,8 @@ public abstract class AnimU<T extends AnimU.ImageLoader> extends AnimD {
 	}
 
 	@Override
-	public FakeImage getNum() {
-		return loader.getNum();
+	public FakeImage getNum(boolean load) {
+		return loader.getNum(load);
 	}
 
 	public VImg getUni() {
@@ -82,13 +82,13 @@ public abstract class AnimU<T extends AnimU.ImageLoader> extends AnimD {
 		loaded = true;
 		try {
 			imgcut = loader.getIC();
-			if (getNum() == null) {
+			if (getNum(true) == null) {
 				Printer.e("AnimU", 70, "can't read png: " + str);
 				mamodel = null;
 				mismatch = true;
 				return;
 			}
-			parts = imgcut.cut(getNum());
+			parts = imgcut.cut(getNum(true));
 			partial();
 		} catch (Exception e) {
 			e.printStackTrace();

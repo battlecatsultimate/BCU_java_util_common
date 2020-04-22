@@ -1,10 +1,9 @@
 package common;
 
-import static java.lang.Character.isDigit;
-
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.nio.file.Files;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.function.Function;
@@ -21,6 +20,8 @@ import common.util.stage.CharaGroup;
 import common.util.stage.MapColc;
 import common.util.stage.Recd;
 import common.util.unit.DIYAnim;
+
+import static java.lang.Character.isDigit;
 
 public class CommonStatic {
 
@@ -54,7 +55,7 @@ public class CommonStatic {
 	public static interface ImgReader {
 
 		public static File loadMusicFile(InStream is, ImgReader r, int pid, int mid) {
-			if (r == null)
+			if (r == null || r.isNull())
 				r = CommonStatic.def.getMusicReader(pid, mid);
 			return r.readFile(is);
 		}
@@ -84,7 +85,10 @@ public class CommonStatic {
 			else
 				try {
 					OutStream data = OutStream.getIns();
-					byte[] bs = Files.readAllBytes(file.toPath());
+					byte[] bs = new byte[(int) file.length()];
+					BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+					buf.read(bs, 0, bs.length);
+					buf.close();
 					data.writeBytesI(bs);
 					data.terminate();
 					os.accept(data);

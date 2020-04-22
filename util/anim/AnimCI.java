@@ -28,7 +28,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		public String getName();
 
-		public FakeImage getNum();
+		public FakeImage getNum(boolean load);
 
 		public int getStatus();
 
@@ -78,10 +78,15 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		}
 
 		@Override
-		public FakeImage getNum() {
+		public FakeImage getNum(boolean load) {
+			if(load) {
+				return num = loader.getNum(true);
+			}
+
 			if (num != null)
 				return num;
-			return num = loader.getNum();
+
+			return num = loader.getNum(false);
 		}
 
 		public int getStatus() {
@@ -106,10 +111,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		public void setEdi(VImg vedi) {
 			edi = vedi;
-			ediLoaded = true;
 			
 			if(vedi != null)
 				vedi.mark(Marker.EDI);
+
+			ediLoaded = true;
 		}
 
 		public void setNum(FakeImage fimg) {
@@ -164,7 +170,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		OutStream osi = OutStream.getIns();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			FakeImage.write(getNum(), "PNG", baos);
+			FakeImage.write(getNum(true), "PNG", baos);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			osi.terminate();
@@ -231,7 +237,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.9");
-		os.writeString(w.writeImg(getNum()));
+		os.writeString(w.writeImg(getNum(false)));
 		os.writeString(w.writeImgOptional(getEdi()));
 		os.writeString(w.writeImgOptional(getUni()));
 		ByteArrayOutputStream baos;

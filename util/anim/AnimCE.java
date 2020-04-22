@@ -85,7 +85,7 @@ public class AnimCE extends AnimCI {
 		}
 
 		@Override
-		public FakeImage getNum() {
+		public FakeImage getNum(boolean load) {
 			return VFile.getFile(pre + name + ".png").getData().getImg();
 		}
 
@@ -148,12 +148,12 @@ public class AnimCE extends AnimCI {
 				anims[i] = ori.anims[i].clone();
 			else
 				anims[i] = new MaAnim();
-		loader.setNum(ori.getNum());
-		parts = imgcut.cut(ori.getNum());
+		loader.setNum(ori.getNum(true));
+		parts = imgcut.cut(ori.getNum(true));
 		File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
 		CommonStatic.def.check(f);
 		try {
-			FakeImage.write(ori.getNum(), "PNG", f);
+			FakeImage.write(ori.getNum(true), "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -177,7 +177,7 @@ public class AnimCE extends AnimCI {
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
 			anims[i] = new MaAnim();
-		parts = imgcut.cut(getNum());
+		parts = imgcut.cut(getNum(true));
 		history("initial");
 	}
 
@@ -203,7 +203,7 @@ public class AnimCE extends AnimCI {
 
 	public void ICedited() {
 		check();
-		parts = imgcut.cut(getNum());
+		parts = imgcut.cut(getNum(true));
 	}
 
 	public boolean isSaved() {
@@ -378,9 +378,9 @@ public class AnimCE extends AnimCI {
 		try {
 			File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
 			CommonStatic.def.check(f);
-			if (!FakeImage.write(getNum(), "PNG", f))
+			if (!FakeImage.write(getNum(true), "PNG", f))
 				if (Opts.writeErr0(f.getPath()))
-					if (FakeImage.write(getNum(), "PNG", f))
+					if (FakeImage.write(getNum(true), "PNG", f))
 						Opts.ioErr("failed to write");
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -175,7 +175,7 @@ public class EffAnim extends AnimD {
 	}
 
 	@Override
-	public FakeImage getNum() {
+	public FakeImage getNum(boolean load) {
 		return vimg.getImg();
 	}
 
