@@ -1,11 +1,11 @@
 package common.system.files;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -21,7 +21,12 @@ public class FDFile implements FileData {
 
 	public byte[] getBytes() {
 		try {
-			return Files.readAllBytes(file.toPath());
+			byte[] bs = new byte[(int) file.length()];
+			BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+			buf.read(bs, 0, bs.length);
+			buf.close();
+
+			return bs;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
