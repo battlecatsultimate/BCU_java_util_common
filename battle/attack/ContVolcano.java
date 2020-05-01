@@ -1,8 +1,5 @@
 package common.battle.attack;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.system.P;
@@ -17,8 +14,6 @@ public class ContVolcano extends ContAb {
 	protected final AttackVolcano v;
 
 	private final int aliveTime;
-	
-	private List<Integer> seTime = new ArrayList<Integer>();
 
 	private int t = 0;
 

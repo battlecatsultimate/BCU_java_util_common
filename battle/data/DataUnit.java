@@ -1,7 +1,6 @@
 package common.battle.data;
 
 import common.CommonStatic;
-import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.Printer;
