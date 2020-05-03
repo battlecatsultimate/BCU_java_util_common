@@ -34,4 +34,6 @@ public interface FakeImage {
 	public void setRGB(int i, int j, int p);
 
 	public void unload();
+
+	public boolean isValid();
 }

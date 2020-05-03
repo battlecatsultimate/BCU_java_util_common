@@ -176,7 +176,7 @@ public class Pack extends Data {
 			if (rem == 0) {
 				for (Pack p : list) {
 					map.remove(p.id);
-					String err = "pack " + p.id + " require parent packs: ";
+					String err = "pack " + p.file.getName() + " require parent packs: ";
 					boolean b = false;
 					for (int val : p.rely)
 						if (!map.keySet().contains(val)) {

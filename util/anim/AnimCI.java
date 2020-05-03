@@ -79,12 +79,12 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		@Override
 		public FakeImage getNum(boolean load) {
+			if (num != null && num.bimg() != null && num.isValid())
+				return num;
+
 			if(load) {
 				return num = loader.getNum(true);
 			}
-
-			if (num != null)
-				return num;
 
 			return num = loader.getNum(false);
 		}
