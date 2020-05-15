@@ -297,6 +297,7 @@ public class AnimCE extends AnimCI {
 		saveIcon();
 		saveUni();
 		unSave("rename (not applicapable for undo)");
+		reloImg();
 	}
 
 	public void resize(double d) {
