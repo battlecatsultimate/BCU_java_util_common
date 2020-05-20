@@ -231,7 +231,7 @@ public class Data {
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;
 	public static final int WT_CANN = 2;
-	public static final int WT_VOLC = 3;
+	public static final int WT_VOLC = 4;
 	public static final int PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
 
 	public static final int PC2_HP = 0;

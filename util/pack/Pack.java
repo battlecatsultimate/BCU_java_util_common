@@ -182,7 +182,7 @@ public class Pack extends Data {
 					if(p.file != null) {
 						name = p.file.getName();
 					} else {
-						name = Integer.toString(p.id);
+						name = Data.hex(p.id);
 					}
 					
 					String err = "pack " + name + " require parent packs: ";

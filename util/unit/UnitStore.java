@@ -192,7 +192,7 @@ public class UnitStore extends Data {
 			u.forms = new Form[m];
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
-				AnimCI ac = new AnimCI(is.subStream(), r);
+				AnimCE ac = new AnimCE(is.subStream(), r);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
 				u.forms[j] = new Form(u, j, name, ac, cu);

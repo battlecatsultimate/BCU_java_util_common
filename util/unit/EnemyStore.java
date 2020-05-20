@@ -170,7 +170,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimCI ac = new AnimCI(is.subStream(), r);
+			AnimCE ac = new AnimCE(is.subStream(), r);
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
 			set(hash % 1000, e);
@@ -184,7 +184,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 			String str = is.nextString();
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
-			AnimCI ac = new AnimCI(is.subStream(), r);
+			AnimCE ac = new AnimCE(is.subStream(), r);
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
 			set(hash % 1000, e);
