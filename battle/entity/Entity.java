@@ -881,8 +881,11 @@ public abstract class Entity extends AbEntity {
 		
 		
 		if((atk.waveType & WT_VOLC) > 0) {
-			if(getProc(P_IMUVOLC, 0) > 0)
+			if(getProc(P_IMUVOLC, 0) > 0) {
 				anim.getEff(INV);
+				return;
+			}
+				
 		}
 
 		tokens.add(atk);
