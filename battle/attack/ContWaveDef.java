@@ -18,5 +18,4 @@ public class ContWaveDef extends ContWaveAb {
 		int wid = dire == 1 ? W_E_WID : W_U_WID;
 		new ContWaveDef(new AttackWave(atk, np, wid), np, layer);
 	}
-
 }
