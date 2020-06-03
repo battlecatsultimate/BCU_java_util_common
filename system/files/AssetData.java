@@ -44,9 +44,11 @@ class DefAsset extends FileByte implements AssetData {
 }
 
 class FileAsset extends FDFile implements AssetData {
+	private final String name;
 
 	protected FileAsset(File f) {
 		super(f);
+		name = f.getName();
 	}
 
 	@Override
@@ -54,6 +56,10 @@ class FileAsset extends FDFile implements AssetData {
 		return getImg();
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
 }
 
 class MultiLangAsset extends Lang implements AssetData {

@@ -71,6 +71,14 @@ public class EffAnim extends AnimD {
 		effas[A_CURSE] = new EffAnim(stfs[3] + ski + "curse", vfs[3], icfs[3], temp);
 
 		readCustom(stfs, icfs);
+		
+		VImg vuw = new VImg("./org/battle/s4/skill004.png");
+		ImgCut icsvuw = ImgCut.newIns("./org/battle/s4/skill004.imgcut");
+		effas[A_WAVE] = new EffAnim("./org/battle/s4/skill_wave_attack", vuw, icsvuw, temp);
+		
+		VImg vew = new VImg("./org/battle/s5/skill005.png");
+		ImgCut icsvew = ImgCut.newIns("./org/battle/s5/skill005.imgcut");
+		effas[A_E_WAVE] = new EffAnim("./org/battle/s5/skill_wave_attack_e",vew, icsvew, temp);
 
 		VImg vsatk = new VImg("./org/battle/s6/skill006.png");
 		ImgCut icsatk = ImgCut.newIns("./org/battle/s6/skill006.imgcut");
