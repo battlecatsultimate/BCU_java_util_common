@@ -175,6 +175,11 @@ public class EffAnim extends AnimD {
 		ImgCut icbreak = ImgCut.newIns(breaker+".imgcut");
 		effas[A_ARMOR] = new EffAnim(breaker, vbreak, icbreak, temp);
 		
+		breaker = stfs[3] + "armor_break_e/armor_break_e";
+		icbreak = ImgCut.newIns(breaker+".imgcut");
+		vbreak = new VImg(breaker+".png");
+		effas[A_E_ARMOR] = new EffAnim(breaker, vbreak, icbreak, temp);
+		
 		temp = new String [] {"up", "down"};
 		
 		String speed = stfs[3] + "speed/speed";

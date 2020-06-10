@@ -394,11 +394,12 @@ public class Data {
 	public static final int A_WAVE = 49;
 	public static final int A_E_WAVE = 50;
 	public static final int A_ARMOR = 51;
-	public static final int A_SPEED = 52;
-	public static final int A_E_SPEED = 53;
+	public static final int A_E_ARMOR = 52;
+	public static final int A_SPEED = 53;
+	public static final int A_E_SPEED = 54;
 
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 54;
+	public static final int A_TOT = 55;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;

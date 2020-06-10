@@ -216,8 +216,9 @@ public abstract class Entity extends AbEntity {
 				CommonStatic.def.setSE(SE_BARRIER_NON);
 			}
 			if (t == P_ARMOR) {
-				int id = status[P_ARMOR][1] >= 0 ? 1 : 0;
-				effs[A_ARMOR] = EffAnim.effas[A_ARMOR].getEAnim(id);
+				int id = dire == -1 ? A_ARMOR : A_E_ARMOR;
+				int index = status[P_ARMOR][1] >= 0 ? 1 : 0;
+				effs[id] = EffAnim.effas[id].getEAnim(index);
 			}
 			
 			if (t == P_SPEED) {
@@ -288,7 +289,8 @@ public abstract class Entity extends AbEntity {
 				status[P_BREAK][0]--;
 			
 			if (status[P_ARMOR][0] == 0) {
-				effs[A_ARMOR] = null;
+				int id = dire == -1 ? A_ARMOR : A_E_ARMOR;
+				effs[id] = null;
 			}
 			
 			if (status[P_SPEED][0] == 0) {
@@ -978,6 +980,7 @@ public abstract class Entity extends AbEntity {
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type, 1))
 			return;
+		
 		double f = getFruit(atk.type, 1);
 		double time = 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
@@ -1314,6 +1317,7 @@ public abstract class Entity extends AbEntity {
 		}
 		
 		mov += extmov;
+		
 		pos += Math.min(mov, max) * dire;
 		return max > mov;
 	}
