@@ -167,6 +167,25 @@ public class EffAnim extends AnimD {
 		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[3] << 16 | is[2] << 8 | is[1]));
 		effas[A_POI7] = new EffAnim(strpb, vpois, icpois, temp);
 		effas[A_POI7].name = "poison_pink";
+		
+		temp = new String [] {"buff", "debuff"};
+		
+		String breaker = stfs[3] + "armor_break/armor_break";
+		VImg vbreak = new VImg(breaker+".png");
+		ImgCut icbreak = ImgCut.newIns(breaker+".imgcut");
+		effas[A_ARMOR] = new EffAnim(breaker, vbreak, icbreak, temp);
+		
+		temp = new String [] {"up", "down"};
+		
+		String speed = stfs[3] + "speed/speed";
+		VImg vspeed = new VImg(speed+".png");
+		ImgCut icspeed = ImgCut.newIns(speed+".imgcut");
+		effas[A_SPEED] = new EffAnim(speed, vspeed, icspeed, temp);
+		
+		speed = stfs[3] + "speed_e/speed_e";
+		vspeed = new VImg(speed+".png");
+		icspeed = ImgCut.newIns(speed+".imgcut");
+		effas[A_E_SPEED] = new EffAnim(speed, vspeed, icspeed, temp);
 	}
 
 	private VImg vimg;

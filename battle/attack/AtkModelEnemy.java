@@ -51,7 +51,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 		extraAtk(ind);
 		if (abis[ind] == 1)
 			setProc(ind, proc);
-		if (e.status[P_WEAK][1] != 0)
+		if (e.status[P_WEAK][0] > 0)
 			atk = atk * e.status[P_WEAK][1] / 100;
 		if (e.status[P_STRONG][0] != 0)
 			atk += atk * e.status[P_STRONG][0] / 100;

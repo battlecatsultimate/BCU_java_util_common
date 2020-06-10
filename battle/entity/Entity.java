@@ -215,6 +215,23 @@ public abstract class Entity extends AbEntity {
 				status[P_BREAK][0] = effs[id].len();
 				CommonStatic.def.setSE(SE_BARRIER_NON);
 			}
+			if (t == P_ARMOR) {
+				int id = status[P_ARMOR][1] >= 0 ? 1 : 0;
+				effs[A_ARMOR] = EffAnim.effas[A_ARMOR].getEAnim(id);
+			}
+			
+			if (t == P_SPEED) {
+				int id = dire == -1 ? A_SPEED : A_E_SPEED;
+				int index;
+				
+				if(status[P_SPEED][2] <= 1) {
+					index = status[P_SPEED][1] >= 0 ? 0 : 1;
+				} else {
+					index = status[P_SPEED][1] >= e.data.getSpeed() ? 0 : 1;
+				}
+				
+				effs[id] = EffAnim.effas[id].getEAnim(index);
+			}
 		}
 
 		/** update effect icons animation */
@@ -269,8 +286,17 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			} else
 				status[P_BREAK][0]--;
+			
+			if (status[P_ARMOR][0] == 0) {
+				effs[A_ARMOR] = null;
+			}
+			
+			if (status[P_SPEED][0] == 0) {
+				int id = dire == -1 ? A_SPEED : A_E_SPEED;
+				effs[id] = null;
+			}
+			
 			efft--;
-
 		}
 
 		/**
@@ -861,7 +887,6 @@ public abstract class Entity extends AbEntity {
 	/** accept attack */
 	@Override
 	public void damaged(AttackAb atk) {
-
 		int dmg = getDamage(atk, atk.atk);
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0) {
@@ -938,6 +963,18 @@ public abstract class Entity extends AbEntity {
 				CommonStatic.def.setSE(SE_POISON);
 			}
 		}
+		
+		if (!isBase && atk.getProc(P_ARMOR)[0] > 0) {
+			status[P_ARMOR][0] = atk.getProc(P_ARMOR)[1];
+			status[P_ARMOR][1] = atk.getProc(P_ARMOR)[2];
+			
+			anim.getEff(P_ARMOR);
+		}
+		
+		if(status[P_ARMOR][0] > 0) {
+			damage =  damage * (100 + status[P_ARMOR][1]) / 100;
+		}
+		
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type, 1))
 			return;
@@ -1032,6 +1069,14 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_POISON);
 			} else
 				anim.getEff(INV);
+		
+		if(atk.getProc(P_SPEED)[0] > 0) {
+			status[P_SPEED][0] = atk.getProc(P_SPEED)[1];
+			status[P_SPEED][1] = atk.getProc(P_SPEED)[2];
+			status[P_SPEED][2] = atk.getProc(P_SPEED)[3];
+			
+			anim.getEff(P_SPEED);
+		}
 	}
 
 	/** get the current ability bitmask */
@@ -1253,6 +1298,21 @@ public abstract class Entity extends AbEntity {
 			max = Math.min(max, maxl);
 
 		double mov = isBase ? 0 : status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
+		
+		if(status[P_SPEED][0] > 0) {
+			if(status[P_SPEED][2] == 0) {
+				mov += status[P_SPEED][1] * 0.5;
+			} else if(status[P_SPEED][2] == 1) {
+				mov = mov * (100 + status[P_SPEED][1]) / 100;
+			} else if(status[P_SPEED][2] == 2) {
+				mov = status[P_SPEED][1] * 0.5;
+			}
+		}
+		
+		if(cantGoMore()) {
+			mov = 0;
+		}
+		
 		mov += extmov;
 		pos += Math.min(mov, max) * dire;
 		return max > mov;
@@ -1380,6 +1440,10 @@ public abstract class Entity extends AbEntity {
 			status[P_SEAL][0]--;
 		if (status[P_IMUATK][0] > 0)
 			status[P_IMUATK][0]--;
+		if (status[P_ARMOR][0] > 0)
+			status[P_ARMOR][0]--;
+		if (status[P_SPEED][0] > 0)
+			status[P_SPEED][0]--;
 		// update tokens
 		weaks.update();
 		pois.update();
@@ -1413,4 +1477,14 @@ public abstract class Entity extends AbEntity {
 		}
 	}
 
+	private boolean cantGoMore() {
+		if(status[P_SPEED][0] == 0)
+			return false;
+		
+		if(dire == 1) {
+			return pos <= 0;
+		} else {
+			return pos >= basis.st.len;
+		}
+	}
 }

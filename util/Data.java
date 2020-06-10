@@ -224,8 +224,21 @@ public class Data {
 	public static final int P_VOLC = 32;
 	public static final int P_IMUPOIATK = 33;
 	public static final int P_IMUVOLC = 34;
+	/**
+	 * Make target receive n% damage more/less
+	 * 0: chance, 1: duration, 2: debuff
+	 */
+	public static final int P_ARMOR = 35;
+	/**
+	 * Make target move faster/slower
+	 * 0: chance, 1: duration, 2: speed, 3: type
+	 * type 0: Current speed * (100 + n)%
+	 * type 1: Current speed + n
+	 * type 2: Fixed speed
+	 */
+	public static final int P_SPEED = 36;
 
-	public static final int PROC_TOT = 40;// 32
+	public static final int PROC_TOT = 40;// 37
 
 	public static final int PROC_WIDTH = 6;
 	public static final int WT_WAVE = 1;
@@ -380,9 +393,12 @@ public class Data {
 	public static final int A_E_CURSE = 48;
 	public static final int A_WAVE = 49;
 	public static final int A_E_WAVE = 50;
+	public static final int A_ARMOR = 51;
+	public static final int A_SPEED = 52;
+	public static final int A_E_SPEED = 53;
 
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 51;
+	public static final int A_TOT = 54;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;

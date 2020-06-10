@@ -23,7 +23,7 @@ public class EEnemy extends Entity {
 	@Override
 	public int getAtk() {
 		int atk = aam.getAtk();
-		if (status[P_WEAK][1] != 0)
+		if (status[P_WEAK][0] > 0)
 			atk = atk * status[P_WEAK][1] / 100;
 		if (status[P_STRONG][0] != 0)
 			atk += atk * status[P_STRONG][0] / 100;
