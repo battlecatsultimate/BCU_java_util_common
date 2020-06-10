@@ -613,7 +613,7 @@ public abstract class Entity extends AbEntity {
 
 		private void getMax() {
 			int max = 0;
-			int val = 100;
+			int val = list.isEmpty() ? 100 : list.get(0)[1];
 			for (int i = 0; i < list.size(); i++) {
 				int[] ws = list.get(i);
 				max = Math.max(max, ws[0]);
@@ -954,6 +954,15 @@ public abstract class Entity extends AbEntity {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_SATK].getEAnim(0)));
 			CommonStatic.def.setSE(SE_SATK);
 		}
+		
+		if(status[P_ARMOR][0] > 0) {
+			damage =  damage * (100 + status[P_ARMOR][1]) / 100;
+		}
+
+		// process proc part
+		if (atk.type != -1 && !receive(atk.type, 1))
+			return;
+		
 		if (atk.getProc(P_POIATK)[0] > 0) {
 			int rst = getProc(P_IMUPOIATK, 0);
 
@@ -967,19 +976,17 @@ public abstract class Entity extends AbEntity {
 		}
 		
 		if (!isBase && atk.getProc(P_ARMOR)[0] > 0) {
+			boolean calc = status[P_ARMOR][0] > 0;
+			
 			status[P_ARMOR][0] = atk.getProc(P_ARMOR)[1];
 			status[P_ARMOR][1] = atk.getProc(P_ARMOR)[2];
 			
 			anim.getEff(P_ARMOR);
+			
+			if(!calc) {
+				damage =  damage * (100 + status[P_ARMOR][1]) / 100;
+			}
 		}
-		
-		if(status[P_ARMOR][0] > 0) {
-			damage =  damage * (100 + status[P_ARMOR][1]) / 100;
-		}
-		
-		// process proc part
-		if (atk.type != -1 && !receive(atk.type, 1))
-			return;
 		
 		double f = getFruit(atk.type, 1);
 		double time = 1 + f * 0.2 / 3;

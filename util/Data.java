@@ -205,7 +205,10 @@ public class Data {
 	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv
 	 */
 	public static final int P_MOVEWAVE = 24;
-	/** 0:prob, 1:time (-1 means infinite), 2:ID */
+	/** 0:prob, 1:time (-1 means infinite), 2:ID, 3: type
+	 * 	0 : Change only BG
+	 * 1 : Kill all and change BG
+	 */
 	public static final int P_THEME = 25;
 	/**
 	 * 0:prob, 1:time, 2:dmg, 3:itv, 4: conf +0: normal, +1: of total, +2: of

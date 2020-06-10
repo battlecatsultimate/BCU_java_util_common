@@ -58,7 +58,7 @@ public class StageBasis extends BattleObj {
 
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
-	private int theme = -1, themeTime;
+	private int theme = -1, themeTime, themeType;
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
 		b = bas;
@@ -102,9 +102,10 @@ public class StageBasis extends BattleObj {
 		next_lv = bas.t().getLvCost(work_lv);
 	}
 
-	public void changeTheme(int them, int time) {
+	public void changeTheme(int them, int time, int type) {
 		theme = them;
 		themeTime = time;
+		themeType = type;
 	}
 
 	public int entityCount(int d) {
@@ -317,12 +318,14 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme >= 0) {
 			bg = BGStore.getBG(theme);
-			le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
-			lw.clear();
-			la.clear();
-			tlw.clear();
-			lea.clear();
-			tempe.removeIf(e -> (e.ent.getAbi() & AB_THEMEI) == 0);
+			le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0 && themeType >= 1);
+			if(themeType >= 1) {
+				lw.clear();
+				la.clear();
+				tlw.clear();
+				lea.clear();
+			}
+			tempe.removeIf(e -> (e.ent.getAbi() & AB_THEMEI) == 0 && themeType >= 1);
 			theme = -1;
 		}
 		if (s_stop == 0 && themeTime > 0) {

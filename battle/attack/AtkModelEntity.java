@@ -146,7 +146,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			if (b.r.nextDouble() * 100 < getProc(ind, P_TIME, 0))
 				b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind, P_TIME, 1));
 			if (b.r.nextDouble() * 100 < getProc(ind, P_THEME, 0))
-				b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1));
+				b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1), getProc(ind, P_THEME, 3));
 		}
 	}
 
