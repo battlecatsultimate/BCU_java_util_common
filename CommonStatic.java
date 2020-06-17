@@ -161,6 +161,8 @@ public class CommonStatic {
 		/** write OutStream into file */
 		public boolean writeBytes(OutStream os, String path);
 
+		/** Write error log to somewhere **/
+		public void writeErrorLog(Exception e);
 	}
 
 	public static class Lang {

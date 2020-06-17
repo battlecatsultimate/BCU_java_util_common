@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import common.CommonStatic;
 import common.system.fake.FakeImage;
 
 public class FDFile implements FileData {
@@ -57,6 +58,7 @@ public class FDFile implements FileData {
 			bfr.close();
 			return result;
 		} catch (IOException e) {
+			CommonStatic.def.writeErrorLog(e);
 			e.printStackTrace();
 			return null;
 		}
