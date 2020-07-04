@@ -72,6 +72,7 @@ public class EUnit extends Entity {
 			ans *= 4;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 		
+		//Perform orb
 		ans += getOrbRes(atk.type, atk.matk);
 
 		return ans;
