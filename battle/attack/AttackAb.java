@@ -3,6 +3,7 @@ package common.battle.attack;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
@@ -12,6 +13,7 @@ public abstract class AttackAb extends BattleObj {
 	public final int atk, type, abi;
 	public final AtkModelAb model;
 	public final AttackAb origin;
+	public final MaskAtk matk;
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
 
@@ -21,7 +23,7 @@ public abstract class AttackAb extends BattleObj {
 
 	private boolean recyc;
 
-	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1) {
+	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, MaskAtk matk) {
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
@@ -32,6 +34,7 @@ public abstract class AttackAb extends BattleObj {
 		sta = p0;
 		end = p1;
 		recyc = true;
+		this.matk = matk;
 	}
 
 	protected AttackAb(AttackAb a, double STA, double END) {
@@ -48,6 +51,7 @@ public abstract class AttackAb extends BattleObj {
 		end = END;
 		recyc = false;
 		a.recyc = false;
+		this.matk = a.matk;
 	}
 
 	/** capture the entities */

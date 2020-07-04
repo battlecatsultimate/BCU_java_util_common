@@ -11,6 +11,7 @@ import common.util.Data;
 import common.util.unit.Combo;
 import common.util.unit.EForm;
 import common.util.unit.Form;
+import common.util.unit.Level;
 import common.util.unit.Unit;
 import common.util.unit.UnitStore;
 
@@ -18,7 +19,7 @@ import java.util.TreeMap;
 
 public class LineUp extends Data {
 
-	public final Map<Unit, int[]> map = new TreeMap<>();
+	public final Map<Unit, Level> map = new TreeMap<>();
 	public final Form[][] fs = new Form[2][5];
 	public final EForm[][] efs = new EForm[2][5];
 	public int[] inc = new int[C_TOT], loc = new int[5];
@@ -42,8 +43,9 @@ public class LineUp extends Data {
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++)
 				fs[i][j] = ref.fs[i][j];
-		for (Entry<Unit, int[]> e : ref.map.entrySet())
+		for (Entry<Unit, Level> e : ref.map.entrySet()) {
 			map.put(e.getKey(), e.getValue().clone());
+		}
 		renew();
 	}
 
@@ -69,7 +71,7 @@ public class LineUp extends Data {
 	}
 
 	/** get level of an Unit, if no date recorded, record default one */
-	public synchronized int[] getLv(Unit u) {
+	public synchronized Level getLv(Unit u) {
 		if (!map.containsKey(u))
 			setLv(u, u.getPrefLvs());
 		return map.get(u);
@@ -173,7 +175,7 @@ public class LineUp extends Data {
 	public synchronized void setLv(Unit u, int[] lv) {
 		boolean sub = updating;
 		updating = true;
-		map.put(u, lv);
+		map.put(u, new Level(lv));
 		if (!sub)
 			renewEForm();
 		updating &= sub;
@@ -202,7 +204,7 @@ public class LineUp extends Data {
 	public OutStream write() {
 		validate();
 		OutStream os = OutStream.getIns();
-		os.writeString("0.3.9");
+		os.writeString("0.4.0");
 		for (int i = 0; i < 10; i++)
 			if (getFS(i) == null) {
 				os.writeInt(i);
@@ -217,9 +219,15 @@ public class LineUp extends Data {
 			os.writeInt(f.fid);
 		}
 		os.writeInt(map.size());
-		for (Entry<Unit, int[]> e : map.entrySet()) {
+		for (Entry<Unit, Level> e : map.entrySet()) {
 			os.writeInt(e.getKey().id);
-			os.writeIntB(e.getValue());
+			os.writeIntB(e.getValue().lvs);
+			if(e.getValue().orbs != null) {
+				os.writeInt(1);
+				os.writeIntBB(e.getValue().orbs);
+			} else {
+				os.writeInt(0);
+			}
 		}
 		os.terminate();
 		return os;
@@ -309,7 +317,9 @@ public class LineUp extends Data {
 		int val = ver;
 		if (val >= 307)
 			val = getVer(is.nextString());
-		if (val >= 309)
+		if (val >= 400)
+			zread$000400(is);
+		else if (val >= 309)
 			zread$000309(is);
 		else if (val >= 307)
 			zread$000307(is);
@@ -332,7 +342,7 @@ public class LineUp extends Data {
 			lvs[0] = lv;
 			Unit u = UnitStore.get(uid, true);
 			if (u != null)
-				map.put(u, lvs);
+				map.put(u, new Level(lvs));
 		}
 	}
 
@@ -349,7 +359,7 @@ public class LineUp extends Data {
 			int[] lv = is.nextIntsB();
 			Unit u = UnitStore.get(uid, true);
 			if (u != null)
-				map.put(u, lv);
+				map.put(u, new Level(lv));
 		}
 	}
 
@@ -366,9 +376,32 @@ public class LineUp extends Data {
 			int[] lv = is.nextIntsB();
 			Unit u = UnitStore.get(uid, true);
 			if (u != null)
-				map.put(u, lv);
+				map.put(u, new Level(lv));
 		}
 		arrange();
 	}
 
+	
+	private void zread$000400(InStream is) {
+		int n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int uid = is.nextInt();
+			int fid = is.nextInt();
+			setFS(UnitStore.get(uid, fid, true), i);
+		}
+		int m = is.nextInt();
+		for (int i = 0; i < m; i++) {
+			int uid = is.nextInt();
+			int[] lv = is.nextIntsB();
+			Unit u = UnitStore.get(uid, true);
+			int[][] orbs = null;
+			int existing = is.nextInt();
+			if(existing == 1) {
+				orbs = is.nextIntsBB();
+			}
+			if (u != null)
+				map.put(u, new Level(lv, orbs));
+		}
+		arrange();
+	}
 }

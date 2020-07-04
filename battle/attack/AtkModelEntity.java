@@ -24,7 +24,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected final MaskEntity data;
-	protected final Entity e;
+	public final Entity e;
 	protected final int[] atks, abis, act;
 	protected final BattleObj[] acs;
 	private final double ratk;

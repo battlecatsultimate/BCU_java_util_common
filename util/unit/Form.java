@@ -3,6 +3,7 @@ package common.util.unit;
 import common.battle.data.CustomUnit;
 import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
+import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
@@ -30,6 +31,8 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 	public final int uid;
 	public int fid;
 	public final VImg udi;// TODO unused
+	
+	public Orb[] orbs = null;
 
 	public String name = "";
 

@@ -9,6 +9,7 @@ import common.io.OutStream;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.unit.Form;
+import common.util.unit.Level;
 
 public class LvRestrict extends Data {
 
@@ -76,8 +77,8 @@ public class LvRestrict extends Data {
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null) {
-					int[] mlv = valid(f);
-					int[] flv = lu.map.get(f.unit);
+					int[] mlv = valid(f).lvs;
+					int[] flv = lu.map.get(f.unit).lvs;
 					for (int i = 0; i < 6; i++)
 						if (mlv[i] < flv[i])
 							return false;
@@ -98,7 +99,7 @@ public class LvRestrict extends Data {
 		return false;
 	}
 
-	public int[] valid(Form f) {
+	public Level valid(Form f) {
 		int[] lv = MAX.clone();
 		boolean mod = false;
 		for (CharaGroup cg : res.keySet())
@@ -109,12 +110,12 @@ public class LvRestrict extends Data {
 				mod = true;
 			}
 		if (mod)
-			return f.regulateLv(null, lv);
+			return new Level(f.regulateLv(null, lv));
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], rares[f.unit.rarity][i]);
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], all[i]);
-		return f.regulateLv(null, lv);
+		return new Level(f.regulateLv(null, lv));
 	}
 
 	public void validate(LineUp lu) {

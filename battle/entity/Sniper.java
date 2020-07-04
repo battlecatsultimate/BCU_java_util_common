@@ -74,7 +74,7 @@ public class Sniper extends AtkModelAb {
 				int atk = b.b.t().getBaseHealth() / 20;
 				int[][] proc = get();
 				proc[P_SNIPER][0] = 1;
-				AttackAb a = new AttackSimple(this, atk, -1, 0, proc, 0, getPos(), false);
+				AttackAb a = new AttackSimple(this, atk, -1, 0, proc, 0, getPos(), false, null);
 				a.canon = -1;
 				b.getAttack(a);
 			}

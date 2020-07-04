@@ -10,13 +10,13 @@ public class AttackSimple extends AttackAb {
 
 	private final boolean range;
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr) {
-		super(ent, ATK, t, eab, pro, p0, p1);
+	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr, MaskAtk mask) {
+		super(ent, ATK, t, eab, pro, p0, p1, mask);
 		range = isr;
 	}
 
 	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, MaskAtk mask) {
-		this(ent, ATK, t, eab, pro, p0, p1, mask.isRange());
+		this(ent, ATK, t, eab, pro, p0, p1, mask.isRange(), mask);
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}

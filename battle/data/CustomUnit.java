@@ -122,4 +122,9 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		resp = is.nextInt();
 	}
 
+	@Override
+	public Orb[] getOrbs() {
+		return pack.orbs;
+	}
+
 }

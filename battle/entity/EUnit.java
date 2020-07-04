@@ -2,17 +2,39 @@ package common.battle.entity;
 
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelEnemy;
+import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
+import common.battle.data.MaskAtk;
 import common.battle.data.MaskUnit;
+import common.battle.data.Orb;
+import common.util.BattleObj;
+import common.util.Data;
 import common.util.anim.EAnimU;
+import common.util.unit.Level;
 
 public class EUnit extends Entity {
+	
+	public static class OrbHandler extends BattleObj {
+		protected static int getOrbAtk(AttackAb atk, EEnemy en) {
+			if(atk.origin.model instanceof AtkModelUnit) {
+				//Warning : Eunit.e became public now
+				EUnit unit = (EUnit) ((AtkModelUnit) atk.origin.model).e;
+				
+				return unit.getOrbAtk(en.type, atk.matk);
+			}
+			
+			return 0;
+		}
+	}
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0) {
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level) {
 		super(b, de, ea, d0 * b.b.t().getAtkMulti(), d0 * b.b.t().getDefMulti());
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		type = de.getType();
+		this.level = level;
 	}
+	
+	protected final Level level;
 
 	@Override
 	public int getAtk() {
@@ -49,6 +71,8 @@ public class EUnit extends Entity {
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
+		
+		ans += getOrbRes(atk.type, atk.matk);
 
 		return ans;
 	}
@@ -69,5 +93,42 @@ public class EUnit extends Entity {
 			extmov += data.getSpeed() * basis.b.getInc(C_SPE) / 200.0;
 		return super.updateMove(maxl, extmov);
 	}
+	
+	private int getOrbAtk(int trait, MaskAtk atk) {
+		Orb[] orbs = ((MaskUnit) data).getOrbs(); 
+		
+		if(orbs == null) {
+			return 0;
+		}
+		
+		int ans = 0;
+		
+		for(int[] line : level.orbs) {
+			if(line[0] != Data.ORB_ATK || (line[1] & trait) == 0)
+				continue;
+			
+			//TODO perfrom ans
+			//Won't need to consider multiple orbs for now
+		}
+		
+		return ans;
+	}
 
+	private int getOrbRes(int trait, MaskAtk atk) {
+        Orb[] orb = ((MaskUnit) data).getOrbs();
+        
+        if(orb == null) 
+        	return 0;
+        
+        int ans = 0;
+        
+        for(int[] line : level.orbs) {
+            if(line[0] != Data.ORB_RES || (line[1] & trait) == 0) 
+            	continue;
+            
+            //TODO perform ans
+        }
+        
+        return ans;
+	}
 }

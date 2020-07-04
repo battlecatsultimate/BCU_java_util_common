@@ -145,7 +145,7 @@ public class Cannon extends AtkModelAb {
 			// wall canon
 			Form f = UnitStore.get(339, 0, false);
 			double multi = 0.01 * b.b.t().getCanonMulti(id);
-			wall = new EUnit(b, f.du, f.getEAnim(4), multi);
+			wall = new EUnit(b, f.du, f.getEAnim(4), multi, null);
 			b.le.add(wall);
 			wall.added(-1, (int) pos);
 			preTime = b.b.t().getCanonProcTime(id);
