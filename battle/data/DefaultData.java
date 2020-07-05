@@ -1,10 +1,11 @@
 package common.battle.data;
 
-public abstract class DefaultData extends DataEntity implements MaskAtk {
+public abstract class DefaultData extends DataEntity {
 
 	public int[][] proc;
 	protected int lds, ldr;
 	protected int atk, atk1, atk2, pre, pre1, pre2, abi0 = 1, abi1, abi2, tba;
+	protected DataAtk[] datks;
 
 	public boolean isrange;
 
@@ -25,9 +26,9 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 
 	@Override
 	public MaskAtk getAtkModel(int ind) {
-		if (ind >= getAtkCount())
+		if (ind >= getAtkCount() || datks == null || ind >= datks.length)
 			return null;
-		return this;
+		return datks[ind];
 	}
 
 	@Override
@@ -35,11 +36,6 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 		int len = getAnimLen();
 		int post = len - getLongPre();
 		return getLongPre() + Math.max(tba * 2 - 1, post);
-	}
-
-	@Override
-	public int getLongPoint() {
-		return lds + ldr;
 	}
 
 	@Override
@@ -54,12 +50,7 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 
 	@Override
 	public MaskAtk getRepAtk() {
-		return this;
-	}
-
-	@Override
-	public int getShortPoint() {
-		return lds;
+		return datks[0];
 	}
 
 	@Override

@@ -57,6 +57,11 @@ public class AtkModelEnemy extends AtkModelEntity {
 			atk += atk * e.status[P_STRONG][0] / 100;
 		return atk;
 	}
+	
+	@Override
+	protected int getBaseAtk(int ind) {
+		return atks[ind];
+	}
 
 	@Override
 	protected int getProc(int ind, int type, int ety) {

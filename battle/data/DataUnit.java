@@ -169,6 +169,12 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 		type = t;
 		abi = a;
+	
+		datks = new DataAtk[getAtkCount()];
+		
+		for(int i = 0; i < datks.length; i++) {
+			datks[i] = new DataAtk(this, i);
+		}
 	}
 
 	@Override
@@ -212,7 +218,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	}
 
 	@Override
-	public Orb[] getOrbs() {
+	public Orb getOrb() {
 		return form.orbs;
 	}
 

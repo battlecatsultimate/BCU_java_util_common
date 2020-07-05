@@ -31,5 +31,7 @@ public interface MaskAtk {
 	public default int loopCount() {
 		return -1;
 	}
+	
+	public int getAtk();
 
 }

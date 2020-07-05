@@ -276,4 +276,9 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 				proc[i][j] = temp[i][j];
 	}
 
+	@Override
+	public int getAtk() {
+		return atk;
+	}
+
 }

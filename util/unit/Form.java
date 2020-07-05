@@ -32,7 +32,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 	public int fid;
 	public final VImg udi;// TODO unused
 	
-	public Orb[] orbs = null;
+	public Orb orbs = null;
 
 	public String name = "";
 

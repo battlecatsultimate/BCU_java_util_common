@@ -123,7 +123,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	}
 
 	@Override
-	public Orb[] getOrbs() {
+	public Orb getOrb() {
 		return pack.orbs;
 	}
 

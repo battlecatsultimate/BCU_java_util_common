@@ -471,7 +471,7 @@ public class Data {
 	public static final int ORB_ATK = 0;
 	public static final int ORB_RES = 1;
 	
-	public static final int ORB_D = 0, ORB_C = 1, ORB_B = 2, ORB_A = 3, ORB_S = 4;
+	public static final int ORB_TYPE = 0, ORB_TRAIT = 1, ORB_GRADE = 2;
 	
 	public static final int[] ORB_ATK_MULTI = {100, 200, 300, 400, 500}; //Atk orb multiplication
 	public static final int[] ORB_RES_MULTI = {4, 8, 12, 16, 20}; //Resist orb multiplication

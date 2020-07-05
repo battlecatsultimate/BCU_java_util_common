@@ -16,6 +16,10 @@ public class EUnit extends Entity {
 	
 	public static class OrbHandler extends BattleObj {
 		protected static int getOrbAtk(AttackAb atk, EEnemy en) {
+			if(atk.matk == null) {
+				return 0;
+			}
+			
 			if(atk.origin.model instanceof AtkModelUnit) {
 				//Warning : Eunit.e became public now
 				EUnit unit = (EUnit) ((AtkModelUnit) atk.origin.model).e;
@@ -95,28 +99,27 @@ public class EUnit extends Entity {
 		return super.updateMove(maxl, extmov);
 	}
 	
-	private int getOrbAtk(int trait, MaskAtk atk) {
-		Orb[] orbs = ((MaskUnit) data).getOrbs(); 
+	private int getOrbAtk(int trait, MaskAtk matk) {
+		Orb orb = ((MaskUnit) data).getOrb(); 
 		
-		if(orbs == null) {
+		if(orb == null) {
 			return 0;
 		}
 		
 		int ans = 0;
 		
 		for(int[] line : level.orbs) {
-			if(line[0] != Data.ORB_ATK || (line[1] & trait) == 0)
+			if(line[ORB_TYPE] != Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
 				continue;
 			
-			//TODO perfrom ans
-			//Won't need to consider multiple orbs for now
+			ans += orb.getAtk(line[ORB_GRADE], matk);
 		}
 		
 		return ans;
 	}
 
-	private int getOrbRes(int trait, MaskAtk atk) {
-        Orb[] orb = ((MaskUnit) data).getOrbs();
+	private int getOrbRes(int trait, MaskAtk matk) {
+        Orb orb = ((MaskUnit) data).getOrb();
         
         if(orb == null) 
         	return 0;
@@ -124,10 +127,10 @@ public class EUnit extends Entity {
         int ans = 0;
         
         for(int[] line : level.orbs) {
-            if(line[0] != Data.ORB_RES || (line[1] & trait) == 0) 
+            if(line[ORB_TYPE] != Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0) 
             	continue;
             
-            //TODO perform ans
+            ans += orb.getRes(line[ORB_GRADE], matk);
         }
         
         return ans;

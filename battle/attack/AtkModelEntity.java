@@ -151,6 +151,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected abstract int getAttack(int ind, int[][] proc);
+	
+	protected abstract int getBaseAtk(int ind);
 
 	@Override
 	protected int getLayer() {

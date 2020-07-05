@@ -104,15 +104,25 @@ public class Orb extends Data {
 				continue;
 			}
 			
-			f.orbs = new Orb[slots];
+			f.orbs = new Orb(slots);
 		}
 	}
 	
+	public Orb(int slots) {
+		this.slots = slots;
+	}
+	
+	private final int slots;
+	
 	public int getAtk(int grade, MaskAtk atk) {
-		return ORB_ATK_MULTI[grade]; // * atk.getAtk() / 100
+		return ORB_ATK_MULTI[grade] * atk.getAtk() / 100;
 	}
 	
 	public int getRes(int grade, MaskAtk atk) {
-		return - ORB_RES_MULTI[grade]; // * atk.getAtk() / 100
+		return - ORB_RES_MULTI[grade] * atk.getAtk() / 100;
+	}
+	
+	public int getSlots() {
+		return slots;
 	}
 }

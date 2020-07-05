@@ -10,8 +10,8 @@ public class AttackSimple extends AttackAb {
 
 	private final boolean range;
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr, MaskAtk mask) {
-		super(ent, ATK, t, eab, pro, p0, p1, mask);
+	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr, MaskAtk matk) {
+		super(ent, ATK, t, eab, pro, p0, p1, matk);
 		range = isr;
 	}
 

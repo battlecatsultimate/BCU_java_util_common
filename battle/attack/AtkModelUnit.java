@@ -58,6 +58,11 @@ public class AtkModelUnit extends AtkModelEntity {
 			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;
 		return atk;
 	}
+	
+	@Override
+	protected int getBaseAtk(int ind) {
+		return atks[ind];
+	}
 
 	@Override
 	protected int getProc(int ind, int type, int ety) {

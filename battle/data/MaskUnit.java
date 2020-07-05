@@ -3,7 +3,7 @@ package common.battle.data;
 import common.util.unit.Form;
 
 public interface MaskUnit extends MaskEntity {
-	public Orb[] getOrbs();
+	public Orb getOrb();
 
 	public int getBack();
 
