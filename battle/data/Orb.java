@@ -11,8 +11,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import common.CommonStatic;
+import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.anim.ImgCut;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitStore;
@@ -22,6 +25,10 @@ public class Orb extends Data {
 	//Map<Trait, Grades>
 	public static final Map<Integer, List<Integer>> ATKORB = new HashMap<Integer, List<Integer>>();
 	public static final Map<Integer, List<Integer>> RESORB = new HashMap<Integer, List<Integer>>();
+	
+	public static FakeImage[] TYPES;
+	public static FakeImage[] TRAITS;
+	public static FakeImage[] GRADES;
 	
 	public static void read() {
 		String data = new String(VFile.get("./org/data/equipmentlist.json").getData().getBytes(), StandardCharsets.UTF_8);
@@ -106,6 +113,23 @@ public class Orb extends Data {
 			
 			f.orbs = new Orb(slots);
 		}
+		
+		String pre = "./org/page/orb/equipment_";
+		
+		VImg type = new VImg(pre+"effect.png");
+		ImgCut it = ImgCut.newIns(pre+"effect.imgcut");
+		
+		TYPES = it.cut(type.getImg());
+		
+		VImg trait = new VImg(pre+"attribute.png");
+		ImgCut itr = ImgCut.newIns(pre+"attribute.imgcut");
+		
+		TRAITS = itr.cut(trait.getImg());
+		
+		VImg grade = new VImg(pre+"grade.png");
+		ImgCut ig = ImgCut.newIns(pre+"grade.imgcut");
+		
+		GRADES = ig.cut(grade.getImg());
 	}
 	
 	public Orb(int slots) {

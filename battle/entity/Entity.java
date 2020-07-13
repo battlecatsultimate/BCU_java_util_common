@@ -103,6 +103,9 @@ public abstract class Entity extends AbEntity {
 		public void drawEff(FakeGraphics g, P p, double siz) {
 			if (dead != -1)
 				return;
+			if(status[P_WARP][2] != 0)
+				return;
+			
 			FakeTransform at = g.getTransform();
 			int EWID = 48;
 			double x = p.x;
@@ -191,7 +194,7 @@ public abstract class Entity extends AbEntity {
 			if (t == P_WARP) {
 				AnimD ea = EffAnim.effas[A_W];
 				int pa = status[P_WARP][2];
-				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim));
+				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim, e.dire));
 				CommonStatic.def.setSE(pa == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
 				status[P_WARP][pa] = ea.len(pa);
 
@@ -337,6 +340,11 @@ public abstract class Entity extends AbEntity {
 
 		/** set kill anim */
 		private void kill() {
+			if((e.getAbi() & AB_GLASS) != 0) {
+				dead = 0;
+				return;
+			}
+			
 			Soul s = SoulStore.getSoul(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
 			CommonStatic.def.setSE(e.basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);

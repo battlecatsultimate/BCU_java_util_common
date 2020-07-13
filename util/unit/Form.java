@@ -45,6 +45,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		du = cu;
 		cu.pack = this;
 		udi = null;
+		orbs = new Orb(-1);
 	}
 
 	protected Form(Unit u, int f, String str, String data) {

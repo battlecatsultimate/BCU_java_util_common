@@ -18,7 +18,7 @@ public class EForm extends Data {
 		this.level = level;
 		PCoin pc = f.getPCoin();
 		if (pc != null)
-			du = pc.improve(level.lvs);
+			du = pc.improve(level.getLvs());
 		else
 			du = form.du;
 	}
@@ -35,7 +35,7 @@ public class EForm extends Data {
 	}
 
 	public EUnit getEntity(StageBasis b) {
-		double d = f.unit.lv.getMult(level.lvs[0]);
+		double d = f.unit.lv.getMult(level.getLvs()[0]);
 		EUnit e = new EUnit(b, du, f.getEAnim(0), d, level);
 		return e;
 	}

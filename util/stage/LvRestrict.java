@@ -77,8 +77,8 @@ public class LvRestrict extends Data {
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null) {
-					int[] mlv = valid(f).lvs;
-					int[] flv = lu.map.get(f.unit).lvs;
+					int[] mlv = valid(f).getLvs();
+					int[] flv = lu.map.get(f.unit).getLvs();
 					for (int i = 0; i < 6; i++)
 						if (mlv[i] < flv[i])
 							return false;

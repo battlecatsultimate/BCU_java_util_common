@@ -175,9 +175,43 @@ public class LineUp extends Data {
 	public synchronized void setLv(Unit u, int[] lv) {
 		boolean sub = updating;
 		updating = true;
-		map.put(u, new Level(lv));
+		
+		Level l = map.get(u);
+		
+		if(l != null) {
+			l.setLvs(lv);
+		} else {
+			l = new Level(lv);
+			
+			map.put(u, l);
+		}
+
 		if (!sub)
 			renewEForm();
+		updating &= sub;
+	}
+	
+	/** set orb data of an Unit */
+	public synchronized void setOrb(Unit u, int[] lvs, int[][] orbs) {
+		//lvs must be generated before doing something with orbs
+		boolean sub = updating;
+		
+		updating = true;
+		
+		Level l = map.get(u);
+		
+		if(l != null) {
+			l.setLvs(lvs);
+			l.setOrbs(orbs);
+		} else {
+			l = new Level(lvs, orbs);
+			
+			map.put(u, l);
+		}
+		
+		if(!sub)
+			renewEForm();
+		
 		updating &= sub;
 	}
 
@@ -221,10 +255,10 @@ public class LineUp extends Data {
 		os.writeInt(map.size());
 		for (Entry<Unit, Level> e : map.entrySet()) {
 			os.writeInt(e.getKey().id);
-			os.writeIntB(e.getValue().lvs);
-			if(e.getValue().orbs != null) {
+			os.writeIntB(e.getValue().getLvs());
+			if(e.getValue().getOrbs() != null) {
 				os.writeInt(1);
-				os.writeIntBB(e.getValue().orbs);
+				os.writeIntBB(e.getValue().getOrbs());
 			} else {
 				os.writeInt(0);
 			}

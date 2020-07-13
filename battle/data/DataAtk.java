@@ -16,8 +16,7 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int[] getProc(int ind) {
-		// TODO Auto-generated method stub
-		return null;
+		return data.proc[ind];
 	}
 
 	@Override

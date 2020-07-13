@@ -136,6 +136,12 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc[P_VOLC][3] = ints[84] * VOLC_ITV;
 		abi = a;
 		type = t;
+		
+		datks = new DataAtk[getAtkCount()];
+		
+		for(int i = 0; i < datks.length; i++) {
+			datks[i] = new DataAtk(this, i);
+		}
 	}
 
 	@Override
