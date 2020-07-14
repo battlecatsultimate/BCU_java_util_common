@@ -2,12 +2,19 @@ package common.util.stage;
 
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
+import common.io.json.JsonClass.JCConcstructor;
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCGenericRead;
+import common.io.json.JsonClass.JCGenericWrite;
+import common.io.json.JsonClass.JCTempField;
+import common.io.json.JsonClass.RType;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.pack.Pack;
@@ -15,6 +22,8 @@ import common.util.unit.Unit;
 import common.util.unit.UnitStore;
 import common.CommonStatic;
 
+@JCGeneric(int.class)
+@JsonClass(read = RType.FILL)
 public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 	public static final Map<Integer, CharaGroup> map = new TreeMap<>();
@@ -41,12 +50,31 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	}
 
 	public final Pack pack;
-	public int id;
-	public final Set<Unit> set = new TreeSet<>();
-
-	public int type = 0;
-
+	@JsonField
+	public int id, type = 0;
+	@JsonField(generic = Unit.class)
+	public final TreeSet<Unit> set = new TreeSet<>();
+	@JsonField
 	public String name = "";
+
+	@JCTempField
+	public MapColc mc;
+
+	@JCConcstructor
+	public CharaGroup(MapColc map) {
+		mc = map;
+		pack = mc.pack;
+	}
+
+	@JCGenericRead(value = int.class, parent = MapColc.class)
+	public static CharaGroup zgen(MapColc mc, int i) {
+		return i < 0 ? null : mc.groups.get(i);
+	}
+
+	@JCGenericWrite(int.class)
+	public int zser() {
+		return id;
+	}
 
 	public CharaGroup(CharaGroup cg) {
 		pack = null;
@@ -131,7 +159,6 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 			zread$000308(is);
 		else if (ver >= 307)
 			zread$000307(is);
-
 	}
 
 	private void zread$000307(InStream is) {

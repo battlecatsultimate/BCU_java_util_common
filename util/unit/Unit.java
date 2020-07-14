@@ -8,6 +8,9 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCGenericRead;
+import common.io.json.JsonClass.JCGenericWrite;
 import common.system.FixIndexList;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
@@ -17,6 +20,7 @@ import common.util.anim.AnimCE;
 import common.util.pack.Pack;
 import main.MainBCU;
 
+@JCGeneric(int.class)
 public class Unit extends Data implements Comparable<Unit> {
 
 	public static class UnitInfo {
@@ -88,6 +92,16 @@ public class Unit extends Data implements Comparable<Unit> {
 	public UnitLevel lv;
 	public final UnitInfo info = new UnitInfo();
 
+	@JCGenericRead(int.class)
+	public static Unit zgen(int i) {
+		return UnitStore.get(i, true);
+	}
+
+	@JCGenericWrite(int.class)
+	public int zser() {
+		return id;
+	}
+	
 	public Unit(int ID, Unit old, Pack p, UnitLevel ul) {
 		pack = p;
 		id = ID;

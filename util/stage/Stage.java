@@ -6,6 +6,9 @@ import java.util.Queue;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
@@ -17,6 +20,7 @@ import common.util.unit.Enemy;
 import common.CommonStatic;
 import main.MainBCU;
 
+@JsonClass
 public class Stage extends Data implements BasedCopable<Stage, StageMap>, BattleStatic {
 
 	public static class StageInfo {
@@ -99,15 +103,19 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	public static final StageMap clipsm = clipmc.maps[0];
 
 	public final StageMap map;
-
 	public StageInfo info;
+
+	@JsonField
 	public String name = "";
+	@JsonField
 	public boolean non_con, trail;
-	public int len, health, max;
-	public int bg, mus0 = -1, mush, mus1 = -1;
-	public int castle;
+	@JsonField
+	public int len, health, max, bg, mus0 = -1, mush, mus1 = -1, castle;
+	@JsonField
 	public SCDef data;
+	@JsonField(gen = GenType.GEN)
 	public Limit lim;
+
 	public List<Recd> recd = new ArrayList<>();
 
 	public Stage(StageMap sm) {

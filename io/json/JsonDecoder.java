@@ -21,6 +21,7 @@ import com.google.gson.JsonPrimitive;
 
 import common.io.json.JsonException.Type;
 
+//FIXME implement map parser and bypass
 public class JsonDecoder {
 
 	@Documented
@@ -87,13 +88,14 @@ public class JsonDecoder {
 				if (jfield.gen() == JsonField.GenType.FILL) {
 					Object val = field.get(cont);
 					if (cls.getAnnotation(JsonClass.class) != null)
-						inject(elem.getAsJsonObject(), cls, val);
+						inject(elem.getAsJsonObject(), cls, val, val);
 					return val;
 				}
 				if (jfield.gen() == JsonField.GenType.GEN) {
 					Class<?> ccls = cont.getClass();
 					if (jfield.generator().length() == 0) {
-						return inject(elem.getAsJsonObject(), cls, cls.getConstructor(ccls).newInstance(cont));
+						Object val = cls.getConstructor(ccls).newInstance(cont);
+						return inject(elem.getAsJsonObject(), cls, val, val);
 					}
 					Method m = ccls.getMethod(jfield.generator(), Class.class, JsonElement.class);
 					Object val = m.invoke(cont, cls, elem);
@@ -150,15 +152,15 @@ public class JsonDecoder {
 	/**
 	 * inject the values from the json object into the target object
 	 */
-	public static Object inject(JsonObject jobj, Class<?> cls, Object obj) throws JsonException {
+	public static Object inject(JsonObject jobj, Class<?> cls, Object obj, Object pass) throws JsonException {
 		JsonClass jc = cls.getAnnotation(JsonClass.class);
 		if (jc == null)
 			throw new JsonException(Type.TYPE_MISMATCH, jobj, "no annotation for class " + cls);
 		if (cls.getSuperclass().getAnnotation(JsonClass.class) != null)
-			inject(jobj, cls.getSuperclass(), obj);
+			inject(jobj, cls.getSuperclass(), obj, pass);
 		Field[] fs = cls.getDeclaredFields();
 		for (Field f : fs) {
-			if(Modifier.isStatic(f.getModifiers()))
+			if (Modifier.isStatic(f.getModifiers()))
 				continue;
 			JsonField jf = f.getAnnotation(JsonField.class);
 			if (jf == null && jc.noTag() == JsonClass.NoTag.LOAD)
@@ -173,7 +175,7 @@ public class JsonDecoder {
 					continue;
 				JsonElement elem = jobj.get(tag);
 				f.setAccessible(true);
-				f.set(obj, decode(elem, f.getType(), obj, jf, f));
+				f.set(obj, decode(elem, f.getType(), pass, jf, f));
 			} catch (Exception e) {
 				if (jf.noErr())
 					continue;
@@ -206,7 +208,7 @@ public class JsonDecoder {
 			JsonElement elem = jobj.get(tag);
 			Class<?> ccls = m.getParameters()[0].getType();
 			try {
-				m.invoke(obj, decode(elem, ccls, obj, jf, null));
+				m.invoke(obj, decode(elem, ccls, pass, jf, null));
 			} catch (Exception e) {
 				if (jf.noErr())
 					continue;
@@ -302,7 +304,8 @@ public class JsonDecoder {
 		JsonObject jobj = elem.getAsJsonObject();
 		if (jc.read() == JsonClass.RType.DATA) {
 			try {
-				return inject(jobj, cls, cls.newInstance());
+				Object val = cls.newInstance();
+				return inject(jobj, cls, val, jc.bypass() ? cont : val);
 			} catch (Exception e) {
 				if (e instanceof JsonException)
 					throw (JsonException) e;
@@ -318,7 +321,7 @@ public class JsonDecoder {
 				Method m = cls.getMethod(func, JsonElement.class);
 				Object val = m.invoke(null, jobj);
 				cls = val.getClass();
-				return inject(jobj, cls, val);
+				return inject(jobj, cls, val, jc.bypass() ? cont : val);
 			} catch (Exception e) {
 				if (e instanceof JsonException)
 					throw (JsonException) e;

@@ -2,9 +2,12 @@ package common.util.stage;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.system.BasedCopable;
 import common.util.Data;
 
+@JsonClass
 public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 
 	public static SCGroup zread(InStream is) {
@@ -21,7 +24,9 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 		return null;
 	}
 
+	@JsonField
 	public final int id;
+	@JsonField
 	private int[] max = { -1, -1, -1, -1 };
 
 	public SCGroup(int ID, int... ns) {

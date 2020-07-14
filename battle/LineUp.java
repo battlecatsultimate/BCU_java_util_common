@@ -4,19 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-
 import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
-import common.io.json.JsonDecoder;
 import common.io.json.JsonDecoder.OnInjected;
-import common.io.json.JsonEncoder;
-import common.io.json.JsonException;
 import common.io.json.JsonField;
-import common.io.json.JsonField.GenType;
-import common.io.json.JsonField.SerType;
 import common.util.Data;
 import common.util.unit.Combo;
 import common.util.unit.EForm;
@@ -30,11 +22,10 @@ import java.util.TreeMap;
 @JsonClass
 public class LineUp extends Data {
 
-	@JsonField(generic = { Unit.class,
-			Level.class }, gen = GenType.GEN, ser = SerType.FUNC, generator = "zgen", serializer = "zser")
+	@JsonField(generic = { Unit.class, Level.class })
 	public final TreeMap<Unit, Level> map = new TreeMap<>();
 
-	@JsonField(gen = GenType.GEN, ser = SerType.FUNC, generator = "zgen", serializer = "zser")
+	@JsonField
 	public final Form[][] fs = new Form[2][5];
 
 	public final EForm[][] efs = new EForm[2][5];
@@ -456,25 +447,4 @@ public class LineUp extends Data {
 		arrange();
 	}
 
-	public Object zgen(Class<?> cls, JsonElement elem) throws JsonException {
-		if (cls == Level.class)
-			return JsonDecoder.decode(elem, cls);
-		if (cls == Unit.class)
-			return UnitStore.get(elem.getAsInt(), true);
-		if (cls == Form.class)
-			return UnitStore.get(JsonDecoder.decode(elem, int[].class));
-		return null;
-	}
-
-	public JsonElement zser(Level lv) throws Exception {
-		return JsonEncoder.encode(lv);
-	}
-
-	public JsonElement zser(Unit u) throws Exception {
-		return new JsonPrimitive(u.id);
-	}
-
-	public JsonElement zser(Form f) throws Exception {
-		return JsonEncoder.encode(new int[] { f.unit.id, f.fid });
-	}
 }

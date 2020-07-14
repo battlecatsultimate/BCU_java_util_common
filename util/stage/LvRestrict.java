@@ -1,27 +1,62 @@
 package common.util.stage;
 
-import java.util.Map;
 import java.util.TreeMap;
 
 import common.battle.LineUp;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
+import common.io.json.JsonClass.JCConcstructor;
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCGenericRead;
+import common.io.json.JsonClass.JCGenericWrite;
+import common.io.json.JsonClass.JCTempField;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonField.GenType;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Level;
 
+@JCGeneric(int.class)
+@JsonClass(read = RType.FILL)
 public class LvRestrict extends Data {
 
 	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
 
-	public final Map<CharaGroup, int[]> res = new TreeMap<>();
+	@JsonField(generic = { int.class, int[].class })
+	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
+	
 	public final Pack pack;
 
+	@JsonField(gen = GenType.FILL)
 	public int[][] rares = new int[RARITY_TOT][6];
+	@JsonField
 	public int[] all = new int[6];
+	@JsonField
 	public int id;
+	@JsonField
 	public String name = "";
+	
+	@JCTempField
+	public MapColc mc;
+	
+	@JCConcstructor
+	public LvRestrict(MapColc mapc) {
+		mc = mapc;
+		pack = mc.pack;
+	}
+	
+	@JCGenericRead(value = int.class, parent = MapColc.class)
+	public static LvRestrict zgen(MapColc mc, int i) {
+		return i < 0 ? null : mc.lvrs.get(i);
+	}
+
+	@JCGenericWrite(int.class)
+	public int zser() {
+		return id;
+	}
 
 	public LvRestrict(MapColc mc, InStream is) {
 		pack = mc.pack;

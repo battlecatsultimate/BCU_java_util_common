@@ -17,6 +17,7 @@ import com.google.gson.JsonPrimitive;
 
 import common.io.json.JsonException.Type;
 
+//FIXME implement map parser
 public class JsonEncoder {
 
 	public static JsonElement encode(Object obj) throws Exception {

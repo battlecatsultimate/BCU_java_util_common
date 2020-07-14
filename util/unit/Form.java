@@ -5,6 +5,9 @@ import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCGenericRead;
+import common.io.json.JsonClass.JCGenericWrite;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
 import common.system.VImg;
@@ -14,6 +17,7 @@ import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.ImgCut;
 
+@JCGeneric(int[].class)
 public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
 
 	public static ImgCut unicut, udicut;
@@ -31,10 +35,20 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 	public final int uid;
 	public int fid;
 	public final VImg udi;// TODO unused
-	
+
 	public Orb orbs = null;
 
 	public String name = "";
+
+	@JCGenericRead(int[].class)
+	public static Form zgen(int[] is) {
+		return UnitStore.get(is);
+	}
+
+	@JCGenericWrite(int[].class)
+	public int[] zser() {
+		return new int[] { uid, fid };
+	}
 
 	public Form(Unit u, int f, String str, AnimU<?> ac, CustomUnit cu) {
 		unit = u;

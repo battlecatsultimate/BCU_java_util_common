@@ -21,9 +21,9 @@ import com.google.gson.JsonArray;
  * 2. customize IOType, to be used only when reading or writing, add parameter
  * {@code IOType} <br>
  * 3. use on methods, must have {@code IOType} {@code R} or {@code W} <br>
- * 4. {@code GenType} {@code FILL} mode, on {@code JsonClassType} {@code SET} or
- * {@code FILL} object field only, allows injection on pre-existing objects. Not
- * applicable to Collections. <br>
+ * 4. {@code GenType} {@code FILL} mode, on {@code RType} {@code SET} or
+ * {@code FILL} object field only, allows injection on pre-existing objects. Can
+ * use on primitive arrays. Not applicable to Collections. <br>
  * 5. {@Code GenType} {@code GEN} mode, use parameter {@code generator} to
  * specify function name, must be static function declared in this class<br>
  * <hr>
@@ -143,6 +143,7 @@ public @interface JsonField {
 		public boolean block() {
 			return false;
 		}
+
 	};
 
 	/**
@@ -153,7 +154,7 @@ public @interface JsonField {
 	String generator() default "";
 
 	/**
-	 * used for generic data structures. Currently supports List, Set, and Map.
+	 * 1. used for generic data structures. Currently supports List, Set, and Map.
 	 * Note: the field declaration must be instantiatable
 	 */
 	Class<?>[] generic() default {};

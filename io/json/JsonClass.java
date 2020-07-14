@@ -4,6 +4,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -11,6 +12,44 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface JsonClass {
+
+	/** indicates that this constructor is only used by JSON */
+	@Target(ElementType.CONSTRUCTOR)
+	public static @interface JCConcstructor {
+	}
+
+	/**
+	 * indicates that this field only serves as a temporary field set by
+	 * jcconstructor
+	 */
+	@Target(ElementType.FIELD)
+	public static @interface JCTempField {
+	}
+
+	/** indicates that this class can be loaded with a value of another class*/
+	@Documented
+	@Retention(RUNTIME)
+	@Target(TYPE)
+	public static @interface JCGeneric {
+		Class<?>[] value();
+	}
+
+	/** the generator code for a specific class mapping*/
+	@Documented
+	@Retention(RUNTIME)
+	@Target(ElementType.METHOD)
+	public static @interface JCGenericRead {
+		Class<?> value();
+		Class<?> parent() default void.class;
+	}
+
+	/** the serializer code for a specific class mapping*/
+	@Documented
+	@Retention(RUNTIME)
+	@Target(ElementType.METHOD)
+	public static @interface JCGenericWrite {
+		Class<?> value();
+	}
 
 	public static enum RType {
 		/**
@@ -39,6 +78,10 @@ public @interface JsonClass {
 
 	JsonClass.WType write() default WType.DEF;
 
+	/** determines how to reat fields with no JsonFiel annotation */
 	JsonClass.NoTag noTag() default NoTag.OMIT;
+
+	/** treat this class as collection */
+	boolean bypass() default false;
 
 }

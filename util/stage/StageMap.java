@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Queue;
 
 import common.CommonStatic;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
 import common.util.Data;
 
+@JsonClass
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 
 	public static class StageMapInfo {
@@ -42,14 +45,16 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 	}
 
 	public final MapColc mc;
-	public final List<Stage> list = new ArrayList<>();
 	public final List<Limit> lim = new ArrayList<>();
-
 	public StageMapInfo info;
+	
+	@JsonField(generic = Stage.class)
+	public final List<Stage> list = new ArrayList<>();
+	@JsonField
 	public String name = "";
-	public int id;
-	public int price = 1, retyp, pllim, set;
-	public int cast = -1;
+	@JsonField
+	public int id,price = 1, retyp, pllim, set,cast = -1;
+	@JsonField
 	public int[] stars = new int[] { 100 };
 
 	public StageMap(MapColc map) {

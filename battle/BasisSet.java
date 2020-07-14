@@ -3,6 +3,8 @@ package common.battle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonElement;
+
 import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
@@ -81,6 +83,16 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public final List<BasisLU> lb = new ArrayList<>();
 
 	public BasisLU sele;
+
+	@JsonField(tag = "sele", io = IOType.W)
+	public int zser() {
+		return lb.indexOf(sele);
+	}
+
+	@JsonField(tag = "sele", io = IOType.R)
+	public void zgen(JsonElement elem) {
+		sele = lb.get(elem.getAsInt());
+	}
 
 	public BasisSet() {
 		if (list.size() == 0)
@@ -205,16 +217,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		}
 		int ind = is.nextInt();
 		sele = lb.get(ind);
-	}
-
-	@JsonField(tag = "sele", io = IOType.R)
-	public BasisLU zgen(int ind) {
-		return lb.get(ind);
-	}
-
-	@JsonField(tag = "sele", io = IOType.W)
-	public int zser() {
-		return lb.indexOf(sele);
 	}
 
 }

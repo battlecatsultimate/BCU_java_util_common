@@ -8,6 +8,9 @@ import java.util.TreeSet;
 import common.battle.StageBasis;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
 import common.system.Copable;
 import common.system.FixIndexList;
 import common.util.Data;
@@ -16,6 +19,7 @@ import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
 
+@JsonClass
 public class SCDef implements Copable<SCDef> {
 
 	public static final int SIZE = 13;
@@ -74,10 +78,13 @@ public class SCDef implements Copable<SCDef> {
 		return null;
 	}
 
+	@JsonField
 	public int[][] datas;
-
+	@JsonField(gen = GenType.FILL)
 	public final FixIndexList<SCGroup> sub = new FixIndexList<>(new SCGroup[1000]);
+	@JsonField(generic = { Integer.class, Integer.class })
 	public final Map<Integer, Integer> smap = new TreeMap<>();
+	@JsonField
 	public int sdef = 0;
 
 	protected SCDef(InStream is, int ver) {
@@ -98,6 +105,9 @@ public class SCDef implements Copable<SCDef> {
 			}
 		} else
 			datas = new int[0][SIZE];
+	}
+
+	protected SCDef() {
 	}
 
 	protected SCDef(int s) {

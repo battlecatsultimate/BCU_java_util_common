@@ -9,6 +9,10 @@ import java.util.TreeMap;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonField.GenType;
 import common.system.FixIndexList;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
@@ -16,6 +20,7 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.pack.Pack;
 
+@JsonClass(read = RType.FILL)
 public class MapColc extends Data {
 
 	private static String[] strs = new String[] { "rc", "ec", "sc", "wc" };
@@ -99,8 +104,11 @@ public class MapColc extends Data {
 	public final Pack pack;
 	public final int id;
 	public String name;
+	@JsonField(gen = GenType.FILL)
 	public FixIndexList<CharaGroup> groups = new FixIndexList<>(new CharaGroup[1000]);
+	@JsonField(gen = GenType.FILL)
 	public FixIndexList<LvRestrict> lvrs = new FixIndexList<>(new LvRestrict[1000]);
+	@JsonField
 	public StageMap[] maps;
 
 	public MapColc(Pack pac) {

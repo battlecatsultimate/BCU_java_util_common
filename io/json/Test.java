@@ -204,6 +204,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws Exception {
+		System.out.println(JsonParser.parseString("{a:\"^\"}"));
 		//JsonTest_2.test();
 		testJson();
 	}

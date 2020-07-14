@@ -6,8 +6,18 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import common.io.json.JsonClass;
+import common.io.json.JsonDecoder;
+import common.io.json.JsonEncoder;
+import common.io.json.JsonField;
+import common.io.json.JsonField.IOType;
 import common.util.Data;
 
+@JsonClass
 public class FixIndexList<T> extends Data {
 
 	private final T[] arr;
@@ -115,6 +125,32 @@ public class FixIndexList<T> extends Data {
 
 	public int size() {
 		return size;
+	}
+
+	@JsonField(tag = "data", io = IOType.R)
+	public void zgen(JsonElement e) throws Exception {
+		@SuppressWarnings("unchecked")
+		Class<T> cls = (Class<T>) arr.getClass().getComponentType();
+		JsonArray jarr = e.getAsJsonArray();
+		for (int i = 0; i < jarr.size(); i++) {
+			JsonObject ji = jarr.get(i).getAsJsonObject();
+			int ind = ji.get("ind").getAsInt();
+			T val = JsonDecoder.decode(ji.get("val"), cls);
+			this.set(ind, val);
+		}
+
+	}
+
+	@JsonField(tag = "data", io = IOType.W)
+	public JsonElement zser() throws Exception {
+		JsonArray data = new JsonArray();
+		for (int i = 0; i < arr.length; i++)
+			if (arr[i] != null) {
+				JsonObject ent = new JsonObject();
+				ent.addProperty("ind", i);
+				ent.add("val", JsonEncoder.encode(arr[i]));
+			}
+		return data;
 	}
 
 }
