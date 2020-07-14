@@ -2,11 +2,16 @@ package common.battle.data;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.util.unit.Form;
 
+@JsonClass
 public class CustomUnit extends CustomEntity implements MaskUnit {
 
 	public Form pack;
+	
+	@JsonField
 	public int price, resp;
 
 	public CustomUnit() {

@@ -3,6 +3,7 @@ package common.io.json;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,6 +36,17 @@ public class JsonEncoder {
 			return new JsonPrimitive((String) obj);
 		Class<?> cls = obj.getClass();
 		if (cls.isArray()) {
+			if (jfield != null && jfield.usePool()) {
+				JsonField.Handler handler = new JsonField.Handler();
+				int n = Array.getLength(obj);
+				JsonArray jarr = new JsonArray();
+				for (int i = 0; i < n; i++)
+					jarr.add(handler.add(Array.get(obj, i)));
+				JsonObject jobj = new JsonObject();
+				jobj.add("pool", encode(handler.list));
+				jobj.add("data", jarr);
+				return jobj;
+			}
 			int n = Array.getLength(obj);
 			JsonArray arr = new JsonArray(n);
 			for (int i = 0; i < n; i++)
@@ -49,12 +61,12 @@ public class JsonEncoder {
 			return encodeMap((Map<?, ?>) obj, jfield, holder);
 
 		if (jfield != null) {
-			if (jfield.SerType() == JsonField.SerType.FUNC) {
+			if (jfield.ser() == JsonField.SerType.FUNC) {
 				if (holder == null || jfield.serializer().length() == 0)
 					throw new JsonException(Type.FUNC, null, "no serializer function");
 				Method m = holder.getClass().getMethod(jfield.serializer(), cls);
 				return encode(m.invoke(holder, obj));
-			} else if (jfield.SerType() == JsonField.SerType.CLASS) {
+			} else if (jfield.ser() == JsonField.SerType.CLASS) {
 				JsonClass cjc = cls.getAnnotation(JsonClass.class);
 				if (cjc == null || cjc.serializer().length() == 0)
 					throw new JsonException(Type.FUNC, null, "no serializer function");
@@ -75,11 +87,22 @@ public class JsonEncoder {
 				Method m = cls.getMethod(func);
 				return encode(m.invoke(obj), null, null);
 			}
-		
+
 		throw new JsonException(Type.UNDEFINED, null, "object " + obj + " not defined");
 	}
 
-	private static JsonArray encodeList(List<?> list, JsonField jfield, Object holder) throws Exception {
+	private static JsonElement encodeList(List<?> list, JsonField jfield, Object holder) throws Exception {
+		if (jfield != null && jfield.usePool()) {
+			JsonField.Handler handler = new JsonField.Handler();
+			int n = list.size();
+			JsonArray jarr = new JsonArray();
+			for (int i = 0; i < n; i++)
+				jarr.add(handler.add(list.get(i)));
+			JsonObject jobj = new JsonObject();
+			jobj.add("pool", encode(handler.list));
+			jobj.add("data", jarr);
+			return jobj;
+		}
 		JsonArray ans = new JsonArray(list.size());
 		for (Object obj : list)
 			ans.add(encode(obj, jfield, holder));
@@ -102,11 +125,13 @@ public class JsonEncoder {
 			encodeObject(jobj, obj, cls);
 		JsonClass jc = cls.getAnnotation(JsonClass.class);
 		for (Field f : cls.getDeclaredFields())
-			if (jc.read() == JsonClass.RType.ALLDATA || f.getAnnotation(JsonField.class) != null) {
+			if (jc.noTag() == JsonClass.NoTag.LOAD || f.getAnnotation(JsonField.class) != null) {
+				if(Modifier.isStatic(f.getModifiers()))
+					continue;
 				JsonField jf = f.getAnnotation(JsonField.class);
 				if (jf == null)
 					jf = JsonField.DEF;
-				if (jf.IOType() == JsonField.IOType.R)
+				if (jf.block() || jf.io() == JsonField.IOType.R)
 					continue;
 				String tag = jf.tag().length() == 0 ? f.getName() : jf.tag();
 				f.setAccessible(true);
@@ -115,9 +140,9 @@ public class JsonEncoder {
 		for (Method m : cls.getDeclaredMethods())
 			if (m.getAnnotation(JsonField.class) != null) {
 				JsonField jf = m.getAnnotation(JsonField.class);
-				if (jf.IOType() == JsonField.IOType.R)
+				if (jf.io() == JsonField.IOType.R)
 					continue;
-				if (jf.IOType() == JsonField.IOType.RW)
+				if (jf.io() == JsonField.IOType.RW)
 					throw new JsonException(Type.FUNC, null, "functional fields should not have RW type");
 				String tag = jf.tag();
 				if (tag.length() == 0)

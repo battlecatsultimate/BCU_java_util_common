@@ -2,11 +2,21 @@ package common.battle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonDecoder;
+import common.io.json.JsonDecoder.OnInjected;
+import common.io.json.JsonEncoder;
+import common.io.json.JsonException;
+import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
+import common.io.json.JsonField.SerType;
 import common.util.Data;
 import common.util.unit.Combo;
 import common.util.unit.EForm;
@@ -17,10 +27,16 @@ import common.util.unit.UnitStore;
 
 import java.util.TreeMap;
 
+@JsonClass
 public class LineUp extends Data {
 
-	public final Map<Unit, Level> map = new TreeMap<>();
+	@JsonField(generic = { Unit.class,
+			Level.class }, gen = GenType.GEN, ser = SerType.FUNC, generator = "zgen", serializer = "zser")
+	public final TreeMap<Unit, Level> map = new TreeMap<>();
+
+	@JsonField(gen = GenType.GEN, ser = SerType.FUNC, generator = "zgen", serializer = "zser")
 	public final Form[][] fs = new Form[2][5];
+
 	public final EForm[][] efs = new EForm[2][5];
 	public int[] inc = new int[C_TOT], loc = new int[5];
 	public List<Combo> coms = new ArrayList<>();
@@ -94,7 +110,9 @@ public class LineUp extends Data {
 		return rem;
 	}
 
+	@OnInjected
 	public void renew() {
+		validate();
 		renewEForm();
 		renewCombo();
 	}
@@ -175,14 +193,14 @@ public class LineUp extends Data {
 	public synchronized void setLv(Unit u, int[] lv) {
 		boolean sub = updating;
 		updating = true;
-		
+
 		Level l = map.get(u);
-		
-		if(l != null) {
+
+		if (l != null) {
 			l.setLvs(lv);
 		} else {
 			l = new Level(lv);
-			
+
 			map.put(u, l);
 		}
 
@@ -190,28 +208,28 @@ public class LineUp extends Data {
 			renewEForm();
 		updating &= sub;
 	}
-	
+
 	/** set orb data of an Unit */
 	public synchronized void setOrb(Unit u, int[] lvs, int[][] orbs) {
-		//lvs must be generated before doing something with orbs
+		// lvs must be generated before doing something with orbs
 		boolean sub = updating;
-		
+
 		updating = true;
-		
+
 		Level l = map.get(u);
-		
-		if(l != null) {
+
+		if (l != null) {
 			l.setLvs(lvs);
 			l.setOrbs(orbs);
 		} else {
 			l = new Level(lvs, orbs);
-			
+
 			map.put(u, l);
 		}
-		
-		if(!sub)
+
+		if (!sub)
 			renewEForm();
-		
+
 		updating &= sub;
 	}
 
@@ -256,7 +274,7 @@ public class LineUp extends Data {
 		for (Entry<Unit, Level> e : map.entrySet()) {
 			os.writeInt(e.getKey().id);
 			os.writeIntB(e.getValue().getLvs());
-			if(e.getValue().getOrbs() != null) {
+			if (e.getValue().getOrbs() != null) {
 				os.writeInt(1);
 				os.writeIntBB(e.getValue().getOrbs());
 			} else {
@@ -415,7 +433,6 @@ public class LineUp extends Data {
 		arrange();
 	}
 
-	
 	private void zread$000400(InStream is) {
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
@@ -430,12 +447,34 @@ public class LineUp extends Data {
 			Unit u = UnitStore.get(uid, true);
 			int[][] orbs = null;
 			int existing = is.nextInt();
-			if(existing == 1) {
+			if (existing == 1) {
 				orbs = is.nextIntsBB();
 			}
 			if (u != null)
 				map.put(u, new Level(lv, orbs));
 		}
 		arrange();
+	}
+
+	public Object zgen(Class<?> cls, JsonElement elem) throws JsonException {
+		if (cls == Level.class)
+			return JsonDecoder.decode(elem, cls);
+		if (cls == Unit.class)
+			return UnitStore.get(elem.getAsInt(), true);
+		if (cls == Form.class)
+			return UnitStore.get(JsonDecoder.decode(elem, int[].class));
+		return null;
+	}
+
+	public JsonElement zser(Level lv) throws Exception {
+		return JsonEncoder.encode(lv);
+	}
+
+	public JsonElement zser(Unit u) throws Exception {
+		return new JsonPrimitive(u.id);
+	}
+
+	public JsonElement zser(Form f) throws Exception {
+		return JsonEncoder.encode(new int[] { f.unit.id, f.fid });
 	}
 }

@@ -1,9 +1,14 @@
 package common.battle;
 
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonField;
 import common.util.Data;
 
+@JsonClass(read = RType.FILL)
 public abstract class Basis extends Data {
 
+	@JsonField
 	public String name;
 
 	/** get combo effect data */

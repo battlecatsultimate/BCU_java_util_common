@@ -1,7 +1,10 @@
 package common.battle.data;
 
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
 import common.util.Data;
 
+@JsonClass(noTag = NoTag.LOAD)
 public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;

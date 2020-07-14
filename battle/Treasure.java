@@ -2,15 +2,22 @@ package common.battle;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonField.GenType;
+import common.io.json.JsonField;
 import common.util.Data;
 
+@JsonClass(read = RType.FILL)
 public class Treasure extends Data {
 
 	public final Basis b;
-	public int[] tech = new int[LV_TOT];
-	public int[] trea = new int[T_TOT];
-	public int[] bslv = new int[BASE_TOT];
-	public int[] fruit = new int[7], gods = new int[3];
+
+	@JsonField(gen = GenType.FILL)
+	public int[] tech = new int[LV_TOT], trea = new int[T_TOT], bslv = new int[BASE_TOT], fruit = new int[7],
+			gods = new int[3];
+	
+	@JsonField
 	public int alien, star;
 
 	/** new Treasure object */

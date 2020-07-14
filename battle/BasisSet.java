@@ -5,9 +5,14 @@ import java.util.List;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
+import common.io.json.JsonField.IOType;
 import common.system.Copable;
 import main.Opts;
 
+@JsonClass
 public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static final List<BasisSet> list = new ArrayList<>();
@@ -69,8 +74,12 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		return ans;
 	}
 
+	@JsonField(gen = GenType.FILL)
 	private final Treasure t;
+
+	@JsonField(generic = BasisLU.class)
 	public final List<BasisLU> lb = new ArrayList<>();
+
 	public BasisLU sele;
 
 	public BasisSet() {
@@ -196,6 +205,16 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		}
 		int ind = is.nextInt();
 		sele = lb.get(ind);
+	}
+
+	@JsonField(tag = "sele", io = IOType.R)
+	public BasisLU zgen(int ind) {
+		return lb.get(ind);
+	}
+
+	@JsonField(tag = "sele", io = IOType.W)
+	public int zser() {
+		return lb.indexOf(sele);
 	}
 
 }

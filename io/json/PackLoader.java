@@ -18,6 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import common.io.DataIO;
+import common.io.json.JsonClass.NoTag;
 import common.io.json.PackLoader.PackDesc.FileDesc;
 
 public class PackLoader {
@@ -28,7 +29,7 @@ public class PackLoader {
 
 	}
 
-	@JsonClass(read = JsonClass.RType.ALLDATA)
+	@JsonClass(noTag = NoTag.LOAD)
 	public static class PackDesc {
 
 		@JsonClass(read = JsonClass.RType.DATA)

@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,8 @@ public class JsonDecoder {
 	 */
 	public static Object decode(JsonElement elem, Class<?> cls, Object cont, JsonField jfield, Field field)
 			throws JsonException {
+		if (elem.isJsonNull())
+			return null;
 		if (JsonElement.class.isAssignableFrom(cls))
 			return elem;
 		if (cls == Boolean.TYPE || cls == Boolean.class)
@@ -50,26 +53,22 @@ public class JsonDecoder {
 		if (cls == String.class)
 			return getString(elem);
 		if (cls.isArray()) {
-			if (elem.isJsonNull())
-				return null;
+			Class<?> ccls = cls.getComponentType();
+			if (elem.isJsonObject() && jfield != null && jfield.usePool()) {
+				JsonArray pool = elem.getAsJsonObject().get("pool").getAsJsonArray();
+				JsonArray data = elem.getAsJsonObject().get("data").getAsJsonArray();
+				JsonField.Handler handler = new JsonField.Handler(pool, cont, ccls, jfield, field);
+				int n = data.size();
+				Object arr = getArray(cont, ccls, n, jfield, field);
+				for (int i = 0; i < n; i++)
+					Array.set(arr, i, handler.get(data.get(i).getAsInt()));
+				return arr;
+			}
 			if (!elem.isJsonArray())
 				throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not array");
 			JsonArray jarr = elem.getAsJsonArray();
 			int n = jarr.size();
-			Class<?> ccls = cls.getComponentType();
-			Object arr = null;
-			if (jfield != null && jfield.GenType() == JsonField.GenType.FILL) {
-				if (field == null || cont == null)
-					throw new JsonException(Type.TAG, elem, "no enclosing object");
-				try {
-					arr = field.get(cont);
-				} catch (Exception e) {
-					JsonException je = new JsonException(Type.INTERNAL, elem, "");
-					je.initCause(e);
-					throw je;
-				}
-			} else
-				arr = Array.newInstance(ccls, n);
+			Object arr = getArray(cont, ccls, n, jfield, field);
 			for (int i = 0; i < n; i++)
 				Array.set(arr, i, decode(jarr.get(i), ccls, cont, jfield, field));
 			return arr;
@@ -85,14 +84,17 @@ public class JsonDecoder {
 		}
 		if (cont != null && jfield != null) {
 			try {
-				if (jfield.GenType() == JsonField.GenType.FILL) {
+				if (jfield.gen() == JsonField.GenType.FILL) {
 					Object val = field.get(cont);
 					if (cls.getAnnotation(JsonClass.class) != null)
 						inject(elem.getAsJsonObject(), cls, val);
 					return val;
 				}
-				if (jfield.GenType() == JsonField.GenType.GEN) {
+				if (jfield.gen() == JsonField.GenType.GEN) {
 					Class<?> ccls = cont.getClass();
+					if (jfield.generator().length() == 0) {
+						return inject(elem.getAsJsonObject(), cls, cls.getConstructor(ccls).newInstance(cont));
+					}
 					Method m = ccls.getMethod(jfield.generator(), Class.class, JsonElement.class);
 					Object val = m.invoke(cont, cls, elem);
 					cls = val.getClass();
@@ -156,10 +158,12 @@ public class JsonDecoder {
 			inject(jobj, cls.getSuperclass(), obj);
 		Field[] fs = cls.getDeclaredFields();
 		for (Field f : fs) {
+			if(Modifier.isStatic(f.getModifiers()))
+				continue;
 			JsonField jf = f.getAnnotation(JsonField.class);
-			if (jc.read() == JsonClass.RType.ALLDATA)
+			if (jf == null && jc.noTag() == JsonClass.NoTag.LOAD)
 				jf = JsonField.DEF;
-			if (jf == null || jf.IOType() == JsonField.IOType.W)
+			if (jf == null || jf.block() || jf.io() == JsonField.IOType.W)
 				continue;
 			try {
 				String tag = jf.tag();
@@ -188,9 +192,9 @@ public class JsonDecoder {
 				else
 					throw new JsonException(Type.FUNC, null, "duplicate OnInjected");
 			JsonField jf = m.getAnnotation(JsonField.class);
-			if (jf == null || jf.IOType() == JsonField.IOType.W)
+			if (jf == null || jf.io() == JsonField.IOType.W)
 				continue;
-			if (jf.IOType() == JsonField.IOType.RW)
+			if (jf.io() == JsonField.IOType.RW)
 				throw new JsonException(Type.FUNC, null, "functional fields should not have RW type");
 			if (m.getParameterCount() != 1)
 				throw new JsonException(Type.FUNC, null, "parameter count should be 1");
@@ -226,25 +230,35 @@ public class JsonDecoder {
 		return obj;
 	}
 
-	private static List<Object> decodeList(JsonElement elem, Class<?> cls, Object cont, JsonField jfield, Field field)
+	protected static List<Object> decodeList(JsonElement elem, Class<?> cls, Object cont, JsonField jfield, Field field)
 			throws JsonException {
 		if (jfield == null || jfield.generic().length != 1)
 			throw new JsonException(Type.TAG, null, "generic data structure requires typeProvider tag");
 		if (elem.isJsonNull())
 			return null;
-		if (!elem.isJsonArray())
-			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not array");
-		JsonArray jarr = elem.getAsJsonArray();
-		int n = jarr.size();
 		try {
 			@SuppressWarnings("unchecked")
 			List<Object> val = (List<Object>) cls.newInstance();
+			if (elem.isJsonObject() && jfield != null && jfield.usePool()) {
+				JsonArray pool = elem.getAsJsonObject().get("pool").getAsJsonArray();
+				JsonArray data = elem.getAsJsonObject().get("data").getAsJsonArray();
+				JsonField.Handler handler = new JsonField.Handler(pool, cont, jfield.generic()[0], jfield, field);
+				int n = data.size();
+				for (int i = 0; i < n; i++)
+					val.add(handler.get(data.get(i).getAsInt()));
+				return val;
+			}
+			if (!elem.isJsonArray())
+				throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not array");
+			JsonArray jarr = elem.getAsJsonArray();
+			int n = jarr.size();
 			for (int i = 0; i < n; i++) {
 				val.add(decode(jarr.get(i), jfield.generic()[0], cont, jfield, field));
 			}
 			return val;
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (e instanceof JsonException)
+				throw (JsonException) e;
 			JsonException je = new JsonException(Type.INTERNAL, null, "");
 			je.initCause(e);
 			throw je;
@@ -273,7 +287,6 @@ public class JsonDecoder {
 			}
 			return val;
 		} catch (Exception e) {
-			e.printStackTrace();
 			JsonException je = new JsonException(Type.INTERNAL, null, "");
 			je.initCause(e);
 			throw je;
@@ -287,7 +300,7 @@ public class JsonDecoder {
 		if (!elem.isJsonObject())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not object");
 		JsonObject jobj = elem.getAsJsonObject();
-		if (jc.read() == JsonClass.RType.DATA || jc.read() == JsonClass.RType.ALLDATA) {
+		if (jc.read() == JsonClass.RType.DATA) {
 			try {
 				return inject(jobj, cls, cls.newInstance());
 			} catch (Exception e) {
@@ -302,7 +315,7 @@ public class JsonDecoder {
 			if (func.length() == 0)
 				throw new JsonException(Type.FUNC, elem, "no generate function");
 			try {
-				Method m = cls.getMethod(func, JsonObject.class);
+				Method m = cls.getMethod(func, JsonElement.class);
 				Object val = m.invoke(null, jobj);
 				cls = val.getClass();
 				return inject(jobj, cls, val);
@@ -335,11 +348,26 @@ public class JsonDecoder {
 			}
 			return val;
 		} catch (Exception e) {
-			e.printStackTrace();
 			JsonException je = new JsonException(Type.INTERNAL, null, "");
 			je.initCause(e);
 			throw je;
 		}
+	}
+
+	private static Object getArray(Object cont, Class<?> ccls, int n, JsonField jfield, Field field)
+			throws JsonException {
+		if (jfield != null && jfield.gen() == JsonField.GenType.FILL) {
+			if (field == null || cont == null)
+				throw new JsonException(Type.TAG, null, "no enclosing object");
+			try {
+				return field.get(cont);
+			} catch (Exception e) {
+				JsonException je = new JsonException(Type.INTERNAL, null, "");
+				je.initCause(e);
+				throw je;
+			}
+		} else
+			return Array.newInstance(ccls, n);
 	}
 
 }

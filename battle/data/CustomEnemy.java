@@ -6,13 +6,18 @@ import java.util.TreeSet;
 import common.battle.Basis;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
 
+@JsonClass
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
 
 	public Enemy pack;
+	
+	@JsonField
 	public int star, drop;
 
 	public CustomEnemy() {

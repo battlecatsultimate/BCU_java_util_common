@@ -5,11 +5,20 @@ import java.util.List;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
 
+@JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
 
+	@JsonField(gen = GenType.GEN)
 	public AtkDataModel rep, rev, res;
+	
+	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
+	
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
 

@@ -213,7 +213,7 @@ public class Cannon extends AtkModelAb {
 				} else if (id == 7) {
 					//curse cannon
 					tempAtk = true;
-					proc[P_CURSE][0] = (int) (b.b.t().getCanonProcTime(id));
+					proc[P_CURSE][0] = (b.b.t().getCanonProcTime(id));
 					int wid = NYRAN[7];
 					int spe = 137;
 					double p = b.ubase.pos - wid / 2 + spe;

@@ -2,15 +2,24 @@ package common.battle.data;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonField.GenType;
+import common.io.json.JsonField;
 import common.system.BasedCopable;
 import common.util.Data;
 
+@JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
 public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataModel, CustomEntity> {
 
+	@JsonField(block = true)
 	public final CustomEntity ce;
 	public String str = "";
 	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1, dire = 1, alt = 0, move = 0;
 	public boolean range = true;
+	
+	@JsonField(gen = GenType.FILL)
 	public int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 
 	public AtkDataModel(CustomEntity ent) {

@@ -4,6 +4,10 @@ import java.util.List;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
 import common.system.Copable;
 import common.util.BattleStatic;
 import common.util.pack.Pack;
@@ -11,6 +15,7 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitStore;
 
+@JsonClass(read = RType.FILL)
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
 	public static BasisLU zread(InStream is) {
@@ -50,8 +55,11 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	}
 
 	private final Treasure t;
+
+	@JsonField(gen = GenType.FILL)
 	public final LineUp lu;
 
+	@JsonField(gen = GenType.FILL)
 	public int[] nyc = new int[3];
 
 	public BasisLU(BasisSet bs, LineUp line, String str) {
