@@ -116,9 +116,10 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 	}
 
 	@Override
-	public EEnemy getEntity(StageBasis b, Object obj, double mul, int d0, int d1, int m) {
+	public EEnemy getEntity(StageBasis b, Object obj, double mul, double mul2, int d0, int d1, int m) {
 		mul *= de.multi(b.b);
-		return new EEnemy(b, de, getEAnim(0), mul, d0, d1, m);
+		mul2 *= de.multi(b.b);
+		return new EEnemy(b, de, getEAnim(0), mul, mul2, d0, d1, m);
 	}
 
 	@Override

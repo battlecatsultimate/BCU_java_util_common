@@ -224,6 +224,30 @@ public class CommonStatic {
 			ans[i] = Integer.parseInt(lstr.get(i));
 		return ans;
 	}
+	
+	public static boolean isInteger(String str) {
+		for(int i = 0; i < str.length(); i++) {
+			if(!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public static String toArrayFormat(int... data) {
+		String res = "{";
+		
+		for(int i = 0; i < data.length; i++) {
+			if(i == data.length -1) {
+				res += data[i]+ "}";
+			} else {
+				res += data[i] + ", ";
+			}
+		}
+		
+		return res;
+	}
 
 	public static long parseLongN(String str) {
 		long ans;

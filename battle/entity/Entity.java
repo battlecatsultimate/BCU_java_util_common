@@ -1185,6 +1185,10 @@ public abstract class Entity extends AbEntity {
 
 		if (health > 0)
 			tempearn = false;
+		
+		if (isBase && health < 0)
+			health = 0;
+		
 		acted = false;
 	}
 

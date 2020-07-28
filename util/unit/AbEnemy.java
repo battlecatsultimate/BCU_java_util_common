@@ -14,7 +14,7 @@ public interface AbEnemy extends Comparable<AbEnemy> {
 
 	}
 
-	public EEnemy getEntity(StageBasis sb, Object obj, double mul, int d0, int d1, int m);
+	public EEnemy getEntity(StageBasis sb, Object obj, double mul, double mul1, int d0, int d1, int m);
 
 	public VImg getIcon();
 

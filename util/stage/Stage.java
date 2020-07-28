@@ -147,7 +147,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		health = Integer.parseInt(strs[1]);
 		bg = Integer.parseInt(strs[4]);
 		max = Integer.parseInt(strs[5]);
+		int isBase = Integer.parseInt(strs[6]) - 2;
 		List<int[]> ll = new ArrayList<>();
+		
 		while (qs.size() > 0)
 			if ((temp = qs.poll()).length() > 0) {
 				if (!Character.isDigit(temp.charAt(0)))
@@ -166,6 +168,13 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 					data[9] = data[5];
 					data[5] = 100;
 				}
+				if(ss.length > 11 && CommonStatic.isInteger(ss[11]))
+					data[SCDef.M1] = Integer.parseInt(ss[11]);
+				else
+					data[SCDef.M1] = data[SCDef.M]; 
+				
+				if(data[0] == isBase)
+					data[SCDef.C0] = 0;
 				ll.add(data);
 			}
 		SCDef scd = new SCDef(ll.size());

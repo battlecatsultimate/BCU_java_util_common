@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,14 +24,39 @@ import common.util.unit.UnitStore;
 public class Orb extends Data {
 	//Available data for atk/res orb, will be used for GUI
 	//Map<Trait, Grades>
-	public static final Map<Integer, List<Integer>> ATKORB = new HashMap<Integer, List<Integer>>();
-	public static final Map<Integer, List<Integer>> RESORB = new HashMap<Integer, List<Integer>>();
+	public static final Map<Integer, List<Integer>> ATKORB = new TreeMap<Integer, List<Integer>>();
+	public static final Map<Integer, List<Integer>> RESORB = new TreeMap<Integer, List<Integer>>();
+	public static final Map<Integer, Integer> DATA = new HashMap<>();
 	
 	public static FakeImage[] TYPES;
 	public static FakeImage[] TRAITS;
 	public static FakeImage[] GRADES;
 	
 	public static void read() {
+		Queue<String> traitData = VFile.readLine("./org/data/equipment_attribute.csv");
+		
+		int key = 0;
+		
+		for(String line : traitData) {
+			if(line == null || line.startsWith("//") || line.isEmpty())
+				continue;
+			
+			String [] strs = line.trim().split(",");
+			
+			int value = 0;
+			
+			for(int i = 0; i < strs.length; i++) {
+				int t = CommonStatic.parseIntN(strs[i]);
+				
+				if(t == 1)
+					value |= getTrait(i);
+			}
+			
+			DATA.put(key, value);
+			
+			key++;
+		}
+		
 		String data = new String(VFile.get("./org/data/equipmentlist.json").getData().getBytes(), StandardCharsets.UTF_8);
 		
 		JSONObject jdata = new JSONObject(data);
@@ -49,36 +75,36 @@ public class Orb extends Data {
 			int grade = obj.getInt("gradeID");
 			
 			if(type == ORB_ATK) {
-				if(ATKORB.get(trait) == null) {
+				if(ATKORB.get(DATA.get(trait)) == null) {
 					List<Integer> grades = new ArrayList<Integer>();
 					
 					grades.add(grade);
 					
-					ATKORB.put(trait, grades);
+					ATKORB.put(DATA.get(trait), grades);
 				} else {
-					List<Integer> grades = ATKORB.get(trait);
+					List<Integer> grades = ATKORB.get(DATA.get(trait));
 					
 					if(!grades.contains(grade)) {
 						grades.add(grade);
 					}
 					
-					ATKORB.put(trait, grades);
+					ATKORB.put(DATA.get(trait), grades);
 				}
 			} else {
-				if(RESORB.get(trait) == null) {
+				if(RESORB.get(DATA.get(trait)) == null) {
 					List<Integer> grades = new ArrayList<Integer>();
 					
 					grades.add(grade);
 					
-					RESORB.put(trait, grades);
+					RESORB.put(DATA.get(trait), grades);
 				} else {
-					List<Integer> grades = RESORB.get(trait);
+					List<Integer> grades = RESORB.get(DATA.get(trait));
 					
 					if(!grades.contains(grade)) {
 						grades.add(grade);
 					}
 					
-					RESORB.put(trait, grades);
+					RESORB.put(DATA.get(trait), grades);
 				}
 			}
 		}
@@ -86,7 +112,7 @@ public class Orb extends Data {
 		Queue<String> units = VFile.readLine("./org/data/equipmentslot.csv");
 		
 		for(String line : units) {
-			if(line.startsWith("//") || line.isEmpty()) {
+			if(line == null || line.startsWith("//") || line.isEmpty()) {
 				continue;
 			}
 			
@@ -148,5 +174,39 @@ public class Orb extends Data {
 	
 	public int getSlots() {
 		return slots;
+	}
+	
+	public static int getTrait(int trait) {
+		switch(trait) {
+			case 0:
+				return TB_RED;
+			case 1:
+				return TB_FLOAT;
+			case 2:
+				return TB_BLACK;
+			case 3:
+				return TB_METAL;
+			case 4:
+				return TB_ANGEL;
+			case 5:
+				return TB_ALIEN;
+			case 6:
+				return TB_ZOMBIE;
+			case 7:
+				return TB_RELIC;
+			case 8:
+				return TB_WHITE;
+			default:
+				return 0;
+		}
+	}
+	
+	public static int reverse(int value) {
+		for(int n : DATA.keySet()) {
+			if(DATA.get(n) == value)
+				return n;
+		}
+		
+		return -1;
 	}
 }

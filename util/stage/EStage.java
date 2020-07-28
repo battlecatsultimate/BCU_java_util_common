@@ -13,6 +13,7 @@ import static common.util.stage.SCDef.R0;
 import static common.util.stage.SCDef.R1;
 import static common.util.stage.SCDef.S0;
 import static common.util.stage.SCDef.S1;
+import static common.util.stage.SCDef.M1;
 
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
@@ -57,8 +58,9 @@ public class EStage extends BattleObj {
 				if (data[8] == 1)
 					b.shock = true;
 				double multi = (data[M] == 0 ? 100 : data[M]) * mul * 0.01;
+				double mulatk = data[M1] * mul * 0.01;
 				AbEnemy e = EnemyStore.getAbEnemy(data[0], false);
-				EEnemy ee = e.getEntity(b, data, multi, data[L0], data[L1], data[B]);
+				EEnemy ee = e.getEntity(b, data, multi, mulatk, data[L0], data[L1], data[B]);
 				ee.group = data[G];
 				return ee;
 			}
@@ -85,8 +87,9 @@ public class EStage extends BattleObj {
 		if (data[C0] == 0) {
 			num[ind] = -1;
 			double multi = data[M] * mul * 0.01;
+			double mulatk = data[M1] == 0 ? multi : data[M1] * mul * 0.01;
 			AbEnemy e = EnemyStore.getAbEnemy(data[E], false);
-			return e.getEntity(sb, this, multi, data[L0], data[L1], -1);
+			return e.getEntity(sb, this, multi, mulatk, data[L0], data[L1], -1);
 		}
 		return null;
 	}

@@ -18,10 +18,10 @@ import common.util.unit.EnemyStore;
 
 public class SCDef implements Copable<SCDef> {
 
-	public static final int SIZE = 13;
+	public static final int SIZE = 14;
 
 	public static final int E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9, S1 = 10,
-			C1 = 11, G = 12;
+			C1 = 11, G = 12, M1 = 13;
 
 	public static SCDef zread(InStream is) {
 		int t = is.nextInt();
@@ -31,9 +31,13 @@ public class SCDef implements Copable<SCDef> {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
-				for (int i = 0; i < n; i++)
+				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < m; j++)
 						scd.datas[i][j] = is.nextInt();
+					
+					if(m < 14)
+						scd.datas[i][M1] = scd.datas[i][M];
+				}
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
@@ -49,9 +53,14 @@ public class SCDef implements Copable<SCDef> {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
-				for (int i = 0; i < n; i++)
+				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < m; j++)
 						scd.datas[i][j] = is.nextInt();
+					
+					if(m < 14) {
+						scd.datas[i][M1] = scd.datas[i][M];
+					}
+				}
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
@@ -65,9 +74,13 @@ public class SCDef implements Copable<SCDef> {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
-				for (int i = 0; i < n; i++)
+				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < m; j++)
 						scd.datas[i][j] = is.nextInt();
+					
+					if(m < 14)
+						scd.datas[i][M1] = scd.datas[i][M];
+				}
 				return scd;
 			}
 		}
@@ -84,9 +97,12 @@ public class SCDef implements Copable<SCDef> {
 		if (ver >= 305) {
 			int n = is.nextByte();
 			datas = new int[n][SIZE];
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < 10; j++)
 					datas[i][j] = is.nextInt();
+				
+				datas[i][M1] = datas[i][M];
+			}
 		} else if (ver >= 203) {
 			int n = is.nextByte();
 			datas = new int[n][SIZE];
@@ -95,6 +111,8 @@ public class SCDef implements Copable<SCDef> {
 					datas[i][j] = is.nextInt();
 				if (datas[i][5] < 100)
 					datas[i][2] *= -1;
+				
+				datas[i][M1] = datas[i][M];
 			}
 		} else
 			datas = new int[0][SIZE];
