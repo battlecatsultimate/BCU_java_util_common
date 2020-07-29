@@ -1321,7 +1321,7 @@ public abstract class Entity extends AbEntity {
 
 		double mov = isBase ? 0 : status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
 		
-		if(status[P_SPEED][0] > 0) {
+		if(status[P_SPEED][0] > 0 && status[P_SLOW][0] <= 0) {
 			if(status[P_SPEED][2] == 0) {
 				mov += status[P_SPEED][1] * 0.5;
 			} else if(status[P_SPEED][2] == 1) {
