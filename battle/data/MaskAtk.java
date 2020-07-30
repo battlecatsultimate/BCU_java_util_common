@@ -1,8 +1,9 @@
 package common.battle.data;
 
+import common.util.BattleStatic;
 import common.util.Data;
 
-public interface MaskAtk {
+public interface MaskAtk extends BattleStatic {
 
 	public default int getAltAbi() {
 		return 0;

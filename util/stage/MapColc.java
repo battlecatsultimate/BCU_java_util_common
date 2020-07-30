@@ -132,7 +132,7 @@ public class MapColc extends Data {
 		id = 3;
 		MAPS.put(id, this);
 		name = "CH";
-		maps = new StageMap[13];
+		maps = new StageMap[14];
 		String abbr = "./org/stage/CH/stageNormal/stageNormal";
 		for (int i = 0; i < 3; i++) {
 			AssetData vf = VFile.get(abbr + "0_" + i + "_Z.csv").getData();
@@ -157,6 +157,8 @@ public class MapColc extends Data {
 		stn = VFile.get(abbr + "1_1_Z.csv").getData();
 		maps[12] = new StageMap(this, 12, stn, 2);
 		maps[12].name = "ItF 2 Zombie";
+		maps[13] = new StageMap(this, 13, stn, 2);
+		maps[13].name = "ItF 3 Zombie";
 		VFile<AssetData> stz = VFile.get("./org/stage/CH/stageZ/");
 		for (VFile<AssetData> vf : stz.list()) {
 			String str = vf.getName();
@@ -174,7 +176,8 @@ public class MapColc extends Data {
 				maps[10].add(new Stage(maps[10], id1, vf, 0));
 			else if (id0 == 5)
 				maps[12].add(new Stage(maps[12], id1, vf, 0));
-
+			else if (id0 == 6)
+				maps[13].add(new Stage(maps[13], id1, vf, 0));
 		}
 		VFile<AssetData> stw = VFile.get("./org/stage/CH/stageW/");
 		for (VFile<AssetData> vf : stw.list()) {
