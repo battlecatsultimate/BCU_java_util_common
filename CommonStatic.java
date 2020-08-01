@@ -163,6 +163,8 @@ public class CommonStatic {
 
 		/** Write error log to somewhere **/
 		public void writeErrorLog(Exception e);
+		
+		public long getMusicLength(File f);
 	}
 
 	public static class Lang {
