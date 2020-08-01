@@ -15,16 +15,17 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCGenericWrite;
 import common.io.json.JsonException.Type;
 
-//FIXME implement map parser
 public class JsonEncoder {
 
 	public static JsonElement encode(Object obj) throws Exception {
-		return encode(obj, null, null);
+		return encode(obj, null);
 	}
 
-	public static JsonElement encode(Object obj, JsonField jfield, Object holder) throws Exception {
+	private static JsonElement encode(Object obj, JsonEncoder par) throws Exception {
 		if (obj == null)
 			return JsonNull.INSTANCE;
 		if (obj instanceof JsonElement)
@@ -37,7 +38,7 @@ public class JsonEncoder {
 			return new JsonPrimitive((String) obj);
 		Class<?> cls = obj.getClass();
 		if (cls.isArray()) {
-			if (jfield != null && jfield.usePool()) {
+			if (par.curjfld != null && par.curjfld.usePool()) {
 				JsonField.Handler handler = new JsonField.Handler();
 				int n = Array.getLength(obj);
 				JsonArray jarr = new JsonArray();
@@ -51,49 +52,66 @@ public class JsonEncoder {
 			int n = Array.getLength(obj);
 			JsonArray arr = new JsonArray(n);
 			for (int i = 0; i < n; i++)
-				arr.add(encode(Array.get(obj, i), jfield, holder));
+				arr.add(encode(Array.get(obj, i), par));
 			return arr;
 		}
-		if (obj instanceof List)
-			return encodeList((List<?>) obj, jfield, holder);
-		if (obj instanceof Set)
-			return encodeSet((Set<?>) obj, jfield, holder);
-		if (obj instanceof Map)
-			return encodeMap((Map<?, ?>) obj, jfield, holder);
-
-		if (jfield != null) {
+		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length == 1) {
+			JCGeneric jcg = cls.getAnnotation(JCGeneric.class);
+			Class<?> alias = par.curjfld.alias()[0];
+			boolean found = false;
+			for (Class<?> ala : jcg.value())
+				if (ala == alias) {
+					found = true;
+					break;
+				}
+			if (!found)
+				throw new JsonException(Type.TYPE_MISMATCH, null, "class not present in JCGeneric");
+			for (Method m : cls.getMethods()) {
+				JCGenericWrite jcgw = m.getAnnotation(JCGenericWrite.class);
+				if (jcgw != null && jcgw.value() == alias) {
+					return encode(m.invoke(obj), par);
+				}
+			}
+			throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGenericWrite present");
+		}
+		if (par != null && par.curjfld != null) {
+			JsonField jfield = par.curjfld;
 			if (jfield.ser() == JsonField.SerType.FUNC) {
-				if (holder == null || jfield.serializer().length() == 0)
+				if (jfield.serializer().length() == 0)
 					throw new JsonException(Type.FUNC, null, "no serializer function");
-				Method m = holder.getClass().getMethod(jfield.serializer(), cls);
-				return encode(m.invoke(holder, obj));
+				Method m = par.obj.getClass().getMethod(jfield.serializer(), cls);
+				return encode(m.invoke(par.obj, obj));
 			} else if (jfield.ser() == JsonField.SerType.CLASS) {
 				JsonClass cjc = cls.getAnnotation(JsonClass.class);
 				if (cjc == null || cjc.serializer().length() == 0)
 					throw new JsonException(Type.FUNC, null, "no serializer function");
 				String func = cjc.serializer();
 				Method m = cls.getMethod(func);
-				return encode(m.invoke(obj), null, null);
+				return encode(m.invoke(obj), null);
 			}
 		}
-
 		JsonClass jc = cls.getAnnotation(JsonClass.class);
 		if (jc != null)
 			if (jc.write() == JsonClass.WType.DEF)
-				return encodeObject(new JsonObject(), obj, cls);
+				return new JsonEncoder(par, obj).ans;
 			else if (jc.write() == JsonClass.WType.CLASS) {
 				if (jc.serializer().length() == 0)
 					throw new JsonException(Type.FUNC, null, "no serializer function");
 				String func = jc.serializer();
 				Method m = cls.getMethod(func);
-				return encode(m.invoke(obj), null, null);
+				return encode(m.invoke(obj), null);
 			}
-
+		if (obj instanceof List)
+			return encodeList((List<?>) obj, par);
+		if (obj instanceof Set)
+			return encodeSet((Set<?>) obj, par);
+		if (obj instanceof Map)
+			return encodeMap((Map<?, ?>) obj, par);
 		throw new JsonException(Type.UNDEFINED, null, "object " + obj + " not defined");
 	}
 
-	private static JsonElement encodeList(List<?> list, JsonField jfield, Object holder) throws Exception {
-		if (jfield != null && jfield.usePool()) {
+	private static JsonElement encodeList(List<?> list, JsonEncoder par) throws Exception {
+		if (par != null && par.curjfld != null && par.curjfld.usePool()) {
 			JsonField.Handler handler = new JsonField.Handler();
 			int n = list.size();
 			JsonArray jarr = new JsonArray();
@@ -106,28 +124,48 @@ public class JsonEncoder {
 		}
 		JsonArray ans = new JsonArray(list.size());
 		for (Object obj : list)
-			ans.add(encode(obj, jfield, holder));
+			ans.add(encode(obj, par));
 		return ans;
 	}
 
-	private static JsonArray encodeMap(Map<?, ?> map, JsonField jfield, Object holder) throws Exception {
+	private static JsonArray encodeMap(Map<?, ?> map, JsonEncoder par) throws Exception {
 		JsonArray ans = new JsonArray(map.size());
 		for (Entry<?, ?> obj : map.entrySet()) {
 			JsonObject ent = new JsonObject();
-			ent.add("key", encode(obj.getKey(), jfield, holder));
-			ent.add("val", encode(obj.getValue(), jfield, holder));
+			ent.add("key", encode(obj.getKey(), par));
+			ent.add("val", encode(obj.getValue(), par));
 			ans.add(ent);
 		}
 		return ans;
 	}
 
-	private static JsonObject encodeObject(JsonObject jobj, Object obj, Class<?> cls) throws Exception {
+	private static JsonArray encodeSet(Set<?> set, JsonEncoder par) throws Exception {
+		JsonArray ans = new JsonArray(set.size());
+		for (Object obj : set)
+			ans.add(encode(obj, par));
+		return ans;
+	}
+
+	private final JsonEncoder par;
+	private final Object obj;
+	private final JsonObject ans = new JsonObject();
+
+	private JsonClass curjcls;
+	private JsonField curjfld;
+
+	private JsonEncoder(JsonEncoder parent, Object object) throws Exception {
+		par = parent;
+		obj = object;
+		encode(obj.getClass());
+	}
+
+	private void encode(Class<?> cls) throws Exception {
 		if (cls.getSuperclass().getAnnotation(JsonClass.class) != null)
-			encodeObject(jobj, obj, cls);
-		JsonClass jc = cls.getAnnotation(JsonClass.class);
+			encode(cls.getSuperclass());
+		curjcls = cls.getAnnotation(JsonClass.class);
 		for (Field f : cls.getDeclaredFields())
-			if (jc.noTag() == JsonClass.NoTag.LOAD || f.getAnnotation(JsonField.class) != null) {
-				if(Modifier.isStatic(f.getModifiers()))
+			if (curjcls.noTag() == JsonClass.NoTag.LOAD || f.getAnnotation(JsonField.class) != null) {
+				if (Modifier.isStatic(f.getModifiers()))
 					continue;
 				JsonField jf = f.getAnnotation(JsonField.class);
 				if (jf == null)
@@ -136,7 +174,7 @@ public class JsonEncoder {
 					continue;
 				String tag = jf.tag().length() == 0 ? f.getName() : jf.tag();
 				f.setAccessible(true);
-				jobj.add(tag, encode(f.get(obj), jf, obj));
+				ans.add(tag, encode(f.get(obj), getInvoker()));
 			}
 		for (Method m : cls.getDeclaredMethods())
 			if (m.getAnnotation(JsonField.class) != null) {
@@ -148,16 +186,12 @@ public class JsonEncoder {
 				String tag = jf.tag();
 				if (tag.length() == 0)
 					throw new JsonException(Type.TAG, null, "function fields must have tag");
-				jobj.add(tag, encode(m.invoke(obj), jf, obj));
+				ans.add(tag, encode(m.invoke(obj), getInvoker()));
 			}
-		return jobj;
 	}
 
-	private static JsonArray encodeSet(Set<?> set, JsonField jfield, Object holder) throws Exception {
-		JsonArray ans = new JsonArray(set.size());
-		for (Object obj : set)
-			ans.add(encode(obj, jfield, holder));
-		return ans;
+	private JsonEncoder getInvoker() {
+		return curjcls.bypass() ? par : this;
 	}
 
 }

@@ -7,11 +7,9 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
-import common.io.json.JsonClass.JCConcstructor;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonClass.JCGenericWrite;
-import common.io.json.JsonClass.JCTempField;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.GenType;
 import common.util.Data;
@@ -25,9 +23,9 @@ public class LvRestrict extends Data {
 
 	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
 
-	@JsonField(generic = { int.class, int[].class })
+	@JsonField(generic = { CharaGroup.class, int[].class }, alias = int.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
-	
+
 	public final Pack pack;
 
 	@JsonField(gen = GenType.FILL)
@@ -38,18 +36,13 @@ public class LvRestrict extends Data {
 	public int id;
 	@JsonField
 	public String name = "";
-	
-	@JCTempField
-	public MapColc mc;
-	
-	@JCConcstructor
+
 	public LvRestrict(MapColc mapc) {
-		mc = mapc;
-		pack = mc.pack;
+		pack = mapc.pack;
 	}
-	
+
 	@JCGenericRead(value = int.class, parent = MapColc.class)
-	public static LvRestrict zgen(MapColc mc, int i) {
+	public static LvRestrict zgen(int i, MapColc mc) {
 		return i < 0 ? null : mc.lvrs.get(i);
 	}
 

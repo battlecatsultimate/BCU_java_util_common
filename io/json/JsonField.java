@@ -1,3 +1,4 @@
+
 package common.io.json;
 
 import static java.lang.annotation.ElementType.FIELD;
@@ -8,7 +9,6 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,10 +57,12 @@ public @interface JsonField {
 		public Handler() {
 		}
 
-		public Handler(JsonArray jarr, Object cont, Class<?> cls, JsonField jf, Field f) throws JsonException {
+		public Handler(JsonArray jarr, Class<?> cls, JsonDecoder dec) throws Exception {
 			int n = jarr.size();
+			if (dec.curjfld.generic().length == 1)
+				cls = dec.curjfld.generic()[0];
 			for (int i = 0; i < n; i++)
-				list.add(JsonDecoder.decode(jarr.get(i), cls, cont, jf, f));
+				list.add(JsonDecoder.decode(jarr.get(i), cls, dec));
 		}
 
 		public int add(Object o) {
@@ -90,8 +92,23 @@ public @interface JsonField {
 	public static JsonField DEF = new JsonField() {
 
 		@Override
+		public Class<?>[] alias() {
+			return new Class[0];
+		}
+
+		@Override
 		public Class<? extends Annotation> annotationType() {
 			return JsonField.class;
+		}
+
+		@Override
+		public boolean block() {
+			return false;
+		}
+
+		@Override
+		public GenType gen() {
+			return GenType.SET;
 		}
 
 		@Override
@@ -105,28 +122,18 @@ public @interface JsonField {
 		}
 
 		@Override
-		public GenType gen() {
-			return GenType.SET;
-		}
-
-		@Override
 		public IOType io() {
 			return IOType.RW;
 		}
 
 		@Override
-		public boolean noErr() {
-			return false;
+		public SerType ser() {
+			return SerType.DEF;
 		}
 
 		@Override
 		public String serializer() {
 			return "";
-		}
-
-		@Override
-		public SerType ser() {
-			return SerType.DEF;
 		}
 
 		@Override
@@ -139,12 +146,18 @@ public @interface JsonField {
 			return false;
 		}
 
-		@Override
-		public boolean block() {
-			return false;
-		}
-
 	};
+
+	Class<?>[] alias() default {};
+
+	boolean block() default false;
+
+	/**
+	 * Generation Type for this Field. Default is SET, which means to set the value.
+	 * FILL requires a default value and must be used on object fields. GEN uses
+	 * generator function. Functional Fields must use SET.
+	 */
+	GenType gen() default GenType.SET;
 
 	/**
 	 * ignored when GenType is not GEN, must refer to a static method declared in
@@ -159,20 +172,11 @@ public @interface JsonField {
 	 */
 	Class<?>[] generic() default {};
 
-	/**
-	 * Generation Type for this Field. Default is SET, which means to set the value.
-	 * FILL requires a default value and must be used on object fields. GEN uses
-	 * generator function. Functional Fields must use SET.
-	 */
-	GenType gen() default GenType.SET;
-
 	IOType io() default IOType.RW;
 
-	boolean noErr() default false;
+	SerType ser() default SerType.DEF;
 
 	String serializer() default "";
-
-	SerType ser() default SerType.DEF;
 
 	/**
 	 * tag name for this field, use the field name if not specified. Must be
@@ -181,7 +185,5 @@ public @interface JsonField {
 	String tag() default "";
 
 	boolean usePool() default false;
-
-	boolean block() default false;
 
 }

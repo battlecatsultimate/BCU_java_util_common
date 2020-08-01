@@ -13,7 +13,6 @@ import common.io.json.JsonClass.JCConcstructor;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonClass.JCGenericWrite;
-import common.io.json.JsonClass.JCTempField;
 import common.io.json.JsonClass.RType;
 import common.system.files.VFile;
 import common.util.Data;
@@ -57,17 +56,13 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	@JsonField
 	public String name = "";
 
-	@JCTempField
-	public MapColc mc;
-
 	@JCConcstructor
 	public CharaGroup(MapColc map) {
-		mc = map;
-		pack = mc.pack;
+		pack = map.pack;
 	}
 
 	@JCGenericRead(value = int.class, parent = MapColc.class)
-	public static CharaGroup zgen(MapColc mc, int i) {
+	public static CharaGroup zgen(int i, MapColc mc) {
 		return i < 0 ? null : mc.groups.get(i);
 	}
 

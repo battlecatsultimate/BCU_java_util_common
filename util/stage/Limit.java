@@ -5,8 +5,6 @@ import java.util.Queue;
 import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
-import common.io.json.JsonClass.JCConcstructor;
-import common.io.json.JsonClass.JCTempField;
 import common.io.json.JsonField;
 import common.system.files.VFile;
 import common.util.BattleStatic;
@@ -28,20 +26,12 @@ public class Limit extends Data implements BattleStatic {
 	public int rare, num, line, min, max;
 	@JsonField
 	public String name = "";
-	@JsonField(generic = int.class)
+	@JsonField(alias = int.class)
 	public CharaGroup group;
-	@JsonField(generic = int.class)
+	@JsonField(alias = int.class)
 	public LvRestrict lvr;
 
-	@JCTempField
-	public MapColc mc;
-
 	public Limit() {
-	}
-
-	@JCConcstructor
-	public Limit(Stage st) {
-		mc = st.map.mc;
 	}
 
 	public Limit(MapColc mc, int ver, InStream is) {
