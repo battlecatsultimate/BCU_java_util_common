@@ -191,6 +191,19 @@ public class EffAnim extends AnimD {
 		vspeed = new VImg(speed+".png");
 		icspeed = ImgCut.newIns(speed+".imgcut");
 		effas[A_E_SPEED] = new EffAnim(speed, vspeed, icspeed, temp);
+		
+		temp = new String [] {"up"};
+		
+		String wea = "./org/battle/";
+		String weakup = wea+"weaken_up/weaken_up";
+		VImg vwea = new VImg(weakup+".png");
+		ImgCut icwea = ImgCut.newIns(weakup+".imgcut");
+		effas[A_WEAK_UP] = new EffAnim(weakup, vwea, icwea, temp);
+		
+		weakup = wea+"weaken_up_e/weaken_up_e";
+		vwea = new VImg(weakup+".png");
+		icwea = ImgCut.newIns(weakup+".imgcut");
+		effas[A_E_WEAK_UP] = new EffAnim(weakup, vwea, icwea, temp);
 	}
 
 	private VImg vimg;

@@ -400,9 +400,11 @@ public class Data {
 	public static final int A_E_ARMOR = 52;
 	public static final int A_SPEED = 53;
 	public static final int A_E_SPEED = 54;
+	public static final int A_WEAK_UP = 55;
+	public static final int A_E_WEAK_UP = 56;
 
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 55;
+	public static final int A_TOT = 57;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;
