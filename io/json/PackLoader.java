@@ -4,105 +4,160 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Queue;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
 import common.io.DataIO;
+import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.NoTag;
-import common.io.json.PackLoader.PackDesc.FileDesc;
+import common.io.json.JsonClass.RType;
+import common.io.json.JsonDecoder.OnInjected;
+import common.io.json.JsonField.GenType;
+import common.io.json.PackLoader.ZipDesc.FileDesc;
+import common.system.fake.FakeImage;
+import common.system.files.FDByte;
+import common.system.files.FileData;
+import common.system.files.VFileRoot;
 
 public class PackLoader {
 
 	public static interface Context {
 
-		public File getFile(String id);
+		public boolean preload(FileDesc fd);
 
 	}
 
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class PackDesc {
 
-		@JsonClass(read = JsonClass.RType.DATA)
-		public static class FileDesc {
-
-			@JsonField
-			private String path;
-
-			@JsonField
-			private int size;
-
-			private File file;
-
-			@Deprecated
-			public FileDesc() {
-			}
-
-			public FileDesc(String path, File f) {
-				this.path = path;
-				this.file = f;
-				this.size = (int) f.length();
-			}
-
-		}
-
 		public String BCU_VERSION;
 		public String uuid;
 		public String author;
-		public FileDesc[] files;
+		public String name;
+		public String desc;
+	}
 
-		@Deprecated
-		public PackDesc() {
+	@JsonClass(read = RType.FILL)
+	public static class ZipDesc {
+
+		@JsonClass
+		public static class FileDesc implements FileData {
+
+			@JsonField
+			public String path;
+
+			@JsonField
+			public int size;
+
+			@JsonField
+			private int offset;
+
+			private File file; // writing only
+			private ZipDesc pack; // reading only
+			private FDByte data; // preload reading only
+
+			public FileDesc(FileSaver parent, String path, File f) {
+				this.path = path;
+				file = f;
+				size = (int) f.length();
+				offset = parent.len;
+				parent.len += (size & 0xF) == 0 ? size : (size | 0xF) + 1;
+				parent.len += PASSWORD;
+			}
+
+			@Deprecated
+			@JCConstructor
+			public FileDesc(ZipDesc desc) {
+				pack = desc;
+			}
+
+			@Override
+			public FakeImage getImg() {
+				try {
+					return data != null ? data.getImg() : FakeImage.read(pack.readFile(path));
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+			@Override
+			public Queue<String> readLine() {
+				try {
+					return data != null ? data.readLine() : FileData.IS2L(pack.readFile(path));
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
 
 		}
 
-		public PackDesc(String ver, String id, String auth, FileDesc[] fs) {
-			BCU_VERSION = ver;
-			uuid = id;
-			author = auth;
+		@JsonField
+		public PackDesc desc;
+
+		@JsonField(gen = GenType.GEN)
+		public FileDesc[] files;
+
+		public VFileRoot<FileDesc> tree = new VFileRoot<>(".");
+
+		private int offset;
+		private FileLoader loader;
+
+		public ZipDesc(PackDesc pd, FileDesc[] fs) {
+			desc = pd;
 			files = fs;
 		}
 
-		private void load(FileLoader loader) throws Exception {
-			for (FileDesc fd : files) {
-				File f = loader.context.getFile(fd.path);
-				int rem = fd.size;
-				byte[] data = null;
-				FileOutputStream fos = new FileOutputStream(f);
-				while (rem > 0) {
-					int size = Math.min(rem, CHUNK);
-					if (data == null || data.length != size)
-						data = new byte[size];
-					data = loader.decode(size, false);
-					fos.write(data, 0, size);
-					rem -= size;
-				}
-				fos.close();
-
-			}
+		private ZipDesc(FileLoader fl, int off) {
+			loader = fl;
+			offset = off;
 		}
 
-		private void save(FileSaver saver) throws IOException {
+		@OnInjected
+		public void onInjected() {
+			for (FileDesc fd : files)
+				tree.build(fd.path, fd);
+		}
+
+		public InputStream readFile(String path) throws Exception {
+			for (FileDesc fd : files)
+				if (fd.path.equals(path))
+					return new FileLoader.FLStream(loader, offset + fd.offset, fd.size);
+			return null;
+		}
+
+		private void load() throws Exception {
+			for (FileDesc fd : files)
+				if (loader.context.preload(fd))
+					fd.data = new FDByte(loader.decode(fd.size));
+				else
+					loader.fis.skip(regulate(fd.size + PASSWORD));
+		}
+
+		private void save(FileSaver saver) throws Exception {
 			for (FileDesc fd : files) {
 				FileInputStream fis = new FileInputStream(fd.file);
 				int rem = fd.size;
 				byte[] data = null;
+				Cipher cipher = encrypt(saver.key);
 				while (rem > 0) {
 					int size = Math.min(rem, CHUNK);
 					if (data == null || data.length != size)
 						data = new byte[size];
 					fis.read(data);
-					saver.save(data);
 					rem -= size;
+					saver.save(cipher, data, rem == 0);
 				}
 				fis.close();
 			}
@@ -112,39 +167,89 @@ public class PackLoader {
 
 	private static class FileLoader {
 
+		private static class FLStream extends InputStream {
+
+			private final FileInputStream fis;
+			private final Cipher cipher;
+
+			private byte[] bs = new byte[PASSWORD];
+			private int len, size;
+			private byte[] cache;
+			private int index;
+
+			private FLStream(FileLoader ld, int offset, int size) throws Exception {
+				len = (size & 0xF) == 0 ? size : (size | 0xF) + 1;
+				this.size = size;
+				cipher = decrypt(ld.key);
+				fis = new FileInputStream(ld.file);
+				fis.skip(offset);
+				fis.read(bs);
+				cipher.update(bs);
+			}
+
+			@Override
+			public void close() throws IOException {
+				fis.close();
+			}
+
+			@Override
+			public int read() throws IOException {
+				if (size == 0)
+					return -1;
+				if (cache == null || index >= cache.length)
+					if (len > 0)
+						update();
+					else
+						return -1;
+				size--;
+				return cache[index++];
+			}
+
+			private void update() throws IOException {
+				fis.read(bs);
+				len -= PASSWORD;
+				index = 0;
+				try {
+					cache = len == 0 ? cipher.doFinal(bs) : cipher.update(bs);
+				} catch (Exception e) {
+					throw new IOException(e);
+				}
+			}
+
+		}
+
 		private final FileInputStream fis;
 		private final Context context;
-		private final PackDesc pack;
-		private final Cipher cipher;
+		private final ZipDesc pack;
+		private final File file;
+		private final byte[] key;
 
 		private FileLoader(Context cont, File f) throws Exception {
 			context = cont;
+			file = f;
 			fis = new FileInputStream(f);
 			byte[] head = new byte[HEADER];
 			fis.read(head);
 			if (!Arrays.equals(head, HEAD_DATA))
 				throw new Exception("Corrupted File: header not match");
-			byte[] password = new byte[PASSWORD];
-			fis.read(password);
-			cipher = decrypt(password);
+			key = new byte[PASSWORD];
+			fis.read(key);
 			byte[] len = new byte[4];
 			fis.read(len);
 			int size = DataIO.toInt(DataIO.translate(len), 0);
-			byte[] first = new byte[PASSWORD];
-			fis.read(first);
-			cipher.update(first);
-			String desc = new String(decode(size, false));
+			String desc = new String(decode(size));
 			JsonElement je = JsonParser.parseString(desc);
-			pack = JsonDecoder.decode(je, PackDesc.class);
-			pack.load(this);
+			int offset = HEADER + PASSWORD * 2 + 4 + regulate(size);
+			pack = JsonDecoder.inject(je, ZipDesc.class, new ZipDesc(this, offset));
+			pack.load();
 			fis.close();
 		}
 
-		private byte[] decode(int size, boolean end) throws Exception {
-			int len = ((size & 0xF) == 0) ? size : (size | 0xF) + 1;
+		private byte[] decode(int size) throws Exception {
+			int len = regulate(size) + PASSWORD;
 			byte[] bs = new byte[len];
 			fis.read(bs);
-			bs = end ? cipher.doFinal(bs) : cipher.update(bs);
+			bs = decrypt(key).doFinal(bs);
 			if (bs.length != size)
 				return Arrays.copyOf(bs, size);
 			return bs;
@@ -155,24 +260,24 @@ public class PackLoader {
 	private static class FileSaver {
 
 		private final FileOutputStream fos;
-		private final Cipher encry;
+		private byte[] key;
 
-		private FileSaver(File dst, File folder, String ver, String id, String auth, String password) throws Exception {
+		private int len;
+
+		private FileSaver(File dst, File folder, PackDesc pd, String password) throws Exception {
 			List<FileDesc> fs = new ArrayList<>();
 			addFiles(fs, folder, "./");
-			PackDesc desc = new PackDesc(ver, id, auth, fs.toArray(new FileDesc[0]));
+			ZipDesc desc = new ZipDesc(pd, fs.toArray(new FileDesc[0]));
 			byte[] bytedesc = JsonEncoder.encode(desc).toString().getBytes();
 			fos = new FileOutputStream(dst);
 			fos.write(HEAD_DATA);
-			byte[] key = getMD5(password.getBytes(), PASSWORD);
+			key = getMD5(password.getBytes(), PASSWORD);
 			fos.write(key);
 			byte[] len = new byte[4];
 			DataIO.fromInt(len, 0, bytedesc.length);
 			fos.write(len);
-			encry = encrypt(key);
-			save(bytedesc);
+			save(encrypt(key), bytedesc, true);
 			desc.save(this);
-			fos.write(encry.doFinal());
 			fos.close();
 		}
 
@@ -181,19 +286,20 @@ public class PackLoader {
 				for (File fi : f.listFiles())
 					addFiles(fs, fi, path + f.getName() + "/");
 			else
-				fs.add(new FileDesc(path + f.getName(), f));
+				fs.add(new FileDesc(this, path + f.getName(), f));
 		}
 
-		private void save(byte[] bs) throws IOException {
+		private void save(Cipher cipher, byte[] bs, boolean end) throws Exception {
 			if ((bs.length & 0xF) != 0)
 				bs = Arrays.copyOf(bs, (bs.length | 0xF) + 1);
-			bs = encry.update(bs);
+			bs = end ? cipher.doFinal(bs) : cipher.update(bs);
 			fos.write(bs);
 		}
 
 	}
 
 	private static final int HEADER = 16, PASSWORD = 16, CHUNK = 1 << 16;
+
 	private static final String HEAD_STR = "battlecatsultimate_packfile";
 	private static final byte[] HEAD_DATA = getMD5(HEAD_STR.getBytes(), HEADER);
 	private static final byte[] INIT_VECTOR = getMD5("battlecatsultimate".getBytes(), 16);
@@ -227,13 +333,17 @@ public class PackLoader {
 		return Arrays.copyOf(ans, len);
 	}
 
-	public static PackDesc readPack(Context cont, File f) throws Exception {
+	public static ZipDesc readPack(Context cont, File f) throws Exception {
 		return new FileLoader(cont, f).pack;
 	}
 
-	public static void writePack(File dst, File folder, String ver, String id, String auth, String password)
+	public static void writePack(File dst, File folder, PackDesc pd, String password)
 			throws Exception {
-		new FileSaver(dst, folder, ver, id, auth, password);
+		new FileSaver(dst, folder, pd, password);
+	}
+
+	private static int regulate(int size) {
+		return (size & 0xF) == 0 ? size : (size | 0xF) + 1;
 	}
 
 }

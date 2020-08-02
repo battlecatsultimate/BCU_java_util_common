@@ -50,6 +50,7 @@ public class JsonDecoder {
 			return getString(elem);
 		if (cls.isArray())
 			return decodeArray(elem, cls, par);
+		// alias
 		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length == 1) {
 			JCGeneric jcg = cls.getAnnotation(JCGeneric.class);
 			Class<?> alias = par.curjfld.alias()[0];
@@ -75,18 +76,22 @@ public class JsonDecoder {
 			}
 			throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGenericRead present");
 		}
+		// fill existing object
 		if (par != null && par.curjfld.gen() == GenType.FILL) {
 			Object val = par.curfld.get(par.obj);
 			if (cls.getAnnotation(JsonClass.class) != null)
 				return inject(par, elem.getAsJsonObject(), cls, null);
 			return val;
 		}
-		if (par != null && par.curjfld.gen() == JsonField.GenType.GEN) {
+		// generator
+		if (par != null && par.curjfld.gen() == GenType.GEN) {
 			Class<?> ccls = par.obj.getClass();
+			// default generator
 			if (par.curjfld.generator().length() == 0) {
 				Object val = cls.getConstructor(ccls).newInstance(par.obj);
 				return inject(par, elem.getAsJsonObject(), cls, val);
 			}
+			// functional generator
 			Method m = ccls.getMethod(par.curjfld.generator(), Class.class, JsonElement.class);
 			return m.invoke(par.obj, cls, elem);
 		}
@@ -137,8 +142,9 @@ public class JsonDecoder {
 		return elem.getAsString();
 	}
 
-	public static Object inject(JsonDecoder par, JsonObject jobj, Class<?> cls, Object pre) throws Exception {
-		return new JsonDecoder(par, jobj, cls, pre == null ? cls.newInstance() : pre).obj;
+	@SuppressWarnings("unchecked")
+	public static <T> T inject(JsonElement elem, Class<T> cls, T pre) throws Exception {
+		return (T) inject(null, elem.getAsJsonObject(), cls, pre);
 	}
 
 	protected static List<Object> decodeList(JsonElement elem, Class<?> cls, JsonDecoder par) throws Exception {
@@ -269,9 +275,15 @@ public class JsonDecoder {
 		return null;
 	}
 
+	private static Object inject(JsonDecoder par, JsonObject jobj, Class<?> cls, Object pre) throws Exception {
+		return new JsonDecoder(par, jobj, cls, pre == null ? cls.newInstance() : pre).obj;
+	}
+
 	private final JsonDecoder par;
 	private final JsonObject jobj;
 	private final Object obj;
+	private final Class<?> tarcls;
+	private final JsonClass tarjcls;
 	private Class<?> curcls;
 	private JsonClass curjcls;
 	private Field curfld;
@@ -281,8 +293,10 @@ public class JsonDecoder {
 		par = parent == null ? current : parent;
 		jobj = json;
 		obj = pre;
+		tarcls = cls;
+		tarjcls = cls.getAnnotation(JsonClass.class);
 		current = getInvoker();
-		decode(cls);
+		decode(tarcls);
 		current = par;
 	}
 
@@ -340,7 +354,7 @@ public class JsonDecoder {
 	}
 
 	private JsonDecoder getInvoker() {
-		return curjcls.bypass() ? par : this;
+		return tarjcls.bypass() ? par : this;
 	}
 
 }

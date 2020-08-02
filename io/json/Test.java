@@ -1,6 +1,7 @@
 package common.io.json;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +15,12 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
+import common.io.json.PackLoader.Context;
+import common.io.json.PackLoader.PackDesc;
+import common.io.json.PackLoader.ZipDesc;
+import common.io.json.PackLoader.ZipDesc.FileDesc;
+import common.util.Data;
+import main.MainBCU;
 
 public class Test {
 
@@ -204,14 +211,29 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(JsonParser.parseString("{a:\"^\"}"));
 		// JsonTest_2.test();
-		testJson();
+		testIO();
 	}
 
 	public static void testIO() throws Exception {
-		PackLoader.writePack(new File("./pack.pack"), new File("./src"), "ver", "id", "test", "password");
-		PackLoader.readPack((str) -> getFile(new File("./out/" + str)), new File("./pack.pack"));
+		PackDesc pd = new PackDesc();
+		pd.author = "test";
+		pd.BCU_VERSION = Data.revVer(MainBCU.ver);
+		pd.uuid = "12345678abcdefgh";
+		PackLoader.writePack(new File("./pack.pack"), new File("./src"), pd, "password");
+		Context ctx = (fd) -> fd.size < 4096;
+		ZipDesc desc = PackLoader.readPack(ctx, new File("./pack.pack"));
+		for (FileDesc fd : desc.files)
+			if (!ctx.preload(fd)) {
+				System.out.println("large: " + fd.path);
+				File f = new File("./out/" + fd.path);
+				getFile(f);
+				FileOutputStream fos = new FileOutputStream(f);
+				byte[] bs = new byte[fd.size];
+				desc.readFile(fd.path).read(bs);
+				fos.write(bs);
+				fos.close();
+			}
 
 	}
 

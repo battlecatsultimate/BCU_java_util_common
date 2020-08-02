@@ -9,7 +9,7 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
-import common.io.json.JsonClass.JCConcstructor;
+import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonClass.JCGenericWrite;
@@ -56,7 +56,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	@JsonField
 	public String name = "";
 
-	@JCConcstructor
+	@JCConstructor
 	public CharaGroup(MapColc map) {
 		pack = map.pack;
 	}

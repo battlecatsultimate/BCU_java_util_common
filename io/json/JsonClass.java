@@ -15,7 +15,7 @@ public @interface JsonClass {
 
 	/** indicates that this constructor is only used by JSON */
 	@Target(ElementType.CONSTRUCTOR)
-	public static @interface JCConcstructor {
+	public static @interface JCConstructor {
 	}
 
 	/** indicates that this class can be loaded with a value of another class */

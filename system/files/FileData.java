@@ -3,6 +3,7 @@ package common.system.files;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -11,9 +12,25 @@ import common.system.fake.FakeImage;
 
 public interface FileData {
 
-	public abstract FakeImage getImg();
+	public FakeImage getImg();
 
-	public abstract Queue<String> readLine();
+	public Queue<String> readLine();
+	
+	public static Queue<String> IS2L(InputStream is) {
+		try {
+			Queue<String> ans = new ArrayDeque<>();
+			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+			BufferedReader reader = new BufferedReader(isr);
+			String temp = null;
+			while ((temp = reader.readLine()) != null)
+				ans.add(temp);
+			reader.close();
+			return ans;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }
 
@@ -33,19 +50,7 @@ interface ByteData extends FileData {
 
 	@Override
 	public default Queue<String> readLine() {
-		try {
-			Queue<String> ans = new ArrayDeque<>();
-			BufferedReader reader = null;
-			InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(getBytes()), "UTF-8");
-			reader = new BufferedReader(isr);
-			String temp = null;
-			while ((temp = reader.readLine()) != null)
-				ans.add(temp);
-			reader.close();
-			return ans;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return FileData.IS2L(new ByteArrayInputStream(getBytes()));
 	}
+	
 }

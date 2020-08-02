@@ -11,7 +11,7 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
-import common.io.json.JsonClass.JCConcstructor;
+import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField.GenType;
 import common.system.Copable;
@@ -32,7 +32,7 @@ public class SCDef implements Copable<SCDef> {
 		public int castle_0, castle_1, layer_0, layer_1;
 		public int mult_atk;
 
-		@JCConcstructor
+		@JCConstructor
 		public Line() {
 		}
 
@@ -327,6 +327,7 @@ public class SCDef implements Copable<SCDef> {
 			os.writeInt(datas[i].spawn_1);
 			os.writeInt(datas[i].castle_1);
 			os.writeInt(datas[i].group);
+			os.writeInt(datas[i].mult_atk);
 		}
 
 		os.writeInt(sdef);
