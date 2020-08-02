@@ -8,10 +8,197 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.Queue;
 
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
+
 public class Data {
 
-	public static final int restrict_name = 32;
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class Proc {
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class ARMOR {
+			public int prob;
+			public int time;
+			public int mult; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class BURROW {
+			public int count;
+			public int dis;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class CRITI {
+			public int type; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class IMU {
+			public int mult;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class MOVEWAVE {
+			public int prob;
+			public int speed;
+			public int width;
+			public int time;
+			public int dis;
+			public int itv;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class PM {
+			public int prob;
+			public int mult;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class POISON {
+
+			public int prob;
+			public int time;
+			public int damage;
+			public int itv;
+			public int type; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class PROB {
+			public int prob;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class PT {
+			public int prob;
+			public int time;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class PTD {
+			public int prob;
+			public int time;
+			public int dis;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class REVIVE {
+			public int count;
+			public int time;
+			public int health;
+			public int p0, p1;
+			public int type; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class SPEED {
+			public int prob;
+			public int time;
+			public int speed;
+			public int type; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class STRONG {
+			public int health;
+			public int mult;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class SUMMON {
+
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE {
+
+				public boolean anim_no_burrow;
+				public boolean burrow_anim;
+				public boolean ignore_limit;
+				public boolean fix_buff;
+				public boolean same_health;
+				public boolean random_layer;
+				public boolean on_hit;
+				public boolean on_kill;
+
+			}
+
+			public int prob;
+			public int id;
+			public int dis;
+			public int mult;
+			public TYPE type;
+			public int time;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class THEME {
+
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE {
+				public boolean kill;
+			}
+
+			public int prob;
+			public int time;
+			public int id;
+			public TYPE type;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class WAVE {
+			public int prob;
+			public int lv;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class WEAK {
+			public int prob;
+			public int time;
+			public int mult;
+		}
+
+		public PTD KB;
+		public PT STOP;
+		public PT SLOW;
+		public PM CRIT;
+		public WAVE WAVE;
+		public WEAK WEAK;
+		public PROB BREAK;
+		public PTD WARP;
+		public PT CURSE;
+		public STRONG STRONG;
+		public PROB LEATHAL;
+		public BURROW BURROW;
+		public REVIVE REVIVE;
+		public IMU IMUKB;
+		public IMU IMUSTOP;
+		public IMU IMUSLOW;
+		public IMU IMUWAVE;
+		public IMU IMUWEAK;
+		public IMU IMUWARP;
+		public IMU IMUCURSE;
+		public PROB SNIPER;
+		public PT TIME;
+		public PT SEAL;
+		public SUMMON SUMMON;
+		public MOVEWAVE MOVEWAVE;
+		public THEME THEME;
+		public POISON POISON;
+		public PROB BOSS;
+		public CRITI CRITI;
+		public PM SATK;
+		public PT IMUATK;
+		public PM POIATK;
+		public WAVE VOLC;
+		public IMU IMUPOIATK;
+		public IMU IMUVOLC;
+		public ARMOR ARMOR;
+		public SPEED SPEED;
+
+	}
+
+	public static final int restrict_name = 32;
 	public static final int SE_HIT_0 = 20;
 	public static final int SE_HIT_1 = 21;
 	public static final int SE_DEATH_0 = 23;
@@ -34,13 +221,15 @@ public class Data {
 	public static final int SE_POISON = 110;
 	public static final int SE_VOLC_START = 111;
 	public static final int SE_VOLC_LOOP = 112;
-	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 }, {124} };
+
+	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
+			{ 124 } };
 
 	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65, 73,
 			74, 83, 84, 85, 86, 90, 110, 111, 112, 124 };
 
 	public static final int RARITY_TOT = 6;
-
+	
 	// trait bit filter
 	public static final int TB_WHITE = 1;
 	public static final int TB_RED = 2;
@@ -54,7 +243,7 @@ public class Data {
 	public static final int TB_EVA = 512;
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
-
+	
 	// trait index
 	public static final int TRAIT_WHITE = 0;
 	public static final int TRAIT_RED = 1;
@@ -69,7 +258,7 @@ public class Data {
 	public static final int TRAIT_WITCH = 10;
 	public static final int TRAIT_INFH = 11;
 	public static final int TRAIT_TOT = 12;
-
+	
 	// treasure
 	public static final int T_RED = 0;
 	public static final int T_FLOAT = 1;
@@ -81,7 +270,7 @@ public class Data {
 
 	// default tech value
 	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10, 30 };
-
+	
 	// tech index
 	public static final int LV_RES = 0;
 	public static final int LV_ACC = 1;
@@ -96,7 +285,7 @@ public class Data {
 
 	// default treasure value
 	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600, 300, 300 };
-
+	
 	// treasure index
 	public static final int T_ATK = 0;
 	public static final int T_DEF = 1;
@@ -110,7 +299,7 @@ public class Data {
 	public static final int T_XP1 = 9;
 	public static final int T_XP2 = 10;
 	public static final int T_TOT = 11;
-
+	
 	// abi bit filter
 	public static final int AB_GOOD = 1 << 0;
 	public static final int AB_RESIST = 1 << 1;
@@ -138,7 +327,7 @@ public class Data {
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
 	public static final int AB_ELIMINATOR = 0x7ae17f;
-
+	
 	// abi index
 	public static final int ABI_GOOD = 0;
 	public static final int ABI_RESIST = 1;
@@ -205,9 +394,9 @@ public class Data {
 	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv
 	 */
 	public static final int P_MOVEWAVE = 24;
-	/** 0:prob, 1:time (-1 means infinite), 2:ID, 3: type
-	 * 	0 : Change only BG
-	 * 1 : Kill all and change BG
+	/**
+	 * 0:prob, 1:time (-1 means infinite), 2:ID, 3: type 0 : Change only BG 1 : Kill
+	 * all and change BG
 	 */
 	public static final int P_THEME = 25;
 	/**
@@ -228,28 +417,22 @@ public class Data {
 	public static final int P_IMUPOIATK = 33;
 	public static final int P_IMUVOLC = 34;
 	/**
-	 * Make target receive n% damage more/less
-	 * 0: chance, 1: duration, 2: debuff
+	 * Make target receive n% damage more/less 0: chance, 1: duration, 2: debuff
 	 */
 	public static final int P_ARMOR = 35;
 	/**
-	 * Make target move faster/slower
-	 * 0: chance, 1: duration, 2: speed, 3: type
-	 * type 0: Current speed * (100 + n)%
-	 * type 1: Current speed + n
-	 * type 2: Fixed speed
+	 * Make target move faster/slower 0: chance, 1: duration, 2: speed, 3: type type
+	 * 0: Current speed * (100 + n)% type 1: Current speed + n type 2: Fixed speed
 	 */
 	public static final int P_SPEED = 36;
-
 	public static final int PROC_TOT = 40;// 37
-
 	public static final int PROC_WIDTH = 6;
+	
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;
 	public static final int WT_CANN = 2;
 	public static final int WT_VOLC = 4;
 	public static final int PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
-
 	public static final int PC2_HP = 0;
 	public static final int PC2_ATK = 1;
 	public static final int PC2_SPEED = 2;
@@ -317,6 +500,7 @@ public class Data {
 	public static final int BREAK_ABI = -4;
 	public static final int BREAK_ATK = -5;
 	public static final int BREAK_NON = -6;
+	
 	// Combo index
 	public static final int C_ATK = 0;
 	public static final int C_DEF = 1;
@@ -402,7 +586,6 @@ public class Data {
 	public static final int A_E_SPEED = 54;
 	public static final int A_WEAK_UP = 55;
 	public static final int A_E_WEAK_UP = 56;
-
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
 	public static final int A_TOT = 57;
 
@@ -452,7 +635,6 @@ public class Data {
 	public static final int E_IMU = -1;
 	public static final int E_IWAVE = -2;
 	public static final int E_SWAVE = -3;
-
 	public static final int W_VOLC = 375;
 	public static final int W_VOLC_INNER = 250; // volcano inner width
 	public static final int W_VOLC_PIERCE = 125; // volcano pierce width
@@ -460,7 +642,6 @@ public class Data {
 
 	public static final int VOLC_PRE = 15; // volcano pre-atk
 	public static final int VOLC_POST = 10; // volcano post-atk
-
 	public static final int VOLC_SE = 30; // volcano se loop duration
 
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10, 2 };// not sure
@@ -469,14 +650,13 @@ public class Data {
 	public static final int SNIPER_PRE = 5;// not sure
 	public static final int SNIPER_POS = -500;// not sure
 	public static final int REVIVE_SHOW_TIME = 16;
-	
+
 	public static final int ORB_ATK = 0;
 	public static final int ORB_RES = 1;
-	
 	public static final int ORB_TYPE = 0, ORB_TRAIT = 1, ORB_GRADE = 2;
-	
-	public static final int[] ORB_ATK_MULTI = {100, 200, 300, 400, 500}; //Atk orb multiplication
-	public static final int[] ORB_RES_MULTI = {4, 8, 12, 16, 20}; //Resist orb multiplication
+
+	public static final int[] ORB_ATK_MULTI = { 100, 200, 300, 400, 500 }; // Atk orb multiplication
+	public static final int[] ORB_RES_MULTI = { 4, 8, 12, 16, 20 }; // Resist orb multiplication
 
 	private static final Deque<int[][]> queue = new ArrayDeque<>();
 
