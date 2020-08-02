@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -10,6 +11,8 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.io.json.JsonClass.JCConcstructor;
+import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField.GenType;
 import common.system.Copable;
 import common.system.FixIndexList;
@@ -22,10 +25,44 @@ import common.util.unit.EnemyStore;
 @JsonClass
 public class SCDef implements Copable<SCDef> {
 
-	public static final int SIZE = 13;
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class Line {
+		public int enemy, number, boss, multiple, group;
+		public int spawn_0, spawn_1, respawn_0, respawn_1;
+		public int castle_0, castle_1, layer_0, layer_1;
 
-	public static final int E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9, S1 = 10,
-			C1 = 11, G = 12;
+		@JCConcstructor
+		public Line() {
+		}
+
+		public Line(int[] arr) {
+			enemy = arr[E];
+			number = arr[N];
+			boss = arr[B];
+			multiple = arr[M];
+			group = arr[G];
+			spawn_0 = arr[S0];
+			respawn_0 = arr[R0];
+			castle_0 = arr[C0];
+			layer_0 = arr[L0];
+			spawn_1 = arr[S1];
+			respawn_1 = arr[R1];
+			castle_1 = arr[C1];
+			layer_1 = arr[L1];
+		}
+
+		public Line clone() {
+			try {
+				return (Line) super.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	private static final int SIZE = 13, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
+			S1 = 10, C1 = 11, G = 12;
 
 	public static SCDef zread(InStream is) {
 		int t = is.nextInt();
@@ -35,9 +72,13 @@ public class SCDef implements Copable<SCDef> {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
-				for (int i = 0; i < n; i++)
+				int[] tmp = new int[SIZE];
+				for (int i = 0; i < n; i++) {
+					Arrays.fill(tmp, 0);
 					for (int j = 0; j < m; j++)
-						scd.datas[i][j] = is.nextInt();
+						tmp[j] = is.nextInt();
+					scd.datas[i] = new Line(tmp);
+				}
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
@@ -53,9 +94,13 @@ public class SCDef implements Copable<SCDef> {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
-				for (int i = 0; i < n; i++)
+				int[] tmp = new int[SIZE];
+				for (int i = 0; i < n; i++) {
+					Arrays.fill(tmp, 0);
 					for (int j = 0; j < m; j++)
-						scd.datas[i][j] = is.nextInt();
+						tmp[j] = is.nextInt();
+					scd.datas[i] = new Line(tmp);
+				}
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
@@ -69,9 +114,13 @@ public class SCDef implements Copable<SCDef> {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
-				for (int i = 0; i < n; i++)
+				int[] tmp = new int[SIZE];
+				for (int i = 0; i < n; i++) {
+					Arrays.fill(tmp, 0);
 					for (int j = 0; j < m; j++)
-						scd.datas[i][j] = is.nextInt();
+						tmp[j] = is.nextInt();
+					scd.datas[i] = new Line(tmp);
+				}
 				return scd;
 			}
 		}
@@ -79,7 +128,7 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	@JsonField
-	public int[][] datas;
+	public Line[] datas;
 	@JsonField(gen = GenType.FILL)
 	public final FixIndexList<SCGroup> sub = new FixIndexList<>(new SCGroup[1000]);
 	@JsonField(generic = { Integer.class, Integer.class })
@@ -90,28 +139,35 @@ public class SCDef implements Copable<SCDef> {
 	protected SCDef(InStream is, int ver) {
 		if (ver >= 305) {
 			int n = is.nextByte();
-			datas = new int[n][SIZE];
-			for (int i = 0; i < n; i++)
+			datas = new Line[n];
+			int[] tmp = new int[SIZE];
+			for (int i = 0; i < n; i++) {
+				Arrays.fill(tmp, 0);
 				for (int j = 0; j < 10; j++)
-					datas[i][j] = is.nextInt();
+					tmp[j] = is.nextInt();
+				datas[i] = new Line(tmp);
+			}
 		} else if (ver >= 203) {
 			int n = is.nextByte();
-			datas = new int[n][SIZE];
+			datas = new Line[n];
+			int[] tmp = new int[SIZE];
 			for (int i = 0; i < n; i++) {
+				Arrays.fill(tmp, 0);
 				for (int j = 0; j < 10; j++)
-					datas[i][j] = is.nextInt();
-				if (datas[i][5] < 100)
-					datas[i][2] *= -1;
+					tmp[j] = is.nextInt();
+				if (tmp[5] < 100)
+					tmp[2] *= -1;
+				datas[i] = new Line(tmp);
 			}
 		} else
-			datas = new int[0][SIZE];
+			datas = new Line[0];
 	}
 
 	protected SCDef() {
 	}
 
 	protected SCDef(int s) {
-		datas = new int[s][SIZE];
+		datas = new Line[s];
 	}
 
 	public int allow(StageBasis sb, AbEnemy e) {
@@ -132,8 +188,8 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	public boolean contains(Enemy e) {
-		for (int[] dat : datas)
-			if (dat[E] == e.id)
+		for (Line dat : datas)
+			if (dat.enemy == e.id)
 				return true;
 		return false;
 	}
@@ -151,18 +207,18 @@ public class SCDef implements Copable<SCDef> {
 
 	public Set<Enemy> getAllEnemy() {
 		Set<Enemy> l = new TreeSet<>();
-		for (int[] dat : datas)
-			l.addAll(EnemyStore.getAbEnemy(dat[E], false).getPossible());
+		for (Line dat : datas)
+			l.addAll(EnemyStore.getAbEnemy(dat.enemy, false).getPossible());
 		for (AbEnemy e : getSummon())
 			l.addAll(e.getPossible());
 		return l;
 	}
 
-	public int[][] getSimple() {
+	public Line[] getSimple() {
 		return datas;
 	}
 
-	public int[] getSimple(int i) {
+	public Line getSimple(int i) {
 		return datas[i];
 	}
 
@@ -181,8 +237,8 @@ public class SCDef implements Copable<SCDef> {
 		Set<AbEnemy> temp = new TreeSet<>();
 		Set<Enemy> pre = new TreeSet<>();
 		Set<Enemy> post = new TreeSet<>();
-		for (int[] line : datas) {
-			AbEnemy e = EnemyStore.getAbEnemy(line[E], false);
+		for (Line line : datas) {
+			AbEnemy e = EnemyStore.getAbEnemy(line.enemy, false);
 			if (e != null)
 				pre.addAll(e.getPossible());
 		}
@@ -201,10 +257,10 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	public boolean isSuitable(Pack p) {
-		for (int[] ints : datas) {
-			if (ints[E] < 1000)
+		for (Line ints : datas) {
+			if (ints.enemy < 1000)
 				continue;
-			int pac = ints[E] / 1000;
+			int pac = ints.enemy / 1000;
 			boolean b = pac == p.id;
 			for (int rel : p.rely)
 				b |= pac == rel;
@@ -215,29 +271,29 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	public boolean isTrail() {
-		for (int[] data : datas)
-			if (data[C0] > 100)
+		for (Line data : datas)
+			if (data.castle_0 > 100)
 				return true;
 		return false;
 	}
 
 	public void merge(int id, int pid, int[] esind) {
-		for (int[] dat : datas)
-			if (dat[E] / 1000 == pid)
-				dat[E] = esind[dat[E] % 1000] + id * 1000;
+		for (Line dat : datas)
+			if (dat.enemy / 1000 == pid)
+				dat.enemy = esind[dat.enemy % 1000] + id * 1000;
 	}
 
 	public int relyOn(int p) {
-		for (int[] data : datas)
-			if (data[E] / 1000 == p)
+		for (Line data : datas)
+			if (data.enemy / 1000 == p)
 				return Pack.RELY_ENE;
 		return -1;
 	}
 
 	public void removePack(int p) {
-		for (int[] data : datas)
-			if (data[E] / 1000 == p)
-				data[E] = 0;
+		for (Line data : datas)
+			if (data.enemy / 1000 == p)
+				data.enemy = 0;
 	}
 
 	public OutStream write() {
@@ -246,9 +302,22 @@ public class SCDef implements Copable<SCDef> {
 		os.writeString("0.4.2");
 		os.writeInt(datas.length);
 		os.writeInt(SIZE);
-		for (int i = 0; i < datas.length; i++)
-			for (int j = 0; j < SIZE; j++)
-				os.writeInt(datas[i][j]);
+		for (int i = 0; i < datas.length; i++) {
+			os.writeInt(datas[i].enemy);
+			os.writeInt(datas[i].number);
+			os.writeInt(datas[i].spawn_0);
+			os.writeInt(datas[i].respawn_0);
+			os.writeInt(datas[i].respawn_1);
+			os.writeInt(datas[i].castle_0);
+			os.writeInt(datas[i].layer_0);
+			os.writeInt(datas[i].layer_1);
+			os.writeInt(datas[i].boss);
+			os.writeInt(datas[i].multiple);
+			os.writeInt(datas[i].spawn_1);
+			os.writeInt(datas[i].castle_1);
+			os.writeInt(datas[i].group);
+		}
+
 		os.writeInt(sdef);
 		os.writeInt(smap.size());
 		smap.forEach((e, i) -> os.writeIntsN(e, i));
@@ -257,5 +326,4 @@ public class SCDef implements Copable<SCDef> {
 		os.terminate();
 		return os;
 	}
-
 }

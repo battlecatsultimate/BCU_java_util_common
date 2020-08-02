@@ -16,6 +16,7 @@ import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.pack.Pack;
+import common.util.stage.SCDef.Line;
 import common.util.unit.Enemy;
 import common.CommonStatic;
 import main.MainBCU;
@@ -163,7 +164,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 				if (temp.startsWith("0,"))
 					break;
 				String[] ss = temp.split(",");
-				int[] data = new int[SCDef.SIZE];
+				int[] data = new int[13];
 				for (int i = 0; i < intl; i++)
 					data[i] = Integer.parseInt(ss[i]);
 				data[0] -= 2;
@@ -178,11 +179,11 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			}
 		SCDef scd = new SCDef(ll.size());
 		for (int i = 0; i < ll.size(); i++)
-			scd.datas[i] = ll.get(scd.datas.length - i - 1);
+			scd.datas[i] = new Line(ll.get(scd.datas.length - i - 1));
 		if (strs.length > 6) {
 			int ano = CommonStatic.parseIntN(strs[6]);
 			if (ano == 317)
-				scd.datas[ll.size() - 1][5] = 0;
+				scd.datas[ll.size() - 1].castle_0 = 0;
 		}
 		data = scd;
 		validate();
@@ -317,30 +318,6 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		return map + " - " + id();
 	}
 
-	public OutStream write() {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.7");
-		os.writeString(toString());
-		os.writeInt(bg);
-		os.writeInt(castle);
-		os.writeInt(health);
-		os.writeInt(len);
-		os.writeInt(mus0);
-		os.writeInt(mush);
-		os.writeInt(mus1);
-		os.writeByte((byte) max);
-		os.writeByte((byte) (non_con ? 1 : 0));
-		os.accept(data.write());
-		lim.write(os);
-		os.writeInt(recd.size());
-		for (Recd r : recd) {
-			os.writeString(r.name);
-			os.accept(r.toOS());
-		}
-		os.terminate();
-		return os;
-	}
-
 	protected void validate() {
 		trail = data.isTrail();
 	}
@@ -428,6 +405,30 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			String name = is.nextString();
 			Recd.getRecd(this, is.subStream(), name);
 		}
+	}
+	
+	public OutStream write() {
+		OutStream os = OutStream.getIns();
+		os.writeString("0.4.7");
+		os.writeString(toString());
+		os.writeInt(bg);
+		os.writeInt(castle);
+		os.writeInt(health);
+		os.writeInt(len);
+		os.writeInt(mus0);
+		os.writeInt(mush);
+		os.writeInt(mus1);
+		os.writeByte((byte) max);
+		os.writeByte((byte) (non_con ? 1 : 0));
+		os.accept(data.write());
+		lim.write(os);
+		os.writeInt(recd.size());
+		for (Recd r : recd) {
+			os.writeString(r.name);
+			os.accept(r.toOS());
+		}
+		os.terminate();
+		return os;
 	}
 
 }

@@ -1,22 +1,9 @@
 package common.util.stage;
 
-import static common.util.stage.SCDef.B;
-import static common.util.stage.SCDef.C0;
-import static common.util.stage.SCDef.C1;
-import static common.util.stage.SCDef.E;
-import static common.util.stage.SCDef.G;
-import static common.util.stage.SCDef.L0;
-import static common.util.stage.SCDef.L1;
-import static common.util.stage.SCDef.M;
-import static common.util.stage.SCDef.N;
-import static common.util.stage.SCDef.R0;
-import static common.util.stage.SCDef.R1;
-import static common.util.stage.SCDef.S0;
-import static common.util.stage.SCDef.S1;
-
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.util.BattleObj;
+import common.util.stage.SCDef.Line;
 import common.util.unit.AbEnemy;
 import common.util.unit.EnemyStore;
 
@@ -34,11 +21,11 @@ public class EStage extends BattleObj {
 		s = st;
 		star = stars;
 		st.validate();
-		int[][] datas = s.data.getSimple();
+		Line[] datas = s.data.getSimple();
 		rem = new int[datas.length];
 		num = new int[datas.length];
 		for (int i = 0; i < rem.length; i++)
-			num[i] = datas[i][N];
+			num[i] = datas[i].number;
 		lim = st.getLim(star);
 		mul = st.map.stars[star] * 0.01;
 	}
@@ -46,20 +33,20 @@ public class EStage extends BattleObj {
 	/** add n new enemies to StageBasis */
 	public EEnemy allow() {
 		for (int i = 0; i < rem.length; i++) {
-			int[] data = s.data.getSimple(i);
-			if (inHealth(data[C0], data[C1]) && s.data.allow(b, data[G]) && rem[i] == 0 && num[i] != -1) {
-				rem[i] = data[R0] + (int) (b.r.nextDouble() * (data[R1] - data[R0]));
+			Line data = s.data.getSimple(i);
+			if (inHealth(data) && s.data.allow(b, data.group) && rem[i] == 0 && num[i] != -1) {
+				rem[i] = data.respawn_0 + (int) (b.r.nextDouble() * (data.respawn_1 - data.respawn_0));
 				if (num[i] > 0) {
 					num[i]--;
 					if (num[i] == 0)
 						num[i] = -1;
 				}
-				if (data[8] == 1)
+				if (data.boss == 1)
 					b.shock = true;
-				double multi = (data[M] == 0 ? 100 : data[M]) * mul * 0.01;
-				AbEnemy e = EnemyStore.getAbEnemy(data[0], false);
-				EEnemy ee = e.getEntity(b, data, multi, data[L0], data[L1], data[B]);
-				ee.group = data[G];
+				double multi = (data.multiple == 0 ? 100 : data.multiple) * mul * 0.01;
+				AbEnemy e = EnemyStore.getAbEnemy(data.enemy, false);
+				EEnemy ee = e.getEntity(b, data, multi, data.layer_0, data.layer_1, data.boss);
+				ee.group = data.group;
 				return ee;
 			}
 		}
@@ -68,11 +55,11 @@ public class EStage extends BattleObj {
 
 	public void assign(StageBasis sb) {
 		b = sb;
-		int[][] datas = s.data.getSimple();
+		Line[] datas = s.data.getSimple();
 		for (int i = 0; i < rem.length; i++) {
-			rem[i] = datas[i][S0];
-			if (Math.abs(datas[i][S0]) < Math.abs(datas[i][S1]))
-				rem[i] += (int) ((datas[i][S1] - datas[i][S0]) * b.r.nextDouble());
+			rem[i] = datas[i].spawn_0;
+			if (Math.abs(datas[i].spawn_0) < Math.abs(datas[i].spawn_1))
+				rem[i] += (int) ((datas[i].spawn_1 - datas[i].spawn_0) * b.r.nextDouble());
 		}
 	}
 
@@ -81,12 +68,12 @@ public class EStage extends BattleObj {
 		int ind = num.length - 1;
 		if (ind < 0)
 			return null;
-		int[] data = s.data.getSimple(ind);
-		if (data[C0] == 0) {
+		Line data = s.data.getSimple(ind);
+		if (data.castle_0 == 0) {
 			num[ind] = -1;
-			double multi = data[M] * mul * 0.01;
-			AbEnemy e = EnemyStore.getAbEnemy(data[E], false);
-			return e.getEntity(sb, this, multi, data[L0], data[L1], -1);
+			double multi = data.multiple * mul * 0.01;
+			AbEnemy e = EnemyStore.getAbEnemy(data.enemy, false);
+			return e.getEntity(sb, this, multi, data.layer_0, data.layer_1, -1);
 		}
 		return null;
 	}
@@ -94,8 +81,8 @@ public class EStage extends BattleObj {
 	/** return true if there is still boss in the base */
 	public boolean hasBoss() {
 		for (int i = 0; i < rem.length; i++) {
-			int[] data = s.data.getSimple(i);
-			if (data[B] == 1 && num[i] > 0)
+			Line data = s.data.getSimple(i);
+			if (data.boss == 1 && num[i] > 0)
 				return true;
 		}
 		return false;
@@ -103,15 +90,17 @@ public class EStage extends BattleObj {
 
 	public void update() {
 		for (int i = 0; i < rem.length; i++) {
-			int[] data = s.data.getSimple(i);
-			if (inHealth(data[C0], data[C1]) && rem[i] < 0)
+			Line data = s.data.getSimple(i);
+			if (inHealth(data) && rem[i] < 0)
 				rem[i] *= -1;
 			if (rem[i] > 0)
 				rem[i]--;
 		}
 	}
 
-	private boolean inHealth(int c0, int c1) {
+	private boolean inHealth(Line line) {
+		int c0 = line.castle_0;
+		int c1 = line.castle_1;
 		double d = !s.trail ? b.getEBHP() * 100 : b.ebase.maxH - b.ebase.health;
 		return c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
 	}
