@@ -111,7 +111,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	@JsonField
 	public boolean non_con, trail;
 	@JsonField
-	public int len, health, max, bg, mus0 = -1, mush, mus1 = -1, castle;
+	public int len, health, max, bg, mus0 = -1, mush, mus1 = -1, castle, loop0, loop1;
 	@JsonField
 	public SCDef data;
 	@JsonField(gen = GenType.GEN)
@@ -134,6 +134,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		zread(str, is);
 	}
 
+	@SuppressWarnings("deprecation")
 	protected Stage(StageMap sm, int id, VFile<AssetData> f, int type) {
 		if (sm.info != null)
 			sm.info.getData(this);
@@ -156,7 +157,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		health = Integer.parseInt(strs[1]);
 		bg = Integer.parseInt(strs[4]);
 		max = Integer.parseInt(strs[5]);
+		int isBase = Integer.parseInt(strs[6]) - 2;
 		List<int[]> ll = new ArrayList<>();
+
 		while (qs.size() > 0)
 			if ((temp = qs.poll()).length() > 0) {
 				if (!Character.isDigit(temp.charAt(0)))
@@ -164,7 +167,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 				if (temp.startsWith("0,"))
 					break;
 				String[] ss = temp.split(",");
-				int[] data = new int[13];
+				int[] data = new int[SCDef.SIZE];
 				for (int i = 0; i < intl; i++)
 					data[i] = Integer.parseInt(ss[i]);
 				data[0] -= 2;
@@ -175,6 +178,13 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 					data[9] = data[5];
 					data[5] = 100;
 				}
+				if (ss.length > 11 && CommonStatic.isInteger(ss[11]))
+					data[SCDef.M1] = Integer.parseInt(ss[11]);
+				else
+					data[SCDef.M1] = data[SCDef.M];
+
+				if (data[0] == isBase)
+					data[SCDef.C0] = 0;
 				ll.add(data);
 			}
 		SCDef scd = new SCDef(ll.size());
@@ -318,6 +328,33 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		return map + " - " + id();
 	}
 
+
+	public OutStream write() {
+		OutStream os = OutStream.getIns();
+		os.writeString("0.4.8");
+		os.writeString(toString());
+		os.writeInt(bg);
+		os.writeInt(castle);
+		os.writeInt(health);
+		os.writeInt(len);
+		os.writeInt(mus0);
+		os.writeInt(mush);
+		os.writeInt(mus1);
+		os.writeInt(loop0);
+		os.writeInt(loop1);
+		os.writeByte((byte) max);
+		os.writeByte((byte) (non_con ? 1 : 0));
+		os.accept(data.write());
+		lim.write(os);
+		os.writeInt(recd.size());
+		for (Recd r : recd) {
+			os.writeString(r.name);
+			os.accept(r.toOS());
+		}
+		os.terminate();
+		return os;
+	}
+
 	protected void validate() {
 		trail = data.isTrail();
 	}
@@ -331,7 +368,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
-		if (val >= 407)
+		if (val >= 408)
+			zread$000408(val, is);
+		else if (val >= 407)
 			zread$000407(val, is);
 		else if (val >= 400)
 			zread$000400(val, is);
@@ -406,29 +445,28 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			Recd.getRecd(this, is.subStream(), name);
 		}
 	}
-	
-	public OutStream write() {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.7");
-		os.writeString(toString());
-		os.writeInt(bg);
-		os.writeInt(castle);
-		os.writeInt(health);
-		os.writeInt(len);
-		os.writeInt(mus0);
-		os.writeInt(mush);
-		os.writeInt(mus1);
-		os.writeByte((byte) max);
-		os.writeByte((byte) (non_con ? 1 : 0));
-		os.accept(data.write());
-		lim.write(os);
-		os.writeInt(recd.size());
-		for (Recd r : recd) {
-			os.writeString(r.name);
-			os.accept(r.toOS());
+
+
+	private void zread$000408(int val, InStream is) {
+		name = is.nextString();
+		bg = is.nextInt();
+		castle = is.nextInt();
+		health = is.nextInt();
+		len = is.nextInt();
+		mus0 = is.nextInt();
+		mush = is.nextInt();
+		mus1 = is.nextInt();
+		loop0 = is.nextInt();
+		loop1 = is.nextInt();
+		max = is.nextByte();
+		non_con = is.nextByte() == 1;
+		data = SCDef.zread(is.subStream());
+		lim = new Limit(map.mc, val, is);
+		int t = is.nextInt();
+		for (int i = 0; i < t; i++) {
+			String name = is.nextString();
+			Recd.getRecd(this, is.subStream(), name);
 		}
-		os.terminate();
-		return os;
 	}
 
 }

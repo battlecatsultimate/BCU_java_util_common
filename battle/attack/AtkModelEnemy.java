@@ -21,15 +21,18 @@ public class AtkModelEnemy extends AtkModelEntity {
 		// conf 4
 		if (ene != null && (allow >= 0 || (conf & 4) > 0)) {
 			double ep = ent.pos + getDire() * proc[2];
+			double mula = proc[3] * 0.01;
 			double mult = proc[3] * 0.01;
 			// conf 8
-			if ((conf & 8) == 0)
+			if ((conf & 8) == 0) {
 				mult *= ((EEnemy) e).mult;
+				mula *= ((EEnemy)e).mula;
+			}
 			int l0 = 0, l1 = 9;
 			// conf 32
 			if ((conf & 32) == 0)
 				l0 = l1 = e.layer;
-			EEnemy ee = ene.getEntity(b, acs, mult, 0, l0, l1);
+			EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, l0, l1);
 			ee.group = allow;
 			if (ep < ee.data.getWidth())
 				ep = ee.data.getWidth();

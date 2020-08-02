@@ -9,11 +9,12 @@ import common.util.anim.EAnimU;
 public class EEnemy extends Entity {
 
 	public final int mark;
-	public final double mult;
+	public final double mult, mula;
 
-	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, double d, int d0, int d1, int m) {
-		super(b, de, ea, d, m == -1 ? -1 : d);
+	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, double d, double datk, int d0, int d1, int m) {
+		super(b, de, ea, datk, m == -1 ? -1 : d);
 		mult = d;
+		mula = datk;
 		mark = m;
 		isBase = mark == -1;
 		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));

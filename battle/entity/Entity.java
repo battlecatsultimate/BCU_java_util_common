@@ -160,7 +160,14 @@ public abstract class Entity extends AbEntity {
 				effs[id] = EffAnim.effas[id].getEAnim(0);
 			}
 			if (t == P_WEAK) {
-				int id = dire == -1 ? A_DOWN : A_E_DOWN;
+				int id;
+				
+				if(status[P_WEAK][1] <= 100) {
+					id =  dire == -1 ? A_DOWN : A_E_DOWN;
+				} else {
+					id =  dire == -1 ? A_WEAK_UP : A_E_WEAK_UP;
+				}
+				
 				effs[id] = EffAnim.effas[id].getEAnim(0);
 			}
 			if (t == P_CURSE) {
@@ -252,7 +259,14 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 			if (status[P_WEAK][0] == 0) {
-				int id = dire == -1 ? A_DOWN : A_E_DOWN;
+				int id;
+				
+				if(status[P_WEAK][1] <= 100) {
+					id = dire == -1 ? A_DOWN : A_E_DOWN;
+				} else {
+					id = dire == -1 ? A_WEAK_UP : A_E_WEAK_UP;
+				}
+				
 				effs[id] = null;
 			}
 			if (status[P_CURSE][0] == 0) {
@@ -347,7 +361,6 @@ public abstract class Entity extends AbEntity {
 			
 			Soul s = SoulStore.getSoul(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
-			CommonStatic.def.setSE(e.basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
 		}
 
 		private int setAnim(int t) {
@@ -628,7 +641,18 @@ public abstract class Entity extends AbEntity {
 				val = Math.min(val, ws[1]);
 			}
 			e.status[P_WEAK][0] = max;
+			
+			double ov = e.status[P_WEAK][1];
+			
 			e.status[P_WEAK][1] = val;
+			
+			if(ov > 100 && val <= 100) {
+				if(e.dire == -1) {
+					e.anim.effs[A_WEAK_UP] = null;
+				} else {
+					e.anim.effs[A_E_WEAK_UP] = null;
+				}
+			}
 		}
 
 		private void update() {
@@ -1185,6 +1209,10 @@ public abstract class Entity extends AbEntity {
 
 		if (health > 0)
 			tempearn = false;
+		
+		if (isBase && health < 0)
+			health = 0;
+		
 		acted = false;
 	}
 
@@ -1317,7 +1345,7 @@ public abstract class Entity extends AbEntity {
 
 		double mov = isBase ? 0 : status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
 		
-		if(status[P_SPEED][0] > 0) {
+		if(status[P_SPEED][0] > 0 && status[P_SLOW][0] <= 0) {
 			if(status[P_SPEED][2] == 0) {
 				mov += status[P_SPEED][1] * 0.5;
 			} else if(status[P_SPEED][2] == 1) {
@@ -1392,6 +1420,8 @@ public abstract class Entity extends AbEntity {
 
 	/** called when last KB reached */
 	private void preKill() {
+		CommonStatic.def.setSE(basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
+		
 		if (zx.prekill())
 			return;
 		kill();

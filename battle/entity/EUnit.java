@@ -112,7 +112,7 @@ public class EUnit extends Entity {
 			if(line.length == 0)
 				continue;
 			
-			if(line[ORB_TYPE] != Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
+			if(line[ORB_TYPE] == Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
 				continue;
 			
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -133,7 +133,7 @@ public class EUnit extends Entity {
         	if(line.length == 0)
         		continue;
         	
-            if(line[ORB_TYPE] != Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0) 
+            if(line[ORB_TYPE] == Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0) 
             	continue;
             
             ans += orb.getRes(line[ORB_GRADE], matk);

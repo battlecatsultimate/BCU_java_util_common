@@ -51,9 +51,9 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 	}
 
 	@Override
-	public EEnemy getEntity(StageBasis sb, Object obj, double mul, int d0, int d1, int m) {
+	public EEnemy getEntity(StageBasis sb, Object obj, double mul, double mul2, int d0, int d1, int m) {
 		sb.rege.add(this);
-		return get(getSelection(sb, obj), sb, obj, mul, d0, d1, m);
+		return get(getSelection(sb, obj), sb, obj, mul, mul2, d0, d1, m);
 	}
 
 	@Override
@@ -99,10 +99,10 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 			zread$000400(is);
 	}
 
-	private EEnemy get(EREnt<Integer> x, StageBasis sb, Object obj, double mul, int d0, int d1, int m) {
+	private EEnemy get(EREnt<Integer> x, StageBasis sb, Object obj, double mul, double mul2, int d0, int d1, int m) {
 		if (x == null || x.ent == null)
-			return EnemyStore.getEnemy(0).getEntity(sb, obj, mul, d0, d1, m);
-		return EnemyStore.getAbEnemy(x.ent, false).getEntity(sb, obj, x.multi * mul / 100, d0, d1, m);
+			return EnemyStore.getEnemy(0).getEntity(sb, obj, mul, mul2, d0, d1, m);
+		return EnemyStore.getAbEnemy(x.ent, false).getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0, d1, m);
 	}
 
 	private void zread$000400(InStream is) {

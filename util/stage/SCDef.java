@@ -30,6 +30,7 @@ public class SCDef implements Copable<SCDef> {
 		public int enemy, number, boss, multiple, group;
 		public int spawn_0, spawn_1, respawn_0, respawn_1;
 		public int castle_0, castle_1, layer_0, layer_1;
+		public int mult_atk;
 
 		@JCConcstructor
 		public Line() {
@@ -49,6 +50,7 @@ public class SCDef implements Copable<SCDef> {
 			respawn_1 = arr[R1];
 			castle_1 = arr[C1];
 			layer_1 = arr[L1];
+			mult_atk = arr[M1];
 		}
 
 		public Line clone() {
@@ -61,8 +63,9 @@ public class SCDef implements Copable<SCDef> {
 		}
 	}
 
-	private static final int SIZE = 13, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
-			S1 = 10, C1 = 11, G = 12;
+	@Deprecated
+	public static final int SIZE = 14, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
+			S1 = 10, C1 = 11, G = 12, M1 = 13;
 
 	public static SCDef zread(InStream is) {
 		int t = is.nextInt();
@@ -77,6 +80,8 @@ public class SCDef implements Copable<SCDef> {
 					Arrays.fill(tmp, 0);
 					for (int j = 0; j < m; j++)
 						tmp[j] = is.nextInt();
+					if (m < 14)
+						tmp[M1] = tmp[M];
 					scd.datas[i] = new Line(tmp);
 				}
 				scd.sdef = is.nextInt();
@@ -99,6 +104,8 @@ public class SCDef implements Copable<SCDef> {
 					Arrays.fill(tmp, 0);
 					for (int j = 0; j < m; j++)
 						tmp[j] = is.nextInt();
+					if (m < 14)
+						tmp[M1] = tmp[M];
 					scd.datas[i] = new Line(tmp);
 				}
 				scd.sdef = is.nextInt();
@@ -119,6 +126,8 @@ public class SCDef implements Copable<SCDef> {
 					Arrays.fill(tmp, 0);
 					for (int j = 0; j < m; j++)
 						tmp[j] = is.nextInt();
+					if (m < 14)
+						tmp[M1] = tmp[M];
 					scd.datas[i] = new Line(tmp);
 				}
 				return scd;
@@ -145,6 +154,7 @@ public class SCDef implements Copable<SCDef> {
 				Arrays.fill(tmp, 0);
 				for (int j = 0; j < 10; j++)
 					tmp[j] = is.nextInt();
+				tmp[M1] = tmp[M];
 				datas[i] = new Line(tmp);
 			}
 		} else if (ver >= 203) {
@@ -157,6 +167,7 @@ public class SCDef implements Copable<SCDef> {
 					tmp[j] = is.nextInt();
 				if (tmp[5] < 100)
 					tmp[2] *= -1;
+				tmp[M1] = tmp[M];
 				datas[i] = new Line(tmp);
 			}
 		} else
