@@ -1,7 +1,9 @@
 package common.io.json;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -13,12 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
 import common.io.json.JsonException.Type;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class JsonDecoder {
 
@@ -192,7 +192,7 @@ public class JsonDecoder {
 				continue;
 			if (jf.IOType() == JsonField.IOType.RW)
 				throw new JsonException(Type.FUNC, null, "functional fields should not have RW type");
-			if (m.getParameterCount() != 1)
+			if (m.getParameterTypes().length != 1)
 				throw new JsonException(Type.FUNC, null, "parameter count should be 1");
 			String tag = jf.tag();
 			if (tag.length() == 0)
@@ -200,7 +200,7 @@ public class JsonDecoder {
 			if (!jobj.has(tag))
 				continue;
 			JsonElement elem = jobj.get(tag);
-			Class<?> ccls = m.getParameters()[0].getType();
+			Class<?> ccls = m.getParameterTypes()[0];
 			try {
 				m.invoke(obj, decode(elem, ccls, obj, jf, null));
 			} catch (Exception e) {
