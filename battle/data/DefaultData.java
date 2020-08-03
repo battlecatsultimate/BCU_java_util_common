@@ -2,7 +2,7 @@ package common.battle.data;
 
 public abstract class DefaultData extends DataEntity {
 
-	public int[][] proc;
+	public Proc proc;
 	protected int lds, ldr;
 	protected int atk, atk1, atk2, pre, pre1, pre2, abi0 = 1, abi1, abi2, tba;
 	protected DataAtk[] datks;
@@ -11,12 +11,12 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int allAtk() {
-		return (int) ((atk + atk1 + atk2) * (1 + proc[P_CRIT][0] * 0.01));
+		return (int) ((atk + atk1 + atk2) * (1 + proc.CRIT.prob * 0.01));
 	}
 
 	@Override
-	public int[] getAllProc(int ind) {
-		return proc[ind];
+	public Proc getAllProc() {
+		return proc;
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public abstract class DefaultData extends DataEntity {
 	}
 
 	@Override
-	public int[] getProc(int ind) {
-		return proc[ind];
+	public Proc getProc() {
+		return proc;
 	}
 
 	@Override

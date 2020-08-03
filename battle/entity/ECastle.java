@@ -25,11 +25,11 @@ public class ECastle extends AbEntity {
 		int ans = atk.atk;
 		if ((atk.abi & AB_BASE) > 0)
 			ans *= 4;
-		int satk = atk.getProc(P_SATK)[0];
+		int satk = atk.getProc().SATK.mult;
 		if (satk > 0)
 			ans *= (100 + satk) * 0.01;
-		if (atk.getProc(P_CRIT)[0] > 0) {
-			ans *= 0.01 * atk.getProc(P_CRIT)[0];
+		if (atk.getProc().CRIT.mult > 0) {
+			ans *= 0.01 * atk.getProc().CRIT.mult;
 			sb.lea.add(new EAnimCont(pos, 9, EffAnim.effas[A_CRIT].getEAnim(0)));
 			CommonStatic.def.setSE(SE_CRIT);
 		} else

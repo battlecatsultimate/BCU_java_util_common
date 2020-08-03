@@ -3,6 +3,7 @@ package common.battle.data;
 import common.util.Animable;
 import common.util.BattleStatic;
 import common.util.Data;
+import common.util.Data.Proc;
 import common.util.anim.AnimU;
 
 public interface MaskEntity extends BattleStatic {
@@ -11,7 +12,7 @@ public interface MaskEntity extends BattleStatic {
 
 	public int getAbi();
 
-	public int[] getAllProc(int ind);
+	public Proc getAllProc();
 
 	/** get the attack animation length */
 	public default int getAnimLen() {
@@ -38,7 +39,7 @@ public interface MaskEntity extends BattleStatic {
 
 	public int getPost();
 
-	public int[] getProc(int ind);
+	public Proc getProc();
 
 	public int getRange();
 

@@ -107,8 +107,13 @@ public class JsonDecoder {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T decode(JsonElement elem, Class<T> cls) throws Exception {
-		return (T) decode(elem, cls, null);
+	public static <T> T decode(JsonElement elem, Class<T> cls) {
+		try {
+			return (T) decode(elem, cls, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static boolean getBoolean(JsonElement elem) throws JsonException {

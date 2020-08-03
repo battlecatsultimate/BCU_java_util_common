@@ -3,11 +3,15 @@ package common.util.unit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonParser;
+
 import common.CommonStatic;
 import common.CommonStatic.ImgReader;
 import common.battle.data.CustomEnemy;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonDecoder;
+import common.io.json.JsonEncoder;
 import common.system.FixIndexList;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
@@ -87,13 +91,13 @@ public class EnemyStore extends FixIndexList<Enemy> {
 
 	public OutStream packup(CommonStatic.ImgWriter w) {
 		OutStream os = OutStream.getIns();
-		os.writeString("0.4.2");
+		os.writeString("0.4.3");
 		List<Enemy> list = getList();
 		os.writeInt(list.size());
 		for (Enemy e : list) {
 			os.writeInt(e.id);
 			os.writeString(e.name);
-			((CustomEnemy) e.de).write(os);
+			os.writeString(JsonEncoder.encode(e.de).toString());
 			os.accept(((AnimCI) e.anim).writeData(w));
 		}
 
@@ -109,11 +113,11 @@ public class EnemyStore extends FixIndexList<Enemy> {
 
 	public OutStream write() {
 		OutStream os = OutStream.getIns();
-		os.writeString("0.4.2");
+		os.writeString("0.4.3");
 		List<Enemy> list = getList();
 		os.writeInt(list.size());
 		for (Enemy e : list) {
-			((CustomEnemy) e.de).write(os);
+			os.writeString(JsonEncoder.encode(e.de).toString());
 			os.writeInt(e.id % 1000);
 			os.accept(DIYAnim.writeAnim((AnimCE) e.anim));
 			os.writeString(e.name);
@@ -130,7 +134,9 @@ public class EnemyStore extends FixIndexList<Enemy> {
 
 	public void zreadp(InStream is, ImgReader r) {
 		int val = getVer(is.nextString());
-		if (val >= 402)
+		if (val >= 403)
+			zreadp$000403(val, is, r);
+		else if (val >= 402)
 			zreadp$000402(val, is, r);
 		else if (val >= 401)
 			zreadp$000401(val, is, r);
@@ -139,7 +145,9 @@ public class EnemyStore extends FixIndexList<Enemy> {
 	public void zreadt(int ver, InStream is) {
 		if (ver >= 401)
 			ver = getVer(is.nextString());
-		if (ver >= 402)
+		if (ver >= 403)
+			zreadt$000403(ver, is, null);
+		else if (ver >= 402)
 			zreadt$000402(ver, is, null);
 		else if (ver >= 401)
 			zreadt$000401(ver, is, null);
@@ -198,6 +206,26 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		}
 	}
 
+	private void zreadp$000403(int ver, InStream is, ImgReader r) {
+		int n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int hash = is.nextInt();
+			String str = is.nextString();
+			CustomEnemy ce = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomEnemy.class);
+			AnimCE ac = new AnimCE(is.subStream(), r);
+			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
+			e.name = str;
+			set(hash % 1000, e);
+		}
+		n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int hash = is.nextInt();
+			EneRand e = new EneRand(pack, hash + 500);
+			e.zread(is.subStream());
+			ers.set(hash, e);
+		}
+	}
+
 	private void zreadt$000302(int ver, InStream is) {
 		int len = is.nextInt();
 		for (int i = 0; i < len; i++) {
@@ -227,6 +255,25 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		for (int i = 0; i < len; i++) {
 			CustomEnemy ce = new CustomEnemy();
 			ce.fillData(ver, is);
+			int hash = is.nextInt();
+			InStream anim = is.subStream();
+			String na = is.nextString();
+			addEnemy(hash, ce, anim, r, na);
+		}
+		int n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int hash = is.nextInt();
+			EneRand e = new EneRand(pack, hash + 500);
+			e.zread(is.subStream());
+			ers.set(hash, e);
+		}
+	}
+
+	private void zreadt$000403(int ver, InStream is, ImgReader r) {
+		int len = is.nextInt();
+		for (int i = 0; i < len; i++) {
+			CustomEnemy ce = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomEnemy.class);
+
 			int hash = is.nextInt();
 			InStream anim = is.subStream();
 			String na = is.nextString();

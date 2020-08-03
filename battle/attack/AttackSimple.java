@@ -5,18 +5,21 @@ import java.util.List;
 
 import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
+import common.util.Data.Proc.MOVEWAVE;
+import common.util.Data.Proc.VOLC;
 
 public class AttackSimple extends AttackAb {
 
 	private final boolean range;
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr, MaskAtk matk) {
+	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, boolean isr,
+			MaskAtk matk) {
 		super(ent, ATK, t, eab, pro, p0, p1, matk);
 		range = isr;
 	}
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, MaskAtk mask) {
-		this(ent, ATK, t, eab, pro, p0, p1, mask.isRange(), mask);
+	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc proc, double p0, double p1, MaskAtk mask) {
+		this(ent, ATK, t, eab, proc, p0, p1, mask.isRange(), mask);
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}
@@ -57,16 +60,16 @@ public class AttackSimple extends AttackAb {
 	public void excuse() {
 		process();
 		int layer = model.getLayer();
-		if (proc[P_MOVEWAVE][0] > 0) {
-			int[] conf = proc[P_MOVEWAVE];
+		if (proc.MOVEWAVE.exists()) {
+			MOVEWAVE mw = proc.MOVEWAVE;
 			int dire = model.getDire();
-			double p0 = model.getPos() + dire * conf[4];
-			new ContMove(this, p0, conf[2], conf[1], 1, conf[3], conf[5], layer);
+			double p0 = model.getPos() + dire * mw.dis;
+			new ContMove(this, p0, mw.width, mw.speed, 1, mw.time, mw.itv, layer);
 			return;
 		}
 		for (AbEntity e : capt)
 			e.damaged(this);
-		if (capt.size() > 0 && proc[P_WAVE][0] > 0) {
+		if (capt.size() > 0 && proc.WAVE.exists()) {
 			int dire = model.getDire();
 			int wid = dire == 1 ? W_E_WID : W_U_WID;
 			int addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2;
@@ -76,14 +79,15 @@ public class AttackSimple extends AttackAb {
 			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0, layer);
 		}
 
-		if (capt.size() > 0 && proc[P_VOLC][0] > 0) {
+		if (capt.size() > 0 && proc.VOLC.exists()) {
 			int dire = model.getDire();
-			int addp = proc[P_VOLC][1] + (int) (model.b.r.nextDouble() * (proc[P_VOLC][2] - proc[P_VOLC][1]));
+			VOLC volc = proc.VOLC;
+			int addp = volc.dis_0 + (int) (model.b.r.nextDouble() * (volc.dis_1 - volc.dis_0));
 			double p0 = model.getPos() + dire * addp;
 			double sta = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 			double end = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-			new ContVolcano(new AttackVolcano(this, sta, end), p0, layer, proc[P_VOLC][3]);
+			new ContVolcano(new AttackVolcano(this, sta, end), p0, layer, volc.time);
 		}
 	}
 

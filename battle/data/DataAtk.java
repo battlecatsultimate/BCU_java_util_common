@@ -1,6 +1,9 @@
 package common.battle.data;
 
+import common.util.Data.Proc;
+
 public class DataAtk implements MaskAtk {
+	
 	public DataAtk(DefaultData data, int index) {
 		this.index = index;
 		this.data = data;
@@ -15,8 +18,8 @@ public class DataAtk implements MaskAtk {
 	}
 
 	@Override
-	public int[] getProc(int ind) {
-		return data.proc[ind];
+	public Proc getProc() {
+		return data.proc;
 	}
 
 	@Override

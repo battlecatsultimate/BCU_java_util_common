@@ -17,13 +17,11 @@ public abstract class AttackAb extends BattleObj {
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
 
-	protected final int[][] proc;
+	protected final Proc proc;
 	protected final List<AbEntity> capt = new ArrayList<>();
 	protected double sta, end;
 
-	private boolean recyc;
-
-	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, MaskAtk matk) {
+	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, MaskAtk matk) {
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
@@ -33,7 +31,6 @@ public abstract class AttackAb extends BattleObj {
 		abi = eab;
 		sta = p0;
 		end = p1;
-		recyc = true;
 		this.matk = matk;
 	}
 
@@ -49,8 +46,6 @@ public abstract class AttackAb extends BattleObj {
 		canon = a.canon;
 		sta = STA;
 		end = END;
-		recyc = false;
-		a.recyc = false;
 		this.matk = a.matk;
 	}
 
@@ -60,21 +55,16 @@ public abstract class AttackAb extends BattleObj {
 	/** apply this attack to the entities captured */
 	public abstract void excuse();
 
-	public int[] getProc(int type) {
-		return proc[type];
-	}
-
-	public final void recycle() {
-		if (recyc)
-			ret(proc);
+	public Proc getProc() {
+		return proc;
 	}
 
 	protected void process() {
 		for (AbEntity ae : capt) {
 			if (ae instanceof Entity) {
 				Entity e = (Entity) ae;
-				if (e.getProc(P_CRITI, 0) == 2)
-					proc[P_CRIT][0] = 0;
+				if (e.getProc().CRITI.type == 2)
+					proc.CRIT.clear();
 			}
 		}
 	}

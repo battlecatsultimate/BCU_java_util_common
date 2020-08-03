@@ -19,6 +19,7 @@ import common.battle.entity.Entity;
 import common.battle.entity.Sniper;
 import common.util.BattleObj;
 import common.util.CopRand;
+import common.util.Data.Proc.THEME;
 import common.util.pack.BGStore;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
@@ -58,7 +59,9 @@ public class StageBasis extends BattleObj {
 
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
-	private int theme = -1, themeTime, themeType;
+	private int theme = -1, themeTime;
+
+	THEME.TYPE themeType;
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
 		b = bas;
@@ -102,7 +105,7 @@ public class StageBasis extends BattleObj {
 		next_lv = bas.t().getLvCost(work_lv);
 	}
 
-	public void changeTheme(int them, int time, int type) {
+	public void changeTheme(int them, int time, THEME.TYPE type) {
 		theme = them;
 		themeTime = time;
 		themeType = type;
@@ -280,7 +283,6 @@ public class StageBasis extends BattleObj {
 			tlw.clear();
 		}
 		la.forEach(a -> a.excuse());
-		la.forEach(a -> a.recycle());
 		la.clear();
 		if (s_stop == 0) {
 			ebase.postUpdate();
@@ -318,14 +320,14 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme >= 0) {
 			bg = BGStore.getBG(theme);
-			le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0 && themeType >= 1);
-			if(themeType >= 1) {
+			le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0 && themeType.kill);
+			if(themeType.kill) {
 				lw.clear();
 				la.clear();
 				tlw.clear();
 				lea.clear();
 			}
-			tempe.removeIf(e -> (e.ent.getAbi() & AB_THEMEI) == 0 && themeType >= 1);
+			tempe.removeIf(e -> (e.ent.getAbi() & AB_THEMEI) == 0 && themeType.kill);
 			theme = -1;
 		}
 		if (s_stop == 0 && themeTime > 0) {

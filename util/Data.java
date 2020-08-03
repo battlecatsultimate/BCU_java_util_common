@@ -2,6 +2,7 @@ package common.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -16,31 +17,173 @@ public class Data {
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Proc {
 
+		private static abstract class IntType implements Cloneable {
+
+			public static @interface BitCount {
+				int value();
+			}
+
+			public IntType load(int val) throws Exception {
+				Field[] fs = this.getClass().getDeclaredFields();
+				for (int i = 0; i < fs.length;) {
+					BitCount c = fs[i].getAnnotation(BitCount.class);
+					if (c == null) {
+						fs[i].set(this, (val >> i & 1) == 1);
+						i++;
+					} else {
+						fs[i].set(this, val >> i & (1 << c.value()) - 1);
+						i += c.value();
+					}
+				}
+				return this;
+			}
+
+			@Override
+			public IntType clone() throws CloneNotSupportedException {
+				return (IntType) super.clone();
+			}
+
+		}
+
+		public static abstract class ProcItem implements Cloneable {
+
+			public boolean exists() {
+				try {
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (f.getType() == int.class) {
+							Object o = f.get(this);
+							if (((Integer) o) != 0)
+								return true;
+						}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return false;
+			}
+
+			public ProcItem load(int[] data) throws Exception {
+				Field[] fs = this.getClass().getDeclaredFields();
+				for (int i = 0; i < Math.min(data.length, fs.length); i++)
+					if (fs[i].getType() == int.class)
+						fs[i].set(this, data[i]);
+					else if (IntType.class.isAssignableFrom(fs[i].getType()))
+						fs[i].set(this, ((IntType) fs[i].getType().newInstance()).load(data[i]));
+					else if (fs[i].getType() == String.class)
+						fs[i].set(this, "" + data[i]);// FIXME id conversion
+					else
+						throw new Exception("unknown field " + fs[i].getType() + " " + fs[i].getName());
+				return this;
+			}
+
+			@Override
+			public ProcItem clone() {
+				try {
+					ProcItem ans = (ProcItem) super.clone();
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (IntType.class.isAssignableFrom(f.getType()))
+							f.set(ans, ((IntType) f.get(this)).clone());
+					return ans;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+			public void set(ProcItem pi) {
+				try {
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (f.getType().isPrimitive())
+							f.set(this, f.get(pi));
+						else if (IntType.class.isAssignableFrom(f.getType()))
+							f.set(this, ((IntType) f.get(pi)).clone());
+						else if (f.getType() == String.class)
+							f.set(this, f.get(pi));
+						else
+							throw new Exception("unknown field " + f.getType() + " " + f.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			public boolean perform(CopRand r) {
+				try {
+					Field f = this.getClass().getDeclaredField("prob");
+					if (f == null)
+						return exists();
+					int prob = f.getInt(this);
+					if (prob == 0)
+						return false;
+					return r.nextDouble() * 100 < prob;
+				} catch (Exception e) {
+					return exists();
+				}
+			}
+
+			public ProcItem clear() {
+				try {
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (f.getType() == int.class)
+							f.set(this, 0);
+						else if (IntType.class.isAssignableFrom(f.getType()))
+							f.set(this, (f.getType().newInstance()));
+						else if (f.getType() == String.class)
+							f.set(this, "");// FIXME id conversion
+						else
+							throw new Exception("unknown field " + f.getType() + " " + f.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return this;
+			}
+
+			public int get(int i) {
+				try {
+					return this.getClass().getDeclaredFields()[i].getInt(this);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return 0;
+				}
+			}
+
+			public void set(int i, int v) {
+				try {
+					this.getClass().getDeclaredFields()[i].set(this, v);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class ARMOR {
+		public static class ARMOR extends ProcItem {
 			public int prob;
 			public int time;
 			public int mult; // TODO
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class BURROW {
+		public static class BURROW extends ProcItem {
 			public int count;
 			public int dis;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class CRITI {
+		public static class CRITI extends ProcItem {
 			public int type; // TODO
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class IMU {
+		public static class IMU extends ProcItem {
 			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class MOVEWAVE {
+		public static class MOVEWAVE extends ProcItem {
 			public int prob;
 			public int speed;
 			public int width;
@@ -50,14 +193,13 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class PM {
+		public static class PM extends ProcItem {
 			public int prob;
 			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class POISON {
-
+		public static class POISON extends ProcItem {
 			public int prob;
 			public int time;
 			public int damage;
@@ -66,34 +208,34 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class PROB {
+		public static class PROB extends ProcItem {
 			public int prob;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class PT {
+		public static class PT extends ProcItem {
 			public int prob;
 			public int time;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class PTD {
+		public static class PTD extends ProcItem {
 			public int prob;
 			public int time;
 			public int dis;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class REVIVE {
+		public static class REVIVE extends ProcItem {
 			public int count;
 			public int time;
 			public int health;
-			public int p0, p1;
+			public int dis_0, dis_1;
 			public int type; // TODO
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class SPEED {
+		public static class SPEED extends ProcItem {
 			public int prob;
 			public int time;
 			public int speed;
@@ -101,19 +243,27 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class STRONG {
+		public static class VOLC extends ProcItem {
+			public int prob;
+			public int dis_0;
+			public int dis_1;
+			public int time;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class STRONG extends ProcItem {
 			public int health;
 			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class SUMMON {
+		public static class SUMMON extends ProcItem {
 
 			@JsonClass(noTag = NoTag.LOAD)
-			public static class TYPE {
+			public static class TYPE extends IntType {
 
-				public boolean anim_no_burrow;
-				public boolean burrow_anim;
+				@BitCount(2)
+				public int anim_type;
 				public boolean ignore_limit;
 				public boolean fix_buff;
 				public boolean same_health;
@@ -132,10 +282,10 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class THEME {
+		public static class THEME extends ProcItem {
 
 			@JsonClass(noTag = NoTag.LOAD)
-			public static class TYPE {
+			public static class TYPE extends IntType {
 				public boolean kill;
 			}
 
@@ -146,55 +296,116 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class WAVE {
+		public static class WAVE extends ProcItem {
 			public int prob;
 			public int lv;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class WEAK {
+		public static class WEAK extends ProcItem {
 			public int prob;
 			public int time;
 			public int mult;
 		}
 
-		public PTD KB;
-		public PT STOP;
-		public PT SLOW;
-		public PM CRIT;
-		public WAVE WAVE;
-		public WEAK WEAK;
-		public PROB BREAK;
-		public PTD WARP;
-		public PT CURSE;
-		public STRONG STRONG;
-		public PROB LEATHAL;
-		public BURROW BURROW;
-		public REVIVE REVIVE;
-		public IMU IMUKB;
-		public IMU IMUSTOP;
-		public IMU IMUSLOW;
-		public IMU IMUWAVE;
-		public IMU IMUWEAK;
-		public IMU IMUWARP;
-		public IMU IMUCURSE;
-		public PROB SNIPER;
-		public PT TIME;
-		public PT SEAL;
-		public SUMMON SUMMON;
-		public MOVEWAVE MOVEWAVE;
-		public THEME THEME;
-		public POISON POISON;
-		public PROB BOSS;
-		public CRITI CRITI;
-		public PM SATK;
-		public PT IMUATK;
-		public PM POIATK;
-		public WAVE VOLC;
-		public IMU IMUPOIATK;
-		public IMU IMUVOLC;
-		public ARMOR ARMOR;
-		public SPEED SPEED;
+		public final PTD KB = null;
+		public final PT STOP = null;
+		public final PT SLOW = null;
+		public final PM CRIT = null;
+		public final WAVE WAVE = null;
+		public final WEAK WEAK = null;
+		public final PROB BREAK = null;
+		public final PTD WARP = null;
+		public final PT CURSE = null;
+		public final STRONG STRONG = null;
+		public final PROB LETHAL = null;
+		public final BURROW BURROW = null;
+		public final REVIVE REVIVE = null;
+		public final IMU IMUKB = null;
+		public final IMU IMUSTOP = null;
+		public final IMU IMUSLOW = null;
+		public final IMU IMUWAVE = null;
+		public final IMU IMUWEAK = null;
+		public final IMU IMUWARP = null;
+		public final IMU IMUCURSE = null;
+		public final PROB SNIPER = null;
+		public final PT TIME = null;
+		public final PT SEAL = null;
+		public final SUMMON SUMMON = null;
+		public final MOVEWAVE MOVEWAVE = null;
+		public final THEME THEME = null;
+		public final POISON POISON = null;
+		public final PROB BOSS = null;
+		public final CRITI CRITI = null;
+		public final PM SATK = null;
+		public final PT IMUATK = null;
+		public final PM POIATK = null;
+		public final VOLC VOLC = null;
+		public final IMU IMUPOIATK = null;
+		public final IMU IMUVOLC = null;
+		public final ARMOR ARMOR = null;
+		public final SPEED SPEED = null;
+
+		public static Proc load(int[][] data) {
+			Proc ans = new Proc();
+			try {
+				Field[] fs = Proc.class.getDeclaredFields();
+				for (int i = 0; i < Math.min(data.length, fs.length); i++) {
+					fs[i].setAccessible(true);
+					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return ans;
+		}
+
+		public static Proc blank() {
+			Proc ans = new Proc();
+			try {
+				Field[] fs = Proc.class.getDeclaredFields();
+				for (int i = 0; i < fs.length; i++) {
+					fs[i].setAccessible(true);
+					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return ans;
+		}
+
+		@Override
+		public Proc clone() {
+			try {
+				Proc ans = new Proc();
+				Field[] fs = this.getClass().getDeclaredFields();
+				for (Field f : fs)
+					f.set(ans, ((ProcItem) f.get(this)).clone());
+				return ans;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		public ProcItem get(String id) {
+			try {
+				return (ProcItem) Proc.class.getField(id).get(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		public ProcItem getArr(int i) {
+			try {
+				return (ProcItem) Proc.class.getDeclaredFields()[i].get(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 
 	}
 
@@ -229,7 +440,7 @@ public class Data {
 			74, 83, 84, 85, 86, 90, 110, 111, 112, 124 };
 
 	public static final int RARITY_TOT = 6;
-	
+
 	// trait bit filter
 	public static final int TB_WHITE = 1;
 	public static final int TB_RED = 2;
@@ -243,7 +454,7 @@ public class Data {
 	public static final int TB_EVA = 512;
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
-	
+
 	// trait index
 	public static final int TRAIT_WHITE = 0;
 	public static final int TRAIT_RED = 1;
@@ -258,7 +469,7 @@ public class Data {
 	public static final int TRAIT_WITCH = 10;
 	public static final int TRAIT_INFH = 11;
 	public static final int TRAIT_TOT = 12;
-	
+
 	// treasure
 	public static final int T_RED = 0;
 	public static final int T_FLOAT = 1;
@@ -270,7 +481,7 @@ public class Data {
 
 	// default tech value
 	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10, 30 };
-	
+
 	// tech index
 	public static final int LV_RES = 0;
 	public static final int LV_ACC = 1;
@@ -285,7 +496,7 @@ public class Data {
 
 	// default treasure value
 	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600, 300, 300 };
-	
+
 	// treasure index
 	public static final int T_ATK = 0;
 	public static final int T_DEF = 1;
@@ -299,7 +510,7 @@ public class Data {
 	public static final int T_XP1 = 9;
 	public static final int T_XP2 = 10;
 	public static final int T_TOT = 11;
-	
+
 	// abi bit filter
 	public static final int AB_GOOD = 1 << 0;
 	public static final int AB_RESIST = 1 << 1;
@@ -327,7 +538,7 @@ public class Data {
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
 	public static final int AB_ELIMINATOR = 0x7ae17f;
-	
+
 	// abi index
 	public static final int ABI_GOOD = 0;
 	public static final int ABI_RESIST = 1;
@@ -427,7 +638,7 @@ public class Data {
 	public static final int P_SPEED = 36;
 	public static final int PROC_TOT = 40;// 37
 	public static final int PROC_WIDTH = 6;
-	
+
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;
 	public static final int WT_CANN = 2;
@@ -500,7 +711,7 @@ public class Data {
 	public static final int BREAK_ABI = -4;
 	public static final int BREAK_ATK = -5;
 	public static final int BREAK_NON = -6;
-	
+
 	// Combo index
 	public static final int C_ATK = 0;
 	public static final int C_DEF = 1;

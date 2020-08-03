@@ -5,7 +5,6 @@ import java.util.TreeSet;
 
 import common.battle.Basis;
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.util.unit.AbEnemy;
@@ -62,8 +61,8 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	public Set<AbEnemy> getSummon() {
 		Set<AbEnemy> ans = new TreeSet<>();
 		for (AtkDataModel adm : atks)
-			if (adm.proc[P_SUMMON][0] > 0)
-				ans.add(EnemyStore.getAbEnemy(adm.proc[P_SUMMON][1], false));
+			if (adm.proc.SUMMON.prob > 0)
+				ans.add(EnemyStore.getAbEnemy(adm.proc.SUMMON.id, false));
 		return ans;
 	}
 
@@ -86,14 +85,6 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		return 1;
 	}
 
-	@Override
-	public void write(OutStream os) {
-		os.writeString("0.4.0");
-		super.write(os);
-		os.writeByte((byte) star);
-		os.writeInt(drop);
-	}
-
 	@SuppressWarnings("deprecation")
 	private void zread(int val, InStream is) {
 		if (val >= 307)
@@ -112,19 +103,19 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		// eliminate old stuff
 		if (val < 307) {
 			if ((abi & AB_MOVEI) > 0)
-				rep.proc[P_IMUWAVE][0] = 100;
+				rep.proc.IMUWAVE.mult = 100;
 			if ((abi & AB_GHOST) > 0)
-				rep.proc[P_IMUSLOW][0] = 100;
+				rep.proc.IMUSLOW.mult = 100;
 			if ((abi & AB_POII) > 0)
-				rep.proc[P_IMUWEAK][0] = 100;
+				rep.proc.IMUWEAK.mult = 100;
 			if ((abi & AB_THEMEI) > 0)
-				rep.proc[P_IMUWARP][0] = 100;
+				rep.proc.IMUWARP.mult = 100;
 			if ((abi & AB_SEALI) > 0)
-				rep.proc[P_IMUCURSE][0] = 100;
+				rep.proc.IMUCURSE.mult = 100;
 			if ((abi & AB_TIMEI) > 0)
-				rep.proc[P_IMUSTOP][0] = 100;
+				rep.proc.IMUSTOP.mult = 100;
 			if ((abi & AB_SNIPERI) > 0)
-				rep.proc[P_IMUKB][0] = 100;
+				rep.proc.IMUKB.mult = 100;
 			abi &= AB_ELIMINATOR;
 		}
 	}

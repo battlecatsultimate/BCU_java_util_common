@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.util.BattleStatic;
 import common.util.Data;
+import common.util.Data.Proc;
 
 public interface MaskAtk extends BattleStatic {
 
@@ -19,7 +20,7 @@ public interface MaskAtk extends BattleStatic {
 		return 0;
 	}
 
-	public int[] getProc(int ind);
+	public Proc getProc();
 
 	public int getShortPoint();
 

@@ -15,14 +15,14 @@ public class AttackWave extends AttackAb {
 		super(a, p0 - wid / 2, p0 + wid / 2);
 		waveType = wt;
 		incl = new HashSet<>();
-		proc[P_WAVE][0]--;
+		proc.WAVE.lv--;
 	}
 
 	public AttackWave(AttackWave a, double p0, double wid) {
 		super(a, p0 - wid / 2, p0 + wid / 2);
 		waveType = a.waveType;
 		incl = a.incl;
-		proc[P_WAVE][0]--;
+		proc.WAVE.lv--;
 	}
 
 	@Override

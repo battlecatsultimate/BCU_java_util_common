@@ -110,8 +110,8 @@ public class Cannon extends AtkModelAb {
 		if (exta != null && exta.done())
 			exta = null;
 		if (anim != null) {
-			if(id == 7) {
-				if(anim.ind() < 32) {
+			if (id == 7) {
+				if (anim.ind() < 32) {
 					anim.update(false);
 				} else {
 					anim = null;
@@ -121,7 +121,7 @@ public class Cannon extends AtkModelAb {
 			}
 		}
 		if (atka != null)
-				atka.update(false);
+			atka.update(false);
 		if (exta != null)
 			exta.update(false);
 
@@ -153,11 +153,11 @@ public class Cannon extends AtkModelAb {
 		if (preTime > 0) {
 			preTime--;
 			if (preTime == 0) {
-				int[][] proc = get();
+				Proc proc = Proc.blank();
 				if (id == 0) {
 					// basic canon
-					proc[P_WAVE][0] = 12;
-					proc[P_SNIPER][0] = 1;
+					proc.WAVE.lv = 12;
+					proc.SNIPER.prob = 1;
 					double wid = NYRAN[0];
 					double p = b.ubase.pos - wid / 2 + 100;
 					int atk = b.b.t().getCanonAtk();
@@ -165,7 +165,7 @@ public class Cannon extends AtkModelAb {
 					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
 				} else if (id == 1) {
 					// slow canon
-					proc[P_SLOW][0] = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_SLOW)) / 100;
+					proc.SLOW.time = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_SLOW)) / 100;
 					int wid = NYRAN[1];
 					int spe = 137;
 					double p = b.ubase.pos - wid / 2 + spe;
@@ -179,31 +179,31 @@ public class Cannon extends AtkModelAb {
 				} else if (id == 3) {
 					// freeze canon
 					tempAtk = true;
-					proc[P_STOP][0] = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_STOP)) / 100;
+					proc.STOP.time = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_STOP)) / 100;
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCanonMulti(id) / 100);
 					int rad = NYRAN[3] / 2;
 					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos + rad));
 				} else if (id == 4) {
 					// water canon
 					tempAtk = true;
-					proc[P_CRIT][0] = -(int) (b.b.t().getCanonMulti(id) / 10);
+					proc.CRIT.mult = -(int) (b.b.t().getCanonMulti(id) / 10);
 					int rad = NYRAN[4] / 2;
 					b.getAttack(new AttackCanon(this, 1, 0, 0, proc, pos - rad, pos + rad));
 				} else if (id == 5) {
 					// zombie canon
-					proc[P_WAVE][0] = 12;
+					proc.WAVE.lv = 12;
 					double wid = NYRAN[5];
-					proc[P_STOP][0] = b.b.t().getCanonProcTime(5) * (100 + b.b.getInc(C_STOP)) / 100;
-					proc[P_SNIPER][0] = 1;
+					proc.STOP.time = b.b.t().getCanonProcTime(5) * (100 + b.b.getInc(C_STOP)) / 100;
+					proc.SNIPER.prob = 1;
 					double p = b.ubase.pos - wid / 2 + 100;
 					AttackCanon eatk = new AttackCanon(this, 0, TB_ZOMBIE, AB_ONLY | AB_ZKILL, proc, 0, 0);
 					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
 				} else if (id == 6) {
 					// barrier canon
 					tempAtk = true;
-					proc[P_BREAK][0] = 1;
-					proc[P_KB][0] = KB_DIS[INT_KB];
-					proc[P_KB][1] = KB_TIME[INT_KB];
+					proc.BREAK.prob = 1;
+					proc.KB.dis = KB_DIS[INT_KB];
+					proc.KB.time = KB_TIME[INT_KB];
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCanonMulti(id) / 100);
 					int rad = b.b.t().getCanonProcTime(id);
 					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos));
@@ -211,9 +211,9 @@ public class Cannon extends AtkModelAb {
 					atka = NyCastle.atks[id].getEAnim(1);
 					exta = NyCastle.atks[id].getEAnim(2);
 				} else if (id == 7) {
-					//curse cannon
+					// curse cannon
 					tempAtk = true;
-					proc[P_CURSE][0] = (b.b.t().getCanonProcTime(id));
+					proc.CURSE.time = (b.b.t().getCanonProcTime(id));
 					int wid = NYRAN[7];
 					int spe = 137;
 					double p = b.ubase.pos - wid / 2 + spe;

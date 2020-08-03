@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonParser;
+
 import common.CommonStatic;
 import common.CommonStatic.ImgReader;
 import common.battle.data.CustomUnit;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonDecoder;
+import common.io.json.JsonEncoder;
 import common.system.FixIndexList;
 import common.util.Data;
 import common.util.anim.AnimCI;
@@ -91,7 +95,7 @@ public class UnitStore extends Data {
 
 	public OutStream packup(CommonStatic.ImgWriter w) {
 		OutStream os = OutStream.getIns();
-		os.writeString("0.4.1");
+		os.writeString("0.4.3");
 		os.writeInt(lvlist.size());
 		Map<Integer, UnitLevel> lvmap = lvlist.getMap();
 		for (int val : lvmap.keySet()) {
@@ -111,7 +115,7 @@ public class UnitStore extends Data {
 			for (Form f : u.forms) {
 				os.writeString(f.name);
 				os.accept(((AnimCI) f.anim).writeData(w));
-				((CustomUnit) f.du).write(os);
+				os.writeString(JsonEncoder.encode(f.du).toString());
 			}
 		}
 
@@ -145,7 +149,7 @@ public class UnitStore extends Data {
 			for (Form f : u.forms) {
 				os.writeString(f.name);
 				os.accept(DIYAnim.writeAnim((AnimCE) f.anim));
-				((CustomUnit) f.du).write(os);
+				os.writeString(JsonEncoder.encode(f.du).toString());
 			}
 		}
 
@@ -160,13 +164,17 @@ public class UnitStore extends Data {
 
 	public void zreadp(InStream is, ImgReader r) {
 		int val = getVer(is.nextString());
+		if (val >= 403)
+			zreadp$000403(val, is, r);
 		if (val >= 401)
 			zreadp$000401(val, is, r);
 	}
 
 	public void zreadt(InStream is) {
 		int val = getVer(is.nextString());
-		if (val >= 401)
+		if (val >= 403)
+			zreadt$000403(val, is);
+		else if (val >= 401)
 			zreadt$000401(val, is);
 		else if (val >= 0)
 			zreadt$000000(val, is);
@@ -195,6 +203,34 @@ public class UnitStore extends Data {
 				AnimCE ac = new AnimCE(is.subStream(), r);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
+				u.forms[j] = new Form(u, j, name, ac, cu);
+			}
+			ulist.set(ind, u);
+		}
+	}
+
+	private void zreadp$000403(int ver, InStream is, ImgReader r) {
+		int n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int ind = is.nextInt();
+			UnitLevel ul = new UnitLevel(pack, ind, is);
+			lvlist.set(ind, ul);
+		}
+		n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int ind = is.nextInt();
+			Unit u = new Unit(pack, pack.id * 1000 + ind);
+			u.lv = getlevel(is.nextInt());
+			u.lv.units.add(u);
+			u.max = is.nextInt();
+			u.maxp = is.nextInt();
+			u.rarity = is.nextInt();
+			int m = is.nextInt();
+			u.forms = new Form[m];
+			for (int j = 0; j < m; j++) {
+				String name = is.nextString();
+				AnimCE ac = new AnimCE(is.subStream(), r);
+				CustomUnit cu = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomUnit.class);
 				u.forms[j] = new Form(u, j, name, ac, cu);
 			}
 			ulist.set(ind, u);
@@ -253,6 +289,34 @@ public class UnitStore extends Data {
 				AnimCE ac = DIYAnim.zread(is.subStream(), null, false);
 				CustomUnit cu = new CustomUnit();
 				cu.fillData(ver, is);
+				u.forms[j] = new Form(u, j, name, ac, cu);
+			}
+			ulist.set(ind, u);
+		}
+	}
+
+	private void zreadt$000403(int ver, InStream is) {
+		int n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int ind = is.nextInt();
+			UnitLevel ul = new UnitLevel(pack, ind, is);
+			lvlist.set(ind, ul);
+		}
+		n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int ind = is.nextInt();
+			Unit u = new Unit(pack, pack.id * 1000 + ind);
+			u.lv = getlevel(is.nextInt());
+			u.lv.units.add(u);
+			u.max = is.nextInt();
+			u.maxp = is.nextInt();
+			u.rarity = is.nextInt();
+			int m = is.nextInt();
+			u.forms = new Form[m];
+			for (int j = 0; j < m; j++) {
+				String name = is.nextString();
+				AnimCE ac = DIYAnim.zread(is.subStream(), null, false);
+				CustomUnit cu = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomUnit.class);
 				u.forms[j] = new Form(u, j, name, ac, cu);
 			}
 			ulist.set(ind, u);

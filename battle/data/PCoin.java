@@ -5,6 +5,7 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.Data.Proc.ProcItem;
 import common.util.unit.UnitStore;
 import main.Opts;
 
@@ -71,13 +72,14 @@ public class PCoin extends Data {
 					modifs[j] = info[i][3 + j * 2];
 
 			if (type[0] == PC_P) {
-				int[] tar = ans.proc[type[1]];
-				for (int j = 0; j < Math.min(tar.length, 4); j++)
-					tar[j] += modifs[j];
+				ProcItem tar = ans.proc.getArr(type[1]);
+				for (int j = 0; j < 4; j++)
+					if (modifs[j] > 0)
+						tar.set(j, tar.get(j) + modifs[j]);
 				if (type[1] == P_STRONG)
-					tar[0] = 100 - tar[0];
+					tar.set(0, 100 - tar.get(0));
 				if (type[1] == P_WEAK)
-					tar[2] = 100 - tar[2];
+					tar.set(2, 100 - tar.get(2));
 			} else if (type[0] == PC_AB)
 				ans.abi |= type[1];
 			else if (type[0] == PC_BASE)
@@ -97,7 +99,7 @@ public class PCoin extends Data {
 				else
 					;
 			else if (type[0] == PC_IMU)
-				ans.proc[type[1]][0] = 100;
+				ans.proc.getArr(type[1]).set(0, 100);
 			else if (type[0] == PC_TRAIT)
 				ans.type |= type[1];
 

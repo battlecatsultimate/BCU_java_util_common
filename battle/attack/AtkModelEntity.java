@@ -6,6 +6,7 @@ import common.battle.entity.EEnemy;
 import common.battle.entity.EUnit;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
+import common.util.Data.Proc.SUMMON;
 import common.util.pack.EffAnim;
 
 public abstract class AtkModelEntity extends AtkModelAb {
@@ -28,6 +29,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	protected final int[] atks, abis, act;
 	protected final BattleObj[] acs;
 	private final double ratk;
+	private final Proc[] sealed;
 
 	protected AtkModelEntity(Entity ent, double d0) {
 		super(ent.basis);
@@ -56,6 +58,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			abis[raw.length + 1] = 1;
 			acs[raw.length + 1] = new BattleObj();
 			act[raw.length + 1] = data.getResurrection().loopCount();
+		}
+		sealed = new Proc[data.getAtkCount()];
+		for (int i = 0; i < sealed.length; i++) {
+			sealed[i] = Proc.blank();
+			sealed[i].MOVEWAVE.set(data.getAtkModel(i).getProc().MOVEWAVE);
 		}
 	}
 
@@ -86,7 +93,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (act[ind] == 0)
 			return null;
 		act[ind]--;
-		int[][] proc = get();
+		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
 		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind));
@@ -119,10 +126,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 	@Override
 	public void invokeLater(AttackAb atk, Entity e) {
-		if (atk.getProc(P_SUMMON)[0] > 0) {
-			int[] proc = atk.getProc(P_SUMMON);
-			int conf = proc[4];
-			if ((conf & 64) > 0 || (conf & 128) > 0 && e.health <= 0)
+		SUMMON proc = atk.getProc().SUMMON;
+		if (proc.exists()) {
+			SUMMON.TYPE conf = proc.type;
+			if (conf.on_hit || conf.on_kill && e.health <= 0)
 				summon(proc, e, e);
 		}
 	}
@@ -143,15 +150,15 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (data.getAtkModel(ind).getAltAbi() != 0)
 			e.altAbi(data.getAtkModel(ind).getAltAbi());
 		if (abis[ind] == 1) {
-			if (b.r.nextDouble() * 100 < getProc(ind, P_TIME, 0))
-				b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind, P_TIME, 1));
-			if (b.r.nextDouble() * 100 < getProc(ind, P_THEME, 0))
-				b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1), getProc(ind, P_THEME, 3));
+			if (b.r.nextDouble() * 100 < getProc(ind).TIME.prob)
+				b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind).TIME.time);
+			if (b.r.nextDouble() * 100 < getProc(ind).THEME.prob)
+				b.changeTheme(getProc(ind).THEME.id, getProc(ind).THEME.time, getProc(ind).THEME.type);
 		}
 	}
 
-	protected abstract int getAttack(int ind, int[][] proc);
-	
+	protected abstract int getAttack(int ind, Proc proc);
+
 	protected abstract int getBaseAtk(int ind);
 
 	@Override
@@ -159,99 +166,38 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return e.layer;
 	}
 
-	protected int getProc(int ind, int type, int ety) {
-		if (e.status[P_SEAL][0] > 0 && type != P_MOVEWAVE)
-			return 0;
-		return data.getAtkModel(ind).getProc(type)[ety];
+	protected Proc getProc(int ind) {
+		if (e.status[P_SEAL][0] > 0)
+			return sealed[ind];
+		return data.getAtkModel(ind).getProc();
 	}
 
-	protected void setProc(int ind, int[][] proc) {
-		if (b.r.nextDouble() * 100 < getProc(ind, P_CRIT, 0)) {
-			int crit = getProc(ind, P_CRIT, 1);
-			proc[P_CRIT][0] = crit == 0 ? 200 : crit;
-		}
-		if (b.r.nextDouble() * 100 < getProc(ind, P_WAVE, 0))
-			proc[P_WAVE][0] = getProc(ind, P_WAVE, 1);
+	protected void setProc(int ind, Proc proc) {
+		String[] par = { "CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
+				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED" };
+		for (String s0 : par)
+			if (getProc(ind).get(s0).perform(b.r))
+				if (s0.equals("SUMMON")) {
+					SUMMON sprc = getProc(ind).SUMMON;
+					SUMMON.TYPE conf = sprc.type;
+					if (!conf.on_hit && !conf.on_kill)
+						summon(sprc, e, acs[ind]);
+					else
+						proc.SUMMON.set(sprc);
+				} else
+					proc.get(s0).set(getProc(ind).get(s0));
 
-		if (b.r.nextDouble() * 100 < getProc(ind, P_KB, 0)) {
-			int time = getProc(ind, P_KB, 1);
-			int dis = getProc(ind, P_KB, 2);
-			proc[P_KB][0] = dis == 0 ? KB_DIS[INT_KB] : dis;
-			proc[P_KB][1] = time == 0 ? KB_TIME[INT_KB] : time;
-		}
-		if (b.r.nextDouble() * 100 < getProc(ind, P_WARP, 0)) {
-			proc[P_WARP][0] = getProc(ind, P_WARP, 1);
-			proc[P_WARP][1] = getProc(ind, P_WARP, 2);
-		}
-		if (b.r.nextDouble() * 100 < getProc(ind, P_STOP, 0))
-			proc[P_STOP][0] = getProc(ind, P_STOP, 1);
-		if (b.r.nextDouble() * 100 < getProc(ind, P_SLOW, 0))
-			proc[P_SLOW][0] = getProc(ind, P_SLOW, 1);
-		if (b.r.nextDouble() * 100 < getProc(ind, P_WEAK, 0)) {
-			proc[P_WEAK][0] = getProc(ind, P_WEAK, 1);
-			proc[P_WEAK][1] = getProc(ind, P_WEAK, 2);
-		}
-		if (b.r.nextDouble() * 100 < getProc(ind, P_POISON, 0)) {
-			proc[P_POISON][0] = getProc(ind, P_POISON, 1);
-			proc[P_POISON][1] = (int) (getProc(ind, P_POISON, 2) * ratk);
-			proc[P_POISON][2] = getProc(ind, P_POISON, 3);
-			proc[P_POISON][3] = getProc(ind, P_POISON, 4);
-		}
-		if (b.r.nextDouble() * 100 < getProc(ind, P_MOVEWAVE, 0))
-			for (int i = 0; i < PROC_WIDTH; i++)
-				proc[P_MOVEWAVE][i] = getProc(ind, P_MOVEWAVE, i);
-		if (b.r.nextDouble() * 100 < getProc(ind, P_CURSE, 0))
-			proc[P_CURSE][0] = getProc(ind, P_CURSE, 1);
-
-		if (b.r.nextDouble() * 100 < getProc(ind, P_SNIPER, 0))
-			proc[P_SNIPER][0] = 1;
-		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0)) {
-			proc[P_BOSS][0] = 1;
+		if (proc.CRIT.exists() && proc.CRIT.mult == 0)
+			proc.CRIT.mult = 200;
+		if (proc.IMUKB.exists() && proc.KB.dis == 0)
+			proc.KB.dis = KB_DIS[INT_KB];
+		if (proc.IMUKB.exists() && proc.KB.time == 0)
+			proc.KB.time = KB_TIME[INT_KB];
+		proc.POISON.damage *= ratk;
+		if (proc.BOSS.exists())
 			b.lea.add(new EAnimCont(e.pos, e.layer, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
-		}
-
-		if (b.r.nextDouble() * 100 < getProc(ind, P_SEAL, 0))
-			proc[P_SEAL][0] = getProc(ind, P_SEAL, 1);
-
-		if (b.r.nextDouble() * 100 < getProc(ind, P_BREAK, 0))
-			proc[P_BREAK][0] = 1;
-		if (b.r.nextDouble() * 100 < getProc(ind, P_SUMMON, 0)) {
-			int[] sprc = data.getAtkModel(ind).getProc(P_SUMMON);
-			int conf = sprc[4];
-			if ((conf & 192) == 0)
-				summon(sprc, e, acs[ind]);
-			else
-				set(proc[P_SUMMON], sprc);
-		}
-		if (getProc(ind, P_SATK, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_SATK, 0)) {
-			proc[P_SATK][0] = getProc(ind, P_SATK, 1);
-		}
-
-		if (getProc(ind, P_POIATK, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_POIATK, 0)) {
-			proc[P_POIATK][0] = getProc(ind, P_POIATK, 1);
-		}
-
-		if (getProc(ind, P_VOLC, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_VOLC, 0)) {
-			proc[P_VOLC][0] = 1;
-			proc[P_VOLC][1] = getProc(ind, P_VOLC, 1);
-			proc[P_VOLC][2] = getProc(ind, P_VOLC, 2);
-			proc[P_VOLC][3] = getProc(ind, P_VOLC, 3);
-		}
-		
-		if (getProc(ind, P_ARMOR, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_ARMOR, 0)) {
-			proc[P_ARMOR][0] = 1;
-			proc[P_ARMOR][1] = getProc(ind, P_ARMOR, 1);
-			proc[P_ARMOR][2] = getProc(ind, P_ARMOR, 2);
-		}
-		
-		if (getProc(ind, P_SPEED, 0) > 0 && b.r.nextDouble() * 100 < getProc(ind, P_SPEED, 0)) {
-			proc[P_SPEED][0] = 1;
-			proc[P_SPEED][1] = getProc(ind, P_SPEED, 1);
-			proc[P_SPEED][2] = getProc(ind, P_SPEED, 2);
-			proc[P_SPEED][3] = getProc(ind, P_SPEED, 3);
-		}
 	}
 
-	protected abstract void summon(int[] proc, Entity ent, Object acs);
+	protected abstract void summon(SUMMON sprc, Entity ent, Object acs);
 
 }

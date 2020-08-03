@@ -26,7 +26,7 @@ import common.util.unit.EnemyStore;
 public class SCDef implements Copable<SCDef> {
 
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class Line {
+	public static class Line implements Cloneable {
 		public int enemy, number, boss, multiple, group;
 		public int spawn_0, spawn_1, respawn_0, respawn_1;
 		public int castle_0, castle_1, layer_0, layer_1;
@@ -53,6 +53,7 @@ public class SCDef implements Copable<SCDef> {
 			mult_atk = arr[M1];
 		}
 
+		@Override
 		public Line clone() {
 			try {
 				return (Line) super.clone();

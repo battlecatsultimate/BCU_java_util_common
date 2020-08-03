@@ -66,15 +66,15 @@ public class CommonStatic {
 			return new VImg(is.nextBytesI());
 		}
 
+		public default boolean isNull() {
+			return true;
+		}
+
 		public File readFile(InStream is);
 
 		public FakeImage readImg(String str);
 
 		public VImg readImgOptional(String str);
-
-		public default boolean isNull() {
-			return true;
-		}
 	}
 
 	public static interface ImgWriter {
@@ -133,6 +133,8 @@ public class CommonStatic {
 		/** exit */
 		public void exit(boolean save);
 
+		public long getMusicLength(File f);
+
 		public ImgReader getMusicReader(int pid, int mid);
 
 		public ImgReader getReader(File f);
@@ -163,15 +165,14 @@ public class CommonStatic {
 
 		/** Write error log to somewhere **/
 		public void writeErrorLog(Exception e);
-		
-		public long getMusicLength(File f);
 	}
 
 	public static class Lang {
 
 		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
 
-		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 }, { 0, 3, 1, 2 }, { 0, 3, 1, 2 }, { 0, 3, 1, 2 } };
+		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
+				{ 0, 3, 1, 2 }, { 0, 3, 1, 2 }, { 0, 3, 1, 2 } };
 
 		public static int lang = 0;
 
@@ -189,6 +190,16 @@ public class CommonStatic {
 		Recd.map.clear();
 		DIYAnim.map.clear();
 		Pack.def = new Pack();
+	}
+
+	public static boolean isInteger(String str) {
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public static int parseIntN(String str) {
@@ -226,30 +237,6 @@ public class CommonStatic {
 			ans[i] = Integer.parseInt(lstr.get(i));
 		return ans;
 	}
-	
-	public static boolean isInteger(String str) {
-		for(int i = 0; i < str.length(); i++) {
-			if(!Character.isDigit(str.charAt(i))) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	public static String toArrayFormat(int... data) {
-		String res = "{";
-		
-		for(int i = 0; i < data.length; i++) {
-			if(i == data.length -1) {
-				res += data[i]+ "}";
-			} else {
-				res += data[i] + ", ";
-			}
-		}
-		
-		return res;
-	}
 
 	public static long parseLongN(String str) {
 		long ans;
@@ -285,6 +272,20 @@ public class CommonStatic {
 		for (int i = 0; i < lstr.size(); i++)
 			ans[i] = Long.parseLong(lstr.get(i));
 		return ans;
+	}
+
+	public static String toArrayFormat(int... data) {
+		String res = "{";
+
+		for (int i = 0; i < data.length; i++) {
+			if (i == data.length - 1) {
+				res += data[i] + "}";
+			} else {
+				res += data[i] + ", ";
+			}
+		}
+
+		return res;
 	}
 
 }

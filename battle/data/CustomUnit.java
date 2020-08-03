@@ -1,7 +1,6 @@
 package common.battle.data;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.util.unit.Form;
@@ -64,14 +63,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 			price = mu.getPrice();
 			resp = mu.getRespawn();
 		}
-	}
-
-	@Override
-	public void write(OutStream os) {
-		os.writeString("0.4.0");
-		super.write(os);
-		os.writeInt(price);
-		os.writeInt(resp);
 	}
 
 	private void zread(int val, InStream is) {

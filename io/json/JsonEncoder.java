@@ -21,8 +21,13 @@ import common.io.json.JsonException.Type;
 
 public class JsonEncoder {
 
-	public static JsonElement encode(Object obj) throws Exception {
-		return encode(obj, null);
+	public static JsonElement encode(Object obj){
+		try {
+			return encode(obj, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private static JsonElement encode(Object obj, JsonEncoder par) throws Exception {

@@ -3,34 +3,42 @@ package common.battle.attack;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
+import common.util.Data.Proc.SUMMON;
 import common.util.unit.AbEnemy;
 import common.util.unit.EnemyStore;
 
 public class AtkModelEnemy extends AtkModelEntity {
 
+	private final Proc[] cursed;
+
 	protected AtkModelEnemy(EEnemy ent, double d0) {
 		super(ent, d0);
+		String[] arr = { "KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "IMUATK",
+				"POIATK" };
+		cursed = new Proc[data.getAtkCount()];
+		for (int i = 0; i < cursed.length; i++) {
+			cursed[i] = data.getAtkModel(i).getProc().clone();
+			for(String s0:arr)
+				cursed[i].get(s0).clear();
+		}
 	}
 
 	@Override
-	public void summon(int[] proc, Entity ent, Object acs) {
-		AbEnemy ene = EnemyStore.getAbEnemy(proc[1], false);
-		int conf = proc[4];
-		int time = proc[5];
+	public void summon(SUMMON proc, Entity ent, Object acs) {
+		AbEnemy ene = EnemyStore.getAbEnemy(proc.id, false);
+		SUMMON.TYPE conf = proc.type;
+		int time = proc.time;
 		int allow = b.st.data.allow(b, ene);
-		// conf 4
-		if (ene != null && (allow >= 0 || (conf & 4) > 0)) {
-			double ep = ent.pos + getDire() * proc[2];
-			double mula = proc[3] * 0.01;
-			double mult = proc[3] * 0.01;
-			// conf 8
-			if ((conf & 8) == 0) {
+		if (ene != null && (allow >= 0 || conf.ignore_limit)) {
+			double ep = ent.pos + getDire() * proc.dis;
+			double mula = proc.mult * 0.01;
+			double mult = proc.mult * 0.01;
+			if (!conf.fix_buff) {
 				mult *= ((EEnemy) e).mult;
-				mula *= ((EEnemy)e).mula;
+				mula *= ((EEnemy) e).mula;
 			}
 			int l0 = 0, l1 = 9;
-			// conf 32
-			if ((conf & 32) == 0)
+			if (!conf.random_layer)
 				l0 = l1 = e.layer;
 			EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, l0, l1);
 			ee.group = allow;
@@ -40,16 +48,15 @@ public class AtkModelEnemy extends AtkModelEntity {
 				ep = b.st.len - 800;
 			ee.added(1, (int) ep);
 			b.tempe.add(new EntCont(ee, time));
-			// conf 16
-			if ((conf & 16) != 0)
+			if (conf.same_health)
 				ee.health = e.health;
-			ee.setSummon(conf & 3);
+			ee.setSummon(conf.anim_type);
 		}
 
 	}
 
 	@Override
-	protected int getAttack(int ind, int[][] proc) {
+	protected int getAttack(int ind, Proc proc) {
 		int atk = atks[ind];
 		extraAtk(ind);
 		if (abis[ind] == 1)
@@ -60,20 +67,17 @@ public class AtkModelEnemy extends AtkModelEntity {
 			atk += atk * e.status[P_STRONG][0] / 100;
 		return atk;
 	}
-	
+
 	@Override
 	protected int getBaseAtk(int ind) {
 		return atks[ind];
 	}
 
 	@Override
-	protected int getProc(int ind, int type, int ety) {
-		if (e.status[P_CURSE][0] > 0
-				&& (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK || type == P_WARP
-						|| type == P_CURSE || type == P_SNIPER || type == P_SEAL || type == P_POISON || type == P_BOSS || type == P_IMUATK
-						|| type == P_POIATK))
-			return 0;
-		return super.getProc(ind, type, ety);
+	protected Proc getProc(int ind) {
+		if (e.status[P_CURSE][0] > 0 && e.status[P_SEAL][0] == 0)
+			return cursed[ind];
+		return super.getProc(ind);
 	}
 
 }

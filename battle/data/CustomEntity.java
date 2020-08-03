@@ -1,26 +1,29 @@
 package common.battle.data;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.util.Data.Proc.ProcItem;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
 
 	@JsonField(gen = GenType.GEN)
 	public AtkDataModel rep, rev, res;
-	
+
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
-	
+
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
+
+	private Proc all;
 
 	@Override
 	public int allAtk() {
@@ -38,9 +41,9 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
-	public int[][][] getAllProc() {
+	public Proc[] getAllProcs() {
 		int n = atks.length + 1;
-		int[][][] ans = new int[n][][];
+		Proc[] ans = new Proc[n];
 		ans[0] = rep.proc;
 		for (int i = 0; i < atks.length; i++)
 			ans[i + 1] = atks[i].proc;
@@ -48,12 +51,22 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
-	public int[] getAllProc(int ind) {
-		int[] ans = rep.getProc(ind);
-		for (AtkDataModel adm : atks)
-			if (adm.getProc(ind)[0] > ans[0])
-				ans = adm.getProc(ind);
-		return ans;
+	public Proc getAllProc() {
+		if (all != null)
+			return all;
+		all = rep.getProc().clone();
+		try {
+			for (AtkDataModel adm : atks) {
+				for (Field f : Proc.class.getDeclaredFields()) {
+					ProcItem pi = (ProcItem) f.get(all);
+					if (!pi.exists())
+						pi.set((ProcItem) f.get(adm.proc));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return all;
 	}
 
 	@Override
@@ -92,8 +105,8 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
-	public int[] getProc(int ind) {
-		return rep.getProc(ind);
+	public Proc getProc() {
+		return rep.getProc();
 	}
 
 	@Override
@@ -142,9 +155,7 @@ public abstract class CustomEntity extends DataEntity {
 		base = de.touchBase();
 		common = false;
 		rep = new AtkDataModel(this);
-		rep.proc = new int[PROC_TOT][];
-		for (int i = 0; i < PROC_TOT; i++)
-			rep.proc[i] = de.getRepAtk().getProc(i).clone();
+		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();
 		atks = new AtkDataModel[m];
 		for (int i = 0; i < m; i++)
@@ -186,43 +197,6 @@ public abstract class CustomEntity extends DataEntity {
 	@Override
 	public int touchBase() {
 		return base == 0 ? range : base;
-	}
-
-	protected void write(OutStream os) {
-		os.writeString("0.4.4");
-		os.writeInt(hp);
-		os.writeInt(hb);
-		os.writeInt(speed);
-		os.writeInt(range);
-		os.writeInt(abi);
-		os.writeInt(type);
-		os.writeInt(width);
-		os.writeInt(shield);
-		os.writeInt(tba);
-		os.writeInt(base);
-		os.writeInt(touch);
-		os.writeInt(loop);
-		os.writeInt(death);
-		os.writeInt(common ? 1 : 0);
-		rep.write(os);
-		List<AtkDataModel> temp = new ArrayList<>();
-		int[] inds = new int[atks.length];
-		for (int i = 0; i < atks.length; i++) {
-			if (!temp.contains(atks[i]))
-				temp.add(atks[i]);
-			inds[i] = temp.indexOf(atks[i]);
-		}
-		os.writeInt(temp.size());
-		for (AtkDataModel adm : temp)
-			adm.write(os);
-		os.writeInt(inds.length);
-		for (int val : inds)
-			os.writeInt(val);
-		os.writeInt((rev == null ? 0 : 1) + (res == null ? 0 : 2));
-		if (rev != null)
-			rev.write(os);
-		if (res != null)
-			res.write(os);
 	}
 
 	protected void zreada(InStream is) {

@@ -86,9 +86,9 @@ public class Pack extends Data {
 
 				Pack pack;
 
-				File g = CommonStatic.def.route("./res/data/"+str.replace(".bcupack",".bcudata"));
+				File g = CommonStatic.def.route("./res/data/" + str.replace(".bcupack", ".bcudata"));
 
-				if(!g.exists()) {
+				if (!g.exists()) {
 					try {
 						pack = new Pack(file);
 					} catch (Exception e) {
@@ -176,15 +176,15 @@ public class Pack extends Data {
 			if (rem == 0) {
 				for (Pack p : list) {
 					map.remove(p.id);
-					
+
 					String name;
-					
-					if(p.file != null) {
+
+					if (p.file != null) {
 						name = p.file.getName();
 					} else {
 						name = Data.hex(p.id);
 					}
-					
+
 					String err = "pack " + name + " require parent packs: ";
 					boolean b = false;
 					for (int val : p.rely)
@@ -356,19 +356,19 @@ public class Pack extends Data {
 		for (Enemy e : es.getList())
 			for (int i = 0; i < e.de.getAtkCount(); i++) {
 				MaskAtk am = e.de.getAtkModel(i);
-				if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
-					am.getProc(Data.P_SUMMON)[1] = 0;
-				if (am.getProc(Data.P_THEME)[2] / 1000 == p)
-					am.getProc(Data.P_THEME)[2] = 0;
+				if (am.getProc().SUMMON.id / 1000 == p)
+					am.getProc().SUMMON.id = 0;
+				if (am.getProc().THEME.id / 1000 == p)
+					am.getProc().THEME.id = 0;
 			}
 		for (Unit u : us.ulist.getList())
 			for (Form e : u.forms)
 				for (int i = 0; i < e.du.getAtkCount(); i++) {
 					MaskAtk am = e.du.getAtkModel(i);
-					if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
-						am.getProc(Data.P_SUMMON)[1] = 0;
-					if (am.getProc(Data.P_THEME)[2] / 1000 == p)
-						am.getProc(Data.P_THEME)[2] = 0;
+					if (am.getProc().SUMMON.id / 1000 == p)
+						am.getProc().SUMMON.id = 0;
+					if (am.getProc().THEME.id / 1000 == p)
+						am.getProc().THEME.id = 0;
 				}
 	}
 
@@ -485,24 +485,24 @@ public class Pack extends Data {
 		}
 
 		for (Enemy e : es.getList())
-			for (int[][] proc : ((CustomEntity) e.de).getAllProc()) {
-				int eid = proc[Data.P_SUMMON][1];
+			for (Proc proc : ((CustomEntity) e.de).getAllProcs()) {
+				int eid = proc.SUMMON.id;
 				if (eid / 1000 == pid)
-					proc[Data.P_SUMMON][1] = inds[M_ES][eid % 1000] + id * 1000;
-				int bgid = proc[Data.P_THEME][2];
+					proc.SUMMON.id = inds[M_ES][eid % 1000] + id * 1000;
+				int bgid = proc.THEME.id;
 				if (bgid / 1000 == pid)
-					proc[Data.P_THEME][2] = inds[M_BG][bgid % 1000] + id * 1000;
+					proc.THEME.id = inds[M_BG][bgid % 1000] + id * 1000;
 			}
 
 		for (Unit u : us.ulist.getList())
 			for (Form f : u.forms)
-				for (int[][] proc : ((CustomEntity) f.du).getAllProc()) {
-					int uid = proc[Data.P_SUMMON][1];
+				for (Proc proc : ((CustomEntity) f.du).getAllProcs()) {
+					int uid = proc.SUMMON.id;
 					if (uid / 1000 == pid)
-						proc[Data.P_SUMMON][1] = inds[M_US][uid] + id * 1000;
-					int bgid = proc[Data.P_THEME][2];
+						proc.SUMMON.id = inds[M_US][uid] + id * 1000;
+					int bgid = proc.THEME.id;
 					if (bgid / 1000 == pid)
-						proc[Data.P_THEME][2] = inds[M_BG][bgid] + id * 1000;
+						proc.THEME.id = inds[M_BG][bgid] + id * 1000;
 				}
 
 		// TODO music
@@ -532,7 +532,7 @@ public class Pack extends Data {
 		os.terminate();
 		CommonStatic.def.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
 	}
-	
+
 	public void packData(CommonStatic.ImgWriter w) {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.2");
@@ -582,18 +582,18 @@ public class Pack extends Data {
 		for (Enemy e : es.getList())
 			for (int i = 0; i < e.de.getAtkCount(); i++) {
 				MaskAtk am = e.de.getAtkModel(i);
-				if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
+				if (am.getProc().SUMMON.id / 1000 == p)
 					return RELY_ABI;
-				if (am.getProc(Data.P_THEME)[2] / 1000 == p)
+				if (am.getProc().THEME.id / 1000 == p)
 					return RELY_ABI;
 			}
 		for (Unit u : us.ulist.getList())
 			for (Form e : u.forms)
 				for (int i = 0; i < e.du.getAtkCount(); i++) {
 					MaskAtk am = e.du.getAtkModel(i);
-					if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
+					if (am.getProc().SUMMON.id / 1000 == p)
 						return RELY_ABI;
-					if (am.getProc(Data.P_THEME)[2] / 1000 == p)
+					if (am.getProc().THEME.id / 1000 == p)
 						return RELY_ABI;
 				}
 
