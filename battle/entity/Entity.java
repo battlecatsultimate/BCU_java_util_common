@@ -538,18 +538,19 @@ public abstract class Entity extends AbEntity {
 		 * end of KB: check whether it's killed, deal with revive
 		 */
 		private void updateKB() {
-			if(kbType == INT_SW) {
+			if(kbType != INT_WARP && kbType != INT_KB) {
 				double mov = kbDis / e.kbTime;
 				kbDis -= mov;
 				kbmove(mov);
-			} else if (kbType != INT_WARP && kbType != INT_SW) {
+			} else if (kbType == INT_KB) {
 				if(time == 1) {
 					kbDuration = e.kbTime;
 				}
 				
-				double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire);
+				double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
+				mov *= - e.dire;
 				
-				e.pos = mov;
+				kbmove(mov);
 				
 				time++;
 			} else {
@@ -573,6 +574,10 @@ public abstract class Entity extends AbEntity {
 			if (e.kbTime == 0) {
 				e.anim.back = null;
 				e.anim.setAnim(0);
+				
+				kbDuration = 0;
+				initPos = 0;
+				time = 1;
 
 				if (e.health <= 0)
 					e.preKill();
