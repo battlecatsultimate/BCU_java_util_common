@@ -1012,10 +1012,6 @@ public abstract class Entity extends AbEntity {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_SATK].getEAnim(0)));
 			CommonStatic.def.setSE(SE_SATK);
 		}
-		
-		if(status[P_ARMOR][0] > 0) {
-			damage =  damage * (100 + status[P_ARMOR][1]) / 100;
-		}
 
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type, 1))
@@ -1197,6 +1193,9 @@ public abstract class Entity extends AbEntity {
 		long ext = health * hb % maxH;
 		if (ext == 0)
 			ext = maxH;
+		if(status[P_ARMOR][0] > 0) {
+			damage =  damage * (100 + status[P_ARMOR][1]) / 100;
+		}
 		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))
 			interrupt(INT_HB, KB_DIS[INT_HB]);
 		health -= damage;
