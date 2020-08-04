@@ -1,6 +1,5 @@
 package common.battle.data;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
-import common.util.Data.Proc.ProcItem;
+import common.util.Data;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
@@ -55,16 +54,10 @@ public abstract class CustomEntity extends DataEntity {
 		if (all != null)
 			return all;
 		all = rep.getProc().clone();
-		try {
-			for (AtkDataModel adm : atks) {
-				for (Field f : Proc.class.getDeclaredFields()) {
-					ProcItem pi = (ProcItem) f.get(all);
-					if (!pi.exists())
-						pi.set((ProcItem) f.get(adm.proc));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		for (AtkDataModel adm : atks) {
+			for (int i = 0; i < Data.PROC_TOT; i++)
+				if (!all.getArr(i).exists())
+					all.getArr(i).set(adm.proc.getArr(i));
 		}
 		return all;
 	}
