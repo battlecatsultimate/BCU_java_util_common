@@ -102,10 +102,6 @@ public class PCoin extends Data {
 				ans.type |= type[1];
 
 		}
-		ans.datks = new DataAtk[ans.getAtkCount()];
-		for(int i = 0; i < ans.getAtkCount(); i++) {
-			ans.datks[i] = new DataAtk(ans, i);
-		}
 		return ans;
 	}
 
