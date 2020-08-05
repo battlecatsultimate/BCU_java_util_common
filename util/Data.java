@@ -200,11 +200,19 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class POISON extends ProcItem {
+			
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@BitCount(2)
+				public int damage_type;
+				public boolean unstackable;
+			}
+			
 			public int prob;
 			public int time;
 			public int damage;
 			public int itv;
-			public int type; // TODO
+			public TYPE type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -227,11 +235,21 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class REVIVE extends ProcItem {
+			
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@BitCount(2)
+				public int range_type;
+				public boolean imu_zkill;
+				public boolean revive_non_zombie;
+				public boolean revive_others;
+			}
+			
 			public int count;
 			public int time;
 			public int health;
 			public int dis_0, dis_1;
-			public int type; // TODO
+			public TYPE type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)

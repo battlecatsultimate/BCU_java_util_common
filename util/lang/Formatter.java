@@ -6,9 +6,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import common.util.Data.Proc.SUMMON;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 
 public class Formatter {
+	
+	@JsonClass
+	public static class Context {
+
+		public final String left = "(";
+		public final String right = ")";
+		public final String sqleft = "[";
+		public final String sqright = "]";
+		public final String crleft = "{";
+		public final String crright = "}";
+
+		@JsonField
+		public boolean isEnemy;
+		@JsonField
+		public boolean useSecond;
+
+		public Context() {
+		}
+
+		public Context(boolean ene, boolean sec) {
+			isEnemy = ene;
+			useSecond = sec;
+		}
+
+		public String toSecond(int time) {
+			return "" + (time * 100 / 30 / 100.0);
+		}
+
+		public String dispTime(int time) {
+			if (useSecond)
+				return toSecond(time) + "s";
+			return time + "f";
+		}
+
+	}
+
 
 	private class BoolElem extends Comp {
 
@@ -181,6 +218,7 @@ public class Formatter {
 			super(start, end);
 		}
 
+		@Override
 		public void build(StringBuilder sb) throws Exception {
 			for (IElem e : list)
 				e.build(sb);
@@ -438,6 +476,7 @@ public class Formatter {
 			super(start, end);
 		}
 
+		@Override
 		public void build(StringBuilder sb) {
 			sb.append(str, p0, p1);
 		}
@@ -489,7 +528,6 @@ public class Formatter {
 	private final String str;
 	private final Object obj;
 	private final Object ctx;
-
 	private final Root root;
 
 	private Formatter(String pattern, Object object, Object context) throws Exception {

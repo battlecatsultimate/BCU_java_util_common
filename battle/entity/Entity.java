@@ -18,6 +18,8 @@ import common.system.fake.FakeTransform;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.ImgCore;
+import common.util.Data.Proc.POISON;
+import common.util.Data.Proc.REVIVE;
 import common.util.anim.AnimD;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
@@ -568,16 +570,17 @@ public abstract class Entity extends AbEntity {
 
 		private final Entity e;
 
-		private final List<int[]> list = new ArrayList<>();
+		private final List<POISON> list = new ArrayList<>();
 
 		private PoisonToken(Entity ent) {
 			e = ent;
 		}
 
-		private void add(int[] is) {
-			if ((is[4] & 4) > 0)
-				list.removeIf(e -> (e[4] & 4) > 0 && type(e) == type(is));
-			list.add(is);
+		private void add(POISON ws) {
+			if (ws.type.unstackable)
+				list.removeIf(e -> e.type.unstackable && type(e) == type(ws));
+			ws.prob = 0; // used as counter
+			list.add(ws);
 			getMax();
 		}
 
@@ -595,23 +598,23 @@ public abstract class Entity extends AbEntity {
 			e.status[P_POISON][0] = max;
 		}
 
-		private int type(int[] ws) {
-			return (ws[4] & 3) + (ws[1] < 0 ? 4 : 0);
+		private int type(POISON ws) {
+			return ws.type.damage_type + (ws.damage < 0 ? 4 : 0);
 		}
 
 		private void update() {
 			for (int i = 0; i < list.size(); i++) {
-				int[] ws = list.get(i);
-				if (ws[0] > 0) {
-					ws[0]--;
-					ws[3]--;
-					if (e.health > 0 && ws[3] <= 0) {
-						damage(ws[1], type(ws));
-						ws[3] += ws[2];
+				POISON ws = list.get(i);
+				if (ws.time > 0) {
+					ws.time--;
+					ws.prob--;// used as counter for itv
+					if (e.health > 0 && ws.prob <= 0) {
+						damage(ws.damage, type(ws));
+						ws.itv += ws.itv;
 					}
 				}
 			}
-			list.removeIf(w -> w[0] <= 0);
+			list.removeIf(w -> w.time <= 0);
 			getMax();
 		}
 
@@ -689,10 +692,10 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private boolean canZK() {
-			if ((e.getProc().REVIVE.type & 4) > 0)
+			if (e.getProc().REVIVE.type.imu_zkill)
 				return false;
 			for (Entity zx : list)
-				if ((zx.getProc().REVIVE.type & 4) > 0)
+				if (zx.getProc().REVIVE.type.imu_zkill)
 					return false;
 			return true;
 		}
@@ -779,7 +782,7 @@ public abstract class Entity extends AbEntity {
 			AnimManager anim = e.anim;
 
 			list.removeIf(em -> {
-				int conf = em.getProc().REVIVE.type & 3;
+				int conf = em.getProc().REVIVE.type.range_type;
 				if (conf == 3)
 					return false;
 				if (conf == 2 || em.kbTime == -1)
@@ -795,11 +798,11 @@ public abstract class Entity extends AbEntity {
 				double d1 = em.pos + em.getProc().REVIVE.dis_1;
 				if ((d0 - e.pos) * (d1 - e.pos) > 0)
 					continue;
-				int conf = em.getProc().REVIVE.type;
-				if ((conf & 8) == 0 && (e.type & TB_ZOMBIE) == 0)
+				REVIVE.TYPE conf = em.getProc().REVIVE.type;
+				if (!conf.revive_non_zombie && (e.type & TB_ZOMBIE) == 0)
 					continue;
-				conf &= 3;
-				if (conf == 0 && (em.touchable() & (TCH_N | TCH_EX)) == 0)
+				int type = conf.range_type;
+				if (type == 0 && (em.touchable() & (TCH_N | TCH_EX)) == 0)
 					continue;
 				list.add(em);
 			}
@@ -1093,13 +1096,9 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc().POISON.time > 0)
 			if ((getAbi() & AB_POII) == 0 || atk.getProc().POISON.damage < 0) {
-				int[] ws = new int[5];
-				ws[0] = atk.getProc().POISON.time;
-				ws[1] = atk.getProc().POISON.damage;
-				ws[2] = atk.getProc().POISON.itv;
-				ws[4] = atk.getProc().POISON.type;
-				if (ws[4] % 4 == 1)
-					ws[1] = getDamage(atk, ws[1]);
+				POISON ws = (POISON) atk.getProc().POISON.clone();
+				if (ws.type.damage_type == 1)
+					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
@@ -1234,7 +1233,7 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public int touchable() {
 		int n = (getAbi() & AB_GHOST) > 0 ? TCH_EX : TCH_N;
-		int ex = (getProc().REVIVE.type & 16) > 0 ? TCH_ZOMBX : 0;
+		int ex = getProc().REVIVE.type.revive_others ? TCH_ZOMBX : 0;
 		if (kbTime == -1)
 			return TCH_SOUL | ex;
 		if (status[P_REVIVE][1] > 0)
