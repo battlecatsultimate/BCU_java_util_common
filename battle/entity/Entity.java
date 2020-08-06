@@ -483,6 +483,10 @@ public abstract class Entity extends AbEntity {
 
 		/** temp field to store wanted KB type */
 		private int tempKBtype = -1;
+		
+		private double initPos;
+		private double kbDuration;
+		private double time = 1;
 
 		private KBManager(Entity ent) {
 			e = ent;
@@ -499,6 +503,9 @@ public abstract class Entity extends AbEntity {
 			kbType = t;
 			e.kbTime = KB_TIME[t];
 			kbDis = d;
+			initPos = e.pos;
+			kbDuration = e.kbTime;
+			time = 1;
 			e.anim.kbAnim();
 		}
 
@@ -533,10 +540,21 @@ public abstract class Entity extends AbEntity {
 		 * end of KB: check whether it's killed, deal with revive
 		 */
 		private void updateKB() {
-			if (kbType != INT_WARP) {
+			if(kbType != INT_WARP && kbType != INT_KB) {
 				double mov = kbDis / e.kbTime;
 				kbDis -= mov;
 				kbmove(mov);
+			} else if (kbType == INT_KB) {
+				if(time == 1) {
+					kbDuration = e.kbTime;
+				}
+				
+				double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
+				mov *= - e.dire;
+				
+				kbmove(mov);
+				
+				time++;
 			} else {
 				e.anim.setAnim(0);
 				if (e.status[P_WARP][0] > 0)
@@ -558,12 +576,20 @@ public abstract class Entity extends AbEntity {
 			if (e.kbTime == 0) {
 				e.anim.back = null;
 				e.anim.setAnim(0);
+				
+				kbDuration = 0;
+				initPos = 0;
+				time = 1;
 
 				if (e.health <= 0)
 					e.preKill();
 			}
 		}
 
+		private double easeOut(double time, double start, double end, double duration, double dire) {
+			time /= duration;
+			return -end * time*(time - 2) * dire + start;
+		}
 	}
 
 	private static class PoisonToken extends BattleObj {
@@ -1159,7 +1185,7 @@ public abstract class Entity extends AbEntity {
 		long ext = health * hb % maxH;
 		if (ext == 0)
 			ext = maxH;
-		if (status[P_ARMOR][0] > 0) {
+		if(status[P_ARMOR][0] > 0) {
 			damage *= (100 + status[P_ARMOR][1]) / 100;
 		}
 		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))

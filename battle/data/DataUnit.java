@@ -212,6 +212,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			return null;
 		}
 		ans.proc = proc.clone();
+		ans.datks = new DataAtk[ans.getAtkCount()];
+		for(int i = 0; i < ans.getAtkCount(); i++) {
+			ans.datks[i] = new DataAtk(ans, i);
+		}
 		return ans;
 	}
 

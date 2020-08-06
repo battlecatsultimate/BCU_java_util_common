@@ -1,7 +1,9 @@
 package common.io.json;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -14,16 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonException.Type;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.Handler;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class JsonDecoder {
 

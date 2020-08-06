@@ -111,7 +111,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	@JsonField
 	public boolean non_con, trail;
 	@JsonField
-	public int len, health, max, bg, mus0 = -1, mush, mus1 = -1, castle, loop0, loop1;
+	public int len, health, max, bg, mus0 = -1, mush, mus1 = -1, castle;
+	@JsonField
+	public long loop0, loop1;
 	@JsonField
 	public SCDef data;
 	@JsonField(gen = GenType.GEN)
@@ -331,7 +333,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	public OutStream write() {
 		OutStream os = OutStream.getIns();
-		os.writeString("0.4.8");
+		os.writeString("0.4.9");
 		os.writeString(toString());
 		os.writeInt(bg);
 		os.writeInt(castle);
@@ -340,8 +342,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		os.writeInt(mus0);
 		os.writeInt(mush);
 		os.writeInt(mus1);
-		os.writeInt(loop0);
-		os.writeInt(loop1);
+		os.writeLong(loop0);
+		os.writeLong(loop1);
 		os.writeByte((byte) max);
 		os.writeByte((byte) (non_con ? 1 : 0));
 		os.accept(data.write());
@@ -368,7 +370,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
-		if (val >= 408)
+		if(val >= 409)
+			zread$000409(val, is);
+		else if (val >= 408)
 			zread$000408(val, is);
 		else if (val >= 407)
 			zread$000407(val, is);
@@ -458,6 +462,28 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		mus1 = is.nextInt();
 		loop0 = is.nextInt();
 		loop1 = is.nextInt();
+		max = is.nextByte();
+		non_con = is.nextByte() == 1;
+		data = SCDef.zread(is.subStream());
+		lim = new Limit(map.mc, val, is);
+		int t = is.nextInt();
+		for (int i = 0; i < t; i++) {
+			String name = is.nextString();
+			Recd.getRecd(this, is.subStream(), name);
+		}
+	}
+	
+	private void zread$000409(int val, InStream is) {
+		name = is.nextString();
+		bg = is.nextInt();
+		castle = is.nextInt();
+		health = is.nextInt();
+		len = is.nextInt();
+		mus0 = is.nextInt();
+		mush = is.nextInt();
+		mus1 = is.nextInt();
+		loop0 = is.nextLong();
+		loop1 = is.nextLong();
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
 		data = SCDef.zread(is.subStream());
