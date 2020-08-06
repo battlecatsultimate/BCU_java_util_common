@@ -57,7 +57,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		int a = 0;
 		if (ints[23] == 1)
 			a |= AB_GOOD;
-		proc = new Proc();
+		proc = Proc.blank();
 		proc.KB.prob = ints[24];
 		proc.STOP.prob = ints[25];
 		proc.STOP.time = ints[26];

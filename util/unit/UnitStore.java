@@ -115,7 +115,7 @@ public class UnitStore extends Data {
 			for (Form f : u.forms) {
 				os.writeString(f.name);
 				os.accept(((AnimCI) f.anim).writeData(w));
-				os.writeString(JsonEncoder.encode(f.du).toString());
+				os.writeBytesI(JsonEncoder.encode(f.du).toString().getBytes());
 			}
 		}
 
@@ -149,7 +149,7 @@ public class UnitStore extends Data {
 			for (Form f : u.forms) {
 				os.writeString(f.name);
 				os.accept(DIYAnim.writeAnim((AnimCE) f.anim));
-				os.writeString(JsonEncoder.encode(f.du).toString());
+				os.writeBytesI(JsonEncoder.encode(f.du).toString().getBytes());
 			}
 		}
 
@@ -230,7 +230,7 @@ public class UnitStore extends Data {
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
 				AnimCE ac = new AnimCE(is.subStream(), r);
-				CustomUnit cu = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomUnit.class);
+				CustomUnit cu = JsonDecoder.decode(JsonParser.parseString(new String(is.nextBytesI())), CustomUnit.class);
 				u.forms[j] = new Form(u, j, name, ac, cu);
 			}
 			ulist.set(ind, u);
@@ -316,7 +316,7 @@ public class UnitStore extends Data {
 			for (int j = 0; j < m; j++) {
 				String name = is.nextString();
 				AnimCE ac = DIYAnim.zread(is.subStream(), null, false);
-				CustomUnit cu = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomUnit.class);
+				CustomUnit cu = JsonDecoder.decode(JsonParser.parseString(new String(is.nextBytesI())), CustomUnit.class);
 				u.forms[j] = new Form(u, j, name, ac, cu);
 			}
 			ulist.set(ind, u);

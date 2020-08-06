@@ -2,6 +2,11 @@ package common.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
@@ -11,6 +16,7 @@ import java.util.Queue;
 
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonEncoder;
 
 public class Data {
 
@@ -19,6 +25,9 @@ public class Data {
 
 		private static abstract class IntType implements Cloneable {
 
+			@Documented
+			@Retention(value = RetentionPolicy.RUNTIME)
+			@Target(value = ElementType.FIELD)
 			public static @interface BitCount {
 				int value();
 			}
@@ -36,6 +45,24 @@ public class Data {
 					}
 				}
 				return this;
+			}
+
+			public int toInt() throws Exception {
+				Field[] fs = this.getClass().getDeclaredFields();
+				int ans = 0;
+				for (int i = 0; i < fs.length;) {
+					BitCount c = fs[i].getAnnotation(BitCount.class);
+					if (c == null) {
+						if (fs[i].getBoolean(this))
+							ans |= 1 << i;
+						i++;
+					} else {
+						int val = fs[i].getInt(this);
+						ans |= val << i;
+						i += c.value();
+					}
+				}
+				return ans;
 			}
 
 			@Override
@@ -142,7 +169,8 @@ public class Data {
 
 			public int get(int i) {
 				try {
-					return this.getClass().getDeclaredFields()[i].getInt(this);
+					Field f = this.getClass().getDeclaredFields()[i];
+					return f.getType() == int.class ? f.getInt(this) : ((IntType) f.get(this)).toInt();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return 0;
@@ -151,10 +179,18 @@ public class Data {
 
 			public void set(int i, int v) {
 				try {
-					this.getClass().getDeclaredFields()[i].set(this, v);
+					Field f = this.getClass().getDeclaredFields()[i];
+					if (f.getType() == int.class)
+						f.set(this, v);
+					else
+						((IntType) f.get(this)).load(v);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+
+			public String toString() {
+				return JsonEncoder.encode(this).toString();
 			}
 
 		}
@@ -200,14 +236,14 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class POISON extends ProcItem {
-			
+
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
 				@BitCount(2)
 				public int damage_type;
 				public boolean unstackable;
 			}
-			
+
 			public int prob;
 			public int time;
 			public int damage;
@@ -235,7 +271,7 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class REVIVE extends ProcItem {
-			
+
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
 				@BitCount(2)
@@ -244,7 +280,7 @@ public class Data {
 				public boolean revive_non_zombie;
 				public boolean revive_others;
 			}
-			
+
 			public int count;
 			public int time;
 			public int health;
@@ -398,8 +434,11 @@ public class Data {
 			try {
 				Proc ans = new Proc();
 				Field[] fs = this.getClass().getDeclaredFields();
-				for (Field f : fs)
+				for (Field f : fs) {
+					f.setAccessible(true);
 					f.set(ans, ((ProcItem) f.get(this)).clone());
+					f.setAccessible(false);
+				}
 				return ans;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -423,6 +462,10 @@ public class Data {
 				e.printStackTrace();
 				return null;
 			}
+		}
+
+		public String toString() {
+			return JsonEncoder.encode(this).toString();
 		}
 
 	}

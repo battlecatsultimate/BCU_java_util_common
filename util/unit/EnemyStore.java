@@ -97,7 +97,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		for (Enemy e : list) {
 			os.writeInt(e.id);
 			os.writeString(e.name);
-			os.writeString(JsonEncoder.encode(e.de).toString());
+			os.writeBytesI(JsonEncoder.encode(e.de).toString().getBytes());
 			os.accept(((AnimCI) e.anim).writeData(w));
 		}
 
@@ -117,7 +117,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		List<Enemy> list = getList();
 		os.writeInt(list.size());
 		for (Enemy e : list) {
-			os.writeString(JsonEncoder.encode(e.de).toString());
+			os.writeBytesI(JsonEncoder.encode(e.de).toString().getBytes());
 			os.writeInt(e.id % 1000);
 			os.accept(DIYAnim.writeAnim((AnimCE) e.anim));
 			os.writeString(e.name);
@@ -211,7 +211,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 		for (int i = 0; i < n; i++) {
 			int hash = is.nextInt();
 			String str = is.nextString();
-			CustomEnemy ce = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomEnemy.class);
+			CustomEnemy ce = JsonDecoder.decode(JsonParser.parseString(new String(is.nextBytesI())), CustomEnemy.class);
 			AnimCE ac = new AnimCE(is.subStream(), r);
 			Enemy e = new Enemy(hash % 1000 + pack.id * 1000, ac, ce);
 			e.name = str;
@@ -272,8 +272,8 @@ public class EnemyStore extends FixIndexList<Enemy> {
 	private void zreadt$000403(int ver, InStream is, ImgReader r) {
 		int len = is.nextInt();
 		for (int i = 0; i < len; i++) {
-			CustomEnemy ce = JsonDecoder.decode(JsonParser.parseString(is.nextString()), CustomEnemy.class);
-
+			String str = new String(is.nextBytesI());
+			CustomEnemy ce = JsonDecoder.decode(JsonParser.parseString(str), CustomEnemy.class);
 			int hash = is.nextInt();
 			InStream anim = is.subStream();
 			String na = is.nextString();

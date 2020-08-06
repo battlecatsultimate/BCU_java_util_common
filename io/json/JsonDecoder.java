@@ -9,6 +9,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -88,7 +89,13 @@ public class JsonDecoder {
 			Class<?> ccls = par.obj.getClass();
 			// default generator
 			if (par.curjfld.generator().length() == 0) {
-				Object val = cls.getConstructor(ccls).newInstance(par.obj);
+				Constructor<?> cst = null;
+				for (Constructor<?> ci : cls.getConstructors())
+					if (ci.getParameterCount() == 1 && ci.getParameters()[0].getType().isAssignableFrom(ccls))
+						cst = ci;
+				if (cst == null)
+					throw new JsonException(Type.FUNC, null, "no constructor found: " + cls);
+				Object val = cst.newInstance(par.obj);
 				return inject(par, elem.getAsJsonObject(), cls, val);
 			}
 			// functional generator

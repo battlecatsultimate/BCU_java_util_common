@@ -23,6 +23,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	public AtkDataModel(CustomEntity ent) {
 		ce = ent;
 		str = ce.getAvailable(str);
+		proc = Proc.blank();
 	}
 
 	protected AtkDataModel(CustomEntity ene, AtkDataModel adm) {
@@ -43,19 +44,20 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	protected AtkDataModel(CustomEntity ent, InStream is) {
 		ce = ent;
+		proc = Proc.blank();
 		zread("0.3.7", is);
 	}
 
 	@Deprecated
 	protected AtkDataModel(CustomEntity ent, InStream is, String ver) {
 		ce = ent;
+		proc = Proc.blank();
 		zread(ver, is);
 	}
 
 	protected AtkDataModel(CustomEntity ene, MaskEntity me, int i) {
 		ce = ene;
 		str = ce.getAvailable("copied");
-
 		int[][] dat = me.rawAtkData();
 		MaskAtk am = me.getAtkModel(i);
 		if (dat[i][2] == 1)
