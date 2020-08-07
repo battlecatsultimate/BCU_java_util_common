@@ -195,6 +195,13 @@ public class JsonDecoder {
 	public static String getString(JsonElement elem) throws JsonException {
 		if (elem.isJsonNull())
 			return null;
+		if(elem.isJsonArray()) {
+			String ans = "";
+			JsonArray arr = elem.getAsJsonArray();
+			for(int i=0;i<arr.size();i++)
+				ans += arr.get(i).getAsString();
+			return ans;
+		}
 		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isString())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not string");
 		return elem.getAsString();
