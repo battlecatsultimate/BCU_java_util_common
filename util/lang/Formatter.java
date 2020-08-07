@@ -46,7 +46,6 @@ public class Formatter {
 
 	}
 
-
 	private class BoolElem extends Comp {
 
 		public BoolElem(int start, int end) {

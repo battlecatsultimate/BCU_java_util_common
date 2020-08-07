@@ -59,6 +59,8 @@ public abstract class Source {
 
 		public boolean confirmDelete();
 
+		public File getLangFile(String file);
+
 		public File getPackFolder();
 
 		public <T> T getStore(Class<T> cls);
@@ -106,6 +108,7 @@ public abstract class Source {
 			int id = v % 1000;
 			return new Identifier("" + pack, "" + id);
 		}
+
 		public final String pack;
 
 		public final String id;
@@ -190,6 +193,7 @@ public abstract class Source {
 		public static UserProfile getProfile() {
 			return profile;
 		}
+
 		public String username;
 
 		public byte[] password;

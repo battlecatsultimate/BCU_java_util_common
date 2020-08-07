@@ -35,6 +35,12 @@ public class JsonDecoder {
 
 	}
 
+	@Documented
+	@Retention(RUNTIME)
+	@Target(METHOD)
+	public static @interface OnInjected {
+	}
+
 	public static final Map<Class<?>, Decoder> REGISTER = new HashMap<>();
 
 	static {
@@ -53,12 +59,6 @@ public class JsonDecoder {
 		REGISTER.put(Double.TYPE, JsonDecoder::getDouble);
 		REGISTER.put(Double.class, JsonDecoder::getDouble);
 		REGISTER.put(String.class, JsonDecoder::getString);
-	}
-
-	@Documented
-	@Retention(RUNTIME)
-	@Target(METHOD)
-	public static @interface OnInjected {
 	}
 
 	private static JsonDecoder current;
@@ -151,12 +151,18 @@ public class JsonDecoder {
 		return elem.getAsBoolean();
 	}
 
+	public static byte getByte(JsonElement elem) throws JsonException {
+		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
+			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
+		return elem.getAsByte();
+	}
+	
 	public static double getDouble(JsonElement elem) throws JsonException {
 		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
 		return elem.getAsDouble();
 	}
-	
+
 	public static float getFloat(JsonElement elem) throws JsonException {
 		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
@@ -178,12 +184,6 @@ public class JsonDecoder {
 		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
 		return elem.getAsLong();
-	}
-
-	public static byte getByte(JsonElement elem) throws JsonException {
-		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
-			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
-		return elem.getAsByte();
 	}
 
 	public static short getShort(JsonElement elem) throws JsonException {
@@ -293,9 +293,7 @@ public class JsonDecoder {
 			if (func.length() == 0)
 				throw new JsonException(Type.FUNC, elem, "no generate function");
 			Method m = cls.getMethod(func, JsonElement.class);
-			Object val = m.invoke(null, jobj);
-			cls = val.getClass();
-			return inject(par, jobj, cls, null);
+			return m.invoke(null, jobj);
 		} else
 			throw new JsonException(Type.UNDEFINED, elem, "class not possible to generate");
 	}

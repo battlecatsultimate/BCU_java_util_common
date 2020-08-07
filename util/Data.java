@@ -23,7 +23,7 @@ public class Data {
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Proc {
 
-		private static abstract class IntType implements Cloneable {
+		public static abstract class IntType implements Cloneable {
 
 			@Documented
 			@Retention(value = RetentionPolicy.RUNTIME)
