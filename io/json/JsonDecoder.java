@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,9 +29,35 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class JsonDecoder {
 
+	public static interface Decoder {
+
+		public Object decode(JsonElement elem) throws Exception;
+
+	}
+
+	public static final Map<Class<?>, Decoder> REGISTER = new HashMap<>();
+
+	static {
+		REGISTER.put(Boolean.TYPE, JsonDecoder::getBoolean);
+		REGISTER.put(Boolean.class, JsonDecoder::getBoolean);
+		REGISTER.put(Byte.TYPE, JsonDecoder::getByte);
+		REGISTER.put(Byte.class, JsonDecoder::getByte);
+		REGISTER.put(Short.TYPE, JsonDecoder::getShort);
+		REGISTER.put(Short.class, JsonDecoder::getShort);
+		REGISTER.put(Integer.TYPE, JsonDecoder::getInt);
+		REGISTER.put(Integer.class, JsonDecoder::getInt);
+		REGISTER.put(Long.TYPE, JsonDecoder::getLong);
+		REGISTER.put(Long.class, JsonDecoder::getLong);
+		REGISTER.put(Float.TYPE, JsonDecoder::getFloat);
+		REGISTER.put(Float.class, JsonDecoder::getFloat);
+		REGISTER.put(Double.TYPE, JsonDecoder::getDouble);
+		REGISTER.put(Double.class, JsonDecoder::getDouble);
+		REGISTER.put(String.class, JsonDecoder::getString);
+	}
+
 	@Documented
 	@Retention(RUNTIME)
-	@Target({ METHOD })
+	@Target(METHOD)
 	public static @interface OnInjected {
 	}
 
@@ -41,14 +68,9 @@ public class JsonDecoder {
 			return null;
 		if (JsonElement.class.isAssignableFrom(cls))
 			return elem;
-		if (cls == Boolean.TYPE || cls == Boolean.class)
-			return getBoolean(elem);
-		if (cls == Integer.TYPE || cls == Integer.class)
-			return getInt(elem);
-		if (cls == Double.TYPE || cls == Double.class)
-			return getDouble(elem);
-		if (cls == String.class)
-			return getString(elem);
+		Decoder dec = REGISTER.get(cls);
+		if(dec != null)
+			return dec.decode(elem);
 		if (cls.isArray())
 			return decodeArray(elem, cls, par);
 		// alias
@@ -134,6 +156,12 @@ public class JsonDecoder {
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
 		return elem.getAsDouble();
 	}
+	
+	public static float getFloat(JsonElement elem) throws JsonException {
+		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
+			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
+		return elem.getAsFloat();
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getGlobal(Class<T> cls) {
@@ -144,6 +172,24 @@ public class JsonDecoder {
 		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
 		return elem.getAsInt();
+	}
+
+	public static long getLong(JsonElement elem) throws JsonException {
+		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
+			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
+		return elem.getAsLong();
+	}
+
+	public static byte getByte(JsonElement elem) throws JsonException {
+		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
+			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
+		return elem.getAsByte();
+	}
+
+	public static short getShort(JsonElement elem) throws JsonException {
+		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
+			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
+		return elem.getAsShort();
 	}
 
 	public static String getString(JsonElement elem) throws JsonException {

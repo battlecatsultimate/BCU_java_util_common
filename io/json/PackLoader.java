@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -19,11 +20,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import common.io.DataIO;
 import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
 import common.io.json.PackLoader.ZipDesc.FileDesc;
+import common.pack.Source.PackDesc;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.system.files.FileData;
@@ -31,20 +32,16 @@ import common.system.files.VFileRoot;
 
 public class PackLoader {
 
-	public static interface Context {
+	public static interface PatchFile {
 
-		public boolean preload(FileDesc fd);
+		public File getFile(String path) throws Exception;
 
 	}
 
-	@JsonClass(noTag = NoTag.LOAD)
-	public static class PackDesc {
+	public static interface Preload {
 
-		public String BCU_VERSION;
-		public String uuid;
-		public String author;
-		public String name;
-		public String desc;
+		public boolean preload(FileDesc fd);
+
 	}
 
 	@JsonClass(read = RType.FILL)
@@ -124,6 +121,10 @@ public class PackLoader {
 			offset = off;
 		}
 
+		public boolean match(byte[] data) {
+			return Arrays.equals(data, loader.key);
+		}
+
 		@OnInjected
 		public void onInjected() {
 			for (FileDesc fd : files)
@@ -131,10 +132,29 @@ public class PackLoader {
 		}
 
 		public InputStream readFile(String path) throws Exception {
-			for (FileDesc fd : files)
-				if (fd.path.equals(path))
-					return new FileLoader.FLStream(loader, offset + fd.offset, fd.size);
-			return null;
+			FileDesc fd = tree.find(path).getData();
+			return new FileLoader.FLStream(loader, offset + fd.offset, fd.size);
+		}
+
+		public void unzip(PatchFile func) throws Exception {
+			InputStream fis = new FileInputStream(loader.file);
+			fis.skip(offset);
+			for (FileDesc fd : files) {
+				int n = regulate(fd.size) / PASSWORD;
+				File dest = func.getFile(fd.path);
+				OutputStream fos = new FileOutputStream(dest);
+				byte[] bs = new byte[PASSWORD];
+				Cipher cipher = decrypt(loader.key);
+				fis.read(bs);
+				cipher.update(bs);
+				for (int i = 0; i < n; i++) {
+					fis.read(bs);
+					byte[] ans = i == n - 1 ? cipher.doFinal(bs) : cipher.update(bs);
+					fos.write(ans);
+				}
+				fos.close();
+			}
+			fis.close();
 		}
 
 		private void load() throws Exception {
@@ -219,12 +239,12 @@ public class PackLoader {
 		}
 
 		private final FileInputStream fis;
-		private final Context context;
+		private final Preload context;
 		private final ZipDesc pack;
 		private final File file;
 		private final byte[] key;
 
-		private FileLoader(Context cont, File f) throws Exception {
+		private FileLoader(Preload cont, File f) throws Exception {
 			context = cont;
 			file = f;
 			fis = new FileInputStream(f);
@@ -333,12 +353,11 @@ public class PackLoader {
 		return Arrays.copyOf(ans, len);
 	}
 
-	public static ZipDesc readPack(Context cont, File f) throws Exception {
+	public static ZipDesc readPack(Preload cont, File f) throws Exception {
 		return new FileLoader(cont, f).pack;
 	}
 
-	public static void writePack(File dst, File folder, PackDesc pd, String password)
-			throws Exception {
+	public static void writePack(File dst, File folder, PackDesc pd, String password) throws Exception {
 		new FileSaver(dst, folder, pd, password);
 	}
 

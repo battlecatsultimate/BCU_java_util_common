@@ -15,8 +15,8 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
-import common.io.json.PackLoader.Context;
-import common.io.json.PackLoader.PackDesc;
+import common.io.json.PackLoader.Preload;
+import common.pack.Source.PackDesc;
 import common.io.json.PackLoader.ZipDesc;
 import common.io.json.PackLoader.ZipDesc.FileDesc;
 import common.util.Data;
@@ -219,9 +219,9 @@ public class Test {
 		PackDesc pd = new PackDesc();
 		pd.author = "test";
 		pd.BCU_VERSION = Data.revVer(MainBCU.ver);
-		pd.uuid = "12345678abcdefgh";
+		pd.id = "12345678abcdefgh";
 		PackLoader.writePack(new File("./pack.pack"), new File("./src"), pd, "password");
-		Context ctx = (fd) -> fd.size < 4096;
+		Preload ctx = (fd) -> fd.size < 4096;
 		ZipDesc desc = PackLoader.readPack(ctx, new File("./pack.pack"));
 		for (FileDesc fd : desc.files)
 			if (!ctx.preload(fd)) {
