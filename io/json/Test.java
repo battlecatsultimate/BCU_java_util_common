@@ -15,10 +15,11 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
-import common.io.json.PackLoader.Preload;
+import common.pack.PackLoader;
+import common.pack.PackLoader.Preload;
+import common.pack.PackLoader.ZipDesc;
+import common.pack.PackLoader.ZipDesc.FileDesc;
 import common.pack.Source.PackDesc;
-import common.io.json.PackLoader.ZipDesc;
-import common.io.json.PackLoader.ZipDesc.FileDesc;
 import common.util.Data;
 import main.MainBCU;
 
