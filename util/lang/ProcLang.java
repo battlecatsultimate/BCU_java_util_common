@@ -54,7 +54,7 @@ public class ProcLang {
 		public String[] list() {
 			String[] ans = new String[map.size()];
 			int i = 0;
-			for (Entry<String,DisplayItem> ent : map.entrySet())
+			for (Entry<String, DisplayItem> ent : map.entrySet())
 				ans[i++] = ent.getKey();
 			return ans;
 		}

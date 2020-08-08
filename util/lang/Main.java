@@ -26,6 +26,19 @@ public class Main {
 		sc.close();
 	}
 
+	private static File fix(String path) throws IOException {
+		if (!path.startsWith("./"))
+			path = "./" + path;
+		if (!path.endsWith(".json"))
+			path += ".json";
+		File f = new File(path);
+		if (!f.getParentFile().exists())
+			f.getParentFile().mkdirs();
+		if (!f.exists())
+			f.createNewFile();
+		return f;
+	}
+
 	private static void loop(String[] args) throws Exception {
 		if (args.length == 3 && args[0].equals("generate")) {
 			if (args[1].equals("proc")) {
@@ -65,19 +78,6 @@ public class Main {
 		System.out.println("usage: generate locale [name] // for generate a new LOCALE json file");
 		System.out.println("usage: parse [locale] [file] [proc] // parse a proc in a proc file with specified locale");
 
-	}
-
-	private static File fix(String path) throws IOException {
-		if (!path.startsWith("./"))
-			path = "./" + path;
-		if (!path.endsWith(".json"))
-			path += ".json";
-		File f = new File(path);
-		if (!f.getParentFile().exists())
-			f.getParentFile().mkdirs();
-		if (!f.exists())
-			f.createNewFile();
-		return f;
 	}
 
 	private static Path parse(String path) {

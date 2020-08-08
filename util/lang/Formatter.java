@@ -34,8 +34,12 @@ public class Formatter {
 			useSecond = sec;
 		}
 
-		public String toSecond(int time) {
-			return "" + (time * 100 / 30 / 100.0);
+		public String abs(int v) {
+			return "" + Math.abs(v);
+		}
+
+		public String bg(int id) {
+			return "BG ID = " + id; // TODO
 		}
 
 		public String dispTime(int time) {
@@ -45,15 +49,11 @@ public class Formatter {
 		}
 
 		public String entity(int id) {
-			return (isEnemy ? "Enemy" : "Unit") + " ID = " + id;
+			return (isEnemy ? "Enemy" : "Unit") + " ID = " + id; // TODO
 		}
 
-		public String bg(int id) {
-			return "BG ID = " + id;
-		}
-
-		public String abs(int v) {
-			return "" + Math.abs(v);
+		public String toSecond(int time) {
+			return "" + (time * 100 / 30 / 100.0);
 		}
 
 	}
@@ -259,7 +259,7 @@ public class Formatter {
 
 		private int eval() throws Exception {
 			Stack<Integer> stack = new Stack<>();
-			char opera = ' ';
+			char opera = '\0';
 			stack.push(nextElem());
 			while (ind < p1) {
 				char ch = str.charAt(ind++);
@@ -283,7 +283,7 @@ public class Formatter {
 				} else
 					throw new Exception("unknown operator " + ch + " at " + (ind - 1));
 			}
-			if (opera != ' ') {
+			if (opera != '\0') {
 				int b = stack.pop();
 				int a = stack.pop();
 				if (opera == '+')

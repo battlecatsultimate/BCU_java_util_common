@@ -5,27 +5,27 @@ import common.io.json.JsonClass.NoTag;
 
 public class LocaleCenter {
 
-	@JsonClass(noTag = NoTag.LOAD)
-	public static class DisplayItem {
-		public String name, tooltip;
-	}
-
 	public static interface Binder {
+
+		String getNameID();
 
 		String getNameValue();
 
-		void setNameValue(String str);
+		String getTooltipID();
 
 		String getToolTipValue();
 
-		void setToolTipValue(String str);
-
-		String getNameID();
-		
-		String getTooltipID();
-
 		Binder refresh();
 
+		void setNameValue(String str);
+
+		void setToolTipValue(String str);
+
+	}
+
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class DisplayItem {
+		public String name, tooltip;
 	}
 
 	public static class ObjBinder implements Binder {
@@ -47,13 +47,18 @@ public class LocaleCenter {
 		}
 
 		@Override
+		public String getNameID() {
+			return name;
+		}
+
+		@Override
 		public String getNameValue() {
 			return item.name;
 		}
 
 		@Override
-		public void setNameValue(String str) {
-			item.name = str;
+		public String getTooltipID() {
+			return name;
 		}
 
 		@Override
@@ -62,22 +67,18 @@ public class LocaleCenter {
 		}
 
 		@Override
-		public void setToolTipValue(String str) {
-			item.tooltip = str;
-		}
-
-		@Override
-		public String getNameID() {
-			return name;
-		}
-		
-		@Override
-		public String getTooltipID() {
-			return name;
-		}
-
 		public Binder refresh() {
 			return func.refresh(name);
+		}
+
+		@Override
+		public void setNameValue(String str) {
+			item.name = str;
+		}
+
+		@Override
+		public void setToolTipValue(String str) {
+			item.tooltip = str;
 		}
 
 	}
