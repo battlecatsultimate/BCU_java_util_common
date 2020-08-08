@@ -155,19 +155,20 @@ public class Pack extends Data {
 				if (all) {
 					CommonStatic.def.prog("reading packs: " + (tot - list.size() + rem) + "/" + tot);
 					if (p.bcuver > MainBCU.ver) {
-						Opts.verErr("BCU", revVer(p.bcuver));
-						// TODO
-					} else
-						try {
-							if (p.editable)
-								p.zreadt();
-							else
-								p.zreadp();
-						} catch (Exception e) {
-							Opts.loadErr("Error in loading custom pack: " + p.id + ", unknown cause");
-							e.printStackTrace();
-							CommonStatic.def.exit(false);
-						}
+						Opts.verErr("BCU", revVer(p.bcuver), p.file == null ? Data.hex(p.id) : p.file.getName());
+					}
+
+					try {
+						if (p.editable)
+							p.zreadt();
+						else
+							p.zreadp();
+					} catch (Exception e) {
+						Opts.loadErr("Error in loading custom pack: " + p.id + ", unknown cause");
+						e.printStackTrace();
+						CommonStatic.def.exit(false);
+					}
+
 					rem++;
 
 				}
@@ -669,7 +670,7 @@ public class Pack extends Data {
 		else if (ver >= 306)
 			zreadt$000306(res);
 		else
-			Opts.verErr("custom pack", "0-4-1-3");
+			Opts.verErr("custom pack", "0-4-1-3", "");
 		err("stages", () -> mc = new MapColc(this, res));
 		err("music", () -> ms.load());
 		res = null;
