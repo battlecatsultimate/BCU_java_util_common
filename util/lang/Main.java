@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -18,7 +19,14 @@ import common.util.lang.Formatter.Context;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		args = new String[] { "parse", "locale", "proc","KB" };
+		Scanner sc = new Scanner(System.in);
+		String str;
+		while (!(str = sc.nextLine()).equals("exit"))
+			loop(args = str.split(" "));
+		sc.close();
+	}
+
+	private static void loop(String[] args) throws Exception {
 		if (args.length == 3 && args[0].equals("generate")) {
 			if (args[1].equals("proc")) {
 				File f = fix(args[2]);
@@ -33,7 +41,6 @@ public class Main {
 				File f = fix(args[2]);
 				JsonElement jo = JsonEncoder.encode(ProcLang.gen(null));
 				String str = jo.toString();
-				System.out.println(str);
 				Files.write(f.toPath(), Arrays.asList(str));
 				System.out.println("file generated");
 				return;
@@ -49,7 +56,6 @@ public class Main {
 				ctx = new Context();
 			ProcItem item = JsonDecoder.decode(jeproc, Proc.class).get(args[3]);
 			ProcLang lang = JsonDecoder.decode(locale, ProcLang.class);
-			System.out.println(JsonEncoder.encode(lang));
 			String pattern = lang.get(args[3]).format;
 			System.out.println(Formatter.format(pattern, item, ctx));
 			return;
@@ -58,6 +64,7 @@ public class Main {
 		System.out.println("usage: generate proc [name] // for generate a new PROC json file");
 		System.out.println("usage: generate locale [name] // for generate a new LOCALE json file");
 		System.out.println("usage: parse [locale] [file] [proc] // parse a proc in a proc file with specified locale");
+
 	}
 
 	private static File fix(String path) throws IOException {

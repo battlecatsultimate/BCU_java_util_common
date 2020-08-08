@@ -320,14 +320,14 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme >= 0) {
 			bg = BGStore.getBG(theme);
-			le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0 && themeType.kill);
 			if(themeType.kill) {
+				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();
 				la.clear();
 				tlw.clear();
 				lea.clear();
+				tempe.removeIf(e -> (e.ent.getAbi() & AB_THEMEI) == 0);
 			}
-			tempe.removeIf(e -> (e.ent.getAbi() & AB_THEMEI) == 0 && themeType.kill);
 			theme = -1;
 		}
 		if (s_stop == 0 && themeTime > 0) {

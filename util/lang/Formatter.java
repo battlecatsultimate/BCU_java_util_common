@@ -10,7 +10,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 
 public class Formatter {
-	
+
 	@JsonClass
 	public static class Context {
 
@@ -42,6 +42,18 @@ public class Formatter {
 			if (useSecond)
 				return toSecond(time) + "s";
 			return time + "f";
+		}
+
+		public String entity(int id) {
+			return (isEnemy ? "Enemy" : "Unit") + " ID = " + id;
+		}
+
+		public String bg(int id) {
+			return "BG ID = " + id;
+		}
+
+		public String abs(int v) {
+			return "" + Math.abs(v);
 		}
 
 	}
@@ -161,10 +173,7 @@ public class Formatter {
 			int i = p0;
 			while (i < p1) {
 				char ch = str.charAt(i++);
-				if (ch == '$') {
-					while (str.charAt(i++) != '(')
-						if (i >= p1)
-							throw new Exception("unfinished at " + i);
+				if (ch == '(') {
 					int depth = 1;
 					int pre = i;
 					while (depth > 0) {
@@ -451,16 +460,18 @@ public class Formatter {
 			for (int i = p0; i < p1; i++) {
 				char ch = str.charAt(i);
 				if (ch == '[') {
-					if (deepth == 0 && i > pre)
+					if (deepth == 0 && i > pre) {
 						list.add(new TextRef(pre, i));
-					pre = i + 1;
+						pre = i + 1;
+					}
 					deepth++;
 				}
 				if (ch == ']') {
 					deepth--;
-					if (deepth == 0 && i > pre)
+					if (deepth == 0 && i > pre) {
 						list.add(new CodeBlock(pre, i));
-					pre = i + 1;
+						pre = i + 1;
+					}
 				}
 			}
 			if (pre < p1)
@@ -550,11 +561,11 @@ public class Formatter {
 			if (ch == '{')
 				stack.push(2);
 			if (ch == ')' && (stack.isEmpty() || stack.pop() != 0))
-				return "bracket ) expected at " + i;
+				return "bracket ) unexpected at " + i;
 			if (ch == ']' && (stack.isEmpty() || stack.pop() != 1))
-				return "bracket ] expected at " + i;
+				return "bracket ] unexpected at " + i;
 			if (ch == '}' && (stack.isEmpty() || stack.pop() != 2))
-				return "bracket } expected at " + i;
+				return "bracket } unexpected at " + i;
 		}
 		return stack.isEmpty() ? null : "unenclosed bracket: " + stack;
 	}
