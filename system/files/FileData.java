@@ -30,6 +30,8 @@ public interface FileData {
 
 	public FakeImage getImg();
 
+	public InputStream getStream() throws Exception;
+
 	public Queue<String> readLine();
 
 }
@@ -46,6 +48,11 @@ interface ByteData extends FileData {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public default InputStream getStream() {
+		return new ByteArrayInputStream(getBytes());
 	}
 
 	@Override

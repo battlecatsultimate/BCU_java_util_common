@@ -32,7 +32,7 @@ import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
-import common.system.files.VFile;
+import common.system.files.FileData;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
@@ -102,8 +102,6 @@ public abstract class Source {
 		public File getLangFile(String file);
 
 		public File getPackFolder();
-
-		public <T> T getStore(Class<T> cls);
 
 		public File getWorkspaceFile(String relativePath);
 
@@ -210,8 +208,6 @@ public abstract class Source {
 		@JsonField
 		public final PackDesc desc;
 
-		public final Map<String, AnimCI> animMap = new HashMap<>();
-
 		// TODO enemy list, unit list, unit level list, bg list, castle list, music
 		// list, MapColc
 
@@ -245,49 +241,52 @@ public abstract class Source {
 
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
-		private final File ic, mm, sp, edi, uni;
-		private final File[] ma = new File[7];
-		private final Identifier id;
+		public static interface SourceLoader {
 
-		public SourceAnimLoader(Identifier id) {
+			public FileData loadFile(Identifier id, String str);
+
+		}
+
+		private static final String IC = "imgcut.txt";
+		private static final String MM = "mamodel.txt";
+		private static final String[] MA = { "maanim_walk.txt", "maanim_idle.txt", "maanim_attack.txt", "maanim_kb.txt",
+				"maanim_burrow_down.txt", "maanim_burrow_move.txt", "maanim_burrow_up.txt" };
+		private static final String SP = "sprite.png";
+		private static final String EDI = "icon_display.png";
+		private static final String UNI = "icon_deploy.png";
+
+		private final Identifier id;
+		private final SourceLoader loader;
+
+		public SourceAnimLoader(Identifier id, SourceLoader loader) {
 			this.id = id;
-			sp = loadFile("sprite.png");
-			edi = loadFile("icon_display.png");
-			uni = loadFile("icon_deploy.png");
-			ic = loadFile("imgcut.txt");
-			mm = loadFile("mamodel.txt");
-			ma[0] = loadFile("maanim_walk.txt");
-			ma[1] = loadFile("maanim_idle.txt");
-			ma[2] = loadFile("maanim_attack.txt");
-			ma[3] = loadFile("maanim_kb.txt");
-			ma[4] = loadFile("maanim_burrow_down.txt");
-			ma[5] = loadFile("maanim_burrow_move.txt");
-			ma[6] = loadFile("maanim_burrow_up.txt");
+			this.loader = loader == null ? Workspace::loadFile : loader;
 		}
 
 		@Override
 		public VImg getEdi() {
-			if (!edi.exists())
+			FileData edi = loader.loadFile(id, EDI);
+			if (edi == null)
 				return null;
 			return ctx.noticeError(() -> new VImg(FakeImage.read(edi)), "failed to read Display Icon" + id);
 		}
 
 		@Override
 		public ImgCut getIC() {
-			return ImgCut.newIns(new FDFile(ic));
+			return ImgCut.newIns(loader.loadFile(id, IC));
 		}
 
 		@Override
 		public MaAnim[] getMA() {
-			MaAnim[] ans = new MaAnim[ma.length];
-			for (int i = 0; i < ma.length; i++)
-				ans[i] = MaAnim.newIns(new FDFile(ma[i]));
+			MaAnim[] ans = new MaAnim[MA.length];
+			for (int i = 0; i < MA.length; i++)
+				ans[i] = MaAnim.newIns(loader.loadFile(id, MA[i]));
 			return ans;
 		}
 
 		@Override
 		public MaModel getMM() {
-			return MaModel.newIns(new FDFile(mm));
+			return MaModel.newIns(loader.loadFile(id, MM));
 		}
 
 		@Override
@@ -297,7 +296,7 @@ public abstract class Source {
 
 		@Override
 		public FakeImage getNum() {
-			return ctx.noticeError(() -> FakeImage.read(sp), "failed to read sprite sheet " + id);
+			return ctx.noticeError(() -> FakeImage.read(loader.loadFile(id, SP)), "failed to read sprite sheet " + id);
 		}
 
 		@Override
@@ -307,13 +306,10 @@ public abstract class Source {
 
 		@Override
 		public VImg getUni() {
-			if (!uni.exists())
+			FileData uni = loader.loadFile(id, UNI);
+			if (uni == null)
 				return null;
 			return ctx.noticeError(() -> new VImg(FakeImage.read(uni)), "failed to read deploy icon " + id);
-		}
-
-		private File loadFile(String str) {
-			return ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str);
 		}
 
 	}
@@ -394,6 +390,7 @@ public abstract class Source {
 
 	public static class UserProfile {
 
+		//FIXME load it into register
 		private static UserProfile profile;
 
 		public static AbEnemy getEnemy(Identifier id) {
@@ -488,9 +485,13 @@ public abstract class Source {
 			for (File f : folder.listFiles()) {
 				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
 				if (f.isDirectory() && ctx.getWorkspaceFile(path).exists())
-					list.add(new AnimCI(new SourceAnimLoader(new Identifier(id, f.getName()))));
+					list.add(new AnimCI(new SourceAnimLoader(new Identifier(id, f.getName()), null)));
 			}
 			return list;
+		}
+
+		private static FileData loadFile(Identifier id, String str) {
+			return new FDFile(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str));
 		}
 
 		private File folder;
@@ -501,8 +502,8 @@ public abstract class Source {
 		}
 
 		@Override
-		public List<AnimCI> loadAnimations() {
-			return loadAnimations("./" + folder.getName());
+		public AnimCI loadAnimation(String name) {
+			return new AnimCI(new SourceAnimLoader(new Identifier(folder.getName(), name), null));
 		}
 
 		@Override
@@ -537,14 +538,8 @@ public abstract class Source {
 		}
 
 		@Override
-		public List<AnimCI> loadAnimations() {
-			VFile<FileDesc> f = zip.tree.find("./animations");
-			List<VFile<FileDesc>> list = f.list();
-			List<AnimCI> ans = new ArrayList<>();
-			for (VFile<FileDesc> vf : list)
-				if (zip.tree.find("./animations/" + vf.name + "/sprite.png") != null)
-					ans.add(new AnimCI(new SourceAnimLoader(new Identifier(data.desc.id, vf.name))));
-			return ans;
+		public AnimCI loadAnimation(String name) {
+			return new AnimCI(new SourceAnimLoader(new Identifier(data.desc.id, name), this::loadAnimationFile));
 		}
 
 		@Override
@@ -560,7 +555,6 @@ public abstract class Source {
 		public Workspace unzip(Context ctx, String password) throws Exception {
 			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
 				return null;
-			UserProfile profile = ctx.getStore(UserProfile.class);
 			File f = ctx.getWorkspaceFile("./" + data.desc.id + "/main.pack.json");
 			File folder = f.getParentFile();
 			if (folder.exists()) {
@@ -570,15 +564,19 @@ public abstract class Source {
 			}
 			Context.check(folder.mkdirs(), "create", folder);
 			Context.check(f.createNewFile(), "create", f);
-			profile.remove(this);
+			UserProfile.profile.remove(this);
 			Workspace ans = new Workspace(folder, data);
 			zip.unzip(id -> {
 				File file = ans.getFile(id);
 				Context.check(file.createNewFile(), "create", file);
 				return file;
 			});
-			profile.add(ans);
+			UserProfile.profile.add(ans);
 			return ans;
+		}
+
+		private FileDesc loadAnimationFile(Identifier id, String path) {
+			return zip.tree.find("./animations/" + id.id + "/" + path).getData();
 		}
 
 	}
@@ -621,16 +619,11 @@ public abstract class Source {
 		data = da;
 	}
 
-	public void init() {
-		for (AnimCI anim : loadAnimations())
-			data.animMap.put(anim.name.id, anim);
-	}
-
 	public boolean loadable() {
 		return loadable;
 	}
 
-	public abstract List<AnimCI> loadAnimations();
+	public abstract AnimCI loadAnimation(String name);
 
 	/** read images from file. Use it */
 	public abstract FakeImage readImage(String path) throws Exception;

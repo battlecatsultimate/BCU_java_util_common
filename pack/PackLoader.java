@@ -93,6 +93,11 @@ public class PackLoader {
 			}
 
 			@Override
+			public InputStream getStream() throws Exception {
+				return pack.readFile(path);
+			}
+
+			@Override
 			public Queue<String> readLine() {
 				try {
 					return data != null ? data.readLine() : FileData.IS2L(pack.readFile(path));

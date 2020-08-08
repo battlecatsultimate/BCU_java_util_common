@@ -1,6 +1,7 @@
 package common.system.files;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
@@ -86,6 +87,11 @@ class MultiLangAsset extends Lang implements AssetData {
 		if (!MultiLangCont.VFILE.containsKey(mlf))
 			MultiLangCont.VFILE.put(mlf, this);
 		return getImg();
+	}
+
+	@Override
+	public InputStream getStream() throws Exception {
+		return getData().getStream();
 	}
 
 	@Override

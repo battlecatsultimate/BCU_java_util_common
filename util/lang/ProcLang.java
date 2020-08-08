@@ -113,7 +113,7 @@ public class ProcLang {
 
 	}
 
-	// TODO static field: log this field into register
+	// FIXME static field: log this field into register
 	private static ProcLangStore store;
 
 	public static ProcLang gen(JsonElement elem) throws Exception {
@@ -135,11 +135,11 @@ public class ProcLang {
 		return store.getLang();
 	}
 
-	public static void read(Source.Context ctx) throws Exception {
-		File f = ctx.getLangFile("proc.json");
+	public static void read() throws Exception {
+		File f = Source.ctx.getLangFile("proc.json");
 		JsonElement elem = JsonParser.parseReader(new FileReader(f));
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);
-		ctx.getStore(ProcLangStore.class).setLang(proc);
+		store.setLang(proc);
 	}
 
 	private final Map<String, ItemLang> map = new LinkedHashMap<>();

@@ -102,6 +102,11 @@ public class AnimCE extends AnimCI {
 	public EditLink link;
 	public Stack<History> history = new Stack<>();
 
+	public AnimCE(Identifier id) {
+		super(new SourceAnimLoader(id, null));
+		name = id;
+	}
+
 	public AnimCE(InStream is, CommonStatic.ImgReader r, String pack) {
 		super(CommonStatic.def.loadAnim(is, r));
 		name = loader.getName();
@@ -111,11 +116,6 @@ public class AnimCE extends AnimCI {
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
 		name = new Identifier("_local", st);
-	}
-
-	public AnimCE(Identifier id) {
-		super(new SourceAnimLoader(id));
-		name = id;
 	}
 
 	public AnimCE(String str, AnimD ori) {
@@ -197,6 +197,10 @@ public class AnimCE extends AnimCI {
 		validate();
 	}
 
+	public void localize(String pack) {
+		name.pack = null;// TODO
+	}
+
 	public void merge(AnimCE a, int x, int y) {
 		ImgCut ic0 = imgcut;
 		ImgCut ic1 = a.imgcut;
@@ -270,10 +274,6 @@ public class AnimCE extends AnimCI {
 		name.id = str;
 		saver.saveAll();
 		unSave("rename (not applicapable for undo)");
-	}
-
-	public void localize(String pack) {
-		name.pack = null;// TODO
 	}
 
 	public void resize(double d) {
