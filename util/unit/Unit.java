@@ -89,6 +89,7 @@ public class Unit extends Data implements Comparable<Unit> {
 	public static Unit zgen(int i) {
 		return UnitStore.get(i, true);
 	}
+
 	public final Pack pack;
 	public final int id;
 	public int rarity, max, maxp;

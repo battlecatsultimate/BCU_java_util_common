@@ -55,6 +55,7 @@ public class Level implements BattleStatic {
 			this.orbs = orbs;
 		}
 	}
+
 	@Override
 	public Level clone() {
 		if (orbs != null)

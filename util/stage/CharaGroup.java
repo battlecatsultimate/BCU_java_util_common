@@ -52,6 +52,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	public static CharaGroup zgen(int i, MapColc mc) {
 		return i < 0 ? null : mc.groups.get(i);
 	}
+
 	public final Pack pack;
 	@JsonField
 	public int id, type = 0;

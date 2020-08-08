@@ -10,7 +10,7 @@ import common.util.Res;
 
 public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile {
 
-	static class DefImgLoader implements AnimU.ImageLoader {
+	static class DefImgLoader implements AnimU.ImageKeeper {
 
 		private final String spath;
 		private final VFile<AssetData> fnum, fedi, funi;

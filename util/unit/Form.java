@@ -34,6 +34,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 	public static Form zgen(int[] is) {
 		return UnitStore.get(is);
 	}
+
 	public final MaskUnit du;
 	public final Unit unit;
 	public final int uid;

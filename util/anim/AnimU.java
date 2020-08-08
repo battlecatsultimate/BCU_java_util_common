@@ -6,9 +6,9 @@ import common.system.fake.FakeImage;
 import common.system.files.AssetData;
 import main.Printer;
 
-public abstract class AnimU<T extends AnimU.ImageLoader> extends AnimD {
+public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 
-	public static interface ImageLoader {
+	public static interface ImageKeeper {
 
 		public VImg getEdi();
 

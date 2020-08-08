@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.CommonStatic.ImgReader;
 import common.io.InStream;
 import common.pack.Source;
+import common.pack.Source.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
@@ -11,9 +12,9 @@ import common.system.files.AssetData;
 import common.util.Res;
 import main.Opts;
 
-public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
+public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
-	protected static class AnimCILoader implements AnimU.ImageLoader {
+	protected static class AnimCIKeeper implements AnimU.ImageKeeper {
 
 		public final Source.AnimLoader loader;
 		private FakeImage num;
@@ -21,7 +22,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		private VImg edi;
 		private VImg uni;
 
-		private AnimCILoader(Source.AnimLoader al) {
+		private AnimCIKeeper(Source.AnimLoader al) {
 			loader = al;
 		}
 
@@ -51,7 +52,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 			return loader.getMM();
 		}
 
-		public String getName() {
+		public Identifier getName() {
 			return loader.getName();
 		}
 
@@ -106,14 +107,14 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 	}
 
-	public String name = "";
+	public Identifier name;
 
 	public AnimCI(InStream is, ImgReader r) {
 		this(CommonStatic.def.loadAnim(is, r));
 	}
 
 	public AnimCI(Source.AnimLoader acl) {
-		super(new AnimCILoader(acl));
+		super(new AnimCIKeeper(acl));
 		name = loader.getName();
 	}
 
@@ -135,7 +136,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 	@Override
 	public String toString() {
-		return name;
+		return name.id;
 	}
 
 }

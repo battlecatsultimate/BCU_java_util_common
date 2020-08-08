@@ -377,6 +377,7 @@ public class Data {
 			}
 			return ans;
 		}
+
 		public static Proc load(int[][] data) {
 			Proc ans = new Proc();
 			try {
@@ -390,6 +391,7 @@ public class Data {
 			}
 			return ans;
 		}
+
 		public final PTD KB = null;
 		public final PT STOP = null;
 		public final PT SLOW = null;

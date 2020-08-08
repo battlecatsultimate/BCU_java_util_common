@@ -32,6 +32,7 @@ import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
+import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
@@ -52,7 +53,7 @@ public abstract class Source {
 
 		public MaModel getMM();
 
-		public String getName();
+		public Identifier getName();
 
 		public FakeImage getNum();
 
@@ -209,6 +210,8 @@ public abstract class Source {
 		@JsonField
 		public final PackDesc desc;
 
+		public final Map<String, AnimCI> animMap = new HashMap<>();
+
 		// TODO enemy list, unit list, unit level list, bg list, castle list, music
 		// list, MapColc
 
@@ -246,7 +249,7 @@ public abstract class Source {
 		private final File[] ma = new File[7];
 		private final Identifier id;
 
-		private SourceAnimLoader(Identifier id) {
+		public SourceAnimLoader(Identifier id) {
 			this.id = id;
 			sp = loadFile("sprite.png");
 			edi = loadFile("icon_display.png");
@@ -288,8 +291,8 @@ public abstract class Source {
 		}
 
 		@Override
-		public String getName() {
-			return id.id;
+		public Identifier getName() {
+			return id;
 		}
 
 		@Override
@@ -477,17 +480,17 @@ public abstract class Source {
 
 	public static class Workspace extends Source {
 
-		public static AnimCI[] loadAnimations(String id) throws Exception {
+		public static List<AnimCI> loadAnimations(String id) {
 			File folder = ctx.getWorkspaceFile("./" + id + "/animations/");
-			if (!folder.exists() || !folder.isDirectory())
-				return new AnimCE[0];
 			List<AnimCI> list = new ArrayList<>();
+			if (!folder.exists() || !folder.isDirectory())
+				return list;
 			for (File f : folder.listFiles()) {
 				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
 				if (f.isDirectory() && ctx.getWorkspaceFile(path).exists())
 					list.add(new AnimCI(new SourceAnimLoader(new Identifier(id, f.getName()))));
 			}
-			return list.toArray(new AnimCI[0]);
+			return list;
 		}
 
 		private File folder;
@@ -498,7 +501,7 @@ public abstract class Source {
 		}
 
 		@Override
-		public AnimCI[] loadAnimations() throws Exception {
+		public List<AnimCI> loadAnimations() {
 			return loadAnimations("./" + folder.getName());
 		}
 
@@ -534,9 +537,14 @@ public abstract class Source {
 		}
 
 		@Override
-		public AnimCI[] loadAnimations() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
+		public List<AnimCI> loadAnimations() {
+			VFile<FileDesc> f = zip.tree.find("./animations");
+			List<VFile<FileDesc>> list = f.list();
+			List<AnimCI> ans = new ArrayList<>();
+			for (VFile<FileDesc> vf : list)
+				if (zip.tree.find("./animations/" + vf.name + "/sprite.png") != null)
+					ans.add(new AnimCI(new SourceAnimLoader(new Identifier(data.desc.id, vf.name))));
+			return ans;
 		}
 
 		@Override
@@ -613,11 +621,16 @@ public abstract class Source {
 		data = da;
 	}
 
+	public void init() {
+		for (AnimCI anim : loadAnimations())
+			data.animMap.put(anim.name.id, anim);
+	}
+
 	public boolean loadable() {
 		return loadable;
 	}
 
-	public abstract AnimCI[] loadAnimations() throws Exception;
+	public abstract List<AnimCI> loadAnimations();
 
 	/** read images from file. Use it */
 	public abstract FakeImage readImage(String path) throws Exception;

@@ -7,6 +7,7 @@ public class DataAtk implements MaskAtk {
 	public final int index;
 
 	public final DefaultData data;
+
 	public DataAtk(DefaultData data, int index) {
 		this.index = index;
 		this.data = data;

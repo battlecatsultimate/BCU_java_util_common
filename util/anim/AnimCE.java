@@ -13,6 +13,7 @@ import common.io.OutStream;
 import common.pack.Source;
 import common.pack.Source.Identifier;
 import common.pack.Source.SourceAnimSaver;
+import common.pack.Source.SourceAnimLoader;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
@@ -63,8 +64,8 @@ public class AnimCE extends AnimCI {
 		}
 
 		@Override
-		public String getName() {
-			return name;
+		public Identifier getName() {
+			return new Identifier("_local", name);
 		}
 
 		@Override
@@ -98,26 +99,27 @@ public class AnimCE extends AnimCI {
 	}
 
 	private boolean saved = false;
-	public Identifier id;
 	public EditLink link;
 	public Stack<History> history = new Stack<>();
 
 	public AnimCE(InStream is, CommonStatic.ImgReader r, String pack) {
 		super(CommonStatic.def.loadAnim(is, r));
 		name = loader.getName();
-		id = new Identifier(pack == null ? "_local" : pack, name);
+		name = new Identifier(pack == null ? "_local" : pack, loader.getName().id);
 	}
 
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
-		id = new Identifier("_local", name);
-		name = st;
+		name = new Identifier("_local", st);
+	}
+
+	public AnimCE(Identifier id) {
+		super(new SourceAnimLoader(id));
+		name = id;
 	}
 
 	public AnimCE(String str, AnimD ori) {
-		super(new AnimCELoader(str));
-		id = new Identifier("_local", str);
-		name = str;
+		this(str);
 		loaded = true;
 		partial = true;
 		imgcut = ori.imgcut.clone();
@@ -155,7 +157,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void delete() {
-		new SourceAnimSaver(id, this).delete();
+		new SourceAnimSaver(name, this).delete();
 	}
 
 	public String getUndo() {
@@ -164,7 +166,7 @@ public class AnimCE extends AnimCI {
 
 	public void hardSave(String str) {
 		if (name == null)
-			name = AnimCE.getAvailable(MainBCU.validate(str));
+			name = new Identifier("_local", AnimCE.getAvailable(MainBCU.validate(str)));
 		saved = false;
 		save();
 	}
@@ -175,7 +177,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	public boolean inPool() {
-		return id.pack.equals("_local");
+		return name.pack != null && name.pack.equals("_local");
 	}
 
 	public boolean isSaved() {
@@ -263,11 +265,15 @@ public class AnimCE extends AnimCI {
 			getUni().check();
 		if (getEdi() != null)
 			getEdi().check();
-		SourceAnimSaver saver = new SourceAnimSaver(id, this);
+		SourceAnimSaver saver = new SourceAnimSaver(name, this);
 		saver.delete();
-		id.id = name = str;
+		name.id = str;
 		saver.saveAll();
 		unSave("rename (not applicapable for undo)");
+	}
+
+	public void localize(String pack) {
+		name.pack = null;// TODO
 	}
 
 	public void resize(double d) {
@@ -322,19 +328,19 @@ public class AnimCE extends AnimCI {
 		if (!loaded || isSaved() || mismatch)
 			return;
 		saved = true;
-		new SourceAnimSaver(id, this).saveAll();
+		new SourceAnimSaver(name, this).saveAll();
 	}
 
 	public void saveIcon() {
-		new SourceAnimSaver(id, this).saveIconDisplay();
+		new SourceAnimSaver(name, this).saveIconDisplay();
 	}
 
 	public void saveImg() {
-		new SourceAnimSaver(id, this).saveSprite();
+		new SourceAnimSaver(name, this).saveSprite();
 	}
 
 	public void saveUni() {
-		new SourceAnimSaver(id, this).saveIconDeploy();
+		new SourceAnimSaver(name, this).saveIconDeploy();
 	}
 
 	public void setEdi(VImg uni) {
