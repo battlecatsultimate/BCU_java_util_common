@@ -81,12 +81,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		public FakeImage getNum(boolean load) {
 			if (num != null && num.bimg() != null && num.isValid())
 				return num;
-
-			if(load) {
-				return num = loader.getNum(true);
-			}
-
-			return num = loader.getNum(false);
+			return num = loader.getNum(load);
 		}
 
 		public int getStatus() {

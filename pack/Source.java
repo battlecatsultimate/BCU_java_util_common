@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -25,9 +26,16 @@ import common.pack.PackLoader.ZipDesc;
 import common.pack.PackLoader.ZipDesc.FileDesc;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
+import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
+import common.system.files.FDFile;
 import common.util.Data;
+import common.util.anim.AnimCE;
+import common.util.anim.AnimCI;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.MaModel;
 import common.util.unit.AbEnemy;
 import main.MainBCU;
 
@@ -202,7 +210,7 @@ public abstract class Source {
 
 		public final Set<Source> failed = new HashSet<>();
 
-		public UserProfile(Context ctx) {
+		public UserProfile() {
 			// TODO load username and password
 			File packs = ctx.getPackFolder();
 			File workspace = ctx.getWorkspaceFile(".");
@@ -211,7 +219,7 @@ public abstract class Source {
 				for (File f : packs.listFiles())
 					if (f.getName().endsWith(".pack.bcuzip"))
 						try {
-							Source s = readZipPack(ctx, f);
+							Source s = readZipPack(f);
 							set.put(s.data.desc.id, s);
 						} catch (Exception e) {
 							ctx.noticeErr(e, "failed to load external pack " + f);
@@ -223,7 +231,7 @@ public abstract class Source {
 						if (!main.exists())
 							continue;
 						try {
-							Source s = readJsonPack(ctx, main);
+							Source s = readJsonPack(main);
 							set.put(s.data.desc.id, s);
 						} catch (Exception e) {
 							ctx.noticeErr(e, "failed to load workspace pack " + f);
@@ -267,6 +275,121 @@ public abstract class Source {
 
 	public static class Workspace extends Source {
 
+		public static class SourceAnimLoader implements AnimCI.AnimLoader {
+
+			private final File ic, mm, sp, edi, uni;
+			private final File[] ma = new File[7];
+			private final Identifier id;
+
+			private SourceAnimLoader(Identifier id) {
+				this.id = id;
+				sp = loadFile("sprite.png", id.id + ".png");
+				edi = loadFile("icon_display.png", "edi.png");
+				uni = loadFile("icon_deploy.png", "uni.png");
+				ic = loadFile("imgcut.txt", id.id + ".imgcut");
+				mm = loadFile("mamodel.txt", id.id + ".mamodel");
+				ma[0] = loadFile("maanim_walk.txt", id.id + "00.maanim");
+				ma[1] = loadFile("maanim_idle.txt", id.id + "01.maanim");
+				ma[2] = loadFile("maanim_attack.txt", id.id + "02.maanim");
+				ma[3] = loadFile("maanim_kb.txt", id.id + "03.maanim");
+				ma[4] = loadFile("maanim_burrow_down.txt", id.id + "_zombie00.maanim");
+				ma[5] = loadFile("maanim_burrow_move.txt", id.id + "_zombie01.maanim");
+				ma[6] = loadFile("maanim_burrow_up.txt", id.id + "_zombie02.maanim");
+			}
+
+			private File loadFile(String... options) {
+				File def = null;
+				for (String str : options) {
+					File f = ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str);
+					if (def == null)
+						def = f;
+					if (f.exists())
+						return f;
+				}
+				return def;
+			}
+
+			@Override
+			public VImg getEdi() {
+				if (!edi.exists())
+					return null;
+				try {
+					return new VImg(FakeImage.read(edi));
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+			@Override
+			public ImgCut getIC() {
+				return ImgCut.newIns(new FDFile(ic));
+			}
+
+			@Override
+			public MaAnim[] getMA() {
+				MaAnim[] ans = new MaAnim[ma.length];
+				for(int i=0;i<ma.length;i++)
+					ans[i] = MaAnim.newIns(new FDFile(ma[i]));
+				return ans;
+			}
+
+			@Override
+			public MaModel getMM() {
+				return MaModel.newIns(new FDFile(mm));
+			}
+
+			@Override
+			public String getName() {
+				return id.id;
+			}
+
+			@Override
+			public FakeImage getNum(boolean load) {
+				try {
+					return FakeImage.read(sp);
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+			@Override
+			public int getStatus() {
+				return id.pack.equals("_local") ? 0 : 1;
+			}
+
+			@Override
+			public VImg getUni() {
+				if (!uni.exists())
+					return null;
+				try {
+					return new VImg(FakeImage.read(uni));
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+			public void saveNum() {
+				
+			}
+			
+		}
+
+		public static AnimCI[] loadAnimations(String id) throws Exception {
+			File folder = ctx.getWorkspaceFile("./" + id + "/animations/");
+			if (!folder.exists() || !folder.isDirectory())
+				return new AnimCE[0];
+			List<AnimCI> list = new ArrayList<>();
+			for (File f : folder.listFiles()) {
+				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
+				if (f.isDirectory() && ctx.getWorkspaceFile(path).exists())
+					list.add(new AnimCI(new SourceAnimLoader(new Identifier(id, f.getName()))));
+			}
+			return list.toArray(new AnimCI[0]);
+		}
+
 		private File folder;
 
 		private Workspace(File root, PackData data) {
@@ -275,23 +398,28 @@ public abstract class Source {
 		}
 
 		@Override
-		public FakeImage readImage(Context ctx, String path) throws IOException {
-			return ImageBuilder.builder.build(getFile(ctx, path));
+		public FakeImage readImage(String path) throws IOException {
+			return ImageBuilder.builder.build(getFile(path));
 		}
 
 		@Override
-		public InputStream streamFile(Context ctx, String path) throws IOException {
-			return new FileInputStream(getFile(ctx, path));
+		public InputStream streamFile(String path) throws IOException {
+			return new FileInputStream(getFile(path));
 		}
 
-		public OutputStream writeFile(Context ctx, String path) throws IOException {
-			File f = getFile(ctx, path);
+		public OutputStream writeFile(String path) throws IOException {
+			File f = getFile(path);
 			Context.check(f);
 			return new FileOutputStream(f);
 		}
 
-		private File getFile(Context ctx, String path) {
+		private File getFile(String path) {
 			return ctx.getWorkspaceFile("./" + folder.getName() + "/" + path);
+		}
+
+		@Override
+		public AnimCI[] loadAnimations() throws Exception {
+			return loadAnimations("./" + folder.getName());
 		}
 
 	}
@@ -306,12 +434,12 @@ public abstract class Source {
 		}
 
 		@Override
-		public FakeImage readImage(Context ctx, String path) throws Exception {
+		public FakeImage readImage(String path) throws Exception {
 			return zip.tree.find(path).getData().getImg();
 		}
 
 		@Override
-		public InputStream streamFile(Context ctx, String path) throws Exception {
+		public InputStream streamFile(String path) throws Exception {
 			return zip.readFile(path);
 		}
 
@@ -331,7 +459,7 @@ public abstract class Source {
 			profile.remove(this);
 			Workspace ans = new Workspace(folder, data);
 			zip.unzip(id -> {
-				File file = ans.getFile(ctx, id);
+				File file = ans.getFile(id);
 				Context.check(file.createNewFile(), "create", file);
 				return file;
 			});
@@ -339,9 +467,17 @@ public abstract class Source {
 			return ans;
 		}
 
+		@Override
+		public AnimCI[] loadAnimations() throws Exception {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	public static Workspace initJsonPack(Context ctx, String id) throws Exception {
+	public static Context ctx;
+
+	public static Workspace initJsonPack(String id) throws Exception {
 		File f = ctx.getWorkspaceFile("./" + id + "/main.pack.json");
 		File folder = f.getParentFile();
 		if (folder.exists()) {
@@ -354,14 +490,14 @@ public abstract class Source {
 		return new Workspace(folder, new PackData(id));
 	}
 
-	public static Workspace readJsonPack(Context ctx, File f) throws Exception {
+	public static Workspace readJsonPack(File f) throws Exception {
 		File folder = f.getParentFile();
 		Reader r = new FileReader(f);
 		PackData data = JsonDecoder.decode(JsonParser.parseReader(r), PackData.class);
 		return new Workspace(folder, data);
 	}
 
-	public static ZipSource readZipPack(Context ctx, File f) throws Exception {
+	public static ZipSource readZipPack(File f) throws Exception {
 		ZipDesc zip = PackLoader.readPack(ctx::preload, f);
 		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"));
 		PackData data = JsonDecoder.decode(JsonParser.parseReader(r), PackData.class);
@@ -382,9 +518,11 @@ public abstract class Source {
 	}
 
 	/** read images from file. Use it */
-	public abstract FakeImage readImage(Context ctx, String path) throws Exception;
+	public abstract FakeImage readImage(String path) throws Exception;
 
 	/** used for streaming music. Do not use it for images and small text files */
-	public abstract InputStream streamFile(Context ctx, String path) throws Exception;
+	public abstract InputStream streamFile(String path) throws Exception;
+
+	public abstract AnimCI[] loadAnimations() throws Exception;
 
 }
