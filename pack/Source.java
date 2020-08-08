@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.google.gson.JsonParser;
 
@@ -41,7 +43,37 @@ import main.MainBCU;
 
 public abstract class Source {
 
+	public static interface AnimLoader {
+		public VImg getEdi();
+
+		public ImgCut getIC();
+
+		public MaAnim[] getMA();
+
+		public MaModel getMM();
+
+		public String getName();
+
+		public FakeImage getNum();
+
+		public int getStatus();
+
+		public VImg getUni();
+	}
+
 	public static interface Context {
+
+		public static interface RunExc {
+
+			public void run() throws Exception;
+
+		}
+
+		public static interface SupExc<T> {
+
+			public T get() throws Exception;
+
+		}
 
 		public static void check(boolean bool, String str, File f) throws IOException {
 			if (bool)
@@ -62,7 +94,6 @@ public abstract class Source {
 				for (File i : f.listFiles())
 					delete(i);
 			check(!f.delete(), "delete", f);
-
 		}
 
 		public boolean confirmDelete();
@@ -76,6 +107,23 @@ public abstract class Source {
 		public File getWorkspaceFile(String relativePath);
 
 		public void noticeErr(Exception e, String str);
+
+		public default void noticeErr(RunExc r, String str) {
+			try {
+				r.run();
+			} catch (Exception e) {
+				noticeErr(e, str);
+			}
+		}
+
+		public default <T> T noticeError(SupExc<T> r, String str) {
+			try {
+				return r.get();
+			} catch (Exception e) {
+				noticeErr(e, str);
+				return null;
+			}
+		}
 
 		public boolean preload(FileDesc desc);
 
@@ -117,9 +165,9 @@ public abstract class Source {
 			return new Identifier("" + pack, "" + id);
 		}
 
-		public final String pack;
+		public String pack;
 
-		public final String id;
+		public String id;
 
 		public Identifier() {
 			pack = null;
@@ -141,6 +189,11 @@ public abstract class Source {
 
 		public boolean equals(Identifier o) {
 			return pack.equals(o.pack) && id.equals(o.id);
+		}
+
+		@Override
+		public String toString() {
+			return pack + "/" + id;
 		}
 	}
 
@@ -185,6 +238,155 @@ public abstract class Source {
 			this.id = id;
 			this.dependency = new ArrayList<>();
 		}
+	}
+
+	public static class SourceAnimLoader implements Source.AnimLoader {
+
+		private final File ic, mm, sp, edi, uni;
+		private final File[] ma = new File[7];
+		private final Identifier id;
+
+		private SourceAnimLoader(Identifier id) {
+			this.id = id;
+			sp = loadFile("sprite.png");
+			edi = loadFile("icon_display.png");
+			uni = loadFile("icon_deploy.png");
+			ic = loadFile("imgcut.txt");
+			mm = loadFile("mamodel.txt");
+			ma[0] = loadFile("maanim_walk.txt");
+			ma[1] = loadFile("maanim_idle.txt");
+			ma[2] = loadFile("maanim_attack.txt");
+			ma[3] = loadFile("maanim_kb.txt");
+			ma[4] = loadFile("maanim_burrow_down.txt");
+			ma[5] = loadFile("maanim_burrow_move.txt");
+			ma[6] = loadFile("maanim_burrow_up.txt");
+		}
+
+		@Override
+		public VImg getEdi() {
+			if (!edi.exists())
+				return null;
+			return ctx.noticeError(() -> new VImg(FakeImage.read(edi)), "failed to read Display Icon" + id);
+		}
+
+		@Override
+		public ImgCut getIC() {
+			return ImgCut.newIns(new FDFile(ic));
+		}
+
+		@Override
+		public MaAnim[] getMA() {
+			MaAnim[] ans = new MaAnim[ma.length];
+			for (int i = 0; i < ma.length; i++)
+				ans[i] = MaAnim.newIns(new FDFile(ma[i]));
+			return ans;
+		}
+
+		@Override
+		public MaModel getMM() {
+			return MaModel.newIns(new FDFile(mm));
+		}
+
+		@Override
+		public String getName() {
+			return id.id;
+		}
+
+		@Override
+		public FakeImage getNum() {
+			return ctx.noticeError(() -> FakeImage.read(sp), "failed to read sprite sheet " + id);
+		}
+
+		@Override
+		public int getStatus() {
+			return id.pack.equals("_local") ? 0 : 1;
+		}
+
+		@Override
+		public VImg getUni() {
+			if (!uni.exists())
+				return null;
+			return ctx.noticeError(() -> new VImg(FakeImage.read(uni)), "failed to read deploy icon " + id);
+		}
+
+		private File loadFile(String str) {
+			return ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str);
+		}
+
+	}
+
+	public static class SourceAnimSaver {
+
+		private final Identifier id;
+		private final AnimCE anim;
+
+		public SourceAnimSaver(Identifier id, AnimCE anim) {
+			this.id = id;
+			this.anim = anim;
+		}
+
+		public void delete() {
+			ctx.noticeErr(() -> Context.delete(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id)),
+					"failed to delete animation: " + id);
+		}
+
+		public void saveAll() {
+			saveData();
+			saveImgs();
+		}
+
+		public void saveData() {
+			try {
+				write("imgcut.txt", anim.imgcut::write);
+				write("mamodel.txt", anim.mamodel::write);
+				write("maanim_walk.txt", anim.anims[0]::write);
+				write("maanim_idle.txt", anim.anims[1]::write);
+				write("maanim_attack.txt", anim.anims[2]::write);
+				write("maanim_kb.txt", anim.anims[3]::write);
+				write("maanim_burrow_down.txt", anim.anims[4]::write);
+				write("maanim_burrow_move.txt", anim.anims[5]::write);
+				write("maanim_burrow_up.txt", anim.anims[6]::write);
+			} catch (IOException e) {
+				ctx.noticeErr(e, "Error during saving animation data: " + anim);
+			}
+		}
+
+		public void saveIconDeploy() {
+			if (anim.getUni() != null)
+				ctx.noticeErr(() -> write("icon_deploy.png", anim.getUni().getImg()),
+						"Error during saving deploy icon: " + id);
+		}
+
+		public void saveIconDisplay() {
+			if (anim.getEdi() != null)
+				ctx.noticeErr(() -> write("icon_display.png", anim.getEdi().getImg()),
+						"Error during saving display icon: " + id);
+		}
+
+		public void saveImgs() {
+			saveSprite();
+			saveIconDisplay();
+			saveIconDeploy();
+		}
+
+		public void saveSprite() {
+			ctx.noticeErr(() -> write("sprite.png", anim.getNum()), "Error during saving sprite sheet: " + id);
+		}
+
+		private void write(String type, Consumer<PrintStream> con) throws IOException {
+			File f = ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + type);
+			Context.check(f);
+			PrintStream ps = new PrintStream(f);
+			con.accept(ps);
+			ps.close();
+		}
+
+		private void write(String type, FakeImage img) throws IOException {
+			File f = ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + type);
+			Context.check(f);
+			Context.check(FakeImage.write(img, "PNG", f), "save", f);
+		}
+
 	}
 
 	public static class UserProfile {
@@ -275,108 +477,6 @@ public abstract class Source {
 
 	public static class Workspace extends Source {
 
-		public static class SourceAnimLoader implements AnimCI.AnimLoader {
-
-			private final File ic, mm, sp, edi, uni;
-			private final File[] ma = new File[7];
-			private final Identifier id;
-
-			private SourceAnimLoader(Identifier id) {
-				this.id = id;
-				sp = loadFile("sprite.png", id.id + ".png");
-				edi = loadFile("icon_display.png", "edi.png");
-				uni = loadFile("icon_deploy.png", "uni.png");
-				ic = loadFile("imgcut.txt", id.id + ".imgcut");
-				mm = loadFile("mamodel.txt", id.id + ".mamodel");
-				ma[0] = loadFile("maanim_walk.txt", id.id + "00.maanim");
-				ma[1] = loadFile("maanim_idle.txt", id.id + "01.maanim");
-				ma[2] = loadFile("maanim_attack.txt", id.id + "02.maanim");
-				ma[3] = loadFile("maanim_kb.txt", id.id + "03.maanim");
-				ma[4] = loadFile("maanim_burrow_down.txt", id.id + "_zombie00.maanim");
-				ma[5] = loadFile("maanim_burrow_move.txt", id.id + "_zombie01.maanim");
-				ma[6] = loadFile("maanim_burrow_up.txt", id.id + "_zombie02.maanim");
-			}
-
-			private File loadFile(String... options) {
-				File def = null;
-				for (String str : options) {
-					File f = ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str);
-					if (def == null)
-						def = f;
-					if (f.exists())
-						return f;
-				}
-				return def;
-			}
-
-			@Override
-			public VImg getEdi() {
-				if (!edi.exists())
-					return null;
-				try {
-					return new VImg(FakeImage.read(edi));
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-			@Override
-			public ImgCut getIC() {
-				return ImgCut.newIns(new FDFile(ic));
-			}
-
-			@Override
-			public MaAnim[] getMA() {
-				MaAnim[] ans = new MaAnim[ma.length];
-				for(int i=0;i<ma.length;i++)
-					ans[i] = MaAnim.newIns(new FDFile(ma[i]));
-				return ans;
-			}
-
-			@Override
-			public MaModel getMM() {
-				return MaModel.newIns(new FDFile(mm));
-			}
-
-			@Override
-			public String getName() {
-				return id.id;
-			}
-
-			@Override
-			public FakeImage getNum(boolean load) {
-				try {
-					return FakeImage.read(sp);
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-			@Override
-			public int getStatus() {
-				return id.pack.equals("_local") ? 0 : 1;
-			}
-
-			@Override
-			public VImg getUni() {
-				if (!uni.exists())
-					return null;
-				try {
-					return new VImg(FakeImage.read(uni));
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-			public void saveNum() {
-				
-			}
-			
-		}
-
 		public static AnimCI[] loadAnimations(String id) throws Exception {
 			File folder = ctx.getWorkspaceFile("./" + id + "/animations/");
 			if (!folder.exists() || !folder.isDirectory())
@@ -395,6 +495,11 @@ public abstract class Source {
 		private Workspace(File root, PackData data) {
 			super(data);
 			folder = root;
+		}
+
+		@Override
+		public AnimCI[] loadAnimations() throws Exception {
+			return loadAnimations("./" + folder.getName());
 		}
 
 		@Override
@@ -417,11 +522,6 @@ public abstract class Source {
 			return ctx.getWorkspaceFile("./" + folder.getName() + "/" + path);
 		}
 
-		@Override
-		public AnimCI[] loadAnimations() throws Exception {
-			return loadAnimations("./" + folder.getName());
-		}
-
 	}
 
 	public static class ZipSource extends Source {
@@ -431,6 +531,12 @@ public abstract class Source {
 		private ZipSource(ZipDesc desc, PackData data) {
 			super(data);
 			zip = desc;
+		}
+
+		@Override
+		public AnimCI[] loadAnimations() throws Exception {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		@Override
@@ -465,12 +571,6 @@ public abstract class Source {
 			});
 			profile.add(ans);
 			return ans;
-		}
-
-		@Override
-		public AnimCI[] loadAnimations() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
 		}
 
 	}
@@ -517,12 +617,12 @@ public abstract class Source {
 		return loadable;
 	}
 
+	public abstract AnimCI[] loadAnimations() throws Exception;
+
 	/** read images from file. Use it */
 	public abstract FakeImage readImage(String path) throws Exception;
 
 	/** used for streaming music. Do not use it for images and small text files */
 	public abstract InputStream streamFile(String path) throws Exception;
-
-	public abstract AnimCI[] loadAnimations() throws Exception;
 
 }

@@ -33,7 +33,7 @@ public abstract class AnimD extends AnimI {
 		return new EAnimD(this, mamodel, anims[t]);
 	}
 
-	public abstract FakeImage getNum(boolean load);
+	public abstract FakeImage getNum();
 
 	public int len(int t) {
 		check();
@@ -70,7 +70,7 @@ public abstract class AnimD extends AnimI {
 	}
 
 	public void unload() {
-		if(parts != null) {
+		if (parts != null) {
 			for (int i = 0; i < parts.length; i++) {
 				if (parts[i] != null) {
 					parts[i].unload();

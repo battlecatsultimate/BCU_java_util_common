@@ -71,14 +71,14 @@ public class EffAnim extends AnimD {
 		effas[A_CURSE] = new EffAnim(stfs[3] + ski + "curse", vfs[3], icfs[3], temp);
 
 		readCustom(stfs, icfs);
-		
+
 		VImg vuw = new VImg("./org/battle/s4/skill004.png");
 		ImgCut icsvuw = ImgCut.newIns("./org/battle/s4/skill004.imgcut");
 		effas[A_WAVE] = new EffAnim("./org/battle/s4/skill_wave_attack", vuw, icsvuw, temp);
-		
+
 		VImg vew = new VImg("./org/battle/s5/skill005.png");
 		ImgCut icsvew = ImgCut.newIns("./org/battle/s5/skill005.imgcut");
-		effas[A_E_WAVE] = new EffAnim("./org/battle/s5/skill_wave_attack_e",vew, icsvew, temp);
+		effas[A_E_WAVE] = new EffAnim("./org/battle/s5/skill_wave_attack_e", vew, icsvew, temp);
 
 		VImg vsatk = new VImg("./org/battle/s6/skill006.png");
 		ImgCut icsatk = ImgCut.newIns("./org/battle/s6/skill006.imgcut");
@@ -99,8 +99,8 @@ public class EffAnim extends AnimD {
 		vic = new VImg("./org/battle/s10/skill010.png");
 		icc = ImgCut.newIns("./org/battle/s10/skill010.imgcut");
 		effas[A_E_VOLC] = new EffAnim("./org/battle/s10/skill_volcano", vic, icc, temp);
-		
-		temp = new String[] {""};
+
+		temp = new String[] { "" };
 		VImg vcu = new VImg("./org/battle/s11/skill011.png");
 		ImgCut iccu = ImgCut.newIns("./org/battle/s11/skill011.imgcut");
 		effas[A_E_CURSE] = new EffAnim("./org/battle/s11/skill_curse_e", vcu, iccu, temp);
@@ -167,42 +167,42 @@ public class EffAnim extends AnimD {
 		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[3] << 16 | is[2] << 8 | is[1]));
 		effas[A_POI7] = new EffAnim(strpb, vpois, icpois, temp);
 		effas[A_POI7].name = "poison_pink";
-		
-		temp = new String [] {"buff", "debuff"};
-		
+
+		temp = new String[] { "buff", "debuff" };
+
 		String breaker = stfs[3] + "armor_break/armor_break";
-		VImg vbreak = new VImg(breaker+".png");
-		ImgCut icbreak = ImgCut.newIns(breaker+".imgcut");
+		VImg vbreak = new VImg(breaker + ".png");
+		ImgCut icbreak = ImgCut.newIns(breaker + ".imgcut");
 		effas[A_ARMOR] = new EffAnim(breaker, vbreak, icbreak, temp);
-		
+
 		breaker = stfs[3] + "armor_break_e/armor_break_e";
-		icbreak = ImgCut.newIns(breaker+".imgcut");
-		vbreak = new VImg(breaker+".png");
+		icbreak = ImgCut.newIns(breaker + ".imgcut");
+		vbreak = new VImg(breaker + ".png");
 		effas[A_E_ARMOR] = new EffAnim(breaker, vbreak, icbreak, temp);
-		
-		temp = new String [] {"up", "down"};
-		
+
+		temp = new String[] { "up", "down" };
+
 		String speed = stfs[3] + "speed/speed";
-		VImg vspeed = new VImg(speed+".png");
-		ImgCut icspeed = ImgCut.newIns(speed+".imgcut");
+		VImg vspeed = new VImg(speed + ".png");
+		ImgCut icspeed = ImgCut.newIns(speed + ".imgcut");
 		effas[A_SPEED] = new EffAnim(speed, vspeed, icspeed, temp);
-		
+
 		speed = stfs[3] + "speed_e/speed_e";
-		vspeed = new VImg(speed+".png");
-		icspeed = ImgCut.newIns(speed+".imgcut");
+		vspeed = new VImg(speed + ".png");
+		icspeed = ImgCut.newIns(speed + ".imgcut");
 		effas[A_E_SPEED] = new EffAnim(speed, vspeed, icspeed, temp);
-		
-		temp = new String [] {"up"};
-		
+
+		temp = new String[] { "up" };
+
 		String wea = "./org/battle/";
-		String weakup = wea+"weaken_up/weaken_up";
-		VImg vwea = new VImg(weakup+".png");
-		ImgCut icwea = ImgCut.newIns(weakup+".imgcut");
+		String weakup = wea + "weaken_up/weaken_up";
+		VImg vwea = new VImg(weakup + ".png");
+		ImgCut icwea = ImgCut.newIns(weakup + ".imgcut");
 		effas[A_WEAK_UP] = new EffAnim(weakup, vwea, icwea, temp);
-		
-		weakup = wea+"weaken_up_e/weaken_up_e";
-		vwea = new VImg(weakup+".png");
-		icwea = ImgCut.newIns(weakup+".imgcut");
+
+		weakup = wea + "weaken_up_e/weaken_up_e";
+		vwea = new VImg(weakup + ".png");
+		icwea = ImgCut.newIns(weakup + ".imgcut");
 		effas[A_E_WEAK_UP] = new EffAnim(weakup, vwea, icwea, temp);
 	}
 
@@ -220,7 +220,7 @@ public class EffAnim extends AnimD {
 	}
 
 	@Override
-	public FakeImage getNum(boolean load) {
+	public FakeImage getNum() {
 		return vimg.getImg();
 	}
 

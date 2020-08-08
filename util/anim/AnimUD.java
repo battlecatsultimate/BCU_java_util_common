@@ -63,7 +63,7 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 		}
 
 		@Override
-		public FakeImage getNum(boolean load) {
+		public FakeImage getNum() {
 			if (num != null)
 				return num;
 			AssetData fd = dnum == null ? (dnum = fnum.getData()) : dnum;
@@ -89,7 +89,7 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 		public void unload() {
 			dnum = null;
 
-			if(num != null) {
+			if (num != null) {
 				num.unload();
 				num = null;
 			}
@@ -111,7 +111,7 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 		if (!loaded)
 			return;
 		loader.reload(ad);
-		parts = imgcut.cut(getNum(true));
+		parts = imgcut.cut(getNum());
 	}
 
 }

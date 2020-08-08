@@ -43,16 +43,16 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 1)
 			id = v;
 		else if (m == 2) {
-			if(extType == 1 && img != v)
-				for(int i = 0; i < randSeries.size(); i++) {
+			if (extType == 1 && img != v)
+				for (int i = 0; i < randSeries.size(); i++) {
 					int r = randSeries.get(i);
-					
+
 					r += 1;
 					r = r > 3 ? 0 : r;
-					
+
 					randSeries.set(i, r);
 				}
-			
+
 			img = v;
 		} else if (m == 3)
 			z = v * ent.length + ind;
@@ -81,7 +81,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 50) {
 			extend = v;
 			extType = 0;
-		} else if(m == 51) {
+		} else if (m == 51) {
 			extend = v;
 			extType = 1;
 		} else
@@ -147,10 +147,11 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P tpiv = P.newP(piv).times(p0).times(base);
 		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
-		if(extType == 0)
+		if (extType == 0)
 			drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
-		else if(extType == 1)
-			drawRandom(g, new FakeImage [] {a.parts(3), a.parts(4), a.parts(5), a.parts(6)}, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
+		else if (extType == 1)
+			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
+					glow == 1, 1.0 * extend / model.ints[0]);
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);

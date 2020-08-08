@@ -84,16 +84,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public BasisLU sele;
 
-	@JsonField(tag = "sele", io = IOType.W)
-	public int zser() {
-		return lb.indexOf(sele);
-	}
-
-	@JsonField(tag = "sele", io = IOType.R)
-	public void zgen(JsonElement elem) {
-		sele = lb.get(elem.getAsInt());
-	}
-
 	public BasisSet() {
 		if (list.size() == 0)
 			name = "temporary";
@@ -165,6 +155,16 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		os.writeInt(lb.indexOf(sele));
 		os.terminate();
 		return os;
+	}
+
+	@JsonField(tag = "sele", io = IOType.R)
+	public void zgen(JsonElement elem) {
+		sele = lb.get(elem.getAsInt());
+	}
+
+	@JsonField(tag = "sele", io = IOType.W)
+	public int zser() {
+		return lb.indexOf(sele);
 	}
 
 	private void zread(int val, InStream is) {

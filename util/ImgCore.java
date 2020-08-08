@@ -54,7 +54,7 @@ public class ImgCore extends Data {
 		}
 		g.setComposite(FakeGraphics.DEF, 0, 0);
 	}
-	
+
 	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, double opa, boolean glow,
 			double extend) {
 		if (opa < fullOpa * 0.01 - 1e-5)
@@ -73,28 +73,28 @@ public class ImgCore extends Data {
 			int i = 0;
 			while (extend > 1) {
 				int data;
-				
-				if(i >= randSeries.size()) {
+
+				if (i >= randSeries.size()) {
 					data = (int) (Math.random() * 3);
-					
+
 					randSeries.add(data);
 				} else {
 					data = randSeries.get(i);
 				}
-				
+
 				FakeImage ranImage = bimg[data];
 				drawImage(g, ranImage, x, -piv.y, sc.x, sc.y);
 				x += sc.x;
 				extend--;
 				i++;
 			}
-			
+
 			int w = (int) (bimg[0].getWidth() * extend);
 			int h = bimg[0].getHeight();
 			if (w > 0) {
 				FakeImage par;
 				par = bimg[0].getSubimage(0, 0, w, h);
-				
+
 				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
 			}
 		}

@@ -85,23 +85,18 @@ public class Unit extends Data implements Comparable<Unit> {
 
 	}
 
+	@JCGenericRead(int.class)
+	public static Unit zgen(int i) {
+		return UnitStore.get(i, true);
+	}
 	public final Pack pack;
 	public final int id;
 	public int rarity, max, maxp;
 	public Form[] forms;
 	public UnitLevel lv;
+
 	public final UnitInfo info = new UnitInfo();
 
-	@JCGenericRead(int.class)
-	public static Unit zgen(int i) {
-		return UnitStore.get(i, true);
-	}
-
-	@JCGenericWrite(int.class)
-	public int zser() {
-		return id;
-	}
-	
 	public Unit(int ID, Unit old, Pack p, UnitLevel ul) {
 		pack = p;
 		id = ID;
@@ -205,6 +200,11 @@ public class Unit extends Data implements Comparable<Unit> {
 		if (forms[0].name.length() > 0)
 			return trio(id) + " " + forms[0].name;
 		return trio(id);
+	}
+
+	@JCGenericWrite(int.class)
+	public int zser() {
+		return id;
 	}
 
 }

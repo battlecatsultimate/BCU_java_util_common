@@ -13,23 +13,25 @@ import common.util.anim.EAnimU;
 import common.util.unit.Level;
 
 public class EUnit extends Entity {
-	
+
 	public static class OrbHandler extends BattleObj {
 		protected static int getOrbAtk(AttackAb atk, EEnemy en) {
-			if(atk.matk == null) {
+			if (atk.matk == null) {
 				return 0;
 			}
-			
-			if(atk.origin.model instanceof AtkModelUnit) {
-				//Warning : Eunit.e became public now
+
+			if (atk.origin.model instanceof AtkModelUnit) {
+				// Warning : Eunit.e became public now
 				EUnit unit = (EUnit) ((AtkModelUnit) atk.origin.model).e;
-				
+
 				return unit.getOrbAtk(en.type, atk.matk);
 			}
-			
+
 			return 0;
 		}
 	}
+
+	protected final Level level;
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level) {
 		super(b, de, ea, d0 * b.b.t().getAtkMulti(), d0 * b.b.t().getDefMulti());
@@ -37,8 +39,6 @@ public class EUnit extends Entity {
 		type = de.getType();
 		this.level = level;
 	}
-	
-	protected final Level level;
 
 	@Override
 	public int getAtk() {
@@ -47,7 +47,7 @@ public class EUnit extends Entity {
 			atk = atk * status[P_WEAK][1] / 100;
 		if (status[P_STRONG][0] != 0)
 			atk += atk * (status[P_STRONG][0] + basis.b.getInc(C_STRONG)) / 100;
-		
+
 		return atk;
 	}
 
@@ -75,8 +75,8 @@ public class EUnit extends Entity {
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
-		
-		//Perform orb
+
+		// Perform orb
 		ans += getOrbRes(atk.type, atk.matk);
 
 		return ans;
@@ -98,47 +98,47 @@ public class EUnit extends Entity {
 			extmov += data.getSpeed() * basis.b.getInc(C_SPE) / 200.0;
 		return super.updateMove(maxl, extmov);
 	}
-	
+
 	private int getOrbAtk(int trait, MaskAtk matk) {
-		Orb orb = ((MaskUnit) data).getOrb(); 
-		
-		if(orb == null || level.getOrbs() == null) {
+		Orb orb = ((MaskUnit) data).getOrb();
+
+		if (orb == null || level.getOrbs() == null) {
 			return 0;
 		}
-		
+
 		int ans = 0;
-		
-		for(int[] line : level.getOrbs()) {
-			if(line.length == 0)
+
+		for (int[] line : level.getOrbs()) {
+			if (line.length == 0)
 				continue;
-			
-			if(line[ORB_TYPE] == Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
+
+			if (line[ORB_TYPE] == Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
 				continue;
-			
+
 			ans += orb.getAtk(line[ORB_GRADE], matk);
 		}
-		
+
 		return ans;
 	}
 
 	private int getOrbRes(int trait, MaskAtk matk) {
-        Orb orb = ((MaskUnit) data).getOrb();
-        
-        if(orb == null || level.getOrbs() == null) 
-        	return 0;
-        
-        int ans = 0;
-        
-        for(int[] line : level.getOrbs()) {
-        	if(line.length == 0)
-        		continue;
-        	
-            if(line[ORB_TYPE] == Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0) 
-            	continue;
-            
-            ans += orb.getRes(line[ORB_GRADE], matk);
-        }
-        
-        return ans;
+		Orb orb = ((MaskUnit) data).getOrb();
+
+		if (orb == null || level.getOrbs() == null)
+			return 0;
+
+		int ans = 0;
+
+		for (int[] line : level.getOrbs()) {
+			if (line.length == 0)
+				continue;
+
+			if (line[ORB_TYPE] == Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0)
+				continue;
+
+			ans += orb.getRes(line[ORB_GRADE], matk);
+		}
+
+		return ans;
 	}
 }

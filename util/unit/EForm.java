@@ -13,23 +13,23 @@ public class EForm extends Data {
 
 	public final MaskUnit du;
 
+	public EForm(Form form, int... level) {
+		f = form;
+		int[] lvs = level;
+		this.level = new Level(lvs);
+		PCoin pc = f.getPCoin();
+		if (pc != null)
+			du = pc.improve(lvs);
+		else
+			du = form.du;
+	}
+
 	public EForm(Form form, Level level) {
 		f = form;
 		this.level = level;
 		PCoin pc = f.getPCoin();
 		if (pc != null)
 			du = pc.improve(level.getLvs());
-		else
-			du = form.du;
-	}
-	
-	public EForm(Form form, int... level) {
-		f = form;
-		int [] lvs = level;
-		this.level = new Level(lvs);
-		PCoin pc = f.getPCoin();
-		if (pc != null)
-			du = pc.improve(lvs);
 		else
 			du = form.du;
 	}

@@ -146,6 +146,9 @@ public class SCDef implements Copable<SCDef> {
 	@JsonField
 	public int sdef = 0;
 
+	protected SCDef() {
+	}
+
 	protected SCDef(InStream is, int ver) {
 		if (ver >= 305) {
 			int n = is.nextByte();
@@ -173,9 +176,6 @@ public class SCDef implements Copable<SCDef> {
 			}
 		} else
 			datas = new Line[0];
-	}
-
-	protected SCDef() {
 	}
 
 	protected SCDef(int s) {

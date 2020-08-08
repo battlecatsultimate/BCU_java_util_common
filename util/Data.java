@@ -23,6 +23,29 @@ public class Data {
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Proc {
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class ARMOR extends ProcItem {
+			public int prob;
+			public int time;
+			public int mult; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class BURROW extends ProcItem {
+			public int count;
+			public int dis;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class CRITI extends ProcItem {
+			public int type; // TODO
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class IMU extends ProcItem {
+			public int mult;
+		}
+
 		public static abstract class IntType implements Cloneable {
 
 			@Documented
@@ -30,6 +53,11 @@ public class Data {
 			@Target(value = ElementType.FIELD)
 			public static @interface BitCount {
 				int value();
+			}
+
+			@Override
+			public IntType clone() throws CloneNotSupportedException {
+				return (IntType) super.clone();
 			}
 
 			public IntType load(int val) throws Exception {
@@ -65,157 +93,6 @@ public class Data {
 				return ans;
 			}
 
-			@Override
-			public IntType clone() throws CloneNotSupportedException {
-				return (IntType) super.clone();
-			}
-
-		}
-
-		public static abstract class ProcItem implements Cloneable {
-
-			public boolean exists() {
-				try {
-					Field[] fs = this.getClass().getDeclaredFields();
-					for (Field f : fs)
-						if (f.getType() == int.class) {
-							Object o = f.get(this);
-							if (((Integer) o) != 0)
-								return true;
-						}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return false;
-			}
-
-			public ProcItem load(int[] data) throws Exception {
-				Field[] fs = this.getClass().getDeclaredFields();
-				for (int i = 0; i < Math.min(data.length, fs.length); i++)
-					if (fs[i].getType() == int.class)
-						fs[i].set(this, data[i]);
-					else if (IntType.class.isAssignableFrom(fs[i].getType()))
-						fs[i].set(this, ((IntType) fs[i].getType().newInstance()).load(data[i]));
-					else if (fs[i].getType() == String.class)
-						fs[i].set(this, "" + data[i]);// FIXME id conversion
-					else
-						throw new Exception("unknown field " + fs[i].getType() + " " + fs[i].getName());
-				return this;
-			}
-
-			@Override
-			public ProcItem clone() {
-				try {
-					ProcItem ans = (ProcItem) super.clone();
-					Field[] fs = this.getClass().getDeclaredFields();
-					for (Field f : fs)
-						if (IntType.class.isAssignableFrom(f.getType()))
-							f.set(ans, ((IntType) f.get(this)).clone());
-					return ans;
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-			public void set(ProcItem pi) {
-				try {
-					Field[] fs = this.getClass().getDeclaredFields();
-					for (Field f : fs)
-						if (f.getType().isPrimitive())
-							f.set(this, f.get(pi));
-						else if (IntType.class.isAssignableFrom(f.getType()))
-							f.set(this, ((IntType) f.get(pi)).clone());
-						else if (f.getType() == String.class)
-							f.set(this, f.get(pi));
-						else
-							throw new Exception("unknown field " + f.getType() + " " + f.getName());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			public boolean perform(CopRand r) {
-				try {
-					Field f = this.getClass().getDeclaredField("prob");
-					if (f == null)
-						return exists();
-					int prob = f.getInt(this);
-					if (prob == 0)
-						return false;
-					return r.nextDouble() * 100 < prob;
-				} catch (Exception e) {
-					return exists();
-				}
-			}
-
-			public ProcItem clear() {
-				try {
-					Field[] fs = this.getClass().getDeclaredFields();
-					for (Field f : fs)
-						if (f.getType() == int.class)
-							f.set(this, 0);
-						else if (IntType.class.isAssignableFrom(f.getType()))
-							f.set(this, (f.getType().newInstance()));
-						else if (f.getType() == String.class)
-							f.set(this, "");// FIXME id conversion
-						else
-							throw new Exception("unknown field " + f.getType() + " " + f.getName());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return this;
-			}
-
-			public int get(int i) {
-				try {
-					Field f = this.getClass().getDeclaredFields()[i];
-					return f.getType() == int.class ? f.getInt(this) : ((IntType) f.get(this)).toInt();
-				} catch (Exception e) {
-					e.printStackTrace();
-					return 0;
-				}
-			}
-
-			public void set(int i, int v) {
-				try {
-					Field f = this.getClass().getDeclaredFields()[i];
-					if (f.getType() == int.class)
-						f.set(this, v);
-					else
-						((IntType) f.get(this)).load(v);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			public String toString() {
-				return JsonEncoder.encode(this).toString();
-			}
-
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class ARMOR extends ProcItem {
-			public int prob;
-			public int time;
-			public int mult; // TODO
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class BURROW extends ProcItem {
-			public int count;
-			public int dis;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class CRITI extends ProcItem {
-			public int type; // TODO
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class IMU extends ProcItem {
-			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -256,6 +133,130 @@ public class Data {
 			public int prob;
 		}
 
+		public static abstract class ProcItem implements Cloneable {
+
+			public ProcItem clear() {
+				try {
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (f.getType() == int.class)
+							f.set(this, 0);
+						else if (IntType.class.isAssignableFrom(f.getType()))
+							f.set(this, (f.getType().newInstance()));
+						else if (f.getType() == String.class)
+							f.set(this, "");// FIXME id conversion
+						else
+							throw new Exception("unknown field " + f.getType() + " " + f.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return this;
+			}
+
+			@Override
+			public ProcItem clone() {
+				try {
+					ProcItem ans = (ProcItem) super.clone();
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (IntType.class.isAssignableFrom(f.getType()))
+							f.set(ans, ((IntType) f.get(this)).clone());
+					return ans;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+			public boolean exists() {
+				try {
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (f.getType() == int.class) {
+							Object o = f.get(this);
+							if (((Integer) o) != 0)
+								return true;
+						}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return false;
+			}
+
+			public int get(int i) {
+				try {
+					Field f = this.getClass().getDeclaredFields()[i];
+					return f.getType() == int.class ? f.getInt(this) : ((IntType) f.get(this)).toInt();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return 0;
+				}
+			}
+
+			public ProcItem load(int[] data) throws Exception {
+				Field[] fs = this.getClass().getDeclaredFields();
+				for (int i = 0; i < Math.min(data.length, fs.length); i++)
+					if (fs[i].getType() == int.class)
+						fs[i].set(this, data[i]);
+					else if (IntType.class.isAssignableFrom(fs[i].getType()))
+						fs[i].set(this, ((IntType) fs[i].getType().newInstance()).load(data[i]));
+					else if (fs[i].getType() == String.class)
+						fs[i].set(this, "" + data[i]);// FIXME id conversion
+					else
+						throw new Exception("unknown field " + fs[i].getType() + " " + fs[i].getName());
+				return this;
+			}
+
+			public boolean perform(CopRand r) {
+				try {
+					Field f = this.getClass().getDeclaredField("prob");
+					if (f == null)
+						return exists();
+					int prob = f.getInt(this);
+					if (prob == 0)
+						return false;
+					return r.nextDouble() * 100 < prob;
+				} catch (Exception e) {
+					return exists();
+				}
+			}
+
+			public void set(int i, int v) {
+				try {
+					Field f = this.getClass().getDeclaredFields()[i];
+					if (f.getType() == int.class)
+						f.set(this, v);
+					else
+						((IntType) f.get(this)).load(v);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			public void set(ProcItem pi) {
+				try {
+					Field[] fs = this.getClass().getDeclaredFields();
+					for (Field f : fs)
+						if (f.getType().isPrimitive())
+							f.set(this, f.get(pi));
+						else if (IntType.class.isAssignableFrom(f.getType()))
+							f.set(this, ((IntType) f.get(pi)).clone());
+						else if (f.getType() == String.class)
+							f.set(this, f.get(pi));
+						else
+							throw new Exception("unknown field " + f.getType() + " " + f.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public String toString() {
+				return JsonEncoder.encode(this).toString();
+			}
+
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class PT extends ProcItem {
 			public int prob;
@@ -294,14 +295,6 @@ public class Data {
 			public int time;
 			public int speed;
 			public int type; // TODO
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class VOLC extends ProcItem {
-			public int prob;
-			public int dis_0;
-			public int dis_1;
-			public int time;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -350,6 +343,14 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class VOLC extends ProcItem {
+			public int prob;
+			public int dis_0;
+			public int dis_1;
+			public int time;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class WAVE extends ProcItem {
 			public int prob;
 			public int lv;
@@ -362,6 +363,33 @@ public class Data {
 			public int mult;
 		}
 
+		public static Proc blank() {
+			Proc ans = new Proc();
+			try {
+				Field[] fs = Proc.class.getDeclaredFields();
+				for (int i = 0; i < fs.length; i++) {
+					fs[i].setAccessible(true);
+					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return ans;
+		}
+		public static Proc load(int[][] data) {
+			Proc ans = new Proc();
+			try {
+				Field[] fs = Proc.class.getDeclaredFields();
+				for (int i = 0; i < Math.min(data.length, fs.length); i++) {
+					fs[i].setAccessible(true);
+					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return ans;
+		}
 		public final PTD KB = null;
 		public final PT STOP = null;
 		public final PT SLOW = null;
@@ -397,37 +425,10 @@ public class Data {
 		public final VOLC VOLC = null;
 		public final IMU IMUPOIATK = null;
 		public final IMU IMUVOLC = null;
+
 		public final ARMOR ARMOR = null;
+
 		public final SPEED SPEED = null;
-
-		public static Proc load(int[][] data) {
-			Proc ans = new Proc();
-			try {
-				Field[] fs = Proc.class.getDeclaredFields();
-				for (int i = 0; i < Math.min(data.length, fs.length); i++) {
-					fs[i].setAccessible(true);
-					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return ans;
-		}
-
-		public static Proc blank() {
-			Proc ans = new Proc();
-			try {
-				Field[] fs = Proc.class.getDeclaredFields();
-				for (int i = 0; i < fs.length; i++) {
-					fs[i].setAccessible(true);
-					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
-
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return ans;
-		}
 
 		@Override
 		public Proc clone() {
@@ -464,6 +465,7 @@ public class Data {
 			}
 		}
 
+		@Override
 		public String toString() {
 			return JsonEncoder.encode(this).toString();
 		}

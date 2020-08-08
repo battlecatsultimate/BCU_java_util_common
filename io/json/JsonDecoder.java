@@ -69,7 +69,7 @@ public class JsonDecoder {
 		if (JsonElement.class.isAssignableFrom(cls))
 			return elem;
 		Decoder dec = REGISTER.get(cls);
-		if(dec != null)
+		if (dec != null)
 			return dec.decode(elem);
 		if (cls.isArray())
 			return decodeArray(elem, cls, par);
@@ -156,7 +156,7 @@ public class JsonDecoder {
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
 		return elem.getAsByte();
 	}
-	
+
 	public static double getDouble(JsonElement elem) throws JsonException {
 		if (!elem.isJsonPrimitive() || !((JsonPrimitive) elem).isNumber())
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not number");
@@ -195,10 +195,10 @@ public class JsonDecoder {
 	public static String getString(JsonElement elem) throws JsonException {
 		if (elem.isJsonNull())
 			return null;
-		if(elem.isJsonArray()) {
+		if (elem.isJsonArray()) {
 			String ans = "";
 			JsonArray arr = elem.getAsJsonArray();
-			for(int i=0;i<arr.size();i++)
+			for (int i = 0; i < arr.size(); i++)
 				ans += arr.get(i).getAsString();
 			return ans;
 		}

@@ -55,7 +55,7 @@ public class Sniper extends AtkModelAb {
 	}
 
 	public void update() {
-		if(canDo && b.ubase.health <= 0) {
+		if (canDo && b.ubase.health <= 0) {
 			canDo = false;
 		}
 
@@ -93,7 +93,7 @@ public class Sniper extends AtkModelAb {
 				pos = e.pos;
 
 		// Get angle of cannon and bullet
-		angle = -(int) (Math.toDegrees(Math.atan(height/(getPos() - pos)))) * 10;
+		angle = -(int) (Math.toDegrees(Math.atan(height / (getPos() - pos)))) * 10;
 
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);

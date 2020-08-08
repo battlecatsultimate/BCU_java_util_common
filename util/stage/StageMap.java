@@ -47,13 +47,13 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 	public final MapColc mc;
 	public final List<Limit> lim = new ArrayList<>();
 	public StageMapInfo info;
-	
+
 	@JsonField(generic = Stage.class)
 	public final List<Stage> list = new ArrayList<>();
 	@JsonField
 	public String name = "";
 	@JsonField
-	public int id,price = 1, retyp, pllim, set,cast = -1;
+	public int id, price = 1, retyp, pllim, set, cast = -1;
 	@JsonField
 	public int[] stars = new int[] { 100 };
 

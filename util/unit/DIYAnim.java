@@ -10,7 +10,6 @@ import java.util.TreeMap;
 import common.CommonStatic;
 import common.CommonStatic.ImgReader;
 import common.io.InStream;
-import common.io.OutStream;
 import common.util.Animable;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
@@ -64,34 +63,19 @@ public class DIYAnim extends Animable<AnimCE> {
 			}
 	}
 
-	public static OutStream writeAnim(AnimCE anim) {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.1");
-		os.writeInt(anim.inPool);
-		if (anim.inPool == 0)
-			os.writeString(anim.toString());
-		else if (anim.inPool == 1)
-			os.accept(anim.write());
-		else if (anim.inPool == 2) {
-			// TODO
-		}
-		os.terminate();
-		return os;
-	}
-
-	public static AnimCE zread(InStream nam, ImgReader r, boolean ene) {
+	public static AnimCE zread(String pack, InStream nam, ImgReader r, boolean ene) {
 		int ver = getVer(nam.nextString());
 		if (ver >= 000401)
-			return zread$000401(nam, r, ene);
+			return zread$000401(pack, nam, r, ene);
 		return null;
 	}
 
-	private static AnimCE zread$000401(InStream is, ImgReader r, boolean ene) {
+	private static AnimCE zread$000401(String pack, InStream is, ImgReader r, boolean ene) {
 		int type = is.nextInt();
 		if (type == 0)
 			return getAnim(is.nextString(), ene);
 		else if (type == 1)
-			return new AnimCE(is.subStream(), r);
+			return new AnimCE(is.subStream(), r, pack);
 		else if (type == 2)
 			return null; // TODO
 		else

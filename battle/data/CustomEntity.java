@@ -40,15 +40,6 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
-	public Proc[] getAllProcs() {
-		int n = atks.length + 1;
-		Proc[] ans = new Proc[n];
-		ans[0] = rep.proc;
-		for (int i = 0; i < atks.length; i++)
-			ans[i + 1] = atks[i].proc;
-		return ans;
-	}
-
 	@Override
 	public Proc getAllProc() {
 		if (all != null)
@@ -60,6 +51,15 @@ public abstract class CustomEntity extends DataEntity {
 					all.getArr(i).set(adm.proc.getArr(i));
 		}
 		return all;
+	}
+
+	public Proc[] getAllProcs() {
+		int n = atks.length + 1;
+		Proc[] ans = new Proc[n];
+		ans[0] = rep.proc;
+		for (int i = 0; i < atks.length; i++)
+			ans[i + 1] = atks[i].proc;
+		return ans;
 	}
 
 	@Override
@@ -196,14 +196,6 @@ public abstract class CustomEntity extends DataEntity {
 		int ver = getVer(is.nextString());
 		if (ver >= 404)
 			zreada$000404(is);
-		else if (ver >= 403)
-			zreada$000403(is);
-		else if (ver >= 402)
-			zreada$000402(is);
-		else if (ver >= 401)
-			zreada$000401(is);
-		else if (ver >= 400)
-			zreada$000400(is);
 	}
 
 	protected void zreada$000308(InStream is) {
@@ -262,106 +254,6 @@ public abstract class CustomEntity extends DataEntity {
 		for (int i = 0; i < atks.length; i++)
 			atks[i] = tnew.get(inds[i]);
 
-	}
-
-	private void zreada$000400(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextInt();
-		range = is.nextInt();
-		abi = is.nextInt();
-		if ((abi & AB_GLASS) > 0)
-			loop = 1;
-		type = is.nextInt();
-		width = is.nextInt();
-		shield = is.nextInt();
-		tba = is.nextInt();
-		base = is.nextInt();
-		touch = is.nextInt();
-		boolean isrange = is.nextInt() > 0;
-		common = is.nextInt() > 0;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextInt();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++) {
-			set[i] = new AtkDataModel(this, is);
-			set[i].range = isrange;
-		}
-		int n = is.nextInt();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextInt()];
-	}
-
-	private void zreada$000401(InStream is) {
-		zreada$000400(is);
-		int adi = is.nextInt();
-		if ((adi & 1) > 0)
-			rev = new AtkDataModel(this, is);
-		if ((adi & 2) > 0)
-			res = new AtkDataModel(this, is);
-	}
-
-	private void zreada$000402(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextInt();
-		range = is.nextInt();
-		abi = is.nextInt();
-		if ((abi & AB_GLASS) > 0)
-			loop = 1;
-		type = is.nextInt();
-		width = is.nextInt();
-		shield = is.nextInt();
-		tba = is.nextInt();
-		base = is.nextInt();
-		touch = is.nextInt();
-		is.nextInt();
-		common = is.nextInt() > 0;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextInt();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
-			set[i] = new AtkDataModel(this, is);
-		int n = is.nextInt();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextInt()];
-		int adi = is.nextInt();
-		if ((adi & 1) > 0)
-			rev = new AtkDataModel(this, is);
-		if ((adi & 2) > 0)
-			res = new AtkDataModel(this, is);
-	}
-
-	private void zreada$000403(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextInt();
-		range = is.nextInt();
-		abi = is.nextInt();
-		type = is.nextInt();
-		width = is.nextInt();
-		shield = is.nextInt();
-		tba = is.nextInt();
-		base = is.nextInt();
-		touch = is.nextInt();
-		loop = is.nextInt();
-		common = is.nextInt() > 0;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextInt();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
-			set[i] = new AtkDataModel(this, is);
-		int n = is.nextInt();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextInt()];
-		int adi = is.nextInt();
-		if ((adi & 1) > 0)
-			rev = new AtkDataModel(this, is);
-		if ((adi & 2) > 0)
-			res = new AtkDataModel(this, is);
 	}
 
 	private void zreada$000404(InStream is) {

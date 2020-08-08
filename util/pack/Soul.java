@@ -26,7 +26,7 @@ public class Soul extends AnimD {
 	}
 
 	@Override
-	public FakeImage getNum(boolean load) {
+	public FakeImage getNum() {
 		return img.getImg();
 	}
 

@@ -198,7 +198,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_spawn(int i, int j, boolean boo) {
-		if(ubase.health == 0)
+		if (ubase.health == 0)
 			return false;
 		if (elu.cool[i][j] > 0)
 			return false;
@@ -320,7 +320,7 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme >= 0) {
 			bg = BGStore.getBG(theme);
-			if(themeType.kill) {
+			if (themeType.kill) {
 				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();
 				la.clear();

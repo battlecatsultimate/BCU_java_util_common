@@ -65,10 +65,10 @@ public class EEnemy extends Entity {
 			else
 				ans = (int) (maxH * basis.b.t().getCanonMulti(5) / 1000);
 		ans = critCalc((data.getType() & TB_METAL) != 0, ans, atk);
-		
-		//Perform Orb
+
+		// Perform Orb
 		ans += EUnit.OrbHandler.getOrbAtk(atk, this);
-		
+
 		return ans;
 	}
 

@@ -16,7 +16,7 @@ public class Treasure extends Data {
 	@JsonField(gen = GenType.FILL)
 	public int[] tech = new int[LV_TOT], trea = new int[T_TOT], bslv = new int[BASE_TOT], fruit = new int[7],
 			gods = new int[3];
-	
+
 	@JsonField
 	public int alien, star;
 

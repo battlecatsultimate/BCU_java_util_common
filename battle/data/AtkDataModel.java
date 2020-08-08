@@ -16,7 +16,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	public String str = "";
 	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1, dire = 1, alt = 0, move = 0;
 	public boolean range = true;
-	
+
 	@JsonField
 	public Proc proc;
 
@@ -90,6 +90,11 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	@Override
+	public int getAtk() {
+		return atk;
+	}
+
+	@Override
 	public int getDire() {
 		return dire;
 	}
@@ -148,83 +153,10 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		return ld0 * ld1 < 0;
 	}
 
-	protected void zread$000301(InStream is) {
-		str = is.nextString();
-		atk = is.nextInt();
-		pre = is.nextInt();
-		ld0 = is.nextShort();
-		ld1 = is.nextShort();
-		proc = Proc.load(is.nextIntsBB());
-	}
-
-	protected void zread$000400(InStream is) {
-		str = is.nextString();
-		atk = is.nextInt();
-		pre = is.nextInt();
-		ld0 = is.nextInt();
-		ld1 = is.nextInt();
-		targ = is.nextInt();
-		dire = is.nextInt() == 1 ? -1 : 1;
-		proc = Proc.load(is.nextIntsBB());
-	}
-
 	private void zread(String ver, InStream is) {
-		int val = getVer(ver);
-		if (val >= 307)
-			val = getVer(is.nextString());
-		else if (val >= 404)
+		int val = getVer(is.nextString());
+		if (val >= 404)
 			zread$000404(is);
-		else if (val >= 403)
-			zread$000403(is);
-		else if (val >= 402)
-			zread$000402(is);
-		else if (val >= 401)
-			zread$000401(is);
-		else if (val >= 400)
-			zread$000400(is);
-		else if (val >= 301)
-			zread$000301(is);
-	}
-
-	private void zread$000401(InStream is) {
-		str = is.nextString();
-		atk = is.nextInt();
-		pre = is.nextInt();
-		ld0 = is.nextInt();
-		ld1 = is.nextInt();
-		targ = is.nextInt();
-		int bm = is.nextInt();
-		dire = (bm & 1) > 0 ? -1 : 1;
-		range = (bm & 2) > 0;
-		proc = Proc.load(is.nextIntsBB());
-	}
-
-	private void zread$000402(InStream is) {
-		str = is.nextString();
-		atk = is.nextInt();
-		pre = is.nextInt();
-		ld0 = is.nextInt();
-		ld1 = is.nextInt();
-		targ = is.nextInt();
-		count = is.nextInt();
-		int bm = is.nextInt();
-		dire = (bm & 1) > 0 ? -1 : 1;
-		range = (bm & 2) > 0;
-		proc = Proc.load(is.nextIntsBB());
-	}
-
-	private void zread$000403(InStream is) {
-		str = is.nextString();
-		atk = is.nextInt();
-		pre = is.nextInt();
-		ld0 = is.nextInt();
-		ld1 = is.nextInt();
-		targ = is.nextInt();
-		count = is.nextInt();
-		dire = is.nextInt();
-		int bm = is.nextInt();
-		range = (bm & 1) > 0;
-		proc = Proc.load(is.nextIntsBB());
 	}
 
 	private void zread$000404(InStream is) {
@@ -241,11 +173,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		int bm = is.nextInt();
 		range = (bm & 1) > 0;
 		proc = Proc.load(is.nextIntsBB());
-	}
-
-	@Override
-	public int getAtk() {
-		return atk;
 	}
 
 }

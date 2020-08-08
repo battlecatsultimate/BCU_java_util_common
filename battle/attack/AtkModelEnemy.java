@@ -18,7 +18,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 		cursed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < cursed.length; i++) {
 			cursed[i] = data.getAtkModel(i).getProc().clone();
-			for(String s0:arr)
+			for (String s0 : arr)
 				cursed[i].get(s0).clear();
 		}
 	}

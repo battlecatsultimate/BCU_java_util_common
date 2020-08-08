@@ -30,25 +30,20 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		return str;
 	}
 
+	@JCGenericRead(int[].class)
+	public static Form zgen(int[] is) {
+		return UnitStore.get(is);
+	}
 	public final MaskUnit du;
 	public final Unit unit;
 	public final int uid;
 	public int fid;
+
 	public final VImg udi;// TODO unused
 
 	public Orb orbs = null;
 
 	public String name = "";
-
-	@JCGenericRead(int[].class)
-	public static Form zgen(int[] is) {
-		return UnitStore.get(is);
-	}
-
-	@JCGenericWrite(int[].class)
-	public int[] zser() {
-		return new int[] { uid, fid };
-	}
 
 	public Form(Unit u, int f, String str, AnimU<?> ac, CustomUnit cu) {
 		unit = u;
@@ -145,6 +140,11 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		if (name.length() > 0)
 			return base + name;
 		return base;
+	}
+
+	@JCGenericWrite(int[].class)
+	public int[] zser() {
+		return new int[] { uid, fid };
 	}
 
 }

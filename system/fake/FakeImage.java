@@ -28,12 +28,12 @@ public interface FakeImage {
 
 	public Object gl();
 
+	public boolean isValid();
+
 	public default void mark(Marker m) {
 	}
 
 	public void setRGB(int i, int j, int p);
 
 	public void unload();
-
-	public boolean isValid();
 }

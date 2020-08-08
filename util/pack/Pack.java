@@ -12,14 +12,12 @@ import java.util.Random;
 import java.util.TreeMap;
 
 import common.CommonStatic;
-import common.CommonStatic.Account;
 import common.CommonStatic.ImgReader;
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
 import common.io.BCUException;
 import common.io.InStream;
-import common.io.OutStream;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.Data;
@@ -206,15 +204,6 @@ public class Pack extends Data {
 		map.put(p.id, p);
 		p.zreadp();
 		return p;
-	}
-
-	public static void writeAll() {
-		File f = CommonStatic.def.route("./res/enemy/");
-		if (!f.exists())
-			f.mkdirs();
-		for (Pack p : map.values())
-			if (p.editable)
-				CommonStatic.def.writeBytes(p.write(), "./res/enemy/" + hex(p.id) + ".bcuenemy");
 	}
 
 	private static boolean contains(String str) {
@@ -508,56 +497,6 @@ public class Pack extends Data {
 		// TODO music
 	}
 
-	public void packUp(CommonStatic.ImgWriter w) {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.2");
-		OutStream head = OutStream.getIns();
-		head.writeInt(id);
-		head.writeByte((byte) rely.size());
-		for (int val : rely)
-			head.writeInt(val);
-		head.writeInt(MainBCU.ver);
-		head.writeString(editable ? time = MainBCU.getTime() : time);
-		head.writeInt(version);
-		head.writeString(Account.USERNAME);
-		head.terminate();
-		os.accept(head);
-		os.writeString(name);
-		os.accept(es.packup(w));
-		os.accept(us.packup(w));
-		os.accept(cs.packup(w));
-		os.accept(bg.packup(w));
-		os.accept(ms.packup(w));
-		mc.write(os);
-		os.terminate();
-		CommonStatic.def.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
-	}
-
-	public void packData(CommonStatic.ImgWriter w) {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.2");
-		OutStream head = OutStream.getIns();
-		head.writeInt(id);
-		head.writeByte((byte) rely.size());
-		for (int val : rely)
-			head.writeInt(val);
-		head.writeInt(MainBCU.ver);
-		head.writeString(editable ? time = MainBCU.getTime() : time);
-		head.writeInt(version);
-		head.writeString(Account.USERNAME);
-		head.terminate();
-		os.accept(head);
-		os.writeString(name);
-		os.accept(es.packup(w));
-		os.accept(us.packup(w));
-		os.accept(cs.packup(w));
-		os.accept(bg.packup(w));
-		os.accept(ms.packup(w));
-		mc.write(os);
-		os.terminate();
-		CommonStatic.def.writeBytes(os, "./res/data/" + hex(id) + ".bcudata");
-	}
-
 	public int relyOn(int p) {
 		if (!rely.contains(p))
 			return -1;
@@ -642,23 +581,6 @@ public class Pack extends Data {
 			if (Pack.map.get(rel).id == p)
 				return true;
 		return false;
-	}
-
-	public OutStream write() {
-		mc.name = name;
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.1");
-		os.writeInt(id);
-		os.writeByte((byte) rely.size());
-		for (int val : rely)
-			os.writeInt(val);
-		os.writeString(name);
-		os.accept(es.write());
-		os.accept(cs.write());
-		os.accept(bg.write());
-		os.accept(us.write());
-		mc.write(os);
-		return os;
 	}
 
 	public void zreadt() {

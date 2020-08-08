@@ -10,6 +10,8 @@ public interface MaskAtk extends BattleStatic {
 		return 0;
 	}
 
+	public int getAtk();
+
 	public default int getDire() {
 		return 1;
 	}
@@ -33,7 +35,5 @@ public interface MaskAtk extends BattleStatic {
 	public default int loopCount() {
 		return -1;
 	}
-	
-	public int getAtk();
 
 }

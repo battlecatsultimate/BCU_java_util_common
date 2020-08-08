@@ -5,7 +5,7 @@ import common.util.pack.EffAnim;
 
 public class ContWaveDef extends ContWaveAb {
 
-	protected ContWaveDef(AttackWave a, double p, int layer) {	
+	protected ContWaveDef(AttackWave a, double p, int layer) {
 		super(a, p, EffAnim.effas[a.dire == 1 ? A_E_WAVE : A_WAVE].getEAnim(0), layer);
 
 		CommonStatic.def.setSE(SE_WAVE);

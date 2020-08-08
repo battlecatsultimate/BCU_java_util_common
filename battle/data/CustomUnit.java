@@ -9,7 +9,7 @@ import common.util.unit.Form;
 public class CustomUnit extends CustomEntity implements MaskUnit {
 
 	public Form pack;
-	
+
 	@JsonField
 	public int price, resp;
 
@@ -41,6 +41,11 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	}
 
 	@Override
+	public Orb getOrb() {
+		return pack.orbs;
+	}
+
+	@Override
 	public Form getPack() {
 		return pack;
 	}
@@ -69,58 +74,12 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		val = getVer(is.nextString());
 		if (val >= 400)
 			zread$000400(is);
-		else if (val >= 308)
-			zread$000308(is);
-		else if (val >= 307)
-			zread$000307(is);
-
-	}
-
-	private void zread$000307(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextByte();
-		range = is.nextShort();
-		abi = is.nextInt();
-		if ((abi & AB_GLASS) > 0)
-			loop = 1;
-		type = is.nextInt();
-		width = is.nextShort();
-		shield = is.nextInt();
-		boolean isrange = is.nextByte() == 1;
-		tba = is.nextInt();
-		base = is.nextShort();
-		price = is.nextInt();
-		resp = is.nextInt();
-		common = is.nextByte() == 1;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextByte();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++) {
-			set[i] = new AtkDataModel(this, is);
-			set[i].range = isrange;
-		}
-		int n = is.nextByte();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextByte()];
-	}
-
-	private void zread$000308(InStream is) {
-		zreada$000308(is);
-		price = is.nextInt();
-		resp = is.nextInt();
 	}
 
 	private void zread$000400(InStream is) {
 		zreada(is);
 		price = is.nextInt();
 		resp = is.nextInt();
-	}
-
-	@Override
-	public Orb getOrb() {
-		return pack.orbs;
 	}
 
 }

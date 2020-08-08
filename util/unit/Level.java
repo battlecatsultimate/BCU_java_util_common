@@ -7,6 +7,10 @@ import common.util.BattleStatic;
 @JsonClass(noTag = NoTag.LOAD)
 public class Level implements BattleStatic {
 
+	private int[] lvs = { 1, 0, 0, 0, 0, 0 };
+
+	private int[][] orbs = null;
+
 	public Level() {
 	}
 
@@ -51,7 +55,6 @@ public class Level implements BattleStatic {
 			this.orbs = orbs;
 		}
 	}
-
 	@Override
 	public Level clone() {
 		if (orbs != null)
@@ -59,9 +62,6 @@ public class Level implements BattleStatic {
 
 		return new Level(lvs.clone());
 	}
-
-	private int[] lvs = { 1, 0, 0, 0, 0, 0 };
-	private int[][] orbs = null;
 
 	public int[] getLvs() {
 		return lvs;

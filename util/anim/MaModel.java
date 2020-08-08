@@ -167,6 +167,24 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 			sets[10] *= -1;
 	}
 
+	public void write(PrintStream ps) {
+		ps.println("[mamodel]");
+		ps.println(3);
+		ps.println(n);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < 13; j++)
+				ps.print(parts[i][j] + ",");
+			ps.println(strs0[i]);
+		}
+		ps.println(ints[0] + "," + ints[1] + "," + ints[2]);
+		ps.println(m);
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < confs[i].length; j++)
+				ps.print(confs[i][j] + ",");
+			ps.println(strs1[i]);
+		}
+	}
+
 	protected EPart[] arrange(EAnimI e) {
 		EPart[] ents = new EPart[n];
 		for (int i = 0; i < n; i++)
@@ -198,24 +216,6 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 			os.writeString(str);
 		for (String str : strs1)
 			os.writeString(str);
-	}
-
-	protected void write(PrintStream ps) {
-		ps.println("[mamodel]");
-		ps.println(3);
-		ps.println(n);
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < 13; j++)
-				ps.print(parts[i][j] + ",");
-			ps.println(strs0[i]);
-		}
-		ps.println(ints[0] + "," + ints[1] + "," + ints[2]);
-		ps.println(m);
-		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < confs[i].length; j++)
-				ps.print(confs[i][j] + ",");
-			ps.println(strs1[i]);
-		}
 	}
 
 	/** detect loop */

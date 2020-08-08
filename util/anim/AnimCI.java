@@ -1,13 +1,9 @@
 package common.util.anim;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import common.CommonStatic;
 import common.CommonStatic.ImgReader;
 import common.io.InStream;
-import common.io.OutStream;
+import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
@@ -17,33 +13,15 @@ import main.Opts;
 
 public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
-	public static interface AnimLoader {
-		public VImg getEdi();
-
-		public ImgCut getIC();
-
-		public MaAnim[] getMA();
-
-		public MaModel getMM();
-
-		public String getName();
-
-		public FakeImage getNum(boolean load);
-
-		public int getStatus();
-
-		public VImg getUni();
-	}
-
 	protected static class AnimCILoader implements AnimU.ImageLoader {
 
-		private final AnimCI.AnimLoader loader;
+		public final Source.AnimLoader loader;
 		private FakeImage num;
 		private boolean ediLoaded = false;
 		private VImg edi;
 		private VImg uni;
 
-		private AnimCILoader(AnimCI.AnimLoader al) {
+		private AnimCILoader(Source.AnimLoader al) {
 			loader = al;
 		}
 
@@ -78,10 +56,10 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 		}
 
 		@Override
-		public FakeImage getNum(boolean load) {
+		public FakeImage getNum() {
 			if (num != null && num.bimg() != null && num.isValid())
 				return num;
-			return num = loader.getNum(load);
+			return num = loader.getNum();
 		}
 
 		public int getStatus() {
@@ -106,8 +84,8 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 		public void setEdi(VImg vedi) {
 			edi = vedi;
-			
-			if(vedi != null)
+
+			if (vedi != null)
 				vedi.mark(Marker.EDI);
 
 			ediLoaded = true;
@@ -130,13 +108,13 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 
 	public String name = "";
 
-	public AnimCI(AnimCI.AnimLoader acl) {
-		super(new AnimCILoader(acl));
-		name = loader.getName();
-	}
-
 	public AnimCI(InStream is, ImgReader r) {
 		this(CommonStatic.def.loadAnim(is, r));
+	}
+
+	public AnimCI(Source.AnimLoader acl) {
+		super(new AnimCILoader(acl));
+		name = loader.getName();
 	}
 
 	@Override
@@ -158,102 +136,6 @@ public class AnimCI extends AnimU<AnimCI.AnimCILoader> {
 	@Override
 	public String toString() {
 		return name;
-	}
-
-	public OutStream write() {
-		check();
-		OutStream osi = OutStream.getIns();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			FakeImage.write(getNum(true), "PNG", baos);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			osi.terminate();
-			return osi;
-		}
-		osi.writeBytesI(baos.toByteArray());
-		try {
-			baos = new ByteArrayOutputStream();
-			imgcut.write(new PrintStream(baos, true, "UTF-8"));
-			osi.writeBytesI(baos.toByteArray());
-			baos = new ByteArrayOutputStream();
-			mamodel.write(new PrintStream(baos, true, "UTF-8"));
-			osi.writeBytesI(baos.toByteArray());
-			osi.writeInt(anims.length);
-			for (MaAnim ani : anims) {
-				baos = new ByteArrayOutputStream();
-				ani.write(new PrintStream(baos, true, "UTF-8"));
-				osi.writeBytesI(baos.toByteArray());
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		if (getEdi() != null && getEdi().getImg() != null) {
-			baos = new ByteArrayOutputStream();
-			try {
-				FakeImage.write(getEdi().getImg(), "PNG", baos);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				osi.terminate();
-				return osi;
-			}
-			osi.writeBytesI(baos.toByteArray());
-		}
-		if (getUni() != null && getUni().getImg() != null) {
-			baos = new ByteArrayOutputStream();
-			try {
-				FakeImage.write(getUni().getImg(), "PNG", baos);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				osi.terminate();
-				return osi;
-			}
-			osi.writeBytesI(baos.toByteArray());
-		}
-		osi.terminate();
-		return osi;
-	}
-
-	public OutStream writeData(CommonStatic.ImgWriter w) {
-		if (w == null)
-			return write();
-
-		if(imgcut == null) {
-			imgcut = loader.getIC();
-		}
-
-		if(mamodel == null) {
-			mamodel = loader.getMM();
-		}
-
-		if(anims == null) {
-			anims = loader.getMA();
-		}
-
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.9");
-		os.writeString(w.writeImg(getNum(false)));
-		os.writeString(w.writeImgOptional(getEdi()));
-		os.writeString(w.writeImgOptional(getUni()));
-		ByteArrayOutputStream baos;
-		try {
-			baos = new ByteArrayOutputStream();
-			imgcut.write(new PrintStream(baos, true, "UTF-8"));
-			os.writeBytesI(baos.toByteArray());
-			baos = new ByteArrayOutputStream();
-			mamodel.write(new PrintStream(baos, true, "UTF-8"));
-			os.writeBytesI(baos.toByteArray());
-			os.writeInt(anims.length);
-			for (MaAnim ani : anims) {
-				baos = new ByteArrayOutputStream();
-				ani.write(new PrintStream(baos, true, "UTF-8"));
-				os.writeBytesI(baos.toByteArray());
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		os.terminate();
-		return os;
 	}
 
 }

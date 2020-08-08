@@ -483,7 +483,7 @@ public abstract class Entity extends AbEntity {
 
 		/** temp field to store wanted KB type */
 		private int tempKBtype = -1;
-		
+
 		private double initPos;
 		private double kbDuration;
 		private double time = 1;
@@ -507,6 +507,11 @@ public abstract class Entity extends AbEntity {
 			kbDuration = e.kbTime;
 			time = 1;
 			e.anim.kbAnim();
+		}
+
+		private double easeOut(double time, double start, double end, double duration, double dire) {
+			time /= duration;
+			return -end * time * (time - 2) * dire + start;
 		}
 
 		private void interrupt(int t, double d) {
@@ -540,20 +545,20 @@ public abstract class Entity extends AbEntity {
 		 * end of KB: check whether it's killed, deal with revive
 		 */
 		private void updateKB() {
-			if(kbType != INT_WARP && kbType != INT_KB) {
+			if (kbType != INT_WARP && kbType != INT_KB) {
 				double mov = kbDis / e.kbTime;
 				kbDis -= mov;
 				kbmove(mov);
 			} else if (kbType == INT_KB) {
-				if(time == 1) {
+				if (time == 1) {
 					kbDuration = e.kbTime;
 				}
-				
+
 				double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
-				mov *= - e.dire;
-				
+				mov *= -e.dire;
+
 				kbmove(mov);
-				
+
 				time++;
 			} else {
 				e.anim.setAnim(0);
@@ -576,7 +581,7 @@ public abstract class Entity extends AbEntity {
 			if (e.kbTime == 0) {
 				e.anim.back = null;
 				e.anim.setAnim(0);
-				
+
 				kbDuration = 0;
 				initPos = 0;
 				time = 1;
@@ -584,11 +589,6 @@ public abstract class Entity extends AbEntity {
 				if (e.health <= 0)
 					e.preKill();
 			}
-		}
-
-		private double easeOut(double time, double start, double end, double duration, double dire) {
-			time /= duration;
-			return -end * time*(time - 2) * dire + start;
 		}
 	}
 
@@ -1185,7 +1185,7 @@ public abstract class Entity extends AbEntity {
 		long ext = health * hb % maxH;
 		if (ext == 0)
 			ext = maxH;
-		if(status[P_ARMOR][0] > 0) {
+		if (status[P_ARMOR][0] > 0) {
 			damage *= (100 + status[P_ARMOR][1]) / 100;
 		}
 		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))
@@ -1382,6 +1382,17 @@ public abstract class Entity extends AbEntity {
 		return max > mov;
 	}
 
+	private boolean cantGoMore() {
+		if (status[P_SPEED][0] == 0)
+			return false;
+
+		if (dire == 1) {
+			return pos <= 0;
+		} else {
+			return pos >= basis.st.len;
+		}
+	}
+
 	/** interrupt whatever this entity is doing */
 	private void clearState() {
 		atkm.stopAtk();
@@ -1540,17 +1551,6 @@ public abstract class Entity extends AbEntity {
 			for (int i = 0; i < le.size(); i++)
 				if (le.get(i).targetable(type))
 					touchEnemy = true;
-		}
-	}
-
-	private boolean cantGoMore() {
-		if (status[P_SPEED][0] == 0)
-			return false;
-
-		if (dire == 1) {
-			return pos <= 0;
-		} else {
-			return pos >= basis.st.len;
 		}
 	}
 }

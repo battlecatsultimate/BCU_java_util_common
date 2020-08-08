@@ -23,10 +23,10 @@ public class WaprCont extends EAnimCont {
 	@Override
 	public void draw(FakeGraphics gra, P p, double psiz) {
 		FakeTransform at = gra.getTransform();
-		p.y -= 275*psiz;
+		p.y -= 275 * psiz;
 		super.draw(gra, p, psiz);
 		gra.setTransform(at);
-		p.y += 275*psiz;
+		p.y += 275 * psiz;
 		ent.paraTo(chara);
 		ent.draw(gra, p, psiz);
 		ent.paraTo(null);

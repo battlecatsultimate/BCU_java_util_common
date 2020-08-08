@@ -48,34 +48,29 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		}
 	}
 
+	@JCGenericRead(value = int.class, parent = MapColc.class)
+	public static CharaGroup zgen(int i, MapColc mc) {
+		return i < 0 ? null : mc.groups.get(i);
+	}
 	public final Pack pack;
 	@JsonField
 	public int id, type = 0;
 	@JsonField(generic = Unit.class)
 	public final TreeSet<Unit> set = new TreeSet<>();
+
 	@JsonField
 	public String name = "";
-
-	@JCConstructor
-	public CharaGroup(MapColc map) {
-		pack = map.pack;
-	}
-
-	@JCGenericRead(value = int.class, parent = MapColc.class)
-	public static CharaGroup zgen(int i, MapColc mc) {
-		return i < 0 ? null : mc.groups.get(i);
-	}
-
-	@JCGenericWrite(int.class)
-	public int zser() {
-		return id;
-	}
 
 	public CharaGroup(CharaGroup cg) {
 		pack = null;
 		id = -1;
 		type = cg.type;
 		set.addAll(cg.set);
+	}
+
+	@JCConstructor
+	public CharaGroup(MapColc map) {
+		pack = map.pack;
 	}
 
 	public CharaGroup(Pack pac, int ID, int t, int... units) {
@@ -136,6 +131,11 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 				if (st.lim != null && st.lim.group == this)
 					return true;
 		return false;
+	}
+
+	@JCGenericWrite(int.class)
+	public int zser() {
+		return id;
 	}
 
 	protected void write(OutStream os) {

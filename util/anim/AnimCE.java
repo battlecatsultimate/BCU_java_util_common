@@ -1,8 +1,6 @@
 package common.util.anim;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +10,9 @@ import common.CommonStatic;
 import common.CommonStatic.EditLink;
 import common.io.InStream;
 import common.io.OutStream;
+import common.pack.Source;
+import common.pack.Source.Identifier;
+import common.pack.Source.SourceAnimSaver;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
@@ -20,25 +21,7 @@ import main.Opts;
 
 public class AnimCE extends AnimCI {
 
-	public static interface AnimLoader {
-		public VImg getEdi();
-
-		public ImgCut getIC();
-
-		public MaAnim[] getMA();
-
-		public MaModel getMM();
-
-		public String getName();
-
-		public FakeImage getNum();
-
-		public int getStatus();
-
-		public VImg getUni();
-	}
-
-	static class AnimCELoader implements AnimCI.AnimLoader {
+	static class AnimCELoader implements Source.AnimLoader {
 
 		private static VImg optional(String str) {
 			VFile<?> fv = VFile.getFile(str);
@@ -85,7 +68,7 @@ public class AnimCE extends AnimCI {
 		}
 
 		@Override
-		public FakeImage getNum(boolean load) {
+		public FakeImage getNum() {
 			return VFile.getFile(pre + name + ".png").getData().getImg();
 		}
 
@@ -115,26 +98,25 @@ public class AnimCE extends AnimCI {
 	}
 
 	private boolean saved = false;
-	public int inPool;
+	public Identifier id;
 	public EditLink link;
 	public Stack<History> history = new Stack<>();
-	public String prev = "./res/anim/";
 
-	public AnimCE(InStream is, CommonStatic.ImgReader r) {
+	public AnimCE(InStream is, CommonStatic.ImgReader r, String pack) {
 		super(CommonStatic.def.loadAnim(is, r));
 		name = loader.getName();
-		inPool = loader.getStatus();
+		id = new Identifier(pack == null ? "_local" : pack, name);
 	}
 
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
-		inPool = 0;
+		id = new Identifier("_local", name);
 		name = st;
 	}
 
 	public AnimCE(String str, AnimD ori) {
 		super(new AnimCELoader(str));
-		inPool = 0;
+		id = new Identifier("_local", str);
 		name = str;
 		loaded = true;
 		partial = true;
@@ -148,24 +130,15 @@ public class AnimCE extends AnimCI {
 				anims[i] = ori.anims[i].clone();
 			else
 				anims[i] = new MaAnim();
-		loader.setNum(ori.getNum(true));
-		parts = imgcut.cut(ori.getNum(true));
-		File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
-		CommonStatic.def.check(f);
-		try {
-			FakeImage.write(ori.getNum(true), "PNG", f);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		reloImg();
+		loader.setNum(ori.getNum());
+		parts = imgcut.cut(ori.getNum());
 		if (ori instanceof AnimU<?>) {
 			AnimU<?> au = (AnimU<?>) ori;
 			setEdi(au.getEdi());
 			setUni(au.getUni());
 		}
-		saveIcon();
-		saveUni();
 		standardize();
+		save();
 		history("initial");
 	}
 
@@ -177,12 +150,12 @@ public class AnimCE extends AnimCI {
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
 			anims[i] = new MaAnim();
-		parts = imgcut.cut(getNum(true));
+		parts = imgcut.cut(getNum());
 		history("initial");
 	}
 
 	public void delete() {
-		CommonStatic.def.delete(CommonStatic.def.route(prev + name + "/"));
+		new SourceAnimSaver(id, this).delete();
 	}
 
 	public String getUndo() {
@@ -190,20 +163,19 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void hardSave(String str) {
-		if (prev == null)
-			prev = "./res/anim/";
 		if (name == null)
 			name = AnimCE.getAvailable(MainBCU.validate(str));
 		saved = false;
 		save();
-		saveImg();
-		saveIcon();
-		saveUni();
 	}
 
 	public void ICedited() {
 		check();
-		parts = imgcut.cut(getNum(true));
+		parts = imgcut.cut(getNum());
+	}
+
+	public boolean inPool() {
+		return id.pack.equals("_local");
 	}
 
 	public boolean isSaved() {
@@ -282,7 +254,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void reloImg() {
-		setNum(VFile.getFile(prev + name + "/" + name + ".png").getData().getImg());
+		setNum(loader.loader.getNum());
 		ICedited();
 	}
 
@@ -291,13 +263,11 @@ public class AnimCE extends AnimCI {
 			getUni().check();
 		if (getEdi() != null)
 			getEdi().check();
-		CommonStatic.def.delete(CommonStatic.def.route(prev + name + "/"));
-		name = str;
-		saveImg();
-		saveIcon();
-		saveUni();
+		SourceAnimSaver saver = new SourceAnimSaver(id, this);
+		saver.delete();
+		id.id = name = str;
+		saver.saveAll();
 		unSave("rename (not applicapable for undo)");
-		reloImg();
 	}
 
 	public void resize(double d) {
@@ -352,52 +322,19 @@ public class AnimCE extends AnimCI {
 		if (!loaded || isSaved() || mismatch)
 			return;
 		saved = true;
-		String pre = prev + name + "/" + name;
-		save$g(pre, 0, 0);
-		save$g(pre, 1, 0);
-
-		for (int i = 0; i < 4; i++)
-			save$g(pre + "0" + i, 2, i);
-		if (anims.length == 7)
-			for (int i = 0; i < 3; i++)
-				save$g(pre + "_zombie0" + i, 2, i + 4);
+		new SourceAnimSaver(id, this).saveAll();
 	}
 
 	public void saveIcon() {
-		if (getEdi() == null || getEdi().getImg() == null || prev == null)
-			return;
-		try {
-			File f = CommonStatic.def.route(prev + name + "/edi.png");
-			CommonStatic.def.check(f);
-			FakeImage.write(getEdi().getImg(), "PNG", f);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new SourceAnimSaver(id, this).saveIconDisplay();
 	}
 
 	public void saveImg() {
-		try {
-			File f = CommonStatic.def.route(prev + name + "/" + name + ".png");
-			CommonStatic.def.check(f);
-			if (!FakeImage.write(getNum(true), "PNG", f))
-				if (Opts.writeErr0(f.getPath()))
-					if (FakeImage.write(getNum(true), "PNG", f))
-						Opts.ioErr("failed to write");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new SourceAnimSaver(id, this).saveSprite();
 	}
 
 	public void saveUni() {
-		if (getUni() == null || getUni().getImg() == null)
-			return;
-		try {
-			File f = CommonStatic.def.route(prev + name + "/uni.png");
-			CommonStatic.def.check(f);
-			FakeImage.write(getUni().getImg(), "PNG", f);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new SourceAnimSaver(id, this).saveIconDeploy();
 	}
 
 	public void setEdi(VImg uni) {
@@ -453,57 +390,6 @@ public class AnimCE extends AnimCI {
 		History h = new History(str, os);
 		history.push(h);
 		updateStatus();
-	}
-
-	private void save$g(String pre, int type, int para) {
-		try {
-			save$s(pre, type, para);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			try {
-				save$s(pre, type, para);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-				String str = type == 0 ? ".imgcut" : type == 1 ? ".mamodel" : ".maanim";
-				Opts.ioErr("cannot save " + pre + str);
-			}
-		}
-	}
-
-	private void save$ic(String pre) throws Exception {
-		File f = CommonStatic.def.route(pre + ".imgcut");
-		CommonStatic.def.check(f);
-		PrintStream ps = new PrintStream(f, "UTF-8");
-		imgcut.write(ps);
-		ps.close();
-		new ImgCut(readLine(f));
-	}
-
-	private void save$ma(String pre, int i) throws Exception {
-		File f = CommonStatic.def.route(pre + ".maanim");
-		CommonStatic.def.check(f);
-		PrintStream ps = new PrintStream(f, "UTF-8");
-		anims[i].write(ps);
-		ps.close();
-		new MaAnim(readLine(f));
-	}
-
-	private void save$mm(String pre) throws Exception {
-		File f = CommonStatic.def.route(pre + ".mamodel");
-		CommonStatic.def.check(f);
-		PrintStream ps = new PrintStream(f, "UTF-8");
-		mamodel.write(ps);
-		ps.close();
-		new MaModel(readLine(f));
-	}
-
-	private void save$s(String pre, int type, int para) throws Exception {
-		if (type == 0)
-			save$ic(pre);
-		if (type == 1)
-			save$mm(pre);
-		if (type == 2)
-			save$ma(pre, para);
 	}
 
 	private void standardize() {

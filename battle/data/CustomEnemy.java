@@ -15,7 +15,7 @@ import common.util.unit.EnemyStore;
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
 
 	public Enemy pack;
-	
+
 	@JsonField
 	public int star, drop;
 
@@ -85,133 +85,11 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		return 1;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void zread(int val, InStream is) {
-		if (val >= 307)
-			val = getVer(is.nextString());
+		val = getVer(is.nextString());
 		if (val >= 400)
 			zread$000400(is);
-		else if (val >= 308)
-			zread$000308(is);
-		else if (val >= 307)
-			zread$000307(is);
-		else if (val >= 305)
-			zread$000305(is);
-		else if (val >= 301)
-			zread$000301(is);
 
-		// eliminate old stuff
-		if (val < 307) {
-			if ((abi & AB_MOVEI) > 0)
-				rep.proc.IMUWAVE.mult = 100;
-			if ((abi & AB_GHOST) > 0)
-				rep.proc.IMUSLOW.mult = 100;
-			if ((abi & AB_POII) > 0)
-				rep.proc.IMUWEAK.mult = 100;
-			if ((abi & AB_THEMEI) > 0)
-				rep.proc.IMUWARP.mult = 100;
-			if ((abi & AB_SEALI) > 0)
-				rep.proc.IMUCURSE.mult = 100;
-			if ((abi & AB_TIMEI) > 0)
-				rep.proc.IMUSTOP.mult = 100;
-			if ((abi & AB_SNIPERI) > 0)
-				rep.proc.IMUKB.mult = 100;
-			abi &= AB_ELIMINATOR;
-		}
-	}
-
-	@Deprecated
-	private void zread$000301(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextByte();
-		range = is.nextShort();
-		abi = is.nextInt();
-		type = is.nextInt();
-		width = is.nextShort();
-		shield = is.nextInt();
-		boolean isrange = is.nextByte() == 1;
-		tba = is.nextInt();
-		base = is.nextShort();
-		star = is.nextByte();
-		drop = is.nextInt();
-		common = false;
-		rep = new AtkDataModel(this, is, "0.3.1");
-		int m = is.nextByte();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++) {
-			set[i] = new AtkDataModel(this, is, "0.3.1");
-			set[i].range = isrange;
-		}
-		int n = is.nextByte();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextByte()];
-	}
-
-	@Deprecated
-	private void zread$000305(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextByte();
-		range = is.nextShort();
-		abi = is.nextInt();
-		type = is.nextInt();
-		width = is.nextShort();
-		shield = is.nextInt();
-		boolean isrange = is.nextByte() == 1;
-		tba = is.nextInt();
-		base = is.nextShort();
-		star = is.nextByte();
-		drop = is.nextInt();
-		common = is.nextByte() == 1;
-		rep = new AtkDataModel(this, is, "0.3.5");
-		int m = is.nextByte();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++) {
-			set[i] = new AtkDataModel(this, is, "0.3.5");
-			set[i].range = isrange;
-		}
-		int n = is.nextByte();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextByte()];
-	}
-
-	private void zread$000307(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextByte();
-		range = is.nextShort();
-		abi = is.nextInt();
-		if ((abi & AB_GLASS) > 0)
-			loop = 1;
-		type = is.nextInt();
-		width = is.nextShort();
-		shield = is.nextInt();
-		boolean isrange = is.nextByte() == 1;
-		tba = is.nextInt();
-		base = is.nextShort();
-		star = is.nextByte();
-		drop = is.nextInt();
-		common = is.nextByte() == 1;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextByte();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++) {
-			set[i] = new AtkDataModel(this, is);
-			set[i].range = isrange;
-		}
-		int n = is.nextByte();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextByte()];
-	}
-
-	private void zread$000308(InStream is) {
-		zreada$000308(is);
-		star = is.nextByte();
-		drop = is.nextInt();
 	}
 
 	private void zread$000400(InStream is) {

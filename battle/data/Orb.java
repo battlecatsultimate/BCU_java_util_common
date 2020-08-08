@@ -23,34 +23,59 @@ import common.util.unit.Unit;
 import common.util.unit.UnitStore;
 
 public class Orb extends Data {
-	//Available data for atk/res orb, will be used for GUI
-	//Map<Trait, Grades>
+	// Available data for atk/res orb, will be used for GUI
+	// Map<Trait, Grades>
 	public static final Map<Integer, List<Integer>> ATKORB = new TreeMap<>();
 	public static final Map<Integer, List<Integer>> RESORB = new TreeMap<>();
 	public static final Map<Integer, Integer> DATA = new HashMap<>();
-	
+
 	public static FakeImage[] TYPES;
 	public static FakeImage[] TRAITS;
 	public static FakeImage[] GRADES;
-	
+
+	public static int getTrait(int trait) {
+		switch (trait) {
+		case 0:
+			return TB_RED;
+		case 1:
+			return TB_FLOAT;
+		case 2:
+			return TB_BLACK;
+		case 3:
+			return TB_METAL;
+		case 4:
+			return TB_ANGEL;
+		case 5:
+			return TB_ALIEN;
+		case 6:
+			return TB_ZOMBIE;
+		case 7:
+			return TB_RELIC;
+		case 8:
+			return TB_WHITE;
+		default:
+			return 0;
+		}
+	}
+
 	public static void read() {
 		try {
 			Queue<String> traitData = VFile.readLine("./org/data/equipment_attribute.csv");
 
 			int key = 0;
 
-			for(String line : traitData) {
-				if(line == null || line.startsWith("//") || line.isEmpty())
+			for (String line : traitData) {
+				if (line == null || line.startsWith("//") || line.isEmpty())
 					continue;
 
-				String [] strs = line.trim().split(",");
+				String[] strs = line.trim().split(",");
 
 				int value = 0;
 
-				for(int i = 0; i < strs.length; i++) {
+				for (int i = 0; i < strs.length; i++) {
 					int t = CommonStatic.parseIntN(strs[i]);
 
-					if(t == 1)
+					if (t == 1)
 						value |= getTrait(i);
 				}
 
@@ -59,14 +84,15 @@ public class Orb extends Data {
 				key++;
 			}
 
-			String data = new String(VFile.get("./org/data/equipmentlist.json").getData().getBytes(), StandardCharsets.UTF_8);
+			String data = new String(VFile.get("./org/data/equipmentlist.json").getData().getBytes(),
+					StandardCharsets.UTF_8);
 
 			JSONObject jdata = new JSONObject(data);
 
 			JSONArray lists = jdata.getJSONArray("ID");
 
-			for(int i = 0; i < lists.length(); i++) {
-				if(!(lists.get(i) instanceof JSONObject)) {
+			for (int i = 0; i < lists.length(); i++) {
+				if (!(lists.get(i) instanceof JSONObject)) {
 					continue;
 				}
 
@@ -76,8 +102,8 @@ public class Orb extends Data {
 				int type = obj.getInt("content");
 				int grade = obj.getInt("gradeID");
 
-				if(type == ORB_ATK) {
-					if(ATKORB.get(DATA.get(trait)) == null) {
+				if (type == ORB_ATK) {
+					if (ATKORB.get(DATA.get(trait)) == null) {
 						List<Integer> grades = new ArrayList<>();
 
 						grades.add(grade);
@@ -86,14 +112,14 @@ public class Orb extends Data {
 					} else {
 						List<Integer> grades = ATKORB.get(DATA.get(trait));
 
-						if(grades != null && !grades.contains(grade)) {
+						if (grades != null && !grades.contains(grade)) {
 							grades.add(grade);
 						}
 
 						ATKORB.put(DATA.get(trait), grades);
 					}
 				} else {
-					if(RESORB.get(DATA.get(trait)) == null) {
+					if (RESORB.get(DATA.get(trait)) == null) {
 						List<Integer> grades = new ArrayList<>();
 
 						grades.add(grade);
@@ -102,7 +128,7 @@ public class Orb extends Data {
 					} else {
 						List<Integer> grades = RESORB.get(DATA.get(trait));
 
-						if(grades != null && !grades.contains(grade)) {
+						if (grades != null && !grades.contains(grade)) {
 							grades.add(grade);
 						}
 
@@ -113,14 +139,14 @@ public class Orb extends Data {
 
 			Queue<String> units = VFile.readLine("./org/data/equipmentslot.csv");
 
-			for(String line : units) {
-				if(line == null || line.startsWith("//") || line.isEmpty()) {
+			for (String line : units) {
+				if (line == null || line.startsWith("//") || line.isEmpty()) {
 					continue;
 				}
 
-				String [] strs = line.trim().split(",");
+				String[] strs = line.trim().split(",");
 
-				if(strs.length != 2) {
+				if (strs.length != 2) {
 					continue;
 				}
 
@@ -129,13 +155,13 @@ public class Orb extends Data {
 
 				Unit u = UnitStore.get(id, false);
 
-				if(u == null || u.forms.length != 3) {
+				if (u == null || u.forms.length != 3) {
 					continue;
 				}
 
 				Form f = u.forms[2];
 
-				if(f == null) {
+				if (f == null) {
 					continue;
 				}
 
@@ -144,80 +170,55 @@ public class Orb extends Data {
 
 			String pre = "./org/page/orb/equipment_";
 
-			VImg type = new VImg(pre+"effect.png");
-			ImgCut it = ImgCut.newIns(pre+"effect.imgcut");
+			VImg type = new VImg(pre + "effect.png");
+			ImgCut it = ImgCut.newIns(pre + "effect.imgcut");
 
 			TYPES = it.cut(type.getImg());
 
-			VImg trait = new VImg(pre+"attribute.png");
-			ImgCut itr = ImgCut.newIns(pre+"attribute.imgcut");
+			VImg trait = new VImg(pre + "attribute.png");
+			ImgCut itr = ImgCut.newIns(pre + "attribute.imgcut");
 
 			TRAITS = itr.cut(trait.getImg());
 
-			VImg grade = new VImg(pre+"grade.png");
-			ImgCut ig = ImgCut.newIns(pre+"grade.imgcut");
+			VImg grade = new VImg(pre + "grade.png");
+			ImgCut ig = ImgCut.newIns(pre + "grade.imgcut");
 
 			GRADES = ig.cut(grade.getImg());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Orb(int slots) {
-		this.slots = slots;
-	}
-	
-	private final int slots;
-	
-	public int getAtk(int grade, MaskAtk atk) {
-		return ORB_ATK_MULTI[grade] * atk.getAtk() / 100;
-	}
-	
-	public int getRes(int grade, MaskAtk atk) {
-		return - ORB_RES_MULTI[grade] * atk.getAtk() / 100;
-	}
-	
-	public int getSlots() {
-		return slots;
-	}
-	
-	public static int getTrait(int trait) {
-		switch(trait) {
-			case 0:
-				return TB_RED;
-			case 1:
-				return TB_FLOAT;
-			case 2:
-				return TB_BLACK;
-			case 3:
-				return TB_METAL;
-			case 4:
-				return TB_ANGEL;
-			case 5:
-				return TB_ALIEN;
-			case 6:
-				return TB_ZOMBIE;
-			case 7:
-				return TB_RELIC;
-			case 8:
-				return TB_WHITE;
-			default:
-				return 0;
-		}
-	}
-	
+
 	public static int reverse(int value) {
-		if(DATA == null) {
+		if (DATA == null) {
 			return -1;
 		}
 
-		for(int n : DATA.keySet()) {
+		for (int n : DATA.keySet()) {
 			int v = DATA.get(n);
 
-			if(DATA.get(n) != null && v == value)
+			if (DATA.get(n) != null && v == value)
 				return n;
 		}
-		
+
 		return -1;
+	}
+
+	private final int slots;
+
+	public Orb(int slots) {
+		this.slots = slots;
+	}
+
+	public int getAtk(int grade, MaskAtk atk) {
+		return ORB_ATK_MULTI[grade] * atk.getAtk() / 100;
+	}
+
+	public int getRes(int grade, MaskAtk atk) {
+		return -ORB_RES_MULTI[grade] * atk.getAtk() / 100;
+	}
+
+	public int getSlots() {
+		return slots;
 	}
 }

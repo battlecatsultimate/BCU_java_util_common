@@ -10,9 +10,9 @@ import java.util.function.Function;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.util.anim.AnimCI;
 import common.util.pack.Background;
 import common.util.pack.Pack;
 import common.util.stage.Castles;
@@ -139,7 +139,7 @@ public class CommonStatic {
 
 		public ImgReader getReader(File f);
 
-		public AnimCI.AnimLoader loadAnim(InStream is, ImgReader r);
+		public Source.AnimLoader loadAnim(InStream is, ImgReader r);
 
 		/** show loading progress, empty is fine */
 		public void prog(String str);

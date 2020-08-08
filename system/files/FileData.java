@@ -12,10 +12,6 @@ import common.system.fake.FakeImage;
 
 public interface FileData {
 
-	public FakeImage getImg();
-
-	public Queue<String> readLine();
-	
 	public static Queue<String> IS2L(InputStream is) {
 		try {
 			Queue<String> ans = new ArrayDeque<>();
@@ -31,6 +27,10 @@ public interface FileData {
 			return null;
 		}
 	}
+
+	public FakeImage getImg();
+
+	public Queue<String> readLine();
 
 }
 
@@ -52,5 +52,5 @@ interface ByteData extends FileData {
 	public default Queue<String> readLine() {
 		return FileData.IS2L(new ByteArrayInputStream(getBytes()));
 	}
-	
+
 }

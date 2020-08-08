@@ -21,7 +21,7 @@ import common.io.json.JsonException.Type;
 
 public class JsonEncoder {
 
-	public static JsonElement encode(Object obj){
+	public static JsonElement encode(Object obj) {
 		try {
 			return encode(obj, null);
 		} catch (Exception e) {

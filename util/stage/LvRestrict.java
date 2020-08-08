@@ -23,32 +23,27 @@ public class LvRestrict extends Data {
 
 	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
 
+	@JCGenericRead(value = int.class, parent = MapColc.class)
+	public static LvRestrict zgen(int i, MapColc mc) {
+		return i < 0 ? null : mc.lvrs.get(i);
+	}
+
 	@JsonField(generic = { CharaGroup.class, int[].class }, alias = int.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
 
 	public final Pack pack;
-
 	@JsonField(gen = GenType.FILL)
 	public int[][] rares = new int[RARITY_TOT][6];
 	@JsonField
 	public int[] all = new int[6];
 	@JsonField
 	public int id;
+
 	@JsonField
 	public String name = "";
 
 	public LvRestrict(MapColc mapc) {
 		pack = mapc.pack;
-	}
-
-	@JCGenericRead(value = int.class, parent = MapColc.class)
-	public static LvRestrict zgen(int i, MapColc mc) {
-		return i < 0 ? null : mc.lvrs.get(i);
-	}
-
-	@JCGenericWrite(int.class)
-	public int zser() {
-		return id;
 	}
 
 	public LvRestrict(MapColc mc, InStream is) {
@@ -152,6 +147,11 @@ public class LvRestrict extends Data {
 				if (f != null)
 					lu.map.put(f.unit, valid(f));
 		lu.renew();
+	}
+
+	@JCGenericWrite(int.class)
+	public int zser() {
+		return id;
 	}
 
 	protected void write(OutStream os) {

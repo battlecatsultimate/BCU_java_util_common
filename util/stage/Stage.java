@@ -330,7 +330,6 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		return map + " - " + id();
 	}
 
-
 	public OutStream write() {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.9");
@@ -370,7 +369,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
-		if(val >= 409)
+		if (val >= 409)
 			zread$000409(val, is);
 		else if (val >= 408)
 			zread$000408(val, is);
@@ -450,7 +449,6 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		}
 	}
 
-
 	private void zread$000408(int val, InStream is) {
 		name = is.nextString();
 		bg = is.nextInt();
@@ -472,7 +470,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			Recd.getRecd(this, is.subStream(), name);
 		}
 	}
-	
+
 	private void zread$000409(int val, InStream is) {
 		name = is.nextString();
 		bg = is.nextInt();
