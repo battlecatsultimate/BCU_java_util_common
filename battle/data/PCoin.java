@@ -3,11 +3,11 @@ package common.battle.data;
 import java.util.Queue;
 
 import common.CommonStatic;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
-import common.util.unit.UnitStore;
-import main.Opts;
 
 public class PCoin extends Data {
 
@@ -38,7 +38,7 @@ public class PCoin extends Data {
 			if (max[i + 1] == 0)
 				max[i + 1] = 1;
 		}
-		du = (DataUnit) UnitStore.get(id, 2, false).du;
+		du = (DataUnit) UserProfile.getUnit(Identifier.parseInt(id)).forms[2].du;
 		du.pcoin = this;
 		full = improve(max);
 	}
@@ -49,12 +49,14 @@ public class PCoin extends Data {
 			if (lvs[i + 1] == 0)
 				continue;
 			if (info[i][0] >= PC_CORRES.length) {
-				Opts.pop("warning: new PCoin ability not yet included in BCU: " + info[i][0], "warning");
+				// TODO Opts.pop("warning: new PCoin ability not yet included in BCU: " +
+				// info[i][0], "warning");
 				continue;
 			}
 			int[] type = PC_CORRES[info[i][0]];
 			if (type.length > 2 || type[0] == -1) {
-				Opts.pop("warning: new PCoin ability not yet included in BCU: " + info[i][0], "warning");
+				// TODO Opts.pop("warning: new PCoin ability not yet included in BCU: " +
+				// info[i][0], "warning");
 				continue;
 			}
 

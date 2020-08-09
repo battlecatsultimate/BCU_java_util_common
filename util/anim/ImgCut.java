@@ -9,7 +9,6 @@ import common.io.OutStream;
 import common.system.fake.FakeImage;
 import common.system.files.FileData;
 import common.util.Data;
-import main.Opts;
 
 public class ImgCut extends Data implements Cloneable {
 
@@ -18,7 +17,6 @@ public class ImgCut extends Data implements Cloneable {
 			return new ImgCut(f.readLine());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.animErr(f.toString());
 			return new ImgCut();
 		}
 	}

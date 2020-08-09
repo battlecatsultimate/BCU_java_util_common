@@ -11,6 +11,7 @@ import common.battle.data.PCoin;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonClass.JCGenericWrite;
+import common.pack.PackData.Identifier;
 import common.system.FixIndexList;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
@@ -18,9 +19,7 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.pack.Pack;
-import main.MainBCU;
 
-@JCGeneric(int.class)
 public class Unit extends Data implements Comparable<Unit> {
 
 	public static class UnitInfo {
@@ -30,14 +29,7 @@ public class Unit extends Data implements Comparable<Unit> {
 		public String[][] explanation;
 		public int type;
 
-		public String[] getExplanation() {
-			String[] exp = MultiLangCont.CFEXP.getCont(this);
-			if (exp != null)
-				return exp;
-			return new String[0];
-		}
-
-		protected void fillBuy(String[] strs) {
+		public void fillBuy(String[] strs) {
 			for (int i = 0; i < 10; i++)
 				price[i] = Integer.parseInt(strs[2 + i]);
 			type = Integer.parseInt(strs[12]);
@@ -52,81 +44,39 @@ public class Unit extends Data implements Comparable<Unit> {
 			}
 		}
 
-	}
-
-	public static void readData() throws IOException {
-		VFile.get("./org/unit").list().forEach(p -> new Unit(p));
-		Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
-		List<Unit> lu = Pack.def.us.ulist.getList();
-		FixIndexList<UnitLevel> l = Pack.def.us.lvlist;
-		for (Unit u : lu) {
-			String[] strs = qs.poll().split(",");
-			int[] lv = new int[20];
-			for (int i = 0; i < 20; i++)
-				lv[i] = Integer.parseInt(strs[i]);
-			UnitLevel ul = new UnitLevel(lv);
-			if (!l.contains(ul)) {
-				ul.id = l.size();
-				l.add(ul);
-			}
-			int ind = l.indexOf(ul);
-			u.lv = l.get(ind);
-			u.lv.units.add(u);
-		}
-		UnitLevel.def = l.get(2);
-		qs = VFile.readLine("./org/data/unitbuy.csv");
-		for (Unit u : lu) {
-			String[] strs = qs.poll().split(",");
-			u.rarity = Integer.parseInt(strs[13]);
-			u.max = Integer.parseInt(strs[50]);
-			u.maxp = Integer.parseInt(strs[51]);
-			u.info.fillBuy(strs);
+		public String[] getExplanation() {
+			String[] exp = MultiLangCont.CFEXP.getCont(this);
+			if (exp != null)
+				return exp;
+			return new String[0];
 		}
 
 	}
 
-	@JCGenericRead(int.class)
-	public static Unit zgen(int i) {
-		return UnitStore.get(i, true);
-	}
-
-	public final Pack pack;
-	public final int id;
+	public final Identifier id;
 	public int rarity, max, maxp;
 	public Form[] forms;
 	public UnitLevel lv;
 
 	public final UnitInfo info = new UnitInfo();
 
-	public Unit(int ID, Unit old, Pack p, UnitLevel ul) {
-		pack = p;
-		id = ID;
-		rarity = old.rarity;
-		max = old.max;
-		maxp = old.maxp;
-		lv = ul;
-		forms = new Form[old.forms.length];
-		for (int i = 0; i < forms.length; i++)
-			forms[i] = old.forms[i].copy(this);
+	public Unit(Identifier identifier) {
+		id = identifier;
 	}
 
 	public Unit(VFile<AssetData> p) {
-		pack = Pack.def;
-		id = CommonStatic.parseIntN(p.getName());
-		Pack.def.us.ulist.add(this);
-		String str = "./org/unit/" + trio(id) + "/";
-		Queue<String> qs = VFile.readLine(str + "unit" + trio(id) + ".csv");
+		id = new Identifier("_default", Data.trio(CommonStatic.parseIntN(p.getName())));
+		String str = "./org/unit/" + id.id + "/";
+		Queue<String> qs = VFile.readLine(str + "unit" + id.id + ".csv");
 		forms = new Form[p.countSubDire()];
 		for (int i = 0; i < forms.length; i++)
 			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
-		if (MainBCU.preload)
-			for (Form f : forms)
-				f.anim.getEdi().check();
+		for (Form f : forms)
+			f.anim.getEdi().check();
 	}
 
-	protected Unit(Pack p, DIYAnim da, CustomUnit cu) {
-		pack = p;
-		id = p.id * 1000 + p.us.ulist.nextInd();
+	protected Unit(Identifier id, DIYAnim da, CustomUnit cu) {
+		this.id = id;
 		forms = new Form[] { new Form(this, 0, "new unit", da.getAnimC(), cu) };
 		max = 50;
 		maxp = 0;
@@ -135,15 +85,8 @@ public class Unit extends Data implements Comparable<Unit> {
 		lv.units.add(this);
 	}
 
-	protected Unit(Pack p, int ID) {
-		pack = p;
-		id = ID;
-	}
-
-	protected Unit(Pack p, Unit u) {
-		pack = p;
-		id = p.id * 1000 + p.us.ulist.nextInd();
-		p.us.ulist.add(this);
+	protected Unit(Identifier id, Unit u) {
+		this.id = id;
 		rarity = u.rarity;
 		max = u.max;
 		maxp = u.maxp;
@@ -163,10 +106,12 @@ public class Unit extends Data implements Comparable<Unit> {
 
 	public List<Combo> allCombo() {
 		List<Combo> ans = new ArrayList<>();
+		if (!id.pack.equals("_default"))
+			return ans;
 		for (Combo[] cs : Combo.combos)
 			for (Combo c : cs)
 				for (int[] is : c.units)
-					if (is[0] == id) {
+					if (trio(is[0]).equals(id.id)) {
 						ans.add(c);
 						break;
 					}
@@ -175,7 +120,7 @@ public class Unit extends Data implements Comparable<Unit> {
 
 	@Override
 	public int compareTo(Unit u) {
-		return id > u.id ? 1 : id < u.id ? -1 : 0;
+		return id.compareTo(u.id);
 	}
 
 	public int getPrefLv() {
@@ -197,15 +142,10 @@ public class Unit extends Data implements Comparable<Unit> {
 	public String toString() {
 		String desp = MultiLangCont.get(forms[0]);
 		if (desp != null && desp.length() > 0)
-			return trio(id) + " " + desp;
+			return id.id + " " + desp;
 		if (forms[0].name.length() > 0)
-			return trio(id) + " " + forms[0].name;
-		return trio(id);
-	}
-
-	@JCGenericWrite(int.class)
-	public int zser() {
-		return id;
+			return id.id + " " + forms[0].name;
+		return id.id;
 	}
 
 }

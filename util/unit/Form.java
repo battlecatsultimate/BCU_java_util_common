@@ -5,19 +5,15 @@ import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
-import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGenericRead;
-import common.io.json.JsonClass.JCGenericWrite;
+import common.pack.PackData.Identifier;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
-import common.system.VImg;
 import common.util.Animable;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.ImgCut;
 
-@JCGeneric(int[].class)
 public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
 
 	public static ImgCut unicut, udicut;
@@ -30,17 +26,10 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		return str;
 	}
 
-	@JCGenericRead(int[].class)
-	public static Form zgen(int[] is) {
-		return UnitStore.get(is);
-	}
-
 	public final MaskUnit du;
 	public final Unit unit;
-	public final int uid;
+	public final Identifier uid;
 	public int fid;
-
-	public final VImg udi;// TODO unused
 
 	public Orb orbs = null;
 
@@ -54,7 +43,6 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		anim = ac;
 		du = cu;
 		cu.pack = this;
-		udi = null;
 		orbs = new Orb(-1);
 	}
 
@@ -62,11 +50,9 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		unit = u;
 		uid = u.id;
 		fid = f;
-		String nam = trio(unit.id) + "_" + SUFX[fid];
+		String nam = uid.id + "_" + SUFX[fid];
 		anim = new AnimUD(str, nam, "edi" + nam + ".png", "uni" + nam + "00.png");
-		udi = new VImg(str + "udi" + nam + ".png");
 		anim.getUni().setCut(unicut);
-		udi.setCut(udicut);
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
 	}
@@ -134,18 +120,13 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 
 	@Override
 	public String toString() {
-		String base = trio(uid) + "-" + fid + " ";
+		String base = uid.id + "-" + fid + " ";
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return base + desp;
 		if (name.length() > 0)
 			return base + name;
 		return base;
-	}
-
-	@JCGenericWrite(int[].class)
-	public int[] zser() {
-		return new int[] { uid, fid };
 	}
 
 }

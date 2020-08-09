@@ -7,9 +7,9 @@ import common.battle.Basis;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.PackData.UserProfile;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 
 @JsonClass
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
@@ -62,7 +62,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		Set<AbEnemy> ans = new TreeSet<>();
 		for (AtkDataModel adm : atks)
 			if (adm.proc.SUMMON.prob > 0)
-				ans.add(EnemyStore.getAbEnemy(adm.proc.SUMMON.id, false));
+				ans.add(UserProfile.getEnemy(adm.proc.SUMMON.id));
 		return ans;
 	}
 

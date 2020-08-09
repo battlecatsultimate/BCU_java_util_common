@@ -28,7 +28,6 @@ import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
 import common.pack.PackLoader.ZipDesc.FileDesc;
-import common.pack.Source.PackDesc;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.system.files.FileData;
@@ -110,7 +109,7 @@ public class PackLoader {
 		}
 
 		@JsonField
-		public PackDesc desc;
+		public PackData.PackDesc desc;
 
 		@JsonField(gen = GenType.GEN)
 		public FileDesc[] files;
@@ -120,7 +119,7 @@ public class PackLoader {
 		private int offset;
 		private FileLoader loader;
 
-		public ZipDesc(PackDesc pd, FileDesc[] fs) {
+		public ZipDesc(PackData.PackDesc pd, FileDesc[] fs) {
 			desc = pd;
 			files = fs;
 		}
@@ -293,7 +292,7 @@ public class PackLoader {
 
 		private int len;
 
-		private FileSaver(File dst, File folder, PackDesc pd, String password) throws Exception {
+		private FileSaver(File dst, File folder, PackData.PackDesc pd, String password) throws Exception {
 			List<FileDesc> fs = new ArrayList<>();
 			addFiles(fs, folder, "./");
 			ZipDesc desc = new ZipDesc(pd, fs.toArray(new FileDesc[0]));
@@ -366,7 +365,7 @@ public class PackLoader {
 		return new FileLoader(cont, f).pack;
 	}
 
-	public static void writePack(File dst, File folder, PackDesc pd, String password) throws Exception {
+	public static void writePack(File dst, File folder, PackData.PackDesc pd, String password) throws Exception {
 		new FileSaver(dst, folder, pd, password);
 	}
 

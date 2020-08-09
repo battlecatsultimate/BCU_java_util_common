@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import common.io.BCUException;
-import main.Printer;
 
 /**
  * this class enables copy of an interconnected system. <br>
@@ -131,7 +130,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 		ARRMAP.clear();
 		UNCHECKED.removeAll(OLD);
 		for (Class<?> cls : UNCHECKED)
-			Printer.e("Copible", 80, "Unchecked: " + cls);
+			;// TODO Printer.e("Copible", 80, "Unchecked: " + cls);
 		OLD.addAll(UNCHECKED);
 		UNCHECKED.clear();
 		return c;

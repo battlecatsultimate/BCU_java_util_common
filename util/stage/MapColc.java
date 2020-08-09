@@ -8,7 +8,6 @@ import java.util.Queue;
 import java.util.TreeMap;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonClass.RType;
@@ -275,94 +274,10 @@ public class MapColc extends Data {
 		return name + " (" + maps.length + ")";
 	}
 
-	public void write(OutStream os) {
-		os.writeString("0.3.8");
-		os.writeString(name);
-
-		List<CharaGroup> cglist = groups.getList();
-		os.writeInt(cglist.size());
-		for (CharaGroup cg : cglist)
-			cg.write(os);
-
-		List<LvRestrict> lvlist = lvrs.getList();
-		os.writeInt(lvlist.size());
-		for (LvRestrict lr : lvlist)
-			lr.write(os);
-
-		os.writeInt(maps.length);
-		for (StageMap sm : maps) {
-			os.writeString(sm.name);
-			os.writeIntB(sm.stars);
-			os.writeInt(sm.list.size());
-			for (Stage st : sm.list)
-				os.accept(st.write());
-			os.writeInt(sm.lim.size());
-			for (Limit l : sm.lim)
-				l.write(os);
-		}
-	}
-
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
 		if (val >= 308)
 			zread$000308(is);
-		else if (val >= 307)
-			zread$000307(is);
-		else if (val >= 301)
-			zread$000301(is);
-	}
-
-	private void zread$000301(InStream is) {
-		name = is.nextString();
-		int n = is.nextInt();
-		maps = new StageMap[n];
-		for (int i = 0; i < n; i++) {
-			StageMap sm = new StageMap(this);
-			maps[i] = sm;
-			sm.name = is.nextString();
-			sm.stars = is.nextIntsB();
-			int m = is.nextInt();
-			for (int j = 0; j < m; j++) {
-				InStream sub = is.subStream();
-				String ver = sub.nextString();
-				sm.add(new Stage(sm, ver, sub));
-			}
-		}
-	}
-
-	private void zread$000307(InStream is) {
-		name = is.nextString();
-
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			int ind = is.nextInt();
-			int m = is.nextInt();
-			int[] ints = new int[m];
-			for (int j = 0; j < m; j++)
-				ints[j] = is.nextInt();
-			groups.set(ind, new CharaGroup(pack, ind, 0, ints));
-		}
-
-		is.nextInt();
-
-		n = is.nextInt();
-		maps = new StageMap[n];
-		for (int i = 0; i < n; i++) {
-			StageMap sm = new StageMap(this);
-			maps[i] = sm;
-			sm.name = is.nextString();
-			sm.stars = is.nextIntsB();
-			int m = is.nextInt();
-			for (int j = 0; j < m; j++) {
-				InStream sub = is.subStream();
-				String ver = sub.nextString();
-				sm.add(new Stage(sm, ver, sub));
-			}
-			m = is.nextInt();
-			for (int j = 0; j < m; i++)
-				sm.lim.add(new Limit(this, 307, is));
-		}
-
 	}
 
 	private void zread$000308(InStream is) {

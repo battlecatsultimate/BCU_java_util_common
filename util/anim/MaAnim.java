@@ -9,7 +9,6 @@ import common.io.OutStream;
 import common.system.files.FileData;
 import common.util.BattleStatic;
 import common.util.Data;
-import main.Opts;
 
 public class MaAnim extends Data implements BattleStatic {
 
@@ -18,7 +17,6 @@ public class MaAnim extends Data implements BattleStatic {
 			return new MaAnim(f.readLine());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.animErr(f.toString());
 			return new MaAnim();
 		}
 	}

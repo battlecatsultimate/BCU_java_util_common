@@ -17,6 +17,7 @@ import java.util.Queue;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonEncoder;
+import common.pack.PackData.Identifier;
 
 public class Data {
 
@@ -143,8 +144,8 @@ public class Data {
 							f.set(this, 0);
 						else if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(this, (f.getType().newInstance()));
-						else if (f.getType() == String.class)
-							f.set(this, "");// FIXME id conversion
+						else if (f.getType() == Identifier.class)
+							f.set(this, null);
 						else
 							throw new Exception("unknown field " + f.getType() + " " + f.getName());
 				} catch (Exception e) {
@@ -161,6 +162,8 @@ public class Data {
 					for (Field f : fs)
 						if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(ans, ((IntType) f.get(this)).clone());
+						else if (f.getType() == Identifier.class)
+							f.set(ans, ((Identifier) f.get(this)).clone());
 					return ans;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -200,8 +203,8 @@ public class Data {
 						fs[i].set(this, data[i]);
 					else if (IntType.class.isAssignableFrom(fs[i].getType()))
 						fs[i].set(this, ((IntType) fs[i].getType().newInstance()).load(data[i]));
-					else if (fs[i].getType() == String.class)
-						fs[i].set(this, "" + data[i]);// FIXME id conversion
+					else if (fs[i].getType() == Identifier.class)
+						fs[i].set(this, Identifier.parseInt(data[i]));
 					else
 						throw new Exception("unknown field " + fs[i].getType() + " " + fs[i].getName());
 				return this;
@@ -226,6 +229,8 @@ public class Data {
 					Field f = this.getClass().getDeclaredFields()[i];
 					if (f.getType() == int.class)
 						f.set(this, v);
+					else if (f.getType() == Identifier.class)
+						f.set(this, Identifier.parseInt(v));
 					else
 						((IntType) f.get(this)).load(v);
 				} catch (Exception e) {
@@ -241,8 +246,8 @@ public class Data {
 							f.set(this, f.get(pi));
 						else if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(this, ((IntType) f.get(pi)).clone());
-						else if (f.getType() == String.class)
-							f.set(this, f.get(pi));
+						else if (f.getType() == Identifier.class)
+							f.set(this, ((Identifier) f.get(pi)).clone());
 						else
 							throw new Exception("unknown field " + f.getType() + " " + f.getName());
 				} catch (Exception e) {
@@ -321,7 +326,7 @@ public class Data {
 			}
 
 			public int prob;
-			public int id;
+			public Identifier id;
 			public int dis;
 			public int mult;
 			public TYPE type;
@@ -338,7 +343,7 @@ public class Data {
 
 			public int prob;
 			public int time;
-			public int id;
+			public Identifier id;
 			public TYPE type;
 		}
 

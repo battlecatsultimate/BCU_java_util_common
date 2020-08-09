@@ -3,17 +3,17 @@ package common.battle;
 import java.util.List;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.PackData;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserProfile;
 import common.system.Copable;
 import common.util.BattleStatic;
-import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import common.util.unit.UnitStore;
 
 @JsonClass(read = RType.FILL)
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
@@ -104,8 +104,8 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	public BasisLU randomize(int n) {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
-		List<Unit> list = Pack.def.us.ulist.getList();
-		list.remove(UnitStore.get(339, false));
+		List<Unit> list = PackData.profile.def.units.getList();
+		list.remove(UserProfile.getUnit(Identifier.parseInt(339)));
 		for (Form[] fs : ans.lu.fs)
 			for (Form f : fs)
 				if (f != null)
@@ -126,17 +126,6 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	@Override
 	public Treasure t() {
 		return t;
-	}
-
-	public OutStream write() {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.3.8");
-		os.writeString(name);
-		os.accept(lu.write());
-		t.write(os);
-		os.writeIntB(nyc);
-		os.terminate();
-		return os;
 	}
 
 }

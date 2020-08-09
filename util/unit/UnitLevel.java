@@ -5,7 +5,7 @@ import java.util.List;
 
 import common.io.InStream;
 import common.io.OutStream;
-import common.util.pack.Pack;
+import common.pack.PackData.Identifier;
 
 public class UnitLevel {
 
@@ -15,15 +15,20 @@ public class UnitLevel {
 
 	public final List<Unit> units = new ArrayList<>();
 
-	public int id;
+	public Identifier id;
 
-	public UnitLevel(Pack p, int ind, UnitLevel ul) {
-		id = p.id * 1000 + ind;
+	public UnitLevel(Identifier ID, InStream is) {
+		id = ID;
+		zread(is);
+	}
+
+	public UnitLevel(Identifier ID, UnitLevel ul) {
+		id = ID;
 		for (int i = 0; i < 3; i++)
 			lvs[i] = ul.lvs[i];
 	}
 
-	protected UnitLevel(int[] inp) {
+	public UnitLevel(int[] inp) {
 		int val = -1;
 		for (int i = 0; i < inp.length; i++) {
 			if (val != inp[i]) {
@@ -42,11 +47,6 @@ public class UnitLevel {
 			lvs[2] = inp.length;
 	}
 
-	protected UnitLevel(Pack p, int ind, InStream is) {
-		id = p.id * 1000 + ind;
-		zread(is);
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -59,7 +59,7 @@ public class UnitLevel {
 		for (int i = 0; i < lvs.length; i++)
 			if (lvs[i] != ul.lvs[i])
 				return false;
-		return id / 1000 == 0 && ul.id / 1000 == 0;
+		return id == null || ul.id == null || id.equals(ul.id);
 	}
 
 	public double getMult(int lv) {

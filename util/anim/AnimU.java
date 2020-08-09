@@ -4,7 +4,6 @@ import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.AssetData;
-import main.Printer;
 
 public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 
@@ -83,9 +82,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 		try {
 			imgcut = loader.getIC();
 			if (getNum() == null) {
-				Printer.e("AnimU", 70, "can't read png: " + str);
 				mamodel = null;
-				mismatch = true;
 				return;
 			}
 			parts = imgcut.cut(getNum());

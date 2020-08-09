@@ -15,13 +15,12 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
+import common.pack.PackData;
 import common.pack.PackLoader;
 import common.pack.PackLoader.Preload;
 import common.pack.PackLoader.ZipDesc;
 import common.pack.PackLoader.ZipDesc.FileDesc;
-import common.pack.Source.PackDesc;
 import common.util.Data;
-import main.MainBCU;
 
 public class Test {
 
@@ -217,9 +216,9 @@ public class Test {
 	}
 
 	public static void testIO() throws Exception {
-		PackDesc pd = new PackDesc();
+		PackData.PackDesc pd = new PackData.PackDesc();
 		pd.author = "test";
-		pd.BCU_VERSION = Data.revVer(MainBCU.ver);
+		pd.BCU_VERSION = Data.revVer(41100);
 		pd.id = "12345678abcdefgh";
 		PackLoader.writePack(new File("./pack.pack"), new File("./src"), pd, "password");
 		Preload ctx = (fd) -> fd.size < 4096;

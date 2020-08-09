@@ -75,6 +75,11 @@ public class VImg extends ImgCore {
 		return file == null ? name.length() == 0 ? "img" : name : file.getName();
 	}
 
+	public void unload() {
+		// FIXME Auto-generated method stub
+
+	}
+
 	private void load() {
 		loaded = true;
 		if (file == null)

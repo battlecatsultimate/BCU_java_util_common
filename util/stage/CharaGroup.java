@@ -6,9 +6,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserProfile;
 import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
@@ -18,7 +19,6 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.unit.Unit;
-import common.util.unit.UnitStore;
 import common.CommonStatic;
 
 @JCGeneric(int.class)
@@ -41,9 +41,9 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 			String[] strs = str.split(",");
 			int id = CommonStatic.parseIntN(strs[0]);
 			int type = CommonStatic.parseIntN(strs[2]);
-			int[] units = new int[strs.length - 3];
+			Identifier[] units = new Identifier[strs.length - 3];
 			for (int i = 3; i < strs.length; i++)
-				units[i - 3] = CommonStatic.parseIntN(strs[i]);
+				units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]));
 			map.put(id, new CharaGroup(Pack.def, id, type, units));
 		}
 	}
@@ -74,12 +74,12 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		pack = map.pack;
 	}
 
-	public CharaGroup(Pack pac, int ID, int t, int... units) {
+	public CharaGroup(Pack pac, int ID, int t, Identifier... units) {
 		pack = pac;
 		id = ID;
 		type = t;
-		for (int uid : units) {
-			Unit u = UnitStore.get(uid, true);
+		for (Identifier uid : units) {
+			Unit u = UserProfile.getUnit(uid);
 			if (u != null)
 				set.add(u);
 		}
@@ -139,16 +139,6 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		return id;
 	}
 
-	protected void write(OutStream os) {
-		os.writeString("0.3.8");
-		os.writeString(name);
-		os.writeInt(id);
-		os.writeInt(type);
-		os.writeInt(set.size());
-		for (Unit u : set)
-			os.writeInt(u.id);
-	}
-
 	private void zread(InStream is) {
 		int ver = getVer(is.nextString());
 		if (ver >= 308)
@@ -162,7 +152,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		type = is.nextInt();
 		int m = is.nextInt();
 		for (int j = 0; j < m; j++) {
-			Unit u = UnitStore.get(is.nextInt(), true);
+			Unit u = UserProfile.getUnit(Identifier.parseInt(is.nextInt()));
 			if (u != null)
 				set.add(u);
 		}

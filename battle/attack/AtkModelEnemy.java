@@ -3,9 +3,9 @@ package common.battle.attack;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
+import common.pack.PackData.UserProfile;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.AbEnemy;
-import common.util.unit.EnemyStore;
 
 public class AtkModelEnemy extends AtkModelEntity {
 
@@ -25,7 +25,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 	@Override
 	public void summon(SUMMON proc, Entity ent, Object acs) {
-		AbEnemy ene = EnemyStore.getAbEnemy(proc.id, false);
+		AbEnemy ene = UserProfile.getEnemy(proc.id);
 		SUMMON.TYPE conf = proc.type;
 		int time = proc.time;
 		int allow = b.st.data.allow(b, ene);

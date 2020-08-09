@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import common.CommonStatic;
-import main.Opts;
 
 public strictfp interface InStream {
 
@@ -204,7 +203,6 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	public InStreamDef subStream() {
 		int n = nextInt();
 		if (n > size()) {
-			Opts.loadErr("corrupted file");
 			new Exception("error in getting subStream").printStackTrace();
 			CommonStatic.def.exit(false);
 		}
@@ -269,12 +267,10 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 			mdi.update(translate(bs.getBytes()));
 			byte[] nmd = mdi.digest();
 			if (!Arrays.equals(md5, nmd)) {
-				Opts.ioErr("corrupted file: mismatch MD5");
 				throw new BCUException("mismatch MD5");
 
 			}
 		} catch (NoSuchAlgorithmException e1) {
-			Opts.ioErr("can't find MD5");
 			e1.printStackTrace();
 		}
 	}

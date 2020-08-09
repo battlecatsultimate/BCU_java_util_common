@@ -19,8 +19,6 @@ import common.util.stage.Castles;
 import common.util.stage.CharaGroup;
 import common.util.stage.MapColc;
 import common.util.stage.Recd;
-import common.util.unit.DIYAnim;
-
 import static java.lang.Character.isDigit;
 
 public class CommonStatic {
@@ -188,7 +186,7 @@ public class CommonStatic {
 		Castles.map.clear();
 		CharaGroup.map.clear();
 		Recd.map.clear();
-		DIYAnim.map.clear();
+		// DIYAnim.map.clear();
 		Pack.def = new Pack();
 	}
 

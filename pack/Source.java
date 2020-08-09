@@ -3,44 +3,26 @@ package common.pack;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Consumer;
 
-import com.google.gson.JsonParser;
-
-import common.io.json.JsonClass;
-import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonClass.NoTag;
+import common.pack.PackData.Identifier;
 import common.pack.PackLoader.ZipDesc;
 import common.pack.PackLoader.ZipDesc.FileDesc;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonField;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
 import common.system.files.FileData;
-import common.util.Data;
-import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
-import common.util.unit.AbEnemy;
-import main.MainBCU;
 
 public abstract class Source {
 
@@ -128,117 +110,6 @@ public abstract class Source {
 
 	}
 
-	@JsonClass(bypass = true)
-	public static class EntryStore<T extends Indexable> {
-
-		@JsonField
-		public final ArrayList<T> list = new ArrayList<>();
-
-		public EntryStore() {
-		}
-
-		public int add(T t) {
-			list.add(t);
-			return list.size() - 1;
-		}
-
-		public T get(String id) {
-			for (T t : list)
-				if (t.getID().id.equals(id))
-					return t;
-			return null;
-		}
-
-		public boolean remove(T t) {
-			return list.remove(t);
-		}
-
-	}
-
-	@JsonClass(noTag = NoTag.LOAD)
-	public static class Identifier implements Comparable<Identifier> {
-
-		public static Identifier parseInt(int v) {
-			int pack = v / 1000;
-			int id = v % 1000;
-			return new Identifier("" + pack, "" + id);
-		}
-
-		public String pack;
-
-		public String id;
-
-		public Identifier() {
-			pack = null;
-			id = null;
-		}
-
-		public Identifier(String pack, String id) {
-			this.pack = pack;
-			this.id = id;
-		}
-
-		@Override
-		public int compareTo(Identifier o) {
-			int val = pack.compareTo(o.pack);
-			if (val != 0)
-				return val;
-			return id.compareTo(o.id);
-		}
-
-		public boolean equals(Identifier o) {
-			return pack.equals(o.pack) && id.equals(o.id);
-		}
-
-		@Override
-		public String toString() {
-			return pack + "/" + id;
-		}
-	}
-
-	public static interface Indexable {
-
-		public Identifier getID();
-
-	}
-
-	@JsonClass
-	public static class PackData {
-
-		@JsonField
-		public final PackDesc desc;
-
-		// TODO enemy list, unit list, unit level list, bg list, castle list, music
-		// list, MapColc
-
-		/** for generating new pack only */
-		private PackData(String id) {
-			desc = new PackDesc(id);
-		}
-
-	}
-
-	@JsonClass(noTag = NoTag.LOAD)
-	public static class PackDesc {
-		public String BCU_VERSION;
-		public String id;
-		public String author;
-		public String name;
-		public String desc;
-		@JsonField(generic = String.class)
-		public ArrayList<String> dependency;
-
-		@JCConstructor
-		public PackDesc() {
-		}
-
-		private PackDesc(String id) {
-			BCU_VERSION = Data.revVer(MainBCU.ver);
-			this.id = id;
-			this.dependency = new ArrayList<>();
-		}
-	}
-
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
 		public static interface SourceLoader {
@@ -247,20 +118,20 @@ public abstract class Source {
 
 		}
 
-		private static final String IC = "imgcut.txt";
-		private static final String MM = "mamodel.txt";
-		private static final String[] MA = { "maanim_walk.txt", "maanim_idle.txt", "maanim_attack.txt", "maanim_kb.txt",
+		public static final String IC = "imgcut.txt";
+		public static final String MM = "mamodel.txt";
+		public static final String[] MA = { "maanim_walk.txt", "maanim_idle.txt", "maanim_attack.txt", "maanim_kb.txt",
 				"maanim_burrow_down.txt", "maanim_burrow_move.txt", "maanim_burrow_up.txt" };
-		private static final String SP = "sprite.png";
-		private static final String EDI = "icon_display.png";
-		private static final String UNI = "icon_deploy.png";
+		public static final String SP = "sprite.png";
+		public static final String EDI = "icon_display.png";
+		public static final String UNI = "icon_deploy.png";
 
 		private final Identifier id;
 		private final SourceLoader loader;
 
 		public SourceAnimLoader(Identifier id, SourceLoader loader) {
 			this.id = id;
-			this.loader = loader == null ? Workspace::loadFile : loader;
+			this.loader = loader == null ? Workspace::loadAnimFile : loader;
 		}
 
 		@Override
@@ -317,11 +188,11 @@ public abstract class Source {
 	public static class SourceAnimSaver {
 
 		private final Identifier id;
-		private final AnimCE anim;
+		private final AnimCI anim;
 
-		public SourceAnimSaver(Identifier id, AnimCE anim) {
+		public SourceAnimSaver(Identifier id, AnimCI animCI) {
 			this.id = id;
-			this.anim = anim;
+			this.anim = animCI;
 		}
 
 		public void delete() {
@@ -388,93 +259,6 @@ public abstract class Source {
 
 	}
 
-	public static class UserProfile {
-
-		//FIXME load it into register
-		private static UserProfile profile;
-
-		public static AbEnemy getEnemy(Identifier id) {
-			Source pack = getProfile().packmap.get(id.pack);
-			if (pack == null)
-				return null;
-			return null;// pack.data.enemylist.get(id.id);
-		}
-
-		public static UserProfile getProfile() {
-			return profile;
-		}
-
-		public String username;
-
-		public byte[] password;
-		public final Map<String, Source> packmap = new HashMap<>();
-		public final Set<Source> packlist = new HashSet<>();
-
-		public final Set<Source> failed = new HashSet<>();
-
-		public UserProfile() {
-			// TODO load username and password
-			File packs = ctx.getPackFolder();
-			File workspace = ctx.getWorkspaceFile(".");
-			Map<String, Source> set = new HashMap<>();
-			if (packs.exists())
-				for (File f : packs.listFiles())
-					if (f.getName().endsWith(".pack.bcuzip"))
-						try {
-							Source s = readZipPack(f);
-							set.put(s.data.desc.id, s);
-						} catch (Exception e) {
-							ctx.noticeErr(e, "failed to load external pack " + f);
-						}
-			if (workspace.exists())
-				for (File f : packs.listFiles())
-					if (f.isDirectory()) {
-						File main = ctx.getWorkspaceFile("./" + f.getName() + "/main.pack.json");
-						if (!main.exists())
-							continue;
-						try {
-							Source s = readJsonPack(main);
-							set.put(s.data.desc.id, s);
-						} catch (Exception e) {
-							ctx.noticeErr(e, "failed to load workspace pack " + f);
-						}
-					}
-			failed.addAll(set.values());
-			while (failed.removeIf(this::add))
-				;
-			packlist.addAll(failed);
-		}
-
-		public boolean add(Source pack) {
-			packlist.add(pack);
-			if (!canAdd(pack))
-				return false;
-			packmap.put(pack.data.desc.id, pack);
-			pack.loadable = true;
-			return true;
-		}
-
-		public boolean canAdd(Source s) {
-			for (String dep : s.data.desc.dependency)
-				if (!packmap.containsKey(dep))
-					return false;
-			return true;
-		}
-
-		public boolean canRemove(String id) {
-			for (Entry<String, Source> ent : packmap.entrySet())
-				if (ent.getValue().data.desc.dependency.contains(id))
-					return false;
-			return true;
-		}
-
-		public void remove(Source pack) {
-			packmap.remove(pack.data.desc.id);
-			packlist.remove(pack);
-		}
-
-	}
-
 	public static class Workspace extends Source {
 
 		public static List<AnimCI> loadAnimations(String id) {
@@ -490,20 +274,17 @@ public abstract class Source {
 			return list;
 		}
 
-		private static FileData loadFile(Identifier id, String str) {
+		private static FileData loadAnimFile(Identifier id, String str) {
 			return new FDFile(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str));
 		}
 
-		private File folder;
-
-		private Workspace(File root, PackData data) {
-			super(data);
-			folder = root;
+		public Workspace(String id) {
+			super(id);
 		}
 
 		@Override
 		public AnimCI loadAnimation(String name) {
-			return new AnimCI(new SourceAnimLoader(new Identifier(folder.getName(), name), null));
+			return new AnimCI(new SourceAnimLoader(new Identifier(id, name), null));
 		}
 
 		@Override
@@ -523,7 +304,7 @@ public abstract class Source {
 		}
 
 		private File getFile(String path) {
-			return ctx.getWorkspaceFile("./" + folder.getName() + "/" + path);
+			return ctx.getWorkspaceFile("./" + id + "/" + path);
 		}
 
 	}
@@ -532,14 +313,14 @@ public abstract class Source {
 
 		private final ZipDesc zip;
 
-		private ZipSource(ZipDesc desc, PackData data) {
-			super(data);
+		public ZipSource(ZipDesc desc) {
+			super(desc.desc.id);
 			zip = desc;
 		}
 
 		@Override
 		public AnimCI loadAnimation(String name) {
-			return new AnimCI(new SourceAnimLoader(new Identifier(data.desc.id, name), this::loadAnimationFile));
+			return new AnimCI(new SourceAnimLoader(new Identifier(id, name), this::loadAnimationFile));
 		}
 
 		@Override
@@ -555,7 +336,7 @@ public abstract class Source {
 		public Workspace unzip(Context ctx, String password) throws Exception {
 			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
 				return null;
-			File f = ctx.getWorkspaceFile("./" + data.desc.id + "/main.pack.json");
+			File f = ctx.getWorkspaceFile("./" + id + "/main.pack.json");
 			File folder = f.getParentFile();
 			if (folder.exists()) {
 				if (!ctx.confirmDelete())
@@ -564,14 +345,12 @@ public abstract class Source {
 			}
 			Context.check(folder.mkdirs(), "create", folder);
 			Context.check(f.createNewFile(), "create", f);
-			UserProfile.profile.remove(this);
-			Workspace ans = new Workspace(folder, data);
+			Workspace ans = new Workspace(id);
 			zip.unzip(id -> {
 				File file = ans.getFile(id);
 				Context.check(file.createNewFile(), "create", file);
 				return file;
 			});
-			UserProfile.profile.add(ans);
 			return ans;
 		}
 
@@ -583,44 +362,10 @@ public abstract class Source {
 
 	public static Context ctx;
 
-	public static Workspace initJsonPack(String id) throws Exception {
-		File f = ctx.getWorkspaceFile("./" + id + "/main.pack.json");
-		File folder = f.getParentFile();
-		if (folder.exists()) {
-			if (!ctx.confirmDelete())
-				return null;
-			Context.delete(f);
-		}
-		Context.check(folder.mkdirs(), "create", folder);
-		Context.check(f.createNewFile(), "create", f);
-		return new Workspace(folder, new PackData(id));
-	}
+	public final String id;
 
-	public static Workspace readJsonPack(File f) throws Exception {
-		File folder = f.getParentFile();
-		Reader r = new FileReader(f);
-		PackData data = JsonDecoder.decode(JsonParser.parseReader(r), PackData.class);
-		return new Workspace(folder, data);
-	}
-
-	public static ZipSource readZipPack(File f) throws Exception {
-		ZipDesc zip = PackLoader.readPack(ctx::preload, f);
-		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"));
-		PackData data = JsonDecoder.decode(JsonParser.parseReader(r), PackData.class);
-		r.close();
-		return new ZipSource(zip, data);
-	}
-
-	public final PackData data;
-
-	private boolean loadable;
-
-	private Source(PackData da) {
-		data = da;
-	}
-
-	public boolean loadable() {
-		return loadable;
+	public Source(String id) {
+		this.id = id;
 	}
 
 	public abstract AnimCI loadAnimation(String name);

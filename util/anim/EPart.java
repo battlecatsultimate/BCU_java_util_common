@@ -5,7 +5,6 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
 import common.util.ImgCore;
-import main.Printer;
 
 public class EPart extends ImgCore implements Comparable<EPart> {
 
@@ -85,7 +84,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			extend = v;
 			extType = 1;
 		} else
-			Printer.p("EPart", 74, "modification can be: " + m);
+			;// TODO Printer.p("EPart", 74, "modification can be: " + m);
 
 	}
 
@@ -126,7 +125,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 14)
 			return vf;
 		else
-			Printer.p("EPart", 74, "modification can be: " + m);
+			;// TODO Printer.p("EPart", 74, "modification can be: " + m);
 		return -1;
 	}
 

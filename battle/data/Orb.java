@@ -13,6 +13,8 @@ import java.util.Queue;
 import java.util.TreeMap;
 
 import common.CommonStatic;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
@@ -20,7 +22,6 @@ import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import common.util.unit.UnitStore;
 
 public class Orb extends Data {
 	// Available data for atk/res orb, will be used for GUI
@@ -153,7 +154,7 @@ public class Orb extends Data {
 				int id = CommonStatic.parseIntN(strs[0]);
 				int slots = CommonStatic.parseIntN(strs[1]);
 
-				Unit u = UnitStore.get(id, false);
+				Unit u = UserProfile.getUnit(Identifier.parseInt(id));
 
 				if (u == null || u.forms.length != 3) {
 					continue;

@@ -2,7 +2,6 @@ package common.battle.data;
 
 import common.battle.Basis;
 import common.util.unit.Enemy;
-import main.Printer;
 
 public class DataEnemy extends DefaultData implements MaskEnemy {
 
@@ -26,11 +25,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		tba = ints[4];
 		range = ints[5];
 		earn = ints[6];
-		if (ints[7] != 0)
-			Printer.p("DataEnemy", 32, enemy.id + "-new 7: " + ints[7]);
 		width = ints[8];
-		if (ints[9] != 0)
-			Printer.p("DataEnemy", 32, enemy.id + "-new 9: " + ints[9]);
 		int t = 0;
 		if (ints[10] == 1)
 			t |= TB_RED;
@@ -91,14 +86,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 			t |= TB_WITCH;
 		if (ints[49] == 1)
 			t |= TB_INFH;
-		if (ints[50] != -1)
-			Printer.p("DataEnemy", 89, enemy.id + "-new 50: " + ints[50]);
-		if (ints[51] != -1)
-			Printer.p("DataEnemy", 91, enemy.id + "-new 51: " + ints[51]);
-		if (ints[52] != 0)
-			Printer.p("DataEnemy", 93, enemy.id + "-new 52: " + ints[52]);
-		if (ints[53] != -1)
-			Printer.p("DataEnemy", 95, enemy.id + "-new 53: " + ints[53]);
 		death = ints[54];
 		atk1 = ints[55];
 		atk2 = ints[56];
@@ -107,17 +94,11 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		abi0 = ints[59];
 		abi1 = ints[60];
 		abi2 = ints[61];
-		if (ints[62] != 0 || ints[63] != 0)
-			Printer.p("DataEnemy", 105, enemy.id + "-new 62,63: " + ints[62] + "," + ints[63]);
 		shield = ints[64];
 		proc.WARP.prob = ints[65];
 		proc.WARP.time = ints[66];
 		proc.WARP.dis = ints[67] / 4;
-		if (ints[67] != ints[68])
-			Printer.p("DataEnemy", 111, enemy.id + "-new 67,68: " + ints[67] + "," + ints[68]);
 		star = ints[69];
-		if (ints[70] != 0)
-			Printer.p("DataEnemy", 114, enemy.id + "-new 70: " + ints[70]);
 		if (ints[71] == 1)
 			t |= TB_EVA;
 		if (ints[72] == 1)

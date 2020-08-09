@@ -13,8 +13,6 @@ import common.io.OutStream;
 import common.system.files.FileData;
 import common.util.BattleStatic;
 import common.util.Data;
-import main.Opts;
-import main.Printer;
 
 public class MaModel extends Data implements Cloneable, BattleStatic {
 
@@ -23,7 +21,6 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 			return new MaModel(f.readLine());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.animErr(f.toString());
 			return new MaModel();
 		}
 
@@ -52,8 +49,6 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 
 	protected MaModel(Queue<String> qs) {
 		qs.poll();
-		if (!qs.poll().trim().equals("3"))
-			Printer.p("MaModel", 24, "new MaModel type");
 		n = Integer.parseInt(qs.poll().trim());
 		parts = new int[n][14];
 		strs0 = new String[n];

@@ -2,32 +2,34 @@ package common.util.stage;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import common.battle.StageBasis;
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField.GenType;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.PackDesc;
+import common.pack.PackData.UserProfile;
 import common.system.Copable;
 import common.system.FixIndexList;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 
 @JsonClass
 public class SCDef implements Copable<SCDef> {
 
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Line implements Cloneable {
-		public int enemy, number, boss, multiple, group;
+		public Identifier enemy;
+		public int number, boss, multiple, group;
 		public int spawn_0, spawn_1, respawn_0, respawn_1;
 		public int castle_0, castle_1, layer_0, layer_1;
 		public int mult_atk;
@@ -37,7 +39,7 @@ public class SCDef implements Copable<SCDef> {
 		}
 
 		public Line(int[] arr) {
-			enemy = arr[E];
+			enemy = Identifier.parseInt(arr[E]);
 			number = arr[N];
 			boss = arr[B];
 			multiple = arr[M];
@@ -88,48 +90,11 @@ public class SCDef implements Copable<SCDef> {
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
-					scd.smap.put(is.nextInt(), is.nextInt());
+					scd.smap.put(Identifier.parseInt(is.nextInt()), is.nextInt());
 				n = is.nextInt();
 				for (int i = 0; i < n; i++) {
 					SCGroup scg = SCGroup.zread(is);
 					scd.sub.set(scg.id, scg);
-				}
-				return scd;
-			}
-			if (ver >= 401) {
-				int n = is.nextInt();
-				int m = is.nextInt();
-				SCDef scd = new SCDef(n);
-				int[] tmp = new int[SIZE];
-				for (int i = 0; i < n; i++) {
-					Arrays.fill(tmp, 0);
-					for (int j = 0; j < m; j++)
-						tmp[j] = is.nextInt();
-					if (m < 14)
-						tmp[M1] = tmp[M];
-					scd.datas[i] = new Line(tmp);
-				}
-				scd.sdef = is.nextInt();
-				n = is.nextInt();
-				for (int i = 0; i < n; i++)
-					scd.smap.put(is.nextInt(), is.nextInt());
-				n = is.nextInt();
-				int id;
-				for (int i = 0; i < n; i++)
-					scd.sub.set(id = is.nextInt(), new SCGroup(id, is.nextInt()));
-				return scd;
-			} else if (ver >= 400) {
-				int n = is.nextInt();
-				int m = is.nextInt();
-				SCDef scd = new SCDef(n);
-				int[] tmp = new int[SIZE];
-				for (int i = 0; i < n; i++) {
-					Arrays.fill(tmp, 0);
-					for (int j = 0; j < m; j++)
-						tmp[j] = is.nextInt();
-					if (m < 14)
-						tmp[M1] = tmp[M];
-					scd.datas[i] = new Line(tmp);
 				}
 				return scd;
 			}
@@ -141,8 +106,8 @@ public class SCDef implements Copable<SCDef> {
 	public Line[] datas;
 	@JsonField(gen = GenType.FILL)
 	public final FixIndexList<SCGroup> sub = new FixIndexList<>(new SCGroup[1000]);
-	@JsonField(generic = { Integer.class, Integer.class })
-	public final Map<Integer, Integer> smap = new TreeMap<>();
+	@JsonField(generic = { Identifier.class, Integer.class })
+	public final Map<Identifier, Integer> smap = new TreeMap<>();
 	@JsonField
 	public int sdef = 0;
 
@@ -220,7 +185,7 @@ public class SCDef implements Copable<SCDef> {
 	public Set<Enemy> getAllEnemy() {
 		Set<Enemy> l = new TreeSet<>();
 		for (Line dat : datas)
-			l.addAll(EnemyStore.getAbEnemy(dat.enemy, false).getPossible());
+			l.addAll(UserProfile.getEnemy(dat.enemy).getPossible());
 		for (AbEnemy e : getSummon())
 			l.addAll(e.getPossible());
 		return l;
@@ -234,14 +199,9 @@ public class SCDef implements Copable<SCDef> {
 		return datas[i];
 	}
 
-	public int[][] getSMap() {
-		int[][] ans = new int[smap.size()][2];
-		int[] i = new int[1];
-		smap.forEach((e, g) -> {
-			ans[i[0]][0] = e;
-			ans[i[0]++][1] = g;
-		});
-		return ans;
+	@SuppressWarnings("unchecked")
+	public Entry<Identifier, Integer>[] getSMap() {
+		return smap.entrySet().toArray(new Entry[0]);
 	}
 
 	public Set<AbEnemy> getSummon() {
@@ -250,7 +210,7 @@ public class SCDef implements Copable<SCDef> {
 		Set<Enemy> pre = new TreeSet<>();
 		Set<Enemy> post = new TreeSet<>();
 		for (Line line : datas) {
-			AbEnemy e = EnemyStore.getAbEnemy(line.enemy, false);
+			AbEnemy e = UserProfile.getEnemy(line.enemy);
 			if (e != null)
 				pre.addAll(e.getPossible());
 		}
@@ -268,14 +228,13 @@ public class SCDef implements Copable<SCDef> {
 		return ans;
 	}
 
-	public boolean isSuitable(Pack p) {
+	public boolean isSuitable(PackDesc pack) {
 		for (Line ints : datas) {
-			if (ints.enemy < 1000)
+			if (ints.enemy.pack.equals(Identifier.DEF))
 				continue;
-			int pac = ints.enemy / 1000;
-			boolean b = pac == p.id;
-			for (int rel : p.rely)
-				b |= pac == rel;
+			boolean b = ints.enemy.pack.equals(pack.id);
+			for (String rel : pack.dependency)
+				b |= ints.enemy.pack.equals(rel);
 			if (!b)
 				return false;
 		}
@@ -289,54 +248,4 @@ public class SCDef implements Copable<SCDef> {
 		return false;
 	}
 
-	public void merge(int id, int pid, int[] esind) {
-		for (Line dat : datas)
-			if (dat.enemy / 1000 == pid)
-				dat.enemy = esind[dat.enemy % 1000] + id * 1000;
-	}
-
-	public int relyOn(int p) {
-		for (Line data : datas)
-			if (data.enemy / 1000 == p)
-				return Pack.RELY_ENE;
-		return -1;
-	}
-
-	public void removePack(int p) {
-		for (Line data : datas)
-			if (data.enemy / 1000 == p)
-				data.enemy = 0;
-	}
-
-	public OutStream write() {
-		OutStream os = OutStream.getIns();
-		os.writeInt(0);
-		os.writeString("0.4.2");
-		os.writeInt(datas.length);
-		os.writeInt(SIZE);
-		for (int i = 0; i < datas.length; i++) {
-			os.writeInt(datas[i].enemy);
-			os.writeInt(datas[i].number);
-			os.writeInt(datas[i].spawn_0);
-			os.writeInt(datas[i].respawn_0);
-			os.writeInt(datas[i].respawn_1);
-			os.writeInt(datas[i].castle_0);
-			os.writeInt(datas[i].layer_0);
-			os.writeInt(datas[i].layer_1);
-			os.writeInt(datas[i].boss);
-			os.writeInt(datas[i].multiple);
-			os.writeInt(datas[i].spawn_1);
-			os.writeInt(datas[i].castle_1);
-			os.writeInt(datas[i].group);
-			os.writeInt(datas[i].mult_atk);
-		}
-
-		os.writeInt(sdef);
-		os.writeInt(smap.size());
-		smap.forEach((e, i) -> os.writeIntsN(e, i));
-		os.writeInt(sub.size());
-		sub.forEach((i, e) -> e.write(os));
-		os.terminate();
-		return os;
-	}
 }

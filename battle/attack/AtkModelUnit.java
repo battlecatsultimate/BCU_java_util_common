@@ -4,10 +4,10 @@ import common.battle.BasisLU;
 import common.battle.entity.EUnit;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
+import common.pack.PackData.UserProfile;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.EForm;
 import common.util.unit.Unit;
-import common.util.unit.UnitStore;
 
 public class AtkModelUnit extends AtkModelEntity {
 
@@ -31,7 +31,7 @@ public class AtkModelUnit extends AtkModelEntity {
 	@Override
 	public void summon(SUMMON proc, Entity ent, Object acs) {
 
-		Unit u = UnitStore.get(proc.id, true);
+		Unit u = UserProfile.getUnit(proc.id);
 		SUMMON.TYPE conf = proc.type;
 		int time = proc.time;
 		if (u != null && (b.entityCount(-1) < b.max_num || conf.ignore_limit)) {

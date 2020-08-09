@@ -1,16 +1,13 @@
 package common.util.anim;
 
 import common.CommonStatic;
-import common.CommonStatic.ImgReader;
-import common.io.InStream;
 import common.pack.Source;
-import common.pack.Source.Identifier;
+import common.pack.PackData.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.AssetData;
 import common.util.Res;
-import main.Opts;
 
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
@@ -109,10 +106,6 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 	public Identifier name;
 
-	public AnimCI(InStream is, ImgReader r) {
-		this(CommonStatic.def.loadAnim(is, r));
-	}
-
 	public AnimCI(Source.AnimLoader acl) {
 		super(new AnimCIKeeper(acl));
 		name = loader.getName();
@@ -127,7 +120,6 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 			if (getUni() != null)
 				getUni().check();
 		} catch (Exception e) {
-			Opts.loadErr("Error in loading custom animation: " + name);
 			e.printStackTrace();
 			CommonStatic.def.exit(false);
 		}

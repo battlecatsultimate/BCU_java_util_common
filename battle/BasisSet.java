@@ -6,13 +6,11 @@ import java.util.List;
 import com.google.gson.JsonElement;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.IOType;
 import common.system.Copable;
-import main.Opts;
 
 @JsonClass
 public class BasisSet extends Basis implements Copable<BasisSet> {
@@ -27,18 +25,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static BasisSet[] readBackup(InStream is) {
 		return zreads(is, true).toArray(new BasisSet[0]);
-	}
-
-	public static OutStream writeAll() {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.3.8");
-		os.writeInt(list.size());
-		for (BasisSet bs : list)
-			if (bs != def)
-				os.accept(bs.write());
-		os.writeInt((byte) list.indexOf(current));
-		os.terminate();
-		return os;
 	}
 
 	private static List<BasisSet> zreads(InStream is, boolean bac) {
@@ -68,7 +54,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 				ans.add(bs);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Opts.loadErr("error in reading basis #" + i);
+				// TODO Opts.loadErr("error in reading basis #" + i);
 			}
 		int ind = Math.max(is.nextInt(), ans.size() - 1);
 		if (!bac)
@@ -141,22 +127,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		return t;
 	}
 
-	public OutStream write() {
-		OutStream os = OutStream.getIns();
-		os.writeString(name);
-		t.write(os);
-		os.writeString("0.3.8");
-		os.writeInt(lb.size());
-		for (BasisLU lu : lb) {
-			os.writeString(lu.name);
-			os.writeIntB(lu.nyc);
-			os.accept(lu.lu.write());
-		}
-		os.writeInt(lb.indexOf(sele));
-		os.terminate();
-		return os;
-	}
-
 	@JsonField(tag = "sele", io = IOType.R)
 	public void zgen(JsonElement elem) {
 		sele = lb.get(elem.getAsInt());
@@ -211,7 +181,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 				lb.add(bl);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Opts.loadErr("error in reading lineup " + name + " - " + str);
+				// TODO Opts.loadErr("error in reading lineup " + name + " - " + str);
 			}
 
 		}

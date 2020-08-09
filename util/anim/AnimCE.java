@@ -11,14 +11,12 @@ import common.CommonStatic.EditLink;
 import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
-import common.pack.Source.Identifier;
+import common.pack.PackData.Identifier;
 import common.pack.Source.SourceAnimSaver;
 import common.pack.Source.SourceAnimLoader;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
-import main.MainBCU;
-import main.Opts;
 
 public class AnimCE extends AnimCI {
 
@@ -107,10 +105,10 @@ public class AnimCE extends AnimCI {
 		name = id;
 	}
 
-	public AnimCE(InStream is, CommonStatic.ImgReader r, String pack) {
-		super(CommonStatic.def.loadAnim(is, r));
-		name = loader.getName();
-		name = new Identifier(pack == null ? "_local" : pack, loader.getName().id);
+	/** for conversion only */
+	@Deprecated
+	public AnimCE(Source.AnimLoader al) {
+		super(al);
 	}
 
 	public AnimCE(String st) {
@@ -166,7 +164,7 @@ public class AnimCE extends AnimCI {
 
 	public void hardSave(String str) {
 		if (name == null)
-			name = new Identifier("_local", AnimCE.getAvailable(MainBCU.validate(str)));
+			name = new Identifier("_local", AnimCE.getAvailable(str));// TODO validate
 		saved = false;
 		save();
 	}
@@ -190,7 +188,6 @@ public class AnimCE extends AnimCI {
 			super.load();
 			history("initial");
 		} catch (Exception e) {
-			Opts.loadErr("Error in loading custom animation: " + name);
 			e.printStackTrace();
 			CommonStatic.def.exit(false);
 		}

@@ -1,6 +1,8 @@
 package common.system;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,8 +22,13 @@ import common.util.Data;
 @JsonClass
 public class FixIndexList<T> extends Data {
 
-	private final T[] arr;
+	private T[] arr;
 	private int size = 0;
+
+	@SuppressWarnings("unchecked")
+	public FixIndexList(Class<T> cls) {
+		arr = (T[]) Array.newInstance(cls, 16);
+	}
 
 	public FixIndexList(T[] ar) {
 		arr = ar;
@@ -101,7 +108,8 @@ public class FixIndexList<T> extends Data {
 		for (int i = 0; i < arr.length; i++)
 			if (arr[i] == null)
 				return i;
-		return -1;
+		arr = Arrays.copyOf(arr, arr.length * 2);
+		return nextInd();
 	}
 
 	public void remove(T t) {
@@ -115,6 +123,8 @@ public class FixIndexList<T> extends Data {
 	}
 
 	public void set(int ind, T t) {
+		while (arr.length < ind)
+			arr = Arrays.copyOf(arr, arr.length * 2);
 		if (arr[ind] != null)
 			size--;
 		if (t != null)

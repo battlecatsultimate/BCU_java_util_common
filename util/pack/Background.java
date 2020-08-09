@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import common.pack.PackData;
+import common.pack.PackData.Identifier;
 import common.system.P;
 import common.system.VImg;
 import common.system.fake.FakeGraphics;
@@ -16,12 +18,12 @@ import common.util.anim.EAnimD;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
-import main.Printer;
 
 public class Background extends AnimI {
 
 	public static MaModel ewavm, uwavm;
 	public static MaAnim ewava, uwava;
+	public static WaveAnim defu, defe;
 
 	public static final List<ImgCut> iclist = new ArrayList<>();
 
@@ -49,14 +51,13 @@ public class Background extends AnimI {
 					for (int i = 0; i < 15; i++)
 						ints[i] = Integer.parseInt(strs[i]);
 				} catch (Exception e) {
-					Printer.p("BG", 53, "error in reading BG " + vf.name);
+					e.printStackTrace();
 				}
 				new Background(new VImg(vf), ints);
 			}
 	}
 
-	public final Pack pack;
-	public final int id;
+	public final Identifier id;
 	public final VImg img;
 	public final int[][] cs = new int[4][3];
 	private final WaveAnim uwav, ewav;
@@ -66,31 +67,34 @@ public class Background extends AnimI {
 
 	public FakeImage[] parts = null;
 
-	protected Background(Pack p, VImg vimg, int ID) {
-		pack = p;
-		id = p.id * 1000 + ID;
+	public Background(Identifier id, VImg vimg) {
+		this.id = id;
 		img = vimg;
 		ic = 1;
 		top = true;
-		uwav = BGStore.getBG(0).uwav;
-		ewav = BGStore.getBG(0).ewav;
+		uwav = defu;
+		ewav = defe;
 	}
 
 	private Background(VImg vimg, int[] ints) {
-		pack = Pack.def;
-		id = pack.bg.size();
+		int id = PackData.profile.def.bgs.size();
+		this.id = Identifier.parseInt(id);
 		img = vimg;
 		top = ints[14] == 1 || ints[13] == 8;
 		ic = ints[13] == 8 ? 1 : ints[13];
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
-		Pack.def.bg.add(this);
+		PackData.profile.def.bgs.add(this);
 		if (id <= 107) {
 			uwav = new WaveAnim(this, uwavm, uwava);
 			ewav = new WaveAnim(this, ewavm, ewava);
 		} else {
-			uwav = BGStore.getBG(0).uwav;
-			ewav = BGStore.getBG(0).ewav;
+			uwav = defu;
+			ewav = defe;
+		}
+		if (id == 0) {
+			defu = uwav;
+			defe = ewav;
 		}
 	}
 
@@ -102,8 +106,8 @@ public class Background extends AnimI {
 
 	}
 
-	public Background copy(Pack p, int id) {
-		Background bg = new Background(p, new VImg(img.getImg()), id);
+	public Background copy(Identifier id) {
+		Background bg = new Background(id, new VImg(img.getImg()));
 		for (int i = 0; i < 4; i++)
 			bg.cs[i] = cs[i];
 		bg.top = top;
@@ -162,7 +166,7 @@ public class Background extends AnimI {
 
 	@Override
 	public String toString() {
-		return hex(pack.id) + "-" + trio(id % 1000);
+		return id.toString();
 	}
 
 }

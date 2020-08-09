@@ -3,7 +3,6 @@ package common.battle.data;
 import common.CommonStatic;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import main.Printer;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
@@ -28,14 +27,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		range = ints[5];
 		price = ints[6];
 		respawn = ints[7] * 2;
-		if (ints[8] != 0)
-			Printer.p("DataUnit", 30, unit.id + "-new 0: " + ints[8]);
 		width = ints[9];
 		int t = 0;
 		if (ints[10] == 1)
 			t |= TB_RED;
-		if (ints[11] != 0)
-			Printer.p("DataUnit", 40, unit.id + "new 2: " + ints[11]);
 		isrange = ints[12] == 1;
 		pre = ints[13];
 		front = ints[14];
@@ -104,13 +99,9 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				a |= AB_ZKILL;
 			if (ints[53] == 1)
 				a |= AB_WKILL;
-			if (ints[54] != 0)
-				Printer.p("DataUnit", 79, unit.id + "-new 3: " + ints[54]);
 			loop = ints[55];
 			if (ints[56] != 0)
 				a |= AB_IMUSW;
-			if (ints[57] != -1)
-				Printer.p("DataUnit", 86, unit.id + "-new 6: " + ints[57]);
 			if (ints[58] == 2)
 				a |= AB_GLASS;
 			atk1 = ints[59];
@@ -120,26 +111,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			abi0 = ints[63];
 			abi1 = ints[64];
 			abi2 = ints[65];
-			if (ints[66] != -1)
-				Printer.p("DataUnit", 98, unit.id + "-new 8: " + ints[66]);
 			death = ints[67];
-			if (ints[68] != 0)
-				Printer.p("DataUnit", 101, unit.id + "-new 9: " + ints[68]);
-			if (ints[69] != 0)
-				Printer.p("DataUnit", 103, unit.id + "-new 10: " + ints[69]);
 			proc.BREAK.prob = ints[70];
-			if (ints[71] != 0)
-				Printer.p("DataUnit", 106, unit.id + "-new 11: " + ints[71]);
-			if (ints[72] != 0)
-				Printer.p("DataUnit", 108, unit.id + "-new 12: " + ints[72]);
-			if (ints[73] != 0)
-				Printer.p("DataUnit", 110, unit.id + "-new 13: " + ints[73]);
-			if (ints[74] != 0)
-				Printer.p("DataUnit", 112, unit.id + "-new 14: " + ints[74]);
 			if (ints[75] == 1)
 				proc.IMUWARP.mult = 100;
-			if (ints[76] != 0)
-				Printer.p("DataUnit", 115, unit.id + "-new 15: " + ints[76]);
 			if (ints[77] == 1)
 				a |= AB_EKILL;
 			if (ints[78] == 1)

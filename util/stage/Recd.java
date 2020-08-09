@@ -12,7 +12,6 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.util.Data;
 import common.util.pack.Pack;
-import main.Opts;
 
 public class Recd extends Data {
 

@@ -5,21 +5,19 @@ import java.util.List;
 import java.util.Queue;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.PackData.Identifier;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.stage.SCDef.Line;
 import common.util.unit.Enemy;
 import common.CommonStatic;
-import main.MainBCU;
 
 @JsonClass
 public class Stage extends Data implements BasedCopable<Stage, StageMap>, BattleStatic {
@@ -39,9 +37,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 			energy = data[0];
 			xp = data[1];
-			s.mus0 = data[2];
+			s.mus0 = Identifier.parseInt(data[2]);
 			s.mush = data[3];
-			s.mus1 = data[4];
+			s.mus1 = Identifier.parseInt(data[4]);
 
 			once = data[data.length - 1];
 			boolean isTime = data.length > 15;
@@ -111,7 +109,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	@JsonField
 	public boolean non_con, trail;
 	@JsonField
-	public int len, health, max, bg, mus0 = -1, mush, mus1 = -1, castle;
+	public int len, health, max, mush;
+	public Identifier castle, bg, mus0, mus1;
 	@JsonField
 	public long loop0, loop1;
 	@JsonField
@@ -147,17 +146,20 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		if (type == 0) {
 			temp = qs.poll();
 			String[] strs = temp.split(",");
-			castle = CommonStatic.parseIntN(strs[0]);
+			int cas = CommonStatic.parseIntN(strs[0]);
+			if (map.cast != -1)
+				cas += map.cast * 1000;
+			castle = Identifier.parseInt(cas);// TODO castle
 			non_con = strs[1].equals("1");
 		} else {
-			castle = -1;
+			castle = null;
 			non_con = false;
 		}
 		int intl = type == 2 ? 9 : 10;
 		String[] strs = qs.poll().split(",");
 		len = Integer.parseInt(strs[0]);
 		health = Integer.parseInt(strs[1]);
-		bg = Integer.parseInt(strs[4]);
+		bg = Identifier.parseInt(Integer.parseInt(strs[4]));
 		max = Integer.parseInt(strs[5]);
 		int isBase = Integer.parseInt(strs[6]) - 2;
 		List<int[]> ll = new ArrayList<>();
@@ -211,24 +213,15 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		ans.len = len;
 		ans.health = health;
 		ans.max = max;
-		ans.bg = bg;
-		ans.castle = castle;
+		ans.bg = bg.clone();
+		ans.castle = castle.clone();
 		ans.name = name;
 		ans.data = data.copy();
 		if (lim != null)
 			ans.lim = lim.clone();
-		ans.mus0 = mus0;
-		ans.mus1 = mus1;
+		ans.mus0 = mus0.clone();
+		ans.mus1 = mus1.clone();
 		ans.mush = mush;
-		return ans;
-	}
-
-	public int getCastle() {
-		int ans = castle;
-		if (ans < 1000 && map.cast != -1)
-			ans += map.cast * 1000;
-		if (castle < 0 || Castles.getCastle(ans) == null)
-			return 0;
 		return ans;
 	}
 
@@ -247,74 +240,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		return map.list.indexOf(this);
 	}
 
-	public boolean isSuitable(Pack p) {
-		return data.isSuitable(p);
-	}
-
-	public void merge(int id, int pid, Pack p, int[][] inds) {
-		if (castle / 1000 == pid)
-			castle = inds[Pack.M_CS][castle % 1000] + id * 1000;
-		if (bg / 1000 == pid)
-			bg = inds[Pack.M_BG][bg % 1000] + id * 1000;
-		if (mus0 / 1000 == pid)
-			mus0 = inds[Pack.M_MS][mus0 % 1000] + id * 1000;
-		if (mus1 / 1000 == pid)
-			mus1 = inds[Pack.M_MS][mus1 % 1000] + id * 1000;
-		data.merge(id, pid, inds[Pack.M_ES]);
-		if (lim == null)
-			return;
-		if (lim.group != null && lim.group.pack == p)
-			lim.group = map.mc.groups.get(inds[Pack.M_CG][lim.group.id]);
-		if (lim.lvr != null && lim.lvr.pack == p)
-			lim.lvr = map.mc.lvrs.get(inds[Pack.M_LR][lim.lvr.id]);
-	}
-
-	public int relyOn(int p) {
-		if (mus0 / 1000 == p)
-			return Pack.RELY_MUS;
-		if (mus1 / 1000 == p)
-			return Pack.RELY_MUS;
-		if (getCastle() / 1000 == p)
-			return Pack.RELY_CAS;
-		if (bg / 1000 == p)
-			return Pack.RELY_BG;
-		Limit l = lim;
-		if (l != null) {
-			if (l.group != null && l.group.pack.id == p)
-				return Pack.RELY_CG;
-			if (l.lvr != null && l.lvr.pack.id == p)
-				return Pack.RELY_LR;
-		}
-		int rel = data.relyOn(p);
-		if (rel >= 0)
-			return rel;
-		return -1;
-	}
-
-	public void removePack(int p) {
-		if (mus0 / 1000 == p)
-			mus0 = -1;
-		if (mus1 / 1000 == p)
-			mus1 = -1;
-		if (getCastle() / 1000 == p)
-			castle = 0;
-		if (bg / 1000 == p)
-			bg = 0;
-		if (lim != null) {
-			if (lim.group != null && lim.group.pack.id == p)
-				lim.group = null;
-			if (lim.lvr != null && lim.lvr.pack.id == p)
-				lim.lvr = null;
-		}
-		data.removePack(p);
-	}
-
-	public void setCast(int val) {
-		castle = val;
-	}
-
 	public void setName(String str) {
-		str = MainBCU.validate(str);
+		// TODO validate str = MainBCU.validate(str);
 		while (!checkName(str))
 			str += "'";
 		name = str;
@@ -330,32 +257,6 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		return map + " - " + id();
 	}
 
-	public OutStream write() {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.9");
-		os.writeString(toString());
-		os.writeInt(bg);
-		os.writeInt(castle);
-		os.writeInt(health);
-		os.writeInt(len);
-		os.writeInt(mus0);
-		os.writeInt(mush);
-		os.writeInt(mus1);
-		os.writeLong(loop0);
-		os.writeLong(loop1);
-		os.writeByte((byte) max);
-		os.writeByte((byte) (non_con ? 1 : 0));
-		os.accept(data.write());
-		lim.write(os);
-		os.writeInt(recd.size());
-		for (Recd r : recd) {
-			os.writeString(r.name);
-			os.accept(r.toOS());
-		}
-		os.terminate();
-		return os;
-	}
-
 	protected void validate() {
 		trail = data.isTrail();
 	}
@@ -369,117 +270,16 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
-		if (val >= 409)
-			zread$000409(val, is);
-		else if (val >= 408)
-			zread$000408(val, is);
-		else if (val >= 407)
-			zread$000407(val, is);
-		else if (val >= 400)
-			zread$000400(val, is);
-		else if (val >= 308)
-			zread$000308(val, is);
-		else if (val >= 305)
-			zread$000305(val, is);
-		else if (val >= 203)
-			zread$000203(is);
-		validate();
-	}
-
-	private void zread$000203(InStream is) {
+		if (val != 409)
+			throw new RuntimeException("stage version has to be 409, got" + val);
 		name = is.nextString();
-		bg = is.nextInt();
-		castle = is.nextInt();
+		bg = Identifier.parseInt(is.nextInt());
+		castle = Identifier.parseInt(is.nextInt());
 		health = is.nextInt();
 		len = is.nextInt();
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = new SCDef(is, 203);
-		lim = new Limit(map.mc, 0, is);
-	}
-
-	private void zread$000305(int val, InStream is) {
-		name = is.nextString();
-		bg = is.nextInt();
-		castle = is.nextInt();
-		health = is.nextInt();
-		len = is.nextInt();
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = new SCDef(is, 305);
-		lim = new Limit(map.mc, val, is);
-	}
-
-	private void zread$000308(int val, InStream is) {
-		name = is.nextString();
-		bg = is.nextInt();
-		castle = is.nextInt();
-		health = is.nextInt();
-		len = is.nextInt();
-		mus0 = is.nextInt();
+		mus0 = Identifier.parseInt(is.nextInt());
 		mush = is.nextInt();
-		mus1 = is.nextInt();
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = new SCDef(is, 305);
-		lim = new Limit(map.mc, val, is);
-	}
-
-	private void zread$000400(int val, InStream is) {
-		name = is.nextString();
-		bg = is.nextInt();
-		castle = is.nextInt();
-		health = is.nextInt();
-		len = is.nextInt();
-		mus0 = is.nextInt();
-		mush = is.nextInt();
-		mus1 = is.nextInt();
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = SCDef.zread(is.subStream());
-		lim = new Limit(map.mc, val, is);
-	}
-
-	private void zread$000407(int val, InStream is) {
-		zread$000400(val, is);
-		int t = is.nextInt();
-		for (int i = 0; i < t; i++) {
-			String name = is.nextString();
-			Recd.getRecd(this, is.subStream(), name);
-		}
-	}
-
-	private void zread$000408(int val, InStream is) {
-		name = is.nextString();
-		bg = is.nextInt();
-		castle = is.nextInt();
-		health = is.nextInt();
-		len = is.nextInt();
-		mus0 = is.nextInt();
-		mush = is.nextInt();
-		mus1 = is.nextInt();
-		loop0 = is.nextInt();
-		loop1 = is.nextInt();
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = SCDef.zread(is.subStream());
-		lim = new Limit(map.mc, val, is);
-		int t = is.nextInt();
-		for (int i = 0; i < t; i++) {
-			String name = is.nextString();
-			Recd.getRecd(this, is.subStream(), name);
-		}
-	}
-
-	private void zread$000409(int val, InStream is) {
-		name = is.nextString();
-		bg = is.nextInt();
-		castle = is.nextInt();
-		health = is.nextInt();
-		len = is.nextInt();
-		mus0 = is.nextInt();
-		mush = is.nextInt();
-		mus1 = is.nextInt();
+		mus1 = Identifier.parseInt(is.nextInt());
 		loop0 = is.nextLong();
 		loop1 = is.nextLong();
 		max = is.nextByte();
@@ -491,6 +291,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			String name = is.nextString();
 			Recd.getRecd(this, is.subStream(), name);
 		}
+		validate();
 	}
 
 }

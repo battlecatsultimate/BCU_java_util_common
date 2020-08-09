@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserProfile;
 import common.util.Data;
 import common.util.unit.Combo;
 import common.util.unit.EForm;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Unit;
-import common.util.unit.UnitStore;
 
 import java.util.TreeMap;
 
@@ -95,7 +95,7 @@ public class LineUp extends Data {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (f.uid == com[i][0])
+				if (eq(f.uid, com[i][0]))
 					rem--;
 			}
 		return rem;
@@ -118,11 +118,11 @@ public class LineUp extends Data {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (f.uid == com[i][0]) {
+				if (eq(f.uid, com[i][0])) {
 					rep[j] = true;
 					exi[i] = true;
 					if (f.fid < com[i][1])
-						fs[0][j] = UnitStore.get(com[i]);
+						fs[0][j] = UserProfile.getUnit(Identifier.parseInt(com[i][0])).forms[com[i][1]];
 					loc[j]++;
 					rem--;
 				}
@@ -143,7 +143,7 @@ public class LineUp extends Data {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (f.uid != c.units[i][0])
+						if (eq(f.uid, c.units[i][0]))
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -155,7 +155,7 @@ public class LineUp extends Data {
 		}
 		for (int i = 0; i < 5; i++)
 			for (int[] is : com)
-				if (fs[1][i] != null && fs[1][i].uid == is[0])
+				if (fs[1][i] != null && eq(fs[1][i].uid, is[0]))
 					fs[1][i] = null;
 		arrange();
 		int emp = 0;
@@ -174,7 +174,8 @@ public class LineUp extends Data {
 			while (exi[p])
 				p++;
 			setFS(getFS(i), j++);
-			setFS(UnitStore.get(com[p++]), i++);
+			int[] c = com[p++];
+			setFS(UserProfile.getUnit(Identifier.parseInt(c[0])).forms[c[1]], i++);
 			r++;
 		}
 		renew();
@@ -233,7 +234,7 @@ public class LineUp extends Data {
 			else if (loc[i] == 0) {
 				boolean b = true;
 				for (int[] is : c.units)
-					if (is[0] == fs[0][i].uid) {
+					if (eq(fs[0][i].uid, is[0])) {
 						b = false;
 						break;
 					}
@@ -243,42 +244,13 @@ public class LineUp extends Data {
 		return free < occupance(c);
 	}
 
-	/** write data to file */
-	public OutStream write() {
-		validate();
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.0");
-		for (int i = 0; i < 10; i++)
-			if (getFS(i) == null) {
-				os.writeInt(i);
-				break;
-			} else if (i == 9)
-				os.writeInt(10);
-		for (int i = 0; i < 10; i++) {
-			Form f = getFS(i);
-			if (f == null)
-				break;
-			os.writeInt(f.uid);
-			os.writeInt(f.fid);
-		}
-		os.writeInt(map.size());
-		for (Entry<Unit, Level> e : map.entrySet()) {
-			os.writeInt(e.getKey().id);
-			os.writeIntB(e.getValue().getLvs());
-			if (e.getValue().getOrbs() != null) {
-				os.writeInt(1);
-				os.writeIntBB(e.getValue().getOrbs());
-			} else {
-				os.writeInt(0);
-			}
-		}
-		os.terminate();
-		return os;
-	}
-
 	/** set slot using 1 dim index */
 	protected void setFS(Form f, int i) {
 		fs[i / 5][i % 5] = f;
+	}
+
+	private boolean eq(Identifier id, int com) {
+		return id.pack.equals(Identifier.DEF) && id.id.equals(Data.trio(com));
 	}
 
 	/** get Form from 1 dim index */
@@ -302,7 +274,7 @@ public class LineUp extends Data {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (f.uid != c.units[i][0] || f.fid < c.units[i][1])
+						if (!eq(f.uid, c.units[i][0]) || f.fid < c.units[i][1])
 							continue;
 						b0 = true;
 						break;
@@ -320,7 +292,7 @@ public class LineUp extends Data {
 							Form f = fs[0][j];
 							if (f == null)
 								continue;
-							if (f.uid == c.units[i][0] && f.fid >= c.units[i][1])
+							if (eq(f.uid, c.units[i][0]) && f.fid >= c.units[i][1])
 								loc[j]++;
 						}
 				}
@@ -347,9 +319,10 @@ public class LineUp extends Data {
 	private void validate() {
 		for (int i = 0; i < 10; i++)
 			if (getFS(i) != null) {
-				int id = getFS(i).uid;
+				Identifier id = getFS(i).uid;
 				int f = getFS(i).fid;
-				if (UnitStore.get(id, f, false) == null)
+				Unit u = UserProfile.getUnit(id);
+				if (u == null || u.forms[f] == null)
 					setFS(null, i);
 			}
 		arrange();
@@ -357,71 +330,9 @@ public class LineUp extends Data {
 
 	/** read data from file, support multiple version */
 	private void zread(int ver, InStream is) {
-		int val = ver;
-		if (val >= 307)
-			val = getVer(is.nextString());
+		int val = getVer(is.nextString());
 		if (val >= 400)
 			zread$000400(is);
-		else if (val >= 309)
-			zread$000309(is);
-		else if (val >= 307)
-			zread$000307(is);
-		else if (val >= 203)
-			zread$000203(is);
-	}
-
-	private void zread$000203(InStream is) {
-		int n = is.nextByte();
-		for (int i = 0; i < n; i++) {
-			int uid = is.nextShort();
-			int fid = is.nextByte();
-			setFS(UnitStore.get(uid, fid, true), i);
-		}
-		int m = is.nextShort();
-		for (int i = 0; i < m; i++) {
-			int uid = is.nextShort();
-			int lv = is.nextByte();
-			int[] lvs = new int[6];
-			lvs[0] = lv;
-			Unit u = UnitStore.get(uid, true);
-			if (u != null)
-				map.put(u, new Level(lvs));
-		}
-	}
-
-	private void zread$000307(InStream is) {
-		int n = is.nextByte();
-		for (int i = 0; i < n; i++) {
-			int uid = is.nextShort();
-			int fid = is.nextByte();
-			setFS(UnitStore.get(uid, fid, true), i);
-		}
-		int m = is.nextShort();
-		for (int i = 0; i < m; i++) {
-			int uid = is.nextShort();
-			int[] lv = is.nextIntsB();
-			Unit u = UnitStore.get(uid, true);
-			if (u != null)
-				map.put(u, new Level(lv));
-		}
-	}
-
-	private void zread$000309(InStream is) {
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			int uid = is.nextInt();
-			int fid = is.nextInt();
-			setFS(UnitStore.get(uid, fid, true), i);
-		}
-		int m = is.nextInt();
-		for (int i = 0; i < m; i++) {
-			int uid = is.nextInt();
-			int[] lv = is.nextIntsB();
-			Unit u = UnitStore.get(uid, true);
-			if (u != null)
-				map.put(u, new Level(lv));
-		}
-		arrange();
 	}
 
 	private void zread$000400(InStream is) {
@@ -429,13 +340,13 @@ public class LineUp extends Data {
 		for (int i = 0; i < n; i++) {
 			int uid = is.nextInt();
 			int fid = is.nextInt();
-			setFS(UnitStore.get(uid, fid, true), i);
+			setFS(UserProfile.getUnit(Identifier.parseInt(uid)).forms[fid], i);
 		}
 		int m = is.nextInt();
 		for (int i = 0; i < m; i++) {
 			int uid = is.nextInt();
 			int[] lv = is.nextIntsB();
-			Unit u = UnitStore.get(uid, true);
+			Unit u = UserProfile.getUnit(Identifier.parseInt(uid));
 			int[][] orbs = null;
 			int existing = is.nextInt();
 			if (existing == 1) {

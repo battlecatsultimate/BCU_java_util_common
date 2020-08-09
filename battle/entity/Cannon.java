@@ -8,6 +8,8 @@ import common.battle.attack.AttackCanon;
 import common.battle.attack.AttackWave;
 import common.battle.attack.ContMove;
 import common.battle.attack.ContWaveCanon;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -15,7 +17,6 @@ import common.util.ImgCore;
 import common.util.anim.EAnimD;
 import common.util.pack.NyCastle;
 import common.util.unit.Form;
-import common.util.unit.UnitStore;
 
 public class Cannon extends AtkModelAb {
 
@@ -143,7 +144,7 @@ public class Cannon extends AtkModelAb {
 
 		if (preTime == -1 && id == 2) {
 			// wall canon
-			Form f = UnitStore.get(339, 0, false);
+			Form f = UserProfile.getUnit(Identifier.parseInt(339)).forms[0];
 			double multi = 0.01 * b.b.t().getCanonMulti(id);
 			wall = new EUnit(b, f.du, f.getEAnim(4), multi, null);
 			b.le.add(wall);
