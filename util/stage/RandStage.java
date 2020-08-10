@@ -1,7 +1,6 @@
 package common.util.stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -40,8 +39,6 @@ public class RandStage {
 		qs.poll();
 		for (int i = 0; i < 5; i++)
 			randRep[i] = CommonStatic.parseIntsN(qs.poll());
-		
-		System.out.println(Arrays.deepToString(randRep));
 	}
 
 }
