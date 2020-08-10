@@ -520,7 +520,7 @@ public class Pack extends Data {
 		head.writeInt(MainBCU.ver);
 		head.writeString(editable ? time = MainBCU.getTime() : time);
 		head.writeInt(version);
-		head.writeString(Account.USERNAME);
+		head.writeString(editable ? Account.USERNAME : author);
 		head.terminate();
 		os.accept(head);
 		os.writeString(name);
