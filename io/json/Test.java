@@ -216,6 +216,7 @@ public class Test {
 	}
 
 	public static void testIO() throws Exception {
+		@SuppressWarnings("deprecation")
 		PackData.PackDesc pd = new PackData.PackDesc();
 		pd.author = "test";
 		pd.BCU_VERSION = Data.revVer(41100);

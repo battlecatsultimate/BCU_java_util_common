@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import common.pack.Context.ErrType;
 import common.pack.PackData.Identifier;
 import common.pack.PackLoader.ZipDesc;
 import common.pack.PackLoader.ZipDesc.FileDesc;
@@ -44,72 +45,6 @@ public abstract class Source {
 		public VImg getUni();
 	}
 
-	public static interface Context {
-
-		public static interface RunExc {
-
-			public void run() throws Exception;
-
-		}
-
-		public static interface SupExc<T> {
-
-			public T get() throws Exception;
-
-		}
-
-		public static void check(boolean bool, String str, File f) throws IOException {
-			if (bool)
-				throw new IOException("failed to " + str + " file " + f);
-		}
-
-		public static void check(File f) throws IOException {
-			if (!f.getParentFile().exists())
-				check(f.getParentFile().mkdirs(), "create", f);
-			if (!f.exists())
-				check(f.createNewFile(), "create", f);
-		}
-
-		public static void delete(File f) throws IOException {
-			if (f == null || !f.exists())
-				return;
-			if (f.isDirectory())
-				for (File i : f.listFiles())
-					delete(i);
-			check(!f.delete(), "delete", f);
-		}
-
-		public boolean confirmDelete();
-
-		public File getLangFile(String file);
-
-		public File getPackFolder();
-
-		public File getWorkspaceFile(String relativePath);
-
-		public void noticeErr(Exception e, String str);
-
-		public default void noticeErr(RunExc r, String str) {
-			try {
-				r.run();
-			} catch (Exception e) {
-				noticeErr(e, str);
-			}
-		}
-
-		public default <T> T noticeError(SupExc<T> r, String str) {
-			try {
-				return r.get();
-			} catch (Exception e) {
-				noticeErr(e, str);
-				return null;
-			}
-		}
-
-		public boolean preload(FileDesc desc);
-
-	}
-
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
 		public static interface SourceLoader {
@@ -139,7 +74,8 @@ public abstract class Source {
 			FileData edi = loader.loadFile(id, EDI);
 			if (edi == null)
 				return null;
-			return ctx.noticeError(() -> new VImg(FakeImage.read(edi)), "failed to read Display Icon" + id);
+			return ctx.noticeError(() -> new VImg(FakeImage.read(edi)), ErrType.ERROR,
+					"failed to read Display Icon" + id);
 		}
 
 		@Override
@@ -167,7 +103,8 @@ public abstract class Source {
 
 		@Override
 		public FakeImage getNum() {
-			return ctx.noticeError(() -> FakeImage.read(loader.loadFile(id, SP)), "failed to read sprite sheet " + id);
+			return ctx.noticeError(() -> FakeImage.read(loader.loadFile(id, SP)), ErrType.ERROR,
+					"failed to read sprite sheet " + id);
 		}
 
 		@Override
@@ -180,7 +117,8 @@ public abstract class Source {
 			FileData uni = loader.loadFile(id, UNI);
 			if (uni == null)
 				return null;
-			return ctx.noticeError(() -> new VImg(FakeImage.read(uni)), "failed to read deploy icon " + id);
+			return ctx.noticeError(() -> new VImg(FakeImage.read(uni)), ErrType.ERROR,
+					"failed to read deploy icon " + id);
 		}
 
 	}
@@ -197,7 +135,7 @@ public abstract class Source {
 
 		public void delete() {
 			ctx.noticeErr(() -> Context.delete(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id)),
-					"failed to delete animation: " + id);
+					ErrType.ERROR, "failed to delete animation: " + id);
 		}
 
 		public void saveAll() {
@@ -217,19 +155,19 @@ public abstract class Source {
 				write("maanim_burrow_move.txt", anim.anims[5]::write);
 				write("maanim_burrow_up.txt", anim.anims[6]::write);
 			} catch (IOException e) {
-				ctx.noticeErr(e, "Error during saving animation data: " + anim);
+				ctx.noticeErr(e, ErrType.ERROR, "Error during saving animation data: " + anim);
 			}
 		}
 
 		public void saveIconDeploy() {
 			if (anim.getUni() != null)
-				ctx.noticeErr(() -> write("icon_deploy.png", anim.getUni().getImg()),
+				ctx.noticeErr(() -> write("icon_deploy.png", anim.getUni().getImg()), ErrType.ERROR,
 						"Error during saving deploy icon: " + id);
 		}
 
 		public void saveIconDisplay() {
 			if (anim.getEdi() != null)
-				ctx.noticeErr(() -> write("icon_display.png", anim.getEdi().getImg()),
+				ctx.noticeErr(() -> write("icon_display.png", anim.getEdi().getImg()), ErrType.ERROR,
 						"Error during saving display icon: " + id);
 		}
 
@@ -240,7 +178,8 @@ public abstract class Source {
 		}
 
 		public void saveSprite() {
-			ctx.noticeErr(() -> write("sprite.png", anim.getNum()), "Error during saving sprite sheet: " + id);
+			ctx.noticeErr(() -> write("sprite.png", anim.getNum()), ErrType.ERROR,
+					"Error during saving sprite sheet: " + id);
 		}
 
 		private void write(String type, Consumer<PrintStream> con) throws IOException {
@@ -360,6 +299,7 @@ public abstract class Source {
 
 	}
 
+	// FIXME static variable
 	public static Context ctx;
 
 	public final String id;

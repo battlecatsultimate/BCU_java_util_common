@@ -3,7 +3,7 @@ package common.battle.attack;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.AbEnemy;
 

@@ -7,9 +7,8 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
-import common.pack.PackData;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.system.Copable;
 import common.util.BattleStatic;
 import common.util.unit.Form;
@@ -104,7 +103,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	public BasisLU randomize(int n) {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
-		List<Unit> list = PackData.profile.def.units.getList();
+		List<Unit> list = UserProfile.getBCData().units.getList();
 		list.remove(UserProfile.getUnit(Identifier.parseInt(339)));
 		for (Form[] fs : ans.lu.fs)
 			for (Form f : fs)

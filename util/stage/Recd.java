@@ -10,18 +10,21 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.io.InStream;
 import common.io.OutStream;
+import common.pack.PackData;
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.Data;
-import common.util.pack.Pack;
+import common.util.stage.MapColc.DefMapColc;
 
 public class Recd extends Data {
 
 	private static class Wait {
 
-		private final Stage st;
+		private final Stage.PackStage st;
 		private final InStream is;
 		private final String str;
 
-		private Wait(Stage stage, InStream input, String name) {
+		private Wait(Stage.PackStage stage, InStream input, String name) {
 			st = stage;
 			is = input;
 			str = name;
@@ -39,7 +42,7 @@ public class Recd extends Data {
 		return str;
 	}
 
-	public static void getRecd(Stage stage, InStream is, String str) {
+	public static void getRecd(Stage.PackStage stage, InStream is, String str) {
 		WAIT.add(new Wait(stage, is, str));
 	}
 
@@ -67,55 +70,7 @@ public class Recd extends Data {
 		int val = getVer(is.nextString());
 		if (val >= 401)
 			return zread$000401(is, name);
-		else if (val >= 400)
-			return zread$000400(is, name);
 		return null;
-	}
-
-	private static Recd zread$000400(InStream is, String name) {
-		long seed = is.nextLong();
-		int[] conf = is.nextIntsB();
-		int star = is.nextInt();
-		BasisLU lu = BasisLU.zread(is.subStream());
-		InStream action = is.subStream();
-		int pid = is.nextInt();
-		String mcn = is.nextString();
-		String smid = is.nextString();
-		String stid = is.nextString();
-		Pack pack = Pack.map.get(pid);
-		if (pack == null) {
-			Opts.recdErr(name, "pack " + pid);
-			return null;
-		}
-		MapColc mc = null;
-		if (pack == Pack.def)
-			mc = MapColc.getMap(mcn);
-		else
-			mc = pack.mc;
-		if (!mc.name.equals(mcn)) {
-			Opts.recdErr(name, "map set");
-			return null;
-		}
-		StageMap sm = null;
-		for (StageMap map : mc.maps)
-			if (map.name.equals(smid))
-				sm = map;
-		if (sm == null) {
-			Opts.recdErr(name, "stage map");
-			return null;
-		}
-		Stage st = null;
-		for (Stage s : sm.list)
-			if (s.name.equals(stid))
-				st = s;
-		if (st == null) {
-			Opts.recdErr(name, "stage");
-			return null;
-		}
-		Recd ans = new Recd(lu, st, star, conf, seed);
-		ans.action = action.translate();
-		ans.name = name;
-		return ans;
 	}
 
 	private static Recd zread$000401(InStream is, String name) {
@@ -128,10 +83,10 @@ public class Recd extends Data {
 		Stage st = null;
 		if (pid == 0) {
 			int id = is.nextInt();
-			StageMap sm = MapColc.getMap(id / 1000);
+			StageMap sm = DefMapColc.getMap(id / 1000);
 			st = sm.list.get(id % 1000);
 			if (st == null) {
-				Opts.recdErr(name, "stage " + id);
+				// TODO Opts.recdErr(name, "stage " + id);
 				return null;
 			}
 		} else {
@@ -148,35 +103,30 @@ public class Recd extends Data {
 		String mcn = is.nextString();
 		String smid = is.nextString();
 		String stid = is.nextString();
-		Pack pack = Pack.map.get(pid);
-		if (pack == null) {
-			Opts.recdErr(name, "pack " + pid);
+		PackData pack = UserProfile.getPack(Data.hex(pid));
+		if (pid != 0 && pack == null) {
+			// TODO Opts.recdErr(name, "pack " + pid);
 			return null;
 		}
 		MapColc mc = null;
-		if (pack == Pack.def)
-			mc = MapColc.getMap(mcn);
+		if (pid == 0)
+			mc = DefMapColc.getMap(mcn);
 		else
-			mc = pack.mc;
-		if (!mc.name.equals(mcn)) {
-			Opts.recdErr(name, "map set " + mcn);
-			return null;
-		}
+			mc = ((UserPack) pack).mc;
 		StageMap sm = null;
 		for (StageMap map : mc.maps)
 			if (map.name.equals(smid))
 				sm = map;
 		if (sm == null) {
-			Opts.recdErr(name, "stage map " + smid);
+			// TODO Opts.recdErr(name, "stage map " + smid);
 			return null;
 		}
 		Stage st = null;
 		for (Stage s : sm.list)
 			if (s.name.equals(stid))
 				st = s;
-
 		if (st == null) {
-			Opts.recdErr(name, "stage " + stid);
+			// TODO Opts.recdErr(name, "stage " + stid);
 			return null;
 		}
 		return st;
@@ -224,33 +174,6 @@ public class Recd extends Data {
 	@Override
 	public String toString() {
 		return name;
-	}
-
-	public void write() {
-		marked = !CommonStatic.def.writeBytes(toOS(), "./replay/" + name + ".replay");
-	}
-
-	protected OutStream toOS() {
-		OutStream os = OutStream.getIns();
-		os.writeString("0.4.1");
-		os.writeLong(seed);
-		os.writeIntB(conf);
-		os.writeInt(star);
-		os.accept(lu.write());
-		os.accept(action);
-		int pid = st.map.mc.pack.id;
-		os.writeInt(pid);
-		if (pid > 0) {
-			os.writeString(st.map.mc.name);
-			os.writeString(st.map.name);
-			os.writeString(st.name);
-		} else {
-			int id = st.map.mc.id;
-			id = id * 1000000 + st.map.id * 1000 + st.id();
-			os.writeInt(id);
-		}
-		os.terminate();
-		return os;
 	}
 
 }

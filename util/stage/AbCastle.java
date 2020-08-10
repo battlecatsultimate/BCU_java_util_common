@@ -6,6 +6,8 @@ import common.system.VImg;
 
 public interface AbCastle {
 
+	public static final String REG_CASTLE = "castle";
+
 	public VImg get(int ind);
 
 	public int getCasID(VImg val);

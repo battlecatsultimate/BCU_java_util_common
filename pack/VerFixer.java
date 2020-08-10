@@ -14,10 +14,12 @@ import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.files.FDFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
 import common.util.pack.Background;
+import common.util.stage.MapColc.PackMapColc;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
@@ -48,28 +50,15 @@ public abstract class VerFixer extends Source {
 			this.r = r;
 		}
 
-		@Override
-		public AnimCI loadAnimation(String name) {
-			return null;
-		}
-
-		@Override
-		public FakeImage readImage(String path) throws Exception {
-			return null;
-		}
-
-		@Override
-		public InputStream streamFile(String path) throws Exception {
-			return null;
-		}
-
-		private void load(PackData data, InStream is) throws VerFixerException {
+		@SuppressWarnings("deprecation")
+		private void load(UserPack data, InStream is) throws VerFixerException {
 			this.data = data;
 			loadEnemies(is.subStream());
 			loadUnits(is.subStream());
 			loadBackgrounds(is.subStream());
 			loadCastles(is.subStream());
 			loadMusics(is.subStream());
+			data.mc = new PackMapColc(data, is);
 		}
 
 		private AnimCE loadAnim(InStream is) throws VerFixerException {
@@ -85,7 +74,7 @@ public abstract class VerFixer extends Source {
 		}
 
 		private void loadBackgrounds(InStream is) throws VerFixerException {
-			int ver = is.nextInt();
+			int ver = Data.getVer(is.nextString());
 			if (ver != 400)
 				throw new VerFixerException("expect bg store version to be 400, got " + ver);
 			File f = CommonStatic.def.route("./res/img/" + id + "/bg/");
@@ -126,12 +115,39 @@ public abstract class VerFixer extends Source {
 			}
 		}
 
-		private void loadCastles(InStream is) {
+		private void loadCastles(InStream is) throws VerFixerException {
+			int ver = Data.getVer(is.nextString());
+			if (ver != 307)
+				throw new VerFixerException("expect castle store version to be 307, got " + ver);
+			is.nextInt();
+			File f = CommonStatic.def.route("./res/img/" + id + "/cas/");
+			if (f.exists()) {
+				File[] fs = f.listFiles();
+				for (File fi : fs) {
+					String str = fi.getName();
+					if (str.length() != 7)
+						continue;
+					if (!str.endsWith(".png"))
+						continue;
+					int val = -1;
 
+					try {
+						val = Integer.parseInt(str.substring(0, 3));
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+						continue;
+					}
+					File fx = Source.ctx.getWorkspaceFile("./" + id + "/castles/" + str);
+					fi.renameTo(fx);
+					VImg bimg = CommonStatic.def.readReal(fx);
+					if (val >= 0 && bimg != null)
+						data.castles.set(val, bimg);
+				}
+			}
 		}
 
 		private void loadEnemies(InStream is) throws VerFixerException {
-			int ver = is.nextInt();
+			int ver = Data.getVer(is.nextString());
 			if (ver != 402)
 				throw new VerFixerException("expect enemy store version to be 402, got " + ver);
 			int len = is.nextInt();
@@ -157,11 +173,32 @@ public abstract class VerFixer extends Source {
 		}
 
 		private void loadMusics(InStream is) {
-
+			File f = CommonStatic.def.route("./res/img/" + id + "/music/");
+			if (f.exists() && f.isDirectory()) {
+				File[] fs = f.listFiles();
+				for (File fi : fs) {
+					String str = fi.getName();
+					if (str.length() != 7)
+						continue;
+					if (!str.endsWith(".ogg"))
+						continue;
+					int val = -1;
+					try {
+						val = Integer.parseInt(str.substring(0, 3));
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+						continue;
+					}
+					File fx = Source.ctx.getWorkspaceFile("./" + id + "/musics/" + str);
+					fi.renameTo(fx);
+					if (val >= 0)
+						data.musics.set(val, new FDFile(fx));
+				}
+			}
 		}
 
 		private void loadUnits(InStream is) throws VerFixerException {
-			int ver = is.nextInt();
+			int ver = Data.getVer(is.nextString());
 			if (ver != 401)
 				throw new VerFixerException("expect unit store version to be 401, got " + ver);
 
@@ -215,7 +252,7 @@ public abstract class VerFixer extends Source {
 		}
 
 		private void loadBackgrounds(InStream is) throws Exception {
-			int ver = is.nextInt();
+			int ver = Data.getVer(is.nextString());
 			if (ver != 400)
 				throw new VerFixerException("expect bg store version to be 400, got " + ver);
 			int n = is.nextInt();
@@ -235,12 +272,22 @@ public abstract class VerFixer extends Source {
 			}
 		}
 
-		private void loadCastles(InStream is) {
-			// TODO
+		private void loadCastles(InStream is) throws Exception {
+			int ver = Data.getVer(is.nextString());
+			if (ver != 307)
+				throw new VerFixerException("expect castle store version to be 307, got " + ver);
+			int n = is.nextInt();
+			for (int i = 0; i < n; i++) {
+				int val = is.nextInt();
+				VImg vimg = ImgReader.readImg(is, r);
+				vimg.name = Data.trio(val);
+				writeImgs(vimg, "castles", vimg.name + ".png");
+				data.castles.set(val, vimg);
+			}
 		}
 
 		private void loadEnemies(InStream is) throws VerFixerException {
-			int ver = is.nextInt();
+			int ver = Data.getVer(is.nextString());
 			if (ver != 402)
 				throw new VerFixerException("expect enemy store version to be 402, got " + ver);
 			int n = is.nextInt();
@@ -263,12 +310,21 @@ public abstract class VerFixer extends Source {
 			}
 		}
 
-		private void loadMusics(InStream is) {
-			// TODO
+		private void loadMusics(InStream is) throws VerFixerException {
+			int ver = Data.getVer(is.nextString());
+			if (ver != 307)
+				throw new VerFixerException("expect music store version to be 307, got " + ver);
+			int n = is.nextInt();
+			for (int i = 0; i < n; i++) {
+				int id = is.nextInt();
+				File f = ImgReader.loadMusicFile(is, r, id, id);
+				f.renameTo(Source.ctx.getWorkspaceFile("./.temp_" + id + "/musics/" + Data.trio(id) + ".ogg"));
+				data.musics.set(id, new FDFile(f));
+			}
 		}
 
 		private void loadUnits(InStream is) throws VerFixerException {
-			int ver = is.nextInt();
+			int ver = Data.getVer(is.nextString());
 			if (ver != 401)
 				throw new VerFixerException("expect unit store version to be 401, got " + ver);
 			int n = is.nextInt();
@@ -307,6 +363,7 @@ public abstract class VerFixer extends Source {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static UserPack fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
 		int ver = Data.getVer(is.nextString());
 		if (ver != 400)
@@ -321,6 +378,7 @@ public abstract class VerFixer extends Source {
 		return ans;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static UserPack fix_bcupack(InStream is, ImgReader r) throws Exception {
 		int ver = Data.getVer(is.nextString());
 		if (ver != 402)
@@ -360,12 +418,11 @@ public abstract class VerFixer extends Source {
 			move(pa + fi + "_zombie01.maanim", pb + MA[5]);
 			move(pa + fi + "_zombie02.maanim", pb + MA[6]);
 		}
-		// TODO
 		Context.delete(new File("./res"));
 	}
 
 	private static UnitLevel getlevel(Identifier id) {
-		return null;// FIXME get level
+		return UserProfile.getPack(id.pack).unitLevels.get(Integer.parseInt(id.id));
 	}
 
 	private static void move(String a, String b) {

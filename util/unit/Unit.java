@@ -1,6 +1,5 @@
 package common.util.unit;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -8,19 +7,15 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
-import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGenericRead;
-import common.io.json.JsonClass.JCGenericWrite;
 import common.pack.PackData.Identifier;
-import common.system.FixIndexList;
+import common.pack.PackData.Indexable;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
-import common.util.pack.Pack;
 
-public class Unit extends Data implements Comparable<Unit> {
+public class Unit extends Data implements Comparable<Unit>, Indexable {
 
 	public static class UnitInfo {
 
@@ -75,9 +70,9 @@ public class Unit extends Data implements Comparable<Unit> {
 			f.anim.getEdi().check();
 	}
 
-	protected Unit(Identifier id, DIYAnim da, CustomUnit cu) {
+	protected Unit(Identifier id, AnimCE ce, CustomUnit cu) {
 		this.id = id;
-		forms = new Form[] { new Form(this, 0, "new unit", da.getAnimC(), cu) };
+		forms = new Form[] { new Form(this, 0, "new unit", ce, cu) };
 		max = 50;
 		maxp = 0;
 		rarity = 4;
@@ -96,8 +91,6 @@ public class Unit extends Data implements Comparable<Unit> {
 		for (int i = 0; i < forms.length; i++) {
 			String str = AnimCE.getAvailable(id + "-" + i);
 			AnimCE ac = new AnimCE(str, u.forms[i].anim);
-			DIYAnim da = new DIYAnim(str, ac);
-			DIYAnim.map.put(str, da);
 			CustomUnit cu = new CustomUnit();
 			cu.importData(u.forms[i].du);
 			forms[i] = new Form(this, i, str, ac, cu);
@@ -121,6 +114,11 @@ public class Unit extends Data implements Comparable<Unit> {
 	@Override
 	public int compareTo(Unit u) {
 		return id.compareTo(u.id);
+	}
+
+	@Override
+	public Identifier getID() {
+		return id;
 	}
 
 	public int getPrefLv() {

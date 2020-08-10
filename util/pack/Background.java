@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import common.pack.PackData;
 import common.pack.PackData.Identifier;
+import common.pack.PackData.Indexable;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.VImg;
 import common.system.fake.FakeGraphics;
@@ -19,7 +20,7 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class Background extends AnimI {
+public class Background extends AnimI implements Indexable {
 
 	public static MaModel ewavm, uwavm;
 	public static MaAnim ewava, uwava;
@@ -77,14 +78,14 @@ public class Background extends AnimI {
 	}
 
 	private Background(VImg vimg, int[] ints) {
-		int id = PackData.profile.def.bgs.size();
+		int id = UserProfile.getBCData().bgs.size();
 		this.id = Identifier.parseInt(id);
 		img = vimg;
 		top = ints[14] == 1 || ints[13] == 8;
 		ic = ints[13] == 8 ? 1 : ints[13];
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
-		PackData.profile.def.bgs.add(this);
+		UserProfile.getBCData().bgs.add(this);
 		if (id <= 107) {
 			uwav = new WaveAnim(this, uwavm, uwava);
 			ewav = new WaveAnim(this, ewavm, ewava);
@@ -146,6 +147,11 @@ public class Background extends AnimI {
 			return uwav.getEAnim(0);
 		else
 			return null;
+	}
+
+	@Override
+	public Identifier getID() {
+		return id;
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 			qs.poll();
 		}
 
-		protected void getData(Stage s) {
+		protected void getData(Stage.DefStage s) {
 			int[] ints = CommonStatic.parseIntsN(qs.poll().split("//")[0]);
 			if (ints.length <= 4)
 				return;

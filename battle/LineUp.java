@@ -9,7 +9,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Combo;
 import common.util.unit.EForm;

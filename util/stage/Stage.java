@@ -9,6 +9,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.PackData.Identifier;
+import common.pack.VerFixer.VerFixerException;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
@@ -21,6 +22,138 @@ import common.CommonStatic;
 
 @JsonClass
 public class Stage extends Data implements BasedCopable<Stage, StageMap>, BattleStatic {
+
+	public static class DefStage extends Stage {
+
+		public StageInfo info;
+
+		@SuppressWarnings("deprecation")
+		protected DefStage(StageMap sm, int id, VFile<AssetData> f, int type) {
+			super(sm);
+			if (sm.info != null)
+				sm.info.getData(this);
+			Queue<String> qs = f.getData().readLine();
+			name = "" + id;
+			String temp;
+			if (type == 0) {
+				temp = qs.poll();
+				String[] strs = temp.split(",");
+				int cas = CommonStatic.parseIntN(strs[0]);
+				if (map.cast != -1)
+					cas += map.cast * 1000;
+				castle = Identifier.parseInt(cas);// TODO castle
+				non_con = strs[1].equals("1");
+			} else {
+				castle = null;
+				non_con = false;
+			}
+			int intl = type == 2 ? 9 : 10;
+			String[] strs = qs.poll().split(",");
+			len = Integer.parseInt(strs[0]);
+			health = Integer.parseInt(strs[1]);
+			bg = Identifier.parseInt(Integer.parseInt(strs[4]));
+			max = Integer.parseInt(strs[5]);
+			int isBase = Integer.parseInt(strs[6]) - 2;
+			List<int[]> ll = new ArrayList<>();
+
+			while (qs.size() > 0)
+				if ((temp = qs.poll()).length() > 0) {
+					if (!Character.isDigit(temp.charAt(0)))
+						break;
+					if (temp.startsWith("0,"))
+						break;
+					String[] ss = temp.split(",");
+					int[] data = new int[SCDef.SIZE];
+					for (int i = 0; i < intl; i++)
+						data[i] = Integer.parseInt(ss[i]);
+					data[0] -= 2;
+					data[2] *= 2;
+					data[3] *= 2;
+					data[4] *= 2;
+					if (intl > 9 && data[5] > 100 && data[9] == 100) {
+						data[9] = data[5];
+						data[5] = 100;
+					}
+					if (ss.length > 11 && CommonStatic.isInteger(ss[11]))
+						data[SCDef.M1] = Integer.parseInt(ss[11]);
+					else
+						data[SCDef.M1] = data[SCDef.M];
+
+					if (data[0] == isBase)
+						data[SCDef.C0] = 0;
+					ll.add(data);
+				}
+			SCDef scd = new SCDef(ll.size());
+			for (int i = 0; i < ll.size(); i++)
+				scd.datas[i] = new Line(ll.get(scd.datas.length - i - 1));
+			if (strs.length > 6) {
+				int ano = CommonStatic.parseIntN(strs[6]);
+				if (ano == 317)
+					scd.datas[ll.size() - 1].castle_0 = 0;
+			}
+			data = scd;
+			validate();
+		}
+
+	}
+
+	public static class PackStage extends Stage {
+
+		public List<Recd> recd = new ArrayList<>();
+
+		public PackStage(StageMap sm) {
+			super(sm);
+			len = 3000;
+			health = 60000;
+			max = 8;
+			name = "stage " + sm.list.size();
+			lim = new Limit();
+			data = new SCDef(0);
+		}
+
+		@Deprecated
+		public PackStage(StageMap sm, InStream is) throws VerFixerException {
+			super(sm);
+			int val = getVer(is.nextString());
+			if (val != 409)
+				throw new VerFixerException("stage version has to be 409, got" + val);
+			name = is.nextString();
+			bg = Identifier.parseInt(is.nextInt());
+			castle = Identifier.parseInt(is.nextInt());
+			health = is.nextInt();
+			len = is.nextInt();
+			mus0 = Identifier.parseInt(is.nextInt());
+			mush = is.nextInt();
+			mus1 = Identifier.parseInt(is.nextInt());
+			loop0 = is.nextLong();
+			loop1 = is.nextLong();
+			max = is.nextByte();
+			non_con = is.nextByte() == 1;
+			data = SCDef.zread(is.subStream());
+			lim = new Limit.PackLimit(map.mc, is);
+			int t = is.nextInt();
+			for (int i = 0; i < t; i++) {
+				String name = is.nextString();
+				Recd.getRecd(this, is.subStream(), name);
+			}
+			validate();
+		}
+
+		public void setName(String str) {
+			// TODO validate str = MainBCU.validate(str);
+			while (!checkName(str))
+				str += "'";
+			name = str;
+		}
+
+		private boolean checkName(String str) {
+			for (Stage st : map.list)
+				if (st != this && st.name.equals(str))
+					return false;
+			return true;
+		}
+
+	}
 
 	public static class StageInfo {
 
@@ -98,11 +231,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	}
 
-	public static final MapColc clipmc = new MapColc("clip", -1);
-	public static final StageMap clipsm = clipmc.maps[0];
-
 	public final StageMap map;
-	public StageInfo info;
 
 	@JsonField
 	public String name = "";
@@ -118,89 +247,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	@JsonField(gen = GenType.GEN)
 	public Limit lim;
 
-	public List<Recd> recd = new ArrayList<>();
-
-	public Stage(StageMap sm) {
+	private Stage(StageMap sm) {
 		map = sm;
-		len = 3000;
-		health = 60000;
-		max = 8;
-		name = "stage " + sm.list.size();
-		lim = new Limit();
-		data = new SCDef(0);
-	}
-
-	public Stage(StageMap sm, String str, InStream is) {
-		map = sm;
-		zread(str, is);
-	}
-
-	@SuppressWarnings("deprecation")
-	protected Stage(StageMap sm, int id, VFile<AssetData> f, int type) {
-		if (sm.info != null)
-			sm.info.getData(this);
-		Queue<String> qs = f.getData().readLine();
-		name = "" + id;
-		map = sm;
-		String temp;
-		if (type == 0) {
-			temp = qs.poll();
-			String[] strs = temp.split(",");
-			int cas = CommonStatic.parseIntN(strs[0]);
-			if (map.cast != -1)
-				cas += map.cast * 1000;
-			castle = Identifier.parseInt(cas);// TODO castle
-			non_con = strs[1].equals("1");
-		} else {
-			castle = null;
-			non_con = false;
-		}
-		int intl = type == 2 ? 9 : 10;
-		String[] strs = qs.poll().split(",");
-		len = Integer.parseInt(strs[0]);
-		health = Integer.parseInt(strs[1]);
-		bg = Identifier.parseInt(Integer.parseInt(strs[4]));
-		max = Integer.parseInt(strs[5]);
-		int isBase = Integer.parseInt(strs[6]) - 2;
-		List<int[]> ll = new ArrayList<>();
-
-		while (qs.size() > 0)
-			if ((temp = qs.poll()).length() > 0) {
-				if (!Character.isDigit(temp.charAt(0)))
-					break;
-				if (temp.startsWith("0,"))
-					break;
-				String[] ss = temp.split(",");
-				int[] data = new int[SCDef.SIZE];
-				for (int i = 0; i < intl; i++)
-					data[i] = Integer.parseInt(ss[i]);
-				data[0] -= 2;
-				data[2] *= 2;
-				data[3] *= 2;
-				data[4] *= 2;
-				if (intl > 9 && data[5] > 100 && data[9] == 100) {
-					data[9] = data[5];
-					data[5] = 100;
-				}
-				if (ss.length > 11 && CommonStatic.isInteger(ss[11]))
-					data[SCDef.M1] = Integer.parseInt(ss[11]);
-				else
-					data[SCDef.M1] = data[SCDef.M];
-
-				if (data[0] == isBase)
-					data[SCDef.C0] = 0;
-				ll.add(data);
-			}
-		SCDef scd = new SCDef(ll.size());
-		for (int i = 0; i < ll.size(); i++)
-			scd.datas[i] = new Line(ll.get(scd.datas.length - i - 1));
-		if (strs.length > 6) {
-			int ano = CommonStatic.parseIntN(strs[6]);
-			if (ano == 317)
-				scd.datas[ll.size() - 1].castle_0 = 0;
-		}
-		data = scd;
-		validate();
 	}
 
 	public boolean contains(Enemy e) {
@@ -208,8 +256,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	}
 
 	@Override
-	public Stage copy(StageMap sm) {
-		Stage ans = new Stage(sm);
+	public PackStage copy(StageMap sm) {
+		PackStage ans = new PackStage(sm);
 		ans.len = len;
 		ans.health = health;
 		ans.max = max;
@@ -240,13 +288,6 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		return map.list.indexOf(this);
 	}
 
-	public void setName(String str) {
-		// TODO validate str = MainBCU.validate(str);
-		while (!checkName(str))
-			str += "'";
-		name = str;
-	}
-
 	@Override
 	public String toString() {
 		String desp = MultiLangCont.get(this);
@@ -259,39 +300,6 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	protected void validate() {
 		trail = data.isTrail();
-	}
-
-	private boolean checkName(String str) {
-		for (Stage st : map.list)
-			if (st != this && st.name.equals(str))
-				return false;
-		return true;
-	}
-
-	private void zread(String ver, InStream is) {
-		int val = getVer(ver);
-		if (val != 409)
-			throw new RuntimeException("stage version has to be 409, got" + val);
-		name = is.nextString();
-		bg = Identifier.parseInt(is.nextInt());
-		castle = Identifier.parseInt(is.nextInt());
-		health = is.nextInt();
-		len = is.nextInt();
-		mus0 = Identifier.parseInt(is.nextInt());
-		mush = is.nextInt();
-		mus1 = Identifier.parseInt(is.nextInt());
-		loop0 = is.nextLong();
-		loop1 = is.nextLong();
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = SCDef.zread(is.subStream());
-		lim = new Limit(map.mc, val, is);
-		int t = is.nextInt();
-		for (int i = 0; i < t; i++) {
-			String name = is.nextString();
-			Recd.getRecd(this, is.subStream(), name);
-		}
-		validate();
 	}
 
 }

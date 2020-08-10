@@ -12,6 +12,7 @@ import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -25,7 +26,6 @@ import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
 import common.util.pack.EffAnim;
 import common.util.pack.Soul;
-import common.util.pack.SoulStore;
 
 /** Entity class for units and enemies */
 public abstract class Entity extends AbEntity {
@@ -361,7 +361,7 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 
-			Soul s = SoulStore.getSoul(e.data.getDeathAnim());
+			Soul s = UserProfile.getSoul(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
 		}
 

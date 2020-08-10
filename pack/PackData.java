@@ -6,15 +6,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import com.google.gson.JsonParser;
 
+import common.CommonStatic;
 import common.battle.data.DataEnemy;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
@@ -22,17 +20,20 @@ import common.io.json.JsonField;
 import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
+import common.io.json.JsonField.GenType;
+import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackLoader.ZipDesc;
-import common.pack.Source.Context;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
-import common.system.FixIndexList;
 import common.system.VImg;
 import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.pack.Background;
-import common.util.unit.AbEnemy;
+import common.util.pack.Soul;
+import common.util.stage.CharaGroup;
+import common.util.stage.Limit;
+import common.util.stage.MapColc.PackMapColc;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
@@ -43,8 +44,28 @@ public class PackData {
 
 	public static class DefPack extends PackData {
 
-		public DefPack() {
+		public final Map<Integer, CharaGroup> cgmap = new HashMap<>();
 
+		public DefPack() {
+			loadSoul();
+			loadEnemies();
+			loadUnits();
+			loadCharaGroup();
+			loadLimit();
+		}
+
+		private void loadCharaGroup() {
+			Queue<String> qs = VFile.readLine("./org/data/Charagroup.csv");
+			qs.poll();
+			for (String str : qs) {
+				String[] strs = str.split(",");
+				int id = CommonStatic.parseIntN(strs[0]);
+				int type = CommonStatic.parseIntN(strs[2]);
+				Identifier[] units = new Identifier[strs.length - 3];
+				for (int i = 3; i < strs.length; i++)
+					units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]));
+				cgmap.put(id, new CharaGroup.DefCG(id, type, units));
+			}
 		}
 
 		private void loadEnemies() {
@@ -57,6 +78,20 @@ public class PackData {
 			qs = VFile.readLine("./org/data/enemy_dictionary_list.csv");
 			for (String str : qs)
 				enemies.get(Integer.parseInt(str.split(",")[0])).inDic = true;
+		}
+
+		private void loadLimit() {
+			Queue<String> qs = VFile.readLine("./org/data/Stage_option.csv");
+			qs.poll();
+			for (String str : qs)
+				new Limit.DefLimit(str.split(","));
+		}
+
+		private void loadSoul() {
+			String pre = "./org/battle/soul/";
+			String mid = "/battle_soul_";
+			for (int i = 0; i < 13; i++)
+				souls.add(new Soul(pre + Data.trio(i) + mid + Data.trio(i), i));
 		}
 
 		private void loadUnits() {
@@ -174,14 +209,16 @@ public class PackData {
 		}
 	}
 
+	@JsonClass(read = RType.FILL)
 	public static class UserPack extends PackData {
 
 		@JsonField
 		public final PackDesc desc;
 
-		public final Source source;
+		@JsonField(gen = GenType.FILL)
+		public PackMapColc mc;
 
-		// TODO MapColc
+		public final Source source;
 
 		/** for old reading method only */
 		@Deprecated
@@ -190,125 +227,18 @@ public class PackData {
 			source = s;
 		}
 
-		@JCConstructor
 		public UserPack(Source s) {
 			desc = null;
 			source = s;
+			mc = new PackMapColc(this);
 		}
 
 		/** for generating new pack only */
-		private UserPack(String id) {
+		public UserPack(String id) {
 			desc = new PackDesc(id);
 			source = new Workspace(id);
 		}
 
-	}
-
-	public static class UserProfile {
-
-		public static Background getBG(Identifier theme) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public static AbEnemy getEnemy(Identifier id) {
-			UserPack pack = profile.packmap.get(id.pack);
-			if (pack == null)
-				return null;
-			return null;// FIXME pack.enemies.get(id.id);
-		}
-
-		public static Unit getUnit(Identifier id) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public String username;
-		public byte[] password;
-		public final DefPack def = new DefPack();
-
-		public final Map<String, UserPack> packmap = new HashMap<>();
-
-		public final Set<UserPack> packlist = new HashSet<>();
-
-		public final Set<UserPack> failed = new HashSet<>();
-
-		public UserProfile() {
-			// TODO load username and password
-			File packs = Source.ctx.getPackFolder();
-			File workspace = Source.ctx.getWorkspaceFile(".");
-			Map<String, UserPack> set = new HashMap<>();
-			if (packs.exists())
-				for (File f : packs.listFiles())
-					if (f.getName().endsWith(".pack.bcuzip"))
-						try {
-							UserPack s = readZipPack(f);
-							set.put(s.desc.id, s);
-						} catch (Exception e) {
-							Source.ctx.noticeErr(e, "failed to load external pack " + f);
-						}
-			if (workspace.exists())
-				for (File f : packs.listFiles())
-					if (f.isDirectory()) {
-						File main = Source.ctx.getWorkspaceFile("./" + f.getName() + "/main.pack.json");
-						if (!main.exists())
-							continue;
-						try {
-							UserPack s = readJsonPack(main);
-							set.put(s.desc.id, s);
-						} catch (Exception e) {
-							Source.ctx.noticeErr(e, "failed to load workspace pack " + f);
-						}
-					}
-			failed.addAll(set.values());
-			while (failed.removeIf(this::add))
-				;
-			packlist.addAll(failed);
-		}
-
-		public boolean add(UserPack pack) {
-			packlist.add(pack);
-			if (!canAdd(pack))
-				return false;
-			packmap.put(pack.desc.id, pack);
-			return true;
-		}
-
-		public boolean canAdd(UserPack s) {
-			for (String dep : s.desc.dependency)
-				if (!packmap.containsKey(dep))
-					return false;
-			return true;
-		}
-
-		public boolean canRemove(String id) {
-			for (Entry<String, UserPack> ent : packmap.entrySet())
-				if (ent.getValue().desc.dependency.contains(id))
-					return false;
-			return true;
-		}
-
-		public void remove(UserPack pack) {
-			packmap.remove(pack.desc.id);
-			packlist.remove(pack);
-		}
-
-	}
-
-	// FIXME load it into register
-	public static UserProfile profile;
-
-	public static UserPack initJsonPack(String id) throws Exception {
-		File f = Source.ctx.getWorkspaceFile("./" + id + "/main.pack.json");
-		File folder = f.getParentFile();
-		if (folder.exists()) {
-			if (!Source.ctx.confirmDelete())
-				return null;
-			Context.delete(f);
-		}
-		Context.check(folder.mkdirs(), "create", folder);
-		Context.check(f.createNewFile(), "create", f);
-		return new UserPack(id);
 	}
 
 	public static UserPack readJsonPack(File f) throws Exception {
@@ -328,11 +258,12 @@ public class PackData {
 		return data;
 	}
 
-	public final FixIndexList<Enemy> enemies = new FixIndexList<>(Enemy.class);
-	public final FixIndexList<EneRand> randEnemies = new FixIndexList<>(EneRand.class);
-	public final FixIndexList<Unit> units = new FixIndexList<>(Unit.class);
-	public final FixIndexList<UnitLevel> unitLevels = new FixIndexList<>(UnitLevel.class);
-	public final FixIndexList<Background> bgs = new FixIndexList<>(Background.class);
+	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
+	public final FixIndexMap<EneRand> randEnemies = new FixIndexMap<>(EneRand.class);
+	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
+	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
+	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
+	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
 	public final FixIndexList<VImg> castles = new FixIndexList<>(VImg.class);
 	public final FixIndexList<FileData> musics = new FixIndexList<>(FileData.class);
 

@@ -1,5 +1,7 @@
 package common.util.pack;
 
+import common.pack.PackData.Identifier;
+import common.pack.PackData.Indexable;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.AnimD;
@@ -7,22 +9,20 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class Soul extends AnimD {
+public class Soul extends AnimD implements Indexable {
 
-	public static void read() {
-		String pre = "./org/battle/soul/";
-		String mid = "/battle_soul_";
-		for (int i = 0; i < 13; i++)
-			Pack.def.ss.add(new Soul(pre + trio(i) + mid + trio(i), i));
-	}
-
-	private final int index;
+	private final Identifier id;
 	private final VImg img;
 
-	private Soul(String st, int i) {
+	public Soul(String st, int i) {
 		super(st);
 		img = new VImg(str + ".png");
-		index = i;
+		id = Identifier.parseInt(i);
+	}
+
+	@Override
+	public Identifier getID() {
+		return id;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class Soul extends AnimD {
 
 	@Override
 	public String toString() {
-		return "soul_" + trio(index);
+		return "soul_" + id.id;
 	}
 
 }

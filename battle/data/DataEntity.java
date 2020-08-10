@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.pack.PackData.Identifier;
 import common.util.Data;
 
 @JsonClass(noTag = NoTag.LOAD)
@@ -9,7 +10,8 @@ public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;
 	public int abi, type, width;
-	public int loop = -1, death, shield;
+	public int loop = -1, shield;
+	public Identifier death;
 
 	@Override
 	public int getAbi() {
@@ -22,7 +24,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	}
 
 	@Override
-	public int getDeathAnim() {
+	public Identifier getDeathAnim() {
 		return death;
 	}
 

@@ -18,7 +18,7 @@ import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
 import common.battle.entity.Sniper;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.util.BattleObj;
 import common.util.CopRand;
 import common.util.Data.Proc.THEME;
@@ -26,6 +26,7 @@ import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.stage.EStage;
 import common.util.stage.Stage;
+import common.util.stage.MapColc.DefMapColc;
 import common.util.unit.EForm;
 import common.util.unit.EneRand;
 
@@ -82,7 +83,7 @@ public class StageBasis extends BattleObj {
 		ubase = new ECastle(this, bas);
 		ubase.added(-1, st.len - 800);
 		int sttime = 3;
-		if (st.map.mc.name.equals("CH")) {
+		if (st.map.mc == DefMapColc.getMap("CH")) {
 			if (st.map.id == 9)
 				sttime = (int) Math.round(Math.log(est.mul) / Math.log(2));
 			if (st.map.id < 3)

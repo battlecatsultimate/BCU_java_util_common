@@ -14,7 +14,7 @@ import java.util.TreeMap;
 
 import common.CommonStatic;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;

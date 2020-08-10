@@ -8,6 +8,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.PackData.Identifier;
 import common.util.Data;
 
 @JsonClass(noTag = NoTag.LOAD)
@@ -269,7 +270,7 @@ public abstract class CustomEntity extends DataEntity {
 		base = is.nextInt();
 		touch = is.nextInt();
 		loop = is.nextInt();
-		death = is.nextInt();
+		death = Identifier.parseInt(is.nextInt());
 		common = is.nextInt() > 0;
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();

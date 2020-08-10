@@ -4,7 +4,7 @@ import java.util.Queue;
 
 import common.CommonStatic;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;

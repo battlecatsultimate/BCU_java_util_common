@@ -8,6 +8,7 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.system.files.VFile;
+import common.util.stage.MapColc.DefMapColc;
 
 public class RandStage {
 
@@ -24,7 +25,7 @@ public class RandStage {
 	}
 
 	public static Stage getStage(int sta) {
-		MapColc mc = MapColc.getMap("N");
+		DefMapColc mc = DefMapColc.getMap("N");
 		if (sta == 47)
 			return mc.maps[48].list.get(0);
 		List<Stage> l = new ArrayList<Stage>();

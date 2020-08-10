@@ -13,12 +13,6 @@ import common.io.OutStream;
 import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.util.pack.Background;
-import common.util.pack.Pack;
-import common.util.stage.Castles;
-import common.util.stage.CharaGroup;
-import common.util.stage.MapColc;
-import common.util.stage.Recd;
 import static java.lang.Character.isDigit;
 
 public class CommonStatic {
@@ -177,18 +171,6 @@ public class CommonStatic {
 	}
 
 	public static Itf def;
-
-	public static void clearData() {
-		Pack.map.clear();
-		MapColc.MAPS.clear();
-		Background.iclist.clear();
-		Castles.defcas.clear();
-		Castles.map.clear();
-		CharaGroup.map.clear();
-		Recd.map.clear();
-		// DIYAnim.map.clear();
-		Pack.def = new Pack();
-	}
 
 	public static boolean isInteger(String str) {
 		for (int i = 0; i < str.length(); i++) {

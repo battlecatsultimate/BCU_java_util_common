@@ -1,7 +1,6 @@
 package common.util.stage;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.system.BasedCopable;
@@ -71,15 +70,6 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 				temp = "";
 			}
 		return str;
-	}
-
-	protected void write(OutStream os) {
-		os.writeString("0.4.4");
-		os.writeInt(id);
-		os.writeInt(4);// stars
-		for (int i = 0; i < 4; i++)
-			os.writeInt(max[i]);
-		os.writeInt(0);// parents
 	}
 
 }

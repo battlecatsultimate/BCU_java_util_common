@@ -1,54 +1,76 @@
 package common.util.stage;
 
-import java.util.Queue;
-
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
-import common.system.files.VFile;
+import common.pack.UserProfile;
 import common.util.BattleStatic;
 import common.util.Data;
+import common.util.stage.MapColc.DefMapColc;
+import common.pack.VerFixer.VerFixerException;
 
 @JsonClass
 public class Limit extends Data implements BattleStatic {
 
-	public static void read() {
-		Queue<String> qs = VFile.readLine("./org/data/Stage_option.csv");
-		qs.poll();
-		for (String str : qs)
-			new Limit(str.split(","));
+	public static class DefLimit extends Limit {
+
+		public DefLimit(String[] strs) {
+			int mid = Integer.parseInt(strs[0]);
+			DefMapColc.getMap(mid).lim.add(this);
+			star = Integer.parseInt(strs[1]);
+			sid = Integer.parseInt(strs[2]);
+			rare = Integer.parseInt(strs[3]);
+			num = Integer.parseInt(strs[4]);
+			line = Integer.parseInt(strs[5]);
+			min = Integer.parseInt(strs[6]);
+			max = Integer.parseInt(strs[7]);
+			group = UserProfile.getBCData().cgmap.get(Integer.parseInt(strs[8]));
+		}
+
+	}
+
+	public static class PackLimit extends Limit {
+
+		@JsonField
+		public String name = "";
+
+		public PackLimit() {
+		}
+
+		@Deprecated
+		public PackLimit(MapColc mc, InStream is) throws VerFixerException {
+			int ver = Data.getVer(is.nextString());
+			if (ver != 308)
+				throw new VerFixerException("Limit requires ver 308, got " + ver);
+			int g = is.nextInt();
+			name = is.nextString();
+			sid = is.nextInt();
+			star = is.nextInt();
+			if (g >= 0)
+				group = mc.groups.get(g);
+			int l = is.nextInt();
+			if (l >= 0)
+				lvr = mc.lvrs.get(l);
+			rare = is.nextInt();
+			num = is.nextByte();
+			line = is.nextByte();
+			min = is.nextInt();
+			max = is.nextInt();
+		}
+
 	}
 
 	@JsonField
 	public int star = -1, sid = -1;
 	@JsonField
 	public int rare, num, line, min, max;
-	@JsonField
-	public String name = "";
 	@JsonField(alias = int.class)
 	public CharaGroup group;
 	@JsonField(alias = int.class)
 	public LvRestrict lvr;
 
+	/** for copy or combine only */
 	public Limit() {
-	}
-
-	public Limit(MapColc mc, int ver, InStream is) {
-		zread(mc, ver, is);
-	}
-
-	private Limit(String[] strs) {
-		int mid = Integer.parseInt(strs[0]);
-		MapColc.getMap(mid).lim.add(this);
-		star = Integer.parseInt(strs[1]);
-		sid = Integer.parseInt(strs[2]);
-		rare = Integer.parseInt(strs[3]);
-		num = Integer.parseInt(strs[4]);
-		line = Integer.parseInt(strs[5]);
-		min = Integer.parseInt(strs[6]);
-		max = Integer.parseInt(strs[7]);
-		group = CharaGroup.map.get(Integer.parseInt(strs[8]));
 	}
 
 	@Override
@@ -93,63 +115,6 @@ public class Limit extends Data implements BattleStatic {
 	@Override
 	public String toString() {
 		return (sid == -1 ? "all stages" : ("" + sid)) + " - " + (star == -1 ? "all stars" : (star + 1) + " star");
-	}
-
-	public void write(OutStream os) {
-		os.writeString("0.3.8");
-		os.writeString(name);
-		os.writeInt(sid);
-		os.writeInt(star);
-		os.writeInt(rare);
-		os.writeByte((byte) num);
-		os.writeByte((byte) line);
-		os.writeInt(min);
-		os.writeInt(max);
-		if (group == null)
-			os.writeInt(-1);
-		else
-			os.writeInt(group.id);
-		if (lvr == null)
-			os.writeInt(-1);
-		else
-			os.writeInt(lvr.id);
-	}
-
-	private void zread(MapColc mc, int ver, InStream is) {
-		if (ver >= 307)
-			ver = getVer(is.nextString());
-		if (ver >= 308)
-			zread$000308(mc, is);
-		else if (ver >= 307)
-			zread$000307(mc, is);
-		else
-			zread$000000(is);
-	}
-
-	private void zread$000000(InStream is) {
-		rare = is.nextInt();
-		num = is.nextByte();
-		line = is.nextByte();
-		min = is.nextInt();
-		max = is.nextInt();
-	}
-
-	private void zread$000307(MapColc mc, InStream is) {
-		zread$000000(is);
-		int g = is.nextInt();
-		if (g >= 0)
-			group = mc.groups.get(g);
-
-		int l = is.nextInt();
-		if (l >= 0)
-			lvr = mc.lvrs.get(l);
-	}
-
-	private void zread$000308(MapColc mc, InStream is) {
-		name = is.nextString();
-		sid = is.nextInt();
-		star = is.nextInt();
-		zread$000307(mc, is);
 	}
 
 }

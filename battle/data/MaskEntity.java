@@ -1,5 +1,6 @@
 package common.battle.data;
 
+import common.pack.PackData.Identifier;
 import common.util.Animable;
 import common.util.BattleStatic;
 import common.util.Data;
@@ -25,7 +26,7 @@ public interface MaskEntity extends BattleStatic {
 
 	public MaskAtk getAtkModel(int ind);
 
-	public int getDeathAnim();
+	public Identifier getDeathAnim();
 
 	public int getHb();
 

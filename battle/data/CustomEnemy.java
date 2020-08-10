@@ -7,7 +7,7 @@ import common.battle.Basis;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 

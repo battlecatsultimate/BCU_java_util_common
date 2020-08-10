@@ -6,8 +6,9 @@ import java.util.List;
 import common.io.InStream;
 import common.io.OutStream;
 import common.pack.PackData.Identifier;
+import common.pack.PackData.Indexable;
 
-public class UnitLevel {
+public class UnitLevel implements Indexable {
 
 	public static UnitLevel def;
 
@@ -60,6 +61,11 @@ public class UnitLevel {
 			if (lvs[i] != ul.lvs[i])
 				return false;
 		return id == null || ul.id == null || id.equals(ul.id);
+	}
+
+	@Override
+	public Identifier getID() {
+		return id;
 	}
 
 	public double getMult(int lv) {

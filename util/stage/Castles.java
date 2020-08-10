@@ -2,39 +2,13 @@ package common.util.stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.files.AssetData;
 import common.system.files.VFile;
+import common.util.Data;
 
 public class Castles implements AbCastle {
-
-	public static Map<Integer, AbCastle> map = new TreeMap<>();
-
-	public static List<AbCastle> defcas = new ArrayList<>();
-
-	public static VImg getCastle(int cind) {
-		if (cind < 0)
-			return getCastle(0);
-		int set = cind / 1000;
-		int id = cind % 1000;
-		AbCastle c = map.get(set);
-		if (c == null)
-			return getCastle(0);
-		int n = c.size();
-		VImg ans = null;
-		if (n == 0)
-			return getCastle(0);
-		else if (id < n)
-			ans = c.get(id);
-		else
-			ans = c.get(0);
-		if (ans == null)
-			return getCastle(0);
-		return ans;
-	}
 
 	public final List<VImg> list = new ArrayList<>();
 	public final String str;
@@ -46,8 +20,7 @@ public class Castles implements AbCastle {
 		str = name;
 		for (VFile<AssetData> vf : VFile.get("./org/img/" + name).list())
 			list.add(new VImg(vf));
-		map.put(id, this);
-		defcas.add(this);
+		UserProfile.getRegister(AbCastle.REG_CASTLE, AbCastle.class).put(Data.hex(id), this);
 	}
 
 	@Override

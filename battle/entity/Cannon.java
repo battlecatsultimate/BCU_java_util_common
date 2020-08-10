@@ -9,7 +9,7 @@ import common.battle.attack.AttackWave;
 import common.battle.attack.ContMove;
 import common.battle.attack.ContWaveCanon;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;

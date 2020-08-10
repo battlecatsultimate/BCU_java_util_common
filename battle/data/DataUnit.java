@@ -1,13 +1,13 @@
 package common.battle.data;
 
 import common.CommonStatic;
+import common.pack.PackData.Identifier;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	private final Form form;
-	private final Unit unit;
 	public int price, respawn;
 	private int front, back;
 
@@ -15,7 +15,6 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	public DataUnit(Form f, Unit u, String[] data) {
 		form = f;
-		unit = u;
 		int[] ints = new int[data.length];
 		for (int i = 0; i < data.length; i++)
 			ints[i] = CommonStatic.parseIntN(data[i]);
@@ -111,7 +110,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			abi0 = ints[63];
 			abi1 = ints[64];
 			abi2 = ints[65];
-			death = ints[67];
+			death = Identifier.parseInt(ints[67]);
 			proc.BREAK.prob = ints[70];
 			if (ints[75] == 1)
 				proc.IMUWARP.mult = 100;

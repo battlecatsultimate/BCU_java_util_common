@@ -4,63 +4,80 @@ import java.util.TreeMap;
 
 import common.battle.LineUp;
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
-import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGenericRead;
-import common.io.json.JsonClass.JCGenericWrite;
-import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.GenType;
+import common.pack.VerFixer.VerFixerException;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Level;
 
-@JCGeneric(int.class)
-@JsonClass(read = RType.FILL)
+@JsonClass
 public class LvRestrict extends Data {
+
+	public static class PackLR extends LvRestrict {
+
+		private final MapColc mc;
+
+		@Deprecated
+		public PackLR(MapColc mc, InStream is) throws VerFixerException {
+			this.mc = mc;
+			int ver = getVer(is.nextString());
+			if (ver != 308)
+				throw new VerFixerException("LvRestrict requires 308, got " + ver);
+			name = is.nextString();
+			id = is.nextInt();
+			int[] tb = is.nextIntsB();
+			for (int i = 0; i < tb.length; i++)
+				all[i] = tb[i];
+			int[][] tbb = is.nextIntsBB();
+			for (int i = 0; i < tbb.length; i++)
+				for (int j = 0; j < tbb[i].length; j++)
+					rares[i][j] = tbb[i][j];
+			int n = is.nextInt();
+			for (int i = 0; i < n; i++) {
+				int cg = is.nextInt();
+				int[] vals = new int[6];
+				tb = is.nextIntsB();
+				for (int j = 0; j < tb.length; j++)
+					vals[j] = tb[j];
+				CharaGroup cgs = mc.groups.get(cg);
+				if (cgs != null)
+					res.put(cgs, vals);
+			}
+		}
+
+		public boolean used() {
+			for (StageMap sm : mc.maps)
+				for (Stage st : sm.list)
+					if (st.lim != null && st.lim.lvr == this)
+						return true;
+			return false;
+		}
+
+	}
 
 	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
 
-	@JCGenericRead(value = int.class, parent = MapColc.class)
-	public static LvRestrict zgen(int i, MapColc mc) {
-		return i < 0 ? null : mc.lvrs.get(i);
-	}
-
 	@JsonField(generic = { CharaGroup.class, int[].class }, alias = int.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
-
-	public final Pack pack;
 	@JsonField(gen = GenType.FILL)
 	public int[][] rares = new int[RARITY_TOT][6];
 	@JsonField
 	public int[] all = new int[6];
 	@JsonField
 	public int id;
-
 	@JsonField
 	public String name = "";
 
-	public LvRestrict(MapColc mapc) {
-		pack = mapc.pack;
-	}
-
-	public LvRestrict(MapColc mc, InStream is) {
-		pack = mc.pack;
-		zread(mc, is);
-	}
-
-	public LvRestrict(Pack pac, int ID) {
-		pack = pac;
+	public LvRestrict(int ID) {
 		all = MAX.clone();
 		for (int i = 0; i < RARITY_TOT; i++)
 			rares[i] = MAX.clone();
 		id = ID;
 	}
 
-	public LvRestrict(Pack pac, int ID, LvRestrict lvr) {
-		pack = pac;
+	public LvRestrict(int ID, LvRestrict lvr) {
 		id = ID;
 		all = lvr.all.clone();
 		for (int i = 0; i < RARITY_TOT; i++)
@@ -69,9 +86,11 @@ public class LvRestrict extends Data {
 			res.put(cg, lvr.res.get(cg).clone());
 	}
 
+	private LvRestrict() {
+	}
+
 	private LvRestrict(LvRestrict lvr) {
 		id = -1;
-		pack = lvr.pack;
 		for (CharaGroup cg : lvr.res.keySet())
 			res.put(cg, lvr.res.get(cg).clone());
 	}
@@ -114,14 +133,6 @@ public class LvRestrict extends Data {
 		return trio(id) + "-" + name;
 	}
 
-	public boolean used() {
-		for (StageMap sm : pack.mc.maps)
-			for (Stage st : sm.list)
-				if (st.lim != null && st.lim.lvr == this)
-					return true;
-		return false;
-	}
-
 	public Level valid(Form f) {
 		int[] lv = MAX.clone();
 		boolean mod = false;
@@ -147,59 +158,6 @@ public class LvRestrict extends Data {
 				if (f != null)
 					lu.map.put(f.unit, valid(f));
 		lu.renew();
-	}
-
-	@JCGenericWrite(int.class)
-	public int zser() {
-		return id;
-	}
-
-	protected void write(OutStream os) {
-		os.writeString("0.3.8");
-		os.writeString(name);
-		os.writeInt(id);
-		os.writeIntB(all);
-		os.writeIntBB(rares);
-		os.writeInt(res.size());
-		for (CharaGroup cg : res.keySet()) {
-			os.writeInt(cg.id);
-			os.writeIntB(res.get(cg));
-		}
-	}
-
-	private void zread(MapColc mc, InStream is) {
-		int ver = getVer(is.nextString());
-		if (ver >= 308)
-			zread$000308(mc, is);
-		else if (ver >= 307)
-			zread$000307(mc, is);
-	}
-
-	private void zread$000307(MapColc mc, InStream is) {
-		id = is.nextInt();
-		int[] tb = is.nextIntsB();
-		for (int i = 0; i < tb.length; i++)
-			all[i] = tb[i];
-		int[][] tbb = is.nextIntsBB();
-		for (int i = 0; i < tbb.length; i++)
-			for (int j = 0; j < tbb[i].length; j++)
-				rares[i][j] = tbb[i][j];
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			int cg = is.nextInt();
-			int[] vals = new int[6];
-			tb = is.nextIntsB();
-			for (int j = 0; j < tb.length; j++)
-				vals[j] = tb[j];
-			CharaGroup cgs = mc.groups.get(cg);
-			if (cgs != null)
-				res.put(cgs, vals);
-		}
-	}
-
-	private void zread$000308(MapColc mc, InStream is) {
-		name = is.nextString();
-		zread$000307(mc, is);
 	}
 
 }

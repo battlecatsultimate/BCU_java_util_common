@@ -4,7 +4,7 @@ import common.battle.BasisLU;
 import common.battle.entity.EUnit;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.EForm;
 import common.util.unit.Unit;

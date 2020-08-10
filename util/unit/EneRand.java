@@ -7,7 +7,7 @@ import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.io.InStream;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.UserProfile;
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.util.EREnt;
 import common.util.EntRand;

@@ -12,6 +12,7 @@ import common.battle.data.DataEnemy;
 import common.battle.data.MaskEnemy;
 import common.battle.entity.EEnemy;
 import common.pack.PackData.Identifier;
+import common.pack.UserProfile;
 import common.system.MultiLangCont;
 import common.system.VImg;
 import common.system.files.AssetData;
@@ -20,8 +21,8 @@ import common.util.Animable;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
-import common.util.pack.Pack;
 import common.util.stage.MapColc;
+import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 
@@ -39,7 +40,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 		anim = ac;
 	}
 
-	public Enemy(Identifier ID, Enemy old, Pack np) {
+	public Enemy(Identifier ID, Enemy old) {
 		id = ID;
 		de = ((CustomEnemy) old.de).copy(this);
 		name = old.name;
@@ -73,8 +74,8 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 
 	public List<MapColc> findMap() {
 		List<MapColc> ans = new ArrayList<>();
-		for (MapColc mc : MapColc.MAPS.values()) {
-			if (mc.pack != Pack.def)
+		for (MapColc mc : UserProfile.getRegister(MapColc.REG_MAPCOLC, MapColc.class).values()) {
+			if (mc instanceof PackMapColc)
 				continue;
 			boolean col = false;
 			for (StageMap sm : mc.maps) {

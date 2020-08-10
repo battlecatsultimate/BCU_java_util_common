@@ -1,4 +1,4 @@
-package common.system;
+package common.pack;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -17,26 +17,33 @@ import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.IOType;
+import common.pack.PackData.Indexable;
 import common.util.Data;
 
 @JsonClass
 public class FixIndexList<T> extends Data {
 
-	private T[] arr;
+	public static class FixIndexMap<T extends Indexable> extends FixIndexList<T> {
+
+		public FixIndexMap(Class<T> cls) {
+			super(cls);
+		}
+
+		public T get(String id) {
+			for (T t : arr)
+				if (t.getID().id.equals(id))
+					return t;
+			return null;
+		}
+
+	}
+
+	protected T[] arr;
 	private int size = 0;
 
 	@SuppressWarnings("unchecked")
 	public FixIndexList(Class<T> cls) {
 		arr = (T[]) Array.newInstance(cls, 16);
-	}
-
-	public FixIndexList(T[] ar) {
-		arr = ar;
-		int n = 0;
-		for (T t : arr)
-			if (t != null)
-				n++;
-		size = n;
 	}
 
 	public void add(T t) {

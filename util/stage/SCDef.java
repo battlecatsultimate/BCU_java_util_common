@@ -16,9 +16,9 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField.GenType;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.PackDesc;
-import common.pack.PackData.UserProfile;
+import common.pack.FixIndexList;
+import common.pack.UserProfile;
 import common.system.Copable;
-import common.system.FixIndexList;
 import common.util.Data;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
@@ -105,7 +105,7 @@ public class SCDef implements Copable<SCDef> {
 	@JsonField
 	public Line[] datas;
 	@JsonField(gen = GenType.FILL)
-	public final FixIndexList<SCGroup> sub = new FixIndexList<>(new SCGroup[1000]);
+	public final FixIndexList<SCGroup> sub = new FixIndexList<>(SCGroup.class);
 	@JsonField(generic = { Identifier.class, Integer.class })
 	public final Map<Identifier, Integer> smap = new TreeMap<>();
 	@JsonField
