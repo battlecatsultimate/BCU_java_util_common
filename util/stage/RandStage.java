@@ -1,6 +1,7 @@
 package common.util.stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -35,8 +36,12 @@ public class RandStage {
 
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/stage/D/RandomDungeon_000.csv");
+		qs.poll();
+		qs.poll();
 		for (int i = 0; i < 5; i++)
 			randRep[i] = CommonStatic.parseIntsN(qs.poll());
+		
+		System.out.println(Arrays.deepToString(randRep));
 	}
 
 }
