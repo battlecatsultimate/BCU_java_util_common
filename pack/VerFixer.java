@@ -19,7 +19,9 @@ import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
 import common.util.pack.Background;
+import common.util.stage.CastleImg;
 import common.util.stage.MapColc.PackMapColc;
+import common.util.stage.Music;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
@@ -43,7 +45,7 @@ public abstract class VerFixer extends Source {
 	private static class EnemyFixer extends VerFixer {
 
 		private final ImgReader r;
-		private PackData data;
+		private UserPack data;
 
 		public EnemyFixer(String id, ImgReader r) {
 			super(id);
@@ -141,7 +143,7 @@ public abstract class VerFixer extends Source {
 					fi.renameTo(fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
-						data.castles.set(val, bimg);
+						data.castles.set(val, new CastleImg(new Identifier(id, Data.trio(val)), bimg));
 				}
 			}
 		}
@@ -192,7 +194,7 @@ public abstract class VerFixer extends Source {
 					File fx = Source.ctx.getWorkspaceFile("./" + id + "/musics/" + str);
 					fi.renameTo(fx);
 					if (val >= 0)
-						data.musics.set(val, new FDFile(fx));
+						data.musics.set(val, new Music(new Identifier(id, Data.trio(val)), new FDFile(fx)));
 				}
 			}
 		}
@@ -235,14 +237,14 @@ public abstract class VerFixer extends Source {
 	private static class PackFixer extends VerFixer {
 
 		private final ImgReader r;
-		private PackData data;
+		private UserPack data;
 
 		public PackFixer(String id, ImgReader r) {
 			super(id);
 			this.r = r;
 		}
 
-		private void load(PackData data, InStream is) throws Exception {
+		private void load(UserPack data, InStream is) throws Exception {
 			this.data = data;
 			loadEnemies(is.subStream());
 			loadUnits(is.subStream());
@@ -282,7 +284,7 @@ public abstract class VerFixer extends Source {
 				VImg vimg = ImgReader.readImg(is, r);
 				vimg.name = Data.trio(val);
 				writeImgs(vimg, "castles", vimg.name + ".png");
-				data.castles.set(val, vimg);
+				data.castles.set(val, new CastleImg(new Identifier(id, Data.trio(val)), vimg));
 			}
 		}
 
@@ -316,10 +318,10 @@ public abstract class VerFixer extends Source {
 				throw new VerFixerException("expect music store version to be 307, got " + ver);
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
-				int id = is.nextInt();
-				File f = ImgReader.loadMusicFile(is, r, id, id);
-				f.renameTo(Source.ctx.getWorkspaceFile("./.temp_" + id + "/musics/" + Data.trio(id) + ".ogg"));
-				data.musics.set(id, new FDFile(f));
+				int val = is.nextInt();
+				File f = ImgReader.loadMusicFile(is, r, Integer.parseInt(id), val);
+				f.renameTo(Source.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
+				data.musics.set(val, new Music(new Identifier(id, Data.trio(val)), new FDFile(f)));
 			}
 		}
 

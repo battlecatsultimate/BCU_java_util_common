@@ -1,6 +1,7 @@
 package common.util.stage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class MapColc extends Data {
 			idmap.put("H", 25);
 			idmap.put("CA", 27);
 			for (int i = 0; i < strs.length; i++)
-				new Castles(i, strs[i]);
+				new CastleList.DefCasList(Data.hex(i), strs[i]);
 			VFile<AssetData> f = VFile.get("./org/stage/");
 			if (f == null)
 				return;
@@ -334,7 +335,7 @@ public class MapColc extends Data {
 
 	}
 
-	public static final String REG_MAPCOLC = "MapColc";
+	private static final String REG_MAPCOLC = "MapColc";
 
 	private static String[] strs = new String[] { "rc", "ec", "sc", "wc" };
 
@@ -342,10 +343,14 @@ public class MapColc extends Data {
 		return new StItr();
 	}
 
+	public static Collection<MapColc> values() {
+		return UserProfile.getRegister(REG_MAPCOLC, MapColc.class).values();
+	}
 	@JsonField(gen = GenType.FILL)
 	public FixIndexList<CharaGroup> groups = new FixIndexList<>(CharaGroup.class);
 	@JsonField(gen = GenType.FILL)
 	public FixIndexList<LvRestrict> lvrs = new FixIndexList<>(LvRestrict.class);
+
 	@JsonField
 	public StageMap[] maps = new StageMap[0];
 

@@ -25,15 +25,16 @@ import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackLoader.ZipDesc;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
-import common.system.VImg;
-import common.system.files.FileData;
+import common.system.files.FDFile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.pack.Background;
 import common.util.pack.Soul;
+import common.util.stage.CastleList.PackCasList;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
 import common.util.stage.MapColc.PackMapColc;
+import common.util.stage.Music;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
@@ -52,6 +53,7 @@ public class PackData {
 			loadUnits();
 			loadCharaGroup();
 			loadLimit();
+			loadMusic();
 		}
 
 		private void loadCharaGroup() {
@@ -85,6 +87,24 @@ public class PackData {
 			qs.poll();
 			for (String str : qs)
 				new Limit.DefLimit(str.split(","));
+		}
+
+		private void loadMusic() {
+			File dict = Source.ctx.getAssetFile("./music/");
+			if (!dict.exists())
+				return;
+			File[] fs = dict.listFiles();
+			for (File f : fs) {
+				String str = f.getName();
+				if (str.length() != 7)
+					continue;
+				if (!str.endsWith(".ogg"))
+					continue;
+				int id = CommonStatic.parseIntN(str.substring(0, 3));
+				if (id == -1)
+					continue;
+				musics.set(id, new Music(Identifier.parseInt(id), new FDFile(f)));
+			}
 		}
 
 		private void loadSoul() {
@@ -218,7 +238,12 @@ public class PackData {
 		@JsonField(gen = GenType.FILL)
 		public PackMapColc mc;
 
+		@JsonField(gen = GenType.FILL)
+		public PackCasList castles;
+
 		public final Source source;
+
+		public boolean editable;
 
 		/** for old reading method only */
 		@Deprecated
@@ -230,6 +255,7 @@ public class PackData {
 		public UserPack(Source s) {
 			desc = null;
 			source = s;
+			editable = source instanceof Workspace;
 			mc = new PackMapColc(this);
 		}
 
@@ -237,6 +263,7 @@ public class PackData {
 		public UserPack(String id) {
 			desc = new PackDesc(id);
 			source = new Workspace(id);
+			castles = new PackCasList(this);
 		}
 
 	}
@@ -264,7 +291,6 @@ public class PackData {
 	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
-	public final FixIndexList<VImg> castles = new FixIndexList<>(VImg.class);
-	public final FixIndexList<FileData> musics = new FixIndexList<>(FileData.class);
+	public final FixIndexList<Music> musics = new FixIndexList<>(Music.class);
 
 }

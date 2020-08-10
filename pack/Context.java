@@ -46,6 +46,8 @@ public interface Context {
 
 	public boolean confirmDelete();
 
+	public File getAssetFile(String string);
+
 	public File getLangFile(String file);
 
 	public File getPackFolder();

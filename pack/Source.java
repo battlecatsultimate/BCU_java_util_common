@@ -20,6 +20,7 @@ import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
 import common.system.files.FileData;
+import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -200,15 +201,17 @@ public abstract class Source {
 
 	public static class Workspace extends Source {
 
-		public static List<AnimCI> loadAnimations(String id) {
+		public static List<AnimCE> loadAnimations(String id) {
+			if (id == null)
+				id = "_local";
 			File folder = ctx.getWorkspaceFile("./" + id + "/animations/");
-			List<AnimCI> list = new ArrayList<>();
+			List<AnimCE> list = new ArrayList<>();
 			if (!folder.exists() || !folder.isDirectory())
 				return list;
 			for (File f : folder.listFiles()) {
 				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
 				if (f.isDirectory() && ctx.getWorkspaceFile(path).exists())
-					list.add(new AnimCI(new SourceAnimLoader(new Identifier(id, f.getName()), null)));
+					list.add(new AnimCE(new Identifier(id, f.getName())));
 			}
 			return list;
 		}

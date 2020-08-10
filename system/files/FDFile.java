@@ -21,13 +21,13 @@ public class FDFile implements FileData {
 		file = f;
 	}
 
+	@Override
 	public byte[] getBytes() {
 		try {
 			byte[] bs = new byte[(int) file.length()];
 			BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
 			buf.read(bs, 0, bs.length);
 			buf.close();
-
 			return bs;
 		} catch (IOException e) {
 			e.printStackTrace();

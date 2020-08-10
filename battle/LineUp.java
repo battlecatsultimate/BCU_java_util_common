@@ -22,14 +22,18 @@ import java.util.TreeMap;
 @JsonClass
 public class LineUp extends Data {
 
+	public static boolean eq(Identifier id, int com) {
+		return id.pack.equals(Identifier.DEF) && id.id.equals(Data.trio(com));
+	}
+
 	@JsonField(generic = { Unit.class, Level.class })
 	public final TreeMap<Unit, Level> map = new TreeMap<>();
 
 	@JsonField
 	public final Form[][] fs = new Form[2][5];
-
 	public final EForm[][] efs = new EForm[2][5];
 	public int[] inc = new int[C_TOT], loc = new int[5];
+
 	public List<Combo> coms = new ArrayList<>();
 
 	private boolean updating = false;
@@ -247,10 +251,6 @@ public class LineUp extends Data {
 	/** set slot using 1 dim index */
 	protected void setFS(Form f, int i) {
 		fs[i / 5][i % 5] = f;
-	}
-
-	private boolean eq(Identifier id, int com) {
-		return id.pack.equals(Identifier.DEF) && id.id.equals(Data.trio(com));
 	}
 
 	/** get Form from 1 dim index */

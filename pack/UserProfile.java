@@ -1,8 +1,11 @@
 package common.pack;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -12,15 +15,45 @@ import common.pack.Context.ErrType;
 import common.pack.PackData.DefPack;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.UserPack;
+import common.system.VImg;
 import common.util.pack.Background;
 import common.util.pack.Soul;
+import common.util.stage.Music;
 import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
+import common.util.unit.Enemy;
 import common.util.unit.Unit;
 
 public class UserProfile {
 
 	// FIXME load it into register
 	private static UserProfile profile;
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <T> List<T> getAll(String pack, Class<T> cls) {
+		List<PackData> list = new ArrayList<>();
+		list.add(profile.def);
+		if (pack != null) {
+			UserPack userpack = profile.packmap.get(pack);
+			list.add(userpack);
+			for (String dep : userpack.desc.dependency)
+				list.add(getPack(dep));
+		}
+		List ans = new ArrayList<>();
+		for (PackData data : list) {
+			if (cls == Unit.class)
+				ans.addAll(data.units.getList());
+			if (cls == Enemy.class || cls == AbEnemy.class)
+				ans.addAll(data.enemies.getList());
+			if (cls == EneRand.class || cls == AbEnemy.class)
+				ans.addAll(data.randEnemies.getList());
+			if (cls == Background.class)
+				ans.addAll(data.bgs.getList());
+			if (cls == Music.class)
+				ans.addAll(data.musics.getList());
+		}
+		return ans;
+	}
 
 	public static DefPack getBCData() {
 		return profile.def;
@@ -33,6 +66,11 @@ public class UserProfile {
 		return pack.bgs.get(id.id);
 	}
 
+	public static VImg getCastle(Identifier cind) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public static AbEnemy getEnemy(Identifier id) {
 		PackData pack = getPack(id.pack);
 		if (pack == null)
@@ -41,6 +79,11 @@ public class UserProfile {
 		if (ans != null)
 			return ans;
 		return pack.randEnemies.get(id.id);
+	}
+
+	public static Music getMusic(Identifier mus1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public static PackData getPack(String str) {
@@ -88,7 +131,9 @@ public class UserProfile {
 			return null;
 		return pack.units.get(id.id);
 	}
-
+	public static UserPack getUserPack(String id) {
+		return profile.packmap.get(id);
+	}
 	public static PackData.UserPack initJsonPack(String id) throws Exception {
 		File f = Source.ctx.getWorkspaceFile("./" + id + "/main.pack.json");
 		File folder = f.getParentFile();
@@ -102,8 +147,14 @@ public class UserProfile {
 		return new PackData.UserPack(id);
 	}
 
+	public static Collection<UserPack> packs() {
+		return profile.packmap.values();
+	}
+
 	public String username;
+
 	public byte[] password;
+
 	public final DefPack def = new DefPack();
 
 	public final Map<String, UserPack> packmap = new HashMap<>();

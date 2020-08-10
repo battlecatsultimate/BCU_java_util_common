@@ -12,7 +12,6 @@ import common.battle.data.DataEnemy;
 import common.battle.data.MaskEnemy;
 import common.battle.entity.EEnemy;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.system.MultiLangCont;
 import common.system.VImg;
 import common.system.files.AssetData;
@@ -74,7 +73,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 
 	public List<MapColc> findMap() {
 		List<MapColc> ans = new ArrayList<>();
-		for (MapColc mc : UserProfile.getRegister(MapColc.REG_MAPCOLC, MapColc.class).values()) {
+		for (MapColc mc : MapColc.values()) {
 			if (mc instanceof PackMapColc)
 				continue;
 			boolean col = false;

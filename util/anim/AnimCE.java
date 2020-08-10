@@ -1,9 +1,7 @@
 package common.util.anim;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.Stack;
 
 import common.CommonStatic;
@@ -13,6 +11,7 @@ import common.io.OutStream;
 import common.pack.Source;
 import common.pack.PackData.Identifier;
 import common.pack.Source.SourceAnimSaver;
+import common.pack.UserProfile;
 import common.pack.Source.SourceAnimLoader;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -83,26 +82,25 @@ public class AnimCE extends AnimCI {
 
 	}
 
-	public static String getAvailable(String str) {
-		File folder = CommonStatic.def.route("./res/anim/");
-		if (!folder.exists())
-			return str;
-		File[] fs = CommonStatic.def.route("./res/anim/").listFiles();
-		Set<String> strs = new HashSet<>();
-		for (int i = 0; i < fs.length; i++)
-			strs.add(fs[i].getName());
-		while (strs.contains(str))
-			str += "'";
-		return str;
+	private static final String REG_LOCAL_ANIM = "local_animation";
+	public static String getAvailable(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static Map<String, AnimCE> map() {
+		return UserProfile.getRegister(REG_LOCAL_ANIM, AnimCE.class);
 	}
 
 	private boolean saved = false;
+
 	public EditLink link;
+
 	public Stack<History> history = new Stack<>();
 
 	public AnimCE(Identifier id) {
 		super(new SourceAnimLoader(id, null));
 		name = id;
+		map().put(name.id, this);
 	}
 
 	/** for conversion only */
@@ -114,6 +112,7 @@ public class AnimCE extends AnimCI {
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
 		name = new Identifier("_local", st);
+		map().put(name.id, this);
 	}
 
 	public AnimCE(String str, AnimD ori) {
@@ -154,7 +153,13 @@ public class AnimCE extends AnimCI {
 		history("initial");
 	}
 
+	public boolean deletable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	public void delete() {
+		map().remove(name.id);
 		new SourceAnimSaver(name, this).delete();
 	}
 
@@ -164,7 +169,7 @@ public class AnimCE extends AnimCI {
 
 	public void hardSave(String str) {
 		if (name == null)
-			name = new Identifier("_local", AnimCE.getAvailable(str));// TODO validate
+			name = new Identifier("_local", str);// TODO validate
 		saved = false;
 		save();
 	}

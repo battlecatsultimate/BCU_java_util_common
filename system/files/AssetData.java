@@ -25,6 +25,7 @@ public interface AssetData extends FileData {
 		return new MultiLangAsset(vf);
 	}
 
+	@Override
 	public byte[] getBytes();
 
 	public FakeImage getImg(MultiLangFile mlf);
