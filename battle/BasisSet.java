@@ -10,6 +10,8 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.IOType;
+import common.pack.VerFixer;
+import common.pack.VerFixer.VerFixerException;
 import common.system.Copable;
 
 @JsonClass
@@ -19,43 +21,28 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public static final BasisSet def = new BasisSet();
 	public static BasisSet current;
 
-	public static void read(InStream is) {
+	public static void read(InStream is) throws VerFixerException {
 		zreads(is, false);
 	}
 
-	public static BasisSet[] readBackup(InStream is) {
+	public static BasisSet[] readBackup(InStream is) throws VerFixerException {
 		return zreads(is, true).toArray(new BasisSet[0]);
 	}
 
-	private static List<BasisSet> zreads(InStream is, boolean bac) {
+	private static List<BasisSet> zreads(InStream is, boolean bac) throws VerFixerException {
 		int ver = getVer(is.nextString());
-		if (ver >= 308)
-			return zreads$000308(ver, is, bac);
-		return zreads$000307(ver, is, bac);
+		if (ver != 308)
+			throw new VerFixer.VerFixerException("basis set has to have version 308, got " + ver);
+		return zreads$000308(ver, is, bac);
 	}
 
-	private static List<BasisSet> zreads$000307(int ver, InStream is, boolean bac) {
-		List<BasisSet> ans = bac ? new ArrayList<BasisSet>() : list;
-		int n = is.nextByte();
-		for (int i = 1; i < n; i++)
-			ans.add(new BasisSet(ver, is));
-		int ind = is.nextByte();
-		if (!bac)
-			current = list.get(ind);
-		return ans;
-	}
-
-	private static List<BasisSet> zreads$000308(int ver, InStream is, boolean bac) {
+	private static List<BasisSet> zreads$000308(int ver, InStream is, boolean bac) throws VerFixerException {
 		List<BasisSet> ans = bac ? new ArrayList<BasisSet>() : list;
 		int n = is.nextInt();
-		for (int i = 1; i < n; i++)
-			try {
-				BasisSet bs = new BasisSet(ver, is.subStream());
-				ans.add(bs);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// TODO Opts.loadErr("error in reading basis #" + i);
-			}
+		for (int i = 1; i < n; i++) {
+			BasisSet bs = new BasisSet(ver, is.subStream());
+			ans.add(bs);
+		}
 		int ind = Math.max(is.nextInt(), ans.size() - 1);
 		if (!bac)
 			current = list.get(ind);
@@ -90,7 +77,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 			lb.add(sele = new BasisLU(this, blu));
 	}
 
-	private BasisSet(int ver, InStream is) {
+	private BasisSet(int ver, InStream is) throws VerFixerException {
 		name = is.nextString();
 		t = new Treasure(this, ver, is);
 		zread(ver, is);
@@ -137,53 +124,17 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		return lb.indexOf(sele);
 	}
 
-	private void zread(int val, InStream is) {
-		if (val >= 307)
-			val = getVer(is.nextString());
-		if (val >= 308)
-			zread$000308(is);
-		else if (val >= 307)
-			zread$000307(is);
-		else
-			zread$000000(val, is);
-	}
-
-	private void zread$000000(int ver, InStream is) {
-		int n = is.nextByte();
-		for (int i = 0; i < n; i++) {
-			String str = is.nextString();
-			int[] ints = is.nextIntsB();
-			lb.add(new BasisLU(this, new LineUp(ver, is), str, ints));
-		}
-		int ind = is.nextByte();
-		sele = lb.get(ind);
-	}
-
-	private void zread$000307(InStream is) {
-		int n = is.nextByte();
-		for (int i = 0; i < n; i++) {
-			String str = is.nextString();
-			int[] ints = is.nextIntsB();
-			lb.add(new BasisLU(this, new LineUp(307, is), str, ints));
-		}
-		int ind = is.nextByte();
-		sele = lb.get(ind);
-	}
-
-	private void zread$000308(InStream is) {
+	private void zread(int val, InStream is) throws VerFixerException {
+		val = getVer(is.nextString());
+		if (val != 308)
+			throw new VerFixer.VerFixerException("basis set has to have version 308, got " + val);
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
 			String str = is.nextString();
 			int[] ints = is.nextIntsB();
 			InStream sub = is.subStream();
-			try {
-				BasisLU bl = new BasisLU(this, new LineUp(308, sub), str, ints);
-				lb.add(bl);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// TODO Opts.loadErr("error in reading lineup " + name + " - " + str);
-			}
-
+			BasisLU bl = new BasisLU(this, new LineUp(308, sub), str, ints);
+			lb.add(bl);
 		}
 		int ind = is.nextInt();
 		sele = lb.get(ind);

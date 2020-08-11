@@ -1,6 +1,9 @@
 package common.pack;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,14 +13,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import java.util.Map.Entry;
 
+import common.io.PackLoader;
+import common.io.PackLoader.ZipDesc;
+import common.io.json.JsonDecoder;
 import common.pack.Context.ErrType;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackData.DefPack;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
+import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
+import common.pack.Source.Workspace;
+import common.pack.Source.ZipSource;
 import common.util.pack.Background;
 import common.util.pack.Soul;
 import common.util.stage.CastleImg;
@@ -105,6 +118,25 @@ public class UserProfile {
 		return new PackData.UserPack(id);
 	}
 
+	public static UserPack readJsonPack(File f) throws Exception {
+		File folder = f.getParentFile();
+		Reader r = new FileReader(f);
+		JsonElement elem = JsonParser.parseReader(r);
+		r.close();
+		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
+		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
+		return data;
+	}
+
+	public static UserPack readZipPack(File f) throws Exception {
+		ZipDesc zip = PackLoader.readPack(Source.ctx::preload, f);
+		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"));
+		JsonElement elem = JsonParser.parseReader(r);
+		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
+		r.close();
+		return data;
+	}
+
 	public static Collection<UserPack> packs() {
 		return profile.packmap.values();
 	}
@@ -148,55 +180,61 @@ public class UserProfile {
 	public final DefPack def = new DefPack();
 
 	public final Map<String, UserPack> packmap = new HashMap<>();
-
 	public final Set<UserPack> packlist = new HashSet<>();
-
 	public final Set<UserPack> failed = new HashSet<>();
-
 	private final Map<String, Map<String, ?>> registers = new HashMap<>();
+	private Map<String, UserPack> pending = new HashMap<>();
 
 	public UserProfile() {
 		// TODO load username and password
+
 		File packs = Source.ctx.getPackFolder();
 		File workspace = Source.ctx.getWorkspaceFile(".");
-		Map<String, UserPack> set = new HashMap<>();
+
 		if (packs.exists())
 			for (File f : packs.listFiles())
-				if (f.getName().endsWith(".pack.bcuzip"))
-					try {
-						UserPack s = PackData.readZipPack(f);
-						set.put(s.desc.id, s);
-					} catch (Exception e) {
-						Source.ctx.noticeErr(e, ErrType.WARN, "failed to load external pack " + f);
-					}
+				if (f.getName().endsWith(".pack.bcuzip")) {
+					UserPack pack = Source.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
+							"failed to load external pack " + f);
+					if (pack != null)
+						pending.put(pack.desc.id, pack);
+				}
+
 		if (workspace.exists())
 			for (File f : packs.listFiles())
 				if (f.isDirectory()) {
 					File main = Source.ctx.getWorkspaceFile("./" + f.getName() + "/main.pack.json");
 					if (!main.exists())
 						continue;
-					try {
-						UserPack s = PackData.readJsonPack(main);
-						set.put(s.desc.id, s);
-					} catch (Exception e) {
-						Source.ctx.noticeErr(e, ErrType.WARN, "failed to load workspace pack " + f);
-					}
+					UserPack pack = Source.ctx.noticeErr(() -> readJsonPack(main), ErrType.WARN,
+							"failed to load workspace pack " + f);
+					if (pack != null)
+						pending.put(pack.desc.id, pack);
 				}
-		failed.addAll(set.values());
-		while (failed.removeIf(this::add))
+		Set<UserPack> queue = new HashSet<>(pending.values());
+		while (queue.removeIf(this::add))
 			;
+		pending = null;
 		packlist.addAll(failed);
 	}
 
-	public boolean add(UserPack pack) {
+	/**
+	 * return true if the pack is attempted to load and should be removed from the
+	 * loading queue
+	 */
+	private boolean add(UserPack pack) {
 		packlist.add(pack);
 		if (!canAdd(pack))
 			return false;
+		if (!Source.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc)) {
+			failed.add(pack);
+			return true;
+		}
 		packmap.put(pack.desc.id, pack);
 		return true;
 	}
 
-	public boolean canAdd(UserPack s) {
+	private boolean canAdd(UserPack s) {
 		for (String dep : s.desc.dependency)
 			if (!packmap.containsKey(dep))
 				return false;

@@ -1,4 +1,4 @@
-package common.pack;
+package common.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import common.io.DataIO;
+
+import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
@@ -27,7 +28,7 @@ import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
-import common.pack.PackLoader.ZipDesc.FileDesc;
+import common.pack.PackData;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.system.files.FileData;

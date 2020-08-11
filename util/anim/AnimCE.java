@@ -10,16 +10,36 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
 import common.pack.Source.SourceAnimSaver;
+import common.pack.Source.Workspace;
 import common.pack.UserProfile;
+import common.pack.PackData.UserPack;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.SourceAnimLoader;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 
 public class AnimCE extends AnimCI {
 
-	static class AnimCELoader implements Source.AnimLoader {
+	private class History {
+
+		protected final OutStream data;
+
+		protected final String name;
+
+		protected OutStream mms;
+
+		protected History(String str, OutStream os) {
+			name = str;
+			data = os;
+		}
+
+	}
+
+	private static class AnimCELoader implements Source.AnimLoader {
 
 		private static VImg optional(String str) {
 			VFile<?> fv = VFile.getFile(str);
@@ -85,7 +105,7 @@ public class AnimCE extends AnimCI {
 	private static final String REG_LOCAL_ANIM = "local_animation";
 
 	public static String getAvailable(String string) {
-		// TODO Auto-generated method stub
+		// FIXME Auto-generated method stub
 		return null;
 	}
 
@@ -101,8 +121,8 @@ public class AnimCE extends AnimCI {
 
 	public AnimCE(ResourceLocation resourceLocation) {
 		super(new SourceAnimLoader(resourceLocation, null));
-		name = resourceLocation;
-		map().put(name.id, this);
+		id = resourceLocation;
+		map().put(id.id, this);
 	}
 
 	/** for conversion only */
@@ -113,8 +133,8 @@ public class AnimCE extends AnimCI {
 
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
-		name = new ResourceLocation("_local", st);
-		map().put(name.id, this);
+		id = new ResourceLocation("_local", st);
+		map().put(id.id, this);
 	}
 
 	public AnimCE(String str, AnimD ori) {
@@ -156,13 +176,21 @@ public class AnimCE extends AnimCI {
 	}
 
 	public boolean deletable() {
-		// TODO Auto-generated method stub
-		return false;
+		for (UserPack p : UserProfile.packs()) {
+			for (Enemy e : p.enemies.getList())
+				if (e.anim == this)
+					return false;
+			for (Unit u : p.units.getList())
+				for (Form f : u.forms)
+					if (f.anim == this)
+						return false;
+		}
+		return true;
 	}
 
 	public void delete() {
-		map().remove(name.id);
-		new SourceAnimSaver(name, this).delete();
+		map().remove(id.id);
+		new SourceAnimSaver(id, this).delete();
 	}
 
 	public String getUndo() {
@@ -170,8 +198,10 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void hardSave(String str) {
-		if (name == null)
-			name = new ResourceLocation("_local", str);// TODO validate
+		if (id == null) {
+			id = Workspace.validate(new ResourceLocation("_local", str));
+			map().put(id.id, this);
+		}
 		saved = false;
 		save();
 	}
@@ -182,7 +212,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	public boolean inPool() {
-		return name.pack != null && name.pack.equals("_local");
+		return id.pack != null && id.pack.equals("_local");
 	}
 
 	public boolean isSaved() {
@@ -202,7 +232,14 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void localize(String pack) {
-		name.pack = null;// TODO
+		if (id.pack.equals(ResourceLocation.LOCAL))
+			map().remove(id.id);
+		SourceAnimSaver saver = new SourceAnimSaver(id, this);
+		saver.delete();
+		id.pack = pack;
+		if (id.pack.equals(ResourceLocation.LOCAL))
+			map().put(str, this);
+		saver.saveAll();
 	}
 
 	public void merge(AnimCE a, int x, int y) {
@@ -269,13 +306,13 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void renameTo(String str) {
-		if (getUni() != null)
-			getUni().check();
-		if (getEdi() != null)
-			getEdi().check();
-		SourceAnimSaver saver = new SourceAnimSaver(name, this);
+		if (id.pack.equals(ResourceLocation.LOCAL))
+			map().remove(id.id);
+		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
-		name.id = str;
+		id.id = str;
+		if (id.pack.equals(ResourceLocation.LOCAL))
+			map().put(str, this);
 		saver.saveAll();
 		unSave("rename (not applicapable for undo)");
 	}
@@ -297,6 +334,7 @@ public class AnimCE extends AnimCI {
 				if (p.ints[1] >= 4 && p.ints[1] <= 7)
 					for (int[] x : p.moves)
 						x[1] *= d;
+		unSave("resize");
 	}
 
 	public void restore() {
@@ -329,22 +367,22 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void save() {
-		if (!loaded || isSaved() || mismatch)
+		if (!loaded || isSaved())
 			return;
 		saved = true;
-		new SourceAnimSaver(name, this).saveAll();
+		new SourceAnimSaver(id, this).saveAll();
 	}
 
 	public void saveIcon() {
-		new SourceAnimSaver(name, this).saveIconDisplay();
+		new SourceAnimSaver(id, this).saveIconDisplay();
 	}
 
 	public void saveImg() {
-		new SourceAnimSaver(name, this).saveSprite();
+		new SourceAnimSaver(id, this).saveSprite();
 	}
 
 	public void saveUni() {
-		new SourceAnimSaver(name, this).saveIconDeploy();
+		new SourceAnimSaver(id, this).saveIconDeploy();
 	}
 
 	public void setEdi(VImg uni) {
@@ -433,21 +471,6 @@ public class AnimCE extends AnimCI {
 		std[0] = 1000;
 		std[1] = 3600;
 		std[2] = 1000;
-	}
-
-}
-
-class History {
-
-	protected final OutStream data;
-
-	protected final String name;
-
-	protected OutStream mms;
-
-	protected History(String str, OutStream os) {
-		name = str;
-		data = os;
 	}
 
 }

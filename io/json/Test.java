@@ -11,15 +11,15 @@ import java.util.HashSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import common.io.PackLoader;
+import common.io.PackLoader.Preload;
+import common.io.PackLoader.ZipDesc;
+import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
 import common.pack.PackData;
-import common.pack.PackLoader;
-import common.pack.PackLoader.Preload;
-import common.pack.PackLoader.ZipDesc;
-import common.pack.PackLoader.ZipDesc.FileDesc;
 import common.util.Data;
 
 public class Test {

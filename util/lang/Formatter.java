@@ -8,6 +8,8 @@ import java.util.Stack;
 
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.PackData.Identifier;
+import common.util.pack.Background;
 
 public class Formatter {
 
@@ -38,8 +40,8 @@ public class Formatter {
 			return "" + Math.abs(v);
 		}
 
-		public String bg(int id) {
-			return "BG ID = " + id; // TODO
+		public String bg(Identifier<Background> id) {
+			return id.get().toString();
 		}
 
 		public String dispTime(int time) {
@@ -48,8 +50,8 @@ public class Formatter {
 			return time + "f";
 		}
 
-		public String entity(int id) {
-			return (isEnemy ? "Enemy" : "Unit") + " ID = " + id; // TODO
+		public String entity(Identifier<?> id) {
+			return id.get().toString();
 		}
 
 		public String toSecond(int time) {

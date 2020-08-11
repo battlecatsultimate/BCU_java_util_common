@@ -1,5 +1,7 @@
 package common.util.anim;
 
+import common.pack.Source;
+import common.pack.Context.ErrType;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -84,7 +86,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			extend = v;
 			extType = 1;
 		} else
-			;// TODO Printer.p("EPart", 74, "modification can be: " + m);
+			Source.ctx.printErr(ErrType.NEW, "unhandled modification " + m);
 
 	}
 

@@ -104,11 +104,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 	}
 
-	public ResourceLocation name;
+	public ResourceLocation id;
 
 	public AnimCI(Source.AnimLoader acl) {
 		super(new AnimCIKeeper(acl));
-		name = loader.getName();
+		id = loader.getName();
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 	@Override
 	public String toString() {
-		return name.id;
+		return id.id;
 	}
 
 }

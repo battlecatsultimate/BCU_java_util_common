@@ -11,9 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import common.io.PackLoader;
+import common.io.PackLoader.ZipDesc;
+import common.io.PackLoader.ZipDesc.FileDesc;
 import common.pack.Context.ErrType;
-import common.pack.PackLoader.ZipDesc;
-import common.pack.PackLoader.ZipDesc.FileDesc;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
@@ -47,6 +48,7 @@ public abstract class Source {
 
 	public static class ResourceLocation {
 
+		public static final String LOCAL = "_local";
 		public String pack;
 		public String id;
 
@@ -86,7 +88,7 @@ public abstract class Source {
 			FileData edi = loader.loadFile(id, EDI);
 			if (edi == null)
 				return null;
-			return ctx.noticeError(() -> new VImg(FakeImage.read(edi)), ErrType.ERROR,
+			return ctx.noticeErr(() -> new VImg(FakeImage.read(edi)), ErrType.ERROR,
 					"failed to read Display Icon" + id);
 		}
 
@@ -115,7 +117,7 @@ public abstract class Source {
 
 		@Override
 		public FakeImage getNum() {
-			return ctx.noticeError(() -> FakeImage.read(loader.loadFile(id, SP)), ErrType.ERROR,
+			return ctx.noticeErr(() -> FakeImage.read(loader.loadFile(id, SP)), ErrType.ERROR,
 					"failed to read sprite sheet " + id);
 		}
 
@@ -129,7 +131,7 @@ public abstract class Source {
 			FileData uni = loader.loadFile(id, UNI);
 			if (uni == null)
 				return null;
-			return ctx.noticeError(() -> new VImg(FakeImage.read(uni)), ErrType.ERROR,
+			return ctx.noticeErr(() -> new VImg(FakeImage.read(uni)), ErrType.ERROR,
 					"failed to read deploy icon " + id);
 		}
 
@@ -211,10 +213,15 @@ public abstract class Source {
 	}
 
 	public static class Workspace extends Source {
+		
+		public static ResourceLocation validate(ResourceLocation rl) {
+			//FIXME find valid path
+			return rl;
+		}
 
 		public static List<AnimCE> loadAnimations(String id) {
 			if (id == null)
-				id = "_local";
+				id = ResourceLocation.LOCAL;
 			File folder = ctx.getWorkspaceFile("./" + id + "/animations/");
 			List<AnimCE> list = new ArrayList<>();
 			if (!folder.exists() || !folder.isDirectory())

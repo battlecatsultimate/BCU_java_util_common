@@ -3,12 +3,12 @@ package common.pack;
 import java.io.File;
 import java.io.IOException;
 
-import common.pack.PackLoader.ZipDesc.FileDesc;
+import common.io.PackLoader.ZipDesc.FileDesc;
 
 public interface Context {
 
 	public static enum ErrType {
-		FATAL, ERROR, WARN, INFO
+		FATAL, ERROR, WARN, INFO, NEW, CORRUPT
 	}
 
 	public static interface RunExc {
@@ -54,17 +54,19 @@ public interface Context {
 
 	public File getWorkspaceFile(String relativePath);
 
-	public default void noticeErr(Context.RunExc r, ErrType t, String str) {
+	public default boolean noticeErr(Context.RunExc r, ErrType t, String str) {
 		try {
 			r.run();
+			return true;
 		} catch (Exception e) {
 			noticeErr(e, t, str);
+			return false;
 		}
 	}
 
 	public void noticeErr(Exception e, ErrType t, String str);
 
-	public default <T> T noticeError(Context.SupExc<T> r, ErrType t, String str) {
+	public default <T> T noticeErr(Context.SupExc<T> r, ErrType t, String str) {
 		try {
 			return r.get();
 		} catch (Exception e) {

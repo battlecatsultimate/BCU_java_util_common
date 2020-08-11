@@ -427,7 +427,7 @@ public abstract class VerFixer extends Source {
 		return ans;
 	}
 
-	public static void transform() throws IOException {
+	private static void transform() throws IOException {
 		File f = new File("./res/anim/");
 		for (String fi : f.list()) {
 			String pa = "./res/anim/" + fi + "/";
@@ -445,7 +445,6 @@ public abstract class VerFixer extends Source {
 			move(pa + fi + "_zombie01.maanim", pb + MA[5]);
 			move(pa + fi + "_zombie02.maanim", pb + MA[6]);
 		}
-		Context.delete(new File("./res"));
 	}
 
 	private static void move(String a, String b) {
@@ -482,6 +481,12 @@ public abstract class VerFixer extends Source {
 		AnimCE ce = new AnimCE(al);
 		new SourceAnimSaver(id, ce).saveAll();
 		return new AnimCE(id);
+	}
+
+	public static void fix() throws IOException {
+		transform();
+		Context.delete(new File("./res"));
+		Context.delete(new File("./pack"));
 	}
 
 }

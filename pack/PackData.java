@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import common.CommonStatic;
 import common.battle.data.DataEnemy;
+import common.io.PackLoader;
+import common.io.PackLoader.ZipDesc;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
@@ -22,7 +25,6 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.GenType;
 import common.pack.FixIndexList.FixIndexMap;
-import common.pack.PackLoader.ZipDesc;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.pack.VerFixer.IdFixer;
@@ -41,7 +43,7 @@ import common.util.unit.Enemy;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
 
-@JsonClass(read = RType.FILL)
+@JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
 public class PackData {
 
 	public static class DefPack extends PackData {
@@ -133,7 +135,7 @@ public class PackData {
 				}
 				int ind = l.indexOf(ul);
 				u.lv = l.get(ind);
-				u.lv.units.add(u);
+				l.get(ind).units.add(u);
 			}
 			UnitLevel.def = l.get(2);
 			qs = VFile.readLine("./org/data/unitbuy.csv");
@@ -270,6 +272,9 @@ public class PackData {
 		public final Source source;
 
 		public boolean editable;
+		public boolean loaded = false;
+		
+		private JsonElement elem;
 
 		/** for old reading method only */
 		@Deprecated
@@ -278,11 +283,18 @@ public class PackData {
 			source = s;
 		}
 
-		public UserPack(Source s) {
-			desc = null;
+		public UserPack(Source s, PackDesc desc, JsonElement elem) {
+			this.desc = desc;
+			this.elem = elem;
 			source = s;
 			editable = source instanceof Workspace;
 			mc = new PackMapColc(this);
+		}
+		
+		void load() throws Exception {
+			JsonDecoder.inject(elem, UserPack.class, this);
+			elem = null;
+			loaded = true;
 		}
 
 		/** for generating new pack only */
@@ -290,25 +302,9 @@ public class PackData {
 			desc = new PackDesc(id);
 			source = new Workspace(id);
 			castles = new PackCasList(this);
+			loaded = true;
 		}
 
-	}
-
-	public static UserPack readJsonPack(File f) throws Exception {
-		File folder = f.getParentFile();
-		Reader r = new FileReader(f);
-		UserPack data = JsonDecoder.inject(JsonParser.parseReader(r), UserPack.class,
-				new UserPack(new Workspace(folder.getName())));
-		r.close();
-		return data;
-	}
-
-	public static UserPack readZipPack(File f) throws Exception {
-		ZipDesc zip = PackLoader.readPack(Source.ctx::preload, f);
-		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"));
-		UserPack data = JsonDecoder.inject(JsonParser.parseReader(r), UserPack.class, new UserPack(new ZipSource(zip)));
-		r.close();
-		return data;
 	}
 
 	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
