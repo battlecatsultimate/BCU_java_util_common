@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import common.pack.Context.ErrType;
-import common.pack.PackData.Identifier;
 import common.pack.PackLoader.ZipDesc;
 import common.pack.PackLoader.ZipDesc.FileDesc;
 import common.system.VImg;
@@ -37,7 +36,7 @@ public abstract class Source {
 
 		public MaModel getMM();
 
-		public Identifier getName();
+		public ResourceLocation getName();
 
 		public FakeImage getNum();
 
@@ -46,11 +45,23 @@ public abstract class Source {
 		public VImg getUni();
 	}
 
+	public static class ResourceLocation {
+
+		public String pack;
+		public String id;
+
+		public ResourceLocation(String pack, String id) {
+			this.pack = pack;
+			this.id = id;
+		}
+
+	}
+
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
 		public static interface SourceLoader {
 
-			public FileData loadFile(Identifier id, String str);
+			public FileData loadFile(ResourceLocation id, String str);
 
 		}
 
@@ -62,10 +73,10 @@ public abstract class Source {
 		public static final String EDI = "icon_display.png";
 		public static final String UNI = "icon_deploy.png";
 
-		private final Identifier id;
+		private final ResourceLocation id;
 		private final SourceLoader loader;
 
-		public SourceAnimLoader(Identifier id, SourceLoader loader) {
+		public SourceAnimLoader(ResourceLocation id, SourceLoader loader) {
 			this.id = id;
 			this.loader = loader == null ? Workspace::loadAnimFile : loader;
 		}
@@ -98,7 +109,7 @@ public abstract class Source {
 		}
 
 		@Override
-		public Identifier getName() {
+		public ResourceLocation getName() {
 			return id;
 		}
 
@@ -126,11 +137,11 @@ public abstract class Source {
 
 	public static class SourceAnimSaver {
 
-		private final Identifier id;
+		private final ResourceLocation id;
 		private final AnimCI anim;
 
-		public SourceAnimSaver(Identifier id, AnimCI animCI) {
-			this.id = id;
+		public SourceAnimSaver(ResourceLocation name, AnimCI animCI) {
+			this.id = name;
 			this.anim = animCI;
 		}
 
@@ -211,12 +222,12 @@ public abstract class Source {
 			for (File f : folder.listFiles()) {
 				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
 				if (f.isDirectory() && ctx.getWorkspaceFile(path).exists())
-					list.add(new AnimCE(new Identifier(id, f.getName())));
+					list.add(new AnimCE(new ResourceLocation(id, f.getName())));
 			}
 			return list;
 		}
 
-		private static FileData loadAnimFile(Identifier id, String str) {
+		private static FileData loadAnimFile(ResourceLocation id, String str) {
 			return new FDFile(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str));
 		}
 
@@ -226,7 +237,7 @@ public abstract class Source {
 
 		@Override
 		public AnimCI loadAnimation(String name) {
-			return new AnimCI(new SourceAnimLoader(new Identifier(id, name), null));
+			return new AnimCI(new SourceAnimLoader(new ResourceLocation(id, name), null));
 		}
 
 		@Override
@@ -262,7 +273,7 @@ public abstract class Source {
 
 		@Override
 		public AnimCI loadAnimation(String name) {
-			return new AnimCI(new SourceAnimLoader(new Identifier(id, name), this::loadAnimationFile));
+			return new AnimCI(new SourceAnimLoader(new ResourceLocation(id, name), this::loadAnimationFile));
 		}
 
 		@Override
@@ -296,7 +307,7 @@ public abstract class Source {
 			return ans;
 		}
 
-		private FileDesc loadAnimationFile(Identifier id, String path) {
+		private FileDesc loadAnimationFile(ResourceLocation id, String path) {
 			return zip.tree.find("./animations/" + id.id + "/" + path).getData();
 		}
 

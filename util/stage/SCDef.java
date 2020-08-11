@@ -17,7 +17,6 @@ import common.io.json.JsonField.GenType;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.PackDesc;
 import common.pack.FixIndexList;
-import common.pack.UserProfile;
 import common.system.Copable;
 import common.util.Data;
 import common.util.unit.AbEnemy;
@@ -28,7 +27,7 @@ public class SCDef implements Copable<SCDef> {
 
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Line implements Cloneable {
-		public Identifier enemy;
+		public Identifier<AbEnemy> enemy;
 		public int number, boss, multiple, group;
 		public int spawn_0, spawn_1, respawn_0, respawn_1;
 		public int castle_0, castle_1, layer_0, layer_1;
@@ -39,7 +38,7 @@ public class SCDef implements Copable<SCDef> {
 		}
 
 		public Line(int[] arr) {
-			enemy = Identifier.parseInt(arr[E]);
+			enemy = Identifier.parseInt(arr[E], Enemy.class);
 			number = arr[N];
 			boss = arr[B];
 			multiple = arr[M];
@@ -90,7 +89,7 @@ public class SCDef implements Copable<SCDef> {
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
-					scd.smap.put(Identifier.parseInt(is.nextInt()), is.nextInt());
+					scd.smap.put(Identifier.parseInt(is.nextInt(), Enemy.class), is.nextInt());
 				n = is.nextInt();
 				for (int i = 0; i < n; i++) {
 					SCGroup scg = SCGroup.zread(is);
@@ -107,7 +106,7 @@ public class SCDef implements Copable<SCDef> {
 	@JsonField(gen = GenType.FILL)
 	public final FixIndexList<SCGroup> sub = new FixIndexList<>(SCGroup.class);
 	@JsonField(generic = { Identifier.class, Integer.class })
-	public final Map<Identifier, Integer> smap = new TreeMap<>();
+	public final Map<Identifier<AbEnemy>, Integer> smap = new TreeMap<>();
 	@JsonField
 	public int sdef = 0;
 
@@ -185,7 +184,7 @@ public class SCDef implements Copable<SCDef> {
 	public Set<Enemy> getAllEnemy() {
 		Set<Enemy> l = new TreeSet<>();
 		for (Line dat : datas)
-			l.addAll(UserProfile.getEnemy(dat.enemy).getPossible());
+			l.addAll(dat.enemy.get().getPossible());
 		for (AbEnemy e : getSummon())
 			l.addAll(e.getPossible());
 		return l;
@@ -200,7 +199,7 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Entry<Identifier, Integer>[] getSMap() {
+	public Entry<Identifier<AbEnemy>, Integer>[] getSMap() {
 		return smap.entrySet().toArray(new Entry[0]);
 	}
 
@@ -210,7 +209,7 @@ public class SCDef implements Copable<SCDef> {
 		Set<Enemy> pre = new TreeSet<>();
 		Set<Enemy> post = new TreeSet<>();
 		for (Line line : datas) {
-			AbEnemy e = UserProfile.getEnemy(line.enemy);
+			AbEnemy e = line.enemy.get();
 			if (e != null)
 				pre.addAll(e.getPossible());
 		}

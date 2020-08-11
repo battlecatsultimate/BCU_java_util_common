@@ -9,7 +9,6 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Combo;
 import common.util.unit.EForm;
@@ -22,8 +21,8 @@ import java.util.TreeMap;
 @JsonClass
 public class LineUp extends Data {
 
-	public static boolean eq(Identifier id, int com) {
-		return id.pack.equals(Identifier.DEF) && id.id.equals(Data.trio(com));
+	public static boolean eq(Identifier<Unit> id, int com) {
+		return id.pack.equals(Identifier.DEF) && id.id == com;
 	}
 
 	@JsonField(generic = { Unit.class, Level.class })
@@ -126,7 +125,7 @@ public class LineUp extends Data {
 					rep[j] = true;
 					exi[i] = true;
 					if (f.fid < com[i][1])
-						fs[0][j] = UserProfile.getUnit(Identifier.parseInt(com[i][0])).forms[com[i][1]];
+						fs[0][j] = Identifier.parseInt(com[i][0], Unit.class).get().forms[com[i][1]];
 					loc[j]++;
 					rem--;
 				}
@@ -179,7 +178,7 @@ public class LineUp extends Data {
 				p++;
 			setFS(getFS(i), j++);
 			int[] c = com[p++];
-			setFS(UserProfile.getUnit(Identifier.parseInt(c[0])).forms[c[1]], i++);
+			setFS(Identifier.parseInt(c[0], Unit.class).get().forms[c[1]], i++);
 			r++;
 		}
 		renew();
@@ -319,9 +318,9 @@ public class LineUp extends Data {
 	private void validate() {
 		for (int i = 0; i < 10; i++)
 			if (getFS(i) != null) {
-				Identifier id = getFS(i).uid;
+				Identifier<Unit> id = getFS(i).uid;
 				int f = getFS(i).fid;
-				Unit u = UserProfile.getUnit(id);
+				Unit u = id.get();
 				if (u == null || u.forms[f] == null)
 					setFS(null, i);
 			}
@@ -340,13 +339,13 @@ public class LineUp extends Data {
 		for (int i = 0; i < n; i++) {
 			int uid = is.nextInt();
 			int fid = is.nextInt();
-			setFS(UserProfile.getUnit(Identifier.parseInt(uid)).forms[fid], i);
+			setFS(Identifier.parseInt(uid, Unit.class).get().forms[fid], i);
 		}
 		int m = is.nextInt();
 		for (int i = 0; i < m; i++) {
 			int uid = is.nextInt();
 			int[] lv = is.nextIntsB();
-			Unit u = UserProfile.getUnit(Identifier.parseInt(uid));
+			Unit u = Identifier.parseInt(uid, Unit.class).get();
 			int[][] orbs = null;
 			int existing = is.nextInt();
 			if (existing == 1) {

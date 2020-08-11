@@ -13,7 +13,6 @@ import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.files.AssetData;
 import common.system.files.VFile;
-import common.util.Data;
 import common.util.stage.MapColc.PackMapColc;
 
 public class CastleList extends FixIndexMap<CastleImg> {
@@ -27,7 +26,7 @@ public class CastleList extends FixIndexMap<CastleImg> {
 			id = hash;
 			str = name;
 			for (VFile<AssetData> vf : VFile.get("./org/img/" + name).list())
-				add(new CastleImg(new Identifier(id, Data.trio(size())), new VImg(vf)));
+				add(new CastleImg(new Identifier<CastleImg>(id, CastleImg.class, size()), new VImg(vf)));
 			map().put(id, this);
 			defset().add(this);
 
@@ -38,6 +37,7 @@ public class CastleList extends FixIndexMap<CastleImg> {
 			return str + " (" + size() + ")";
 		}
 	}
+
 	public static class PackCasList extends CastleList {
 
 		public final UserPack pack;

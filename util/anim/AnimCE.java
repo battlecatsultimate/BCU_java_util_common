@@ -9,9 +9,9 @@ import common.CommonStatic.EditLink;
 import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
-import common.pack.PackData.Identifier;
 import common.pack.Source.SourceAnimSaver;
 import common.pack.UserProfile;
+import common.pack.Source.ResourceLocation;
 import common.pack.Source.SourceAnimLoader;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -61,8 +61,8 @@ public class AnimCE extends AnimCI {
 		}
 
 		@Override
-		public Identifier getName() {
-			return new Identifier("_local", name);
+		public ResourceLocation getName() {
+			return new ResourceLocation("_local", name);
 		}
 
 		@Override
@@ -83,10 +83,12 @@ public class AnimCE extends AnimCI {
 	}
 
 	private static final String REG_LOCAL_ANIM = "local_animation";
+
 	public static String getAvailable(String string) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public static Map<String, AnimCE> map() {
 		return UserProfile.getRegister(REG_LOCAL_ANIM, AnimCE.class);
 	}
@@ -97,9 +99,9 @@ public class AnimCE extends AnimCI {
 
 	public Stack<History> history = new Stack<>();
 
-	public AnimCE(Identifier id) {
-		super(new SourceAnimLoader(id, null));
-		name = id;
+	public AnimCE(ResourceLocation resourceLocation) {
+		super(new SourceAnimLoader(resourceLocation, null));
+		name = resourceLocation;
 		map().put(name.id, this);
 	}
 
@@ -111,7 +113,7 @@ public class AnimCE extends AnimCI {
 
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
-		name = new Identifier("_local", st);
+		name = new ResourceLocation("_local", st);
 		map().put(name.id, this);
 	}
 
@@ -169,7 +171,7 @@ public class AnimCE extends AnimCI {
 
 	public void hardSave(String str) {
 		if (name == null)
-			name = new Identifier("_local", str);// TODO validate
+			name = new ResourceLocation("_local", str);// TODO validate
 		saved = false;
 		save();
 	}

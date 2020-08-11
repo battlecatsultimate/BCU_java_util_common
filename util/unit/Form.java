@@ -28,7 +28,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 
 	public final MaskUnit du;
 	public final Unit unit;
-	public final Identifier uid;
+	public final Identifier<Unit> uid;
 	public int fid;
 
 	public Orb orbs = null;

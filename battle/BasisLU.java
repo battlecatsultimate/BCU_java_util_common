@@ -104,7 +104,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
 		List<Unit> list = UserProfile.getBCData().units.getList();
-		list.remove(UserProfile.getUnit(Identifier.parseInt(339)));
+		list.remove(Identifier.parseInt(339, Unit.class).get());
 		for (Form[] fs : ans.lu.fs)
 			for (Form f : fs)
 				if (f != null)

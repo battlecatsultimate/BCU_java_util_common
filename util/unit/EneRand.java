@@ -7,26 +7,25 @@ import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.io.InStream;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.system.VImg;
 import common.util.EREnt;
 import common.util.EntRand;
 import common.util.Res;
 
-public class EneRand extends EntRand<Identifier> implements AbEnemy {
+public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
-	public final Identifier id;
+	public final Identifier<AbEnemy> id;
 
 	public String name = "";
 
-	public EneRand(Identifier ID) {
+	public EneRand(Identifier<AbEnemy> ID) {
 		id = ID;
 	}
 
 	public void fillPossible(Set<Enemy> se, Set<EneRand> sr) {
 		sr.add(this);
-		for (EREnt<Identifier> e : list) {
-			AbEnemy ae = UserProfile.getEnemy(e.ent);
+		for (EREnt<Identifier<AbEnemy>> e : list) {
+			AbEnemy ae = e.ent.get();
 			if (ae instanceof Enemy)
 				se.add((Enemy) ae);
 			if (ae instanceof EneRand) {
@@ -49,7 +48,7 @@ public class EneRand extends EntRand<Identifier> implements AbEnemy {
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<AbEnemy> getID() {
 		return id;
 	}
 
@@ -71,8 +70,9 @@ public class EneRand extends EntRand<Identifier> implements AbEnemy {
 			zread$000400(is);
 	}
 
-	private EEnemy get(EREnt<Identifier> x, StageBasis sb, Object obj, double mul, double mul2, int d0, int d1, int m) {
-		return UserProfile.getEnemy(x.ent).getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0, d1, m);
+	private EEnemy get(EREnt<Identifier<AbEnemy>> x, StageBasis sb, Object obj, double mul, double mul2, int d0, int d1,
+			int m) {
+		return x.ent.get().getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0, d1, m);
 	}
 
 	private void zread$000400(InStream is) {
@@ -80,9 +80,9 @@ public class EneRand extends EntRand<Identifier> implements AbEnemy {
 		type = is.nextInt();
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
-			EREnt<Identifier> ere = new EREnt<>();
+			EREnt<Identifier<AbEnemy>> ere = new EREnt<>();
 			list.add(ere);
-			ere.ent = Identifier.parseInt(is.nextInt());
+			ere.ent = Identifier.parseInt(is.nextInt(), EneRand.class);
 			ere.multi = is.nextInt();
 			ere.share = is.nextInt();
 		}

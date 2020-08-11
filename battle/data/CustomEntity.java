@@ -10,6 +10,7 @@ import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.PackData.Identifier;
 import common.util.Data;
+import common.util.pack.Soul;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
@@ -199,34 +200,6 @@ public abstract class CustomEntity extends DataEntity {
 			zreada$000404(is);
 	}
 
-	protected void zreada$000308(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextInt();
-		range = is.nextInt();
-		abi = is.nextInt();
-		if ((abi & AB_GLASS) > 0)
-			loop = 1;
-		type = is.nextInt();
-		width = is.nextInt();
-		shield = is.nextInt();
-		boolean isrange = is.nextByte() > 0;
-		tba = is.nextInt();
-		base = is.nextInt();
-		common = is.nextByte() > 0;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextInt();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++) {
-			set[i] = new AtkDataModel(this, is);
-			set[i].range = isrange;
-		}
-		int n = is.nextInt();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextInt()];
-	}
-
 	private boolean contains(String str) {
 		if (atks == null || atks.length == 0)
 			return false;
@@ -270,7 +243,7 @@ public abstract class CustomEntity extends DataEntity {
 		base = is.nextInt();
 		touch = is.nextInt();
 		loop = is.nextInt();
-		death = Identifier.parseInt(is.nextInt());
+		death = Identifier.parseInt(is.nextInt(), Soul.class);
 		common = is.nextInt() > 0;
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();

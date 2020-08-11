@@ -18,7 +18,6 @@ import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
 import common.battle.entity.Sniper;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.util.BattleObj;
 import common.util.CopRand;
 import common.util.Data.Proc.THEME;
@@ -62,7 +61,7 @@ public class StageBasis extends BattleObj {
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
 	private int themeTime;
-	private Identifier theme = null;
+	private Identifier<Background> theme = null;
 	private THEME.TYPE themeType;
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
@@ -73,7 +72,7 @@ public class StageBasis extends BattleObj {
 		st = est.s;
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
-		bg = UserProfile.getBG(st.bg);
+		bg = st.bg.get();
 		EEnemy ee = est.base(this);
 		if (ee != null)
 			ebase = ee;
@@ -107,7 +106,7 @@ public class StageBasis extends BattleObj {
 		next_lv = bas.t().getLvCost(work_lv);
 	}
 
-	public void changeTheme(Identifier id, int time, THEME.TYPE type) {
+	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
 		theme = id;
 		themeTime = time;
 		themeType = type;
@@ -321,7 +320,7 @@ public class StageBasis extends BattleObj {
 
 	private void updateTheme() {
 		if (theme != null) {
-			bg = UserProfile.getBG(theme);
+			bg = theme.get();
 			if (themeType.kill) {
 				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();

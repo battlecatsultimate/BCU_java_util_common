@@ -8,16 +8,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.Map.Entry;
 
 import common.pack.Context.ErrType;
+import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackData.DefPack;
 import common.pack.PackData.Identifier;
+import common.pack.PackData.Indexable;
 import common.pack.PackData.UserPack;
-import common.system.VImg;
 import common.util.pack.Background;
 import common.util.pack.Soul;
+import common.util.stage.CastleImg;
+import common.util.stage.CastleList;
 import common.util.stage.Music;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
@@ -25,6 +29,9 @@ import common.util.unit.Enemy;
 import common.util.unit.Unit;
 
 public class UserProfile {
+
+	private static final String REG_POOL = "_pools";
+	private static final String REG_STATIC = "_statics";
 
 	// FIXME load it into register
 	private static UserProfile profile;
@@ -40,50 +47,13 @@ public class UserProfile {
 				list.add(getPack(dep));
 		}
 		List ans = new ArrayList<>();
-		for (PackData data : list) {
-			if (cls == Unit.class)
-				ans.addAll(data.units.getList());
-			if (cls == Enemy.class || cls == AbEnemy.class)
-				ans.addAll(data.enemies.getList());
-			if (cls == EneRand.class || cls == AbEnemy.class)
-				ans.addAll(data.randEnemies.getList());
-			if (cls == Background.class)
-				ans.addAll(data.bgs.getList());
-			if (cls == Music.class)
-				ans.addAll(data.musics.getList());
-		}
+		for (PackData data : list)
+			getList(data, cls, l -> ans.addAll(l.getList()));
 		return ans;
 	}
 
 	public static DefPack getBCData() {
 		return profile.def;
-	}
-
-	public static Background getBG(Identifier id) {
-		PackData pack = getPack(id.pack);
-		if (pack == null)
-			return null;
-		return pack.bgs.get(id.id);
-	}
-
-	public static VImg getCastle(Identifier cind) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static AbEnemy getEnemy(Identifier id) {
-		PackData pack = getPack(id.pack);
-		if (pack == null)
-			return null;
-		AbEnemy ans = pack.enemies.get(id.id);
-		if (ans != null)
-			return ans;
-		return pack.randEnemies.get(id.id);
-	}
-
-	public static Music getMusic(Identifier mus1) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public static PackData getPack(String str) {
@@ -94,7 +64,7 @@ public class UserProfile {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Set<T> getPool(String id, Class<T> cls) {
-		Map<String, Set> pool = getRegister("_pools", Set.class);
+		Map<String, Set> pool = getRegister(REG_POOL, Set.class);
 		Set<T> ans = pool.get(id);
 		if (ans == null)
 			pool.put(id, ans = new HashSet<>());
@@ -109,33 +79,21 @@ public class UserProfile {
 		return ans;
 	}
 
-	public static Soul getSoul(Identifier id) {
-		PackData pack = getPack(id.pack);
-		if (pack == null)
-			return null;
-		return pack.souls.get(id.id);
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <T> T getStatic(String id, Supplier<T> def) {
-		Map<String, Object> pool = getRegister("_statics", Object.class);
+		Map<String, Object> pool = getRegister(REG_STATIC, Object.class);
 		T ans = (T) pool.get(id);
 		if (ans == null)
 			pool.put(id, ans = def.get());
 		return ans;
 	}
 
-	public static Unit getUnit(Identifier id) {
-		PackData pack = getPack(id.pack);
-		if (pack == null)
-			return null;
-		return pack.units.get(id.id);
-	}
 	public static UserPack getUserPack(String id) {
 		return profile.packmap.get(id);
 	}
+
 	public static PackData.UserPack initJsonPack(String id) throws Exception {
-		File f = Source.ctx.getWorkspaceFile("./" + id + "/main.pack.json");
+		File f = Source.ctx.getWorkspaceFile("./" + id + "/pack.json");
 		File folder = f.getParentFile();
 		if (folder.exists()) {
 			if (!Source.ctx.confirmDelete())
@@ -149,6 +107,38 @@ public class UserProfile {
 
 	public static Collection<UserPack> packs() {
 		return profile.packmap.values();
+	}
+
+	public static void setStatic(String id, Object val) {
+		getRegister(REG_STATIC, Object.class).put(id, val);
+	}
+
+	@SuppressWarnings("unchecked")
+	static <T extends Indexable<?>> T get(Identifier<T> id) {
+		if (id.cls == CastleImg.class)
+			return (T) CastleList.map().get(id.pack).get(id.id);
+		PackData data = getPack(id.pack);
+		if (data == null)
+			return null;
+		Object[] ans = new Object[1];
+		getList(data, id.cls, l -> ans[0] = ans[0] == null ? l.get(id.id) : ans[0]);
+		return (T) ans[0];
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	private static void getList(PackData data, Class cls, Consumer<FixIndexMap> func) {
+		if (cls == Unit.class)
+			func.accept(data.units);
+		if (cls == Enemy.class || cls == AbEnemy.class)
+			func.accept(data.enemies);
+		if (cls == EneRand.class || cls == AbEnemy.class)
+			func.accept(data.randEnemies);
+		if (cls == Background.class)
+			func.accept(data.bgs);
+		if (cls == Soul.class)
+			func.accept(data.souls);
+		if (cls == Music.class)
+			func.accept(data.musics);
 	}
 
 	public String username;

@@ -22,6 +22,7 @@ import common.util.pack.Background;
 import common.util.stage.CastleImg;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
+import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
@@ -31,6 +32,25 @@ import common.util.unit.UnitLevel;
 import static common.pack.Source.SourceAnimLoader.*;
 
 public abstract class VerFixer extends Source {
+
+	public static class IdFixer {
+
+		private final Class<?> ent;
+
+		public IdFixer(Class<?> cls) {
+			ent = cls == null ? AbEnemy.class : cls;
+		}
+
+		public Class<?> parse(int val, Class<?> cls) {
+			if (cls == Data.Proc.THEME.class)
+				return Background.class;
+			else if (ent == Unit.class)
+				return ent;
+			else
+				return val % 1000 < 500 ? Enemy.class : EneRand.class;
+		}
+
+	}
 
 	public static class VerFixerException extends Exception {
 
@@ -99,7 +119,7 @@ public abstract class VerFixer extends Source {
 					fi.renameTo(fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
-						data.bgs.set(val, new Background(new Identifier(id, Data.trio(val)), bimg));
+						data.bgs.set(val, new Background(new Identifier<>(id, Background.class, val), bimg));
 				}
 			}
 			int n = is.nextInt();
@@ -143,7 +163,7 @@ public abstract class VerFixer extends Source {
 					fi.renameTo(fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
-						data.castles.set(val, new CastleImg(new Identifier(id, Data.trio(val)), bimg));
+						data.castles.set(val, new CastleImg(new Identifier<>(id, CastleImg.class, val), bimg));
 				}
 			}
 		}
@@ -152,6 +172,7 @@ public abstract class VerFixer extends Source {
 			int ver = Data.getVer(is.nextString());
 			if (ver != 402)
 				throw new VerFixerException("expect enemy store version to be 402, got " + ver);
+			UserProfile.setStatic(Identifier.STATIC_FIXER, new IdFixer(AbEnemy.class));
 			int len = is.nextInt();
 			for (int i = 0; i < len; i++) {
 				CustomEnemy ce = new CustomEnemy();
@@ -160,7 +181,7 @@ public abstract class VerFixer extends Source {
 				InStream anim = is.subStream();
 				String na = is.nextString();
 				AnimCE ac = loadAnim(anim);
-				Enemy e = new Enemy(new Identifier(id, Data.trio(hash)), ac, ce);
+				Enemy e = new Enemy(new Identifier<>(id, Enemy.class, hash), ac, ce);
 				e.name = na;
 				data.enemies.set(hash % 1000, e);
 
@@ -168,7 +189,7 @@ public abstract class VerFixer extends Source {
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int hash = is.nextInt();
-				EneRand e = new EneRand(new Identifier(id, Data.trio(hash + 500)));
+				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash + 500)); // TODO rand enemies
 				e.zread(is.subStream());
 				data.randEnemies.set(hash, e);
 			}
@@ -194,7 +215,7 @@ public abstract class VerFixer extends Source {
 					File fx = Source.ctx.getWorkspaceFile("./" + id + "/musics/" + str);
 					fi.renameTo(fx);
 					if (val >= 0)
-						data.musics.set(val, new Music(new Identifier(id, Data.trio(val)), new FDFile(fx)));
+						data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(fx)));
 				}
 			}
 		}
@@ -203,18 +224,18 @@ public abstract class VerFixer extends Source {
 			int ver = Data.getVer(is.nextString());
 			if (ver != 401)
 				throw new VerFixerException("expect unit store version to be 401, got " + ver);
-
+			UserProfile.setStatic(Identifier.STATIC_FIXER, new IdFixer(Unit.class));
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int ind = is.nextInt();
-				UnitLevel ul = new UnitLevel(new Identifier(id, Data.trio(ind)), is);
+				UnitLevel ul = new UnitLevel(new Identifier<>(id, UnitLevel.class, ind), is);
 				data.unitLevels.set(ind, ul);
 			}
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int ind = is.nextInt();
-				Unit u = new Unit(new Identifier(id, Data.trio(ind)));
-				u.lv = getlevel(Identifier.parseInt(is.nextInt()));
+				Unit u = new Unit(new Identifier<>(id, Unit.class, ind));
+				u.lv = Identifier.parseInt(is.nextInt(), UnitLevel.class).get();
 				u.lv.units.add(u);
 				u.max = is.nextInt();
 				u.maxp = is.nextInt();
@@ -230,6 +251,7 @@ public abstract class VerFixer extends Source {
 				}
 				data.units.set(ind, u);
 			}
+			UserProfile.setStatic(Identifier.STATIC_FIXER, null);
 		}
 
 	}
@@ -263,7 +285,7 @@ public abstract class VerFixer extends Source {
 				VImg vimg = ImgReader.readImg(is, r);
 				vimg.name = Data.trio(ind);
 				writeImgs(vimg, "backgrounds", vimg.name + ".png");
-				Background bg = new Background(new Identifier(id, Data.trio(ind)), vimg);
+				Background bg = new Background(new Identifier<>(id, Background.class, ind), vimg);
 				data.bgs.set(ind, bg);
 				bg.top = is.nextInt() > 0;
 				bg.ic = is.nextInt();
@@ -284,7 +306,7 @@ public abstract class VerFixer extends Source {
 				VImg vimg = ImgReader.readImg(is, r);
 				vimg.name = Data.trio(val);
 				writeImgs(vimg, "castles", vimg.name + ".png");
-				data.castles.set(val, new CastleImg(new Identifier(id, Data.trio(val)), vimg));
+				data.castles.set(val, new CastleImg(new Identifier<>(id, CastleImg.class, val), vimg));
 			}
 		}
 
@@ -292,6 +314,7 @@ public abstract class VerFixer extends Source {
 			int ver = Data.getVer(is.nextString());
 			if (ver != 402)
 				throw new VerFixerException("expect enemy store version to be 402, got " + ver);
+			UserProfile.setStatic(Identifier.STATIC_FIXER, new IdFixer(AbEnemy.class));
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int hash = is.nextInt();
@@ -299,14 +322,14 @@ public abstract class VerFixer extends Source {
 				CustomEnemy ce = new CustomEnemy();
 				ce.fillData(ver, is);
 				AnimCE ac = decodeAnim(".temp_" + id, is.subStream(), r);
-				Enemy e = new Enemy(new Identifier(id, Data.trio(hash)), ac, ce);
+				Enemy e = new Enemy(new Identifier<>(id, Enemy.class, hash), ac, ce);
 				e.name = str;
 				data.enemies.set(hash % 1000, e);
 			}
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int hash = is.nextInt();
-				EneRand e = new EneRand(new Identifier(id, Data.trio(hash + 500)));
+				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash + 500));// TODO randEnemy
 				e.zread(is.subStream());
 				data.randEnemies.set(hash, e);
 			}
@@ -321,7 +344,7 @@ public abstract class VerFixer extends Source {
 				int val = is.nextInt();
 				File f = ImgReader.loadMusicFile(is, r, Integer.parseInt(id), val);
 				f.renameTo(Source.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
-				data.musics.set(val, new Music(new Identifier(id, Data.trio(val)), new FDFile(f)));
+				data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(f)));
 			}
 		}
 
@@ -329,17 +352,18 @@ public abstract class VerFixer extends Source {
 			int ver = Data.getVer(is.nextString());
 			if (ver != 401)
 				throw new VerFixerException("expect unit store version to be 401, got " + ver);
+			UserProfile.setStatic(Identifier.STATIC_FIXER, new IdFixer(Unit.class));
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int ind = is.nextInt();
-				UnitLevel ul = new UnitLevel(new Identifier(id, Data.trio(ind)), is);
+				UnitLevel ul = new UnitLevel(new Identifier<>(id, UnitLevel.class, ind), is);
 				data.unitLevels.set(ind, ul);
 			}
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int ind = is.nextInt();
-				Unit u = new Unit(new Identifier(id, Data.trio(ind)));
-				u.lv = getlevel(Identifier.parseInt(is.nextInt()));
+				Unit u = new Unit(new Identifier<>(id, Unit.class, ind));
+				u.lv = Identifier.parseInt(is.nextInt(), UnitLevel.class).get();
 				u.lv.units.add(u);
 				u.max = is.nextInt();
 				u.maxp = is.nextInt();
@@ -355,6 +379,7 @@ public abstract class VerFixer extends Source {
 				}
 				data.units.set(ind, u);
 			}
+			UserProfile.setStatic(Identifier.STATIC_FIXER, null);
 		}
 
 		private void writeImgs(VImg img, String type, String name) throws IOException {
@@ -423,10 +448,6 @@ public abstract class VerFixer extends Source {
 		Context.delete(new File("./res"));
 	}
 
-	private static UnitLevel getlevel(Identifier id) {
-		return UserProfile.getPack(id.pack).unitLevels.get(Integer.parseInt(id.id));
-	}
-
 	private static void move(String a, String b) {
 		File f = new File(a);
 		if (!f.exists())
@@ -455,7 +476,7 @@ public abstract class VerFixer extends Source {
 
 	protected AnimCE decodeAnim(String target, InStream is, ImgReader r) {
 		AnimLoader al = CommonStatic.def.loadAnim(is, r);
-		Identifier id = al.getName();
+		ResourceLocation id = al.getName();
 		id.pack = target;
 		@SuppressWarnings("deprecation")
 		AnimCE ce = new AnimCE(al);

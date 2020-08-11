@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.battle.Basis;
 import common.pack.PackData.Identifier;
+import common.util.pack.Soul;
 import common.util.unit.Enemy;
 
 public class DataEnemy extends DefaultData implements MaskEnemy {
@@ -87,7 +88,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 			t |= TB_WITCH;
 		if (ints[49] == 1)
 			t |= TB_INFH;
-		death = Identifier.parseInt(ints[54]);
+		death = Identifier.parseInt(ints[54], Soul.class);
 		atk1 = ints[55];
 		atk2 = ints[56];
 		pre1 = ints[57];

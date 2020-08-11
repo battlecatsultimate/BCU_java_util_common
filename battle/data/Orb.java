@@ -14,7 +14,6 @@ import java.util.TreeMap;
 
 import common.CommonStatic;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
@@ -154,7 +153,7 @@ public class Orb extends Data {
 				int id = CommonStatic.parseIntN(strs[0]);
 				int slots = CommonStatic.parseIntN(strs[1]);
 
-				Unit u = UserProfile.getUnit(Identifier.parseInt(id));
+				Unit u = Identifier.parseInt(id, Unit.class).get();
 
 				if (u == null || u.forms.length != 3) {
 					continue;

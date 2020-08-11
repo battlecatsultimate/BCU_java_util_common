@@ -16,6 +16,7 @@ import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
+import common.util.pack.Background;
 import common.util.stage.SCDef.Line;
 import common.util.unit.Enemy;
 import common.CommonStatic;
@@ -41,7 +42,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 				int cas = CommonStatic.parseIntN(strs[0]);
 				if (map.cast != -1)
 					cas += map.cast * 1000;
-				castle = Identifier.parseInt(cas);// TODO castle
+				castle = Identifier.parseInt(cas, CastleImg.class);
 				non_con = strs[1].equals("1");
 			} else {
 				castle = null;
@@ -51,7 +52,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			String[] strs = qs.poll().split(",");
 			len = Integer.parseInt(strs[0]);
 			health = Integer.parseInt(strs[1]);
-			bg = Identifier.parseInt(Integer.parseInt(strs[4]));
+			bg = Identifier.parseInt(Integer.parseInt(strs[4]), Background.class);
 			max = Integer.parseInt(strs[5]);
 			int isBase = Integer.parseInt(strs[6]) - 2;
 			List<int[]> ll = new ArrayList<>();
@@ -118,13 +119,13 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			if (val != 409)
 				throw new VerFixerException("stage version has to be 409, got" + val);
 			name = is.nextString();
-			bg = Identifier.parseInt(is.nextInt());
-			castle = Identifier.parseInt(is.nextInt());
+			bg = Identifier.parseInt(is.nextInt(), Background.class);
+			castle = Identifier.parseInt(is.nextInt(), CastleImg.class);
 			health = is.nextInt();
 			len = is.nextInt();
-			mus0 = Identifier.parseInt(is.nextInt());
+			mus0 = Identifier.parseInt(is.nextInt(), Music.class);
 			mush = is.nextInt();
-			mus1 = Identifier.parseInt(is.nextInt());
+			mus1 = Identifier.parseInt(is.nextInt(), Music.class);
 			loop0 = is.nextLong();
 			loop1 = is.nextLong();
 			max = is.nextByte();
@@ -170,9 +171,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 			energy = data[0];
 			xp = data[1];
-			s.mus0 = Identifier.parseInt(data[2]);
+			s.mus0 = Identifier.parseInt(data[2], Music.class);
 			s.mush = data[3];
-			s.mus1 = Identifier.parseInt(data[4]);
+			s.mus1 = Identifier.parseInt(data[4], Music.class);
 
 			once = data[data.length - 1];
 			boolean isTime = data.length > 15;
@@ -239,7 +240,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	public boolean non_con, trail;
 	@JsonField
 	public int len, health, max, mush;
-	public Identifier castle, bg, mus0, mus1;
+	public Identifier<CastleImg> castle;
+	public Identifier<Background> bg;
+	public Identifier<Music> mus0, mus1;
 	@JsonField
 	public long loop0, loop1;
 	@JsonField

@@ -9,19 +9,19 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class Soul extends AnimD implements Indexable {
+public class Soul extends AnimD implements Indexable<Soul> {
 
-	private final Identifier id;
+	private final Identifier<Soul> id;
 	private final VImg img;
 
 	public Soul(String st, int i) {
 		super(st);
 		img = new VImg(str + ".png");
-		id = Identifier.parseInt(i);
+		id = Identifier.parseInt(i, Soul.class);
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<Soul> getID() {
 		return id;
 	}
 

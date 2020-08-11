@@ -15,7 +15,7 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 
-public class Unit extends Data implements Comparable<Unit>, Indexable {
+public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
 
 	public static class UnitInfo {
 
@@ -48,19 +48,19 @@ public class Unit extends Data implements Comparable<Unit>, Indexable {
 
 	}
 
-	public final Identifier id;
+	public final Identifier<Unit> id;
 	public int rarity, max, maxp;
 	public Form[] forms;
 	public UnitLevel lv;
 
 	public final UnitInfo info = new UnitInfo();
 
-	public Unit(Identifier identifier) {
+	public Unit(Identifier<Unit> identifier) {
 		id = identifier;
 	}
 
 	public Unit(VFile<AssetData> p) {
-		id = new Identifier("_default", Data.trio(CommonStatic.parseIntN(p.getName())));
+		id = new Identifier<>(Identifier.DEF, Unit.class, CommonStatic.parseIntN(p.getName()));
 		String str = "./org/unit/" + id.id + "/";
 		Queue<String> qs = VFile.readLine(str + "unit" + id.id + ".csv");
 		forms = new Form[p.countSubDire()];
@@ -70,7 +70,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable {
 			f.anim.getEdi().check();
 	}
 
-	protected Unit(Identifier id, AnimCE ce, CustomUnit cu) {
+	protected Unit(Identifier<Unit> id, AnimCE ce, CustomUnit cu) {
 		this.id = id;
 		forms = new Form[] { new Form(this, 0, "new unit", ce, cu) };
 		max = 50;
@@ -80,7 +80,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable {
 		lv.units.add(this);
 	}
 
-	protected Unit(Identifier id, Unit u) {
+	protected Unit(Identifier<Unit> id, Unit u) {
 		this.id = id;
 		rarity = u.rarity;
 		max = u.max;
@@ -104,7 +104,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable {
 		for (Combo[] cs : Combo.combos)
 			for (Combo c : cs)
 				for (int[] is : c.units)
-					if (trio(is[0]).equals(id.id)) {
+					if (is[0] == id.id) {
 						ans.add(c);
 						break;
 					}
@@ -117,7 +117,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable {
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<Unit> getID() {
 		return id;
 	}
 
@@ -140,10 +140,10 @@ public class Unit extends Data implements Comparable<Unit>, Indexable {
 	public String toString() {
 		String desp = MultiLangCont.get(forms[0]);
 		if (desp != null && desp.length() > 0)
-			return id.id + " " + desp;
+			return Data.trio(id.id) + " " + desp;
 		if (forms[0].name.length() > 0)
-			return id.id + " " + forms[0].name;
-		return id.id;
+			return Data.trio(id.id) + " " + forms[0].name;
+		return Data.trio(id.id);
 	}
 
 }

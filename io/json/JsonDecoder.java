@@ -59,6 +59,7 @@ public class JsonDecoder {
 		REGISTER.put(Double.TYPE, JsonDecoder::getDouble);
 		REGISTER.put(Double.class, JsonDecoder::getDouble);
 		REGISTER.put(String.class, JsonDecoder::getString);
+		REGISTER.put(Class.class, (elem) -> Class.forName(getString(elem)));
 	}
 
 	private static JsonDecoder current;

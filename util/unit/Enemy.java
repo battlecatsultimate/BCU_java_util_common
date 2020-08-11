@@ -17,6 +17,7 @@ import common.system.VImg;
 import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Animable;
+import common.util.Data;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
@@ -27,19 +28,19 @@ import common.util.stage.StageMap;
 
 public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 
-	public final Identifier id;
+	public final Identifier<AbEnemy> id;
 	public final MaskEnemy de;
 	public String name = "";
 	public boolean inDic = false;
 
-	public Enemy(Identifier hash, AnimU<?> ac, CustomEnemy ce) {
+	public Enemy(Identifier<AbEnemy> hash, AnimU<?> ac, CustomEnemy ce) {
 		id = hash;
 		de = ce;
 		ce.pack = this;
 		anim = ac;
 	}
 
-	public Enemy(Identifier ID, Enemy old) {
+	public Enemy(Identifier<AbEnemy> ID, Enemy old) {
 		id = ID;
 		de = ((CustomEnemy) old.de).copy(this);
 		name = old.name;
@@ -47,7 +48,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 	}
 
 	public Enemy(VFile<AssetData> f) {
-		id = new Identifier("_default", trio(CommonStatic.parseIntN(f.getName())));
+		id = new Identifier<>(Identifier.DEF, Enemy.class, CommonStatic.parseIntN(f.getName()));
 		String str = "./org/enemy/" + id.id + "/";
 		de = new DataEnemy(this);
 		anim = new AnimUD(str, id.id + "_e", "edi_" + id.id + ".png", null);
@@ -110,7 +111,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<AbEnemy> getID() {
 		return id;
 	}
 
@@ -125,10 +126,10 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 	public String toString() {
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
-			return id.id + " - " + desp;
+			return Data.trio(id.id) + " - " + desp;
 		if (name.length() == 0)
-			return id.id;
-		return id.id + " - " + name;
+			return Data.trio(id.id);
+		return Data.trio(id.id) + " - " + name;
 	}
 
 }

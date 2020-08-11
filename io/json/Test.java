@@ -175,6 +175,8 @@ public class Test {
 		@JsonClass
 		public static class JsonA {
 
+			public static final String REG = "test";
+
 			@JsonField(usePool = true)
 			public JsonB[] list;
 
@@ -211,8 +213,8 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws Exception {
-		// JsonTest_2.test();
-		testIO();
+		JsonTest_2.test();
+		// testIO();
 	}
 
 	public static void testIO() throws Exception {

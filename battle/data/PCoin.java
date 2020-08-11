@@ -4,10 +4,10 @@ import java.util.Queue;
 
 import common.CommonStatic;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
+import common.util.unit.Unit;
 
 public class PCoin extends Data {
 
@@ -38,11 +38,12 @@ public class PCoin extends Data {
 			if (max[i + 1] == 0)
 				max[i + 1] = 1;
 		}
-		du = (DataUnit) UserProfile.getUnit(Identifier.parseInt(id)).forms[2].du;
+		du = (DataUnit) Identifier.parseInt(id, Unit.class).get().forms[2].du;
 		du.pcoin = this;
 		full = improve(max);
 	}
 
+	@SuppressWarnings("deprecation")
 	public DataUnit improve(int[] lvs) {
 		DataUnit ans = du.clone();
 		for (int i = 0; i < 5; i++) {

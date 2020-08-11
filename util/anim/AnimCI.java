@@ -2,7 +2,7 @@ package common.util.anim;
 
 import common.CommonStatic;
 import common.pack.Source;
-import common.pack.PackData.Identifier;
+import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
@@ -49,7 +49,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 			return loader.getMM();
 		}
 
-		public Identifier getName() {
+		public ResourceLocation getName() {
 			return loader.getName();
 		}
 
@@ -104,7 +104,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 	}
 
-	public Identifier name;
+	public ResourceLocation name;
 
 	public AnimCI(Source.AnimLoader acl) {
 		super(new AnimCIKeeper(acl));

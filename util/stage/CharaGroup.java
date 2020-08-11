@@ -6,7 +6,6 @@ import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Unit;
 
@@ -15,7 +14,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 	public static class DefCG extends CharaGroup {
 
-		public DefCG(int ID, int t, Identifier[] units) {
+		public DefCG(int ID, int t, Identifier<Unit>[] units) {
 			super(t, units);
 			id = ID;
 		}
@@ -40,7 +39,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 				type = is.nextInt();
 				int m = is.nextInt();
 				for (int j = 0; j < m; j++) {
-					Unit u = UserProfile.getUnit(Identifier.parseInt(is.nextInt()));
+					Unit u = Identifier.parseInt(is.nextInt(), Unit.class).get();
 					if (u != null)
 						set.add(u);
 				}
@@ -78,10 +77,11 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	private CharaGroup() {
 	}
 
-	private CharaGroup(int t, Identifier... units) {
+	@SuppressWarnings("unchecked")
+	private CharaGroup(int t, Identifier<Unit>... units) {
 		type = t;
-		for (Identifier uid : units) {
-			Unit u = UserProfile.getUnit(uid);
+		for (Identifier<Unit> uid : units) {
+			Unit u = uid.get();
 			if (u != null)
 				set.add(u);
 		}

@@ -12,7 +12,6 @@ import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
-import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -361,7 +360,7 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 
-			Soul s = UserProfile.getSoul(e.data.getDeathAnim());
+			Soul s = e.data.getDeathAnim().get();
 			dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
 		}
 

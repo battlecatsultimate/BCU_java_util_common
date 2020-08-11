@@ -18,6 +18,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonEncoder;
 import common.pack.PackData.Identifier;
+import common.util.pack.Background;
 
 public class Data {
 
@@ -28,7 +29,7 @@ public class Data {
 		public static class ARMOR extends ProcItem {
 			public int prob;
 			public int time;
-			public int mult; // TODO
+			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -39,7 +40,7 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class CRITI extends ProcItem {
-			public int type; // TODO
+			public int type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -163,7 +164,7 @@ public class Data {
 						if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(ans, ((IntType) f.get(this)).clone());
 						else if (f.getType() == Identifier.class)
-							f.set(ans, ((Identifier) f.get(this)).clone());
+							f.set(ans, ((Identifier<?>) f.get(this)).clone());
 					return ans;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -186,6 +187,7 @@ public class Data {
 				return false;
 			}
 
+			@Deprecated
 			public int get(int i) {
 				try {
 					Field f = this.getClass().getDeclaredFields()[i];
@@ -196,6 +198,7 @@ public class Data {
 				}
 			}
 
+			@Deprecated
 			public ProcItem load(int[] data) throws Exception {
 				Field[] fs = this.getClass().getDeclaredFields();
 				for (int i = 0; i < Math.min(data.length, fs.length); i++)
@@ -204,7 +207,7 @@ public class Data {
 					else if (IntType.class.isAssignableFrom(fs[i].getType()))
 						fs[i].set(this, ((IntType) fs[i].getType().newInstance()).load(data[i]));
 					else if (fs[i].getType() == Identifier.class)
-						fs[i].set(this, Identifier.parseInt(data[i]));
+						fs[i].set(this, Identifier.parseIntRaw(data[i], this.getClass()));
 					else
 						throw new Exception("unknown field " + fs[i].getType() + " " + fs[i].getName());
 				return this;
@@ -224,15 +227,13 @@ public class Data {
 				}
 			}
 
+			/** should not modify IntType and Identifier */
+			@Deprecated
 			public void set(int i, int v) {
 				try {
 					Field f = this.getClass().getDeclaredFields()[i];
 					if (f.getType() == int.class)
 						f.set(this, v);
-					else if (f.getType() == Identifier.class)
-						f.set(this, Identifier.parseInt(v));
-					else
-						((IntType) f.get(this)).load(v);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -247,7 +248,7 @@ public class Data {
 						else if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(this, ((IntType) f.get(pi)).clone());
 						else if (f.getType() == Identifier.class)
-							f.set(this, ((Identifier) f.get(pi)).clone());
+							f.set(this, ((Identifier<?>) f.get(pi)).clone());
 						else
 							throw new Exception("unknown field " + f.getType() + " " + f.getName());
 				} catch (Exception e) {
@@ -299,7 +300,7 @@ public class Data {
 			public int prob;
 			public int time;
 			public int speed;
-			public int type; // TODO
+			public int type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -326,7 +327,7 @@ public class Data {
 			}
 
 			public int prob;
-			public Identifier id;
+			public Identifier<?> id;
 			public int dis;
 			public int mult;
 			public TYPE type;
@@ -343,7 +344,7 @@ public class Data {
 
 			public int prob;
 			public int time;
-			public Identifier id;
+			public Identifier<Background> id;
 			public TYPE type;
 		}
 

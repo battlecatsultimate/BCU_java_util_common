@@ -2,7 +2,6 @@ package common.util.stage;
 
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
-import common.pack.UserProfile;
 import common.util.BattleObj;
 import common.util.stage.SCDef.Line;
 import common.util.unit.AbEnemy;
@@ -46,7 +45,7 @@ public class EStage extends BattleObj {
 
 				double multi = (data.multiple == 0 ? 100 : data.multiple) * mul * 0.01;
 				double mulatk = (data.mult_atk == 0 ? 100 : data.mult_atk) * mul * 0.01;
-				AbEnemy e = UserProfile.getEnemy(data.enemy);
+				AbEnemy e = data.enemy.get();
 				EEnemy ee = e.getEntity(b, data, multi, mulatk, data.layer_0, data.layer_1, data.boss);
 				ee.group = data.group;
 				return ee;
@@ -75,7 +74,7 @@ public class EStage extends BattleObj {
 			num[ind] = -1;
 			double multi = data.multiple * mul * 0.01;
 			double mulatk = data.mult_atk == 0 ? multi : data.mult_atk * mul * 0.01;
-			AbEnemy e = UserProfile.getEnemy(data.enemy);
+			AbEnemy e = data.enemy.get();
 			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, -1);
 		}
 		return null;

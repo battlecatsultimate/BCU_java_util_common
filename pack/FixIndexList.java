@@ -23,17 +23,10 @@ import common.util.Data;
 @JsonClass
 public class FixIndexList<T> extends Data {
 
-	public static class FixIndexMap<T extends Indexable> extends FixIndexList<T> {
+	public static class FixIndexMap<T extends Indexable<?>> extends FixIndexList<T> {
 
 		public FixIndexMap(Class<T> cls) {
 			super(cls);
-		}
-
-		public T get(String id) {
-			for (T t : arr)
-				if (t.getID().id.equals(id))
-					return t;
-			return null;
 		}
 
 	}

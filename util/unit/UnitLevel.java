@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
 
-public class UnitLevel implements Indexable {
+public class UnitLevel implements Indexable<UnitLevel> {
 
 	public static UnitLevel def;
 
@@ -16,14 +15,14 @@ public class UnitLevel implements Indexable {
 
 	public final List<Unit> units = new ArrayList<>();
 
-	public Identifier id;
+	public Identifier<UnitLevel> id;
 
-	public UnitLevel(Identifier ID, InStream is) {
+	public UnitLevel(Identifier<UnitLevel> ID, InStream is) {
 		id = ID;
 		zread(is);
 	}
 
-	public UnitLevel(Identifier ID, UnitLevel ul) {
+	public UnitLevel(Identifier<UnitLevel> ID, UnitLevel ul) {
 		id = ID;
 		for (int i = 0; i < 3; i++)
 			lvs[i] = ul.lvs[i];
@@ -64,7 +63,7 @@ public class UnitLevel implements Indexable {
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<UnitLevel> getID() {
 		return id;
 	}
 
@@ -97,11 +96,6 @@ public class UnitLevel implements Indexable {
 		}
 		ans += "}";
 		return ans;
-	}
-
-	protected void write(OutStream os) {
-		os.writeInt(1);// save for version check
-		os.writeIntB(lvs);
 	}
 
 	private void zread(InStream is) {

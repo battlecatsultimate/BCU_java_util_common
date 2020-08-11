@@ -4,24 +4,24 @@ import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
 import common.system.files.FileData;
 
-public class Music implements Indexable {
+public class Music implements Indexable<Music> {
 
-	public final Identifier id;
+	public final Identifier<Music> id;
 	public final FileData data;
 
-	public Music(Identifier id, FileData fd) {
+	public Music(Identifier<Music> id, FileData fd) {
 		this.id = id;
 		data = fd;
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<Music> getID() {
 		return id;
 	}
 
 	@Override
 	public String toString() {
-		return id.id;
+		return id.toString();
 	}
 
 }

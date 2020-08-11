@@ -6,6 +6,7 @@ import common.util.BattleStatic;
 import common.util.Data;
 import common.util.Data.Proc;
 import common.util.anim.AnimU;
+import common.util.pack.Soul;
 
 public interface MaskEntity extends BattleStatic {
 
@@ -26,7 +27,7 @@ public interface MaskEntity extends BattleStatic {
 
 	public MaskAtk getAtkModel(int ind);
 
-	public Identifier getDeathAnim();
+	public Identifier<Soul> getDeathAnim();
 
 	public int getHb();
 

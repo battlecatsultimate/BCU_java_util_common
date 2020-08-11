@@ -346,6 +346,7 @@ public class MapColc extends Data {
 	public static Collection<MapColc> values() {
 		return UserProfile.getRegister(REG_MAPCOLC, MapColc.class).values();
 	}
+
 	@JsonField(gen = GenType.FILL)
 	public FixIndexList<CharaGroup> groups = new FixIndexList<>(CharaGroup.class);
 	@JsonField(gen = GenType.FILL)

@@ -8,7 +8,7 @@ import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
 import common.system.VImg;
 
-public interface AbEnemy extends Comparable<AbEnemy>, Indexable {
+public interface AbEnemy extends Comparable<AbEnemy>, Indexable<AbEnemy> {
 
 	@Override
 	public default int compareTo(AbEnemy e) {
@@ -20,7 +20,7 @@ public interface AbEnemy extends Comparable<AbEnemy>, Indexable {
 	public VImg getIcon();
 
 	@Override
-	public Identifier getID();
+	public Identifier<AbEnemy> getID();
 
 	public Set<Enemy> getPossible();
 

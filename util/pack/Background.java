@@ -20,12 +20,11 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class Background extends AnimI implements Indexable {
+public class Background extends AnimI implements Indexable<Background> {
 
-	public static MaModel ewavm, uwavm;
+	public static MaModel ewavm, uwavm; // FIXME static fields
 	public static MaAnim ewava, uwava;
 	public static WaveAnim defu, defe;
-
 	public static final List<ImgCut> iclist = new ArrayList<>();
 
 	public static final int BG = 0, TOP = 20, shift = 65; // in pix
@@ -58,7 +57,7 @@ public class Background extends AnimI implements Indexable {
 			}
 	}
 
-	public final Identifier id;
+	public final Identifier<Background> id;
 	public final VImg img;
 	public final int[][] cs = new int[4][3];
 	private final WaveAnim uwav, ewav;
@@ -68,7 +67,7 @@ public class Background extends AnimI implements Indexable {
 
 	public FakeImage[] parts = null;
 
-	public Background(Identifier id, VImg vimg) {
+	public Background(Identifier<Background> id, VImg vimg) {
 		this.id = id;
 		img = vimg;
 		ic = 1;
@@ -79,7 +78,7 @@ public class Background extends AnimI implements Indexable {
 
 	private Background(VImg vimg, int[] ints) {
 		int id = UserProfile.getBCData().bgs.size();
-		this.id = Identifier.parseInt(id);
+		this.id = Identifier.parseInt(id, Background.class);
 		img = vimg;
 		top = ints[14] == 1 || ints[13] == 8;
 		ic = ints[13] == 8 ? 1 : ints[13];
@@ -107,7 +106,7 @@ public class Background extends AnimI implements Indexable {
 
 	}
 
-	public Background copy(Identifier id) {
+	public Background copy(Identifier<Background> id) {
 		Background bg = new Background(id, new VImg(img.getImg()));
 		for (int i = 0; i < 4; i++)
 			bg.cs[i] = cs[i];
@@ -150,7 +149,7 @@ public class Background extends AnimI implements Indexable {
 	}
 
 	@Override
-	public Identifier getID() {
+	public Identifier<Background> getID() {
 		return id;
 	}
 

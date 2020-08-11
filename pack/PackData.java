@@ -25,6 +25,7 @@ import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackLoader.ZipDesc;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
+import common.pack.VerFixer.IdFixer;
 import common.system.files.FDFile;
 import common.system.files.VFile;
 import common.util.Data;
@@ -63,9 +64,10 @@ public class PackData {
 				String[] strs = str.split(",");
 				int id = CommonStatic.parseIntN(strs[0]);
 				int type = CommonStatic.parseIntN(strs[2]);
-				Identifier[] units = new Identifier[strs.length - 3];
+				@SuppressWarnings("unchecked")
+				Identifier<Unit>[] units = new Identifier[strs.length - 3];
 				for (int i = 3; i < strs.length; i++)
-					units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]));
+					units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]), Unit.class);
 				cgmap.put(id, new CharaGroup.DefCG(id, type, units));
 			}
 		}
@@ -103,7 +105,7 @@ public class PackData {
 				int id = CommonStatic.parseIntN(str.substring(0, 3));
 				if (id == -1)
 					continue;
-				musics.set(id, new Music(Identifier.parseInt(id), new FDFile(f)));
+				musics.set(id, new Music(Identifier.parseInt(id, Music.class), new FDFile(f)));
 			}
 		}
 
@@ -126,7 +128,7 @@ public class PackData {
 					lv[i] = Integer.parseInt(strs[i]);
 				UnitLevel ul = new UnitLevel(lv);
 				if (!l.contains(ul)) {
-					ul.id = new Identifier("_default", Data.trio(l.size()));
+					ul.id = new Identifier<UnitLevel>(Identifier.DEF, UnitLevel.class, l.size());
 					l.add(ul);
 				}
 				int ind = l.indexOf(ul);
@@ -147,34 +149,53 @@ public class PackData {
 	}
 
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class Identifier implements Comparable<Identifier>, Cloneable {
+	public static class Identifier<T extends Indexable<?>> implements Comparable<Identifier<T>>, Cloneable {
 
 		public static final String DEF = "_default";
 
-		public static Identifier parseInt(int v) {
+		static final String STATIC_FIXER = "id_fixer";
+
+		/**
+		 * cls must be a class implementing Indexable. interfaces or other classes will
+		 * go through fixer
+		 */
+		@SuppressWarnings("unchecked")
+		public static <T extends Indexable<?>> Identifier<T> parseInt(int v, Class<? extends T> cls) {
+			return parseIntRaw(v, cls);
+		}
+
+		@Deprecated
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public static Identifier parseIntRaw(int v, Class<?> cls) {
+			if (cls == null || cls.isInterface() || !Indexable.class.isAssignableFrom(cls))
+				cls = UserProfile.getStatic(STATIC_FIXER, () -> new IdFixer(null)).parse(v, cls);
 			String pack = v / 1000 == 0 ? DEF : Data.hex(v / 1000);
 			int id = v % 1000;
-			return new Identifier(pack, Data.trio(id));
+			return new Identifier(pack, cls, id);
 		}
 
+		public Class<? extends T> cls;
 		public String pack;
+		public int id;
 
-		public String id;
-
+		@Deprecated
 		public Identifier() {
+			cls = null;
 			pack = null;
-			id = null;
+			id = 0;
 		}
 
-		public Identifier(String pack, String id) {
+		public Identifier(String pack, Class<? extends T> cls, int id) {
+			this.cls = cls;
 			this.pack = pack;
 			this.id = id;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
-		public Identifier clone() {
+		public Identifier<T> clone() {
 			try {
-				return (Identifier) super.clone();
+				return (Identifier<T>) super.clone();
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 				return null;
@@ -182,26 +203,31 @@ public class PackData {
 		}
 
 		@Override
-		public int compareTo(Identifier o) {
+		public int compareTo(Identifier<T> o) {
 			int val = pack.compareTo(o.pack);
 			if (val != 0)
 				return val;
-			return id.compareTo(o.id);
+			return Integer.compare(id, o.id);
 		}
 
-		public boolean equals(Identifier o) {
-			return pack.equals(o.pack) && id.equals(o.id);
+		public boolean equals(Identifier<T> o) {
+			return pack.equals(o.pack) && id == o.id;
+		}
+
+		public T get() {
+			return UserProfile.get(this);
 		}
 
 		@Override
 		public String toString() {
 			return pack + "/" + id;
 		}
+
 	}
 
-	public static interface Indexable {
+	public static interface Indexable<T extends Indexable<?>> {
 
-		public Identifier getID();
+		public Identifier<T> getID();
 
 	}
 
@@ -291,6 +317,6 @@ public class PackData {
 	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
-	public final FixIndexList<Music> musics = new FixIndexList<>(Music.class);
+	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
 
 }
