@@ -2,17 +2,21 @@ package common.system.files;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 
 import common.CommonStatic;
+import common.io.PackLoader.ZipDesc.FileDesc;
 
 public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
-	public static final VFileRoot<AssetData> root = new VFileRoot<>(".");
+	public static final VFileRoot<FileDesc> root = new VFileRoot<>(".");
 
-	public static VFile<AssetData> get(String str) {
+	public static VFile<FileDesc> get(String str) {
 		return root.find(str);
 	}
 
@@ -36,7 +40,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	protected final VFile<T> parent;
 
-	private final List<VFile<T>> subs;
+	private final Map<String, VFile<T>> subs;
 
 	private T data;
 
@@ -51,10 +55,10 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	protected VFile(VFile<T> par, String str) {
 		parent = par;
 		name = str;
-		subs = new ArrayList<VFile<T>>();
+		subs = new TreeMap<>();
 		data = null;
 		if (parent != null)
-			parent.subs.add(this);
+			parent.subs.put(name, this);
 	}
 
 	/** constructor for data file */
@@ -64,7 +68,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		subs = null;
 		data = fd;
 		if (parent != null)
-			parent.subs.add(this);
+			parent.subs.put(name, this);
 	}
 
 	@Override
@@ -74,14 +78,14 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	public int countSubDire() {
 		int ans = 0;
-		for (VFile<T> f : subs)
+		for (VFile<T> f : subs.values())
 			if (f.subs != null)
 				ans++;
 		return ans;
 	}
 
 	public void delete() {
-		parent.subs.remove(this);
+		parent.subs.remove(name);
 	}
 
 	public T getData() {
@@ -113,8 +117,18 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		return name;
 	}
 
-	public List<VFile<T>> list() {
-		return subs;
+	public Collection<VFile<T>> list() {
+		return subs.values();
+	}
+
+	public void merge(VFile<T> f) throws Exception {
+		if (subs == null || f.subs == null)
+			throw new Exception("merge can only happen for folders");
+		for (VFile<T> fi : f.subs.values())
+			if (fi.subs == null || !subs.containsKey(fi.name))
+				subs.put(fi.name, fi);
+			else
+				subs.get(fi.name).merge(fi);
 	}
 
 	public void replace(T t) {
@@ -124,14 +138,6 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	public void setData(T fd) {
 		data = fd;
-	}
-
-	public void sort() {
-		if (subs == null)
-			return;
-		subs.sort(null);
-		for (VFile<T> v : subs)
-			v.sort();
 	}
 
 	@Override

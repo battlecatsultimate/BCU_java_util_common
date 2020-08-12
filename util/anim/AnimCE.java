@@ -24,21 +24,6 @@ import common.util.unit.Unit;
 
 public class AnimCE extends AnimCI {
 
-	private class History {
-
-		protected final OutStream data;
-
-		protected final String name;
-
-		protected OutStream mms;
-
-		protected History(String str, OutStream os) {
-			name = str;
-			data = os;
-		}
-
-	}
-
 	private static class AnimCELoader implements Source.AnimLoader {
 
 		private static VImg optional(String str) {
@@ -98,6 +83,21 @@ public class AnimCE extends AnimCI {
 		@Override
 		public VImg getUni() {
 			return optional(pre + "uni.png");
+		}
+
+	}
+
+	private class History {
+
+		protected final OutStream data;
+
+		protected final String name;
+
+		protected OutStream mms;
+
+		protected History(String str, OutStream os) {
+			name = str;
+			data = os;
 		}
 
 	}

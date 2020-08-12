@@ -3,7 +3,6 @@ package common.util.anim;
 import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.files.AssetData;
 
 public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 
@@ -20,8 +19,6 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 		public FakeImage getNum();
 
 		public VImg getUni();
-
-		public void reload(AssetData data);
 
 		public void unload();
 

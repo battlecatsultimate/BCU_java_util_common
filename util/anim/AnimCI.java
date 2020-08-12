@@ -6,7 +6,6 @@ import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
-import common.system.files.AssetData;
 import common.util.Res;
 
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
@@ -74,10 +73,6 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 			else
 				uni = Res.slot[0];
 			return uni;
-		}
-
-		@Override
-		public void reload(AssetData data) {
 		}
 
 		public void setEdi(VImg vedi) {

@@ -213,11 +213,6 @@ public abstract class Source {
 	}
 
 	public static class Workspace extends Source {
-		
-		public static ResourceLocation validate(ResourceLocation rl) {
-			//FIXME find valid path
-			return rl;
-		}
 
 		public static List<AnimCE> loadAnimations(String id) {
 			if (id == null)
@@ -232,6 +227,11 @@ public abstract class Source {
 					list.add(new AnimCE(new ResourceLocation(id, f.getName())));
 			}
 			return list;
+		}
+
+		public static ResourceLocation validate(ResourceLocation rl) {
+			// FIXME find valid path
+			return rl;
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {

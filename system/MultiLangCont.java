@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import common.CommonStatic.Lang;
-import common.system.files.AssetData;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
@@ -27,8 +26,6 @@ public class MultiLangCont<I, T> extends Lang {
 	public static final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
 
-	public static final Map<MultiLangFile, AssetData> VFILE = new HashMap<>();
-
 	public static String get(Object o) {
 		if (o instanceof MapColc)
 			return MCNAME.getCont((MapColc) o);
@@ -41,10 +38,6 @@ public class MultiLangCont<I, T> extends Lang {
 		if (o instanceof Enemy)
 			return ENAME.getCont((Enemy) o);
 		return null;
-	}
-
-	public static void redefine() {
-		VFILE.forEach((mlf, f) -> mlf.reload(f));
 	}
 
 	private final Map<String, HashMap<I, T>> map = new TreeMap<>();

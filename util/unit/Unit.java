@@ -10,7 +10,6 @@ import common.battle.data.PCoin;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
 import common.system.MultiLangCont;
-import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
@@ -59,7 +58,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
 		id = identifier;
 	}
 
-	public Unit(VFile<AssetData> p) {
+	public Unit(VFile<?> p) {
 		id = new Identifier<>(Identifier.DEF, Unit.class, CommonStatic.parseIntN(p.getName()));
 		String str = "./org/unit/" + id.id + "/";
 		Queue<String> qs = VFile.readLine(str + "unit" + id.id + ".csv");

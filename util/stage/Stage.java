@@ -12,7 +12,6 @@ import common.pack.PackData.Identifier;
 import common.pack.VerFixer.VerFixerException;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
-import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
@@ -29,7 +28,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		public StageInfo info;
 
 		@SuppressWarnings("deprecation")
-		protected DefStage(StageMap sm, int id, VFile<AssetData> f, int type) {
+		protected DefStage(StageMap sm, int id, VFile<?> f, int type) {
 			super(sm);
 			if (sm.info != null)
 				sm.info.getData(this);

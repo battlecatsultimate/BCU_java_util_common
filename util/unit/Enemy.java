@@ -14,7 +14,6 @@ import common.battle.entity.EEnemy;
 import common.pack.PackData.Identifier;
 import common.system.MultiLangCont;
 import common.system.VImg;
-import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.Animable;
 import common.util.Data;
@@ -47,7 +46,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 		anim = old.anim;
 	}
 
-	public Enemy(VFile<AssetData> f) {
+	public Enemy(VFile<?> f) {
 		id = new Identifier<>(Identifier.DEF, Enemy.class, CommonStatic.parseIntN(f.getName()));
 		String str = "./org/enemy/" + id.id + "/";
 		de = new DataEnemy(this);

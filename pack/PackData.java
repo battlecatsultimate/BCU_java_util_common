@@ -1,9 +1,6 @@
 package common.pack;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,12 +8,8 @@ import java.util.Map;
 import java.util.Queue;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import common.CommonStatic;
 import common.battle.data.DataEnemy;
-import common.io.PackLoader;
-import common.io.PackLoader.ZipDesc;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
@@ -26,7 +19,6 @@ import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.GenType;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Source.Workspace;
-import common.pack.Source.ZipSource;
 import common.pack.VerFixer.IdFixer;
 import common.system.files.FDFile;
 import common.system.files.VFile;
@@ -273,7 +265,7 @@ public class PackData {
 
 		public boolean editable;
 		public boolean loaded = false;
-		
+
 		private JsonElement elem;
 
 		/** for old reading method only */
@@ -290,18 +282,18 @@ public class PackData {
 			editable = source instanceof Workspace;
 			mc = new PackMapColc(this);
 		}
-		
-		void load() throws Exception {
-			JsonDecoder.inject(elem, UserPack.class, this);
-			elem = null;
-			loaded = true;
-		}
 
 		/** for generating new pack only */
 		public UserPack(String id) {
 			desc = new PackDesc(id);
 			source = new Workspace(id);
 			castles = new PackCasList(this);
+			loaded = true;
+		}
+
+		void load() throws Exception {
+			JsonDecoder.inject(elem, UserPack.class, this);
+			elem = null;
 			loaded = true;
 		}
 

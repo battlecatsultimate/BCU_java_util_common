@@ -11,7 +11,6 @@ import common.pack.PackData.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.system.VImg;
-import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.stage.MapColc.PackMapColc;
 
@@ -25,7 +24,7 @@ public class CastleList extends FixIndexMap<CastleImg> {
 		public DefCasList(String hash, String name) {
 			id = hash;
 			str = name;
-			for (VFile<AssetData> vf : VFile.get("./org/img/" + name).list())
+			for (VFile<?> vf : VFile.get("./org/img/" + name).list())
 				add(new CastleImg(new Identifier<CastleImg>(id, CastleImg.class, size()), new VImg(vf)));
 			map().put(id, this);
 			defset().add(this);

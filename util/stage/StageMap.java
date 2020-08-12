@@ -9,7 +9,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.system.BasedCopable;
 import common.system.MultiLangCont;
-import common.system.files.AssetData;
+import common.system.files.FileData;
 import common.util.Data;
 
 @JsonClass
@@ -23,7 +23,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 
 		public int rand, time, lim;
 
-		private StageMapInfo(StageMap map, AssetData ad) {
+		private StageMapInfo(StageMap map, FileData ad) {
 			sm = map;
 			qs = ad.readLine();
 			int[] ints = CommonStatic.parseIntsN(qs.poll().split("//")[0]);
@@ -62,15 +62,15 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 		name = "new stage map";
 	}
 
-	protected StageMap(MapColc map, int ID, AssetData m) {
+	protected StageMap(MapColc map, int ID, FileData m) {
 		info = new StageMapInfo(this, m);
 		mc = map;
 		id = ID;
 
 	}
 
-	protected StageMap(MapColc map, int ID, AssetData m, int cas) {
-		this(map, ID, m);
+	protected StageMap(MapColc map, int ID, FileData stn, int cas) {
+		this(map, ID, stn);
 		cast = cas;
 	}
 

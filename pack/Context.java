@@ -30,9 +30,9 @@ public interface Context {
 
 	public static void check(File f) throws IOException {
 		if (!f.getParentFile().exists())
-			check(f.getParentFile().mkdirs(), "create", f);
+			check(!f.getParentFile().mkdirs(), "create", f);
 		if (!f.exists())
-			check(f.createNewFile(), "create", f);
+			check(!f.createNewFile(), "create", f);
 	}
 
 	public static void delete(File f) throws IOException {
@@ -64,8 +64,6 @@ public interface Context {
 		}
 	}
 
-	public void noticeErr(Exception e, ErrType t, String str);
-
 	public default <T> T noticeErr(Context.SupExc<T> r, ErrType t, String str) {
 		try {
 			return r.get();
@@ -74,6 +72,8 @@ public interface Context {
 			return null;
 		}
 	}
+
+	public void noticeErr(Exception e, ErrType t, String str);
 
 	public boolean preload(FileDesc desc);
 

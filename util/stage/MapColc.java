@@ -16,7 +16,7 @@ import common.pack.UserProfile;
 import common.pack.VerFixer.VerFixerException;
 import common.pack.PackData.UserPack;
 import common.system.MultiLangCont;
-import common.system.files.AssetData;
+import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 
@@ -55,19 +55,20 @@ public class MapColc extends Data {
 			idmap.put("CA", 27);
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
-			VFile<AssetData> f = VFile.get("./org/stage/");
+			VFile<?> f = VFile.get("./org/stage/");
 			if (f == null)
 				return;
-			for (VFile<AssetData> fi : f.list()) {
+			for (VFile<?> fi : f.list()) {
 				if (fi.getName().equals("CH"))
 					continue;
 				if (fi.getName().equals("D"))
 					continue;
-				VFile<AssetData> map = fi.list().get(0);
-				List<VFile<AssetData>> stage = new ArrayList<>();
-				for (int i = 1; i < fi.list().size(); i++)
-					if (fi.list().get(i).list() != null)
-						stage.addAll(fi.list().get(i).list());
+				List<VFile<?>> list = new ArrayList<>(fi.list());
+				VFile<?> map = list.get(0);
+				List<VFile<?>> stage = new ArrayList<>();
+				for (int i = 1; i < list.size(); i++)
+					if (list.get(i).list() != null)
+						stage.addAll(list.get(i).list());
 				new DefMapColc(fi.getName(), idmap.get(fi.getName()), stage, map);
 			}
 			new DefMapColc();
@@ -99,7 +100,7 @@ public class MapColc extends Data {
 			maps = new StageMap[14];
 			String abbr = "./org/stage/CH/stageNormal/stageNormal";
 			for (int i = 0; i < 3; i++) {
-				AssetData vf = VFile.get(abbr + "0_" + i + "_Z.csv").getData();
+				FileData vf = VFile.get(abbr + "0_" + i + "_Z.csv").getData();
 				maps[i] = new StageMap(this, i, vf, 1);
 				maps[i].name = "EoC " + (i + 1) + " Zombie";
 				vf = VFile.get(abbr + "1_" + i + ".csv").getData();
@@ -109,7 +110,7 @@ public class MapColc extends Data {
 				maps[6 + i] = new StageMap(this, 6 + i, vf, 3);
 				maps[i + 6].name = "CotC " + (i + 1);
 			}
-			AssetData stn = VFile.get(abbr + "0.csv").getData();
+			FileData stn = VFile.get(abbr + "0.csv").getData();
 			maps[9] = new StageMap(this, 9, stn, 1);
 			maps[9].name = "EoC 1-3";
 			stn = VFile.get(abbr + "1_0_Z.csv").getData();
@@ -123,8 +124,8 @@ public class MapColc extends Data {
 			maps[12].name = "ItF 2 Zombie";
 			maps[13] = new StageMap(this, 13, stn, 2);
 			maps[13].name = "ItF 3 Zombie";
-			VFile<AssetData> stz = VFile.get("./org/stage/CH/stageZ/");
-			for (VFile<AssetData> vf : stz.list()) {
+			VFile<?> stz = VFile.get("./org/stage/CH/stageZ/");
+			for (VFile<?> vf : stz.list()) {
 				String str = vf.getName();
 				int id0 = -1, id1 = -1;
 				try {
@@ -143,8 +144,8 @@ public class MapColc extends Data {
 				else if (id0 == 6)
 					maps[13].add(new Stage.DefStage(maps[13], id1, vf, 0));
 			}
-			VFile<AssetData> stw = VFile.get("./org/stage/CH/stageW/");
-			for (VFile<AssetData> vf : stw.list()) {
+			VFile<?> stw = VFile.get("./org/stage/CH/stageW/");
+			for (VFile<?> vf : stw.list()) {
 				String str = vf.getName();
 				int id0 = -1, id1 = -1;
 				try {
@@ -156,8 +157,8 @@ public class MapColc extends Data {
 				}
 				maps[id0 - 1].add(new Stage.DefStage(maps[id0 - 1], id1, vf, 1));
 			}
-			VFile<AssetData> sts = VFile.get("./org/stage/CH/stageSpace/");
-			for (VFile<AssetData> vf : sts.list()) {
+			VFile<?> sts = VFile.get("./org/stage/CH/stageSpace/");
+			for (VFile<?> vf : sts.list()) {
 				String str = vf.getName();
 				if (str.length() > 20) {
 					maps[11].add(new Stage.DefStage(maps[11], 0, vf, 0));
@@ -174,8 +175,8 @@ public class MapColc extends Data {
 				maps[id0 - 1].add(new Stage.DefStage(maps[id0 - 1], id1, vf, 1));
 			}
 
-			VFile<AssetData> st = VFile.get("./org/stage/CH/stage/");
-			for (VFile<AssetData> vf : st.list()) {
+			VFile<?> st = VFile.get("./org/stage/CH/stage/");
+			for (VFile<?> vf : st.list()) {
 				String str = vf.getName();
 				int id0 = -1;
 				try {
@@ -189,11 +190,11 @@ public class MapColc extends Data {
 			maps[9].stars = new int[] { 100, 200, 400 };
 		}
 
-		private DefMapColc(String st, int ID, List<VFile<AssetData>> stage, VFile<AssetData> map) {
+		private DefMapColc(String st, int ID, List<VFile<?>> stage, VFile<?> map) {
 			name = st;
 			id = ID;
 			StageMap[] sms = new StageMap[map.list().size()];
-			for (VFile<AssetData> m : map.list()) {
+			for (VFile<?> m : map.list()) {
 				String str = m.getName();
 				int len = str.length();
 				int id = -1;
@@ -207,7 +208,7 @@ public class MapColc extends Data {
 			}
 			maps = sms;
 
-			for (VFile<AssetData> s : stage) {
+			for (VFile<?> s : stage) {
 				String str = s.getName();
 				int len = str.length();
 				int id0 = -1, id1 = -1;

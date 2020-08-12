@@ -3,12 +3,17 @@ package common.pack;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import common.CommonStatic;
 import common.CommonStatic.ImgReader;
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomUnit;
 import common.io.InStream;
+import common.pack.Context.ErrType;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
@@ -64,23 +69,21 @@ public abstract class VerFixer extends Source {
 
 	private static class EnemyFixer extends VerFixer {
 
-		private final ImgReader r;
-		private UserPack data;
-
 		public EnemyFixer(String id, ImgReader r) {
 			super(id);
 			this.r = r;
 		}
 
+		@Override
 		@SuppressWarnings("deprecation")
-		private void load(UserPack data, InStream is) throws VerFixerException {
-			this.data = data;
+		protected void load() throws VerFixerException {
 			loadEnemies(is.subStream());
 			loadUnits(is.subStream());
 			loadBackgrounds(is.subStream());
 			loadCastles(is.subStream());
 			loadMusics(is.subStream());
 			data.mc = new PackMapColc(data, is);
+			is = null;
 		}
 
 		private AnimCE loadAnim(InStream is) throws VerFixerException {
@@ -258,21 +261,21 @@ public abstract class VerFixer extends Source {
 
 	private static class PackFixer extends VerFixer {
 
-		private final ImgReader r;
-		private UserPack data;
-
 		public PackFixer(String id, ImgReader r) {
 			super(id);
 			this.r = r;
 		}
 
-		private void load(UserPack data, InStream is) throws Exception {
-			this.data = data;
+		@Override
+		@SuppressWarnings("deprecation")
+		protected void load() throws Exception {
 			loadEnemies(is.subStream());
 			loadUnits(is.subStream());
 			loadBackgrounds(is.subStream());
 			loadCastles(is.subStream());
 			loadMusics(is.subStream());
+			data.mc = new PackMapColc(data, is);
+			is = null;
 		}
 
 		private void loadBackgrounds(InStream is) throws Exception {
@@ -390,8 +393,15 @@ public abstract class VerFixer extends Source {
 		}
 	}
 
+	public static void fix() throws Exception {
+		transform();
+		readPacks();
+		Context.delete(new File("./res"));
+		Context.delete(new File("./pack"));
+	}
+
 	@SuppressWarnings("deprecation")
-	public static UserPack fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
+	private static VerFixer fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
 		int ver = Data.getVer(is.nextString());
 		if (ver != 400)
 			throw new VerFixerException("unexpected bcuenemy data version: " + ver + ", requires 400");
@@ -401,12 +411,13 @@ public abstract class VerFixer extends Source {
 			desc.dependency.add(Data.hex(is.nextInt()));
 		EnemyFixer fix = new EnemyFixer(desc.id, r);
 		UserPack ans = new UserPack(desc, fix);
-		fix.load(ans, is);
-		return ans;
+		fix.data = ans;
+		fix.is = is;
+		return fix;
 	}
 
 	@SuppressWarnings("deprecation")
-	public static UserPack fix_bcupack(InStream is, ImgReader r) throws Exception {
+	private static VerFixer fix_bcupack(InStream is, ImgReader r) throws Exception {
 		int ver = Data.getVer(is.nextString());
 		if (ver != 402)
 			throw new VerFixerException("unexpected bcupack data version: " + ver + ", requires 402");
@@ -423,8 +434,69 @@ public abstract class VerFixer extends Source {
 		desc.author = head.nextString();
 		PackFixer fix = new PackFixer(desc.id, r);
 		UserPack ans = new UserPack(desc, fix);
-		fix.load(ans, is);
-		return ans;
+		fix.data = ans;
+		fix.is = is;
+		return fix;
+	}
+
+	private static void move(String a, String b) {
+		File f = new File(a);
+		if (!f.exists())
+			return;
+		f.renameTo(new File(b));
+	}
+
+	private static void readPacks() throws Exception {
+		File f = CommonStatic.def.route("./pack/");
+		Map<String, File> fmap = new HashMap<>();
+		Map<String, VerFixer> map = new HashMap<>();
+		if (f.exists()) {
+			for (File file : f.listFiles()) {
+				String str = file.getName();
+				if (!str.endsWith(".bcupack"))
+					continue;
+				File g = CommonStatic.def.route("./res/data/" + str.replace(".bcupack", ".bcudata"));
+				if (!g.exists())
+					g = file;
+				VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(g), CommonStatic.def.getReader(g));
+				fmap.put(pack.id, file);
+				map.put(pack.id, pack);
+
+			}
+		}
+		List<VerFixer> list = new ArrayList<>();
+		list.addAll(map.values());
+		f = CommonStatic.def.route("./res/enemy/");
+		if (f.exists())
+			for (File file : f.listFiles()) {
+				String str = file.getName();
+				if (!str.endsWith(".bcuenemy"))
+					continue;
+				VerFixer fix = fix_bcuenemy(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(file));
+				list.removeIf(p -> p.id == fix.id);
+				list.add(fix);
+			}
+		while (list.size() > 0) {
+			int rem = 0;
+			for (VerFixer p : list) {
+				boolean all = true;
+				for (String pre : p.data.desc.dependency)
+					if (!map.containsKey(pre) || map.get(pre).is != null)
+						all = false;
+				if (all) {
+					p.load();
+					rem++;
+				}
+			}
+			list.removeIf(p -> p.is == null);
+			if (rem == 0) {
+				for (VerFixer p : list) {
+					map.remove(p.id);
+					Source.ctx.printErr(ErrType.WARN, "Failed to load " + p.data.desc);
+				}
+				break;
+			}
+		}
 	}
 
 	private static void transform() throws IOException {
@@ -447,12 +519,11 @@ public abstract class VerFixer extends Source {
 		}
 	}
 
-	private static void move(String a, String b) {
-		File f = new File(a);
-		if (!f.exists())
-			return;
-		f.renameTo(new File(b));
-	}
+	ImgReader r;
+
+	UserPack data;
+
+	InStream is;
 
 	private VerFixer(String id) {
 		super(id);
@@ -483,10 +554,6 @@ public abstract class VerFixer extends Source {
 		return new AnimCE(id);
 	}
 
-	public static void fix() throws IOException {
-		transform();
-		Context.delete(new File("./res"));
-		Context.delete(new File("./pack"));
-	}
+	protected abstract void load() throws Exception;
 
 }

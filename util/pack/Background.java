@@ -12,7 +12,6 @@ import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
-import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimD;
@@ -31,7 +30,7 @@ public class Background extends AnimI implements Indexable<Background> {
 
 	public static void read() {
 		String path = "./org/battle/bg/";
-		for (VFile<AssetData> vf : VFile.get("./org/battle/bg").list()) {
+		for (VFile<?> vf : VFile.get("./org/battle/bg").list()) {
 			String name = vf.getName();
 			if (name.length() != 11 || !name.endsWith(".imgcut"))
 				continue;
@@ -43,7 +42,7 @@ public class Background extends AnimI implements Indexable<Background> {
 		ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
-		for (VFile<AssetData> vf : VFile.get("./org/img/bg/").list())
+		for (VFile<?> vf : VFile.get("./org/img/bg/").list())
 			if (vf.getName().length() == 9) {
 				int[] ints = new int[15];
 				try {

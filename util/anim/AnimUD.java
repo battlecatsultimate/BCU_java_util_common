@@ -1,21 +1,19 @@
 package common.util.anim;
 
-import common.system.MultiLangFile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
-import common.system.files.AssetData;
+import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Res;
 
-public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile {
+public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
 	static class DefImgLoader implements AnimU.ImageKeeper {
 
 		private final String spath;
-		private final VFile<AssetData> fnum, fedi, funi;
-		private AnimUD anim;
-		private AssetData dnum;
+		private final VFile<?> fnum, fedi, funi;
+		private FileData dnum;
 		private FakeImage num;
 		private VImg edi, uni;
 
@@ -66,8 +64,8 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 		public FakeImage getNum() {
 			if (num != null)
 				return num;
-			AssetData fd = dnum == null ? (dnum = fnum.getData()) : dnum;
-			num = fd.getImg(anim);
+			FileData fd = dnum == null ? (dnum = fnum.getData()) : dnum;
+			num = fd.getImg();
 			return num;
 		}
 
@@ -76,13 +74,6 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 			if (uni != null)
 				return uni;
 			return funi == null ? Res.slot[0] : (uni = new VImg(funi).mark(Marker.UNI));
-		}
-
-		@Override
-		public void reload(AssetData data) {
-			dnum = data;
-			num.unload();
-			num = null;
 		}
 
 		@Override
@@ -95,23 +86,10 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> implements MultiLangFile 
 			}
 		}
 
-		private void setAnim(AnimUD a) {
-			anim = a;
-		}
-
 	}
 
 	public AnimUD(String path, String name, String edi, String uni) {
 		super(path + name, new DefImgLoader(path, name, edi, uni));
-		loader.setAnim(this);
-	}
-
-	@Override
-	public void reload(AssetData ad) {
-		if (!loaded)
-			return;
-		loader.reload(ad);
-		parts = imgcut.cut(getNum());
 	}
 
 }

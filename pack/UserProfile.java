@@ -118,6 +118,10 @@ public class UserProfile {
 		return new PackData.UserPack(id);
 	}
 
+	public static Collection<UserPack> packs() {
+		return profile.packmap.values();
+	}
+
 	public static UserPack readJsonPack(File f) throws Exception {
 		File folder = f.getParentFile();
 		Reader r = new FileReader(f);
@@ -135,10 +139,6 @@ public class UserProfile {
 		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
 		r.close();
 		return data;
-	}
-
-	public static Collection<UserPack> packs() {
-		return profile.packmap.values();
 	}
 
 	public static void setStatic(String id, Object val) {
@@ -187,7 +187,7 @@ public class UserProfile {
 
 	public UserProfile() {
 		// TODO load username and password
-
+		Source.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to convert old format");
 		File packs = Source.ctx.getPackFolder();
 		File workspace = Source.ctx.getWorkspaceFile(".");
 
@@ -218,6 +218,18 @@ public class UserProfile {
 		packlist.addAll(failed);
 	}
 
+	public boolean canRemove(String id) {
+		for (Entry<String, UserPack> ent : packmap.entrySet())
+			if (ent.getValue().desc.dependency.contains(id))
+				return false;
+		return true;
+	}
+
+	public void remove(UserPack pack) {
+		packmap.remove(pack.desc.id);
+		packlist.remove(pack);
+	}
+
 	/**
 	 * return true if the pack is attempted to load and should be removed from the
 	 * loading queue
@@ -239,18 +251,6 @@ public class UserProfile {
 			if (!packmap.containsKey(dep))
 				return false;
 		return true;
-	}
-
-	public boolean canRemove(String id) {
-		for (Entry<String, UserPack> ent : packmap.entrySet())
-			if (ent.getValue().desc.dependency.contains(id))
-				return false;
-		return true;
-	}
-
-	public void remove(UserPack pack) {
-		packmap.remove(pack.desc.id);
-		packlist.remove(pack);
 	}
 
 }

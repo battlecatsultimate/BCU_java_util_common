@@ -19,7 +19,10 @@ import javax.crypto.spec.SecretKeySpec;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import common.io.MultiStream.ByteStream;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.AssetLoader.AssetHeader;
+import common.io.assets.AssetLoader.AssetHeader.AssetEntry;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
@@ -45,6 +48,12 @@ public class PackLoader {
 	public static interface Preload {
 
 		public boolean preload(FileDesc fd);
+
+	}
+
+	public static interface Preloader {
+
+		Preload getPreload(ZipDesc desc);
 
 	}
 
@@ -168,7 +177,7 @@ public class PackLoader {
 
 		private void load() throws Exception {
 			for (FileDesc fd : files)
-				if (loader.context.preload(fd))
+				if (loader.context.getPreload(this).preload(fd))
 					fd.data = new FDByte(loader.decode(fd.size));
 				else
 					loader.fis.skip(regulate(fd.size + PASSWORD));
@@ -198,7 +207,7 @@ public class PackLoader {
 
 		private static class FLStream extends InputStream {
 
-			private final FileInputStream fis;
+			private final ByteStream fis;
 			private final Cipher cipher;
 
 			private byte[] bs = new byte[PASSWORD];
@@ -210,8 +219,7 @@ public class PackLoader {
 				len = (size & 0xF) == 0 ? size : (size | 0xF) + 1;
 				this.size = size;
 				cipher = decrypt(ld.key);
-				fis = new FileInputStream(ld.file);
-				fis.skip(offset);
+				fis = MultiStream.getStream(ld.file, offset, ld.useRAF);
 				fis.read(bs);
 				cipher.update(bs);
 			}
@@ -248,15 +256,18 @@ public class PackLoader {
 		}
 
 		private final FileInputStream fis;
-		private final Preload context;
+		private final Preloader context;
 		private final ZipDesc pack;
 		private final File file;
 		private final byte[] key;
+		private final boolean useRAF;
 
-		private FileLoader(Preload cont, File f) throws Exception {
+		private FileLoader(Preloader cont, FileInputStream stream, int off, File file, boolean useRAF)
+				throws Exception {
 			context = cont;
-			file = f;
-			fis = new FileInputStream(f);
+			this.file = file;
+			this.fis = stream;
+			this.useRAF = useRAF;
 			byte[] head = new byte[HEADER];
 			fis.read(head);
 			if (!Arrays.equals(head, HEAD_DATA))
@@ -268,10 +279,9 @@ public class PackLoader {
 			int size = DataIO.toInt(DataIO.translate(len), 0);
 			String desc = new String(decode(size));
 			JsonElement je = JsonParser.parseString(desc);
-			int offset = HEADER + PASSWORD * 2 + 4 + regulate(size);
+			int offset = off + HEADER + PASSWORD * 2 + 4 + regulate(size);
 			pack = JsonDecoder.inject(je, ZipDesc.class, new ZipDesc(this, offset));
 			pack.load();
-			fis.close();
 		}
 
 		private byte[] decode(int size) throws Exception {
@@ -288,6 +298,8 @@ public class PackLoader {
 
 	private static class FileSaver {
 
+		private static final String[] EXCLUDE = { ".DS_Store", ".desktop.ini", "__MACOSX" };
+
 		private final FileOutputStream fos;
 		private byte[] key;
 
@@ -295,7 +307,8 @@ public class PackLoader {
 
 		private FileSaver(File dst, File folder, PackData.PackDesc pd, String password) throws Exception {
 			List<FileDesc> fs = new ArrayList<>();
-			addFiles(fs, folder, "./");
+			for (File fi : folder.listFiles())
+				addFiles(fs, fi, "./");
 			ZipDesc desc = new ZipDesc(pd, fs.toArray(new FileDesc[0]));
 			byte[] bytedesc = JsonEncoder.encode(desc).toString().getBytes();
 			fos = new FileOutputStream(dst);
@@ -311,6 +324,9 @@ public class PackLoader {
 		}
 
 		private void addFiles(List<FileDesc> fs, File f, String path) {
+			for (String str : EXCLUDE)
+				if (f.getName().equals(str))
+					return;
 			if (f.isDirectory())
 				for (File fi : f.listFiles())
 					addFiles(fs, fi, path + f.getName() + "/");
@@ -329,8 +345,10 @@ public class PackLoader {
 
 	private static final int HEADER = 16, PASSWORD = 16, CHUNK = 1 << 16;
 
-	private static final String HEAD_STR = "battlecatsultimate_packfile";
+	private static final String HEAD_STR = "battlecatsultimate";
+
 	private static final byte[] HEAD_DATA = getMD5(HEAD_STR.getBytes(), HEADER);
+
 	private static final byte[] INIT_VECTOR = getMD5("battlecatsultimate".getBytes(), 16);
 
 	public static Cipher decrypt(byte[] key) throws Exception {
@@ -362,8 +380,51 @@ public class PackLoader {
 		return Arrays.copyOf(ans, len);
 	}
 
+	public static void read(FileInputStream fis, AssetHeader asset) throws Exception {
+		byte[] head = new byte[HEADER];
+		fis.read(head);
+		if (!Arrays.equals(head, HEAD_DATA))
+			throw new Exception("Corrupted File: header not match");
+		byte[] len = new byte[4];
+		fis.read(len);
+		int size = DataIO.toInt(DataIO.translate(len), 0);
+		byte[] data = new byte[size];
+		fis.read(data);
+		String desc = new String(data);
+		JsonElement je = JsonParser.parseString(desc);
+		JsonDecoder.inject(je, AssetHeader.class, asset);
+		asset.offset = HEADER + 4 + size;
+	}
+
+	public static List<ZipDesc> readAssets(Preloader cont, File f) throws Exception {
+		FileInputStream fis = new FileInputStream(f);
+		AssetHeader header = new AssetHeader();
+		read(fis, header);
+		List<ZipDesc> ans = new ArrayList<>();
+		int off = header.offset;
+		for (AssetEntry ent : header.list) {
+			ZipDesc zip = new FileLoader(cont, fis, off, f, true).pack;
+			ans.add(zip);
+			off += ent.size;
+		}
+		fis.close();
+		return ans;
+	}
+
 	public static ZipDesc readPack(Preload cont, File f) throws Exception {
-		return new FileLoader(cont, f).pack;
+		FileInputStream fis = new FileInputStream(f);
+		ZipDesc ans = new FileLoader((desc) -> cont, fis, 0, f, false).pack;
+		fis.close();
+		return ans;
+	}
+
+	public static void write(FileOutputStream fos, AssetHeader asset) throws Exception {
+		fos.write(HEAD_DATA);
+		byte[] data = JsonEncoder.encode(asset).toString().getBytes();
+		byte[] len = new byte[4];
+		DataIO.fromInt(len, 0, data.length);
+		fos.write(len);
+		fos.write(data);
 	}
 
 	public static void writePack(File dst, File folder, PackData.PackDesc pd, String password) throws Exception {
