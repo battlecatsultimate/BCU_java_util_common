@@ -3,6 +3,7 @@ package common.util.unit;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.CommonStatic;
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.io.InStream;
@@ -10,7 +11,6 @@ import common.pack.PackData.Identifier;
 import common.system.VImg;
 import common.util.EREnt;
 import common.util.EntRand;
-import common.util.Res;
 
 public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
@@ -44,7 +44,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
 	@Override
 	public VImg getIcon() {
-		return Res.ico[0][0];
+		return CommonStatic.getBCAssets().ico[0][0];
 	}
 
 	@Override

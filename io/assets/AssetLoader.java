@@ -12,19 +12,21 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.Preload;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.Admin.StaticPermitted;
 import common.io.assets.AssetLoader.AssetHeader.AssetEntry;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.PackData.PackDesc;
-import common.pack.Source;
 import common.system.files.VFile;
 import common.util.Data;
 
+@StaticPermitted
 public class AssetLoader {
 
 	@JsonClass
@@ -83,19 +85,19 @@ public class AssetLoader {
 	private static final int LEN = 1024;
 
 	public static void load() throws Exception {
-		File folder = Source.ctx.getAssetFile("./assets/");
+		File folder = CommonStatic.ctx.getAssetFile("./assets/");
 		for (File f : folder.listFiles()) {
 			if (f.getName().endsWith(".assets.bcuzips")) {
 				List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f);
 				for (ZipDesc zip : list)
 					if (Data.getVer(zip.desc.id) <= Data.getVer(CORE_VER))
-						VFile.root.merge(zip.tree);
+						VFile.getBCFileTree().merge(zip.tree);
 			}
 		}
 	}
 
 	public static void merge() throws Exception {
-		File folder = Source.ctx.getAssetFile("./assets/");
+		File folder = CommonStatic.ctx.getAssetFile("./assets/");
 		Map<String, Map<String, File>> map = new TreeMap<>();
 		for (File f : folder.listFiles()) {
 			if (f.getName().endsWith(".asset.bcuzip")) {
@@ -108,8 +110,8 @@ public class AssetLoader {
 			}
 		}
 		for (Entry<String, Map<String, File>> emain : map.entrySet()) {
-			File target = Source.ctx.getAssetFile("./assets/" + emain.getKey() + "xxxx.assets.bcuzips");
-			File dst = Source.ctx.getAssetFile("./assets/.temp.assets.bcuzips");
+			File target = CommonStatic.ctx.getAssetFile("./assets/" + emain.getKey() + "xxxx.assets.bcuzips");
+			File dst = CommonStatic.ctx.getAssetFile("./assets/.temp.assets.bcuzips");
 			Context.check(dst);
 			FileOutputStream fos = new FileOutputStream(dst);
 			AssetHeader header = new AssetHeader();
@@ -140,7 +142,7 @@ public class AssetLoader {
 	}
 
 	public static Set<String> previewAssets() throws Exception {
-		File folder = Source.ctx.getAssetFile("./assets/");
+		File folder = CommonStatic.ctx.getAssetFile("./assets/");
 		Set<String> ans = new TreeSet<>();
 		for (File f : folder.listFiles()) {
 			if (f.getName().endsWith(".assets.bcuzips")) {

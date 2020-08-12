@@ -8,9 +8,9 @@ import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.system.BasedCopable;
-import common.system.MultiLangCont;
 import common.system.files.FileData;
 import common.util.Data;
+import common.util.lang.MultiLangCont;
 
 @JsonClass
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {

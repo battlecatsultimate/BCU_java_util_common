@@ -17,7 +17,6 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
 import common.util.BattleObj;
 import common.util.Data;
-import common.util.ImgCore;
 import common.util.Data.Proc.POISON;
 import common.util.Data.Proc.REVIVE;
 import common.util.anim.AnimD;
@@ -95,7 +94,7 @@ public abstract class Entity extends AbEntity {
 				anim.draw(gra, p, siz);
 			anim.paraTo(null);
 			gra.setTransform(at);
-			if (ImgCore.ref)
+			if (CommonStatic.getConfig().ref)
 				e.drawAxis(gra, p, siz);
 			gra.delete(at);
 		}
@@ -129,36 +128,36 @@ public abstract class Entity extends AbEntity {
 			if (t == INV) {
 				effs[eftp] = null;
 				eftp = A_EFF_INV;
-				effs[eftp] = EffAnim.effas[eftp].getEAnim(0);
-				efft = EffAnim.effas[eftp].len(0);
+				effs[eftp] = effas()[eftp].getEAnim(0);
+				efft = effas()[eftp].len(0);
 			}
 			if (t == P_WAVE) {
 				int id = dire == -1 ? A_WAVE_INVALID : A_E_WAVE_INVALID;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
-				status[P_WAVE][0] = EffAnim.effas[id].len(0);
+				effs[id] = effas()[id].getEAnim(0);
+				status[P_WAVE][0] = effas()[id].len(0);
 			}
 			if (t == STPWAVE) {
 				effs[eftp] = null;
 				eftp = dire == -1 ? A_WAVE_STOP : A_E_WAVE_STOP;
-				effs[eftp] = EffAnim.effas[eftp].getEAnim(0);
-				efft = EffAnim.effas[eftp].len(0);
+				effs[eftp] = effas()[eftp].getEAnim(0);
+				efft = effas()[eftp].len(0);
 			}
 			if (t == INVWARP) {
 				effs[eftp] = null;
 				eftp = dire == -1 ? A_FARATTACK : A_E_FARATTACK;
-				effs[eftp] = EffAnim.effas[eftp].getEAnim(0);
-				efft = EffAnim.effas[eftp].len(0);
+				effs[eftp] = effas()[eftp].getEAnim(0);
+				efft = effas()[eftp].len(0);
 			}
 			if (t == P_STOP) {
 				int id = dire == -1 ? A_STOP : A_E_STOP;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 			}
 			if (t == P_IMUATK) {
-				effs[A_IMUATK] = EffAnim.effas[A_IMUATK].getEAnim(0);
+				effs[A_IMUATK] = effas()[A_IMUATK].getEAnim(0);
 			}
 			if (t == P_SLOW) {
 				int id = dire == -1 ? A_SLOW : A_E_SLOW;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 			}
 			if (t == P_WEAK) {
 				int id;
@@ -169,67 +168,67 @@ public abstract class Entity extends AbEntity {
 					id = dire == -1 ? A_WEAK_UP : A_E_WEAK_UP;
 				}
 
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 			}
 			if (t == P_CURSE) {
 				int id = dire == -1 ? A_CURSE : A_E_CURSE;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 			}
 			if (t == P_POISON) {
 				int mask = status[P_POISON][0];
 				for (int i = 0; i < A_POIS.length; i++)
 					if ((mask & (1 << i)) > 0) {
 						int id = A_POIS[i];
-						effs[id] = EffAnim.effas[id].getEAnim(0);
+						effs[id] = effas()[id].getEAnim(0);
 					}
 
 			}
 			if (t == P_SEAL) {
 				int id = A_SEAL;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 			}
 			if (t == P_STRONG) {
 				int id = dire == -1 ? A_UP : A_E_UP;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 			}
 			if (t == P_LETHAL) {
 				int id = dire == -1 ? A_SHIELD : A_E_SHIELD;
-				AnimD ea = EffAnim.effas[id];
+				AnimD ea = effas()[id];
 				status[P_LETHAL][1] = ea.len(0);
 				effs[id] = ea.getEAnim(0);
-				CommonStatic.def.setSE(SE_LETHAL);
+				CommonStatic.setSE(SE_LETHAL);
 			}
 			if (t == P_WARP) {
-				AnimD ea = EffAnim.effas[A_W];
+				AnimD ea = effas()[A_W];
 				int pa = status[P_WARP][2];
 				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim, e.dire));
-				CommonStatic.def.setSE(pa == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
+				CommonStatic.setSE(pa == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
 				status[P_WARP][pa] = ea.len(pa);
 
 			}
 
 			if (t == BREAK_ABI) {
 				int id = dire == -1 ? A_U_E_B : A_E_B;
-				effs[id] = EffAnim.effas[id].getEAnim(0);
+				effs[id] = effas()[id].getEAnim(0);
 				status[P_BREAK][0] = effs[id].len();
-				CommonStatic.def.setSE(SE_BARRIER_ABI);
+				CommonStatic.setSE(SE_BARRIER_ABI);
 			}
 			if (t == BREAK_ATK) {
 				int id = dire == -1 ? A_U_E_B : A_E_B;
-				effs[id] = EffAnim.effas[id].getEAnim(1);
+				effs[id] = effas()[id].getEAnim(1);
 				status[P_BREAK][0] = effs[id].len();
-				CommonStatic.def.setSE(SE_BARRIER_ATK);
+				CommonStatic.setSE(SE_BARRIER_ATK);
 			}
 			if (t == BREAK_NON) {
 				int id = dire == -1 ? A_U_B : A_B;
-				effs[id] = EffAnim.effas[id].getEAnim(4);
+				effs[id] = effas()[id].getEAnim(4);
 				status[P_BREAK][0] = effs[id].len();
-				CommonStatic.def.setSE(SE_BARRIER_NON);
+				CommonStatic.setSE(SE_BARRIER_NON);
 			}
 			if (t == P_ARMOR) {
 				int id = dire == -1 ? A_ARMOR : A_E_ARMOR;
 				int index = status[P_ARMOR][1] >= 0 ? 1 : 0;
-				effs[id] = EffAnim.effas[id].getEAnim(index);
+				effs[id] = effas()[id].getEAnim(index);
 			}
 
 			if (t == P_SPEED) {
@@ -242,7 +241,7 @@ public abstract class Entity extends AbEntity {
 					index = status[P_SPEED][1] >= e.data.getSpeed() ? 0 : 1;
 				}
 
-				effs[id] = EffAnim.effas[id].getEAnim(index);
+				effs[id] = effas()[id].getEAnim(index);
 			}
 		}
 
@@ -339,17 +338,17 @@ public abstract class Entity extends AbEntity {
 			if (t == INT_KB)
 				e.kbTime = status[P_KB][0];
 			if (t == INT_HB)
-				back = EffAnim.effas[A_KB].getEAnim(0);
+				back = effas()[A_KB].getEAnim(0);
 			if (t == INT_SW)
-				back = EffAnim.effas[A_KB].getEAnim(1);
+				back = effas()[A_KB].getEAnim(1);
 			if (t == INT_ASS)
-				back = EffAnim.effas[A_KB].getEAnim(2);
+				back = effas()[A_KB].getEAnim(2);
 
 			// Z-kill icon
 			if (e.health <= 0 && e.zx.tempZK && e.zx.canRevive() > 0) {
-				EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
+				EAnimD eae = effas()[A_Z_STRONG].getEAnim(0);
 				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
-				CommonStatic.def.setSE(SE_ZKILL);
+				CommonStatic.setSE(SE_ZKILL);
 			}
 		}
 
@@ -565,7 +564,7 @@ public abstract class Entity extends AbEntity {
 					e.status[P_WARP][0]--;
 				if (e.status[P_WARP][1] > 0)
 					e.status[P_WARP][1]--;
-				EffAnim ea = EffAnim.effas[A_W];
+				EffAnim ea = effas()[A_W];
 				if (e.kbTime == ea.len(1)) {
 					kbmove(kbDis);
 					kbDis = 0;
@@ -735,7 +734,7 @@ public abstract class Entity extends AbEntity {
 			else if (c == 2)
 				extraRev++;
 			int deadAnim = minRevTime();
-			EffAnim ea = EffAnim.effas[A_ZOMBIE];
+			EffAnim ea = effas()[A_ZOMBIE];
 			deadAnim += ea.getEAnim(0).len();
 			e.status[P_REVIVE][1] = deadAnim;
 			e.health = e.maxH * maxRevHealth() / 100;
@@ -835,7 +834,7 @@ public abstract class Entity extends AbEntity {
 			if (status[P_REVIVE][1] > 0) {
 				e.acted = true;
 				int id = e.dire == -1 ? A_U_ZOMBIE : A_ZOMBIE;
-				EffAnim ea = EffAnim.effas[id];
+				EffAnim ea = effas()[id];
 				if (anim.corpse == null)
 					anim.corpse = ea.getEAnim(1);
 				if (status[P_REVIVE][1] == ea.getEAnim(0).len())
@@ -1006,18 +1005,18 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		CommonStatic.def.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
+		CommonStatic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
 		damage += dmg;
 		zx.damaged(atk);
 		tempearn |= (atk.abi & AB_EARN) > 0;
 		if (atk.getProc().CRIT.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_CRIT].getEAnim(0)));
-			CommonStatic.def.setSE(SE_CRIT);
+			basis.lea.add(new EAnimCont(pos, layer, effas()[A_CRIT].getEAnim(0)));
+			CommonStatic.setSE(SE_CRIT);
 		}
 		if (atk.getProc().SATK.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_SATK].getEAnim(0)));
-			CommonStatic.def.setSE(SE_SATK);
+			basis.lea.add(new EAnimCont(pos, layer, effas()[A_SATK].getEAnim(0)));
+			CommonStatic.setSE(SE_SATK);
 		}
 
 		// process proc part
@@ -1030,8 +1029,8 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 			} else {
 				damage += maxH * atk.getProc().POIATK.mult / 100;
-				basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_POISON].getEAnim(0)));
-				CommonStatic.def.setSE(SE_POISON);
+				basis.lea.add(new EAnimCont(pos, layer, effas()[A_POISON].getEAnim(0)));
+				CommonStatic.setSE(SE_POISON);
 			}
 		}
 
@@ -1103,7 +1102,7 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().WARP.exists())
 			if (getProc().IMUWARP.mult < 100) {
 				interrupt(INT_WARP, atk.getProc().WARP.dis);
-				EffAnim e = EffAnim.effas[A_W];
+				EffAnim e = effas()[A_W];
 				int len = e.len(0) + e.len(1);
 				int val = atk.getProc().WARP.time;
 				int rst = getProc().IMUWARP.mult;
@@ -1236,7 +1235,7 @@ public abstract class Entity extends AbEntity {
 		// conf 1
 		if (conf == 1) {
 			kb.kbType = INT_WARP;
-			kbTime = EffAnim.effas[A_W].len(1);
+			kbTime = effas()[A_W].len(1);
 			status[P_WARP][2] = 1;
 		}
 		// conf 2
@@ -1447,7 +1446,7 @@ public abstract class Entity extends AbEntity {
 
 	/** called when last KB reached */
 	private void preKill() {
-		CommonStatic.def.setSE(basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
+		CommonStatic.setSE(basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
 
 		if (zx.prekill())
 			return;

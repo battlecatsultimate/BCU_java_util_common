@@ -1,12 +1,12 @@
 package common.battle.attack;
 
+import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
-import common.util.ImgCore;
 import common.util.anim.EAnimD;
 
 public abstract class ContWaveAb extends ContAb {
@@ -57,7 +57,7 @@ public abstract class ContWaveAb extends ContAb {
 	}
 
 	protected void drawAxis(FakeGraphics gra, P p, double siz) {
-		if (!ImgCore.ref)
+		if (!CommonStatic.getConfig().ref)
 			return;
 
 		// after this is the drawing of hit boxes

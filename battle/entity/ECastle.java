@@ -4,7 +4,6 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
-import common.util.pack.EffAnim;
 
 public class ECastle extends AbEntity {
 
@@ -30,10 +29,10 @@ public class ECastle extends AbEntity {
 			ans *= (100 + satk) * 0.01;
 		if (atk.getProc().CRIT.mult > 0) {
 			ans *= 0.01 * atk.getProc().CRIT.mult;
-			sb.lea.add(new EAnimCont(pos, 9, EffAnim.effas[A_CRIT].getEAnim(0)));
-			CommonStatic.def.setSE(SE_CRIT);
+			sb.lea.add(new EAnimCont(pos, 9, effas()[A_CRIT].getEAnim(0)));
+			CommonStatic.setSE(SE_CRIT);
 		} else
-			CommonStatic.def.setSE(SE_HIT_BASE);
+			CommonStatic.setSE(SE_HIT_BASE);
 		health -= ans;
 		if (health > maxH)
 			health = maxH;

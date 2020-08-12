@@ -1,18 +1,41 @@
 package common.io.assets;
 
 import java.io.File;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
 import common.pack.PackData.PackDesc;
-import common.pack.Source;
 import common.util.Data;
 
+@StaticPermitted
 public class Admin {
+
+	@Documented
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.TYPE, ElementType.FIELD })
+	public static @interface StaticPermitted {
+
+		public static enum Type {
+			FINAL, ENV, TEMP
+		}
+
+		Type value() default Type.FINAL;
+
+	}
 
 	private static class AdminContext implements Context {
 
@@ -43,6 +66,10 @@ public class Admin {
 		}
 
 		@Override
+		public void initProfile() {
+		}
+
+		@Override
 		public void noticeErr(Exception e, ErrType t, String str) {
 			printErr(t, str);
 			e.printStackTrace(t == ErrType.INFO ? System.out : System.err);
@@ -66,9 +93,11 @@ public class Admin {
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
 	public static void main(String[] args) throws Exception {
-		Source.ctx = new AdminContext();
-		AssetLoader.merge();
-		System.out.println(AssetLoader.previewAssets());
+		// Source.ctx = new AdminContext();
+		// AssetLoader.merge();
+		// UserProfile.getBCData().load();
+		// UserProfile.loadPacks();
+		searchForStaticFields();
 	}
 
 	public static List<ZipDesc> read() throws Exception {
@@ -81,6 +110,55 @@ public class Admin {
 			}
 		}
 		return list;
+	}
+
+	public static void searchForStaticFields() throws ClassNotFoundException {
+		File f = new File("./src/common");
+		Queue<File> qfile = new ArrayDeque<>();
+		Queue<Class<?>> qcls = new ArrayDeque<>();
+		qfile.add(f);
+		while (qfile.size() > 0) {
+			File fi = qfile.poll();
+			if (fi.isDirectory())
+				for (File fx : fi.listFiles())
+					qfile.add(fx);
+			else if (fi.getName().endsWith(".java")) {
+				String str = fi.toString();
+				str = str.substring(6, str.length() - 5);
+				str = str.replaceAll("/", ".");
+				qcls.add(Class.forName(str));
+			}
+		}
+		List<Class<?>> clist = new ArrayList<>();
+		while (qcls.size() > 0) {
+			Class<?> cls = qcls.poll();
+			clist.add(cls);
+			for (Class<?> ci : cls.getDeclaredClasses())
+				qcls.add(ci);
+		}
+		List<Field> flist = new ArrayList<>();
+		for (Class<?> cls : clist) {
+			if (cls.isEnum())
+				continue;
+			if (cls.getAnnotation(StaticPermitted.class) != null)
+				continue;
+			for (Field field : cls.getDeclaredFields()) {
+				if ((field.getModifiers() & Modifier.STATIC) == 0)
+					continue;
+				if ((field.getModifiers() & Modifier.FINAL) != 0) {
+					if (field.getType().isPrimitive())
+						continue;
+					if (field.getType() == String.class)
+						continue;
+				}
+				if (field.getAnnotation(StaticPermitted.class) != null)
+					continue;
+				flist.add(field);
+			}
+		}
+		for (Field field : flist) {
+			System.out.println(field);
+		}
 	}
 
 	public static void write() throws Exception {

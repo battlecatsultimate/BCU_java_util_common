@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import common.CommonStatic;
 import common.io.BCUException;
+import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context.ErrType;
-import common.pack.Source;
 
 /**
  * this class enables copy of an interconnected system. <br>
@@ -29,6 +30,7 @@ import common.pack.Source;
  * EAnimI (override)<br>
  * EneRand (update map reference) <br>
  */
+@StaticPermitted(StaticPermitted.Type.TEMP)
 public strictfp class BattleObj extends ImgCore implements Cloneable {
 
 	public static final String NONC = "NONC_";
@@ -132,7 +134,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 		ARRMAP.clear();
 		UNCHECKED.removeAll(OLD);
 		for (Class<?> cls : UNCHECKED)
-			Source.ctx.printErr(ErrType.WARN, "Unchecked Class in Battle: " + cls);
+			CommonStatic.ctx.printErr(ErrType.WARN, "Unchecked Class in Battle: " + cls);
 		OLD.addAll(UNCHECKED);
 		UNCHECKED.clear();
 		return c;

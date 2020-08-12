@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 
+import common.io.assets.Admin.StaticPermitted;
+
 /**
  * ways to read from JSON: <br>
  * 1. default setting, use on fields, put {@code @JsonField}, ignore fields not
@@ -89,6 +91,7 @@ public @interface JsonField {
 		DEF, FUNC, CLASS
 	}
 
+	@StaticPermitted
 	public static JsonField DEF = new JsonField() {
 
 		@Override

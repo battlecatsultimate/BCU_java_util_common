@@ -1,11 +1,11 @@
 package common.util.pack;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
+import common.CommonStatic;
+import common.CommonStatic.BCAuxAssets;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.VImg;
@@ -21,25 +21,21 @@ import common.util.anim.MaModel;
 
 public class Background extends AnimI implements Indexable<Background> {
 
-	public static MaModel ewavm, uwavm; // FIXME static fields
-	public static MaAnim ewava, uwava;
-	public static WaveAnim defu, defe;
-	public static final List<ImgCut> iclist = new ArrayList<>();
-
 	public static final int BG = 0, TOP = 20, shift = 65; // in pix
 
 	public static void read() {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
 		String path = "./org/battle/bg/";
 		for (VFile<?> vf : VFile.get("./org/battle/bg").list()) {
 			String name = vf.getName();
 			if (name.length() != 11 || !name.endsWith(".imgcut"))
 				continue;
-			iclist.add(ImgCut.newIns(path + name));
+			aux.iclist.add(ImgCut.newIns(path + name));
 		}
-		uwavm = MaModel.newIns("./org/battle/bg/bg_01.mamodel");
-		ewavm = MaModel.newIns("./org/battle/bg/bg_02.mamodel");
-		uwava = MaAnim.newIns("./org/battle/bg/bg_01.maanim");
-		ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
+		aux.uwavm = MaModel.newIns("./org/battle/bg/bg_01.mamodel");
+		aux.ewavm = MaModel.newIns("./org/battle/bg/bg_02.mamodel");
+		aux.uwava = MaAnim.newIns("./org/battle/bg/bg_01.maanim");
+		aux.ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
 		for (VFile<?> vf : VFile.get("./org/img/bg/").list())
@@ -71,8 +67,9 @@ public class Background extends AnimI implements Indexable<Background> {
 		img = vimg;
 		ic = 1;
 		top = true;
-		uwav = defu;
-		ewav = defe;
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		uwav = aux.defu;
+		ewav = aux.defe;
 	}
 
 	private Background(VImg vimg, int[] ints) {
@@ -84,16 +81,17 @@ public class Background extends AnimI implements Indexable<Background> {
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		UserProfile.getBCData().bgs.add(this);
+		BCAuxAssets aux = CommonStatic.getBCAssets();
 		if (id <= 107) {
-			uwav = new WaveAnim(this, uwavm, uwava);
-			ewav = new WaveAnim(this, ewavm, ewava);
+			uwav = new WaveAnim(this, aux.uwavm, aux.uwava);
+			ewav = new WaveAnim(this, aux.ewavm, aux.ewava);
 		} else {
-			uwav = defu;
-			ewav = defe;
+			uwav = aux.defu;
+			ewav = aux.defe;
 		}
 		if (id == 0) {
-			defu = uwav;
-			defe = ewav;
+			aux.defu = uwav;
+			aux.defe = ewav;
 		}
 	}
 
@@ -155,7 +153,8 @@ public class Background extends AnimI implements Indexable<Background> {
 	@Override
 	public void load() {
 		img.mark(Marker.BG);
-		parts = iclist.get(ic).cut(img.getImg());
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		parts = aux.iclist.get(ic).cut(img.getImg());
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package common.util.anim;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -35,7 +36,7 @@ public class EAnimU extends EAnimD {
 		set(g);
 		FakeTransform at = g.getTransform();
 		g.translate(ori.x, ori.y);
-		if (ref && !battle) {
+		if (CommonStatic.getConfig().ref && !CommonStatic.getConfig().battle) {
 			P p0 = P.newP(-200, 0).times(siz);
 			P p1 = P.newP(400, 100).times(siz);
 			P p2 = P.newP(0, -300).times(siz);

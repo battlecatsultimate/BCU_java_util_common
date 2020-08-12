@@ -1,9 +1,9 @@
 package common.battle.attack;
 
+import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.system.P;
 import common.system.fake.FakeGraphics;
-import common.util.ImgCore;
 
 public class ContMove extends ContAb {
 
@@ -27,7 +27,7 @@ public class ContMove extends ContAb {
 
 	@Override
 	public void draw(FakeGraphics gra, P p, double siz) {
-		if (!ImgCore.ref)
+		if (!CommonStatic.getConfig().ref)
 			return;
 
 		// after this is the drawing of hit boxes

@@ -3,31 +3,31 @@ package common.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.CommonStatic;
+import common.io.assets.Admin.StaticPermitted;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 
 public class ImgCore extends Data {
 
+	@StaticPermitted
 	public static final String[] NAME = new String[] { "opacity", "color", "accuracy", "scale" };
+	@StaticPermitted
 	public static final String[] VAL = new String[] { "fast", "default", "quality" };
-
-	public static int deadOpa = 10, fullOpa = 90;
-	public static int[] ints = new int[] { 1, 1, 1, 1 };
-	public static boolean ref = true, battle = false;
 
 	protected static List<Integer> randSeries = new ArrayList<Integer>();
 
 	public static void set(FakeGraphics g) {
-		if (battle)
+		if (CommonStatic.getConfig().battle)
 			return;
 		for (int i = 0; i < 4; i++)
-			g.setRenderingHint(i, ints[i]);
+			g.setRenderingHint(i, CommonStatic.getConfig().ints[i]);
 	}
 
 	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, boolean glow,
 			double extend) {
-		if (opa < fullOpa * 0.01 - 1e-5)
+		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5)
 			if (!glow)
 				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
 			else
@@ -57,7 +57,7 @@ public class ImgCore extends Data {
 
 	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, double opa, boolean glow,
 			double extend) {
-		if (opa < fullOpa * 0.01 - 1e-5)
+		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5)
 			if (!glow)
 				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
 			else

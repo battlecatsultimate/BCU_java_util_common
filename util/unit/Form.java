@@ -7,12 +7,12 @@ import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.pack.PackData.Identifier;
 import common.system.BasedCopable;
-import common.system.MultiLangCont;
 import common.util.Animable;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.ImgCut;
+import common.util.lang.MultiLangCont;
 
 public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
 
@@ -76,7 +76,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 	}
 
 	public String[] getExplanation() {
-		String[] exp = MultiLangCont.FEXP.getCont(this);
+		String[] exp = MultiLangCont.getStatic().FEXP.getCont(this);
 		if (exp != null)
 			return exp;
 		return new String[0];

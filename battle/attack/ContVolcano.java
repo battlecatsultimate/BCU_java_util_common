@@ -5,9 +5,7 @@ import common.CommonStatic.BattleConst;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
-import common.util.ImgCore;
 import common.util.anim.EAnimD;
-import common.util.pack.EffAnim;
 
 public class ContVolcano extends ContAb {
 	protected final EAnimD anim;
@@ -19,11 +17,11 @@ public class ContVolcano extends ContAb {
 
 	protected ContVolcano(AttackVolcano v, double p, int lay, int alive) {
 		super(v.model.b, p, lay);
-		anim = EffAnim.effas[v.dire == 1 ? A_E_VOLC : A_VOLC].getEAnim(1);
+		anim = effas()[v.dire == 1 ? A_E_VOLC : A_VOLC].getEAnim(1);
 		anim.changeAnim(0);
 		this.v = v;
 		aliveTime = alive;
-		CommonStatic.def.setSE(SE_VOLC_START);
+		CommonStatic.setSE(SE_VOLC_START);
 	}
 
 	@Override
@@ -38,12 +36,12 @@ public class ContVolcano extends ContAb {
 	public void update() {
 		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != 1) {
 			anim.changeAnim(1);
-			CommonStatic.def.setSE(SE_VOLC_LOOP);
+			CommonStatic.setSE(SE_VOLC_LOOP);
 		} else if (t > VOLC_PRE + aliveTime && anim.type != 2)
 			anim.changeAnim(2);
 
 		if (t > VOLC_PRE && t < VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
-			CommonStatic.def.setSE(SE_VOLC_LOOP);
+			CommonStatic.setSE(SE_VOLC_LOOP);
 		}
 
 		if (t >= aliveTime + VOLC_POST + VOLC_PRE) {
@@ -57,7 +55,7 @@ public class ContVolcano extends ContAb {
 	}
 
 	protected void drawAxis(FakeGraphics gra, P p, double siz) {
-		if (!ImgCore.ref)
+		if (!CommonStatic.getConfig().ref)
 			return;
 
 		// after this is the drawing of hit boxes

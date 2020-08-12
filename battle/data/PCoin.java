@@ -3,7 +3,6 @@ package common.battle.data;
 import java.util.Queue;
 
 import common.CommonStatic;
-import common.pack.Source;
 import common.pack.Context.ErrType;
 import common.pack.PackData.Identifier;
 import common.system.files.VFile;
@@ -52,12 +51,12 @@ public class PCoin extends Data {
 			if (lvs[i + 1] == 0)
 				continue;
 			if (info[i][0] >= PC_CORRES.length) {
-				Source.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]);
 				continue;
 			}
 			int[] type = PC_CORRES[info[i][0]];
 			if (type.length > 2 || type[0] == -1) {
-				Source.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]);
 				continue;
 			}
 

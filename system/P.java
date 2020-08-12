@@ -3,10 +3,12 @@ package common.system;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import common.io.assets.Admin.StaticPermitted;
 import common.util.BattleObj;
 
 public strictfp class P extends BattleObj {
 
+	@StaticPermitted(StaticPermitted.Type.TEMP)
 	public static Deque<P> stack = new ArrayDeque<>();
 
 	public static void delete(P p) {

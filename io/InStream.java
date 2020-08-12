@@ -1,10 +1,6 @@
 package common.io;
 
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
 import common.CommonStatic;
 
 public strictfp interface InStream {
@@ -14,10 +10,6 @@ public strictfp interface InStream {
 		int sig = DataIO.toInt(is, 0);
 		if (sig == bs.length - 4) {
 			InStream ans = new InStreamDef(is, 4, is.length);
-			return ans;
-		}
-		if (sig == -1) {
-			InStream ans = new InStreamFmt(is, 4, is.length);
 			return ans;
 		}
 		throw new BCUException("Unsupported version");
@@ -234,147 +226,6 @@ strictfp class InStreamDef extends DataIO implements InStream {
 					+ "/" + bs.length;
 			throw new BCUException(str);
 		}
-	}
-
-}
-
-strictfp class InStreamFmt extends DataIO implements InStream {
-
-	private final InStreamDef bs;
-
-	private int max;
-
-	private int index = 0;
-
-	protected InStreamFmt(InStreamDef isd, int n) {
-		bs = isd;
-		max = n;
-	}
-
-	protected InStreamFmt(int[] data, int ofs, int m) {
-		InStreamDef ts = new InStreamDef(data, ofs, m);
-		InStreamDef head = ts.subStream();
-		bs = ts.subStream();
-		max = head.nextInt();
-		byte[] md5 = head.nextBytesB();
-		try {
-
-		} catch (BCUException e) {
-		}
-
-		try {
-			MessageDigest mdi = MessageDigest.getInstance("MD5");
-			mdi.update(translate(bs.getBytes()));
-			byte[] nmd = mdi.digest();
-			if (!Arrays.equals(md5, nmd)) {
-				throw new BCUException("mismatch MD5");
-
-			}
-		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	@Override
-	public boolean end() {
-		return index == max;
-	}
-
-	@Override
-	public int nextByte() {
-		check(BYTE);
-		return bs.nextByte();
-	}
-
-	@Override
-	public byte[] nextBytesB() {
-		check(BYTESB);
-		return bs.nextBytesB();
-	}
-
-	@Override
-	public byte[] nextBytesI() {
-		check(BYTESI);
-		return bs.nextBytesI();
-	}
-
-	@Override
-	public double nextDouble() {
-		check(DOUBLE);
-		return bs.nextDouble();
-	}
-
-	@Override
-	public double[] nextDoubles() {
-		check(DOUBLESB);
-		return bs.nextDoubles();
-	}
-
-	@Override
-	public float nextFloat() {
-		check(FLOAT);
-		return bs.nextFloat();
-	}
-
-	@Override
-	public int nextInt() {
-		check(INT);
-		return bs.nextInt();
-	}
-
-	@Override
-	public int[] nextIntsB() {
-		check(INTSB);
-		return bs.nextIntsB();
-	}
-
-	@Override
-	public int[][] nextIntsBB() {
-		check(INTSSBB);
-		return bs.nextIntsBB();
-	}
-
-	@Override
-	public long nextLong() {
-		check(LONG);
-		return bs.nextLong();
-	}
-
-	@Override
-	public int nextShort() {
-		check(SHORT);
-		return bs.nextShort();
-	}
-
-	@Override
-	public String nextString() {
-		check(STRING);
-		return bs.nextString();
-	}
-
-	@Override
-	public InStreamFmt subStream() {
-		check(SUBS);
-		assert bs.nextInt() == -1;
-		int n = bs.nextInt();
-		return new InStreamFmt(bs.subStream(), n);
-	}
-
-	@Override
-	public OutStreamFmt translate() {
-		return new OutStreamFmt(bs.translate(), index);
-	}
-
-	private void check(byte f) {
-		if (index >= max)
-			throw new BCUException("Fmt: reach end of " + max);
-		index++;
-		int r = bs.nextByte();
-		if (r == f)
-			return;
-		if (r >= names.length || r == 0)
-			throw new BCUException("unknown data type: " + r);
-		throw new BCUException("Expected to Read " + names[f] + " but read " + names[r]);
 	}
 
 }

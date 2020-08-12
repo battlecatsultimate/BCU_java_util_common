@@ -1,6 +1,6 @@
 package common.util.anim;
 
-import common.pack.Source;
+import common.CommonStatic;
 import common.pack.Context.ErrType;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -86,7 +86,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			extend = v;
 			extType = 1;
 		} else
-			Source.ctx.printErr(ErrType.NEW, "unhandled modification " + m);
+			CommonStatic.ctx.printErr(ErrType.NEW, "unhandled modification " + m);
 
 	}
 
@@ -137,7 +137,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	}
 
 	protected void drawPart(FakeGraphics g, P base) {
-		if (img < 0 || id < 0 || opa() < deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
+		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
 		FakeTransform at = g.getTransform();
 		transform(g, base);

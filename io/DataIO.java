@@ -19,9 +19,6 @@ public strictfp abstract class DataIO {
 	protected static final byte DOUBLESB = 13;
 	protected static final byte SUBS = 14;
 
-	protected static final String[] names = { "unknown", "byte", "short", "int", "long", "float", "double", "byte[int]",
-			"int[byte]", "String", "byte[byte]", "int[byte][byte]", "double[byte" };
-
 	public static void fromABP(byte[] b, int index, P n) {
 		fromShort(b, index, (short) (n.x * 10 + 2000));
 		index += 2;

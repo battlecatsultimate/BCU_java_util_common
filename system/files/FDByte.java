@@ -1,18 +1,10 @@
 package common.system.files;
 
-public class FDByte extends FileByte {
-
-	public FDByte(byte[] bs) {
-		super(bs);
-	}
-
-}
-
-class FileByte implements ByteData {
+public class FDByte implements ByteData {
 
 	private byte[] data;
 
-	public FileByte(byte[] bs) {
+	public FDByte(byte[] bs) {
 		data = bs;
 	}
 

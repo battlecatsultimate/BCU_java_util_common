@@ -2,6 +2,7 @@ package common.util.pack;
 
 import java.util.function.Function;
 
+import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
@@ -12,9 +13,8 @@ import common.util.anim.MaModel;
 
 public class EffAnim extends AnimD {
 
-	public static final EffAnim[] effas = new EffAnim[A_TOT];
-
 	public static void read() {
+		EffAnim[] effas = CommonStatic.getBCAssets().effas;
 		String stre = "./org/battle/e1/set_enemy001_zombie";
 		VImg ve = new VImg(stre + ".png");
 		ImgCut ice = ImgCut.newIns(stre + ".imgcut");
@@ -126,6 +126,7 @@ public class EffAnim extends AnimD {
 	private static void readCustom(String[] stfs, ImgCut[] icfs) {
 		String ski = "skill_";
 		String[] temp = new String[] { "" };
+		EffAnim[] effas = CommonStatic.getBCAssets().effas;
 
 		VImg vseal = new VImg(stfs[3] + "skill003.png");
 		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));

@@ -92,7 +92,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
 	@Override
 	public BasisLU copy() {
-		return new BasisLU(BasisSet.current, this);
+		return new BasisLU(BasisSet.current(), this);
 	}
 
 	@Override

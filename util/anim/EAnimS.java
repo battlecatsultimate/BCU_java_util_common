@@ -1,5 +1,6 @@
 package common.util.anim;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
@@ -13,7 +14,7 @@ public class EAnimS extends EAnimI {
 	public void draw(FakeGraphics g, P ori, double siz) {
 		set(g);
 		g.translate(ori.x, ori.y);
-		if (ref && !battle) {
+		if (CommonStatic.getConfig().ref && !CommonStatic.getConfig().battle) {
 			P p0 = new P(-200, 0).times(siz);
 			P p1 = new P(400, 100).times(siz);
 			P p2 = new P(0, -300).times(siz);

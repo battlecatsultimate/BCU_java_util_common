@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import common.CommonStatic;
+import common.CommonStatic.BCAuxAssets;
 import common.system.files.VFile;
 import common.util.Data;
 
 public class Combo extends Data {
 
-	public static final Combo[][] combos = new Combo[C_TOT][];
-	public static final int[][] values = new int[C_TOT][5];
-	public static int[][] filter;
-
 	public static void readFile() {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
 		Queue<String> qs = VFile.readLine("./org/data/NyancomboData.csv");
 		List<Combo> list = new ArrayList<>();
 		int i = 0;
@@ -28,10 +27,10 @@ public class Combo extends Data {
 			}
 		}
 		for (i = 0; i < C_TOT; i++)
-			combos[i] = new Combo[ns[i]];
+			aux.combos[i] = new Combo[ns[i]];
 		ns = new int[C_TOT];
 		for (Combo c : list)
-			combos[c.type][ns[c.type]++] = c;
+			aux.combos[c.type][ns[c.type]++] = c;
 
 		qs = VFile.readLine("./org/data/NyancomboParam.tsv");
 		for (i = 0; i < C_TOT; i++) {
@@ -39,20 +38,20 @@ public class Combo extends Data {
 			if (strs.length < 5)
 				continue;
 			for (int j = 0; j < 5; j++) {
-				values[i][j] = Integer.parseInt(strs[j]);
+				aux.values[i][j] = Integer.parseInt(strs[j]);
 				if (i == C_RESP)
-					values[i][j] *= 2.6;
+					aux.values[i][j] *= 2.6;
 				if (i == C_C_SPE)
-					values[i][j] = (values[i][j] - 10) * 15;
+					aux.values[i][j] = (aux.values[i][j] - 10) * 15;
 			}
 		}
 		qs = VFile.readLine("./org/data/NyancomboFilter.tsv");
-		filter = new int[qs.size()][];
-		for (i = 0; i < filter.length; i++) {
+		aux.filter = new int[qs.size()][];
+		for (i = 0; i < aux.filter.length; i++) {
 			String[] strs = qs.poll().trim().split("\t");
-			filter[i] = new int[strs.length];
+			aux.filter[i] = new int[strs.length];
 			for (int j = 0; j < strs.length; j++)
-				filter[i][j] = Integer.parseInt(strs[j]);
+				aux.filter[i][j] = Integer.parseInt(strs[j]);
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.PackData.Identifier;
@@ -524,6 +525,7 @@ public class Formatter {
 
 	}
 
+	@StaticPermitted
 	private static final String[] MATCH = { ">=", "<=", "==", "!=", ">", "<" };
 
 	public static String format(String pattern, Object obj, Object ctx) {

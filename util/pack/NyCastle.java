@@ -1,5 +1,7 @@
 package common.util.pack;
 
+import common.CommonStatic;
+import common.CommonStatic.BCAuxAssets;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.AnimI;
@@ -12,21 +14,19 @@ public class NyCastle extends AnimI {
 
 	public static final int TOT = 8;
 
-	public static final VImg[][] main = new VImg[3][TOT];
-	public static final NyCastle[] atks = new NyCastle[TOT];
-
 	public static void read() {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
 		String pre = "./org/castle/00";
 		String mid = "/nyankoCastle_00";
 		int[] type = new int[] { 0, 2, 3 };
 		for (int t = 0; t < 3; t++)
 			for (int i = 0; i < TOT; i++) {
 				String str = pre + type[t] + mid + type[t] + "_0" + i;
-				main[t][i] = new VImg(str + ".png");
+				aux.main[t][i] = new VImg(str + ".png");
 			}
 		for (int i = 0; i < TOT; i++) {
 			String str = pre + 1 + mid + 1 + "_0";
-			atks[i] = new NyCastle(str, i);
+			aux.atks[i] = new NyCastle(str, i);
 		}
 	}
 

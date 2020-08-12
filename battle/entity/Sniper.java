@@ -7,12 +7,11 @@ import common.battle.attack.AttackSimple;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.anim.EAnimD;
-import common.util.pack.EffAnim;
 
 public class Sniper extends AtkModelAb {
 
-	private EAnimD anim = EffAnim.effas[A_SNIPER].getEAnim(0);
-	private EAnimD atka = EffAnim.effas[A_SNIPER].getEAnim(1);
+	private EAnimD anim = effas()[A_SNIPER].getEAnim(0);
+	private EAnimD atka = effas()[A_SNIPER].getEAnim(1);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0, angle = 0;
 	public boolean enabled = true, canDo = true;
 	public double pos, height, updown;

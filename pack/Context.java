@@ -54,6 +54,8 @@ public interface Context {
 
 	public File getWorkspaceFile(String relativePath);
 
+	public void initProfile();
+
 	public default boolean noticeErr(Context.RunExc r, ErrType t, String str) {
 		try {
 			r.run();

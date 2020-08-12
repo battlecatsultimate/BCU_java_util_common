@@ -8,7 +8,7 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
 
-import common.pack.Source;
+import common.CommonStatic;
 import common.pack.Context.ErrType;
 
 public class MultiStream {
@@ -109,11 +109,11 @@ public class MultiStream {
 			r.run();
 			return;
 		} catch (IOException e) {
-			Source.ctx.printErr(ErrType.INFO, "failed to read, attempted again");
+			CommonStatic.ctx.printErr(ErrType.INFO, "failed to read, attempted again");
 			close();
 		}
 		r.run();
-		Source.ctx.printErr(ErrType.INFO, "attempt succeed");
+		CommonStatic.ctx.printErr(ErrType.INFO, "attempt succeed");
 	}
 
 	private void readBytes(int pos, byte[] arr) throws IOException {

@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import common.pack.Source;
+import common.CommonStatic;
 import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
 
@@ -41,7 +41,7 @@ public interface FileData {
 			is.close();
 			return baos.toByteArray();
 		} catch (Exception e) {
-			Source.ctx.noticeErr(e, ErrType.FATAL, "failed to read data");
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read data");
 			return null;
 		}
 	}

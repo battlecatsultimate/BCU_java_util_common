@@ -5,7 +5,6 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
-import common.util.pack.EffAnim;
 
 public class WaprCont extends EAnimCont {
 
@@ -14,9 +13,9 @@ public class WaprCont extends EAnimCont {
 	public final int dire;
 
 	public WaprCont(double p, int pa, int layer, EAnimU a, int dire) {
-		super(p, layer, EffAnim.effas[A_W].getEAnim(pa));
+		super(p, layer, effas()[A_W].getEAnim(pa));
 		ent = a;
-		chara = EffAnim.effas[A_W_C].getEAnim(pa);
+		chara = effas()[A_W_C].getEAnim(pa);
 		this.dire = dire;
 	}
 

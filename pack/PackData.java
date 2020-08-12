@@ -10,6 +10,9 @@ import java.util.Queue;
 import com.google.gson.JsonElement;
 import common.CommonStatic;
 import common.battle.data.DataEnemy;
+import common.battle.data.Orb;
+import common.battle.data.PCoin;
+import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
@@ -22,14 +25,21 @@ import common.pack.Source.Workspace;
 import common.pack.VerFixer.IdFixer;
 import common.system.files.FDFile;
 import common.system.files.VFile;
+import common.system.files.VFileRoot;
 import common.util.Data;
+import common.util.Res;
 import common.util.pack.Background;
+import common.util.pack.EffAnim;
+import common.util.pack.NyCastle;
 import common.util.pack.Soul;
 import common.util.stage.CastleList.PackCasList;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
+import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
+import common.util.stage.RandStage;
+import common.util.unit.Combo;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
@@ -40,14 +50,35 @@ public class PackData {
 
 	public static class DefPack extends PackData {
 
+		public VFileRoot<FileDesc> root = new VFileRoot<>(".");;
+
 		public final Map<Integer, CharaGroup> cgmap = new HashMap<>();
 
-		public DefPack() {
-			loadSoul();
+		protected DefPack() {
+		}
+
+		public void load() {
+			Res.readData();
+
 			loadEnemies();
 			loadUnits();
+
+			Combo.readFile();
+			PCoin.read();
+			EffAnim.read();
+			Background.read();
+			NyCastle.read();
+
+			loadSoul();
+
+			DefMapColc.read();
+			RandStage.read();
+
 			loadCharaGroup();
 			loadLimit();
+
+			Orb.read();
+
 			loadMusic();
 		}
 
@@ -86,7 +117,7 @@ public class PackData {
 		}
 
 		private void loadMusic() {
-			File dict = Source.ctx.getAssetFile("./music/");
+			File dict = CommonStatic.ctx.getAssetFile("./music/");
 			if (!dict.exists())
 				return;
 			File[] fs = dict.listFiles();

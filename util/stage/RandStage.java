@@ -18,10 +18,10 @@ public class RandStage {
 		double r = Math.random() * 100;
 		for (int i = 0; i < 10; i++)
 			if (r < randRep[att][i])
-				return BasisSet.current.sele.randomize(10 - i);
+				return BasisSet.current().sele.randomize(10 - i);
 			else
 				r -= randRep[att][i];
-		return BasisSet.current.sele;
+		return BasisSet.current().sele;
 	}
 
 	public static Stage getStage(int sta) {

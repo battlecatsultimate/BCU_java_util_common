@@ -11,18 +11,21 @@ import java.util.function.Predicate;
 
 import common.CommonStatic;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.pack.UserProfile;
 
 public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
-	public static final VFileRoot<FileDesc> root = new VFileRoot<>(".");
-
 	public static VFile<FileDesc> get(String str) {
-		return root.find(str);
+		return getBCFileTree().find(str);
+	}
+
+	public static final VFileRoot<FileDesc> getBCFileTree() {
+		return UserProfile.getBCData().root;
 	}
 
 	public static VFile<? extends FileData> getFile(String path) {
 		if (path.startsWith("./org/") || path.startsWith("./lang/"))
-			return root.find(path);
+			return getBCFileTree().find(path);
 		if (path.startsWith("./res/")) {
 			File f = CommonStatic.def.route(path);
 			if (!f.exists())

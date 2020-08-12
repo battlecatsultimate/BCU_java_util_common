@@ -4,6 +4,7 @@ import java.util.TreeMap;
 
 import common.battle.LineUp;
 import common.io.InStream;
+import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
@@ -57,6 +58,7 @@ public class LvRestrict extends Data {
 
 	}
 
+	@StaticPermitted
 	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
 
 	@JsonField(generic = { CharaGroup.class, int[].class }, alias = int.class)

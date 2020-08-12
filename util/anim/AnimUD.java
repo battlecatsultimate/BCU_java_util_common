@@ -1,11 +1,11 @@
 package common.util.anim;
 
+import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.FileData;
 import common.system.files.VFile;
-import common.util.Res;
 
 public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
@@ -73,7 +73,7 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 		public VImg getUni() {
 			if (uni != null)
 				return uni;
-			return funi == null ? Res.slot[0] : (uni = new VImg(funi).mark(Marker.UNI));
+			return funi == null ? CommonStatic.getBCAssets().slot[0] : (uni = new VImg(funi).mark(Marker.UNI));
 		}
 
 		@Override

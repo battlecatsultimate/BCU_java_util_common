@@ -3,8 +3,11 @@ package common.system;
 import java.util.HashMap;
 import java.util.Map;
 
+import common.io.assets.Admin.StaticPermitted;
+
 public interface BasedCopable<T, B> extends Cloneable, Copable<T> {
 
+	@StaticPermitted(StaticPermitted.Type.TEMP)
 	public static Map<Class<?>, Object> map = new HashMap<>();
 
 	@Override

@@ -118,7 +118,7 @@ public abstract class VerFixer extends Source {
 						e.printStackTrace();
 						continue;
 					}
-					File fx = Source.ctx.getWorkspaceFile("./" + id + "/backgrounds/" + str);
+					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/backgrounds/" + str);
 					fi.renameTo(fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
@@ -162,7 +162,7 @@ public abstract class VerFixer extends Source {
 						e.printStackTrace();
 						continue;
 					}
-					File fx = Source.ctx.getWorkspaceFile("./" + id + "/castles/" + str);
+					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/castles/" + str);
 					fi.renameTo(fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
@@ -215,7 +215,7 @@ public abstract class VerFixer extends Source {
 						e.printStackTrace();
 						continue;
 					}
-					File fx = Source.ctx.getWorkspaceFile("./" + id + "/musics/" + str);
+					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/musics/" + str);
 					fi.renameTo(fx);
 					if (val >= 0)
 						data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(fx)));
@@ -346,7 +346,7 @@ public abstract class VerFixer extends Source {
 			for (int i = 0; i < n; i++) {
 				int val = is.nextInt();
 				File f = ImgReader.loadMusicFile(is, r, Integer.parseInt(id), val);
-				f.renameTo(Source.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
+				f.renameTo(CommonStatic.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
 				data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(f)));
 			}
 		}
@@ -387,7 +387,7 @@ public abstract class VerFixer extends Source {
 
 		private void writeImgs(VImg img, String type, String name) throws IOException {
 			String path = "./.temp_" + id + "/" + type + "/" + name;
-			File f = Source.ctx.getWorkspaceFile(path);
+			File f = CommonStatic.ctx.getWorkspaceFile(path);
 			FakeImage.write(img.getImg(), "", f);
 			img.unload();
 		}
@@ -492,7 +492,7 @@ public abstract class VerFixer extends Source {
 			if (rem == 0) {
 				for (VerFixer p : list) {
 					map.remove(p.id);
-					Source.ctx.printErr(ErrType.WARN, "Failed to load " + p.data.desc);
+					CommonStatic.ctx.printErr(ErrType.WARN, "Failed to load " + p.data.desc);
 				}
 				break;
 			}

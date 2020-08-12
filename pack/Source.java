@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context.ErrType;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -59,6 +61,7 @@ public abstract class Source {
 
 	}
 
+	@StaticPermitted
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
 		public static interface SourceLoader {
@@ -88,7 +91,7 @@ public abstract class Source {
 			FileData edi = loader.loadFile(id, EDI);
 			if (edi == null)
 				return null;
-			return ctx.noticeErr(() -> new VImg(FakeImage.read(edi)), ErrType.ERROR,
+			return CommonStatic.ctx.noticeErr(() -> new VImg(FakeImage.read(edi)), ErrType.ERROR,
 					"failed to read Display Icon" + id);
 		}
 
@@ -117,7 +120,7 @@ public abstract class Source {
 
 		@Override
 		public FakeImage getNum() {
-			return ctx.noticeErr(() -> FakeImage.read(loader.loadFile(id, SP)), ErrType.ERROR,
+			return CommonStatic.ctx.noticeErr(() -> FakeImage.read(loader.loadFile(id, SP)), ErrType.ERROR,
 					"failed to read sprite sheet " + id);
 		}
 
@@ -131,7 +134,7 @@ public abstract class Source {
 			FileData uni = loader.loadFile(id, UNI);
 			if (uni == null)
 				return null;
-			return ctx.noticeErr(() -> new VImg(FakeImage.read(uni)), ErrType.ERROR,
+			return CommonStatic.ctx.noticeErr(() -> new VImg(FakeImage.read(uni)), ErrType.ERROR,
 					"failed to read deploy icon " + id);
 		}
 
@@ -148,7 +151,8 @@ public abstract class Source {
 		}
 
 		public void delete() {
-			ctx.noticeErr(() -> Context.delete(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id)),
+			CommonStatic.ctx.noticeErr(
+					() -> Context.delete(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id)),
 					ErrType.ERROR, "failed to delete animation: " + id);
 		}
 
@@ -169,19 +173,19 @@ public abstract class Source {
 				write("maanim_burrow_move.txt", anim.anims[5]::write);
 				write("maanim_burrow_up.txt", anim.anims[6]::write);
 			} catch (IOException e) {
-				ctx.noticeErr(e, ErrType.ERROR, "Error during saving animation data: " + anim);
+				CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "Error during saving animation data: " + anim);
 			}
 		}
 
 		public void saveIconDeploy() {
 			if (anim.getUni() != null)
-				ctx.noticeErr(() -> write("icon_deploy.png", anim.getUni().getImg()), ErrType.ERROR,
+				CommonStatic.ctx.noticeErr(() -> write("icon_deploy.png", anim.getUni().getImg()), ErrType.ERROR,
 						"Error during saving deploy icon: " + id);
 		}
 
 		public void saveIconDisplay() {
 			if (anim.getEdi() != null)
-				ctx.noticeErr(() -> write("icon_display.png", anim.getEdi().getImg()), ErrType.ERROR,
+				CommonStatic.ctx.noticeErr(() -> write("icon_display.png", anim.getEdi().getImg()), ErrType.ERROR,
 						"Error during saving display icon: " + id);
 		}
 
@@ -192,12 +196,12 @@ public abstract class Source {
 		}
 
 		public void saveSprite() {
-			ctx.noticeErr(() -> write("sprite.png", anim.getNum()), ErrType.ERROR,
+			CommonStatic.ctx.noticeErr(() -> write("sprite.png", anim.getNum()), ErrType.ERROR,
 					"Error during saving sprite sheet: " + id);
 		}
 
 		private void write(String type, Consumer<PrintStream> con) throws IOException {
-			File f = ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + type);
+			File f = CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + type);
 			Context.check(f);
 			PrintStream ps = new PrintStream(f);
 			con.accept(ps);
@@ -205,7 +209,7 @@ public abstract class Source {
 		}
 
 		private void write(String type, FakeImage img) throws IOException {
-			File f = ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + type);
+			File f = CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + type);
 			Context.check(f);
 			Context.check(FakeImage.write(img, "PNG", f), "save", f);
 		}
@@ -217,13 +221,13 @@ public abstract class Source {
 		public static List<AnimCE> loadAnimations(String id) {
 			if (id == null)
 				id = ResourceLocation.LOCAL;
-			File folder = ctx.getWorkspaceFile("./" + id + "/animations/");
+			File folder = CommonStatic.ctx.getWorkspaceFile("./" + id + "/animations/");
 			List<AnimCE> list = new ArrayList<>();
 			if (!folder.exists() || !folder.isDirectory())
 				return list;
 			for (File f : folder.listFiles()) {
 				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
-				if (f.isDirectory() && ctx.getWorkspaceFile(path).exists())
+				if (f.isDirectory() && CommonStatic.ctx.getWorkspaceFile(path).exists())
 					list.add(new AnimCE(new ResourceLocation(id, f.getName())));
 			}
 			return list;
@@ -235,7 +239,7 @@ public abstract class Source {
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
-			return new FDFile(ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str));
+			return new FDFile(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str));
 		}
 
 		public Workspace(String id) {
@@ -264,7 +268,7 @@ public abstract class Source {
 		}
 
 		private File getFile(String path) {
-			return ctx.getWorkspaceFile("./" + id + "/" + path);
+			return CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + path);
 		}
 
 	}
@@ -319,9 +323,6 @@ public abstract class Source {
 		}
 
 	}
-
-	// FIXME static variable
-	public static Context ctx;
 
 	public final String id;
 

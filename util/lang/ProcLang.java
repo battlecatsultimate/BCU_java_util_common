@@ -18,7 +18,7 @@ import common.io.json.JsonField;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonClass.WType;
 import common.io.json.JsonField.IOType;
-import common.pack.Source;
+import common.pack.UserProfile;
 import common.util.Data.Proc;
 import common.util.Data.Proc.IntType;
 import common.util.lang.LocaleCenter.Binder;
@@ -104,17 +104,14 @@ public class ProcLang {
 		private final ProcLang[] langs = new ProcLang[CommonStatic.Lang.LOC_CODE.length];
 
 		private ProcLang getLang() {
-			return langs[CommonStatic.Lang.lang];
+			return langs[CommonStatic.getConfig().lang];
 		}
 
 		private void setLang(ProcLang lang) {
-			langs[CommonStatic.Lang.lang] = lang;
+			langs[CommonStatic.getConfig().lang] = lang;
 		}
 
 	}
-
-	// FIXME static field: log this field into register
-	private static ProcLangStore store;
 
 	public static ProcLang gen(JsonElement elem) throws Exception {
 		ProcLang ans = new ProcLang();
@@ -129,17 +126,22 @@ public class ProcLang {
 			ans.map.put(name, item);
 		}
 		return ans;
-	}
+	};
 
 	public static ProcLang get() {
-		return store.getLang();
+		return store().getLang();
 	}
 
 	public static void read() throws Exception {
-		File f = Source.ctx.getLangFile("proc.json");
+		File f = CommonStatic.ctx.getLangFile("proc.json");
 		JsonElement elem = JsonParser.parseReader(new FileReader(f));
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);
-		store.setLang(proc);
+		store().setLang(proc);
+	}
+
+	// FIXME static field: log this field into register
+	private static ProcLangStore store() {
+		return UserProfile.getStatic("ProcLangStore", ProcLangStore::new);
 	}
 
 	private final Map<String, ItemLang> map = new LinkedHashMap<>();

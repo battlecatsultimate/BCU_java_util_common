@@ -5,29 +5,86 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.assets.Admin.StaticPermitted;
+import common.pack.Context;
 import common.pack.Source;
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.util.Data;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.MaModel;
+import common.util.pack.EffAnim;
+import common.util.pack.NyCastle;
+import common.util.pack.WaveAnim;
+import common.util.unit.Combo;
+
 import static java.lang.Character.isDigit;
 
 public class CommonStatic {
-
-	public static class Account {
-
-		public static String USERNAME = "";
-		public static long PASSWORD = 0;
-
-	}
 
 	public static interface BattleConst {
 
 		public static final double ratio = 768.0 / 2400.0;// r = p/u
 
+	}
+
+	public static class BCAuxAssets {
+
+		// Res resources
+		public VImg[] slot = new VImg[3];
+		public VImg[][] ico = new VImg[2][];
+		public VImg[][] num = new VImg[9][11];
+		public VImg[][] battle = new VImg[3][];
+		public VImg[][] icon = new VImg[4][];
+
+		// Background resources
+		public MaModel ewavm, uwavm;
+		public MaAnim ewava, uwava;
+		public WaveAnim defu, defe;
+		public final List<ImgCut> iclist = new ArrayList<>();
+
+		// Available data for atk/res orb, will be used for GUI
+		// Map<Trait, Grades>
+		public final Map<Integer, List<Integer>> ATKORB = new TreeMap<>();
+		public final Map<Integer, List<Integer>> RESORB = new TreeMap<>();
+		public final Map<Integer, Integer> DATA = new HashMap<>();
+
+		public FakeImage[] TYPES;
+		public FakeImage[] TRAITS;
+		public FakeImage[] GRADES;
+
+		// NyCastle
+		public final VImg[][] main = new VImg[3][NyCastle.TOT];
+		public final NyCastle[] atks = new NyCastle[NyCastle.TOT];
+
+		// EffAnim
+		public final EffAnim[] effas = new EffAnim[Data.A_TOT];
+
+		// Combo
+		public final Combo[][] combos = new Combo[Data.C_TOT][];
+		public final int[][] values = new int[Data.C_TOT][5];
+		public int[][] filter;
+
+	}
+
+	public static class Config {
+		// ImgCore
+		public int deadOpa = 10, fullOpa = 90;
+		public int[] ints = new int[] { 1, 1, 1, 1 };
+		public boolean ref = true, battle = false;
+		// Lang
+		public int lang;
 	}
 
 	public static interface EditLink {
@@ -149,7 +206,6 @@ public class CommonStatic {
 
 		public File route(String path);
 
-		/** play sound effect */
 		public void setSE(int ind);
 
 		/** write OutStream into file */
@@ -161,16 +217,28 @@ public class CommonStatic {
 
 	public static class Lang {
 
+		@StaticPermitted
 		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
 
+		@StaticPermitted
 		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
 				{ 0, 3, 1, 2 }, { 0, 3, 1, 2 }, { 0, 3, 1, 2 } };
 
-		public static int lang = 0;
-
 	}
 
+	@StaticPermitted(StaticPermitted.Type.ENV)
 	public static Itf def;
+
+	@StaticPermitted(StaticPermitted.Type.ENV)
+	public static Context ctx;
+
+	public static BCAuxAssets getBCAssets() {
+		return UserProfile.getStatic("BCAuxAssets", BCAuxAssets::new);
+	}
+
+	public static Config getConfig() {
+		return UserProfile.getStatic("config", Config::new);
+	}
 
 	public static boolean isInteger(String str) {
 		for (int i = 0; i < str.length(); i++) {
@@ -252,6 +320,11 @@ public class CommonStatic {
 		for (int i = 0; i < lstr.size(); i++)
 			ans[i] = Long.parseLong(lstr.get(i));
 		return ans;
+	}
+
+	/** play sound effect */
+	public static void setSE(int ind) {
+		def.setSE(ind);
 	}
 
 	public static String toArrayFormat(int... data) {

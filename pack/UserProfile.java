@@ -19,6 +19,7 @@ import com.google.gson.JsonParser;
 
 import java.util.Map.Entry;
 
+import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.json.JsonDecoder;
@@ -47,14 +48,22 @@ public class UserProfile {
 	private static final String REG_STATIC = "_statics";
 
 	// FIXME load it into register
-	private static UserProfile profile;
+	// TODO load username and password
+	private static UserProfile profile = null;
+
+	public static boolean canRemove(String id) {
+		for (Entry<String, UserPack> ent : profile().packmap.entrySet())
+			if (ent.getValue().desc.dependency.contains(id))
+				return false;
+		return true;
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static <T> List<T> getAll(String pack, Class<T> cls) {
 		List<PackData> list = new ArrayList<>();
-		list.add(profile.def);
+		list.add(profile().def);
 		if (pack != null) {
-			UserPack userpack = profile.packmap.get(pack);
+			UserPack userpack = profile().packmap.get(pack);
 			list.add(userpack);
 			for (String dep : userpack.desc.dependency)
 				list.add(getPack(dep));
@@ -66,13 +75,13 @@ public class UserProfile {
 	}
 
 	public static DefPack getBCData() {
-		return profile.def;
+		return profile().def;
 	}
 
 	public static PackData getPack(String str) {
 		if (str.equals(Identifier.DEF))
-			return profile.def;
-		return profile.packmap.get(str);
+			return profile().def;
+		return profile().packmap.get(str);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -86,9 +95,9 @@ public class UserProfile {
 
 	@SuppressWarnings("unchecked")
 	public static <T> Map<String, T> getRegister(String id, Class<T> cls) {
-		Map<String, T> ans = (Map<String, T>) profile.registers.get(id);
+		Map<String, T> ans = (Map<String, T>) profile().registers.get(id);
 		if (ans == null)
-			profile.registers.put(id, ans = new HashMap<>());
+			profile().registers.put(id, ans = new HashMap<>());
 		return ans;
 	}
 
@@ -102,14 +111,14 @@ public class UserProfile {
 	}
 
 	public static UserPack getUserPack(String id) {
-		return profile.packmap.get(id);
+		return profile().packmap.get(id);
 	}
 
 	public static PackData.UserPack initJsonPack(String id) throws Exception {
-		File f = Source.ctx.getWorkspaceFile("./" + id + "/pack.json");
+		File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/pack.json");
 		File folder = f.getParentFile();
 		if (folder.exists()) {
-			if (!Source.ctx.confirmDelete())
+			if (!CommonStatic.ctx.confirmDelete())
 				return null;
 			Context.delete(f);
 		}
@@ -118,8 +127,40 @@ public class UserProfile {
 		return new PackData.UserPack(id);
 	}
 
+	public static void loadPacks() {
+		CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to convert old format");
+		File packs = CommonStatic.ctx.getPackFolder();
+		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
+		UserProfile profile = profile();
+		if (packs.exists())
+			for (File f : packs.listFiles())
+				if (f.getName().endsWith(".pack.bcuzip")) {
+					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
+							"failed to load external pack " + f);
+					if (pack != null)
+						profile.pending.put(pack.desc.id, pack);
+				}
+
+		if (workspace.exists())
+			for (File f : packs.listFiles())
+				if (f.isDirectory()) {
+					File main = CommonStatic.ctx.getWorkspaceFile("./" + f.getName() + "/main.pack.json");
+					if (!main.exists())
+						continue;
+					UserPack pack = CommonStatic.ctx.noticeErr(() -> readJsonPack(main), ErrType.WARN,
+							"failed to load workspace pack " + f);
+					if (pack != null)
+						profile.pending.put(pack.desc.id, pack);
+				}
+		Set<UserPack> queue = new HashSet<>(profile.pending.values());
+		while (queue.removeIf(profile::add))
+			;
+		profile.pending = null;
+		profile.packlist.addAll(profile.failed);
+	}
+
 	public static Collection<UserPack> packs() {
-		return profile.packmap.values();
+		return profile().packmap.values();
 	}
 
 	public static UserPack readJsonPack(File f) throws Exception {
@@ -133,12 +174,17 @@ public class UserProfile {
 	}
 
 	public static UserPack readZipPack(File f) throws Exception {
-		ZipDesc zip = PackLoader.readPack(Source.ctx::preload, f);
+		ZipDesc zip = PackLoader.readPack(CommonStatic.ctx::preload, f);
 		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"));
 		JsonElement elem = JsonParser.parseReader(r);
 		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
 		r.close();
 		return data;
+	}
+
+	public static void remove(UserPack pack) {
+		profile().packmap.remove(pack.desc.id);
+		profile().packlist.remove(pack);
 	}
 
 	public static void setStatic(String id, Object val) {
@@ -173,61 +219,27 @@ public class UserProfile {
 			func.accept(data.musics);
 	}
 
+	private static UserProfile profile() {
+		if (profile == null) {
+			profile = new UserProfile();
+			CommonStatic.ctx.initProfile();
+		}
+		return profile;
+	}
+
 	public String username;
-
 	public byte[] password;
-
 	public final DefPack def = new DefPack();
-
 	public final Map<String, UserPack> packmap = new HashMap<>();
 	public final Set<UserPack> packlist = new HashSet<>();
+
 	public final Set<UserPack> failed = new HashSet<>();
+
 	private final Map<String, Map<String, ?>> registers = new HashMap<>();
+
 	private Map<String, UserPack> pending = new HashMap<>();
 
-	public UserProfile() {
-		// TODO load username and password
-		Source.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to convert old format");
-		File packs = Source.ctx.getPackFolder();
-		File workspace = Source.ctx.getWorkspaceFile(".");
-
-		if (packs.exists())
-			for (File f : packs.listFiles())
-				if (f.getName().endsWith(".pack.bcuzip")) {
-					UserPack pack = Source.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
-							"failed to load external pack " + f);
-					if (pack != null)
-						pending.put(pack.desc.id, pack);
-				}
-
-		if (workspace.exists())
-			for (File f : packs.listFiles())
-				if (f.isDirectory()) {
-					File main = Source.ctx.getWorkspaceFile("./" + f.getName() + "/main.pack.json");
-					if (!main.exists())
-						continue;
-					UserPack pack = Source.ctx.noticeErr(() -> readJsonPack(main), ErrType.WARN,
-							"failed to load workspace pack " + f);
-					if (pack != null)
-						pending.put(pack.desc.id, pack);
-				}
-		Set<UserPack> queue = new HashSet<>(pending.values());
-		while (queue.removeIf(this::add))
-			;
-		pending = null;
-		packlist.addAll(failed);
-	}
-
-	public boolean canRemove(String id) {
-		for (Entry<String, UserPack> ent : packmap.entrySet())
-			if (ent.getValue().desc.dependency.contains(id))
-				return false;
-		return true;
-	}
-
-	public void remove(UserPack pack) {
-		packmap.remove(pack.desc.id);
-		packlist.remove(pack);
+	private UserProfile() {
 	}
 
 	/**
@@ -238,7 +250,7 @@ public class UserProfile {
 		packlist.add(pack);
 		if (!canAdd(pack))
 			return false;
-		if (!Source.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc)) {
+		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc)) {
 			failed.add(pack);
 			return true;
 		}

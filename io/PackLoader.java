@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 
 import common.io.MultiStream.ByteStream;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.Admin.StaticPermitted;
 import common.io.assets.AssetLoader.AssetHeader;
 import common.io.assets.AssetLoader.AssetHeader.AssetEntry;
 import common.io.json.JsonClass;
@@ -37,6 +38,7 @@ import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFileRoot;
 
+@StaticPermitted
 public class PackLoader {
 
 	public static interface PatchFile {
@@ -298,6 +300,7 @@ public class PackLoader {
 
 	private static class FileSaver {
 
+		@StaticPermitted
 		private static final String[] EXCLUDE = { ".DS_Store", ".desktop.ini", "__MACOSX" };
 
 		private final FileOutputStream fos;

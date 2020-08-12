@@ -12,9 +12,7 @@ import common.pack.PackData.Identifier;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
-import common.util.ImgCore;
 import common.util.anim.EAnimD;
-import common.util.pack.NyCastle;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
@@ -34,9 +32,9 @@ public class Cannon extends AtkModelAb {
 
 	/** call when shoot the canon */
 	public void activate() {
-		anim = NyCastle.atks[id].getEAnim(0);
+		anim = CommonStatic.getBCAssets().atks[id].getEAnim(0);
 		preTime = NYPRE[id];
-		CommonStatic.def.setSE(SE_CANNON[id][0]);
+		CommonStatic.setSE(SE_CANNON[id][0]);
 	}
 
 	/** attack part of animation */
@@ -48,7 +46,7 @@ public class Cannon extends AtkModelAb {
 		if (exta != null)
 			exta.draw(g, ori, siz);
 		g.setTransform(at);
-		if (!ImgCore.ref || id == BASE_H || id == BASE_SLOW || id == BASE_GROUND) {
+		if (!CommonStatic.getConfig().ref || id == BASE_H || id == BASE_SLOW || id == BASE_GROUND) {
 			g.delete(at);
 			return;
 		}
@@ -102,8 +100,8 @@ public class Cannon extends AtkModelAb {
 		if (anim != null && anim.done()) {
 			anim = null;
 			if (id > 2 && id < 5) {
-				atka = NyCastle.atks[id].getEAnim(1);
-				CommonStatic.def.setSE(SE_CANNON[id][1]);
+				atka = CommonStatic.getBCAssets().atks[id].getEAnim(1);
+				CommonStatic.setSE(SE_CANNON[id][1]);
 			}
 		}
 		if (atka != null && atka.done())
@@ -209,8 +207,8 @@ public class Cannon extends AtkModelAb {
 					int rad = b.b.t().getCanonProcTime(id);
 					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos));
 
-					atka = NyCastle.atks[id].getEAnim(1);
-					exta = NyCastle.atks[id].getEAnim(2);
+					atka = CommonStatic.getBCAssets().atks[id].getEAnim(1);
+					exta = CommonStatic.getBCAssets().atks[id].getEAnim(2);
 				} else if (id == 7) {
 					// curse cannon
 					tempAtk = true;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import common.CommonStatic;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
@@ -262,7 +263,7 @@ public class LineUp extends Data {
 		List<Combo> tcom = new ArrayList<>();
 		inc = new int[C_TOT];
 		loc = new int[5];
-		for (Combo[] cs : Combo.combos)
+		for (Combo[] cs : CommonStatic.getBCAssets().combos)
 			for (Combo c : cs) {
 				boolean b = true;
 				for (int i = 0; i < c.units.length; i++) {
@@ -285,7 +286,7 @@ public class LineUp extends Data {
 				}
 				if (b) {
 					tcom.add(c);
-					inc[c.type] += Combo.values[c.type][c.lv];
+					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
 					for (int i = 0; i < c.units.length; i++)
 						for (int j = 0; j < 5; j++) {
 							Form f = fs[0][j];

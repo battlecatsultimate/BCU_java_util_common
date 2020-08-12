@@ -10,6 +10,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.IOType;
+import common.pack.UserProfile;
 import common.pack.VerFixer;
 import common.pack.VerFixer.VerFixerException;
 import common.system.Copable;
@@ -17,9 +18,17 @@ import common.system.Copable;
 @JsonClass
 public class BasisSet extends Basis implements Copable<BasisSet> {
 
-	public static final List<BasisSet> list = new ArrayList<>();
-	public static final BasisSet def = new BasisSet();
-	public static BasisSet current;
+	public static BasisSet current() {
+		return UserProfile.getStatic("BasisSet_current", () -> null);
+	}
+
+	public static BasisSet def() {
+		return UserProfile.getStatic("BasisSet_default", () -> new BasisSet());
+	}
+
+	public static List<BasisSet> list() {
+		return UserProfile.getStatic("BasisSet_list", () -> new ArrayList<>());
+	}
 
 	public static void read(InStream is) throws VerFixerException {
 		zreads(is, false);
@@ -27,6 +36,10 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static BasisSet[] readBackup(InStream is) throws VerFixerException {
 		return zreads(is, true).toArray(new BasisSet[0]);
+	}
+
+	public static void setCurrent(BasisSet cur) {
+		UserProfile.setStatic("BasisSet_current", cur);
 	}
 
 	private static List<BasisSet> zreads(InStream is, boolean bac) throws VerFixerException {
@@ -37,7 +50,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	}
 
 	private static List<BasisSet> zreads$000308(int ver, InStream is, boolean bac) throws VerFixerException {
-		List<BasisSet> ans = bac ? new ArrayList<BasisSet>() : list;
+		List<BasisSet> ans = bac ? new ArrayList<BasisSet>() : list();
 		int n = is.nextInt();
 		for (int i = 1; i < n; i++) {
 			BasisSet bs = new BasisSet(ver, is.subStream());
@@ -45,7 +58,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		}
 		int ind = Math.max(is.nextInt(), ans.size() - 1);
 		if (!bac)
-			current = list.get(ind);
+			setCurrent(list().get(ind));
 		return ans;
 	}
 
@@ -58,21 +71,21 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public BasisLU sele;
 
 	public BasisSet() {
-		if (list.size() == 0)
+		if (list().size() == 0)
 			name = "temporary";
 		else
-			name = "set " + list.size();
+			name = "set " + list().size();
 		t = new Treasure(this);
-		current = this;
+		setCurrent(this);
 		lb.add(sele = new BasisLU(this));
-		list.add(this);
+		list().add(this);
 	}
 
 	public BasisSet(BasisSet ref) {
-		name = "set " + list.size();
-		list.add(this);
+		name = "set " + list().size();
+		list().add(this);
 		t = new Treasure(this, ref.t);
-		current = this;
+		setCurrent(this);
 		for (BasisLU blu : ref.lb)
 			lb.add(sele = new BasisLU(this, blu));
 	}

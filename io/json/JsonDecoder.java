@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonException.Type;
@@ -41,6 +42,7 @@ public class JsonDecoder {
 	public static @interface OnInjected {
 	}
 
+	@StaticPermitted
 	public static final Map<Class<?>, Decoder> REGISTER = new HashMap<>();
 
 	static {
@@ -62,6 +64,7 @@ public class JsonDecoder {
 		REGISTER.put(Class.class, (elem) -> Class.forName(getString(elem)));
 	}
 
+	@StaticPermitted(StaticPermitted.Type.TEMP)
 	private static JsonDecoder current;
 
 	public static Object decode(JsonElement elem, Class<?> cls, JsonDecoder par) throws Exception {

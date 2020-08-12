@@ -9,10 +9,10 @@ import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.Indexable;
-import common.system.MultiLangCont;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
+import common.util.lang.MultiLangCont;
 
 public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
 
@@ -39,7 +39,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
 		}
 
 		public String[] getExplanation() {
-			String[] exp = MultiLangCont.CFEXP.getCont(this);
+			String[] exp = MultiLangCont.getStatic().CFEXP.getCont(this);
 			if (exp != null)
 				return exp;
 			return new String[0];
@@ -100,7 +100,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
 		List<Combo> ans = new ArrayList<>();
 		if (!id.pack.equals("_default"))
 			return ans;
-		for (Combo[] cs : Combo.combos)
+		for (Combo[] cs : CommonStatic.getBCAssets().combos)
 			for (Combo c : cs)
 				for (int[] is : c.units)
 					if (is[0] == id.id) {

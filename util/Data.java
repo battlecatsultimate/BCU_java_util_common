@@ -1,25 +1,22 @@
 package common.util;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.Queue;
 
+import common.CommonStatic;
+import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonEncoder;
 import common.pack.PackData.Identifier;
 import common.util.pack.Background;
+import common.util.pack.EffAnim;
 
+@StaticPermitted
 public class Data {
 
 	@JsonClass(noTag = NoTag.LOAD)
@@ -897,6 +894,7 @@ public class Data {
 	public static final int TCH_SOUL = 16;
 	public static final int TCH_EX = 32;
 	public static final int TCH_ZOMBX = 64;
+
 	public static final String[] A_PATH = new String[] { "down", "up", "slow", "stop", "shield", "farattack",
 			"wave_invalid", "wave_stop", "waveguard" };
 
@@ -940,18 +938,10 @@ public class Data {
 	public static final int[] ORB_ATK_MULTI = { 100, 200, 300, 400, 500 }; // Atk orb multiplication
 	public static final int[] ORB_RES_MULTI = { 4, 8, 12, 16, 20 }; // Resist orb multiplication
 
-	private static final Deque<int[][]> queue = new ArrayDeque<>();
-
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
-	public static int[][] get() {
-		if (queue.size() > 0) {
-			int[][] ans = queue.pop();
-			for (int[] a : ans)
-				Arrays.fill(a, 0);
-			return ans;
-		}
-		return new int[PROC_TOT][PROC_WIDTH];
+	public static EffAnim[] effas() {
+		return CommonStatic.getBCAssets().effas;
 	}
 
 	public static int getVer(String ver) {
@@ -968,32 +958,14 @@ public class Data {
 		return trio(id / 1000) + trio(id % 1000);
 	}
 
-	public static Queue<String> readLine(File f) {
-		try {
-			return new ArrayDeque<String>(Files.readAllLines(f.toPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 	public static String restrict(String str) {
 		if (str.length() < restrict_name)
 			return str;
 		return str.substring(0, restrict_name);
 	}
 
-	public static void ret(int[][] proc) {
-		queue.push(proc);
-	}
-
 	public static String revVer(int ver) {
 		return ver / 1000000 % 100 + "-" + ver / 10000 % 100 + "-" + ver / 100 % 100 + "-" + ver % 100;
-	}
-
-	public static void set(int[] dst, int[] src) {
-		for (int i = 0; i < Math.min(dst.length, src.length); i++)
-			dst[i] = src[i];
 	}
 
 	public static String trio(int i) {

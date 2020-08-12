@@ -15,10 +15,10 @@ import common.pack.FixIndexList;
 import common.pack.UserProfile;
 import common.pack.VerFixer.VerFixerException;
 import common.pack.PackData.UserPack;
-import common.system.MultiLangCont;
 import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.lang.MultiLangCont;
 
 @JsonClass(read = RType.FILL)
 public class MapColc extends Data {

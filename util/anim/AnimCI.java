@@ -6,7 +6,6 @@ import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
-import common.util.Res;
 
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
@@ -71,7 +70,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 			if (uni != null)
 				uni.mark(Marker.UNI);
 			else
-				uni = Res.slot[0];
+				uni = CommonStatic.getBCAssets().slot[0];
 			return uni;
 		}
 
