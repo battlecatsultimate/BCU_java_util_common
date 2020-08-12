@@ -75,6 +75,12 @@ public class CommonStatic {
 		public final Combo[][] combos = new Combo[Data.C_TOT][];
 		public final int[][] values = new int[Data.C_TOT][5];
 		public int[][] filter;
+		
+		// Form cuts
+		public ImgCut unicut, udicut;
+		
+		// RandStage
+		public final int[][] randRep = new int[5][];
 
 	}
 
@@ -82,7 +88,7 @@ public class CommonStatic {
 		// ImgCore
 		public int deadOpa = 10, fullOpa = 90;
 		public int[] ints = new int[] { 1, 1, 1, 1 };
-		public boolean ref = true, battle = false;
+		public boolean ref = true, battle = false, icon = false;
 		// Lang
 		public int lang;
 	}

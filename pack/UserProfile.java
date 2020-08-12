@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
+import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonDecoder;
 import common.pack.Context.ErrType;
 import common.pack.FixIndexList.FixIndexMap;
@@ -47,8 +48,8 @@ public class UserProfile {
 	private static final String REG_POOL = "_pools";
 	private static final String REG_STATIC = "_statics";
 
-	// FIXME load it into register
 	// TODO load username and password
+	@StaticPermitted(StaticPermitted.Type.ENV)
 	private static UserProfile profile = null;
 
 	public static boolean canRemove(String id) {

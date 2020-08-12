@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import common.io.InStream;
+import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonClass.RType;
@@ -338,6 +339,7 @@ public class MapColc extends Data {
 
 	private static final String REG_MAPCOLC = "MapColc";
 
+	@StaticPermitted
 	private static String[] strs = new String[] { "rc", "ec", "sc", "wc" };
 
 	public static Iterable<Stage> getAllStage() {

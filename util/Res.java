@@ -60,10 +60,10 @@ public class Res extends ImgCore {
 
 	public static void readData() {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
-		Form.unicut = ImgCut.newIns("./org/data/uni.imgcut");
-		Form.udicut = ImgCut.newIns("./org/data/udi.imgcut");
+		aux.unicut = ImgCut.newIns("./org/data/uni.imgcut");
+		aux.udicut = ImgCut.newIns("./org/data/udi.imgcut");
 		VImg uni = new VImg("./org/page/uni.png");
-		uni.setCut(Form.unicut);
+		uni.setCut(aux.unicut);
 		aux.slot[0] = uni;
 
 		aux.ico[0] = new VImg[6];
@@ -79,7 +79,7 @@ public class Res extends ImgCore {
 		aux.ico[1][2] = new VImg("./org/page/uni_s.png");
 		aux.ico[1][3] = new VImg("./org/page/uni_box.png");
 		for (VImg vs : aux.ico[1])
-			vs.setCut(Form.unicut);
+			vs.setCut(aux.unicut);
 
 		ImgCut ic029 = ImgCut.newIns("./org/page/img029.imgcut");
 		VImg img029 = new VImg("./org/page/img029.png");
@@ -109,7 +109,7 @@ public class Res extends ImgCore {
 
 	private static void readAbiIcon() {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
-		ImageBuilder.icon = true;
+		CommonStatic.getConfig().icon = true;
 		ImgCut ic015 = ImgCut.newIns("./org/page/img015.imgcut");
 		VImg img015 = new VImg("./org/page/img015.png");
 		FakeImage[] parts = ic015.cut(img015.getImg());
@@ -190,7 +190,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_POIATK] = new VImg("./org/page/icons/BCPoison.png");
 		aux.icon[1][P_ARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
 		aux.icon[1][P_SPEED] = new VImg("./org/page/icons/Speed.png");
-		ImageBuilder.icon = false;
+		CommonStatic.getConfig().icon = false;
 	}
 
 	private static void readBattle() {

@@ -1,5 +1,6 @@
 package common.util.unit;
 
+import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
@@ -15,8 +16,6 @@ import common.util.anim.ImgCut;
 import common.util.lang.MultiLangCont;
 
 public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
-
-	public static ImgCut unicut, udicut;
 
 	public static String lvString(int[] lvs) {
 		String str = "Lv." + lvs[0] + ", {";
@@ -52,7 +51,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		fid = f;
 		String nam = uid.id + "_" + SUFX[fid];
 		anim = new AnimUD(str, nam, "edi" + nam + ".png", "uni" + nam + "00.png");
-		anim.getUni().setCut(unicut);
+		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
 	}

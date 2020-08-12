@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Queue;
 
 import common.CommonStatic;
+import common.CommonStatic.BCAuxAssets;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.system.files.VFile;
@@ -12,15 +13,14 @@ import common.util.stage.MapColc.DefMapColc;
 
 public class RandStage {
 
-	private static final int[][] randRep = new int[5][];
-
 	public static BasisLU getLU(int att) {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
 		double r = Math.random() * 100;
 		for (int i = 0; i < 10; i++)
-			if (r < randRep[att][i])
+			if (r < aux.randRep[att][i])
 				return BasisSet.current().sele.randomize(10 - i);
 			else
-				r -= randRep[att][i];
+				r -= aux.randRep[att][i];
 		return BasisSet.current().sele;
 	}
 
@@ -37,7 +37,7 @@ public class RandStage {
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/stage/D/RandomDungeon_000.csv");
 		for (int i = 0; i < 5; i++)
-			randRep[i] = CommonStatic.parseIntsN(qs.poll());
+			CommonStatic.getBCAssets().randRep[i] = CommonStatic.parseIntsN(qs.poll());
 	}
 
 }

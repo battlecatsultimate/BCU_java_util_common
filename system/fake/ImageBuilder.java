@@ -2,11 +2,12 @@ package common.system.fake;
 
 import java.io.IOException;
 
+import common.io.assets.Admin.StaticPermitted;
+
 public abstract class ImageBuilder {
 
+	@StaticPermitted(StaticPermitted.Type.ENV)
 	public static ImageBuilder builder;
-
-	public static boolean icon = false;
 
 	public abstract FakeImage build(Object o) throws IOException;
 
