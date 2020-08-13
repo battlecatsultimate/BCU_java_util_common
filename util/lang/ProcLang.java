@@ -148,12 +148,12 @@ public class ProcLang {
 	private ProcLang() {
 	}
 
-	public ItemLang get(String str) {
-		return map.get(str);
-	}
-	
 	public ItemLang get(int i) {
 		return get(Proc.class.getDeclaredFields()[i].getName());
+	}
+
+	public ItemLang get(String str) {
+		return map.get(str);
 	}
 
 	public JsonObject ser() {

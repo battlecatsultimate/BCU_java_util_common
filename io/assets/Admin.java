@@ -21,25 +21,16 @@ import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
 import common.pack.PackData.PackDesc;
 import common.pack.UserProfile;
+import common.system.fake.ImageBuilder;
 import common.util.Data;
+import jogl.util.GLIB;
+import utilpc.UtilPC;
+import utilpc.awt.PCIB;
 
 @StaticPermitted
 public class Admin {
 
-	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.TYPE, ElementType.FIELD })
-	public static @interface StaticPermitted {
-
-		public static enum Type {
-			FINAL, ENV, TEMP
-		}
-
-		Type value() default Type.FINAL;
-
-	}
-
-	private static class AdminContext implements Context {
+	public static class AdminContext implements Context {
 
 		@Override
 		public boolean confirmDelete() {
@@ -70,8 +61,8 @@ public class Admin {
 		@Override
 		public void initProfile() {
 			AssetLoader.load();
-			UserProfile.getBCData().load();
-			UserProfile.loadPacks();
+			//UserProfile.getBCData().load(); TODO
+			// UserProfile.loadPacks(); TODO
 		}
 
 		@Override
@@ -92,12 +83,27 @@ public class Admin {
 
 	}
 
+	@Documented
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.TYPE, ElementType.FIELD })
+	public static @interface StaticPermitted {
+
+		public static enum Type {
+			FINAL, ENV, TEMP
+		}
+
+		Type value() default Type.FINAL;
+
+	}
+
 	private static final String[] ANIMFL = { ".imgcut", ".mamodel", ".maanim" };
 
 	private static final String[] NONPRE = { "\\./org/img/../.....\\.png", "\\./org/enemy/.../..._.\\.png",
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
 	public static void main(String[] args) {
+		UserProfile.profile();
+		CommonStatic.def = new UtilPC.PCItr();
 		CommonStatic.ctx = new AdminContext();
 		CommonStatic.ctx.initProfile();
 		// AssetLoader.merge();

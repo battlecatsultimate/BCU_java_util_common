@@ -48,7 +48,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 		unit = u;
 		uid = u.id;
 		fid = f;
-		String nam = uid.id + "_" + SUFX[fid];
+		String nam = trio(uid.id) + "_" + SUFX[fid];
 		anim = new AnimUD(str, nam, "edi" + nam + ".png", "uni" + nam + "00.png");
 		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
 		String[] strs = data.split("//")[0].trim().split(",");

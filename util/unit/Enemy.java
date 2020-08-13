@@ -48,9 +48,9 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 
 	public Enemy(VFile<?> f) {
 		id = new Identifier<>(Identifier.DEF, Enemy.class, CommonStatic.parseIntN(f.getName()));
-		String str = "./org/enemy/" + id.id + "/";
+		String str = "./org/enemy/" + Data.trio(id.id) + "/";
 		de = new DataEnemy(this);
-		anim = new AnimUD(str, id.id + "_e", "edi_" + id.id + ".png", null);
+		anim = new AnimUD(str, Data.trio(id.id) + "_e", "edi_" + Data.trio(id.id) + ".png", null);
 		anim.getEdi().check();
 	}
 

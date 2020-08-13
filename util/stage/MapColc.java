@@ -30,7 +30,11 @@ public class MapColc extends Data {
 
 		/** get a BC stage */
 		public static StageMap getMap(int mid) {
-			return UserProfile.getRegister(REG_MAPCOLC, MapColc.class).get(Data.trio(mid / 1000)).maps[mid % 1000];
+			Map<String, MapColc> map = UserProfile.getRegister(REG_MAPCOLC, MapColc.class);
+			MapColc mc = map.get(Data.trio(mid / 1000));
+			if (mc == null)
+				return null;
+			return mc.maps[mid % 1000];
 		}
 
 		public static DefMapColc getMap(String id) {
@@ -97,6 +101,7 @@ public class MapColc extends Data {
 
 		private DefMapColc() {
 			id = 3;
+			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.trio(id), this);
 			name = "CH";
 			maps = new StageMap[14];
 			String abbr = "./org/stage/CH/stageNormal/stageNormal";
@@ -194,6 +199,7 @@ public class MapColc extends Data {
 		private DefMapColc(String st, int ID, List<VFile<?>> stage, VFile<?> map) {
 			name = st;
 			id = ID;
+			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.trio(id), this);
 			StageMap[] sms = new StageMap[map.list().size()];
 			for (VFile<?> m : map.list()) {
 				String str = m.getName();

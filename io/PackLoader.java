@@ -118,6 +118,11 @@ public class PackLoader {
 				}
 			}
 
+			@Override
+			public int size() {
+				return size;
+			}
+
 		}
 
 		@JsonField

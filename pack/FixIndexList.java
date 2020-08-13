@@ -40,7 +40,8 @@ public class FixIndexList<T> extends Data {
 	}
 
 	public void add(T t) {
-		arr[nextInd()] = t;
+		int ind = nextInd();
+		arr[ind] = t;
 		if (t != null)
 			size++;
 	}
@@ -109,7 +110,7 @@ public class FixIndexList<T> extends Data {
 			if (arr[i] == null)
 				return i;
 		arr = Arrays.copyOf(arr, arr.length * 2);
-		return nextInd();
+		return arr.length / 2;
 	}
 
 	public void remove(T t) {
@@ -123,7 +124,7 @@ public class FixIndexList<T> extends Data {
 	}
 
 	public void set(int ind, T t) {
-		while (arr.length < ind)
+		while (arr.length <= ind)
 			arr = Arrays.copyOf(arr, arr.length * 2);
 		if (arr[ind] != null)
 			size--;

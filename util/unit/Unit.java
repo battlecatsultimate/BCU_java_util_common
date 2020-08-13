@@ -60,8 +60,8 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
 
 	public Unit(VFile<?> p) {
 		id = new Identifier<>(Identifier.DEF, Unit.class, CommonStatic.parseIntN(p.getName()));
-		String str = "./org/unit/" + id.id + "/";
-		Queue<String> qs = VFile.readLine(str + "unit" + id.id + ".csv");
+		String str = "./org/unit/" + Data.trio(id.id) + "/";
+		Queue<String> qs = VFile.readLine(str + "unit" + Data.trio(id.id) + ".csv");
 		forms = new Form[p.countSubDire()];
 		for (int i = 0; i < forms.length; i++)
 			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());

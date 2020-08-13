@@ -41,7 +41,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	public String name;
 
-	protected final VFile<T> parent;
+	protected VFile<T> parent;
 
 	private final Map<String, VFile<T>> subs;
 
@@ -121,17 +121,19 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	}
 
 	public Collection<VFile<T>> list() {
-		return subs.values();
+		return subs == null ? null : subs.values();
 	}
 
 	public void merge(VFile<T> f) throws Exception {
 		if (subs == null || f.subs == null)
 			throw new Exception("merge can only happen for folders");
-		for (VFile<T> fi : f.subs.values())
+		for (VFile<T> fi : f.subs.values()) {
+			fi.parent = this;
 			if (fi.subs == null || !subs.containsKey(fi.name))
 				subs.put(fi.name, fi);
 			else
 				subs.get(fi.name).merge(fi);
+		}
 	}
 
 	public void replace(T t) {

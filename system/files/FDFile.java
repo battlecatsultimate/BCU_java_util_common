@@ -71,6 +71,11 @@ public class FDFile implements FileData {
 	}
 
 	@Override
+	public int size() {
+		return (int) file.length();
+	}
+
+	@Override
 	public String toString() {
 		return file.getName();
 	}

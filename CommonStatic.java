@@ -27,6 +27,7 @@ import common.util.anim.MaModel;
 import common.util.pack.EffAnim;
 import common.util.pack.NyCastle;
 import common.util.pack.WaveAnim;
+import common.util.stage.Music;
 import common.util.unit.Combo;
 
 import static java.lang.Character.isDigit;
@@ -188,7 +189,7 @@ public class CommonStatic {
 		/** exit */
 		public void exit(boolean save);
 
-		public long getMusicLength(File f);
+		public long getMusicLength(Music f);
 
 		public ImgReader getMusicReader(int pid, int mid);
 

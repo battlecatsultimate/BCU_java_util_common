@@ -52,6 +52,8 @@ public interface FileData {
 
 	public Queue<String> readLine();
 
+	public int size();
+
 }
 
 interface ByteData extends FileData {
@@ -77,6 +79,11 @@ interface ByteData extends FileData {
 	@Override
 	public default Queue<String> readLine() {
 		return FileData.IS2L(new ByteArrayInputStream(getBytes()));
+	}
+
+	@Override
+	public default int size() {
+		return getBytes().length;
 	}
 
 }

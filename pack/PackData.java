@@ -59,7 +59,6 @@ public class PackData {
 
 		public void load() {
 			Res.readData();
-
 			loadEnemies();
 			loadUnits();
 

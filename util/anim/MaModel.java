@@ -49,6 +49,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 
 	protected MaModel(Queue<String> qs) {
 		qs.poll();
+		qs.poll();
 		n = Integer.parseInt(qs.poll().trim());
 		parts = new int[n][14];
 		strs0 = new String[n];

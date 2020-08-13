@@ -164,6 +164,15 @@ public class UserProfile {
 		return profile().packmap.values();
 	}
 
+	public static UserProfile profile() {
+		if (profile == null) {
+			profile = new UserProfile();
+			if (CommonStatic.ctx != null)
+				CommonStatic.ctx.initProfile();
+		}
+		return profile;
+	}
+
 	public static UserPack readJsonPack(File f) throws Exception {
 		File folder = f.getParentFile();
 		Reader r = new FileReader(f);
@@ -218,14 +227,6 @@ public class UserProfile {
 			func.accept(data.souls);
 		if (cls == Music.class)
 			func.accept(data.musics);
-	}
-
-	private static UserProfile profile() {
-		if (profile == null) {
-			profile = new UserProfile();
-			CommonStatic.ctx.initProfile();
-		}
-		return profile;
 	}
 
 	public String username;

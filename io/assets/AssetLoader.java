@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.PackData.PackDesc;
+import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 
@@ -92,10 +95,17 @@ public class AssetLoader {
 				if (f.getName().endsWith(".assets.bcuzips")) {
 					List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f);
 					for (ZipDesc zip : list)
-						if (Data.getVer(zip.desc.id) <= Data.getVer(CORE_VER))
+						if (Data.getVer(zip.desc.BCU_VERSION) <= Data.getVer(CORE_VER))
 							VFile.getBCFileTree().merge(zip.tree);
 				}
 			}
+			
+			File f = new File("./test.png");
+			Context.check(f);
+			FileOutputStream fos = new FileOutputStream(f);
+			FileData fd = VFile.get("./org/unit/002/f/002_f.png").getData();
+			stream(fos,fd.getStream());
+			fos.close();
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");
 		}
@@ -175,7 +185,7 @@ public class AssetLoader {
 	}
 
 	private static Preload getPreload(ZipDesc desc) {
-		return Data.getVer(desc.desc.id) > Data.getVer(CORE_VER) ? (fd) -> false : AssetLoader::preload;
+		return Data.getVer(desc.desc.BCU_VERSION) > Data.getVer(CORE_VER) ? (fd) -> false : AssetLoader::preload;
 	}
 
 	private static boolean preload(FileDesc fd) {
@@ -188,7 +198,7 @@ public class AssetLoader {
 		return true;
 	}
 
-	private static void stream(FileOutputStream fos, FileInputStream fis) throws IOException {
+	private static void stream(OutputStream fos, InputStream fis) throws IOException {
 		byte[] data = new byte[LEN];
 		int len;
 		do {

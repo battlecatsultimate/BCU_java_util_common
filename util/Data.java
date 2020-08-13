@@ -160,7 +160,7 @@ public class Data {
 					for (Field f : fs)
 						if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(ans, ((IntType) f.get(this)).clone());
-						else if (f.getType() == Identifier.class)
+						else if (f.getType() == Identifier.class && f.get(this) != null)
 							f.set(ans, ((Identifier<?>) f.get(this)).clone());
 					return ans;
 				} catch (Exception e) {
