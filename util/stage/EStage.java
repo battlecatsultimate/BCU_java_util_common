@@ -18,6 +18,7 @@ import static common.util.stage.SCDef.M1;
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.util.BattleObj;
+import common.util.pack.Pack;
 import common.util.unit.AbEnemy;
 import common.util.unit.EnemyStore;
 
@@ -58,7 +59,7 @@ public class EStage extends BattleObj {
 				if (data[8] == 1)
 					b.shock = true;
 				double multi = (data[M] == 0 ? 100 : data[M]) * mul * 0.01;
-				double mulatk = (data[M1] == 0 ? 100 : data[M1]) * mul * 0.01;
+				double mulatk = (data[M1] == 0 && s.map.mc.pack == Pack.def ? 100 : data[M1]) * mul * 0.01;
 				AbEnemy e = EnemyStore.getAbEnemy(data[0], false);
 				EEnemy ee = e.getEntity(b, data, multi, mulatk, data[L0], data[L1], data[B]);
 				ee.group = data[G];
