@@ -59,7 +59,7 @@ public class EStage extends BattleObj {
 				if (data[8] == 1)
 					b.shock = true;
 				double multi = (data[M] == 0 ? 100 : data[M]) * mul * 0.01;
-				double mulatk = (data[M1] == 0 && s.map.mc.pack == Pack.def ? 100 : data[M1]) * mul * 0.01;
+				double mulatk = (data[M1] == 0 && data[M] == 0 ? 100 : data[M1]) * mul * 0.01;
 				AbEnemy e = EnemyStore.getAbEnemy(data[0], false);
 				EEnemy ee = e.getEntity(b, data, multi, mulatk, data[L0], data[L1], data[B]);
 				ee.group = data[G];
