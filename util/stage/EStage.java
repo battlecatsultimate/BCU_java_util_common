@@ -18,7 +18,6 @@ import static common.util.stage.SCDef.M1;
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.util.BattleObj;
-import common.util.pack.Pack;
 import common.util.unit.AbEnemy;
 import common.util.unit.EnemyStore;
 
