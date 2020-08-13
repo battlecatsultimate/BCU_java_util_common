@@ -139,7 +139,6 @@ public class ProcLang {
 		store().setLang(proc);
 	}
 
-	// FIXME static field: log this field into register
 	private static ProcLangStore store() {
 		return UserProfile.getStatic("ProcLangStore", ProcLangStore::new);
 	}
@@ -151,6 +150,10 @@ public class ProcLang {
 
 	public ItemLang get(String str) {
 		return map.get(str);
+	}
+	
+	public ItemLang get(int i) {
+		return get(Proc.class.getDeclaredFields()[i].getName());
 	}
 
 	public JsonObject ser() {

@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
 import common.pack.PackData.PackDesc;
+import common.pack.UserProfile;
 import common.util.Data;
 
 @StaticPermitted
@@ -67,6 +69,9 @@ public class Admin {
 
 		@Override
 		public void initProfile() {
+			AssetLoader.load();
+			UserProfile.getBCData().load();
+			UserProfile.loadPacks();
 		}
 
 		@Override
@@ -92,12 +97,11 @@ public class Admin {
 	private static final String[] NONPRE = { "\\./org/img/../.....\\.png", "\\./org/enemy/.../..._.\\.png",
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
-	public static void main(String[] args) throws Exception {
-		// Source.ctx = new AdminContext();
+	public static void main(String[] args) {
+		CommonStatic.ctx = new AdminContext();
+		CommonStatic.ctx.initProfile();
 		// AssetLoader.merge();
-		// UserProfile.getBCData().load();
-		// UserProfile.loadPacks();
-		searchForStaticFields();
+		// searchForStaticFields();
 	}
 
 	public static List<ZipDesc> read() throws Exception {

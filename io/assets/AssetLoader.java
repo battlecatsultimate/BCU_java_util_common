@@ -22,6 +22,7 @@ import common.io.assets.AssetLoader.AssetHeader.AssetEntry;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Context;
+import common.pack.Context.ErrType;
 import common.pack.PackData.PackDesc;
 import common.system.files.VFile;
 import common.util.Data;
@@ -84,77 +85,93 @@ public class AssetLoader {
 
 	private static final int LEN = 1024;
 
-	public static void load() throws Exception {
-		File folder = CommonStatic.ctx.getAssetFile("./assets/");
-		for (File f : folder.listFiles()) {
-			if (f.getName().endsWith(".assets.bcuzips")) {
-				List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f);
-				for (ZipDesc zip : list)
-					if (Data.getVer(zip.desc.id) <= Data.getVer(CORE_VER))
-						VFile.getBCFileTree().merge(zip.tree);
+	public static void load() {
+		try {
+			File folder = CommonStatic.ctx.getAssetFile("./assets/");
+			for (File f : folder.listFiles()) {
+				if (f.getName().endsWith(".assets.bcuzips")) {
+					List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f);
+					for (ZipDesc zip : list)
+						if (Data.getVer(zip.desc.id) <= Data.getVer(CORE_VER))
+							VFile.getBCFileTree().merge(zip.tree);
+				}
 			}
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");
 		}
 	}
 
 	public static void merge() throws Exception {
-		File folder = CommonStatic.ctx.getAssetFile("./assets/");
-		Map<String, Map<String, File>> map = new TreeMap<>();
-		for (File f : folder.listFiles()) {
-			if (f.getName().endsWith(".asset.bcuzip")) {
-				String pre = f.getName().substring(0, 2);
-				String name = f.getName().substring(0, 6);
-				Map<String, File> sub = map.get(pre);
-				if (sub == null)
-					map.put(pre, sub = new TreeMap<>());
-				sub.put(name, f);
+		try {
+			File folder = CommonStatic.ctx.getAssetFile("./assets/");
+			Map<String, Map<String, File>> map = new TreeMap<>();
+			for (File f : folder.listFiles()) {
+				if (f.getName().endsWith(".asset.bcuzip")) {
+					String pre = f.getName().substring(0, 2);
+					String name = f.getName().substring(0, 6);
+					Map<String, File> sub = map.get(pre);
+					if (sub == null)
+						map.put(pre, sub = new TreeMap<>());
+					sub.put(name, f);
+				}
 			}
+			for (Entry<String, Map<String, File>> emain : map.entrySet()) {
+				File target = CommonStatic.ctx.getAssetFile("./assets/" + emain.getKey() + "xxxx.assets.bcuzips");
+				File dst = CommonStatic.ctx.getAssetFile("./assets/.temp.assets.bcuzips");
+				Context.check(dst);
+				FileOutputStream fos = new FileOutputStream(dst);
+				AssetHeader header = new AssetHeader();
+				FileInputStream fis = null;
+				if (target.exists()) {
+					fis = new FileInputStream(target);
+					PackLoader.read(fis, header);
+				}
+				List<File> queue = new ArrayList<>();
+				for (Entry<String, File> esub : emain.getValue().entrySet())
+					if (header.add(esub.getValue()))
+						queue.add(esub.getValue());
+					else
+						Context.delete(esub.getValue());
+				PackLoader.write(fos, header);
+				if (fis != null) {
+					stream(fos, fis);
+					fis.close();
+				}
+				for (File efile : queue) {
+					fis = new FileInputStream(efile);
+					stream(fos, fis);
+					fis.close();
+					Context.delete(efile);
+				}
+				fos.close();
+				Context.delete(target);
+				dst.renameTo(target);
+			}
+		} catch (Exception e) {
+			// TODO corruption prevention
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to merge asset");
 		}
-		for (Entry<String, Map<String, File>> emain : map.entrySet()) {
-			File target = CommonStatic.ctx.getAssetFile("./assets/" + emain.getKey() + "xxxx.assets.bcuzips");
-			File dst = CommonStatic.ctx.getAssetFile("./assets/.temp.assets.bcuzips");
-			Context.check(dst);
-			FileOutputStream fos = new FileOutputStream(dst);
-			AssetHeader header = new AssetHeader();
-			FileInputStream fis = null;
-			if (target.exists()) {
-				fis = new FileInputStream(target);
-				PackLoader.read(fis, header);
-			}
-			List<File> queue = new ArrayList<>();
-			for (Entry<String, File> esub : emain.getValue().entrySet())
-				if (header.add(esub.getValue()))
-					queue.add(esub.getValue());
-			PackLoader.write(fos, header);
-			if (fis != null) {
-				stream(fos, fis);
-				fis.close();
-			}
-			for (File efile : queue) {
-				fis = new FileInputStream(efile);
-				stream(fos, fis);
-				fis.close();
-			}
-			fos.close();
-			Context.delete(target);
-			dst.renameTo(target);
-		}
-
 	}
 
-	public static Set<String> previewAssets() throws Exception {
-		File folder = CommonStatic.ctx.getAssetFile("./assets/");
-		Set<String> ans = new TreeSet<>();
-		for (File f : folder.listFiles()) {
-			if (f.getName().endsWith(".assets.bcuzips")) {
-				AssetHeader header = new AssetHeader();
-				FileInputStream fis = new FileInputStream(f);
-				PackLoader.read(fis, header);
-				fis.close();
-				for (AssetEntry ent : header.list)
-					ans.add(ent.desc.id);
+	public static Set<String> previewAssets() {
+		try {
+			File folder = CommonStatic.ctx.getAssetFile("./assets/");
+			Set<String> ans = new TreeSet<>();
+			for (File f : folder.listFiles()) {
+				if (f.getName().endsWith(".assets.bcuzips")) {
+					AssetHeader header = new AssetHeader();
+					FileInputStream fis = new FileInputStream(f);
+					PackLoader.read(fis, header);
+					fis.close();
+					for (AssetEntry ent : header.list)
+						ans.add(ent.desc.id);
+				}
 			}
+			return ans;
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to preview asset");
+			return null;
 		}
-		return ans;
 	}
 
 	private static Preload getPreload(ZipDesc desc) {

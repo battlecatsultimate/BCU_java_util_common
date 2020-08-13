@@ -7,9 +7,7 @@ import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
 import common.util.anim.ImgCut;
-import common.util.unit.Form;
 
 public class Res extends ImgCore {
 

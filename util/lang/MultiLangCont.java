@@ -31,10 +31,6 @@ public class MultiLangCont<I, T> extends Lang {
 
 	}
 
-	public static MultiLangStatics getStatic() {
-		return UserProfile.getStatic("MultiLangStatics", MultiLangStatics::new);
-	}
-
 	public static String get(Object o) {
 		if (o instanceof MapColc)
 			return getStatic().MCNAME.getCont((MapColc) o);
@@ -47,6 +43,10 @@ public class MultiLangCont<I, T> extends Lang {
 		if (o instanceof Enemy)
 			return getStatic().ENAME.getCont((Enemy) o);
 		return null;
+	}
+
+	public static MultiLangStatics getStatic() {
+		return UserProfile.getStatic("MultiLangStatics", MultiLangStatics::new);
 	}
 
 	private final Map<String, HashMap<I, T>> map = new TreeMap<>();

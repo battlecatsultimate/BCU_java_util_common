@@ -12,7 +12,6 @@ import common.util.Animable;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
-import common.util.anim.ImgCut;
 import common.util.lang.MultiLangCont;
 
 public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
