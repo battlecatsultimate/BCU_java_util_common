@@ -10,6 +10,8 @@ import java.util.Scanner;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import common.CommonStatic;
+import common.io.assets.Admin;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.util.Data.Proc;
@@ -19,6 +21,7 @@ import common.util.lang.Formatter.Context;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
+		CommonStatic.ctx=new Admin.AdminContext();
 		Scanner sc = new Scanner(System.in);
 		String str;
 		while (!(str = sc.nextLine()).equals("exit"))

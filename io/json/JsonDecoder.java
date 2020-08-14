@@ -288,7 +288,7 @@ public class JsonDecoder {
 		if (elem.isJsonNull())
 			return null;
 		if (!elem.isJsonObject())
-			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not object");
+			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not object for " + cls);
 		JsonObject jobj = elem.getAsJsonObject();
 		JsonClass jc = cls.getAnnotation(JsonClass.class);
 		if (jc.read() == JsonClass.RType.FILL)
