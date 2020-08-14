@@ -24,6 +24,7 @@ import common.io.json.JsonClass.JCGenericRead;
 import common.io.json.JsonException.Type;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.Handler;
+import common.util.Data;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -141,12 +142,7 @@ public class JsonDecoder {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T decode(JsonElement elem, Class<T> cls) {
-		try {
-			return (T) decode(elem, cls, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return (T) Data.err(() -> decode(elem, cls, null));
 	}
 
 	public static boolean getBoolean(JsonElement elem) throws JsonException {

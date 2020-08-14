@@ -1,7 +1,5 @@
 package common.system;
 
-import java.io.IOException;
-
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.FileData;
@@ -28,13 +26,8 @@ public class VImg extends ImgCore {
 			file = (VFile<?>) o;
 		else
 			file = null;
-
 		if (file == null)
-			try {
-				bimg = FakeImage.read(o);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			bimg = err(() -> FakeImage.read(o));
 		loaded = bimg != null;
 	}
 
@@ -60,11 +53,7 @@ public class VImg extends ImgCore {
 	}
 
 	public void setImg(Object img) {
-		try {
-			bimg = FakeImage.read(img);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		bimg = err(() -> FakeImage.read(img));
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];
 		loaded = true;

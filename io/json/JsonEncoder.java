@@ -18,16 +18,12 @@ import com.google.gson.JsonPrimitive;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGenericWrite;
 import common.io.json.JsonException.Type;
+import common.util.Data;
 
 public class JsonEncoder {
 
 	public static JsonElement encode(Object obj) {
-		try {
-			return encode(obj, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return Data.err(() -> encode(obj, null));
 	}
 
 	private static JsonElement encode(Object obj, JsonEncoder par) throws Exception {

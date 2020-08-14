@@ -1,17 +1,14 @@
 package common.system.files;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
-
 import common.CommonStatic;
+import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
+import common.util.Data;
 
 public class FDFile implements FileData {
 
@@ -37,37 +34,13 @@ public class FDFile implements FileData {
 
 	@Override
 	public FakeImage getImg() {
-		try {
-			return FakeImage.read(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return Data.err(() -> FakeImage.read(file));
 	}
 
 	@Override
-	public InputStream getStream() throws IOException {
-		return new FileInputStream(file);
-	}
-
-	@Override
-	public Queue<String> readLine() {
-		try {
-			ArrayDeque<String> result = new ArrayDeque<>();
-
-			FileInputStream fis = new FileInputStream(file);
-			BufferedReader bfr = new BufferedReader(new InputStreamReader(fis));
-			String line;
-			while ((line = bfr.readLine()) != null) {
-				result.add(line);
-			}
-			bfr.close();
-			return result;
-		} catch (IOException e) {
-			CommonStatic.def.writeErrorLog(e);
-			e.printStackTrace();
-			return null;
-		}
+	public InputStream getStream() {
+		return CommonStatic.ctx.noticeErr(() -> new FileInputStream(file), ErrType.ERROR,
+				"failed to read bcuzip at " + file);
 	}
 
 	@Override

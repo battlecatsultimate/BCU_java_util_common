@@ -184,13 +184,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	@Override
 	protected DataUnit clone() {
-		DataUnit ans;
-		try {
-			ans = (DataUnit) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return null;
-		}
+		DataUnit ans = (DataUnit) err(super::clone);
 		ans.proc = proc.clone();
 		ans.datks = new DataAtk[ans.getAtkCount()];
 		for (int i = 0; i < ans.getAtkCount(); i++) {

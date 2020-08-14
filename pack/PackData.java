@@ -13,6 +13,7 @@ import common.battle.data.DataEnemy;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.AssetLoader;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
@@ -218,12 +219,7 @@ public class PackData {
 		@SuppressWarnings("unchecked")
 		@Override
 		public Identifier<T> clone() {
-			try {
-				return (Identifier<T>) super.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-				return null;
-			}
+			return (Identifier<T>) Data.err(super::clone);
 		}
 
 		@Override
@@ -273,7 +269,7 @@ public class PackData {
 		}
 
 		public PackDesc(String id) {
-			BCU_VERSION = "";// FIXME ver Data.revVer(MainBCU.ver);
+			BCU_VERSION = AssetLoader.CORE_VER;
 			this.id = id;
 			this.dependency = new ArrayList<>();
 		}
@@ -321,10 +317,19 @@ public class PackData {
 			loaded = true;
 		}
 
+		public <T extends Indexable<?>> Identifier<T> getID(Class<T> cls, int id) {
+			return new Identifier<T>(desc.id, cls, id);
+		}
+
+		public void loadMusics() {
+			// FIXME
+		}
+
 		void load() throws Exception {
 			JsonDecoder.inject(elem, UserPack.class, this);
 			elem = null;
 			loaded = true;
+			loadMusics();
 		}
 
 	}

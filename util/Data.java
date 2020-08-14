@@ -12,6 +12,9 @@ import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonEncoder;
+import common.pack.Context.ErrType;
+import common.pack.Context.RunExc;
+import common.pack.Context.SupExc;
 import common.pack.PackData.Identifier;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
@@ -942,6 +945,22 @@ public class Data {
 
 	public static EffAnim[] effas() {
 		return CommonStatic.getBCAssets().effas;
+	}
+
+	/**
+	 * convenient method to log an unexpected error. Don't use it to process any
+	 * expected error
+	 */
+	public static boolean err(RunExc s) {
+		return CommonStatic.ctx.noticeErr(s, ErrType.ERROR, "unexpected error");
+	}
+
+	/**
+	 * convenient method to log an unexpected error. Don't use it to process any
+	 * expected error
+	 */
+	public static <T> T err(SupExc<T> s) {
+		return CommonStatic.ctx.noticeErr(s, ErrType.ERROR, "unexpected error");
 	}
 
 	public static int getVer(String ver) {

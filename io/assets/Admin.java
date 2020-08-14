@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
@@ -22,7 +21,6 @@ import common.pack.Context;
 import common.pack.PackData.PackDesc;
 import common.pack.UserProfile;
 import common.util.Data;
-import utilpc.UtilPC;
 
 @StaticPermitted
 public class Admin {
@@ -98,9 +96,7 @@ public class Admin {
 	private static final String[] NONPRE = { "\\./org/img/../.....\\.png", "\\./org/enemy/.../..._.\\.png",
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
-	public static void main(String[] args) throws Exception {
-		trueRun();
-
+	public static void main$0(String[] args) throws Exception {
 		// AssetLoader.merge();
 		// searchForStaticFields();
 	}
@@ -164,13 +160,6 @@ public class Admin {
 		for (Field field : flist) {
 			System.out.println(field);
 		}
-	}
-
-	public static void trueRun() {
-		UserProfile.profile();
-		CommonStatic.def = new UtilPC.PCItr();
-		CommonStatic.ctx = new AdminContext();
-		CommonStatic.ctx.initProfile();
 	}
 
 	public static void write() throws Exception {

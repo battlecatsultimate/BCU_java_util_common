@@ -115,7 +115,6 @@ public abstract class VerFixer extends Source {
 					try {
 						val = Integer.parseInt(str.substring(0, 3));
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
 						continue;
 					}
 					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/backgrounds/" + str);

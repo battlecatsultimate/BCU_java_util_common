@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import common.CommonStatic;
 import common.io.MultiStream.ByteStream;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
@@ -32,11 +32,13 @@ import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
+import common.pack.Context.ErrType;
 import common.pack.PackData;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFileRoot;
+import common.util.Data;
 
 @StaticPermitted
 public class PackLoader {
@@ -95,27 +97,17 @@ public class PackLoader {
 
 			@Override
 			public FakeImage getImg() {
-				try {
-					return data != null ? data.getImg() : FakeImage.read(pack.readFile(path));
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
+				return data != null ? data.getImg() : Data.err(() -> FakeImage.read(this));
 			}
 
 			@Override
-			public InputStream getStream() throws Exception {
+			public InputStream getStream() {
 				return pack.readFile(path);
 			}
 
 			@Override
 			public Queue<String> readLine() {
-				try {
-					return data != null ? data.readLine() : FileData.IS2L(pack.readFile(path));
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
+				return data != null ? data.readLine() : FileData.super.readLine();
 			}
 
 			@Override
@@ -156,9 +148,10 @@ public class PackLoader {
 				tree.build(fd.path, fd);
 		}
 
-		public InputStream readFile(String path) throws Exception {
+		public InputStream readFile(String path) {
 			FileDesc fd = tree.find(path).getData();
-			return new FileLoader.FLStream(loader, offset + fd.offset, fd.size);
+			return CommonStatic.ctx.noticeErr(() -> new FileLoader.FLStream(loader, offset + fd.offset, fd.size),
+					ErrType.ERROR, "failed to read bcuzip at " + path);
 		}
 
 		public void unzip(PatchFile func) throws Exception {
@@ -414,12 +407,7 @@ public class PackLoader {
 	}
 
 	public static byte[] getMD5(byte[] data, int len) {
-		MessageDigest md5 = null;
-		try {
-			md5 = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
+		MessageDigest md5 = Data.err(() -> MessageDigest.getInstance("MD5"));
 		byte[] ans = md5.digest(data);
 		if (ans.length == len)
 			return ans;

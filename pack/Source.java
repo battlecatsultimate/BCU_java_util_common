@@ -17,16 +17,20 @@ import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context.ErrType;
+import common.pack.PackData.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
 import common.system.files.FileData;
+import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
+import common.util.pack.Background;
+import common.util.stage.CastleImg;
 
 public abstract class Source {
 
@@ -244,6 +248,14 @@ public abstract class Source {
 
 		public Workspace(String id) {
 			super(id);
+		}
+
+		public File getBGFile(Identifier<Background> id) {
+			return getFile("./backgrounds/" + Data.trio(id.id) + ".png");
+		}
+
+		public File getCasFile(Identifier<CastleImg> id) {
+			return getFile("./castles/" + Data.trio(id.id) + ".png");
 		}
 
 		@Override

@@ -52,6 +52,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 		de = new DataEnemy(this);
 		anim = new AnimUD(str, Data.trio(id.id) + "_e", "edi_" + Data.trio(id.id) + ".png", null);
 		anim.getEdi().check();
+
 	}
 
 	public List<Stage> findApp() {
