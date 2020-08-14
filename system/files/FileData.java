@@ -2,7 +2,6 @@ package common.system.files;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,13 +32,13 @@ public interface FileData {
 
 	public default byte[] getBytes() {
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			byte[] ans = new byte[size()];
 			InputStream is = getStream();
-			int data;
-			while ((data = is.read()) >= 0)
-				baos.write(data);
+			int r = is.read(ans);
 			is.close();
-			return baos.toByteArray();
+			if (r != size())
+				CommonStatic.ctx.printErr(ErrType.FATAL, "failed to read data");
+			return ans;
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read data");
 			return null;

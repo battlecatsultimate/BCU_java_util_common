@@ -99,12 +99,12 @@ public class AssetLoader {
 							VFile.getBCFileTree().merge(zip.tree);
 				}
 			}
-			
+
 			File f = new File("./test.png");
 			Context.check(f);
 			FileOutputStream fos = new FileOutputStream(f);
 			FileData fd = VFile.get("./org/unit/002/f/002_f.png").getData();
-			stream(fos,fd.getStream());
+			stream(fos, fd.getStream());
 			fos.close();
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");

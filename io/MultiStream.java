@@ -17,7 +17,7 @@ public class MultiStream {
 
 		public void close() throws IOException;
 
-		public void read(byte[] bs) throws IOException;
+		public void read(byte[] bs, int i, int rlen) throws IOException;
 
 	}
 
@@ -27,7 +27,9 @@ public class MultiStream {
 
 		public TrueStream(File f, int pos) throws IOException {
 			fis = new FileInputStream(f);
-			fis.skip(pos);
+			int skip = (int) fis.skip(pos);
+			if (skip != pos)
+				throw new IOException("failed to skip bytes");
 		}
 
 		@Override
@@ -36,8 +38,8 @@ public class MultiStream {
 		}
 
 		@Override
-		public void read(byte[] bs) throws IOException {
-			fis.read(bs);
+		public void read(byte[] bs, int off, int len) throws IOException {
+			fis.read(bs, off, len);
 		}
 
 	}
@@ -61,8 +63,8 @@ public class MultiStream {
 		}
 
 		@Override
-		public void read(byte[] bs) throws IOException {
-			attempt(() -> readBytes(pos, bs));
+		public void read(byte[] bs, int off, int len) throws IOException {
+			attempt(() -> readBytes(pos, bs, off, len));
 			pos += bs.length;
 		}
 
@@ -116,7 +118,7 @@ public class MultiStream {
 		CommonStatic.ctx.printErr(ErrType.INFO, "attempt succeed");
 	}
 
-	private void readBytes(int pos, byte[] arr) throws IOException {
+	private void readBytes(int pos, byte[] arr, int off, int len) throws IOException {
 		access();
 		if (poscache == -1)
 			poscache = raf.getFilePointer();
@@ -124,8 +126,8 @@ public class MultiStream {
 			raf.seek(pos);
 			poscache = pos;
 		}
-		raf.read(arr);
-		poscache += arr.length;
+		raf.read(arr, off, len);
+		poscache += len;
 	}
 
 }

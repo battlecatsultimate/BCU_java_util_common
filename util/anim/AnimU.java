@@ -1,5 +1,6 @@
 package common.util.anim;
 
+import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 
@@ -31,7 +32,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 	}
 
 	public static void redefine() {
-		// FIXME static CommonStatic.def.redefine(AnimU.class);
+		CommonStatic.def.redefine(AnimU.class);
 	}
 
 	protected boolean partial = false;

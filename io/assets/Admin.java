@@ -21,11 +21,8 @@ import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
 import common.pack.PackData.PackDesc;
 import common.pack.UserProfile;
-import common.system.fake.ImageBuilder;
 import common.util.Data;
-import jogl.util.GLIB;
 import utilpc.UtilPC;
-import utilpc.awt.PCIB;
 
 @StaticPermitted
 public class Admin {
@@ -61,7 +58,7 @@ public class Admin {
 		@Override
 		public void initProfile() {
 			AssetLoader.load();
-			//UserProfile.getBCData().load(); TODO
+			UserProfile.getBCData().load();
 			// UserProfile.loadPacks(); TODO
 		}
 
@@ -101,11 +98,9 @@ public class Admin {
 	private static final String[] NONPRE = { "\\./org/img/../.....\\.png", "\\./org/enemy/.../..._.\\.png",
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
-	public static void main(String[] args) {
-		UserProfile.profile();
-		CommonStatic.def = new UtilPC.PCItr();
-		CommonStatic.ctx = new AdminContext();
-		CommonStatic.ctx.initProfile();
+	public static void main(String[] args) throws Exception {
+		trueRun();
+
 		// AssetLoader.merge();
 		// searchForStaticFields();
 	}
@@ -171,6 +166,13 @@ public class Admin {
 		}
 	}
 
+	public static void trueRun() {
+		UserProfile.profile();
+		CommonStatic.def = new UtilPC.PCItr();
+		CommonStatic.ctx = new AdminContext();
+		CommonStatic.ctx.initProfile();
+	}
+
 	public static void write() throws Exception {
 		for (int i = 1; i <= 9; i++) {
 			File f = new File("./assets/" + Data.hex(i));
@@ -185,6 +187,8 @@ public class Admin {
 	}
 
 	private static boolean preload(FileDesc fd) {
+		if (fd.size < 1024)
+			return true;
 		for (String str : ANIMFL)
 			if (fd.path.endsWith(str))
 				return false;

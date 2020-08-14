@@ -19,15 +19,17 @@ import common.system.Copable;
 public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static BasisSet current() {
-		return UserProfile.getStatic("BasisSet_current", () -> null);
+		return UserProfile.getStatic("BasisSet_current", () -> def());
 	}
 
 	public static BasisSet def() {
+		listRaw();
 		return UserProfile.getStatic("BasisSet_default", () -> new BasisSet());
 	}
 
 	public static List<BasisSet> list() {
-		return UserProfile.getStatic("BasisSet_list", () -> new ArrayList<>());
+		def();
+		return listRaw();
 	}
 
 	public static void read(InStream is) throws VerFixerException {
@@ -40,6 +42,10 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static void setCurrent(BasisSet cur) {
 		UserProfile.setStatic("BasisSet_current", cur);
+	}
+
+	private static List<BasisSet> listRaw() {
+		return UserProfile.getStatic("BasisSet_list", () -> new ArrayList<>());
 	}
 
 	private static List<BasisSet> zreads(InStream is, boolean bac) throws VerFixerException {
@@ -71,14 +77,14 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public BasisLU sele;
 
 	public BasisSet() {
-		if (list().size() == 0)
+		if (listRaw().size() == 0)
 			name = "temporary";
 		else
-			name = "set " + list().size();
+			name = "set " + listRaw().size();
 		t = new Treasure(this);
 		setCurrent(this);
 		lb.add(sele = new BasisLU(this));
-		list().add(this);
+		listRaw().add(this);
 	}
 
 	public BasisSet(BasisSet ref) {

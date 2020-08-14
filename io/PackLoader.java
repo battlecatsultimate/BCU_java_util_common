@@ -217,18 +217,26 @@ public class PackLoader {
 			private final ByteStream fis;
 			private final Cipher cipher;
 
-			private byte[] bs = new byte[PASSWORD];
-			private int len, size;
+			private int LEN, len, size;
 			private byte[] cache;
 			private int index;
 
 			private FLStream(FileLoader ld, int offset, int size) throws Exception {
 				len = (size & 0xF) == 0 ? size : (size | 0xF) + 1;
+				for (int i = 0; i <= 6; i++) {
+					if (i == 6 || len < 1 << i + 13) {
+						LEN = 1 << i + 10;
+						break;
+					}
+				}
+				cache = new byte[LEN];
 				this.size = size;
 				cipher = decrypt(ld.key);
 				fis = MultiStream.getStream(ld.file, offset, ld.useRAF);
-				fis.read(bs);
-				cipher.update(bs);
+				byte[] init = new byte[PASSWORD];
+				fis.read(init, 0, PASSWORD);
+				cipher.update(init, 0, PASSWORD, new byte[0], 0);
+				index = LEN;
 			}
 
 			@Override
@@ -240,21 +248,51 @@ public class PackLoader {
 			public int read() throws IOException {
 				if (size == 0)
 					return -1;
-				if (cache == null || index >= cache.length)
-					if (len > 0)
+				if (index >= LEN)
+					update();
+				return (readByte()) & 0xff;
+			}
+
+			@Override
+			public int read(byte[] b, int off, int len) throws IOException {
+				int rlen = Math.min(len, size);
+				if (b == null) {
+					throw new NullPointerException();
+				} else if (off < 0 || rlen < 0 || rlen > b.length - off) {
+					throw new IndexOutOfBoundsException();
+				} else if (rlen == 0) {
+					return rlen < len ? -1 : 0;
+				}
+				int i = rlen;
+				while (i > 0) {
+					if (index >= LEN)
 						update();
-					else
-						return -1;
+					int avi = Math.min(i, LEN - index);
+					System.arraycopy(cache, index, b, off, avi);
+					i -= avi;
+					index += avi;
+					off += avi;
+					size -= avi;
+				}
+				return rlen;
+
+			}
+
+			private byte readByte() {
 				size--;
 				return cache[index++];
 			}
 
 			private void update() throws IOException {
-				fis.read(bs);
-				len -= PASSWORD;
+				int rlen = Math.min(len, LEN);
+				fis.read(cache, 0, rlen);
+				len -= rlen;
 				index = 0;
 				try {
-					cache = len == 0 ? cipher.doFinal(bs) : cipher.update(bs);
+					if (len == 0)
+						cipher.doFinal(cache, 0, rlen, cache, 0);
+					else
+						cipher.update(cache, 0, rlen, cache, 0);
 				} catch (Exception e) {
 					throw new IOException(e);
 				}
