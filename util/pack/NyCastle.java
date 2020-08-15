@@ -10,7 +10,11 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class NyCastle extends AnimI {
+public class NyCastle extends AnimI<NyCastle, NyCastle.NyType> {
+
+	public static enum NyType implements AnimI.AnimType<NyCastle, NyType> {
+		BASE, ATK, EXT
+	}
 
 	public static final int TOT = 8;
 
@@ -67,14 +71,14 @@ public class NyCastle extends AnimI {
 	}
 
 	@Override
-	public EAnimD getEAnim(int t) {
+	public EAnimD<NyType> getEAnim(NyType t) {
 		check();
-		if (t == 0)
-			return new EAnimD(this, model, manim);
-		if (t == 1)
-			return new EAnimD(this, atkm, atka);
-		if (t == 2)
-			return new EAnimD(this, extm, exta);
+		if (t == NyType.BASE)
+			return new EAnimD<>(this, model, manim);
+		if (t == NyType.ATK)
+			return new EAnimD<>(this, atkm, atka);
+		if (t == NyType.EXT)
+			return new EAnimD<>(this, extm, exta);
 		return null;
 	}
 
@@ -100,6 +104,11 @@ public class NyCastle extends AnimI {
 	@Override
 	public String toString() {
 		return "castle " + id;
+	}
+
+	@Override
+	public NyType[] types() {
+		return NyType.values();
 	}
 
 }

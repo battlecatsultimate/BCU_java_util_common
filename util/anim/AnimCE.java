@@ -137,7 +137,7 @@ public class AnimCE extends AnimCI {
 		map().put(id.id, this);
 	}
 
-	public AnimCE(String str, AnimD ori) {
+	public AnimCE(String str, AnimD<?, ?> ori) {
 		this(str);
 		loaded = true;
 		partial = true;

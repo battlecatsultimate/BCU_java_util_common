@@ -24,7 +24,7 @@ import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
-import common.util.pack.EffAnim;
+import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
 import common.util.pack.WaveAnim;
 import common.util.stage.Music;
@@ -70,7 +70,7 @@ public class CommonStatic {
 		public final NyCastle[] atks = new NyCastle[NyCastle.TOT];
 
 		// EffAnim
-		public final EffAnim[] effas = new EffAnim[Data.A_TOT];
+		public final EffAnimStore effas = new EffAnimStore();
 
 		// Combo
 		public final Combo[][] combos = new Combo[Data.C_TOT][];
@@ -208,8 +208,6 @@ public class CommonStatic {
 
 		/** read strings from path */
 		public <T> T readSave(String path, Function<Queue<String>, T> func);
-
-		public void redefine(Class<?> class1);
 
 		public File route(String path);
 

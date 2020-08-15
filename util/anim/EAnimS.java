@@ -6,7 +6,7 @@ import common.system.fake.FakeGraphics;
 
 public class EAnimS extends EAnimI {
 
-	public EAnimS(AnimI ia, MaModel mm) {
+	public EAnimS(AnimI<?, ?> ia, MaModel mm) {
 		super(ia, mm);
 	}
 

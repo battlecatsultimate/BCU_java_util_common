@@ -9,9 +9,9 @@ public class EAnimCont extends BattleObj {
 
 	public final double pos;
 	public final int layer;
-	private final EAnimD anim;
+	private final EAnimD<?> anim;
 
-	public EAnimCont(double p, int lay, EAnimD ead) {
+	public EAnimCont(double p, int lay, EAnimD<?> ead) {
 		pos = p;
 		layer = lay;
 		anim = ead;

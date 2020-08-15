@@ -5,11 +5,16 @@ import common.pack.PackData.Indexable;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.AnimD;
+import common.util.anim.AnimI;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class Soul extends AnimD implements Indexable<Soul> {
+public class Soul extends AnimD<Soul, Soul.SoulType> implements Indexable<Soul> {
+
+	public static enum SoulType implements AnimI.AnimType<Soul, SoulType> {
+		DEF;
+	}
 
 	private final Identifier<Soul> id;
 	private final VImg img;
@@ -36,12 +41,8 @@ public class Soul extends AnimD implements Indexable<Soul> {
 		imgcut = ImgCut.newIns(str + ".imgcut");
 		mamodel = MaModel.newIns(str + ".mamodel");
 		anims = new MaAnim[] { MaAnim.newIns(str + ".maanim") };
+		types = SoulType.values();
 		parts = imgcut.cut(img.getImg());
-	}
-
-	@Override
-	public String[] names() {
-		return new String[] { "soul" };
 	}
 
 	@Override

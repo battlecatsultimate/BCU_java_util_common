@@ -2,10 +2,11 @@ package common.util.anim;
 
 import common.system.fake.FakeImage;
 
-public abstract class AnimD extends AnimI {
+public abstract class AnimD<A extends AnimD<A, T>, T extends Enum<T> & AnimI.AnimType<A, T>> extends AnimI<A, T> {
 
 	public ImgCut imgcut;
 	public MaModel mamodel;
+	public T[] types;
 	public MaAnim[] anims;
 	public FakeImage[] parts;
 
@@ -16,7 +17,6 @@ public abstract class AnimD extends AnimI {
 
 	public AnimD(String st) {
 		str = st;
-		anim = this;
 	}
 
 	@Override
@@ -26,25 +26,36 @@ public abstract class AnimD extends AnimI {
 	}
 
 	@Override
-	public EAnimD getEAnim(int t) {
+	public EAnimD<T> getEAnim(T t) {
 		check();
-		if (mamodel == null || t >= anims.length || anims[t] == null)
+		if (mamodel == null)
 			return null;
-		return new EAnimD(this, mamodel, anims[t]);
+		MaAnim anim = getMaAnim(t);
+		return anim == null ? null : new EAnimD<T>(this, mamodel, anim);
+	}
+
+	public final MaAnim getMaAnim(T t) {
+		for (int i = 0; i < types.length; i++)
+			if (types[i] == t)
+				return anims[i];
+		return null;
 	}
 
 	public abstract FakeImage getNum();
 
-	public int len(int t) {
+	public final int len(T t) {
 		check();
-		return anims[t].max + 1;
+		return getMaAnim(t).max + 1;
 	}
 
 	@Override
 	public abstract void load();
 
 	@Override
-	public abstract String[] names();
+	public final String[] names() {
+		check();
+		return translate(types);
+	}
 
 	@Override
 	public FakeImage parts(int i) {
@@ -67,6 +78,12 @@ public abstract class AnimD extends AnimI {
 		for (MaAnim ma : anims)
 			if (ma != null)
 				ma.revert();
+	}
+
+	@Override
+	public final T[] types() {
+		check();
+		return types;
 	}
 
 	public void unload() {

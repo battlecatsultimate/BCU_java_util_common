@@ -7,6 +7,7 @@ import common.battle.entity.EUnit;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
 import common.util.Data.Proc.SUMMON;
+import common.util.pack.EffAnim.DefEff;
 
 public abstract class AtkModelEntity extends AtkModelAb {
 
@@ -194,7 +195,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc.KB.time = KB_TIME[INT_KB];
 		proc.POISON.damage *= ratk;
 		if (proc.BOSS.exists())
-			b.lea.add(new EAnimCont(e.pos, e.layer, effas()[A_SHOCKWAVE].getEAnim(0)));
+			b.lea.add(new EAnimCont(e.pos, e.layer, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
 	}
 
 	protected abstract void summon(SUMMON sprc, Entity ent, Object acs);

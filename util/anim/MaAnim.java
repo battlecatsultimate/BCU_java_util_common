@@ -94,7 +94,7 @@ public class MaAnim extends Data implements BattleStatic {
 		validate();
 	}
 
-	protected void update(int f, EAnimD eAnim, boolean rotate) {
+	protected void update(int f, EAnimD<?> eAnim, boolean rotate) {
 		if (rotate)
 			f %= max;
 		if (f == 0 || rotate && f % max == 0) {

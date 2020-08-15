@@ -17,6 +17,7 @@ import common.system.files.VFile;
 import common.util.Animable;
 import common.util.Data;
 import common.util.anim.AnimU;
+import common.util.anim.AnimU.UType;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.lang.MultiLangCont;
@@ -25,7 +26,7 @@ import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 
-public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
+public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	public final Identifier<AbEnemy> id;
 	public final MaskEnemy de;
@@ -92,7 +93,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 	}
 
 	@Override
-	public EAnimU getEAnim(int t) {
+	public EAnimU getEAnim(UType t) {
 		if (anim == null)
 			return null;
 		return anim.getEAnim(t);
@@ -102,7 +103,7 @@ public class Enemy extends Animable<AnimU<?>> implements AbEnemy {
 	public EEnemy getEntity(StageBasis b, Object obj, double mul, double mul2, int d0, int d1, int m) {
 		mul *= de.multi(b.b);
 		mul2 *= de.multi(b.b);
-		return new EEnemy(b, de, getEAnim(0), mul, mul2, d0, d1, m);
+		return new EEnemy(b, de, getEAnim(UType.WALK), mul, mul2, d0, d1, m);
 	}
 
 	@Override

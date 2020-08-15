@@ -12,12 +12,12 @@ import common.util.anim.EAnimD;
 public abstract class ContWaveAb extends ContAb {
 
 	protected final AttackWave atk;
-	protected final EAnimD anim;
+	protected final EAnimD<?> anim;
 	private int t = 0;
 	private int maxt;
 	private boolean tempAtk;
 
-	protected ContWaveAb(AttackWave a, double p, EAnimD ead, int layer) {
+	protected ContWaveAb(AttackWave a, double p, EAnimD<?> ead, int layer) {
 		super(a.model.b, p, layer);
 		atk = a;
 		anim = ead;

@@ -94,7 +94,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 	}
 
 	/** regulate check imgcut id and detect parent loop */
-	public void check(AnimD anim) {
+	public void check(AnimD<?, ?> anim) {
 		int ics = anim.imgcut.n;
 		for (int[] p : parts) {
 			if (p[2] >= ics)

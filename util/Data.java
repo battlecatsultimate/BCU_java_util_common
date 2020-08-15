@@ -17,7 +17,7 @@ import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
 import common.pack.PackData.Identifier;
 import common.util.pack.Background;
-import common.util.pack.EffAnim;
+import common.util.pack.EffAnim.EffAnimStore;
 
 @StaticPermitted
 public class Data {
@@ -943,7 +943,7 @@ public class Data {
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
-	public static EffAnim[] effas() {
+	public static EffAnimStore effas() {
 		return CommonStatic.getBCAssets().effas;
 	}
 

@@ -1,10 +1,9 @@
 package common.util.anim;
 
-import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 
-public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
+public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>, AnimU.UType> {
 
 	public static interface ImageKeeper {
 
@@ -24,16 +23,14 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 
 	}
 
-	// FIXME static
-	public static String[] strs0, strs1, strs2;
-
-	static {
-		redefine();
+	public static enum UType implements AnimI.AnimType<AnimU<?>, UType> {
+		WALK, IDLE, ATK, HB, ENTER, BURROW_DOWN, BURROW_MOVE, BURROW_UP;
 	}
+	public static final UType[] TYPE4 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB };
+	public static final UType[] TYPE5 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB, UType.ENTER };
 
-	public static void redefine() {
-		CommonStatic.def.redefine(AnimU.class);
-	}
+	public static final UType[] TYPE7 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB, UType.BURROW_DOWN,
+			UType.BURROW_MOVE, UType.BURROW_UP };
 
 	protected boolean partial = false;
 	public final T loader;
@@ -54,10 +51,8 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 	}
 
 	@Override
-	public EAnimU getEAnim(int t) {
+	public EAnimU getEAnim(UType t) {
 		check();
-		if (mamodel == null || t >= anims.length || anims[t] == null)
-			return null;
 		return new EAnimU(this, t);
 	}
 
@@ -91,16 +86,6 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 	}
 
 	@Override
-	public String[] names() {
-		partial();
-		if (anims.length == 4)
-			return strs0;
-		if (anims.length == 5)
-			return strs2;
-		return strs1;
-	}
-
-	@Override
 	public void unload() {
 		loader.unload();
 		super.unload();
@@ -111,6 +96,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD {
 			partial = true;
 			mamodel = loader.getMM();
 			anims = loader.getMA();
+			types = anims.length == 4 ? TYPE4 : anims.length == 5 ? TYPE5 : TYPE7;
 		}
 	}
 

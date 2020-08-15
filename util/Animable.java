@@ -3,10 +3,10 @@ package common.util;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimI;
 
-public abstract class Animable<T extends AnimI> extends ImgCore {
+public abstract class Animable<A extends AnimI<A, T>, T extends Enum<T> & AnimI.AnimType<A, T>> extends ImgCore {
 
-	public T anim;
+	public A anim;
 
-	public abstract EAnimI getEAnim(int t);
+	public abstract EAnimI getEAnim(T t);
 
 }

@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import common.CommonStatic;
 import common.CommonStatic.Lang;
 import common.pack.UserProfile;
+import common.util.anim.AnimI;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
@@ -28,6 +29,7 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
 		public final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
+		public final MultiLangCont<AnimI.AnimType<?, ?>, String> ANIMNAME = new MultiLangCont<>();
 
 	}
 

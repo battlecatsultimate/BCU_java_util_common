@@ -18,8 +18,13 @@ import common.util.anim.EAnimD;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
+import common.util.pack.WaveAnim.WaveType;
 
-public class Background extends AnimI implements Indexable<Background> {
+public class Background extends AnimI<Background, Background.BGWvType> implements Indexable<Background> {
+
+	public static enum BGWvType implements AnimI.AnimType<Background, BGWvType> {
+		ENEMY, UNIT
+	}
 
 	public static final int BG = 0, TOP = 20, shift = 65; // in pix
 
@@ -136,11 +141,11 @@ public class Background extends AnimI implements Indexable<Background> {
 	}
 
 	@Override
-	public EAnimD getEAnim(int t) {
-		if (t == 1 || t == 0)
-			return ewav.getEAnim(0);
-		else if (t == 2)
-			return uwav.getEAnim(0);
+	public EAnimD<WaveType> getEAnim(BGWvType t) {
+		if (t == BGWvType.ENEMY)
+			return ewav.getEAnim(WaveAnim.WaveType.DEF);
+		else if (t == BGWvType.UNIT)
+			return uwav.getEAnim(WaveAnim.WaveType.DEF);
 		else
 			return null;
 	}
@@ -170,6 +175,11 @@ public class Background extends AnimI implements Indexable<Background> {
 	@Override
 	public String toString() {
 		return id.toString();
+	}
+
+	@Override
+	public BGWvType[] types() {
+		return BGWvType.values();
 	}
 
 }

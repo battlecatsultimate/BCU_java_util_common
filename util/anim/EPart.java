@@ -12,7 +12,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	private final String name;
 	private final MaModel model;
-	private final AnimI a;
+	private final AnimI<?, ?> a;
 	private final int[] args;
 	private final EPart[] ent;
 	private final int ind;
@@ -25,7 +25,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	public int par;// temp
 
-	protected EPart(MaModel mm, AnimI aa, int[] part, String str, int i, EPart[] ents) {
+	protected EPart(MaModel mm, AnimI<?, ?> aa, int[] part, String str, int i, EPart[] ents) {
 		model = mm;
 		a = aa;
 		args = part;

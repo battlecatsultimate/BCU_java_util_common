@@ -174,7 +174,7 @@ public class PackData {
 	}
 
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class Identifier<T extends Indexable<?>> implements Comparable<Identifier<T>>, Cloneable {
+	public static class Identifier<T extends Indexable<?>> implements Comparable<Identifier<?>>, Cloneable {
 
 		public static final String DEF = "_default";
 
@@ -223,11 +223,11 @@ public class PackData {
 		}
 
 		@Override
-		public int compareTo(Identifier<T> o) {
-			int val = pack.compareTo(o.pack);
+		public int compareTo(Identifier<?> identifier) {
+			int val = pack.compareTo(identifier.pack);
 			if (val != 0)
 				return val;
-			return Integer.compare(id, o.id);
+			return Integer.compare(id, identifier.id);
 		}
 
 		public boolean equals(Identifier<T> o) {

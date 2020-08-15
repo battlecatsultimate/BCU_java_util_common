@@ -6,9 +6,10 @@ import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
 import common.util.anim.EAnimD;
+import common.util.pack.EffAnim.VolcEff;
 
 public class ContVolcano extends ContAb {
-	protected final EAnimD anim;
+	protected final EAnimD<VolcEff> anim;
 	protected final AttackVolcano v;
 
 	private final int aliveTime;
@@ -17,8 +18,7 @@ public class ContVolcano extends ContAb {
 
 	protected ContVolcano(AttackVolcano v, double p, int lay, int alive) {
 		super(v.model.b, p, lay);
-		anim = effas()[v.dire == 1 ? A_E_VOLC : A_VOLC].getEAnim(1);
-		anim.changeAnim(0);
+		anim = (v.dire == 1 ? effas().A_E_VOLC : effas().A_VOLC).getEAnim(VolcEff.START);
 		this.v = v;
 		aliveTime = alive;
 		CommonStatic.setSE(SE_VOLC_START);
@@ -34,11 +34,11 @@ public class ContVolcano extends ContAb {
 
 	@Override
 	public void update() {
-		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != 1) {
-			anim.changeAnim(1);
+		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != VolcEff.DURING) {
+			anim.changeAnim(VolcEff.DURING);
 			CommonStatic.setSE(SE_VOLC_LOOP);
-		} else if (t > VOLC_PRE + aliveTime && anim.type != 2)
-			anim.changeAnim(2);
+		} else if (t > VOLC_PRE + aliveTime && anim.type != VolcEff.END)
+			anim.changeAnim(VolcEff.END);
 
 		if (t > VOLC_PRE && t < VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
 			CommonStatic.setSE(SE_VOLC_LOOP);

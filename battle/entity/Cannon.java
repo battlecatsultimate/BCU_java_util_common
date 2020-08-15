@@ -12,14 +12,16 @@ import common.pack.PackData.Identifier;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
+import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
+import common.util.pack.NyCastle.NyType;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
 public class Cannon extends AtkModelAb {
 
 	public final int id;
-	private EAnimD anim, atka, exta;
+	private EAnimD<?> anim, atka, exta;
 	private int preTime = 0;
 	private EUnit wall = null;
 	public double pos;
@@ -32,7 +34,7 @@ public class Cannon extends AtkModelAb {
 
 	/** call when shoot the canon */
 	public void activate() {
-		anim = CommonStatic.getBCAssets().atks[id].getEAnim(0);
+		anim = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.BASE);
 		preTime = NYPRE[id];
 		CommonStatic.setSE(SE_CANNON[id][0]);
 	}
@@ -100,7 +102,7 @@ public class Cannon extends AtkModelAb {
 		if (anim != null && anim.done()) {
 			anim = null;
 			if (id > 2 && id < 5) {
-				atka = CommonStatic.getBCAssets().atks[id].getEAnim(1);
+				atka = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK);
 				CommonStatic.setSE(SE_CANNON[id][1]);
 			}
 		}
@@ -144,7 +146,7 @@ public class Cannon extends AtkModelAb {
 			// wall canon
 			Form f = Identifier.parseInt(339, Unit.class).get().forms[0];
 			double multi = 0.01 * b.b.t().getCanonMulti(id);
-			wall = new EUnit(b, f.du, f.getEAnim(4), multi, null);
+			wall = new EUnit(b, f.du, f.getEAnim(UType.ENTER), multi, null);
 			b.le.add(wall);
 			wall.added(-1, (int) pos);
 			preTime = b.b.t().getCanonProcTime(id);
@@ -207,8 +209,8 @@ public class Cannon extends AtkModelAb {
 					int rad = b.b.t().getCanonProcTime(id);
 					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos));
 
-					atka = CommonStatic.getBCAssets().atks[id].getEAnim(1);
-					exta = CommonStatic.getBCAssets().atks[id].getEAnim(2);
+					atka = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK);
+					exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
 				} else if (id == 7) {
 					// curse cannon
 					tempAtk = true;

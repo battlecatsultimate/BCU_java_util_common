@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
@@ -96,9 +97,10 @@ public class Admin {
 	private static final String[] NONPRE = { "\\./org/img/../.....\\.png", "\\./org/enemy/.../..._.\\.png",
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
-	public static void main$0(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
+		CommonStatic.ctx = new AdminContext();
 		// AssetLoader.merge();
-		// searchForStaticFields();
+		searchForStaticFields();
 	}
 
 	public static List<ZipDesc> read() throws Exception {

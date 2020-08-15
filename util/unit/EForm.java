@@ -5,6 +5,7 @@ import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
 import common.battle.entity.EUnit;
 import common.util.Data;
+import common.util.anim.AnimU;
 
 public class EForm extends Data {
 
@@ -36,7 +37,7 @@ public class EForm extends Data {
 
 	public EUnit getEntity(StageBasis b) {
 		double d = f.unit.lv.getMult(level.getLvs()[0]);
-		EUnit e = new EUnit(b, du, f.getEAnim(0), d, level);
+		EUnit e = new EUnit(b, du, f.getEAnim(AnimU.UType.WALK), d, level);
 		return e;
 	}
 

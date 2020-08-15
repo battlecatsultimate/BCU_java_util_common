@@ -3,13 +3,14 @@ package common.battle.attack;
 import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
+import common.util.pack.NyCastle.NyType;
 
 public class ContWaveCanon extends ContWaveAb {
 
 	private final int canid;
 
 	public ContWaveCanon(AttackWave a, double p, int id) {
-		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(1), 9);
+		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9);
 		canid = id;
 	}
 

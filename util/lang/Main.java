@@ -21,7 +21,7 @@ import common.util.lang.Formatter.Context;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		CommonStatic.ctx=new Admin.AdminContext();
+		CommonStatic.ctx = new Admin.AdminContext();
 		Scanner sc = new Scanner(System.in);
 		String str;
 		while (!(str = sc.nextLine()).equals("exit"))

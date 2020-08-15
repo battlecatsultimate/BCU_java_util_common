@@ -3,11 +3,25 @@ package common.util.anim;
 import common.system.fake.FakeImage;
 import common.util.Animable;
 import common.util.BattleStatic;
+import common.util.lang.MultiLangCont;
 
-public abstract class AnimI extends Animable<AnimI> implements BattleStatic {
+public abstract class AnimI<A extends AnimI<A, T>, T extends Enum<T> & AnimI.AnimType<A, T>> extends Animable<A, T>
+		implements BattleStatic {
 
+	public static interface AnimType<A extends AnimI<A, T>, T extends Enum<T> & AnimType<A, T>> {
+
+	}
+
+	protected static String[] translate(AnimType<?, ?>... anim) {
+		String[] ans = new String[anim.length];
+		for (int i = 0; i < ans.length; i++)
+			ans[i] = MultiLangCont.getStatic().ANIMNAME.getCont(anim[i]);
+		return ans;
+	}
+
+	@SuppressWarnings("unchecked")
 	public AnimI() {
-		anim = this;
+		anim = (A) this;
 	}
 
 	public abstract void check();
@@ -17,5 +31,7 @@ public abstract class AnimI extends Animable<AnimI> implements BattleStatic {
 	public abstract String[] names();
 
 	public abstract FakeImage parts(int img);
+
+	public abstract T[] types();
 
 }

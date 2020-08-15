@@ -4,27 +4,18 @@ import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
+import common.util.anim.AnimU.UType;
 
-public class EAnimU extends EAnimD {
+public class EAnimU extends EAnimD<AnimU.UType> {
 
-	protected EAnimU(AnimU<?> ani, int i) {
-		super(ani, ani.mamodel, ani.anims[i]);
+	protected EAnimU(AnimU<?> ani, UType i) {
+		super(ani, ani.mamodel, ani.getMaAnim(i));
 		type = i;
 	}
 
 	@Override
 	public AnimU<?> anim() {
 		return (AnimU<?>) a;
-	}
-
-	/** change the animation state, for entities only */
-	@Override
-	public void changeAnim(int t) {
-		if (t >= anim().anims.length)
-			return;
-		f = -1;
-		ma = anim().anims[t];
-		type = t;
 	}
 
 	@Override
@@ -64,7 +55,7 @@ public class EAnimU extends EAnimD {
 	}
 
 	/** make this animation a component of another, used in warp and kb */
-	public void paraTo(EAnimD base) {
+	public void paraTo(EAnimD<?> base) {
 		if (base == null)
 			ent[0].setPara(null);
 		else

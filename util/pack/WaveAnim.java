@@ -5,8 +5,13 @@ import common.util.anim.AnimI;
 import common.util.anim.EAnimD;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
+import common.util.anim.AnimI.AnimType;
 
-public class WaveAnim extends AnimI {
+public class WaveAnim extends AnimI<WaveAnim, WaveAnim.WaveType> {
+
+	public static enum WaveType implements AnimType<WaveAnim, WaveType> {
+		DEF;
+	}
 
 	private final Background bg;
 	private final MaModel mamodel;
@@ -27,8 +32,8 @@ public class WaveAnim extends AnimI {
 	}
 
 	@Override
-	public EAnimD getEAnim(int t) {
-		return new EAnimD(this, mamodel, maanim);
+	public EAnimD<WaveType> getEAnim(WaveType t) {
+		return new EAnimD<>(this, mamodel, maanim);
 	}
 
 	@Override
@@ -39,13 +44,18 @@ public class WaveAnim extends AnimI {
 
 	@Override
 	public String[] names() {
-		return new String[] { "wave" };
+		return translate(WaveType.DEF);
 	}
 
 	@Override
 	public FakeImage parts(int i) {
 		check();
 		return parts[i];
+	}
+
+	@Override
+	public WaveType[] types() {
+		return WaveType.values();
 	}
 
 }

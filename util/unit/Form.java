@@ -14,7 +14,7 @@ import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.lang.MultiLangCont;
 
-public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit> {
+public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopable<Form, Unit> {
 
 	public static String lvString(int[] lvs) {
 		String str = "Lv." + lvs[0] + ", {";
@@ -69,7 +69,7 @@ public class Form extends Animable<AnimU<?>> implements BasedCopable<Form, Unit>
 	}
 
 	@Override
-	public EAnimU getEAnim(int t) {
+	public EAnimU getEAnim(AnimU.UType t) {
 		return anim.getEAnim(t);
 	}
 

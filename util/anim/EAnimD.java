@@ -3,24 +3,23 @@ package common.util.anim;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
-public class EAnimD extends EAnimI {
+public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
-	public int type;
+	public T type;
 
 	protected MaAnim ma;
 
 	protected int f = -1;
 
-	public EAnimD(AnimI ia, MaModel mm, MaAnim anim) {
+	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim) {
 		super(ia, mm);
 		ma = anim;
 	}
 
-	public void changeAnim(int t) {
-		if (t >= ((AnimD) anim()).anims.length)
-			return;
+	@SuppressWarnings("unchecked")
+	public void changeAnim(T t) {
 		f = -1;
-		ma = ((AnimD) anim()).anims[t];
+		ma = ((AnimD<?, T>) anim()).getMaAnim(t);
 		type = t;
 	}
 
@@ -73,7 +72,7 @@ public class EAnimD extends EAnimI {
 	@Override
 	protected void performDeepCopy() {
 		super.performDeepCopy();
-		((EAnimD) copy).setTime(f);
+		((EAnimD<?>) copy).setTime(f);
 	}
 
 }

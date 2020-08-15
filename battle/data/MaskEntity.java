@@ -6,6 +6,7 @@ import common.util.BattleStatic;
 import common.util.Data;
 import common.util.Data.Proc;
 import common.util.anim.AnimU;
+import common.util.anim.AnimU.UType;
 import common.util.pack.Soul;
 
 public interface MaskEntity extends BattleStatic {
@@ -37,7 +38,7 @@ public interface MaskEntity extends BattleStatic {
 	public int getItv();
 
 	/** get the Enemy/Form this data represents */
-	public Animable<AnimU<?>> getPack();
+	public Animable<AnimU<?>, UType> getPack();
 
 	public int getPost();
 

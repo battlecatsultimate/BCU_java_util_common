@@ -51,7 +51,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 		validate();
 	}
 
-	public void check(AnimD anim) {
+	public void check(AnimD<?, ?> anim) {
 		int mms = anim.mamodel.n;
 		int ics = anim.imgcut.n;
 		if (ints[0] >= mms)

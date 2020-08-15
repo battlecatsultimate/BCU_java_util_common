@@ -1,11 +1,12 @@
 package common.battle.attack;
 
 import common.CommonStatic;
+import common.util.pack.EffAnim.DefEff;
 
 public class ContWaveDef extends ContWaveAb {
 
 	protected ContWaveDef(AttackWave a, double p, int layer) {
-		super(a, p, effas()[a.dire == 1 ? A_E_WAVE : A_WAVE].getEAnim(0), layer);
+		super(a, p, (a.dire == 1 ? effas().A_E_WAVE : effas().A_WAVE).getEAnim(DefEff.DEF), layer);
 
 		CommonStatic.setSE(SE_WAVE);
 	}

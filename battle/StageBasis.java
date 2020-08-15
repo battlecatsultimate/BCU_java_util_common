@@ -22,6 +22,7 @@ import common.util.BattleObj;
 import common.util.CopRand;
 import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
+import common.util.pack.EffAnim.DefEff;
 import common.util.stage.EStage;
 import common.util.stage.Stage;
 import common.util.stage.MapColc.DefMapColc;
@@ -260,7 +261,7 @@ public class StageBasis extends BattleObj {
 				for (int i = 0; i < le.size(); i++)
 					if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0)
 						le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
-				lea.add(new EAnimCont(700, 9, effas()[A_SHOCKWAVE].getEAnim(0)));
+				lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
 				CommonStatic.setSE(SE_BOSS);
 				shock = false;
 			}

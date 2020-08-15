@@ -32,18 +32,18 @@ public abstract class EAnimI extends BattleObj {
 	public int sele = -1;
 
 	public EPart[] ent = null;
-	protected final AnimI a;
+	protected final AnimI<?, ?> a;
 	protected final MaModel mamodel;
 
 	protected EPart[] order;
 
-	public EAnimI(AnimI ia, MaModel mm) {
+	public EAnimI(AnimI<?, ?> ia, MaModel mm) {
 		a = ia;
 		mamodel = mm;
 		organize();
 	}
 
-	public AnimI anim() {
+	public AnimI<?, ?> anim() {
 		return a;
 	}
 
