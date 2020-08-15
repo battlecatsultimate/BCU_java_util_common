@@ -176,7 +176,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	public boolean deletable() {
-		for (UserPack p : UserProfile.packs()) {
+		for (UserPack p : UserProfile.getUserPacks()) {
 			for (Enemy e : p.enemies.getList())
 				if (e.anim == this)
 					return false;

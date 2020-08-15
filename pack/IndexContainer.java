@@ -18,6 +18,11 @@ public interface IndexContainer {
 
 	public static interface Indexable<R extends IndexContainer, T extends Indexable<R, T>> {
 
+		@SuppressWarnings("unchecked")
+		public default R getCont() {
+			return (R) getID().getCont();
+		}
+
 		public Identifier<T> getID();
 
 	}

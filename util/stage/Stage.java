@@ -9,6 +9,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.PackData.Identifier;
+import common.pack.PackData.UserPack;
 import common.pack.VerFixer.VerFixerException;
 import common.system.BasedCopable;
 import common.system.files.VFile;
@@ -112,7 +113,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		}
 
 		@Deprecated
-		public PackStage(StageMap sm, InStream is) throws VerFixerException {
+		public PackStage(UserPack pack, StageMap sm, InStream is) throws VerFixerException {
 			super(sm);
 			int val = getVer(is.nextString());
 			if (val != 409)
@@ -130,7 +131,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 			max = is.nextByte();
 			non_con = is.nextByte() == 1;
 			data = SCDef.zread(is.subStream());
-			lim = new Limit.PackLimit(map.mc, is);
+			lim = new Limit.PackLimit(pack, is);
 			int t = is.nextInt();
 			for (int i = 0; i < t; i++) {
 				String name = is.nextString();

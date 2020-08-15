@@ -3,9 +3,7 @@ package common.pack;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import com.google.gson.JsonElement;
 import common.CommonStatic;
@@ -36,6 +34,7 @@ import common.util.pack.Soul;
 import common.util.stage.CastleList.PackCasList;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
+import common.util.stage.LvRestrict;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
@@ -53,8 +52,6 @@ public abstract class PackData implements IndexContainer {
 	public static class DefPack extends PackData {
 
 		public VFileRoot<FileDesc> root = new VFileRoot<>(".");;
-
-		public final Map<Integer, CharaGroup> cgmap = new HashMap<>();
 
 		protected DefPack() {
 		}
@@ -99,7 +96,7 @@ public abstract class PackData implements IndexContainer {
 				Identifier<Unit>[] units = new Identifier[strs.length - 3];
 				for (int i = 3; i < strs.length; i++)
 					units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]), Unit.class);
-				cgmap.put(id, new CharaGroup.DefCG(id, type, units));
+				groups.set(id, new CharaGroup.DefCG(id, type, units));
 			}
 		}
 
@@ -372,7 +369,8 @@ public abstract class PackData implements IndexContainer {
 	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
-
+	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);
+	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
 	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
 
 	@Override
@@ -390,6 +388,10 @@ public abstract class PackData implements IndexContainer {
 			def = func.reduce(def, souls);
 		if (cls == Music.class)
 			def = func.reduce(def, musics);
+		if (cls == CharaGroup.class)
+			def = func.reduce(def, groups);
+		if (cls == LvRestrict.class)
+			def = func.reduce(def, lvrs);
 		return def;
 	}
 

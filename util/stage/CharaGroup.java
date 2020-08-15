@@ -5,18 +5,23 @@ import java.util.TreeSet;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
+import common.pack.PackData;
 import common.pack.PackData.Identifier;
+import common.pack.PackData.UserPack;
 import common.util.Data;
 import common.util.unit.Unit;
 
+@IndexCont(PackData.class)
 @JsonClass
-public class CharaGroup extends Data implements Comparable<CharaGroup> {
+public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>, Comparable<CharaGroup> {
 
 	public static class DefCG extends CharaGroup {
 
 		public DefCG(int ID, int t, Identifier<Unit>[] units) {
 			super(t, units);
-			id = ID;
+			id = Identifier.parseInt(ID, CharaGroup.class);
 		}
 
 	}
@@ -24,18 +29,18 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	@JsonClass
 	public static class PackCG extends CharaGroup {
 
-		private final MapColc mc;
+		private final UserPack mc;
 
 		@JsonField
 		public String name = "";
 
 		@Deprecated
-		public PackCG(MapColc mc, InStream is) {
+		public PackCG(UserPack mc, InStream is) {
 			this.mc = mc;
 			int ver = getVer(is.nextString());
 			if (ver == 308) {
 				name = is.nextString();
-				id = is.nextInt();
+				id = mc.getID(CharaGroup.class, is.nextInt());
 				type = is.nextInt();
 				int m = is.nextInt();
 				for (int j = 0; j < m; j++) {
@@ -48,14 +53,14 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 		@Override
 		public String toString() {
-			return trio(id) + " - " + name;
+			return id + " - " + name;
 		}
 
 		public boolean used() {
 			for (LvRestrict lr : mc.lvrs.getList())
 				if (lr.res.containsKey(this))
 					return true;
-			for (StageMap sm : mc.maps)
+			for (StageMap sm : mc.mc.maps)
 				for (Stage st : sm.list)
 					if (st.lim != null && st.lim.group == this)
 						return true;
@@ -65,7 +70,9 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	}
 
 	@JsonField
-	public int id = -1, type = 0;
+	public Identifier<CharaGroup> id;
+	@JsonField
+	public int type = 0;
 	@JsonField(generic = Unit.class, alias = Identifier.class)
 	public final TreeSet<Unit> set = new TreeSet<>();
 
@@ -110,12 +117,18 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 	@Override
 	public int compareTo(CharaGroup cg) {
-		return Integer.compare(id, cg.id);
+		return id.compareTo(cg.id);
+	}
+
+	@Override
+	public Identifier<CharaGroup> getID() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String toString() {
-		return trio(id);
+		return id.toString();
 	}
 
 }

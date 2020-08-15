@@ -8,26 +8,32 @@ import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
+import common.pack.PackData;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserPack;
 import common.pack.VerFixer.VerFixerException;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 
+@IndexCont(PackData.class)
 @JsonClass
-public class LvRestrict extends Data {
+public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> {
 
 	public static class PackLR extends LvRestrict {
 
-		private final MapColc mc;
+		private final UserPack pack;
 
 		@Deprecated
-		public PackLR(MapColc mc, InStream is) throws VerFixerException {
-			this.mc = mc;
+		public PackLR(UserPack mc, InStream is) throws VerFixerException {
+			this.pack = mc;
 			int ver = getVer(is.nextString());
 			if (ver != 308)
 				throw new VerFixerException("LvRestrict requires 308, got " + ver);
 			name = is.nextString();
-			id = is.nextInt();
+			id = Identifier.parseInt(is.nextInt(), LvRestrict.class);
 			int[] tb = is.nextIntsB();
 			for (int i = 0; i < tb.length; i++)
 				all[i] = tb[i];
@@ -49,7 +55,7 @@ public class LvRestrict extends Data {
 		}
 
 		public boolean used() {
-			for (StageMap sm : mc.maps)
+			for (StageMap sm : pack.mc.maps)
 				for (Stage st : sm.list)
 					if (st.lim != null && st.lim.lvr == this)
 						return true;
@@ -68,18 +74,18 @@ public class LvRestrict extends Data {
 	@JsonField
 	public int[] all = new int[6];
 	@JsonField
-	public int id;
+	public Identifier<LvRestrict> id;
 	@JsonField
 	public String name = "";
 
-	public LvRestrict(int ID) {
+	public LvRestrict(Identifier<LvRestrict> ID) {
 		all = MAX.clone();
 		for (int i = 0; i < RARITY_TOT; i++)
 			rares[i] = MAX.clone();
 		id = ID;
 	}
 
-	public LvRestrict(int ID, LvRestrict lvr) {
+	public LvRestrict(Identifier<LvRestrict> ID, LvRestrict lvr) {
 		id = ID;
 		all = lvr.all.clone();
 		for (int i = 0; i < RARITY_TOT; i++)
@@ -92,7 +98,6 @@ public class LvRestrict extends Data {
 	}
 
 	private LvRestrict(LvRestrict lvr) {
-		id = -1;
 		for (CharaGroup cg : lvr.res.keySet())
 			res.put(cg, lvr.res.get(cg).clone());
 	}
@@ -117,6 +122,11 @@ public class LvRestrict extends Data {
 		return ans;
 	}
 
+	@Override
+	public Identifier<LvRestrict> getID() {
+		return id;
+	}
+
 	public boolean isValid(LineUp lu) {
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
@@ -132,7 +142,7 @@ public class LvRestrict extends Data {
 
 	@Override
 	public String toString() {
-		return trio(id) + "-" + name;
+		return id + "-" + name;
 	}
 
 	public Level valid(Form f) {

@@ -3,6 +3,7 @@ package common.util.stage;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.BattleStatic;
 import common.util.Data;
@@ -24,7 +25,7 @@ public class Limit extends Data implements BattleStatic {
 			line = Integer.parseInt(strs[5]);
 			min = Integer.parseInt(strs[6]);
 			max = Integer.parseInt(strs[7]);
-			group = UserProfile.getBCData().cgmap.get(Integer.parseInt(strs[8]));
+			group = UserProfile.getBCData().groups.get(Integer.parseInt(strs[8]));
 		}
 
 	}
@@ -38,7 +39,7 @@ public class Limit extends Data implements BattleStatic {
 		}
 
 		@Deprecated
-		public PackLimit(MapColc mc, InStream is) throws VerFixerException {
+		public PackLimit(UserPack mc, InStream is) throws VerFixerException {
 			int ver = Data.getVer(is.nextString());
 			if (ver != 308)
 				throw new VerFixerException("Limit requires ver 308, got " + ver);

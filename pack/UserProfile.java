@@ -47,6 +47,7 @@ public class UserProfile {
 		return true;
 	}
 
+	/** get all available items for a pack, except castle */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static <T> List<T> getAll(String pack, Class<T> cls) {
 		List<PackData> list = new ArrayList<>();
@@ -63,16 +64,26 @@ public class UserProfile {
 		return ans;
 	}
 
+	/** get all packs, including default pack */
+	public static Collection<PackData> getAllPacks() {
+		List<PackData> ans = new ArrayList<>();
+		ans.add(getBCData());
+		ans.addAll(getUserPacks());
+		return ans;
+	}
+
 	public static DefPack getBCData() {
 		return profile().def;
 	}
 
+	/** get a PackData from a String */
 	public static PackData getPack(String str) {
 		if (str.equals(Identifier.DEF))
 			return profile().def;
 		return profile().packmap.get(str);
 	}
 
+	/** get a set registered in the Registrar */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Set<T> getPool(String id, Class<T> cls) {
 		Map<String, Set> pool = getRegister(REG_POOL, Set.class);
@@ -82,6 +93,7 @@ public class UserProfile {
 		return ans;
 	}
 
+	/** get a map registered in the Registrar */
 	@SuppressWarnings("unchecked")
 	public static <T> Map<String, T> getRegister(String id, Class<T> cls) {
 		Map<String, T> ans = (Map<String, T>) profile().registers.get(id);
@@ -90,6 +102,7 @@ public class UserProfile {
 		return ans;
 	}
 
+	/** get a variable registered in the Registrar */
 	@SuppressWarnings("unchecked")
 	public static <T> T getStatic(String id, Supplier<T> def) {
 		Map<String, Object> pool = getRegister(REG_STATIC, Object.class);
@@ -99,11 +112,17 @@ public class UserProfile {
 		return ans;
 	}
 
+	/** get a UserPack from a String */
 	public static UserPack getUserPack(String id) {
 		return profile().packmap.get(id);
 	}
 
-	public static PackData.UserPack initJsonPack(String id) throws Exception {
+	/** get all UserPack */
+	public static Collection<UserPack> getUserPacks() {
+		return profile().packmap.values();
+	}
+
+	public static UserPack initJsonPack(String id) throws Exception {
 		File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/pack.json");
 		File folder = f.getParentFile();
 		if (folder.exists()) {
@@ -148,10 +167,6 @@ public class UserProfile {
 		profile.packlist.addAll(profile.failed);
 	}
 
-	public static Collection<UserPack> packs() {
-		return profile().packmap.values();
-	}
-
 	public static UserProfile profile() {
 		if (profile == null) {
 			profile = new UserProfile();
@@ -193,6 +208,7 @@ public class UserProfile {
 	public byte[] password;
 	public final DefPack def = new DefPack();
 	public final Map<String, UserPack> packmap = new HashMap<>();
+
 	public final Set<UserPack> packlist = new HashSet<>();
 
 	public final Set<UserPack> failed = new HashSet<>();

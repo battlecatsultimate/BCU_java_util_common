@@ -11,8 +11,6 @@ import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonClass.RType;
-import common.io.json.JsonField.GenType;
-import common.pack.FixIndexList;
 import common.pack.UserProfile;
 import common.pack.VerFixer.VerFixerException;
 import common.pack.PackData.UserPack;
@@ -259,14 +257,14 @@ public class MapColc extends Data {
 
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
-				CharaGroup cg = new CharaGroup.PackCG(this, is);
-				groups.set(cg.id, cg);
+				CharaGroup cg = new CharaGroup.PackCG(pack, is);
+				pack.groups.set(cg.id.id, cg);
 			}
 
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
-				LvRestrict lr = new LvRestrict.PackLR(this, is);
-				lvrs.set(lr.id, lr);
+				LvRestrict lr = new LvRestrict.PackLR(pack, is);
+				pack.lvrs.set(lr.id.id, lr);
 			}
 
 			n = is.nextInt();
@@ -279,11 +277,11 @@ public class MapColc extends Data {
 				int m = is.nextInt();
 				for (int j = 0; j < m; j++) {
 					InStream sub = is.subStream();
-					sm.add(new Stage.PackStage(sm, sub));
+					sm.add(new Stage.PackStage(pack, sm, sub));
 				}
 				m = is.nextInt();
 				for (int j = 0; j < m; j++)
-					sm.lim.add(new Limit.PackLimit(this, is));
+					sm.lim.add(new Limit.PackLimit(pack, is));
 			}
 		}
 
@@ -355,11 +353,6 @@ public class MapColc extends Data {
 	public static Collection<MapColc> values() {
 		return UserProfile.getRegister(REG_MAPCOLC, MapColc.class).values();
 	}
-
-	@JsonField(gen = GenType.FILL)
-	public FixIndexList<CharaGroup> groups = new FixIndexList<>(CharaGroup.class);
-	@JsonField(gen = GenType.FILL)
-	public FixIndexList<LvRestrict> lvrs = new FixIndexList<>(LvRestrict.class);
 
 	@JsonField
 	public StageMap[] maps = new StageMap[0];
