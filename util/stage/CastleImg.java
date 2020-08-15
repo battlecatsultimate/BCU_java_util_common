@@ -1,10 +1,12 @@
 package common.util.stage;
 
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 import common.system.VImg;
 
-public class CastleImg implements Indexable<CastleImg> {
+@IndexCont(CastleList.class)
+public class CastleImg implements Indexable<CastleList, CastleImg> {
 
 	public final Identifier<CastleImg> id;
 	public final VImg img;

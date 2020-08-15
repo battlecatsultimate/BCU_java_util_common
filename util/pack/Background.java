@@ -3,9 +3,11 @@ package common.util.pack;
 import java.util.Queue;
 
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.VImg;
@@ -20,7 +22,8 @@ import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 import common.util.pack.WaveAnim.WaveType;
 
-public class Background extends AnimI<Background, Background.BGWvType> implements Indexable<Background> {
+@IndexCont(PackData.class)
+public class Background extends AnimI<Background, Background.BGWvType> implements Indexable<PackData, Background> {
 
 	public static enum BGWvType implements AnimI.AnimType<Background, BGWvType> {
 		ENEMY, UNIT

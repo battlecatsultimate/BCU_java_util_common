@@ -1,12 +1,12 @@
 package common.pack;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-
 import com.google.gson.JsonElement;
 import common.CommonStatic;
 import common.battle.data.DataEnemy;
@@ -40,6 +40,7 @@ import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
 import common.util.stage.RandStage;
+import common.util.unit.AbEnemy;
 import common.util.unit.Combo;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -47,7 +48,7 @@ import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
 
 @JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
-public class PackData {
+public abstract class PackData implements IndexContainer {
 
 	public static class DefPack extends PackData {
 
@@ -56,6 +57,11 @@ public class PackData {
 		public final Map<Integer, CharaGroup> cgmap = new HashMap<>();
 
 		protected DefPack() {
+		}
+
+		@Override
+		public String getID() {
+			return Identifier.DEF;
 		}
 
 		public void load() {
@@ -174,7 +180,7 @@ public class PackData {
 	}
 
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class Identifier<T extends Indexable<?>> implements Comparable<Identifier<?>>, Cloneable {
+	public static class Identifier<T extends Indexable<?, T>> implements Comparable<Identifier<?>>, Cloneable {
 
 		public static final String DEF = "_default";
 
@@ -185,7 +191,7 @@ public class PackData {
 		 * go through fixer
 		 */
 		@SuppressWarnings("unchecked")
-		public static <T extends Indexable<?>> Identifier<T> parseInt(int v, Class<? extends T> cls) {
+		public static <T extends Indexable<?, T>> Identifier<T> parseInt(int v, Class<? extends T> cls) {
 			return parseIntRaw(v, cls);
 		}
 
@@ -197,6 +203,22 @@ public class PackData {
 			String pack = v / 1000 == 0 ? DEF : Data.hex(v / 1000);
 			int id = v % 1000;
 			return new Identifier(pack, cls, id);
+		}
+
+		private static Object getContainer(Class<?> cls, String str) {
+			IndexCont cont = null;
+			while (cls != null && (cont = cls.getAnnotation(IndexCont.class)) == null)
+				cls = cls.getSuperclass();
+			if (cont == null)
+				return null;
+			Method m = null;
+			for (Method mi : cont.value().getMethods())
+				if (mi.getAnnotation(ContGetter.class) != null)
+					m = mi;
+			if (m == null)
+				return null;
+			Method fm = m;
+			return Data.err(() -> fm.invoke(null, str));
 		}
 
 		public Class<? extends T> cls;
@@ -234,20 +256,20 @@ public class PackData {
 			return pack.equals(o.pack) && id == o.id;
 		}
 
+		@SuppressWarnings("unchecked")
 		public T get() {
-			return UserProfile.get(this);
+			IndexContainer cont = getCont();
+			return (T) cont.getList(cls, (r, l) -> r == null ? l.get(id) : r, null);
+		}
+
+		public IndexContainer getCont() {
+			return (IndexContainer) getContainer(cls, pack);
 		}
 
 		@Override
 		public String toString() {
 			return pack + "/" + id;
 		}
-
-	}
-
-	public static interface Indexable<T extends Indexable<?>> {
-
-		public Identifier<T> getID();
 
 	}
 
@@ -317,7 +339,12 @@ public class PackData {
 			loaded = true;
 		}
 
-		public <T extends Indexable<?>> Identifier<T> getID(Class<T> cls, int id) {
+		@Override
+		public String getID() {
+			return desc.id;
+		}
+
+		public <T extends Indexable<?, T>> Identifier<T> getID(Class<T> cls, int id) {
 			return new Identifier<T>(desc.id, cls, id);
 		}
 
@@ -334,12 +361,36 @@ public class PackData {
 
 	}
 
+	@ContGetter
+	public static PackData getPack(String str) {
+		return UserProfile.getPack(str);
+	}
+
 	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
 	public final FixIndexMap<EneRand> randEnemies = new FixIndexMap<>(EneRand.class);
 	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
 	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
+
 	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
+
+	@Override
+	@SuppressWarnings({ "rawtypes" })
+	public <R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def) {
+		if (cls == Unit.class)
+			def = func.reduce(def, units);
+		if (cls == Enemy.class || cls == AbEnemy.class)
+			def = func.reduce(def, enemies);
+		if (cls == EneRand.class || cls == AbEnemy.class)
+			def = func.reduce(def, randEnemies);
+		if (cls == Background.class)
+			def = func.reduce(def, bgs);
+		if (cls == Soul.class)
+			def = func.reduce(def, souls);
+		if (cls == Music.class)
+			def = func.reduce(def, musics);
+		return def;
+	}
 
 }

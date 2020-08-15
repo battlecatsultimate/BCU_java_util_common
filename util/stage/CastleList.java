@@ -5,16 +5,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import common.pack.FixIndexList.FixIndexMap;
-import common.pack.PackData.Identifier;
+import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.files.VFile;
 import common.util.stage.MapColc.PackMapColc;
 
-public class CastleList extends FixIndexMap<CastleImg> {
+public abstract class CastleList extends FixIndexMap<CastleImg> implements IndexContainer {
 
 	public static class DefCasList extends CastleList {
 
@@ -24,11 +23,16 @@ public class CastleList extends FixIndexMap<CastleImg> {
 		public DefCasList(String hash, String name) {
 			id = hash;
 			str = name;
-			for (VFile<?> vf : VFile.get("./org/img/" + name).list())
-				add(new CastleImg(new Identifier<CastleImg>(id, CastleImg.class, size()), new VImg(vf)));
 			map().put(id, this);
 			defset().add(this);
+			for (VFile<?> vf : VFile.get("./org/img/" + name).list())
+				add(new CastleImg(getNextID(CastleImg.class), new VImg(vf)));
 
+		}
+
+		@Override
+		public String getID() {
+			return id;
 		}
 
 		@Override
@@ -44,6 +48,11 @@ public class CastleList extends FixIndexMap<CastleImg> {
 		public PackCasList(UserPack p) {
 			pack = p;
 			map().put(pack.desc.id, this);
+		}
+
+		@Override
+		public String getID() {
+			return pack.getID();
 		}
 
 		@Override
@@ -73,6 +82,11 @@ public class CastleList extends FixIndexMap<CastleImg> {
 		return list;
 	}
 
+	@ContGetter
+	public static CastleList getList(String str) {
+		return map().get(str);
+	}
+
 	public static Map<String, CastleList> map() {
 		return UserProfile.getRegister(REG_CASTLE, CastleList.class);
 	}
@@ -80,4 +94,11 @@ public class CastleList extends FixIndexMap<CastleImg> {
 	private CastleList() {
 		super(CastleImg.class);
 	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public <R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def) {
+		return func.reduce(def, this);
+	}
+
 }

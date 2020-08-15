@@ -26,6 +26,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 	public static enum UType implements AnimI.AnimType<AnimU<?>, UType> {
 		WALK, IDLE, ATK, HB, ENTER, BURROW_DOWN, BURROW_MOVE, BURROW_UP;
 	}
+
 	public static final UType[] TYPE4 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB };
 	public static final UType[] TYPE5 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB, UType.ENTER };
 

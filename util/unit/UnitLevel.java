@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.io.InStream;
+import common.pack.PackData;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 
-public class UnitLevel implements Indexable<UnitLevel> {
+@IndexCont(PackData.class)
+public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	public static UnitLevel def;
 

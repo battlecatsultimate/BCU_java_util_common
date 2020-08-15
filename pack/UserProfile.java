@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.google.gson.JsonElement;
@@ -25,23 +24,12 @@ import common.io.PackLoader.ZipDesc;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonDecoder;
 import common.pack.Context.ErrType;
-import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackData.DefPack;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
 import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
-import common.util.pack.Background;
-import common.util.pack.Soul;
-import common.util.stage.CastleImg;
-import common.util.stage.CastleList;
-import common.util.stage.Music;
-import common.util.unit.AbEnemy;
-import common.util.unit.EneRand;
-import common.util.unit.Enemy;
-import common.util.unit.Unit;
 
 public class UserProfile {
 
@@ -71,7 +59,7 @@ public class UserProfile {
 		}
 		List ans = new ArrayList<>();
 		for (PackData data : list)
-			getList(data, cls, l -> ans.addAll(l.getList()));
+			data.getList(cls, (r, l) -> ans.addAll(l.getList()), null);
 		return ans;
 	}
 
@@ -199,34 +187,6 @@ public class UserProfile {
 
 	public static void setStatic(String id, Object val) {
 		getRegister(REG_STATIC, Object.class).put(id, val);
-	}
-
-	@SuppressWarnings("unchecked")
-	static <T extends Indexable<?>> T get(Identifier<T> id) {
-		if (id.cls == CastleImg.class)
-			return (T) CastleList.map().get(id.pack).get(id.id);
-		PackData data = getPack(id.pack);
-		if (data == null)
-			return null;
-		Object[] ans = new Object[1];
-		getList(data, id.cls, l -> ans[0] = ans[0] == null ? l.get(id.id) : ans[0]);
-		return (T) ans[0];
-	}
-
-	@SuppressWarnings({ "rawtypes" })
-	private static void getList(PackData data, Class cls, Consumer<FixIndexMap> func) {
-		if (cls == Unit.class)
-			func.accept(data.units);
-		if (cls == Enemy.class || cls == AbEnemy.class)
-			func.accept(data.enemies);
-		if (cls == EneRand.class || cls == AbEnemy.class)
-			func.accept(data.randEnemies);
-		if (cls == Background.class)
-			func.accept(data.bgs);
-		if (cls == Soul.class)
-			func.accept(data.souls);
-		if (cls == Music.class)
-			func.accept(data.musics);
 	}
 
 	public String username;

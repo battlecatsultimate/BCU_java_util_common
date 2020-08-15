@@ -1,10 +1,13 @@
 package common.util.stage;
 
+import common.pack.PackData;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 import common.system.files.FileData;
 
-public class Music implements Indexable<Music> {
+@IndexCont(PackData.class)
+public class Music implements Indexable<PackData, Music> {
 
 	public final Identifier<Music> id;
 	public final FileData data;

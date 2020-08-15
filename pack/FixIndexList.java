@@ -17,13 +17,13 @@ import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.IOType;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.Indexable;
 import common.util.Data;
 
 @JsonClass
 public class FixIndexList<T> extends Data {
 
-	public static class FixIndexMap<T extends Indexable<?>> extends FixIndexList<T> {
+	public static class FixIndexMap<T extends Indexable<?, ?>> extends FixIndexList<T> {
 
 		public FixIndexMap(Class<T> cls) {
 			super(cls);
@@ -42,8 +42,9 @@ public class FixIndexList<T> extends Data {
 	public void add(T t) {
 		int ind = nextInd();
 		arr[ind] = t;
-		if (t != null)
+		if (t != null) {
 			size++;
+		}
 	}
 
 	public void clear() {

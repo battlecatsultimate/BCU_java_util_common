@@ -7,14 +7,17 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
+import common.pack.PackData;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.lang.MultiLangCont;
 
-public class Unit extends Data implements Comparable<Unit>, Indexable<Unit> {
+@IndexCont(PackData.class)
+public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, Unit> {
 
 	public static class UnitInfo {
 

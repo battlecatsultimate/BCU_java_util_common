@@ -4,11 +4,14 @@ import java.util.Set;
 
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
+import common.pack.PackData;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 import common.system.VImg;
 
-public interface AbEnemy extends Comparable<AbEnemy>, Indexable<AbEnemy> {
+@IndexCont(PackData.class)
+public interface AbEnemy extends Comparable<AbEnemy>, Indexable<PackData, AbEnemy> {
 
 	@Override
 	public default int compareTo(AbEnemy e) {

@@ -1,7 +1,9 @@
 package common.util.pack;
 
+import common.pack.PackData;
 import common.pack.PackData.Identifier;
-import common.pack.PackData.Indexable;
+import common.pack.IndexContainer.IndexCont;
+import common.pack.IndexContainer.Indexable;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.AnimD;
@@ -10,7 +12,8 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class Soul extends AnimD<Soul, Soul.SoulType> implements Indexable<Soul> {
+@IndexCont(PackData.class)
+public class Soul extends AnimD<Soul, Soul.SoulType> implements Indexable<PackData, Soul> {
 
 	public static enum SoulType implements AnimI.AnimType<Soul, SoulType> {
 		DEF;
