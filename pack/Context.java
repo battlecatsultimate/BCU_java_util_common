@@ -52,6 +52,8 @@ public interface Context {
 
 	public File getPackFolder();
 
+	public File getUserFile(String string);
+
 	public File getWorkspaceFile(String relativePath);
 
 	public void initProfile();

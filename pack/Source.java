@@ -309,13 +309,13 @@ public abstract class Source {
 			return zip.readFile(path);
 		}
 
-		public Workspace unzip(Context ctx, String password) throws Exception {
+		public Workspace unzip(String password) throws Exception {
 			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
 				return null;
-			File f = ctx.getWorkspaceFile("./" + id + "/main.pack.json");
+			File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/main.pack.json");
 			File folder = f.getParentFile();
 			if (folder.exists()) {
-				if (!ctx.confirmDelete())
+				if (!CommonStatic.ctx.confirmDelete())
 					return null;
 				Context.delete(f);
 			}

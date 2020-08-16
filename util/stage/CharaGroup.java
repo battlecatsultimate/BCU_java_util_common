@@ -29,14 +29,15 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 	@JsonClass
 	public static class PackCG extends CharaGroup {
 
-		private final UserPack mc;
-
 		@JsonField
 		public String name = "";
 
+		public PackCG(Identifier<CharaGroup> id) {
+			this.id = id;
+		}
+
 		@Deprecated
 		public PackCG(UserPack mc, InStream is) {
-			this.mc = mc;
 			int ver = getVer(is.nextString());
 			if (ver == 308) {
 				name = is.nextString();
@@ -57,6 +58,7 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 		}
 
 		public boolean used() {
+			UserPack mc = (UserPack) getCont();
 			for (LvRestrict lr : mc.lvrs.getList())
 				if (lr.res.containsKey(this))
 					return true;

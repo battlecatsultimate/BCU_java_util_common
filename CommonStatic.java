@@ -180,12 +180,6 @@ public class CommonStatic {
 
 	public static interface Itf {
 
-		/** create a file if not exist */
-		public void check(File f);
-
-		/** delete a file */
-		public void delete(File file);
-
 		/** exit */
 		public void exit(boolean save);
 

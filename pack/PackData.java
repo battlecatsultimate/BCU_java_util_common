@@ -336,6 +336,11 @@ public abstract class PackData implements IndexContainer {
 			loaded = true;
 		}
 
+		public void delete() {
+			// TODO Auto-generated method stub
+
+		}
+
 		@Override
 		public String getID() {
 			return desc.id;

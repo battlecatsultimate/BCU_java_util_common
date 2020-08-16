@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Queue;
 
 import common.CommonStatic;
+import common.battle.BasisSet;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
@@ -50,6 +51,11 @@ public class Admin {
 		}
 
 		@Override
+		public File getUserFile(String string) {
+			return new File("./user/" + string);
+		}
+
+		@Override
 		public File getWorkspaceFile(String relativePath) {
 			return new File("./workspace/" + relativePath);
 		}
@@ -58,6 +64,7 @@ public class Admin {
 		public void initProfile() {
 			AssetLoader.load();
 			UserProfile.getBCData().load();
+			BasisSet.read();
 			// UserProfile.loadPacks(); TODO
 		}
 

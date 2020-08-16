@@ -61,6 +61,16 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		id = identifier;
 	}
 
+	public Unit(Identifier<Unit> id, AnimCE ce, CustomUnit cu) {
+		this.id = id;
+		forms = new Form[] { new Form(this, 0, "new unit", ce, cu) };
+		max = 50;
+		maxp = 0;
+		rarity = 4;
+		lv = UnitLevel.def;
+		lv.units.add(this);
+	}
+
 	public Unit(VFile<?> p) {
 		id = new Identifier<>(Identifier.DEF, Unit.class, CommonStatic.parseIntN(p.getName()));
 		String str = "./org/unit/" + Data.trio(id.id) + "/";
@@ -70,16 +80,6 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
 		for (Form f : forms)
 			f.anim.getEdi().check();
-	}
-
-	protected Unit(Identifier<Unit> id, AnimCE ce, CustomUnit cu) {
-		this.id = id;
-		forms = new Form[] { new Form(this, 0, "new unit", ce, cu) };
-		max = 50;
-		maxp = 0;
-		rarity = 4;
-		lv = UnitLevel.def;
-		lv.units.add(this);
 	}
 
 	protected Unit(Identifier<Unit> id, Unit u) {

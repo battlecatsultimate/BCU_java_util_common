@@ -204,8 +204,6 @@ public class UserProfile {
 		getRegister(REG_STATIC, Object.class).put(id, val);
 	}
 
-	public String username;
-	public byte[] password;
 	public final DefPack def = new DefPack();
 	public final Map<String, UserPack> packmap = new HashMap<>();
 

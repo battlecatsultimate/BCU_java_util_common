@@ -24,11 +24,12 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 
 	public static class PackLR extends LvRestrict {
 
-		private final UserPack pack;
+		public PackLR(Identifier<LvRestrict> id) {
+			this.id = id;
+		}
 
 		@Deprecated
 		public PackLR(UserPack mc, InStream is) throws VerFixerException {
-			this.pack = mc;
 			int ver = getVer(is.nextString());
 			if (ver != 308)
 				throw new VerFixerException("LvRestrict requires 308, got " + ver);
@@ -55,7 +56,7 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		}
 
 		public boolean used() {
-			for (StageMap sm : pack.mc.maps)
+			for (StageMap sm : ((UserPack) getCont()).mc.maps)
 				for (Stage st : sm.list)
 					if (st.lim != null && st.lim.lvr == this)
 						return true;

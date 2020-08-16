@@ -232,6 +232,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	}
 
+	public static final MapColc CLIPMC = new MapColc.ClipMapColc();
+	public static final StageMap CLIPSM = CLIPMC.maps[0];
+
 	public final StageMap map;
 
 	@JsonField
@@ -289,6 +292,11 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	public int id() {
 		return map.list.indexOf(this);
+	}
+
+	public boolean isSuitable(String pack) {
+		// FIXME suitable
+		return false;
 	}
 
 	@Override

@@ -341,6 +341,20 @@ public class MapColc extends Data {
 
 	}
 
+	protected static class ClipMapColc extends MapColc {
+
+		protected ClipMapColc() {
+			maps = new StageMap[1];
+			maps[0] = new StageMap(this);
+		}
+
+		@Override
+		public String toString() {
+			return "clipboard";
+		}
+
+	}
+
 	private static final String REG_MAPCOLC = "MapColc";
 
 	@StaticPermitted
