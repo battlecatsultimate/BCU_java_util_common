@@ -34,6 +34,7 @@ import common.util.pack.EffAnim;
 import common.util.pack.NyCastle;
 import common.util.pack.Soul;
 import common.util.stage.CastleList.PackCasList;
+import common.util.stage.CastleImg;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
 import common.util.stage.LvRestrict;
@@ -199,7 +200,7 @@ public abstract class PackData implements IndexContainer {
 		public static Identifier parseIntRaw(int v, Class<?> cls) {
 			if (cls == null || cls.isInterface() || !Indexable.class.isAssignableFrom(cls))
 				cls = UserProfile.getStatic(STATIC_FIXER, () -> new IdFixer(null)).parse(v, cls);
-			String pack = v / 1000 == 0 ? DEF : Data.hex(v / 1000);
+			String pack = cls != CastleImg.class && v / 1000 == 0 ? DEF : Data.hex(v / 1000);
 			int id = v % 1000;
 			return new Identifier(pack, cls, id);
 		}
@@ -218,15 +219,11 @@ public abstract class PackData implements IndexContainer {
 					q.add(cj);
 			}
 			if (cont == null)
-				System.out.println(cls);
-			if (cont == null)
 				return null;
 			Method m = null;
 			for (Method mi : cont.value().getMethods())
 				if (mi.getAnnotation(ContGetter.class) != null)
 					m = mi;
-			if (m == null)
-				System.out.println("no method found");
 			if (m == null)
 				return null;
 			Method fm = m;

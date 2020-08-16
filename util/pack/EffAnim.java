@@ -158,7 +158,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 	}
 
 	public static enum KBEff implements EffType<KBEff> {
-		KB("_kb"), SW("_sw"), ASS("_ass");
+		KB("_hb"), SW("_sw"), ASS("_ass");
 
 		private final String path;
 
@@ -449,7 +449,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		mamodel = MaModel.newIns(str + ".mamodel");
 		anims = new MaAnim[types.length];
 		for (int i = 0; i < types.length; i++)
-			anims[i] = MaAnim.newIns(str + types[i] + ".maanim");
+			anims[i] = MaAnim.newIns(str + types[i].path() + ".maanim");
 		if (rev)
 			revert();
 	}

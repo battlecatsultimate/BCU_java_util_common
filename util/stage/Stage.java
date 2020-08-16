@@ -45,7 +45,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 				castle = Identifier.parseInt(cas, CastleImg.class);
 				non_con = strs[1].equals("1");
 			} else {
-				castle = null;
+				castle = Identifier.parseInt(0, CastleImg.class);
 				non_con = false;
 			}
 			int intl = type == 2 ? 9 : 10;
