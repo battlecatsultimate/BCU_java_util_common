@@ -2,7 +2,6 @@ package common.util.lang;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -119,6 +118,10 @@ public class ProcLang {
 
 	}
 
+	public static void clear() {
+		UserProfile.setStatic("ProcLangStore", null);
+	};
+
 	public static ProcLang gen(JsonElement elem) throws Exception {
 		ProcLang ans = new ProcLang();
 		JsonObject obj = elem == null ? null : elem.getAsJsonObject();
@@ -132,7 +135,7 @@ public class ProcLang {
 			ans.map.put(name, item);
 		}
 		return ans;
-	};
+	}
 
 	public static ProcLang get() {
 		return store().getLang();
@@ -140,15 +143,11 @@ public class ProcLang {
 
 	private static void read() throws Exception {
 		File f = CommonStatic.ctx.getLangFile("proc.json");
-		if(!f.exists())
+		if (!f.exists())
 			CommonStatic.ctx.printErr(ErrType.FATAL, "cannot find proc.json");
 		JsonElement elem = JsonParser.parseReader(new FileReader(f));
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);
 		store().setLang(proc);
-	}
-
-	public static void clear() {
-		UserProfile.setStatic("ProcLangStore", null);
 	}
 
 	private static ProcLangStore store() {

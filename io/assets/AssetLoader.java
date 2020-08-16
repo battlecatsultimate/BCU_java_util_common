@@ -94,8 +94,9 @@ public class AssetLoader {
 				if (f.getName().endsWith(".assets.bcuzips")) {
 					List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f);
 					for (ZipDesc zip : list)
-						if (Data.getVer(zip.desc.BCU_VERSION) <= Data.getVer(CORE_VER))
+						if (Data.getVer(zip.desc.BCU_VERSION) <= Data.getVer(CORE_VER)) {
 							VFile.getBCFileTree().merge(zip.tree);
+						}
 				}
 			}
 		} catch (Exception e) {

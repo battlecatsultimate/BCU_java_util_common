@@ -26,10 +26,10 @@ public class LineUp extends Data {
 		return id.pack.equals(Identifier.DEF) && id.id == com;
 	}
 
-	@JsonField(generic = { Unit.class, Level.class })
+	@JsonField(generic = { Unit.class, Level.class }, alias = { Identifier.class })
 	public final TreeMap<Unit, Level> map = new TreeMap<>();
 
-	@JsonField
+	@JsonField(alias = Form.FormJson.class)
 	public final Form[][] fs = new Form[2][5];
 	public final EForm[][] efs = new EForm[2][5];
 	public int[] inc = new int[C_TOT], loc = new int[5];

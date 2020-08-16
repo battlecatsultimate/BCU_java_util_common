@@ -20,7 +20,7 @@ import java.util.Set;
 
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGenericRead;
+import common.io.json.JsonClass.JCGetter;
 import common.io.json.JsonException.Type;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.Handler;
@@ -78,10 +78,16 @@ public class JsonDecoder {
 			return dec.decode(elem);
 		if (cls.isArray())
 			return decodeArray(elem, cls, par);
+		if (List.class.isAssignableFrom(cls))
+			return decodeList(elem, cls, par);
+		if (Map.class.isAssignableFrom(cls))
+			return decodeMap(elem, cls, par);
+		if (Set.class.isAssignableFrom(cls))
+			return decodeSet(elem, cls, par);
 		// alias
-		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length == 1) {
+		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length > par.index) {
 			JCGeneric jcg = cls.getAnnotation(JCGeneric.class);
-			Class<?> alias = par.curjfld.alias()[0];
+			Class<?> alias = par.curjfld.alias()[par.index];
 			boolean found = false;
 			for (Class<?> ala : jcg.value())
 				if (ala == alias) {
@@ -91,24 +97,16 @@ public class JsonDecoder {
 			if (!found)
 				throw new JsonException(Type.TYPE_MISMATCH, null, "class not present in JCGeneric");
 			Object input = decode(elem, alias, par);
-			for (Method m : cls.getMethods()) {
-				JCGenericRead jcgr = m.getAnnotation(JCGenericRead.class);
-				if (jcgr != null && jcgr.value() == alias) {
-					Class<?>[] pars = jcgr.parent();
-					Object[] args = new Object[pars.length + 1];
-					args[0] = input;
-					for (int i = 1; i <= pars.length; i++)
-						args[i] = getGlobal(par, pars[i - 1]);
-					return m.invoke(null, args);
-				}
-			}
+			for (Method m : alias.getDeclaredMethods())
+				if (m.getAnnotation(JCGetter.class) != null)
+					return m.invoke(input);
 			throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGenericRead present");
 		}
 		// fill existing object
 		if (par != null && par.curjfld.gen() == GenType.FILL) {
 			Object val = par.curfld.get(par.obj);
 			if (cls.getAnnotation(JsonClass.class) != null)
-				return inject(par, elem.getAsJsonObject(), cls, null);
+				return inject(par, elem.getAsJsonObject(), cls, val);
 			return val;
 		}
 		// generator
@@ -117,7 +115,7 @@ public class JsonDecoder {
 			// default generator
 			if (par.curjfld.generator().length() == 0) {
 				Constructor<?> cst = null;
-				for (Constructor<?> ci : cls.getConstructors())
+				for (Constructor<?> ci : cls.getDeclaredConstructors())
 					if (ci.getParameterCount() == 1 && ci.getParameters()[0].getType().isAssignableFrom(ccls))
 						cst = ci;
 				if (cst == null)
@@ -131,12 +129,6 @@ public class JsonDecoder {
 		}
 		if (cls.getAnnotation(JsonClass.class) != null)
 			return decodeObject(elem, cls, par);
-		if (List.class.isAssignableFrom(cls))
-			return decodeList(elem, cls, par);
-		if (Map.class.isAssignableFrom(cls))
-			return decodeMap(elem, cls, par);
-		if (Set.class.isAssignableFrom(cls))
-			return decodeSet(elem, cls, par);
 		throw new JsonException(Type.UNDEFINED, elem, "class not possible to generate");
 	}
 
@@ -277,7 +269,9 @@ public class JsonDecoder {
 		for (int i = 0; i < n; i++) {
 			JsonObject obj = jarr.get(i).getAsJsonObject();
 			Object key = decode(obj.get("key"), par.curjfld.generic()[0], par);
+			par.index = 1;
 			Object ent = decode(obj.get("val"), par.curjfld.generic()[1], par);
+			par.index = 0;
 			val.put(key, ent);
 		}
 		return val;
@@ -351,6 +345,7 @@ public class JsonDecoder {
 	private JsonClass curjcls;
 	private Field curfld;
 	protected JsonField curjfld;
+	private int index = 0;
 
 	private JsonDecoder(JsonDecoder parent, JsonObject json, Class<?> cls, Object pre) throws Exception {
 		par = parent == null ? current : parent;
@@ -387,7 +382,9 @@ public class JsonDecoder {
 				continue;
 			JsonElement elem = jobj.get(tag);
 			f.setAccessible(true);
+			curfld = f;
 			f.set(obj, decode(elem, f.getType(), getInvoker()));
+			curfld = null;
 		}
 		Method oni = null;
 		for (Method m : cls.getDeclaredMethods()) {
@@ -396,14 +393,14 @@ public class JsonDecoder {
 					oni = m;
 				else
 					throw new JsonException(Type.FUNC, null, "duplicate OnInjected");
-			JsonField jf = m.getAnnotation(JsonField.class);
-			if (jf == null || jf.io() == JsonField.IOType.W)
+			curjfld = m.getAnnotation(JsonField.class);
+			if (curjfld == null || curjfld.io() == JsonField.IOType.W)
 				continue;
-			if (jf.io() == JsonField.IOType.RW)
+			if (curjfld.io() == JsonField.IOType.RW)
 				throw new JsonException(Type.FUNC, null, "functional fields should not have RW type");
 			if (m.getParameterCount() != 1)
 				throw new JsonException(Type.FUNC, null, "parameter count should be 1");
-			String tag = jf.tag();
+			String tag = curjfld.tag();
 			if (tag.length() == 0)
 				throw new JsonException(Type.TAG, null, "function fields must have tag");
 			if (!jobj.has(tag))

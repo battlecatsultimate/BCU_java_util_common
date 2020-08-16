@@ -1,6 +1,7 @@
 package common.io.json;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -16,7 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGenericWrite;
+import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonException.Type;
 import common.util.Data;
 
@@ -58,9 +59,9 @@ public class JsonEncoder {
 				arr.add(encode(Array.get(obj, i), par));
 			return arr;
 		}
-		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length == 1) {
+		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length > par.index) {
 			JCGeneric jcg = cls.getAnnotation(JCGeneric.class);
-			Class<?> alias = par.curjfld.alias()[0];
+			Class<?> alias = par.curjfld.alias()[par.index];
 			boolean found = false;
 			for (Class<?> ala : jcg.value())
 				if (ala == alias) {
@@ -69,13 +70,13 @@ public class JsonEncoder {
 				}
 			if (!found)
 				throw new JsonException(Type.TYPE_MISMATCH, null, "class not present in JCGeneric");
-			for (Method m : cls.getMethods()) {
-				JCGenericWrite jcgw = m.getAnnotation(JCGenericWrite.class);
-				if (jcgw != null && jcgw.value() == alias) {
-					return encode(m.invoke(obj), par);
-				}
+			for (Field f : cls.getDeclaredFields()) {
+				JCIdentifier jcgw = f.getAnnotation(JCIdentifier.class);
+				if (jcgw != null && f.getType() == alias)
+					return encode(f.get(obj), par);
 			}
-			throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGenericWrite present");
+			Constructor<?> con = alias.getConstructor(cls);
+			return encode(con.newInstance(obj), par);
 		}
 		if (par != null && par.curjfld != null) {
 			JsonField jfield = par.curjfld;
@@ -136,7 +137,9 @@ public class JsonEncoder {
 		for (Entry<?, ?> obj : map.entrySet()) {
 			JsonObject ent = new JsonObject();
 			ent.add("key", encode(obj.getKey(), par));
+			par.index = 1;
 			ent.add("val", encode(obj.getValue(), par));
+			par.index = 0;
 			ans.add(ent);
 		}
 		return ans;
@@ -155,6 +158,7 @@ public class JsonEncoder {
 
 	private JsonClass curjcls;
 	private JsonField curjfld;
+	private int index = 0;
 
 	private JsonEncoder(JsonEncoder parent, Object object) throws Exception {
 		par = parent;
@@ -177,7 +181,9 @@ public class JsonEncoder {
 					continue;
 				String tag = jf.tag().length() == 0 ? f.getName() : jf.tag();
 				f.setAccessible(true);
+				curjfld = jf;
 				ans.add(tag, encode(f.get(obj), getInvoker()));
+				curjfld = null;
 			}
 		for (Method m : cls.getDeclaredMethods())
 			if (m.getAnnotation(JsonField.class) != null) {
@@ -189,7 +195,9 @@ public class JsonEncoder {
 				String tag = jf.tag();
 				if (tag.length() == 0)
 					throw new JsonException(Type.TAG, null, "function fields must have tag");
+				curjfld = jf;
 				ans.add(tag, encode(m.invoke(obj), getInvoker()));
+				curjfld = null;
 			}
 	}
 

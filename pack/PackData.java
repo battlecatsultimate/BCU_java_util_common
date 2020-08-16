@@ -2,6 +2,7 @@ package common.pack;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -16,6 +17,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.io.json.JsonClass.JCConstructor;
+import common.io.json.JsonClass.JCGetter;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.GenType;
@@ -204,14 +206,27 @@ public abstract class PackData implements IndexContainer {
 
 		private static Object getContainer(Class<?> cls, String str) {
 			IndexCont cont = null;
-			while (cls != null && (cont = cls.getAnnotation(IndexCont.class)) == null)
-				cls = cls.getSuperclass();
+			Queue<Class<?>> q = new ArrayDeque<>();
+			q.add(cls);
+			while (q.size() > 0) {
+				Class<?> ci = q.poll();
+				if ((cont = ci.getAnnotation(IndexCont.class)) != null)
+					break;
+				if (ci.getSuperclass() != null)
+					q.add(ci.getSuperclass());
+				for (Class<?> cj : ci.getInterfaces())
+					q.add(cj);
+			}
+			if (cont == null)
+				System.out.println(cls);
 			if (cont == null)
 				return null;
 			Method m = null;
 			for (Method mi : cont.value().getMethods())
 				if (mi.getAnnotation(ContGetter.class) != null)
 					m = mi;
+			if (m == null)
+				System.out.println("no method found");
 			if (m == null)
 				return null;
 			Method fm = m;
@@ -253,6 +268,7 @@ public abstract class PackData implements IndexContainer {
 			return pack.equals(o.pack) && id == o.id;
 		}
 
+		@JCGetter
 		@SuppressWarnings("unchecked")
 		public T get() {
 			IndexContainer cont = getCont();
@@ -260,7 +276,8 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public IndexContainer getCont() {
-			return (IndexContainer) getContainer(cls, pack);
+			IndexContainer cont = (IndexContainer) getContainer(cls, pack);
+			return cont;
 		}
 
 		@Override

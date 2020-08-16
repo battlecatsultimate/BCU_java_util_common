@@ -6,6 +6,12 @@ import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.JCConstructor;
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCGetter;
+import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonField;
 import common.pack.PackData.Identifier;
 import common.system.BasedCopable;
 import common.util.Animable;
@@ -14,7 +20,31 @@ import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.lang.MultiLangCont;
 
+@JCGeneric(Form.FormJson.class)
+@JsonClass
 public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopable<Form, Unit> {
+
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class FormJson {
+
+		public Identifier<Unit> uid;
+		public int fid;
+
+		@JCConstructor
+		public FormJson() {
+		}
+
+		@JCConstructor
+		public FormJson(Form f) {
+			uid = f.uid;
+			fid = f.fid;
+		}
+
+		@JCGetter
+		public Form get() {
+			return uid.get().forms[fid];
+		}
+	}
 
 	public static String lvString(int[] lvs) {
 		String str = "Lv." + lvs[0] + ", {";
@@ -24,14 +54,22 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return str;
 	}
 
+	@JsonField
 	public final MaskUnit du;
 	public final Unit unit;
 	public final Identifier<Unit> uid;
+	@JsonField
 	public int fid;
-
 	public Orb orbs = null;
-
+	@JsonField
 	public String name = "";
+
+	@JCConstructor
+	public Form(Unit u) {
+		du = null;
+		unit = u;
+		uid = unit.id;
+	}
 
 	public Form(Unit u, int f, String str, AnimU<?> ac, CustomUnit cu) {
 		unit = u;

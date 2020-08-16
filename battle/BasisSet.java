@@ -115,8 +115,8 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	@JsonField(gen = GenType.FILL)
 	private final Treasure t;
 
-	@JsonField(generic = BasisLU.class)
-	public final List<BasisLU> lb = new ArrayList<>();
+	@JsonField(generic = BasisLU.class, gen = GenType.GEN)
+	public final ArrayList<BasisLU> lb = new ArrayList<>();
 
 	public BasisLU sele;
 

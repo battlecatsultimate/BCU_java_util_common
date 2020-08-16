@@ -26,22 +26,16 @@ public @interface JsonClass {
 		Class<?>[] value();
 	}
 
-	/** the generator code for a specific class mapping */
 	@Documented
 	@Retention(RUNTIME)
 	@Target(ElementType.METHOD)
-	public static @interface JCGenericRead {
-		Class<?>[] parent() default {};
-
-		Class<?> value();
+	public static @interface JCGetter {
 	}
 
-	/** the serializer code for a specific class mapping */
 	@Documented
 	@Retention(RUNTIME)
-	@Target(ElementType.METHOD)
-	public static @interface JCGenericWrite {
-		Class<?> value();
+	@Target(ElementType.FIELD)
+	public static @interface JCIdentifier {
 	}
 
 	public static enum NoTag {
