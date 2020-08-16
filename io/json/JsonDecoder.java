@@ -240,7 +240,7 @@ public class JsonDecoder {
 
 	private static Object decodeArray(JsonElement elem, Class<?> cls, JsonDecoder par) throws Exception {
 		Class<?> ccls = cls.getComponentType();
-		JsonField jf = par.curjfld;
+		JsonField jf = par == null ? null : par.curjfld;
 		if (elem.isJsonObject() && jf != null && jf.usePool()) {
 			JsonArray pool = elem.getAsJsonObject().get("pool").getAsJsonArray();
 			JsonArray data = elem.getAsJsonObject().get("data").getAsJsonArray();
@@ -323,7 +323,7 @@ public class JsonDecoder {
 	}
 
 	private static Object getArray(Class<?> cls, int n, JsonDecoder par) throws Exception {
-		if (par.curjfld != null && par.curjfld.gen() == JsonField.GenType.FILL) {
+		if (par != null && par.curjfld != null && par.curjfld.gen() == JsonField.GenType.FILL) {
 			if (par.curfld == null || par.obj == null)
 				throw new JsonException(Type.TAG, null, "no enclosing object");
 			return par.curfld.get(par.obj);

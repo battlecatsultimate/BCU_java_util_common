@@ -15,6 +15,8 @@ import java.util.function.Function;
 import common.io.InStream;
 import common.io.OutStream;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
 import common.pack.Context;
 import common.pack.Source;
 import common.pack.UserProfile;
@@ -85,6 +87,7 @@ public class CommonStatic {
 
 	}
 
+	@JsonClass(noTag = NoTag.LOAD)
 	public static class Config {
 		// ImgCore
 		public int deadOpa = 10, fullOpa = 90;

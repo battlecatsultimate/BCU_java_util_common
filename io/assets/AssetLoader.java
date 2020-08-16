@@ -26,7 +26,6 @@ import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.PackData.PackDesc;
-import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 
@@ -99,13 +98,6 @@ public class AssetLoader {
 							VFile.getBCFileTree().merge(zip.tree);
 				}
 			}
-
-			File f = new File("./test.png");
-			Context.check(f);
-			FileOutputStream fos = new FileOutputStream(f);
-			FileData fd = VFile.get("./org/unit/002/f/002_f.png").getData();
-			stream(fos, fd.getStream());
-			fos.close();
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");
 		}

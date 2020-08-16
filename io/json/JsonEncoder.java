@@ -41,7 +41,7 @@ public class JsonEncoder {
 			return new JsonPrimitive(((Class<?>) obj).getName());
 		Class<?> cls = obj.getClass();
 		if (cls.isArray()) {
-			if (par.curjfld != null && par.curjfld.usePool()) {
+			if (par != null && par.curjfld != null && par.curjfld.usePool()) {
 				JsonField.Handler handler = new JsonField.Handler();
 				int n = Array.getLength(obj);
 				JsonArray jarr = new JsonArray();
