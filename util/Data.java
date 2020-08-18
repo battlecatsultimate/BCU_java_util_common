@@ -384,6 +384,10 @@ public class Data {
 			return ans;
 		}
 
+		public static String getName(int i) {
+			return Proc.class.getDeclaredFields()[i].getName();
+		}
+
 		public static Proc load(int[][] data) {
 			Proc ans = new Proc();
 			try {
@@ -432,6 +436,7 @@ public class Data {
 		public final PM POIATK = null;
 		public final VOLC VOLC = null;
 		public final IMU IMUPOIATK = null;
+
 		public final IMU IMUVOLC = null;
 
 		public final ARMOR ARMOR = null;
@@ -975,6 +980,14 @@ public class Data {
 
 	public static String hex(int id) {
 		return trio(id / 1000) + trio(id % 1000);
+	}
+
+	public static <T> T ignore(SupExc<T> sup) {
+		try {
+			return sup.get();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public static String restrict(String str) {

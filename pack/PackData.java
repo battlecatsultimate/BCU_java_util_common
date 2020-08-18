@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import com.google.gson.JsonElement;
@@ -42,6 +43,7 @@ import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
 import common.util.stage.RandStage;
+import common.util.stage.Recd;
 import common.util.unit.AbEnemy;
 import common.util.unit.Combo;
 import common.util.unit.EneRand;
@@ -351,7 +353,12 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public void delete() {
-			// TODO Auto-generated method stub
+			// FIXME Auto-generated method stub
+
+		}
+
+		public void forceRemoveParent(String id) {
+			// FIXME Auto-generated method stub
 
 		}
 
@@ -364,8 +371,18 @@ public abstract class PackData implements IndexContainer {
 			return new Identifier<T>(desc.id, cls, id);
 		}
 
+		public Collection<Recd> getReplays() {
+			// FIXME Auto-generated method stub
+			return null;
+		}
+
 		public void loadMusics() {
 			// FIXME
+		}
+
+		public boolean relyOn(String id) {
+			// FIXME
+			return false;
 		}
 
 		void load() throws Exception {

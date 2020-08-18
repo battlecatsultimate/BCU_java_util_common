@@ -23,9 +23,42 @@ public class LocaleCenter {
 
 	}
 
+	public static interface Displayable {
+
+		String getName();
+
+		String getTooltip();
+
+		void setName(String str);
+
+		void setTooltip(String str);
+
+	}
+
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class DisplayItem {
+	public static class DisplayItem implements Displayable {
 		public String name, tooltip;
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public String getTooltip() {
+			return tooltip;
+		}
+
+		@Override
+		public void setName(String str) {
+			name = str;
+		}
+
+		@Override
+		public void setTooltip(String str) {
+			tooltip = str;
+		}
+
 	}
 
 	public static class ObjBinder implements Binder {
@@ -37,10 +70,10 @@ public class LocaleCenter {
 		}
 
 		public final String name;
-		public final DisplayItem item;
+		public final Displayable item;
 		public final BinderFunc func;
 
-		public ObjBinder(DisplayItem item, String name, BinderFunc func) throws Exception {
+		public ObjBinder(Displayable item, String name, BinderFunc func) {
 			this.item = item;
 			this.name = name;
 			this.func = func;
@@ -53,7 +86,7 @@ public class LocaleCenter {
 
 		@Override
 		public String getNameValue() {
-			return item.name;
+			return item.getName();
 		}
 
 		@Override
@@ -63,7 +96,7 @@ public class LocaleCenter {
 
 		@Override
 		public String getToolTipValue() {
-			return item.tooltip;
+			return item.getTooltip();
 		}
 
 		@Override
@@ -73,12 +106,12 @@ public class LocaleCenter {
 
 		@Override
 		public void setNameValue(String str) {
-			item.name = str;
+			item.setName(str);
 		}
 
 		@Override
 		public void setToolTipValue(String str) {
-			item.tooltip = str;
+			item.setTooltip(str);
 		}
 
 	}

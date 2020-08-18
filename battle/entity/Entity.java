@@ -651,7 +651,7 @@ public abstract class Entity extends AbEntity {
 					ws.prob--;// used as counter for itv
 					if (e.health > 0 && ws.prob <= 0) {
 						damage(ws.damage, type(ws));
-						ws.itv += ws.itv;
+						ws.prob += ws.itv;
 					}
 				}
 			}
