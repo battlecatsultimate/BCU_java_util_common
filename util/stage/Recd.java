@@ -20,11 +20,11 @@ public class Recd extends Data {
 
 	private static class Wait {
 
-		private final Stage.PackStage st;
+		private final Stage st;
 		private final InStream is;
 		private final String str;
 
-		private Wait(Stage.PackStage stage, InStream input, String name) {
+		private Wait(Stage stage, InStream input, String name) {
 			st = stage;
 			is = input;
 			str = name;
@@ -42,7 +42,7 @@ public class Recd extends Data {
 		return str;
 	}
 
-	public static void getRecd(Stage.PackStage stage, InStream is, String str) {
+	public static void getRecd(Stage stage, InStream is, String str) {
 		WAIT.add(new Wait(stage, is, str));
 	}
 

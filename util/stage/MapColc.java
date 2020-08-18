@@ -140,13 +140,13 @@ public class MapColc extends Data {
 					continue;
 				}
 				if (id0 < 3)
-					maps[id0].add(new Stage.DefStage(maps[id0], id1, vf, 0));
+					maps[id0].add(new Stage(maps[id0], id1, vf, 0));
 				else if (id0 == 4)
-					maps[10].add(new Stage.DefStage(maps[10], id1, vf, 0));
+					maps[10].add(new Stage(maps[10], id1, vf, 0));
 				else if (id0 == 5)
-					maps[12].add(new Stage.DefStage(maps[12], id1, vf, 0));
+					maps[12].add(new Stage(maps[12], id1, vf, 0));
 				else if (id0 == 6)
-					maps[13].add(new Stage.DefStage(maps[13], id1, vf, 0));
+					maps[13].add(new Stage(maps[13], id1, vf, 0));
 			}
 			VFile<?> stw = VFile.get("./org/stage/CH/stageW/");
 			for (VFile<?> vf : stw.list()) {
@@ -159,13 +159,13 @@ public class MapColc extends Data {
 					e.printStackTrace();
 					continue;
 				}
-				maps[id0 - 1].add(new Stage.DefStage(maps[id0 - 1], id1, vf, 1));
+				maps[id0 - 1].add(new Stage(maps[id0 - 1], id1, vf, 1));
 			}
 			VFile<?> sts = VFile.get("./org/stage/CH/stageSpace/");
 			for (VFile<?> vf : sts.list()) {
 				String str = vf.getName();
 				if (str.length() > 20) {
-					maps[11].add(new Stage.DefStage(maps[11], 0, vf, 0));
+					maps[11].add(new Stage(maps[11], 0, vf, 0));
 					continue;
 				}
 				int id0 = -1, id1 = -1;
@@ -176,7 +176,7 @@ public class MapColc extends Data {
 					e.printStackTrace();
 					continue;
 				}
-				maps[id0 - 1].add(new Stage.DefStage(maps[id0 - 1], id1, vf, 1));
+				maps[id0 - 1].add(new Stage(maps[id0 - 1], id1, vf, 1));
 			}
 
 			VFile<?> st = VFile.get("./org/stage/CH/stage/");
@@ -189,7 +189,7 @@ public class MapColc extends Data {
 					e.printStackTrace();
 					continue;
 				}
-				maps[9].add(new Stage.DefStage(maps[9], id0, vf, 2));
+				maps[9].add(new Stage(maps[9], id0, vf, 2));
 			}
 			maps[9].stars = new int[] { 100, 200, 400 };
 		}
@@ -224,7 +224,7 @@ public class MapColc extends Data {
 					e.printStackTrace();
 					continue;
 				}
-				sms[id0].add(new Stage.DefStage(sms[id0], id1, s, 0));
+				sms[id0].add(new Stage(sms[id0], id1, s, 0));
 			}
 		}
 
@@ -257,13 +257,13 @@ public class MapColc extends Data {
 
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
-				CharaGroup cg = new CharaGroup.PackCG(pack, is);
+				CharaGroup cg = new CharaGroup(pack, is);
 				pack.groups.set(cg.id.id, cg);
 			}
 
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
-				LvRestrict lr = new LvRestrict.PackLR(pack, is);
+				LvRestrict lr = new LvRestrict(pack, is);
 				pack.lvrs.set(lr.id.id, lr);
 			}
 
@@ -277,7 +277,7 @@ public class MapColc extends Data {
 				int m = is.nextInt();
 				for (int j = 0; j < m; j++) {
 					InStream sub = is.subStream();
-					sm.add(new Stage.PackStage(pack, sm, sub));
+					sm.add(new Stage(pack, sm, sub));
 				}
 				m = is.nextInt();
 				for (int j = 0; j < m; j++)

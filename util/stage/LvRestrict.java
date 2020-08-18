@@ -6,6 +6,7 @@ import common.battle.LineUp;
 import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.IndexContainer.IndexCont;
@@ -19,64 +20,21 @@ import common.util.unit.Form;
 import common.util.unit.Level;
 
 @IndexCont(PackData.class)
-@JsonClass
+@JsonClass()
 public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> {
-
-	public static class PackLR extends LvRestrict {
-
-		public PackLR(Identifier<LvRestrict> id) {
-			this.id = id;
-		}
-
-		@Deprecated
-		public PackLR(UserPack mc, InStream is) throws VerFixerException {
-			int ver = getVer(is.nextString());
-			if (ver != 308)
-				throw new VerFixerException("LvRestrict requires 308, got " + ver);
-			name = is.nextString();
-			id = Identifier.parseInt(is.nextInt(), LvRestrict.class);
-			int[] tb = is.nextIntsB();
-			for (int i = 0; i < tb.length; i++)
-				all[i] = tb[i];
-			int[][] tbb = is.nextIntsBB();
-			for (int i = 0; i < tbb.length; i++)
-				for (int j = 0; j < tbb[i].length; j++)
-					rares[i][j] = tbb[i][j];
-			int n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				int cg = is.nextInt();
-				int[] vals = new int[6];
-				tb = is.nextIntsB();
-				for (int j = 0; j < tb.length; j++)
-					vals[j] = tb[j];
-				CharaGroup cgs = mc.groups.get(cg);
-				if (cgs != null)
-					res.put(cgs, vals);
-			}
-		}
-
-		public boolean used() {
-			for (StageMap sm : ((UserPack) getCont()).mc.maps)
-				for (Stage st : sm.list)
-					if (st.lim != null && st.lim.lvr == this)
-						return true;
-			return false;
-		}
-
-	}
 
 	@StaticPermitted
 	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
 
-	@JsonField(generic = { CharaGroup.class, int[].class }, alias = int.class)
+	@JsonField(generic = { CharaGroup.class, int[].class }, alias = Identifier.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
+
 	@JsonField(gen = GenType.FILL)
 	public int[][] rares = new int[RARITY_TOT][6];
-	@JsonField
+
 	public int[] all = new int[6];
-	@JsonField
+	@JCIdentifier
 	public Identifier<LvRestrict> id;
-	@JsonField
 	public String name = "";
 
 	public LvRestrict(Identifier<LvRestrict> ID) {
@@ -95,7 +53,31 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			res.put(cg, lvr.res.get(cg).clone());
 	}
 
-	private LvRestrict() {
+	@Deprecated
+	public LvRestrict(UserPack mc, InStream is) throws VerFixerException {
+		int ver = getVer(is.nextString());
+		if (ver != 308)
+			throw new VerFixerException("LvRestrict requires 308, got " + ver);
+		name = is.nextString();
+		id = Identifier.parseInt(is.nextInt(), LvRestrict.class);
+		int[] tb = is.nextIntsB();
+		for (int i = 0; i < tb.length; i++)
+			all[i] = tb[i];
+		int[][] tbb = is.nextIntsBB();
+		for (int i = 0; i < tbb.length; i++)
+			for (int j = 0; j < tbb[i].length; j++)
+				rares[i][j] = tbb[i][j];
+		int n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int cg = is.nextInt();
+			int[] vals = new int[6];
+			tb = is.nextIntsB();
+			for (int j = 0; j < tb.length; j++)
+				vals[j] = tb[j];
+			CharaGroup cgs = mc.groups.get(cg);
+			if (cgs != null)
+				res.put(cgs, vals);
+		}
 	}
 
 	private LvRestrict(LvRestrict lvr) {
@@ -144,6 +126,14 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 	@Override
 	public String toString() {
 		return id + "-" + name;
+	}
+
+	public boolean used() {
+		for (StageMap sm : ((UserPack) getCont()).mc.maps)
+			for (Stage st : sm.list)
+				if (st.lim != null && st.lim.lvr == this)
+					return true;
+		return false;
 	}
 
 	public Level valid(Form f) {

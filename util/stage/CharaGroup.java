@@ -4,6 +4,9 @@ import java.util.TreeSet;
 
 import common.io.InStream;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.JCGeneric;
+import common.io.json.JsonClass.JCIdentifier;
+import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
@@ -14,67 +17,17 @@ import common.util.Data;
 import common.util.unit.Unit;
 
 @IndexCont(PackData.class)
-@JsonClass
+@JsonClass(noTag = NoTag.LOAD)
+@JCGeneric(Identifier.class)
 public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>, Comparable<CharaGroup> {
 
-	public static class DefCG extends CharaGroup {
+	public String name = "";
 
-		public DefCG(int ID, int t, Identifier<Unit>[] units) {
-			super(t, units);
-			id = Identifier.parseInt(ID, CharaGroup.class);
-		}
-
-	}
-
-	@JsonClass
-	public static class PackCG extends CharaGroup {
-
-		@JsonField
-		public String name = "";
-
-		public PackCG(Identifier<CharaGroup> id) {
-			this.id = id;
-		}
-
-		@Deprecated
-		public PackCG(UserPack mc, InStream is) {
-			int ver = getVer(is.nextString());
-			if (ver == 308) {
-				name = is.nextString();
-				id = mc.getID(CharaGroup.class, is.nextInt());
-				type = is.nextInt();
-				int m = is.nextInt();
-				for (int j = 0; j < m; j++) {
-					Unit u = Identifier.parseInt(is.nextInt(), Unit.class).get();
-					if (u != null)
-						set.add(u);
-				}
-			}
-		}
-
-		@Override
-		public String toString() {
-			return id + " - " + name;
-		}
-
-		public boolean used() {
-			UserPack mc = (UserPack) getCont();
-			for (LvRestrict lr : mc.lvrs.getList())
-				if (lr.res.containsKey(this))
-					return true;
-			for (StageMap sm : mc.mc.maps)
-				for (Stage st : sm.list)
-					if (st.lim != null && st.lim.group == this)
-						return true;
-			return false;
-		}
-
-	}
-
-	@JsonField
+	@JCIdentifier
 	public Identifier<CharaGroup> id;
-	@JsonField
+
 	public int type = 0;
+
 	@JsonField(generic = Unit.class, alias = Identifier.class)
 	public final TreeSet<Unit> set = new TreeSet<>();
 
@@ -83,7 +36,29 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 		set.addAll(cg.set);
 	}
 
-	private CharaGroup() {
+	public CharaGroup(Identifier<CharaGroup> id) {
+		this.id = id;
+	}
+
+	public CharaGroup(int ID, int t, Identifier<Unit>[] units) {
+		this(t, units);
+		id = Identifier.parseInt(ID, CharaGroup.class);
+	}
+
+	@Deprecated
+	public CharaGroup(UserPack mc, InStream is) {
+		int ver = getVer(is.nextString());
+		if (ver == 308) {
+			name = is.nextString();
+			id = mc.getID(CharaGroup.class, is.nextInt());
+			type = is.nextInt();
+			int m = is.nextInt();
+			for (int j = 0; j < m; j++) {
+				Unit u = Identifier.parseInt(is.nextInt(), Unit.class).get();
+				if (u != null)
+					set.add(u);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -124,13 +99,24 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 
 	@Override
 	public Identifier<CharaGroup> getID() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	@Override
 	public String toString() {
-		return id.toString();
+		return id + " - " + name;
+	}
+
+	public boolean used() {
+		UserPack mc = (UserPack) getCont();
+		for (LvRestrict lr : mc.lvrs.getList())
+			if (lr.res.containsKey(this))
+				return true;
+		for (StageMap sm : mc.mc.maps)
+			for (Stage st : sm.list)
+				if (st.lim != null && st.lim.group == this)
+					return true;
+		return false;
 	}
 
 }

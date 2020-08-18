@@ -114,8 +114,11 @@ public class LineUp extends Data {
 
 	/** apply a combo */
 	public void set(int[][] com) {
+		// if a unit in the lineup is present in the combo
 		boolean[] rep = new boolean[5];
+		// if a unit in the combo is already present in the lineup
 		boolean[] exi = new boolean[com.length];
+		// the number of units required to inject
 		int rem = com.length;
 		for (int i = 0; i < com.length; i++)
 			for (int j = 0; j < 5; j++) {
@@ -126,17 +129,20 @@ public class LineUp extends Data {
 					rep[j] = true;
 					exi[i] = true;
 					if (f.fid < com[i][1])
-						fs[0][j] = Identifier.parseInt(com[i][0], Unit.class).get().forms[com[i][1]];
+						fs[0][j] = f.unit.forms[com[i][1]];
 					loc[j]++;
 					rem--;
 				}
 			}
+		// number of units not present in any combo
 		int free = 0;
 		for (int i = 0; i < 5; i++)
 			if (loc[i] == 0)
 				free++;
 
 		if (free < rem) {
+			// required to remove some combo
+
 			int del = rem - free;
 			while (del > 0) {
 				Combo c = coms.remove(0);
@@ -147,7 +153,7 @@ public class LineUp extends Data {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (eq(f.uid, c.units[i][0]))
+						if (!eq(f.uid, c.units[i][0]))
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -209,23 +215,17 @@ public class LineUp extends Data {
 	public synchronized void setOrb(Unit u, int[] lvs, int[][] orbs) {
 		// lvs must be generated before doing something with orbs
 		boolean sub = updating;
-
 		updating = true;
-
 		Level l = map.get(u);
-
 		if (l != null) {
 			l.setLvs(lvs);
 			l.setOrbs(orbs);
 		} else {
 			l = new Level(lvs, orbs);
-
 			map.put(u, l);
 		}
-
 		if (!sub)
 			renewEForm();
-
 		updating &= sub;
 	}
 

@@ -3,6 +3,7 @@ package common.util.stage;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.PackData.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.BattleStatic;
@@ -65,9 +66,9 @@ public class Limit extends Data implements BattleStatic {
 	public int star = -1, sid = -1;
 	@JsonField
 	public int rare, num, line, min, max;
-	@JsonField(alias = int.class)
+	@JsonField(alias = Identifier.class)
 	public CharaGroup group;
-	@JsonField(alias = int.class)
+	@JsonField(alias = Identifier.class)
 	public LvRestrict lvr;
 
 	/** for copy or combine only */

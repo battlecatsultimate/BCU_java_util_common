@@ -99,7 +99,7 @@ public abstract class PackData implements IndexContainer {
 				Identifier<Unit>[] units = new Identifier[strs.length - 3];
 				for (int i = 3; i < strs.length; i++)
 					units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]), Unit.class);
-				groups.set(id, new CharaGroup.DefCG(id, type, units));
+				groups.set(id, new CharaGroup(id, type, units));
 			}
 		}
 
