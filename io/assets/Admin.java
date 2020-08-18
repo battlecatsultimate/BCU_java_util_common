@@ -63,7 +63,8 @@ public class Admin {
 		@Override
 		public void initProfile() {
 			AssetLoader.load();
-			UserProfile.getBCData().load();
+			UserProfile.getBCData().load((str) -> {
+			});
 			BasisSet.read();
 			// UserProfile.loadPacks(); TODO
 		}
@@ -108,6 +109,18 @@ public class Admin {
 		CommonStatic.ctx = new AdminContext();
 		// AssetLoader.merge();
 		searchForStaticFields();
+	}
+
+	public static boolean preload(FileDesc fd) {
+		if (fd.size < 1024)
+			return true;
+		for (String str : ANIMFL)
+			if (fd.path.endsWith(str))
+				return false;
+		for (String str : NONPRE)
+			if (fd.path.length() == str.length() - 2 && fd.path.matches(str))
+				return false;
+		return true;
 	}
 
 	public static List<ZipDesc> read() throws Exception {
@@ -182,18 +195,6 @@ public class Admin {
 			pd.desc = "default required asset " + Data.hex(i);
 			PackLoader.writePack(dst, f, pd, "battlecatsultimate");
 		}
-	}
-
-	private static boolean preload(FileDesc fd) {
-		if (fd.size < 1024)
-			return true;
-		for (String str : ANIMFL)
-			if (fd.path.endsWith(str))
-				return false;
-		for (String str : NONPRE)
-			if (fd.path.length() == str.length() - 2 && fd.path.matches(str))
-				return false;
-		return true;
 	}
 
 }

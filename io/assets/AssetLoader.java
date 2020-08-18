@@ -182,6 +182,8 @@ public class AssetLoader {
 	}
 
 	private static boolean preload(FileDesc fd) {
+		if (fd.size < 1024)
+			return true;
 		for (String str : ANIMFL)
 			if (fd.path.endsWith(str))
 				return false;

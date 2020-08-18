@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Consumer;
+
 import com.google.gson.JsonElement;
 import common.CommonStatic;
 import common.battle.data.DataEnemy;
@@ -66,27 +68,32 @@ public abstract class PackData implements IndexContainer {
 			return Identifier.DEF;
 		}
 
-		public void load() {
+		public void load(Consumer<String> progress) {
+			progress.accept("loading basic images");
 			Res.readData();
+			progress.accept("loading enemies");
 			loadEnemies();
+			progress.accept("loading units");
 			loadUnits();
-
+			progress.accept("loading auxiliary data");
 			Combo.readFile();
 			PCoin.read();
+			progress.accept("loading effects");
 			EffAnim.read();
+			progress.accept("loading backgrounds");
 			Background.read();
+			progress.accept("loading cat castles");
 			NyCastle.read();
-
+			progress.accept("loading souls");
 			loadSoul();
-
+			progress.accept("loading stages");
 			DefMapColc.read();
 			RandStage.read();
-
 			loadCharaGroup();
 			loadLimit();
-
+			progress.accept("loading orbs");
 			Orb.read();
-
+			progress.accept("loading musics");
 			loadMusic();
 		}
 
@@ -349,6 +356,8 @@ public abstract class PackData implements IndexContainer {
 			desc = new PackDesc(id);
 			source = new Workspace(id);
 			castles = new PackCasList(this);
+			mc = new PackMapColc(this);
+			editable = true;
 			loaded = true;
 		}
 

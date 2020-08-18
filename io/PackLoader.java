@@ -150,6 +150,7 @@ public class PackLoader {
 
 		public InputStream readFile(String path) {
 			FileDesc fd = tree.find(path).getData();
+			System.out.println("stream requested: " + fd.path + ", " + fd.size);
 			return CommonStatic.ctx.noticeErr(() -> new FileLoader.FLStream(loader, offset + fd.offset, fd.size),
 					ErrType.ERROR, "failed to read bcuzip at " + path);
 		}

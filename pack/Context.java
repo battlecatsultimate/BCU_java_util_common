@@ -24,15 +24,15 @@ public interface Context {
 	}
 
 	public static void check(boolean bool, String str, File f) throws IOException {
-		if (bool)
+		if (!bool)
 			throw new IOException("failed to " + str + " file " + f);
 	}
 
 	public static void check(File f) throws IOException {
 		if (!f.getParentFile().exists())
-			check(!f.getParentFile().mkdirs(), "create", f);
+			check(f.getParentFile().mkdirs(), "create", f);
 		if (!f.exists())
-			check(!f.createNewFile(), "create", f);
+			check(f.createNewFile(), "create", f);
 	}
 
 	public static void delete(File f) throws IOException {
@@ -41,7 +41,7 @@ public interface Context {
 		if (f.isDirectory())
 			for (File i : f.listFiles())
 				delete(i);
-		check(!f.delete(), "delete", f);
+		check(f.delete(), "delete", f);
 	}
 
 	public boolean confirmDelete();

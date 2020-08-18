@@ -106,7 +106,7 @@ public class AnimCE extends AnimCI {
 
 	public static String getAvailable(String string) {
 		// FIXME Auto-generated method stub
-		return null;
+		return string;
 	}
 
 	public static Map<String, AnimCE> map() {
@@ -123,6 +123,7 @@ public class AnimCE extends AnimCI {
 		super(new SourceAnimLoader(resourceLocation, null));
 		id = resourceLocation;
 		map().put(id.id, this);
+		history("initial");
 	}
 
 	/** for conversion only */
@@ -407,6 +408,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void updateStatus() {
+		partial();
 		OutStream mms = OutStream.getIns();
 		mms.writeInt(mamodel.status.size());
 		mamodel.status.forEach((d, s) -> {
@@ -428,6 +430,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	private void history(String str) {
+		partial();
 		OutStream os = OutStream.getIns();
 		imgcut.write(os);
 		mamodel.write(os);

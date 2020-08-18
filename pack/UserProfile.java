@@ -130,9 +130,11 @@ public class UserProfile {
 				return null;
 			Context.delete(f);
 		}
-		Context.check(folder.mkdirs(), "create", folder);
+		folder.mkdirs();
 		Context.check(f.createNewFile(), "create", f);
-		return new PackData.UserPack(id);
+		UserPack p = new UserPack(id);
+		profile().packmap.put(id, p);
+		return p;
 	}
 
 	public static void loadPacks() {

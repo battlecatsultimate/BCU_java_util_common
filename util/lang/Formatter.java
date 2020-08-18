@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
+import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
+import common.pack.Context.ErrType;
 import common.pack.PackData.Identifier;
 import common.util.pack.Background;
 
@@ -534,7 +537,8 @@ public class Formatter {
 			Formatter f = new Formatter(pattern, obj, ctx);
 			f.root.build(sb);
 		} catch (Exception e) {
-			e.printStackTrace();
+			CommonStatic.ctx.noticeErr(e, ErrType.ERROR,
+					"err during formatting " + pattern + " with " + JsonEncoder.encode(obj));
 		}
 		return sb.toString();
 	}

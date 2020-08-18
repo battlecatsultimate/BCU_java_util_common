@@ -95,6 +95,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 	protected void partial() {
 		if (!partial) {
 			partial = true;
+			imgcut = loader.getIC();
 			mamodel = loader.getMM();
 			anims = loader.getMA();
 			types = anims.length == 4 ? TYPE4 : anims.length == 5 ? TYPE5 : TYPE7;

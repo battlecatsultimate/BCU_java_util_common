@@ -35,7 +35,16 @@ public class Editors {
 
 		@Override
 		public String getTooltip() {
-			return (lang.tooltip == null ? "" : lang.tooltip + "<hr>") + Formatter.format(lang.format, proc, ctx);
+			String t0 = lang.tooltip == null ? null : lang.tooltip;
+			String t1 = proc == null ? null : Formatter.format(lang.format, proc, ctx);
+			if (t0 == null && t1 == null)
+				return "";
+			else if (t0 == null)
+				return t1;
+			else if (t1 == null)
+				return t0;
+			else
+				return t0 + "<hr>" + t1;
 		}
 
 		@Override
