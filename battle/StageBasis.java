@@ -50,7 +50,7 @@ public class StageBasis extends BattleObj {
 	public final CopRand r;
 	public final Recorder rx = new Recorder();
 
-	public int work_lv, max_mon, can, max_can, next_lv, max_num;
+	public int work_lv, max_mon, can, max_can, next_lv, max_num, eMax;
 	public double mon;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
@@ -69,10 +69,12 @@ public class StageBasis extends BattleObj {
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
 		bg = BGStore.getBG(st.bg);
+		eMax = st.max;
 		EEnemy ee = est.base(this);
-		if (ee != null)
+		if (ee != null) {
 			ebase = ee;
-		else
+			eMax--;
+		} else
 			ebase = new ECastle(this);
 		ebase.added(1, 800);
 		ubase = new ECastle(this, bas);
@@ -239,7 +241,8 @@ public class StageBasis extends BattleObj {
 		});
 		if (s_stop == 0) {
 
-			int allow = st.max - entityCount(1);
+			int allow = eMax - entityCount(1);
+			
 			if (time % 2 == 1 && ebase.health > 0 && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
