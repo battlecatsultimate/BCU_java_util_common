@@ -45,7 +45,7 @@ public class Formatter {
 		}
 
 		public String bg(Identifier<Background> id) {
-			return id.get().toString();
+			return Identifier.get(id) + "";
 		}
 
 		public String dispTime(int time) {
@@ -55,7 +55,7 @@ public class Formatter {
 		}
 
 		public String entity(Identifier<?> id) {
-			return id.get().toString();
+			return Identifier.get(id) + "";
 		}
 
 		public String toSecond(int time) {

@@ -195,6 +195,10 @@ public abstract class PackData implements IndexContainer {
 
 		static final String STATIC_FIXER = "id_fixer";
 
+		public static <T extends Indexable<?, T>> T get(Identifier<T> id) {
+			return id == null ? null : id.get();
+		}
+
 		/**
 		 * cls must be a class implementing Indexable. interfaces or other classes will
 		 * go through fixer
@@ -274,6 +278,7 @@ public abstract class PackData implements IndexContainer {
 			return pack.equals(o.pack) && id == o.id;
 		}
 
+		@Deprecated
 		@JCGetter
 		@SuppressWarnings("unchecked")
 		public T get() {
@@ -284,6 +289,10 @@ public abstract class PackData implements IndexContainer {
 		public IndexContainer getCont() {
 			IndexContainer cont = (IndexContainer) getContainer(cls, pack);
 			return cont;
+		}
+
+		public boolean isNull() {
+			return id == -1;
 		}
 
 		@Override

@@ -10,6 +10,7 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass.JCConstructor;
 import common.pack.PackData;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
@@ -137,13 +138,18 @@ public class Recd extends Data {
 	public int[] conf;
 	public int star, len;
 	public BasisLU lu;
-	public boolean avail;
 
+	public boolean avail;
 	public boolean marked;
 
 	public OutStream action;
 
 	public Stage st;
+
+	@JCConstructor
+	public Recd() {
+
+	}
 
 	public Recd(BasisLU blu, Stage sta, int stars, int[] con, long se) {
 		lu = blu;
@@ -174,6 +180,11 @@ public class Recd extends Data {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public void write() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

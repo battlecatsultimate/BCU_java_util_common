@@ -46,7 +46,7 @@ public class LocaleCenter {
 
 		@Override
 		public String getTooltip() {
-			return tooltip;
+			return "<html><p width=\"500\">" + tooltip + "</p></html>";
 		}
 
 		@Override

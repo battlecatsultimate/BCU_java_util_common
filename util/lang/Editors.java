@@ -3,6 +3,7 @@ package common.util.lang;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.jcodec.common.tools.MathUtil;
 
@@ -19,10 +20,10 @@ public class Editors {
 	public static class DispItem implements Displayable {
 
 		private final ProcLang.ItemLang lang;
-		private final Proc.ProcItem proc;
+		private final Supplier<Proc.ProcItem> proc;
 		private final Formatter.Context ctx;
 
-		public DispItem(ProcLang.ItemLang lang, Proc.ProcItem proc, Formatter.Context ctx) {
+		public DispItem(ProcLang.ItemLang lang, Supplier<Proc.ProcItem> proc, Formatter.Context ctx) {
 			this.lang = lang;
 			this.proc = proc;
 			this.ctx = ctx;
@@ -36,15 +37,20 @@ public class Editors {
 		@Override
 		public String getTooltip() {
 			String t0 = lang.tooltip == null ? null : lang.tooltip;
-			String t1 = proc == null ? null : Formatter.format(lang.format, proc, ctx);
+			Proc.ProcItem item = proc.get();
+			String t1 = item == null ? null : Formatter.format(lang.format, item, ctx);
+			if (t0 != null)
+				t0 = "<p width = \"500\">" + t0 + "</p>";
+			if (t1 != null)
+				t1 = "<p width = \"500\">" + t1 + "</p>";
 			if (t0 == null && t1 == null)
 				return "";
 			else if (t0 == null)
-				return t1;
+				return "<html>" + t1 + "</html>";
 			else if (t1 == null)
-				return t0;
+				return "<html>" + t0 + "</html>";
 			else
-				return t0 + "<hr>" + t1;
+				return "<html>" + t0 + "<hr>" + t1 + "</html>";
 		}
 
 		@Override
@@ -59,6 +65,56 @@ public class Editors {
 
 	}
 
+	public static class EdiField {
+
+		private Field f0, f1;
+
+		public Object obj;
+
+		private EdiField(Field f) {
+			f0 = f;
+			f1 = null;
+		}
+
+		private EdiField(Field pri, Field sec) {
+			f0 = sec;
+			f1 = pri;
+		}
+
+		public Object get() {
+			return Data.err(() -> f0.get(obj));
+		}
+
+		public boolean getBoolean() {
+			return Data.err(() -> f0.getBoolean(obj));
+		}
+
+		public int getInt() {
+			return Data.err(() -> f0.getInt(obj));
+		}
+
+		public Class<?> getType() {
+			return f0.getType();
+		}
+
+		public void set(Object data) {
+			Data.err(() -> f0.set(obj, data));
+		}
+
+		public void setBoolean(boolean data) {
+			Data.err(() -> f0.setBoolean(obj, data));
+		}
+
+		public void setData(Object obj) {
+			this.obj = f1 == null ? obj : obj == null ? null : Data.err(() -> f1.get(obj));
+		}
+
+		public void setInt(int data) {
+			Data.err(() -> f0.setInt(obj, data));
+		}
+
+	}
+
 	public static class EditControl<T> {
 
 		public final Class<T> cls;
@@ -69,13 +125,15 @@ public class Editors {
 			regulator = func;
 		}
 
-		public Field getField(String f) {
+		public EdiField getField(String f) {
 			return Data.err(() -> {
 				if (f.contains(".")) {
 					String[] strs = f.split("\\.");
-					return cls.getField(strs[0]).getType().getField(strs[1]);
+					Field f0 = cls.getField(strs[0]);
+					Field f1 = f0.getType().getField(strs[1]);
+					return new EdiField(f0, f1);
 				} else
-					return cls.getField(f);
+					return new EdiField(cls.getField(f));
 			});
 		}
 
@@ -96,9 +154,9 @@ public class Editors {
 	public static abstract class Editor {
 
 		public final EditorGroup par;
-		public final Field field;
+		public final EdiField field;
 
-		public Editor(EditorGroup par, Field field, String f) throws Exception {
+		public Editor(EditorGroup par, EdiField field, String f) throws Exception {
 			this.par = par;
 			this.field = field;
 		}
@@ -137,7 +195,7 @@ public class Editors {
 
 		public LocaleCenter.Binder getItem(Formatter.Context ctx) {
 			ProcLang.ItemLang lang = ProcLang.get().get(proc);
-			Displayable disp = new DispItem(lang, (ProcItem) obj, ctx);
+			Displayable disp = new DispItem(lang, this::getProcItem, ctx);
 			return new LocaleCenter.ObjBinder(disp, proc, (name) -> getItem(ctx));
 		}
 
@@ -145,6 +203,10 @@ public class Editors {
 			this.obj = obj;
 			for (Editor e : list)
 				e.setData();
+		}
+
+		private ProcItem getProcItem() {
+			return (ProcItem) obj;
 		}
 
 	}

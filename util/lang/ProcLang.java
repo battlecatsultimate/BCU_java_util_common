@@ -84,11 +84,10 @@ public class ProcLang {
 
 		private void fill(String pre, Class<?> c, JsonObject obj) {
 			for (Field f : c.getDeclaredFields()) {
-				JsonElement elem = obj == null ? null : obj.get(f.getName());
 				if (IntType.class.isAssignableFrom(f.getType())) {
-					JsonObject data = elem == null ? null : elem.getAsJsonObject();
-					fill(f.getName() + ".", f.getType(), data);
+					fill(f.getName() + ".", f.getType(), obj);
 				} else {
+					JsonElement elem = obj == null ? null : obj.get(pre + f.getName());
 					DisplayItem pf = elem == null ? new DisplayItem() : JsonDecoder.decode(elem, DisplayItem.class);
 					map.put(pre + f.getName(), pf);
 				}
