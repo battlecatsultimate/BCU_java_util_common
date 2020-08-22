@@ -6,11 +6,9 @@ import common.pack.UserProfile
 import common.util.Data
 import common.util.Data.Proc
 import common.util.Data.Proc.*
-import common.util.lang.Formatter
 import common.util.lang.LocaleCenter.Displayable
 import common.util.lang.LocaleCenter.ObjBinder
 import common.util.lang.LocaleCenter.ObjBinder.BinderFunc
-import common.util.lang.ProcLang
 import common.util.lang.ProcLang.ItemLang
 import org.jcodec.common.tools.MathUtil
 import java.lang.reflect.Field
@@ -204,12 +202,12 @@ object Editors {
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) common.util.lang.t.mult = 0 else if (common.util.lang.t.mult == 0) common.util.lang.t.mult = 200
         })
-        map()["WAVE"] = EditControl<WAVE>(WAVE::class.java, Consumer<WAVE> { t: WAVE? ->
+        map()["WAVE"] = EditControl<Wave>(Wave::class.java, Consumer<Wave> { t: Wave? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) common.util.lang.t.lv = 0
             common.util.lang.t.lv = MathUtil.clip(common.util.lang.t.lv, 1, 20)
         })
-        map()["WEAK"] = EditControl<WEAK>(WEAK::class.java, Consumer<WEAK> { t: WEAK? ->
+        map()["WEAK"] = EditControl<Weak>(Weak::class.java, Consumer<Weak> { t: Weak? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.time = 0
@@ -227,16 +225,16 @@ object Editors {
             }
         })
         map()["CURSE"] = common.util.lang.pt
-        map()["STRONG"] = EditControl<STRONG>(STRONG::class.java, Consumer<STRONG> { t: STRONG? ->
+        map()["STRONG"] = EditControl<Strong>(Strong::class.java, Consumer<Strong> { t: Strong? ->
             common.util.lang.t.health = MathUtil.clip(common.util.lang.t.health, 0, 99)
             if (common.util.lang.t.health == 0) common.util.lang.t.mult = 0
         })
         map()["LETHAL"] = common.util.lang.prob
-        map()["BURROW"] = EditControl<BURROW>(BURROW::class.java, Consumer<BURROW> { t: BURROW? ->
+        map()["BURROW"] = EditControl<Burrow>(Burrow::class.java, Consumer<Burrow> { t: Burrow? ->
             common.util.lang.t.count = Math.max(common.util.lang.t.count, -1)
             if (common.util.lang.t.count == 0) common.util.lang.t.dis = 0 else common.util.lang.t.dis = Math.max(common.util.lang.t.dis, 1)
         })
-        map()["REVIVE"] = EditControl<REVIVE>(REVIVE::class.java, Consumer<REVIVE> { t: REVIVE? ->
+        map()["REVIVE"] = EditControl<Revive>(Revive::class.java, Consumer<Revive> { t: Revive? ->
             common.util.lang.t.count = Math.max(common.util.lang.t.count, -1)
             if (common.util.lang.t.count == 0) {
                 common.util.lang.t.health = 0
@@ -263,7 +261,7 @@ object Editors {
         map()["SNIPER"] = common.util.lang.prob
         map()["TIME"] = common.util.lang.pt
         map()["SEAL"] = common.util.lang.pt
-        map()["SUMMON"] = EditControl<SUMMON>(SUMMON::class.java, Consumer<SUMMON> { t: SUMMON? ->
+        map()["SUMMON"] = EditControl<Summon>(Summon::class.java, Consumer<Summon> { t: Summon? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.dis = 0
@@ -283,7 +281,7 @@ object Editors {
                 common.util.lang.t.type.anim_type = MathUtil.clip(common.util.lang.t.type.anim_type, 0, 3)
             }
         })
-        map()["MOVEWAVE"] = EditControl<MOVEWAVE>(MOVEWAVE::class.java, Consumer<MOVEWAVE> { t: MOVEWAVE? ->
+        map()["MOVEWAVE"] = EditControl<MoveWave>(MoveWave::class.java, Consumer<MoveWave> { t: MoveWave? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.dis = 0
@@ -297,8 +295,8 @@ object Editors {
                 common.util.lang.t.itv = Math.max(1, common.util.lang.t.itv)
             }
         })
-        map()["THEME"] = EditControl<THEME>(THEME::class.java, Consumer<THEME> { t: THEME? -> common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100) })
-        map()["POISON"] = EditControl<POISON>(POISON::class.java, Consumer<POISON> { t: POISON? ->
+        map()["THEME"] = EditControl<Theme>(Theme::class.java, Consumer<Theme> { t: Theme? -> common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100) })
+        map()["POISON"] = EditControl<Poison>(Poison::class.java, Consumer<Poison> { t: Poison? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.damage = 0
@@ -313,11 +311,11 @@ object Editors {
             }
         })
         map()["BOSS"] = common.util.lang.prob
-        map()["CRITI"] = EditControl<CRITI>(CRITI::class.java, Consumer<CRITI> { t: CRITI? -> common.util.lang.t.type = MathUtil.clip(0, common.util.lang.t.type, 2) })
+        map()["CRITI"] = EditControl<CritI>(CritI::class.java, Consumer<CritI> { t: CritI? -> common.util.lang.t.type = MathUtil.clip(0, common.util.lang.t.type, 2) })
         map()["SATK"] = EditControl<PM>(PM::class.java, Consumer<PM> { t: PM? -> if (common.util.lang.t.prob == 0) common.util.lang.t.mult = 0 })
         map()["IMUATK"] = common.util.lang.pt
         map()["POIATK"] = EditControl<PM>(PM::class.java, Consumer<PM> { t: PM? -> if (common.util.lang.t.prob == 0) common.util.lang.t.mult = 0 })
-        map()["VOLC"] = EditControl<VOLC>(VOLC::class.java, Consumer<VOLC> { t: VOLC? ->
+        map()["VOLC"] = EditControl<Volc>(Volc::class.java, Consumer<Volc> { t: Volc? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.dis_1 = 0
@@ -327,7 +325,7 @@ object Editors {
                 common.util.lang.t.time = Math.max(1, common.util.lang.t.time / Data.Companion.VOLC_ITV) * Data.Companion.VOLC_ITV
             }
         })
-        map()["ARMOR"] = EditControl<ARMOR>(ARMOR::class.java, Consumer<ARMOR> { t: ARMOR? ->
+        map()["ARMOR"] = EditControl<Armor>(Armor::class.java, Consumer<Armor> { t: Armor? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.time = 0
@@ -336,7 +334,7 @@ object Editors {
                 common.util.lang.t.time = Math.max(1, common.util.lang.t.time)
             }
         })
-        map()["SPEED"] = EditControl<SPEED>(SPEED::class.java, Consumer<SPEED> { t: SPEED? ->
+        map()["SPEED"] = EditControl<Speed>(Speed::class.java, Consumer<Speed> { t: Speed? ->
             common.util.lang.t.prob = MathUtil.clip(common.util.lang.t.prob, 0, 100)
             if (common.util.lang.t.prob == 0) {
                 common.util.lang.t.time = 0

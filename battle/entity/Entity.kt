@@ -10,8 +10,7 @@ import common.system.fake.FakeGraphics
 import common.system.fake.FakeTransform
 import common.util.BattleObj
 import common.util.Data
-import common.util.Data.Proc
-import common.util.Data.Proc.POISON
+import common.util.Data.Proc.Poison
 import common.util.Data.Proc.PT
 import common.util.anim.AnimU.UType
 import common.util.anim.EAnimD
@@ -522,9 +521,9 @@ abstract class Entity protected constructor(b: StageBasis, de: MaskEntity, ea: E
     }
 
     private class PoisonToken(private val e: Entity) : BattleObj() {
-        private val list: MutableList<POISON> = ArrayList<POISON>()
-        fun add(ws: POISON) {
-            if (ws.type.unstackable) list.removeIf(Predicate<POISON> { e: POISON -> e.type.unstackable && type(e) == type(ws) })
+        private val list: MutableList<Poison> = ArrayList<Poison>()
+        fun add(ws: Poison) {
+            if (ws.type.unstackable) list.removeIf(Predicate<Poison> { e: Poison -> e.type.unstackable && type(e) == type(ws) })
             ws.prob = 0 // used as counter
             list.add(ws)
             getMax()
@@ -543,13 +542,13 @@ abstract class Entity protected constructor(b: StageBasis, de: MaskEntity, ea: E
             e.status[Data.Companion.P_POISON][0] = max
         }
 
-        private fun type(ws: POISON): Int {
+        private fun type(ws: Poison): Int {
             return ws.type.damage_type + if (ws.damage < 0) 4 else 0
         }
 
         fun update() {
             for (i in list.indices) {
-                val ws: POISON = list[i]
+                val ws: Poison = list[i]
                 if (ws.time > 0) {
                     ws.time--
                     ws.prob-- // used as counter for itv
@@ -559,7 +558,7 @@ abstract class Entity protected constructor(b: StageBasis, de: MaskEntity, ea: E
                     }
                 }
             }
-            list.removeIf(Predicate<POISON> { w: POISON -> w.time <= 0 })
+            list.removeIf(Predicate<Poison> { w: Poison -> w.time <= 0 })
             getMax()
         }
     }
@@ -929,7 +928,7 @@ abstract class Entity protected constructor(b: StageBasis, de: MaskEntity, ea: E
             anim.getEff(Data.Companion.P_SEAL)
         } else anim.getEff(Data.Companion.INV)
         if (atk.getProc().POISON.time > 0) if (getAbi() and Data.Companion.AB_POII == 0 || atk.getProc().POISON.damage < 0) {
-            val ws: POISON = atk.getProc().POISON.clone() as POISON
+            val ws: Poison = atk.getProc().POISON.clone() as Poison
             if (ws.type.damage_type == 1) ws.damage = getDamage(atk, ws.damage)
             pois.add(ws)
             anim.getEff(Data.Companion.P_POISON)

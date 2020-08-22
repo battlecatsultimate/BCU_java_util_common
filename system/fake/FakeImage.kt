@@ -22,12 +22,12 @@ interface FakeImage {
     companion object {
         @Throws(IOException::class)
         fun read(o: Any?): FakeImage? {
-            return ImageBuilder.Companion.builder.build(o)
+            return ImageBuilder.Companion.builder!!.build(o)
         }
 
         @Throws(IOException::class)
-        fun write(img: FakeImage?, str: String?, o: Any?): Boolean {
-            return ImageBuilder.Companion.builder.write(img, str, o)
+        fun write(img: FakeImage, str: String, o: Any): Boolean {
+            return ImageBuilder.Companion.builder!!.write(img, str, o)
         }
     }
 }

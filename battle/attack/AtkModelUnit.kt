@@ -5,16 +5,16 @@ import common.battle.entity.EUnit
 import common.battle.entity.EntCont
 import common.battle.entity.Entity
 import common.util.Data
-import common.util.Data.Proc.SUMMON
+import common.util.Data.Proc.Summon
 import common.util.unit.EForm
 import common.util.unit.Unit
 
 class AtkModelUnit(ent: Entity, d0: Double) : AtkModelEntity(ent, d0) {
     private val bas: BasisLU
     private val buffed: Array<Proc?>
-    override fun summon(proc: SUMMON, ent: Entity, acs: Any?) {
+    override fun summon(proc: Summon, ent: Entity, acs: Any?) {
         val u = proc.id.get() as Unit
-        val conf: Data.Proc.SUMMON.TYPE = proc.type
+        val conf: Data.Proc.Summon.TYPE = proc.type
         val time: Int = proc.time
         if (u != null && (b.entityCount(-1) < b.max_num || conf.ignore_limit)) {
             val up: Double = ent.pos + getDire() * proc.dis

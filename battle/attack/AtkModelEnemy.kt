@@ -4,14 +4,14 @@ import common.battle.entity.EEnemy
 import common.battle.entity.EntCont
 import common.battle.entity.Entity
 import common.util.Data
-import common.util.Data.Proc.SUMMON
+import common.util.Data.Proc.Summon
 import common.util.unit.AbEnemy
 
 class AtkModelEnemy(ent: EEnemy, d0: Double) : AtkModelEntity(ent, d0) {
     private val cursed: Array<Proc?>
-    override fun summon(proc: SUMMON, ent: Entity, acs: Any?) {
+    override fun summon(proc: Summon, ent: Entity, acs: Any?) {
         val ene: AbEnemy = proc.id.get() as AbEnemy
-        val conf: Data.Proc.SUMMON.TYPE = proc.type
+        val conf: Data.Proc.Summon.TYPE = proc.type
         val time: Int = proc.time
         val allow: Int = b.st.data.allow(b, ene)
         if (ene != null && (allow >= 0 || conf.ignore_limit)) {

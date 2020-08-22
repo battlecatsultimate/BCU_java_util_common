@@ -9,8 +9,6 @@ import common.pack.Context
 import common.pack.Context.ErrType
 import common.pack.Context.SupExc
 import common.pack.PackData
-import common.util.Data
-import common.util.Data.Proc
 import common.util.pack.Background
 import common.util.pack.EffAnim.EffAnimStore
 import java.lang.annotation.Documented
@@ -22,20 +20,20 @@ open class Data {
     @JsonClass(noTag = NoTag.LOAD)
     class Proc {
         @JsonClass(noTag = NoTag.LOAD)
-        class ARMOR : ProcItem() {
+        class Armor : ProcItem() {
             var prob = 0
             var time = 0
             var mult = 0
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class BURROW : ProcItem() {
+        class Burrow : ProcItem() {
             var count = 0
             var dis = 0
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class CRITI : ProcItem() {
+        class CritI : ProcItem() {
             var type = 0
         }
 
@@ -93,7 +91,7 @@ open class Data {
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class MOVEWAVE : ProcItem() {
+        class MoveWave : ProcItem() {
             var prob = 0
             var speed = 0
             var width = 0
@@ -109,7 +107,7 @@ open class Data {
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class POISON : ProcItem() {
+        class Poison : ProcItem() {
             @JsonClass(noTag = NoTag.LOAD)
             class TYPE : Data.Proc.IntType() {
                 @BitCount(2)
@@ -121,7 +119,7 @@ open class Data {
             var time = 0
             var damage = 0
             var itv = 0
-            var type: Data.Proc.POISON.TYPE? = null
+            var type: Data.Proc.Poison.TYPE? = null
         }
 
         @JsonClass(noTag = NoTag.LOAD)
@@ -233,7 +231,7 @@ open class Data {
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class REVIVE : ProcItem() {
+        class Revive : ProcItem() {
             @JsonClass(noTag = NoTag.LOAD)
             class TYPE : Data.Proc.IntType() {
                 @BitCount(2)
@@ -248,11 +246,11 @@ open class Data {
             var health = 0
             var dis_0 = 0
             var dis_1 = 0
-            var type: Data.Proc.REVIVE.TYPE? = null
+            var type: Data.Proc.Revive.TYPE? = null
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class SPEED : ProcItem() {
+        class Speed : ProcItem() {
             var prob = 0
             var time = 0
             var speed = 0
@@ -260,13 +258,13 @@ open class Data {
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class STRONG : ProcItem() {
+        class Strong : ProcItem() {
             var health = 0
             var mult = 0
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class SUMMON : ProcItem() {
+        class Summon : ProcItem() {
             @JsonClass(noTag = NoTag.LOAD)
             class TYPE : Data.Proc.IntType() {
                 @BitCount(2)
@@ -283,12 +281,12 @@ open class Data {
             var id: PackData.Identifier<*>? = null
             var dis = 0
             var mult = 0
-            var type: Data.Proc.SUMMON.TYPE? = null
+            var type: Data.Proc.Summon.TYPE? = null
             var time = 0
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class THEME : ProcItem() {
+        class Theme : ProcItem() {
             @JsonClass(noTag = NoTag.LOAD)
             class TYPE : Data.Proc.IntType() {
                 var kill = false
@@ -297,11 +295,11 @@ open class Data {
             var prob = 0
             var time = 0
             var id: PackData.Identifier<Background>? = null
-            var type: Data.Proc.THEME.TYPE? = null
+            var type: Data.Proc.Theme.TYPE? = null
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class VOLC : ProcItem() {
+        class Volc : ProcItem() {
             var prob = 0
             var dis_0 = 0
             var dis_1 = 0
@@ -309,13 +307,13 @@ open class Data {
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class WAVE : ProcItem() {
+        class Wave : ProcItem() {
             var prob = 0
             var lv = 0
         }
 
         @JsonClass(noTag = NoTag.LOAD)
-        class WEAK : ProcItem() {
+        class Weak : ProcItem() {
             var prob = 0
             var time = 0
             var mult = 0
@@ -325,15 +323,15 @@ open class Data {
         val STOP: PT? = null
         val SLOW: PT? = null
         val CRIT: PM? = null
-        val WAVE: WAVE? = null
-        val WEAK: WEAK? = null
+        val WAVE: Wave? = null
+        val WEAK: Weak? = null
         val BREAK: PROB? = null
         val WARP: PTD? = null
         val CURSE: PT? = null
-        val STRONG: STRONG? = null
+        val STRONG: Strong? = null
         val LETHAL: PROB? = null
-        val BURROW: BURROW? = null
-        val REVIVE: REVIVE? = null
+        val BURROW: Burrow? = null
+        val REVIVE: Revive? = null
         val IMUKB: IMU? = null
         val IMUSTOP: IMU? = null
         val IMUSLOW: IMU? = null
@@ -344,20 +342,20 @@ open class Data {
         val SNIPER: PROB? = null
         val TIME: PT? = null
         val SEAL: PT? = null
-        val SUMMON: SUMMON? = null
-        val MOVEWAVE: MOVEWAVE? = null
-        val THEME: THEME? = null
-        val POISON: POISON? = null
+        val SUMMON: Summon? = null
+        val MOVEWAVE: MoveWave? = null
+        val THEME: Theme? = null
+        val POISON: Poison? = null
         val BOSS: PROB? = null
-        val CRITI: CRITI? = null
+        val CRITI: CritI? = null
         val SATK: PM? = null
         val IMUATK: PT? = null
         val POIATK: PM? = null
-        val VOLC: VOLC? = null
+        val VOLC: Volc? = null
         val IMUPOIATK: IMU? = null
         val IMUVOLC: IMU? = null
-        val ARMOR: ARMOR? = null
-        val SPEED: SPEED? = null
+        val ARMOR: Armor? = null
+        val SPEED: Speed? = null
         override fun clone(): Proc? {
             return try {
                 val ans = Proc()

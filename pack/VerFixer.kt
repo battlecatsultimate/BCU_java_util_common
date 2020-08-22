@@ -5,19 +5,14 @@ import common.CommonStatic.ImgReader
 import common.battle.data.CustomEnemy
 import common.battle.data.CustomUnit
 import common.io.InStream
-import common.pack.Context
 import common.pack.Context.ErrType
-import common.pack.PackData
 import common.pack.PackData.PackDesc
 import common.pack.PackData.UserPack
-import common.pack.Source.SourceAnimLoader
-import common.pack.UserProfile
-import common.pack.VerFixer.VerFixerException
 import common.system.VImg
 import common.system.fake.FakeImage
 import common.system.files.FDFile
 import common.util.Data
-import common.util.Data.Proc.THEME
+import common.util.Data.Proc.Theme
 import common.util.anim.AnimCE
 import common.util.anim.AnimCI
 import common.util.pack.Background
@@ -36,7 +31,7 @@ abstract class VerFixer private constructor(id: String) : Source(id) {
     class IdFixer(cls: Class<*>?) {
         private val ent: Class<*>
         fun parse(`val`: Int, cls: Class<*>): Class<*> {
-            return if (cls == THEME::class.java) Background::class.java else if (ent == Unit::class.java) ent else if (`val` % 1000 < 500) Enemy::class.java else EneRand::class.java
+            return if (cls == Theme::class.java) Background::class.java else if (ent == Unit::class.java) ent else if (`val` % 1000 < 500) Enemy::class.java else EneRand::class.java
         }
 
         init {

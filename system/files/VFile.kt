@@ -62,16 +62,8 @@ open class VFile<T : FileData?> : Comparable<VFile<T>?> {
         return ans
     }
 
-    fun getName(): String {
-        return name
-    }
-
-    fun getParent(): VFile<T>? {
-        return parent
-    }
-
     fun getPath(): String {
-        return if (parent != null) parent.getPath() + "/" + name else name
+        return if (parent != null) parent!!.getPath() + "/" + name else name
     }
 
     fun list(): Collection<VFile<T>>? {

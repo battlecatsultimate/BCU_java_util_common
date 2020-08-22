@@ -55,8 +55,8 @@ class StageBasis(stage: EStage, bas: BasisLU, ints: IntArray, seed: Long) : Batt
     private var lethal = false
     private var themeTime = 0
     private var theme: PackData.Identifier<Background>? = null
-    private var themeType: Data.Proc.THEME.TYPE? = null
-    fun changeTheme(id: PackData.Identifier<Background>?, time: Int, type: Data.Proc.THEME.TYPE?) {
+    private var themeType: Data.Proc.Theme.TYPE? = null
+    fun changeTheme(id: PackData.Identifier<Background>?, time: Int, type: Data.Proc.Theme.TYPE?) {
         theme = id
         themeTime = time
         themeType = type

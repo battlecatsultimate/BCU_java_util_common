@@ -6,8 +6,7 @@ import common.battle.entity.EUnit
 import common.battle.entity.Entity
 import common.util.BattleObj
 import common.util.Data
-import common.util.Data.Proc
-import common.util.Data.Proc.SUMMON
+import common.util.Data.Proc.Summon
 import common.util.pack.EffAnim.DefEff
 
 abstract class AtkModelEntity protected constructor(val e: Entity, private val ratk: Double) : AtkModelAb(e.basis) {
@@ -75,9 +74,9 @@ abstract class AtkModelEntity protected constructor(val e: Entity, private val r
     }
 
     override fun invokeLater(atk: AttackAb, e: Entity) {
-        val proc: SUMMON = atk.getProc().SUMMON
+        val proc: Summon = atk.getProc().SUMMON
         if (proc.exists()) {
-            val conf: Data.Proc.SUMMON.TYPE = proc.type
+            val conf: Data.Proc.Summon.TYPE = proc.type
             if (conf.on_hit || conf.on_kill && e.health <= 0) summon(proc, e, e)
         }
     }
@@ -117,8 +116,8 @@ abstract class AtkModelEntity protected constructor(val e: Entity, private val r
         val par = arrayOf("CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
                 "BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED")
         for (s0 in par) if (getProc(ind).get(s0).perform(b.r)) if (s0 == "SUMMON") {
-            val sprc: SUMMON = getProc(ind).SUMMON
-            val conf: Data.Proc.SUMMON.TYPE = sprc.type
+            val sprc: Summon = getProc(ind).SUMMON
+            val conf: Data.Proc.Summon.TYPE = sprc.type
             if (!conf.on_hit && !conf.on_kill) summon(sprc, e, acs[ind]) else proc.SUMMON.set(sprc)
         } else proc.get(s0).set(getProc(ind).get(s0))
         if (proc.CRIT.exists() && proc.CRIT.mult == 0) proc.CRIT.mult = 200
@@ -128,7 +127,7 @@ abstract class AtkModelEntity protected constructor(val e: Entity, private val r
         if (proc.BOSS.exists()) b.lea.add(EAnimCont(e.pos, e.layer, Data.Companion.effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)))
     }
 
-    protected abstract fun summon(sprc: SUMMON, ent: Entity, acs: Any?)
+    protected abstract fun summon(sprc: Summon, ent: Entity, acs: Any?)
 
     companion object {
         fun getIns(e: Entity, d0: Double): AtkModelEntity? {

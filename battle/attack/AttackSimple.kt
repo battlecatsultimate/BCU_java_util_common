@@ -2,8 +2,8 @@ package common.battle.attack
 
 import common.battle.entity.AbEntity
 import common.util.Data
-import common.util.Data.Proc.MOVEWAVE
-import common.util.Data.Proc.VOLC
+import common.util.Data.Proc.MoveWave
+import common.util.Data.Proc.Volc
 import java.util.*
 
 open class AttackSimple(ent: AtkModelAb, ATK: Int, t: Int, eab: Int, pro: Proc, p0: Double, p1: Double, private val range: Boolean,
@@ -39,7 +39,7 @@ open class AttackSimple(ent: AtkModelAb, ATK: Int, t: Int, eab: Int, pro: Proc, 
         process()
         val layer: Int = model.getLayer()
         if (proc.MOVEWAVE.exists()) {
-            val mw: MOVEWAVE = proc.MOVEWAVE
+            val mw: MoveWave = proc.MOVEWAVE
             val dire: Int = model.getDire()
             val p0: Double = model.getPos() + dire * mw.dis
             ContMove(this, p0, mw.width, mw.speed, 1, mw.time, mw.itv, layer)
@@ -56,7 +56,7 @@ open class AttackSimple(ent: AtkModelAb, ATK: Int, t: Int, eab: Int, pro: Proc, 
         }
         if (capt.size > 0 && proc.VOLC.exists()) {
             val dire: Int = model.getDire()
-            val volc: VOLC = proc.VOLC
+            val volc: Volc = proc.VOLC
             val addp: Int = volc.dis_0 + (model.b.r.nextDouble() * (volc.dis_1 - volc.dis_0)) as Int
             val p0: Double = model.getPos() + dire * addp
             val sta: Double = p0 + if (dire == 1) Data.Companion.W_VOLC_PIERCE else Data.Companion.W_VOLC_INNER
