@@ -4,20 +4,20 @@ import java.util.Random;
 
 public class CopRand extends BattleObj {
 
-	private long seed;
+    private long seed;
 
-	public CopRand(long s) {
-		seed = s;
-	}
+    public CopRand(long s) {
+        seed = s;
+    }
 
-	public double irDouble() {
-		return Math.random();
-	}
+    public double irDouble() {
+        return Math.random();
+    }
 
-	public double nextDouble() {
-		Random r = new Random(seed);
-		seed = r.nextLong();
-		return r.nextDouble();
-	}
+    public double nextDouble() {
+        Random r = new Random(seed);
+        seed = r.nextLong();
+        return r.nextDouble();
+    }
 
 }

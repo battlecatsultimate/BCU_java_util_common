@@ -1,6 +1,6 @@
 package common.battle.data;
 
-import common.pack.PackData.Identifier;
+import common.pack.Identifier;
 import common.util.Animable;
 import common.util.BattleStatic;
 import common.util.Data;
@@ -11,74 +11,82 @@ import common.util.pack.Soul;
 
 public interface MaskEntity extends BattleStatic {
 
-	public int allAtk();
+    int allAtk();
 
-	public int getAbi();
+    int getAbi();
 
-	public Proc getAllProc();
+    Proc getAllProc();
 
-	/** get the attack animation length */
-	public default int getAnimLen() {
-		return getPack().anim.getAtkLen();
-	}
+    /**
+     * get the attack animation length
+     */
+    default int getAnimLen() {
+        return getPack().anim.getAtkLen();
+    }
 
-	public int getAtkCount();
+    int getAtkCount();
 
-	public int getAtkLoop();
+    int getAtkLoop();
 
-	public MaskAtk getAtkModel(int ind);
+    MaskAtk getAtkModel(int ind);
 
-	public Identifier<Soul> getDeathAnim();
+    Identifier<Soul> getDeathAnim();
 
-	public int getHb();
+    int getHb();
 
-	public int getHp();
+    int getHp();
 
-	/** get the attack period */
-	public int getItv();
+    /**
+     * get the attack period
+     */
+	int getItv();
 
-	/** get the Enemy/Form this data represents */
-	public Animable<AnimU<?>, UType> getPack();
+    /**
+     * get the Enemy/Form this data represents
+     */
+	Animable<AnimU<?>, UType> getPack();
 
-	public int getPost();
+    int getPost();
 
-	public Proc getProc();
+    Proc getProc();
 
-	public int getRange();
+    int getRange();
 
-	public MaskAtk getRepAtk();
+    MaskAtk getRepAtk();
 
-	public default AtkDataModel getResurrection() {
-		return null;
-	}
+    default AtkDataModel getResurrection() {
+        return null;
+    }
 
-	public default AtkDataModel getRevenge() {
-		return null;
-	}
+    default AtkDataModel getRevenge() {
+        return null;
+    }
 
-	public int getShield();
+    int getShield();
 
-	public int getSpeed();
+    int getSpeed();
 
-	/** get waiting time */
-	public int getTBA();
+    /**
+     * get waiting time
+     */
+	int getTBA();
 
-	public default int getTouch() {
-		return Data.TCH_N;
-	}
+    default int getTouch() {
+        return Data.TCH_N;
+    }
 
-	public int getType();
+    int getType();
 
-	public int getWidth();
+    int getWidth();
 
-	public boolean isLD();
+    boolean isLD();
 
-	public boolean isOmni();
+    boolean isOmni();
 
-	public boolean isRange();
+    boolean isRange();
 
-	public int[][] rawAtkData();
+    int[][] rawAtkData();
 
-	public int touchBase();
+    int touchBase();
 
 }

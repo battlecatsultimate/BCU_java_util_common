@@ -1,55 +1,51 @@
 package common.pack;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import common.pack.FixIndexList.FixIndexMap;
-import common.pack.PackData.Identifier;
+
+import java.lang.annotation.*;
 
 public interface IndexContainer {
 
-	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public static @interface ContGetter {
-	}
+    @Documented
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+	@interface ContGetter {
+    }
 
-	public static interface Indexable<R extends IndexContainer, T extends Indexable<R, T>> {
+    interface Indexable<R extends IndexContainer, T extends Indexable<R, T>> {
 
-		@SuppressWarnings("unchecked")
-		public default R getCont() {
-			return (R) getID().getCont();
-		}
+        @SuppressWarnings("unchecked")
+		default R getCont() {
+            return (R) getID().getCont();
+        }
 
-		public Identifier<T> getID();
+        Identifier<T> getID();
 
-	}
+    }
 
-	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public static @interface IndexCont {
+    @Documented
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+	@interface IndexCont {
 
-		Class<? extends IndexContainer> value();
+        Class<? extends IndexContainer> value();
 
-	}
+    }
 
-	public static interface Reductor<R, T> {
+    interface Reductor<R, T> {
 
-		public R reduce(R r, T t);
+        R reduce(R r, T t);
 
-	}
+    }
 
-	public String getID();
+    String getID();
 
-	@SuppressWarnings("rawtypes")
-	public <R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def);
+    @SuppressWarnings("rawtypes")
+	<R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def);
 
-	public default <T extends R, R extends Indexable<?, R>> Identifier<R> getNextID(Class<T> cls) {
-		int id = getList(cls, (r, l) -> l.nextInd(), 0);
-		return new Identifier<R>(getID(), cls, id);
-	}
+    default <T extends R, R extends Indexable<?, R>> Identifier<R> getNextID(Class<T> cls) {
+        int id = getList(cls, (r, l) -> l.nextInd(), 0);
+        return new Identifier<R>(getID(), cls, id);
+    }
 
 }

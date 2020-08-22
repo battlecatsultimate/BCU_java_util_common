@@ -1,25 +1,25 @@
 package common.battle.data;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 import common.battle.Basis;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public interface MaskEnemy extends MaskEntity {
 
-	public double getDrop();
+    double getDrop();
 
-	@Override
-	public Enemy getPack();
+    @Override
+    Enemy getPack();
 
-	public int getStar();
+    int getStar();
 
-	public default Set<AbEnemy> getSummon() {
-		return new TreeSet<AbEnemy>();
-	}
+    default Set<AbEnemy> getSummon() {
+        return new TreeSet<AbEnemy>();
+    }
 
-	public double multi(Basis b);
+    double multi(Basis b);
 
 }

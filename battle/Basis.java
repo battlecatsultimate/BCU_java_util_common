@@ -8,18 +8,22 @@ import common.util.Data;
 @JsonClass(read = RType.FILL)
 public abstract class Basis extends Data {
 
-	@JsonField
-	public String name;
+    @JsonField
+    public String name;
 
-	/** get combo effect data */
-	public abstract int getInc(int type);
+    /**
+     * get combo effect data
+     */
+    public abstract int getInc(int type);
 
-	/** get Treasure object */
-	public abstract Treasure t();
+    /**
+     * get Treasure object
+     */
+    public abstract Treasure t();
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

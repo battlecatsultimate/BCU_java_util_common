@@ -3,17 +3,17 @@ package common.battle.data;
 import common.util.unit.Form;
 
 public interface MaskUnit extends MaskEntity {
-	public int getBack();
+    int getBack();
 
-	public int getFront();
+    int getFront();
 
-	public Orb getOrb();
+    Orb getOrb();
 
-	@Override
-	public Form getPack();
+    @Override
+    Form getPack();
 
-	public int getPrice();
+    int getPrice();
 
-	public int getRespawn();
+    int getRespawn();
 
 }

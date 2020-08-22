@@ -2,10 +2,10 @@ package common.io;
 
 public class BCUException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public BCUException(String str) {
-		super(str);
-	}
+    public BCUException(String str) {
+        super(str);
+    }
 
 }
