@@ -17,6 +17,7 @@ import java.util.function.BiConsumer;
 @JsonClass
 public class FixIndexList<T> extends Data {
 
+	@JsonClass
 	public static class FixIndexMap<T extends Indexable<?, ?>> extends FixIndexList<T> implements Iterable<T> {
 
 		private class Itr implements Iterator<T> {
@@ -25,22 +26,20 @@ public class FixIndexList<T> extends Data {
 
 			@Override
 			public boolean hasNext() {
-				while (ind < arr.length && arr[ind] == null)
-					ind++;
-				if (ind >= arr.length)
-					return false;
-				return true;
+				return ind < size;
 			}
 
 			@Override
 			public T next() {
-				return arr[ind++];
+				return arr[order[ind++]];
 			}
 
 		}
 
-		public int[] order;
+		@JsonField
+		private int[] order;
 
+		@JsonField
 		public final Class<T> cls;
 
 		public FixIndexMap(Class<T> cls) {
@@ -50,8 +49,65 @@ public class FixIndexList<T> extends Data {
 		}
 
 		@Override
+		public void clear() {
+			super.clear();
+			Arrays.fill(order, 0);
+		}
+
+		@Override
+		public void expand(int size) {
+			super.expand(size);
+			if (size < order.length)
+				return;
+			order = Arrays.copyOf(order, size);
+		}
+
+		@Override
+		public List<T> getList() {
+			List<T> ans = new ArrayList<>(size);
+			for (int i = 0; i < size; i++)
+				ans.add(arr[order[i]]);
+			return ans;
+		}
+
+		@Override
 		public Iterator<T> iterator() {
 			return new Itr();
+		}
+
+		public void reorder(int ori, int fin) {
+			if (ori < fin) {
+				fin--;
+				int val = order[ori];
+				for (int i = ori; i < fin; i++)
+					order[i] = order[i + 1];
+				order[fin] = val;
+			} else if (ori > fin) {
+				int val = order[ori];
+				for (int i = ori; i > fin; i--)
+					order[i] = order[i - 1];
+				order[fin] = val;
+			}
+		}
+
+		@Override
+		public void set(int ind, T t) {
+			boolean fill = arr[ind] == null && t != null;
+			boolean dele = arr[ind] != null && t == null;
+			super.set(ind, t);
+			if (fill) {
+				order[size - 1] = ind;
+			}
+			if (dele) {
+				int oind = -1;
+				for (int i = 0; i < size; i++) {
+					if (oind == -1 && order[i] == ind)
+						oind = ind;
+					if (oind >= 0)
+						order[i] = order[i + 1];
+				}
+			}
+
 		}
 
 		@SuppressWarnings("unchecked")
@@ -62,7 +118,7 @@ public class FixIndexList<T> extends Data {
 	}
 
 	protected T[] arr;
-	private int size = 0;
+	protected int size = 0;
 
 	@SuppressWarnings("unchecked")
 	public FixIndexList(Class<T> cls) {
@@ -71,10 +127,7 @@ public class FixIndexList<T> extends Data {
 
 	public void add(T t) {
 		int ind = nextInd();
-		arr[ind] = t;
-		if (t != null) {
-			size++;
-		}
+		set(ind, t);
 	}
 
 	public void clear() {
@@ -154,10 +207,8 @@ public class FixIndexList<T> extends Data {
 		if (t == null)
 			return;
 		for (int i = 0; i < arr.length; i++)
-			if (arr[i] == t) {
-				arr[i] = null;
-				size--;
-			}
+			if (arr[i] == t)
+				set(i, null);
 	}
 
 	public void set(int ind, T t) {
