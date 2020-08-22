@@ -1,20 +1,25 @@
 package common.util;
 
 import common.battle.StageBasis;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@JsonClass
 public abstract class EntRand<X> extends Data {
 
     public static final int T_NL = 0, T_LL = 1, T_GL = 2;
 
+    @JsonField(generic = EREnt.class)
     public final List<EREnt<X>> list = new ArrayList<>();
 
     public final Map<StageBasis, Lock<X>> map = new HashMap<>();
 
+    @JsonField
     public int type = 0;
 
     @SuppressWarnings("unchecked")

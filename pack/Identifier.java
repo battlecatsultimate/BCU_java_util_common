@@ -9,6 +9,9 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Queue;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Comparable<Identifier<?>>, Cloneable {
 
@@ -16,7 +19,13 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 
     static final String STATIC_FIXER = "id_fixer";
 
+    @Nullable
     public static <T extends IndexContainer.Indexable<?, T>> T get(Identifier<T> id) {
+        return id == null ? null : id.get();
+    }
+    
+    @NotNull
+    public static <T extends IndexContainer.Indexable<?, T>> T getOr(Identifier<T> id) {
         return id == null ? null : id.get();
     }
 
@@ -98,7 +107,6 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
         return pack.equals(o.pack) && id == o.id;
     }
 
-    @Deprecated
     @JsonClass.JCGetter
     @SuppressWarnings("unchecked")
     public T get() {

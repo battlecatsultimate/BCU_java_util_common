@@ -1,9 +1,11 @@
 package common.util;
 
 import common.system.Copable;
+import org.jetbrains.annotations.Nullable;
 
 public class EREnt<X> implements BattleStatic, Copable<EREnt<X>> {
 
+    @Nullable
     public X ent;
     public int multi = 100;
     public int mula = 100;

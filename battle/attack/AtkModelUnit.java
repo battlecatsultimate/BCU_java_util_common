@@ -4,6 +4,7 @@ import common.battle.BasisLU;
 import common.battle.entity.EUnit;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
+import common.pack.Identifier;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.EForm;
 import common.util.unit.Unit;
@@ -29,8 +30,7 @@ public class AtkModelUnit extends AtkModelEntity {
 
     @Override
     public void summon(SUMMON proc, Entity ent, Object acs) {
-
-        Unit u = (Unit) proc.id.get();
+        Unit u = (Unit) Identifier.getOr(proc.id);
         SUMMON.TYPE conf = proc.type;
         int time = proc.time;
         if (u != null && (b.entityCount(-1) < b.max_num || conf.ignore_limit)) {

@@ -65,7 +65,7 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
     private CharaGroup(int t, Identifier<Unit>... units) {
         type = t;
         for (Identifier<Unit> uid : units) {
-            Unit u = uid.get();
+            Unit u = Identifier.get(uid);
             if (u != null)
                 set.add(u);
         }

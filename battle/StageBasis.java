@@ -64,7 +64,7 @@ public class StageBasis extends BattleObj {
         st = est.s;
         elu = new ELineUp(bas.lu, this);
         est.assign(this);
-        bg = st.bg.get();
+        bg = Identifier.getOr(st.bg);
         EEnemy ee = est.base(this);
         if (ee != null)
             ebase = ee;
@@ -316,7 +316,7 @@ public class StageBasis extends BattleObj {
 
     private void updateTheme() {
         if (theme != null) {
-            bg = theme.get();
+            bg = Identifier.getOr(theme);
             if (themeType.kill) {
                 le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
                 lw.clear();

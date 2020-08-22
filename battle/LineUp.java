@@ -342,7 +342,7 @@ public class LineUp extends Data {
             if (getFS(i) != null) {
                 Identifier<Unit> id = getFS(i).uid;
                 int f = getFS(i).fid;
-                Unit u = id.get();
+                Unit u = Identifier.get(id);
                 if (u == null || u.forms[f] == null)
                     setFS(null, i);
             }

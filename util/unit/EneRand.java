@@ -4,6 +4,8 @@ import common.CommonStatic;
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.io.InStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.system.VImg;
 import common.util.EREnt;
@@ -12,11 +14,19 @@ import common.util.EntRand;
 import java.util.Set;
 import java.util.TreeSet;
 
+@JsonClass
 public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
+    @JsonField
     public final Identifier<AbEnemy> id;
 
+    @JsonField
     public String name = "";
+
+    @JsonClass.JCConstructor
+    public EneRand(){
+        id = null;
+    }
 
     public EneRand(Identifier<AbEnemy> ID) {
         id = ID;
@@ -25,7 +35,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
     public void fillPossible(Set<Enemy> se, Set<EneRand> sr) {
         sr.add(this);
         for (EREnt<Identifier<AbEnemy>> e : list) {
-            AbEnemy ae = e.ent.get();
+            AbEnemy ae = Identifier.get(e.ent);
             if (ae instanceof Enemy)
                 se.add((Enemy) ae);
             if (ae instanceof EneRand) {
@@ -72,7 +82,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
     private EEnemy get(EREnt<Identifier<AbEnemy>> x, StageBasis sb, Object obj, double mul, double mul2, int d0, int d1,
                        int m) {
-        return x.ent.get().getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0, d1, m);
+        return Identifier.getOr(x.ent).getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0, d1, m);
     }
 
     private void zread$000400(InStream is) {

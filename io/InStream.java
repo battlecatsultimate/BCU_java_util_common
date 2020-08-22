@@ -2,7 +2,6 @@ package common.io;
 
 import common.CommonStatic;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 public strictfp interface InStream {

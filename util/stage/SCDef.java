@@ -14,7 +14,6 @@ import common.system.Copable;
 import common.util.Data;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
-
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -180,7 +179,7 @@ public class SCDef implements Copable<SCDef> {
     public Set<Enemy> getAllEnemy() {
         Set<Enemy> l = new TreeSet<>();
         for (Line dat : datas)
-            l.addAll(dat.enemy.get().getPossible());
+            l.addAll(Identifier.getOr(dat.enemy).getPossible());
         for (AbEnemy e : getSummon())
             l.addAll(e.getPossible());
         return l;
@@ -205,7 +204,7 @@ public class SCDef implements Copable<SCDef> {
         Set<Enemy> pre = new TreeSet<>();
         Set<Enemy> post = new TreeSet<>();
         for (Line line : datas) {
-            AbEnemy e = line.enemy.get();
+            AbEnemy e = Identifier.get(line.enemy);
             if (e != null)
                 pre.addAll(e.getPossible());
         }
