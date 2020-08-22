@@ -9,7 +9,7 @@ import common.io.json.JsonEncoder
 import common.io.json.JsonField
 import common.io.json.JsonField.IOType
 import common.pack.IndexContainer.Indexable
-import common.util.Dataimport
+import common.util.Data
 import java.util.*
 import java.util.function.BiConsumer
 
@@ -38,8 +38,8 @@ open class FixIndexList<T>(cls: Class<T>?) : Data() {
         return false
     }
 
-    fun forEach(c: BiConsumer<Int?, T>) {
-        for (i in arr.indices) if (arr[i] != null) c.accept(i, arr[i])
+    fun forEach(c: BiConsumer<Int, T>) {
+        for (i in arr.indices) if (arr[i] != null) c.accept(i, arr[i]!!)
     }
 
     operator fun get(ind: Int): T? {
@@ -58,9 +58,9 @@ open class FixIndexList<T>(cls: Class<T>?) : Data() {
         return ans
     }
 
-    fun getMap(): Map<Int, T?> {
-        val map: MutableMap<Int, T?> = TreeMap<Int, T>()
-        for (i in arr.indices) if (arr[i] != null) map[i] = arr[i]
+    fun getMap(): Map<Int, T> {
+        val map: MutableMap<Int, T> = TreeMap<Int, T>()
+        for (i in arr.indices) if(arr[i] != null) map[i] = arr[i]!!
         return map
     }
 
@@ -84,7 +84,7 @@ open class FixIndexList<T>(cls: Class<T>?) : Data() {
     }
 
     operator fun set(ind: Int, t: T?) {
-        while (arr.size <= ind) arr = Arrays.copyOf(arr, arr.size * 2)
+        while (arr.size <= ind) arr = arr.copyOf(arr.size * 2)
         if (arr[ind] != null) size--
         if (t != null) size++
         arr[ind] = t

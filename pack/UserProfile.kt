@@ -36,11 +36,12 @@ import kotlin.collections.get
 import kotlin.collections.set
 
 class UserProfile private constructor() {
+
     val def: DefPack = DefPack()
     val packmap: MutableMap<String, UserPack> = HashMap<String, UserPack>()
     val packlist: MutableSet<UserPack> = HashSet<UserPack>()
     val failed: MutableSet<UserPack> = HashSet<UserPack>()
-    private val registers: Map<String, Map<String, *>> = HashMap()
+    private val registers: MutableMap<String, Map<String, *>> = HashMap()
     private val pending: Map<String, UserPack> = HashMap<String, UserPack>()
 
     /**
@@ -50,16 +51,16 @@ class UserProfile private constructor() {
     private fun add(pack: UserPack): Boolean {
         packlist.add(pack)
         if (!canAdd(pack)) return false
-        if (!CommonStatic.ctx.noticeErr(Context.RunExc { pack.load() }, ErrType.WARN, "failed to load pack " + pack.desc)) {
+        if (!CommonStatic.ctx!!.noticeErr({ pack.load() }, ErrType.WARN, "failed to load pack " + pack.desc)) {
             failed.add(pack)
             return true
         }
-        packmap[pack.desc.id] = pack
+        packmap[pack.desc.id!!] = pack
         return true
     }
 
     private fun canAdd(s: UserPack): Boolean {
-        for (dep in s.desc.dependency) if (!packmap.containsKey(dep)) return false
+        for (dep in s.desc.dependency!!) if (!packmap.containsKey(dep)) return false
         return true
     }
 
@@ -69,60 +70,59 @@ class UserProfile private constructor() {
 
         // TODO load username and password
         @StaticPermitted(Admin.StaticPermitted.Type.ENV)
-        private val profile: UserProfile? = null
+        private var profile: UserProfile? = null
         fun canRemove(id: String?): Boolean {
-            for ((_, value) in UserProfile.Companion.profile().packmap.entries) if (value.desc.dependency.contains(id)) return false
+            for ((_, value) in profile().packmap.entries) if (value.desc.dependency!!.contains(id)) return false
             return true
         }
 
         /** get all available items for a pack, except castle  */
-        fun <T> getAll(pack: String?, cls: Class<T>?): List<T> {
+        fun <T> getAll(pack: String?, cls: Class<T>): List<T> {
             val list: MutableList<PackData> = ArrayList<PackData>()
-            list.add(UserProfile.Companion.profile().def)
+            list.add(profile().def)
             if (pack != null) {
-                val userpack: UserPack = UserProfile.Companion.profile().packmap.get(pack)
+                val userpack: UserPack = profile().packmap[pack] as UserPack
                 list.add(userpack)
-                for (dep in userpack.desc.dependency) list.add(UserProfile.Companion.getPack(dep))
+                for (dep in userpack.desc.dependency!!) list.add(getPack(dep))
             }
             val ans: MutableList<*> = ArrayList<Any>()
-            for (data in list) data.getList<Any>(cls!!, Reductor<Any, FixIndexMap<*>> { r: Any?, l: FixIndexMap<*> -> ans.addAll(l.getList()) }, null)
+            for (data in list)
+                data.getList<Any?>(cls, { _:Any?, l: FixIndexMap<*> -> ans.addAll(l.getList()) }, null)
             return ans
         }
 
         /** get all packs, including default pack  */
         fun getAllPacks(): Collection<PackData> {
             val ans: MutableList<PackData> = ArrayList<PackData>()
-            ans.add(UserProfile.Companion.getBCData())
-            ans.addAll(UserProfile.Companion.getUserPacks())
+            ans.add(getBCData())
+            ans.addAll(getUserPacks())
             return ans
         }
 
         fun getBCData(): DefPack {
-            return UserProfile.Companion.profile().def
+            return profile().def
         }
 
         /** get a PackData from a String  */
-        fun getPack(str: String): PackData {
-            return if (str == PackData.Identifier.Companion.DEF) UserProfile.Companion.profile().def else UserProfile.Companion.profile().packmap.get(str)
+        fun getPack(str: String): PackData? {
+            return if (str == PackData.Identifier.DEF) profile().def else profile().packmap[str]
         }
 
         /** get a set registered in the Registrar  */
-        fun <T> getPool(id: String, cls: Class<T>?): Set<T>? {
-            val pool: MutableMap<String, Set<*>> = UserProfile.Companion.getRegister<Set<*>>(UserProfile.Companion.REG_POOL, MutableSet::class.java)
-            var ans: Set<T>? = pool[id]
-            if (ans == null) pool[id] = HashSet<T>().also { ans = it }
-            return ans
+        fun <T> getPool(id: String, cls: Class<T>): MutableSet<T> {
+            val pool: MutableMap<String, MutableSet<*>> = getRegister(REG_POOL, MutableSet::class.java)
+            return (pool[id] ?: HashSet<T>().also { pool[id] = it }) as MutableSet<T>
         }
 
         /** get a map registered in the Registrar  */
-        fun <T> getRegister(id: String?, cls: Class<T>?): Map<String?, T>? {
-            var ans: Map<String?, T>? = UserProfile.Companion.profile().registers.get(id)
-            if (ans == null) UserProfile.Companion.profile().registers.put(id, HashMap<String, T>().also { ans = it })
-            return ans
+        fun <T> getRegister(id: String, cls: Class<T>): MutableMap<String, T> {
+            var ans: Map<String, *>? = UserProfile.profile().registers[id]
+            if (ans == null) UserProfile.Companion.profile().registers[id] = HashMap<String, T>().also { ans = it }
+            return ans as MutableMap<String, T>
         }
 
         /** get a variable registered in the Registrar  */
-        fun <T> getStatic(id: String, def: Supplier<T>): T? {
+        fun <T> getStatic(id: String, def: Supplier<T>): T {
             val pool: MutableMap<String, Any> = UserProfile.Companion.getRegister<Any>(UserProfile.Companion.REG_STATIC, Any::class.java)
             var ans = pool[id] as T?
             if (ans == null) pool[id] = def.get().also { ans = it }
@@ -130,7 +130,7 @@ class UserProfile private constructor() {
         }
 
         /** get a UserPack from a String  */
-        fun getUserPack(id: String?): UserPack {
+        fun getUserPack(id: String): UserPack {
             return UserProfile.Companion.profile().packmap.get(id)
         }
 
@@ -141,16 +141,16 @@ class UserProfile private constructor() {
 
         @Throws(Exception::class)
         fun initJsonPack(id: String): UserPack? {
-            val f: File = CommonStatic.ctx.getWorkspaceFile("./$id/pack.json")
+            val f: File = CommonStatic.ctx!!.getWorkspaceFile("./$id/pack.json")
             val folder = f.parentFile
             if (folder.exists()) {
-                if (!CommonStatic.ctx.confirmDelete()) return null
+                if (!CommonStatic.ctx!!.confirmDelete()) return null
                 Context.Companion.delete(f)
             }
             folder.mkdirs()
             Context.Companion.check(f.createNewFile(), "create", f)
             val p = UserPack(id)
-            UserProfile.Companion.profile().packmap.put(id, p)
+            UserProfile.Companion.profile().packmap[id] = p
             return p
         }
 
@@ -178,11 +178,11 @@ class UserProfile private constructor() {
         }
 
         fun profile(): UserProfile {
-            if (UserProfile.Companion.profile == null) {
-                UserProfile.Companion.profile = common.pack.UserProfile()
-                if (CommonStatic.ctx != null) CommonStatic.ctx.initProfile()
+            if (profile == null) {
+                profile = UserProfile()
+                CommonStatic.ctx?.initProfile()
             }
-            return UserProfile.Companion.profile
+            return profile!!
         }
 
         @Throws(Exception::class)

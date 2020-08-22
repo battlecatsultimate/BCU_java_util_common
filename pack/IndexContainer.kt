@@ -1,37 +1,37 @@
 package common.pack
 
 import common.pack.FixIndexList.FixIndexMap
-import common.pack.PackData
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
+import common.pack.IndexContainer.Reductor
 import kotlin.reflect.KClass
 
 interface IndexContainer {
-    @Documented
-    @Retention(RetentionPolicy.RUNTIME)
+    @MustBeDocumented
+    @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
     annotation class ContGetter
     interface Indexable<R : IndexContainer?, T : Indexable<R, T>?> {
         fun getCont(): R {
-            return getID()!!.getCont() as R
+            return getID().getCont() as R
         }
 
-        fun getID(): PackData.Identifier<T>?
+        fun getID(): PackData.Identifier<T>
     }
 
-    @Documented
-    @Retention(RetentionPolicy.RUNTIME)
+    @MustBeDocumented
+    @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.CLASS)
-    annotation class IndexCont(val value: KClass<out IndexContainer?>)
-    interface Reductor<R, T> {
+    annotation class IndexCont(val value: KClass<out IndexContainer>)
+
+    fun interface Reductor<R, T> {
         fun reduce(r: R, t: T): R
     }
 
-    fun getID(): String?
-    fun <R> getList(cls: Class<*>?, func: Reductor<R, FixIndexMap<*>?>?, def: R): R
-    fun <T : R?, R : Indexable<*, R>?> getNextID(cls: Class<T>?): PackData.Identifier<R>? {
-        val id = getList(cls, Reductor<Int, FixIndexMap<*>> { r: Int?, l: FixIndexMap<*> -> l.nextInd() }, 0)
+    fun getID(): String
+
+    fun <R> getList(cls: Class<*>, func: Reductor<R, FixIndexMap<*>>, def: R): R
+
+    fun <T : R, R : Indexable<*, R>> getNextID(cls: Class<T>): PackData.Identifier<R> {
+        val id = getList(cls, Reductor<Int, FixIndexMap<*>> { r: Int, l: FixIndexMap<*> -> l.nextInd() }, 0)
         return PackData.Identifier(getID(), cls, id)
     }
 }

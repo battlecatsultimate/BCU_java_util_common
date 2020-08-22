@@ -34,17 +34,18 @@ object CommonStatic {
 
     @StaticPermitted(Admin.StaticPermitted.Type.ENV)
     var ctx: Context? = null
+
     fun getBCAssets(): BCAuxAssets {
-        return UserProfile.Companion.getStatic<BCAuxAssets>("BCAuxAssets", Supplier { BCAuxAssets() })
+        return UserProfile.Companion.getStatic<BCAuxAssets>("BCAuxAssets", {BCAuxAssets()} )
     }
 
     fun getConfig(): Config {
-        return UserProfile.Companion.getStatic<Config>("config", Supplier { Config() })
+        return UserProfile.Companion.getStatic<Config>("config", {Config()})
     }
 
     fun isInteger(str: String): Boolean {
-        for (i in 0 until str.length) {
-            if (!Character.isDigit(str[i])) {
+        for (element in str) {
+            if (!Character.isDigit(element)) {
                 return false
             }
         }
@@ -52,19 +53,17 @@ object CommonStatic {
     }
 
     fun parseIntN(str: String): Int {
-        val ans: Int
-        ans = try {
+        return try {
             parseIntsN(str)[0]
         } catch (e: Exception) {
             -1
         }
-        return ans
     }
 
     fun parseIntsN(str: String): IntArray {
         val lstr = ArrayList<String>()
         var t = -1
-        for (i in 0 until str.length) if (t == -1) {
+        for (i in str.indices) if (t == -1) {
             if (Character.isDigit(str[i]) || str[i] == '-' || str[i] == '+') t = i
         } else if (!Character.isDigit(str[i])) {
             lstr.add(str.substring(t, i))
@@ -81,19 +80,17 @@ object CommonStatic {
     }
 
     fun parseLongN(str: String): Long {
-        val ans: Long
-        ans = try {
+        return try {
             parseLongsN(str)[0]
         } catch (e: Exception) {
             -1
         }
-        return ans
     }
 
     fun parseLongsN(str: String): LongArray {
         val lstr = ArrayList<String>()
         var t = -1
-        for (i in 0 until str.length) if (t == -1) {
+        for (i in str.indices) if (t == -1) {
             if (Character.isDigit(str[i]) || str[i] == '-' || str[i] == '+') t = i
         } else if (!Character.isDigit(str[i])) {
             lstr.add(str.substring(t, i))
@@ -132,13 +129,13 @@ object CommonStatic {
         }
     }
 
-    class BCAuxAssets {
+    class BCAuxAssets() {
         // Res resources
         var slot: Array<VImg?> = arrayOfNulls<VImg>(3)
-        var ico: Array<Array<VImg>> = arrayOfNulls<Array<VImg>>(2)
-        var num: Array<Array<VImg?>> = Array<Array<VImg?>>(9) { arrayOfNulls<VImg>(11) }
-        var battle: Array<Array<VImg>> = arrayOfNulls<Array<VImg>>(3)
-        var icon: Array<Array<VImg>> = arrayOfNulls<Array<VImg>>(4)
+        var ico: Array<Array<VImg>?> = arrayOfNulls<Array<VImg>>(2)
+        var num: Array<Array<VImg?>?> = Array<Array<VImg?>?>(9) { arrayOfNulls<VImg>(11) }
+        var battle: Array<Array<VImg>?> = arrayOfNulls<Array<VImg>>(3)
+        var icon: Array<Array<VImg>?> = arrayOfNulls<Array<VImg>>(4)
 
         // Background resources
         var ewavm: MaModel? = null
@@ -154,9 +151,9 @@ object CommonStatic {
         val ATKORB: Map<Int, List<Int>> = TreeMap<Int, List<Int>>()
         val RESORB: Map<Int, List<Int>> = TreeMap<Int, List<Int>>()
         val DATA: Map<Int, Int> = HashMap()
-        var TYPES: Array<FakeImage>
-        var TRAITS: Array<FakeImage>
-        var GRADES: Array<FakeImage>
+        var TYPES: Array<FakeImage>? = null
+        var TRAITS: Array<FakeImage>? = null
+        var GRADES: Array<FakeImage>? = null
 
         // NyCastle
         val main: Array<Array<VImg?>> = Array<Array<VImg?>>(3) { arrayOfNulls<VImg>(NyCastle.Companion.TOT) }
@@ -166,9 +163,9 @@ object CommonStatic {
         val effas: EffAnimStore = EffAnimStore()
 
         // Combo
-        val combos: Array<Array<Combo>> = arrayOfNulls<Array<Combo>>(Data.Companion.C_TOT)
+        val combos: Array<Array<Combo>?> = arrayOfNulls<Array<Combo>>(Data.Companion.C_TOT)
         val values = Array(Data.Companion.C_TOT) { IntArray(5) }
-        var filter: Array<IntArray>
+        var filter: Array<IntArray>? = null
 
         // Form cuts
         var unicut: ImgCut? = null
@@ -179,7 +176,7 @@ object CommonStatic {
     }
 
     @JsonClass(noTag = NoTag.LOAD)
-    class Config {
+    class Config() {
         // ImgCore
         var deadOpa = 10
         var fullOpa = 90
@@ -190,6 +187,7 @@ object CommonStatic {
 
         // Lang
         var lang = 0
+
     }
 
     interface EditLink {
@@ -224,8 +222,8 @@ object CommonStatic {
     }
 
     interface ImgWriter {
-        fun saveFile(f: File?): String?
-        fun writeImg(img: FakeImage?): String?
+        fun saveFile(f: File?): String
+        fun writeImg(img: FakeImage?): String
         fun writeImgOptional(img: VImg?): String?
 
         companion object {
@@ -246,8 +244,8 @@ object CommonStatic {
                 return true
             }
 
-            fun writeImg(os: OutStream, w: ImgWriter?, img: FakeImage?): Boolean {
-                if (w != null) os.writeString(w.writeImg(img)) else try {
+            fun writeImg(os: OutStream, w: ImgWriter?, img: FakeImage): Boolean {
+                if (w != null) os.writeString(w!!.writeImg(img)) else try {
                     val baos = ByteArrayOutputStream()
                     FakeImage.Companion.write(img, "PNG", baos)
                     os.writeBytesI(baos.toByteArray())

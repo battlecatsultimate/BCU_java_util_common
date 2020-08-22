@@ -36,7 +36,7 @@ interface OutStream {
     fun writeString(str: String)
 
     companion object {
-        fun getIns(): OutStream? {
+        fun getIns(): OutStream {
             return OutStreamDef()
         }
     }

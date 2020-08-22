@@ -15,13 +15,13 @@ interface FileData {
     fun getBytes(): ByteArray? {
         return try {
             val ans = ByteArray(size())
-            val `is` = getStream()
-            val r = `is`.read(ans)
-            `is`.close()
-            if (r != size()) CommonStatic.ctx.printErr(ErrType.FATAL, "failed to read data")
+            val stream = getStream()
+            val r = stream.read(ans)
+            stream.close()
+            if (r != size()) CommonStatic.ctx!!.printErr(ErrType.FATAL, "failed to read data")
             ans
         } catch (e: Exception) {
-            CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read data")
+            CommonStatic.ctx!!.noticeErr(e, ErrType.FATAL, "failed to read data")
             null
         }
     }
@@ -39,7 +39,7 @@ interface FileData {
             reader.close()
             ans
         } catch (e: Exception) {
-            CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read lines")
+            CommonStatic.ctx!!.noticeErr(e, ErrType.FATAL, "failed to read lines")
             null
         }
     }
@@ -50,7 +50,7 @@ interface FileData {
 internal interface ByteData : FileData {
     override fun getBytes(): ByteArray?
     override fun getImg(): FakeImage {
-        return Data.Companion.err<FakeImage>(SupExc<FakeImage> { FakeImage.Companion.read(bytes) })
+        return Data.err<FakeImage>( {(void)->FakeImage.Companion.read(bytes)})
     }
 
     override fun getStream(): InputStream {

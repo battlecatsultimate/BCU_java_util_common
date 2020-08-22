@@ -6,16 +6,17 @@ import java.io.File
 import java.io.IOException
 
 interface Context {
+
     enum class ErrType {
         FATAL, ERROR, WARN, INFO, NEW, CORRUPT
     }
 
-    interface RunExc {
+    fun interface RunExc {
         @Throws(Exception::class)
         fun run()
     }
 
-    interface SupExc<T> {
+    fun interface SupExc<T> {
         @Throws(Exception::class)
         fun get(): T
     }
