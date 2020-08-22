@@ -61,17 +61,17 @@ class AtkDataModel : Data, MaskAtk, BasedCopable<AtkDataModel?, CustomEntity?> {
         str = ce.getAvailable("copied")
         val dat: Array<IntArray?> = me.rawAtkData()
         val am: MaskAtk = me.getAtkModel(i)
-        if (dat[i]!![2] == 1) proc = am!!.getProc().clone()
-        ld0 = am!!.getShortPoint()
-        ld1 = am!!.getLongPoint()
+        if (dat[i]!![2] == 1) proc = am.getProc().clone()
+        ld0 = am.getShortPoint()
+        ld1 = am.getLongPoint()
         pre = dat[i]!![1]
         atk = dat[i]!![0]
-        range = am!!.isRange()
-        dire = am!!.getDire()
-        count = am!!.loopCount()
-        targ = am!!.getTarget()
-        alt = am!!.getAltAbi()
-        move = am!!.getMove()
+        range = am.isRange()
+        dire = am.getDire()
+        count = am.loopCount()
+        targ = am.getTarget()
+        alt = am.getAltAbi()
+        move = am.getMove()
     }
 
     override fun clone(): AtkDataModel {

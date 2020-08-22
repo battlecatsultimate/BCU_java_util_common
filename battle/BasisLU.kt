@@ -43,7 +43,7 @@ class BasisLU : Basis, Copable<BasisLU?>, BattleStatic {
         t = Treasure(this, bs.t())
         lu = LineUp(bl!!.lu)
         name = "lineup " + bs.lb.size
-        nyc = bl!!.nyc.clone()
+        nyc = bl.nyc.clone()
     }
 
     private constructor(ver: Int, `is`: InStream) {

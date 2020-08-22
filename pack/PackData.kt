@@ -271,8 +271,7 @@ abstract class PackData : IndexContainer {
 
         @JCConstructor
         @Deprecated("")
-        constructor() {
-        }
+        constructor()
 
         constructor(id: String?) {
             BCU_VERSION = AssetLoader.CORE_VER

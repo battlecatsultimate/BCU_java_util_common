@@ -45,7 +45,7 @@ object Main {
             if (args[1] == "proc") {
                 val f = Main.fix(args[2])
                 val e: JsonElement = JsonEncoder.Companion.encode(Proc.Companion.blank())
-                e.getAsJsonObject().add("context", JsonEncoder.Companion.encode(Formatter.Context()))
+                e.asJsonObject.add("context", JsonEncoder.Companion.encode(Formatter.Context()))
                 val str: String = e.toString()
                 Files.write(f.toPath(), Arrays.asList<String>(str))
                 println("file generated")
@@ -64,7 +64,7 @@ object Main {
             val locale: JsonElement = JsonParser.parseReader(Files.newBufferedReader(Main.parse(args[1])))
             val jeproc: JsonElement = JsonParser.parseReader(Files.newBufferedReader(Main.parse(args[2])))
             var ctx: Formatter.Context? = null
-            ctx = if (jeproc.getAsJsonObject().has("context")) JsonDecoder.Companion.decode<Formatter.Context>(jeproc.getAsJsonObject().get("context"), Formatter.Context::class.java) else Formatter.Context()
+            ctx = if (jeproc.asJsonObject.has("context")) JsonDecoder.Companion.decode<Formatter.Context>(jeproc.asJsonObject.get("context"), Formatter.Context::class.java) else Formatter.Context()
             val item: ProcItem = JsonDecoder.Companion.decode<Proc>(jeproc, Proc::class.java).get(args[3])
             val lang: ProcLang = JsonDecoder.Companion.decode<ProcLang>(locale, ProcLang::class.java)
             val pattern: String = lang.get(args[3])!!.format

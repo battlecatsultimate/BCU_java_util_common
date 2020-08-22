@@ -34,7 +34,7 @@ open class Limit
         @JsonField
         var name = ""
 
-        constructor() {}
+        constructor()
 
         @Deprecated("")
         constructor(mc: UserPack, `is`: InStream) {

@@ -191,7 +191,7 @@ class UserProfile private constructor() {
             val r: Reader = FileReader(f)
             val elem: JsonElement = JsonParser.parseReader(r)
             r.close()
-            val desc: PackDesc = JsonDecoder.Companion.decode<PackDesc>(elem.getAsJsonObject().get("desc"), PackDesc::class.java)
+            val desc: PackDesc = JsonDecoder.Companion.decode<PackDesc>(elem.asJsonObject.get("desc"), PackDesc::class.java)
             return UserPack(Workspace(folder.name), desc, elem)
         }
 

@@ -46,7 +46,7 @@ abstract class AnimD<A : AnimD<A, T>?, T>(protected val str: String) : AnimI<A, 
 
     fun reorderModel(inds: IntArray) {
         for (ints in mamodel!!.parts) if (ints != null && ints[0] >= 0) ints[0] = inds[ints[0]]
-        for (ma in anims) for (part in ma.parts) part!!.ints[0] = inds[part!!.ints[0]]
+        for (ma in anims) for (part in ma.parts) part!!.ints[0] = inds[part.ints[0]]
     }
 
     open fun revert() {
@@ -78,7 +78,7 @@ abstract class AnimD<A : AnimD<A, T>?, T>(protected val str: String) : AnimI<A, 
         for (ma in anims) {
             for (p in ma.parts) {
                 p!!.check(this)
-                p!!.validate()
+                p.validate()
             }
             ma.validate()
         }

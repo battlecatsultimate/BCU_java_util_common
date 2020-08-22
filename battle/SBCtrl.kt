@@ -31,7 +31,7 @@ class SBCtrl : BattleField {
     }
 
     /** process the user action  */
-    protected override fun actions() {
+    override fun actions() {
         if (sb.ebase.health <= 0) return
         var rec = 0
         if ((keys.pressed(-1, 0) || action.contains(-1)) && act_mon()) {

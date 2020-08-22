@@ -29,7 +29,7 @@ abstract class EAnimI(ia: AnimI<*, *>, mm: MaModel) : BattleObj() {
 
     abstract fun setTime(value: Int)
     abstract fun update(b: Boolean)
-    protected override fun performDeepCopy() {
+    override fun performDeepCopy() {
         (copy as EAnimI).organize()
     }
 
@@ -37,7 +37,7 @@ abstract class EAnimI(ia: AnimI<*, *>, mm: MaModel) : BattleObj() {
         sort(order, 0, order.size - 1)
     }
 
-    protected override fun terminate() {
+    override fun terminate() {
         copy = null
     }
 

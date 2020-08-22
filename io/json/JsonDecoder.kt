@@ -39,7 +39,7 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
         private var current: JsonDecoder
         @Throws(Exception::class)
         fun decode(elem: JsonElement, cls: Class<*>, par: JsonDecoder?): Any? {
-            if (elem.isJsonNull()) return null
+            if (elem.isJsonNull) return null
             if (JsonElement::class.java.isAssignableFrom(cls)) return elem
             val dec = REGISTER[cls]
             if (dec != null) return dec.decode(elem)
@@ -64,7 +64,7 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
             // fill existing object
             if (par != null && par.curjfld!!.gen() == GenType.FILL) {
                 val `val` = par.curfld!![par.obj]
-                return if (cls.getAnnotation(JsonClass::class.java) != null) inject(par, elem.getAsJsonObject(), cls, `val`) else `val`
+                return if (cls.getAnnotation(JsonClass::class.java) != null) inject(par, elem.asJsonObject, cls, `val`) else `val`
             }
             // generator
             if (par != null && par.curjfld!!.gen() == GenType.GEN) {
@@ -75,7 +75,7 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
                     for (ci in cls.declaredConstructors) if (ci.parameterCount == 1 && ci.parameters[0].type.isAssignableFrom(ccls)) cst = ci
                     if (cst == null) throw JsonException(JsonException.Type.FUNC, null, "no constructor found: $cls")
                     val `val` = cst.newInstance(par.obj)
-                    return inject(par, elem.getAsJsonObject(), cls, `val`)
+                    return inject(par, elem.asJsonObject, cls, `val`)
                 }
                 // functional generator
                 val m = ccls.getMethod(par.curjfld!!.generator(), Class::class.java, JsonElement::class.java)
@@ -91,25 +91,25 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
 
         @Throws(JsonException::class)
         fun getBoolean(elem: JsonElement): Boolean {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isBoolean()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not boolean")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isBoolean) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not boolean")
             return elem.getAsBoolean()
         }
 
         @Throws(JsonException::class)
         fun getByte(elem: JsonElement): Byte {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isNumber()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isNumber) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
             return elem.getAsByte()
         }
 
         @Throws(JsonException::class)
         fun getDouble(elem: JsonElement): Double {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isNumber()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isNumber) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
             return elem.getAsDouble()
         }
 
         @Throws(JsonException::class)
         fun getFloat(elem: JsonElement): Float {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isNumber()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isNumber) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
             return elem.getAsFloat()
         }
 
@@ -119,55 +119,55 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
 
         @Throws(JsonException::class)
         fun getInt(elem: JsonElement): Int {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isNumber()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isNumber) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
             return elem.getAsInt()
         }
 
         @Throws(JsonException::class)
         fun getLong(elem: JsonElement): Long {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isNumber()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isNumber) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
             return elem.getAsLong()
         }
 
         @Throws(JsonException::class)
         fun getShort(elem: JsonElement): Short {
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isNumber()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isNumber) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not number")
             return elem.getAsShort()
         }
 
         @Throws(JsonException::class)
         fun getString(elem: JsonElement): String? {
-            if (elem.isJsonNull()) return null
-            if (elem.isJsonArray()) {
+            if (elem.isJsonNull) return null
+            if (elem.isJsonArray) {
                 var ans = ""
-                val arr: JsonArray = elem.getAsJsonArray()
-                for (i in 0 until arr.size()) ans += arr.get(i).getAsString()
+                val arr: JsonArray = elem.asJsonArray
+                for (i in 0 until arr.size()) ans += arr.get(i).asString
                 return ans
             }
-            if (!elem.isJsonPrimitive() || !(elem as JsonPrimitive).isString()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not string")
+            if (!elem.isJsonPrimitive || !(elem as JsonPrimitive).isString) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not string")
             return elem.getAsString()
         }
 
         @Throws(Exception::class)
         fun <T> inject(elem: JsonElement, cls: Class<T>, pre: T): T? {
-            return inject(null, elem.getAsJsonObject(), cls, pre) as T?
+            return inject(null, elem.asJsonObject, cls, pre) as T?
         }
 
         @Throws(Exception::class)
         protected fun decodeList(elem: JsonElement, cls: Class<*>, par: JsonDecoder?): List<Any?>? {
-            if (par!!.curjfld == null || par.curjfld.generic().size != 1) throw JsonException(JsonException.Type.TAG, null, "generic data structure requires typeProvider tag")
-            if (elem.isJsonNull()) return null
+            if (par!!.curjfld == null || par.curjfld.generic.size != 1) throw JsonException(JsonException.Type.TAG, null, "generic data structure requires typeProvider tag")
+            if (elem.isJsonNull) return null
             val `val` = cls.newInstance() as MutableList<Any?>
-            if (elem.isJsonObject() && par.curjfld.usePool()) {
-                val pool: JsonArray = elem.getAsJsonObject().get("pool").getAsJsonArray()
-                val data: JsonArray = elem.getAsJsonObject().get("data").getAsJsonArray()
+            if (elem.isJsonObject && par.curjfld.usePool) {
+                val pool: JsonArray = elem.asJsonObject.get("pool").asJsonArray
+                val data: JsonArray = elem.asJsonObject.get("data").asJsonArray
                 val handler = JsonField.Handler(pool, null, par)
                 val n: Int = data.size()
-                for (i in 0 until n) `val`.add(handler[data.get(i).getAsInt()])
+                for (i in 0 until n) `val`.add(handler[data.get(i).asInt])
                 return `val`
             }
-            if (!elem.isJsonArray()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
-            val jarr: JsonArray = elem.getAsJsonArray()
+            if (!elem.isJsonArray) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
+            val jarr: JsonArray = elem.asJsonArray
             val n: Int = jarr.size()
             for (i in 0 until n) {
                 `val`.add(decode(jarr.get(i), par.curjfld.generic().get(0), par))
@@ -179,17 +179,17 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
         private fun decodeArray(elem: JsonElement, cls: Class<*>, par: JsonDecoder?): Any {
             val ccls = cls.componentType
             val jf: JsonField? = par?.curjfld
-            if (elem.isJsonObject() && jf != null && jf.usePool()) {
-                val pool: JsonArray = elem.getAsJsonObject().get("pool").getAsJsonArray()
-                val data: JsonArray = elem.getAsJsonObject().get("data").getAsJsonArray()
+            if (elem.isJsonObject && jf != null && jf.usePool()) {
+                val pool: JsonArray = elem.asJsonObject.get("pool").asJsonArray
+                val data: JsonArray = elem.asJsonObject.get("data").asJsonArray
                 val handler = JsonField.Handler(pool, ccls, par)
                 val n: Int = data.size()
                 val arr = getArray(ccls, n, par)
-                for (i in 0 until n) Array.set(arr, i, handler[data.get(i).getAsInt()])
+                for (i in 0 until n) Array.set(arr, i, handler[data.get(i).asInt])
                 return arr
             }
-            if (!elem.isJsonArray()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
-            val jarr: JsonArray = elem.getAsJsonArray()
+            if (!elem.isJsonArray) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
+            val jarr: JsonArray = elem.asJsonArray
             val n: Int = jarr.size()
             val arr = getArray(ccls, n, par)
             for (i in 0 until n) Array.set(arr, i, decode(jarr.get(i), ccls, par))
@@ -199,13 +199,13 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
         @Throws(Exception::class)
         private fun decodeMap(elem: JsonElement, cls: Class<*>, par: JsonDecoder?): Map<Any?, Any?>? {
             if (par!!.curjfld == null || par.curjfld.generic().size != 2) throw JsonException(JsonException.Type.TAG, null, "generic data structure requires typeProvider tag")
-            if (elem.isJsonNull()) return null
-            if (!elem.isJsonArray()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
-            val jarr: JsonArray = elem.getAsJsonArray()
+            if (elem.isJsonNull) return null
+            if (!elem.isJsonArray) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
+            val jarr: JsonArray = elem.asJsonArray
             val n: Int = jarr.size()
             val `val` = cls.newInstance() as MutableMap<Any?, Any?>
             for (i in 0 until n) {
-                val obj: JsonObject = jarr.get(i).getAsJsonObject()
+                val obj: JsonObject = jarr.get(i).asJsonObject
                 val key = decode(obj.get("key"), par.curjfld.generic().get(0), par)
                 par.index = 1
                 val ent = decode(obj.get("val"), par.curjfld.generic().get(1), par)
@@ -217,9 +217,9 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
 
         @Throws(Exception::class)
         private fun decodeObject(elem: JsonElement, cls: Class<*>, par: JsonDecoder?): Any? {
-            if (elem.isJsonNull()) return null
-            if (!elem.isJsonObject()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not object for $cls")
-            val jobj: JsonObject = elem.getAsJsonObject()
+            if (elem.isJsonNull) return null
+            if (!elem.isJsonObject) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not object for $cls")
+            val jobj: JsonObject = elem.asJsonObject
             val jc: JsonClass = cls.getAnnotation(JsonClass::class.java)
             return if (jc.read() == RType.FILL) throw JsonException(JsonException.Type.FUNC, null, "RType FILL requires GenType FILL or GEN") else if (jc.read() == RType.DATA) inject(par, jobj, cls, null) else if (jc.read() == RType.MANUAL) {
                 val func: String = jc.generator()
@@ -232,9 +232,9 @@ class JsonDecoder private constructor(parent: JsonDecoder?, json: JsonObject, cl
         @Throws(Exception::class)
         private fun decodeSet(elem: JsonElement, cls: Class<*>, par: JsonDecoder?): Set<Any?>? {
             if (par!!.curjfld == null || par.curjfld.generic().size != 1) throw JsonException(JsonException.Type.TAG, null, "generic data structure requires typeProvider tag")
-            if (elem.isJsonNull()) return null
-            if (!elem.isJsonArray()) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
-            val jarr: JsonArray = elem.getAsJsonArray()
+            if (elem.isJsonNull) return null
+            if (!elem.isJsonArray) throw JsonException(JsonException.Type.TYPE_MISMATCH, elem, "this element is not array")
+            val jarr: JsonArray = elem.asJsonArray
             val n: Int = jarr.size()
             val `val` = cls.newInstance() as MutableSet<Any?>
             for (i in 0 until n) {

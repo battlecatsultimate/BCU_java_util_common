@@ -17,7 +17,7 @@ class EUnit(b: StageBasis, de: MaskUnit, ea: EAnimU?, d0: Double, level: Level?)
             }
             if (atk.origin.model is AtkModelUnit) {
                 // Warning : Eunit.e became public now
-                val unit = (atk.origin.model as AtkModelUnit).e as EUnit
+                val unit = atk.origin.model.e as EUnit
                 return unit.getOrbAtk(en.type, atk.matk)
             }
             return 0
@@ -75,7 +75,7 @@ class EUnit(b: StageBasis, de: MaskUnit, ea: EAnimU?, d0: Double, level: Level?)
             return 0
         }
         var ans = 0
-        for (line in level!!.orbs) {
+        for (line in level.orbs) {
             if (line.size == 0) continue
             if (line[Data.Companion.ORB_TYPE] == Data.Companion.ORB_RES || line[Data.Companion.ORB_TRAIT] and trait == 0) continue
             ans += orb.getAtk(line[Data.Companion.ORB_GRADE], matk)

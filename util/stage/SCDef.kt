@@ -39,8 +39,7 @@ class SCDef : Copable<SCDef?> {
         var mult_atk = 0
 
         @JCConstructor
-        constructor() {
-        }
+        constructor()
 
         constructor(arr: IntArray) {
             enemy = PackData.Identifier.Companion.parseInt<AbEnemy>(arr[E], Enemy::class.java)
@@ -81,7 +80,7 @@ class SCDef : Copable<SCDef?> {
     @JsonField
     var sdef = 0
 
-    protected constructor() {}
+    protected constructor()
     protected constructor(`is`: InStream, ver: Int) {
         if (ver >= 305) {
             val n: Int = `is`.nextByte()
@@ -259,7 +258,7 @@ class SCDef : Copable<SCDef?> {
                     n = `is`.nextInt()
                     for (i in 0 until n) {
                         val scg: SCGroup = SCGroup.Companion.zread(`is`)
-                        scd.sub.set(scg!!.id, scg)
+                        scd.sub.set(scg.id, scg)
                     }
                     return scd
                 }

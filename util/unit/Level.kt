@@ -9,7 +9,7 @@ class Level : BattleStatic {
     private var lvs = intArrayOf(1, 0, 0, 0, 0, 0)
     private var orbs: Array<IntArray?>? = null
 
-    constructor() {}
+    constructor()
     constructor(lvs: IntArray) {
         if (lvs.size == 6) {
             this.lvs = lvs

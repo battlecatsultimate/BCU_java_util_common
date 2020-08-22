@@ -49,7 +49,7 @@ class Unit : Data, Comparable<Unit?>, Indexable<PackData?, Unit?> {
 
         fun getExplanation(): Array<String?> {
             val exp: Array<String?> = MultiLangCont.Companion.getStatic().CFEXP.getCont(this)
-            return exp ?: arrayOfNulls(0)
+            return exp
         }
     }
 

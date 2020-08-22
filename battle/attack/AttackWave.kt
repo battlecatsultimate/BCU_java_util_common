@@ -34,7 +34,7 @@ class AttackWave : AttackAb {
             if (e.isBase()) continue
             if (e is Entity) {
                 e.damaged(this)
-                incl!!.add(e as Entity)
+                incl!!.add(e)
             }
         }
     }

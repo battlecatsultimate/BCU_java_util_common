@@ -166,7 +166,7 @@ object Editors {
         }
 
         init {
-            cls = Data.Companion.err<Field>(SupExc<Field> { Proc::class.java.getDeclaredField(proc) }).getType()
+            cls = Data.Companion.err<Field>(SupExc<Field> { Proc::class.java.getDeclaredField(proc) }).type
             callback = cb
             ctrl = map()[proc]!!
             val item: ItemLang = ProcLang.Companion.get()!!.get(proc)

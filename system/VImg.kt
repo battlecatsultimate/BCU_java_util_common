@@ -65,7 +65,7 @@ class VImg(o: Any?) : ImgCore() {
     }
 
     init {
-        file = if (o is String) VFile.Companion.getFile(o as String?) else if (o is VFile<*>) o as VFile<*>? else null
+        file = if (o is String) VFile.Companion.getFile(o as String?) else if (o is VFile<*>) o else null
         if (file == null) bimg = Data.Companion.err<FakeImage>(SupExc<FakeImage> { FakeImage.Companion.read(o) })
         loaded = bimg != null
     }

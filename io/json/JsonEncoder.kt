@@ -736,7 +736,7 @@ class JsonEncoder private constructor(private val par: JsonEncoder?, private val
         @Throws(Exception::class)
         private fun encode(obj: Any?, par: JsonEncoder?): JsonElement {
             if (obj == null) return JsonNull.INSTANCE
-            if (obj is JsonElement) return obj as JsonElement
+            if (obj is JsonElement) return obj
             if (obj is Number) return JsonPrimitive(obj as Number?)
             if (obj is Boolean) return JsonPrimitive(obj as Boolean?)
             if (obj is String) return JsonPrimitive(obj as String?)
@@ -777,10 +777,10 @@ class JsonEncoder private constructor(private val par: JsonEncoder?, private val
             if (par != null && par.curjfld != null) {
                 val jfield: JsonField? = par.curjfld
                 if (jfield!!.ser() == SerType.FUNC) {
-                    if (jfield!!.serializer().length == 0) throw JsonException(JsonException.Type.FUNC, null, "no serializer function")
-                    val m = par.obj.javaClass.getMethod(jfield!!.serializer(), cls)
+                    if (jfield.serializer().length == 0) throw JsonException(JsonException.Type.FUNC, null, "no serializer function")
+                    val m = par.obj.javaClass.getMethod(jfield.serializer(), cls)
                     return encode(m.invoke(par.obj, obj))
-                } else if (jfield!!.ser() == SerType.CLASS) {
+                } else if (jfield.ser() == SerType.CLASS) {
                     val cjc: JsonClass = cls.getAnnotation(JsonClass::class.java)
                     if (cjc == null || cjc.serializer().length == 0) throw JsonException(JsonException.Type.FUNC, null, "no serializer function")
                     val func: String = cjc.serializer()

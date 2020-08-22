@@ -87,8 +87,7 @@ class AnimCE : AnimCI {
 
     /** for conversion only  */
     @Deprecated("")
-    constructor(al: AnimLoader) : super(al) {
-    }
+    constructor(al: AnimLoader) : super(al)
 
     constructor(st: String) : super(AnimCELoader(st)) {
         id = ResourceLocation("_local", st)
@@ -253,7 +252,7 @@ class AnimCE : AnimCI {
     }
 
     fun resize(d: Double) {
-        for (l in imgcut!!.cuts) for (i in l!!.indices) (l!![i] *= d).toInt()
+        for (l in imgcut!!.cuts) for (i in l!!.indices) (l[i] *= d).toInt()
         (mamodel!!.parts.get(0)!!.get(8) /= d).toInt()
         (mamodel!!.parts.get(0)!!.get(9) /= d).toInt()
         for (l in mamodel!!.parts) {
@@ -262,7 +261,7 @@ class AnimCE : AnimCI {
             (l!![6] *= d).toInt()
             (l!![7] *= d).toInt()
         }
-        for (ma in anims) for (p in ma.parts) if (p!!.ints[1] >= 4 && p!!.ints[1] <= 7) for (x in p!!.moves) (x[1] *= d).toInt()
+        for (ma in anims) for (p in ma.parts) if (p!!.ints[1] >= 4 && p.ints[1] <= 7) for (x in p.moves) (x[1] *= d).toInt()
         unSave("resize")
     }
 
@@ -344,7 +343,7 @@ class AnimCE : AnimCI {
         history.peek().mms = mms
     }
 
-    protected override fun partial() {
+    override fun partial() {
         super.partial()
         standardize()
     }
@@ -372,15 +371,15 @@ class AnimCE : AnimCI {
         con[2] = con[3]
         val std: IntArray = mamodel!!.ints
         for (data in mamodel!!.parts) {
-            data!![8] = data!![8] * 1000 / std[0]
-            data!![9] = data!![9] * 1000 / std[0]
-            data!![10] = data!![10] * 3600 / std[1]
-            data!![11] = data!![11] * 1000 / std[2]
+            data!![8] = data[8] * 1000 / std[0]
+            data[9] = data[9] * 1000 / std[0]
+            data[10] = data[10] * 3600 / std[1]
+            data[11] = data[11] * 1000 / std[2]
         }
         for (ma in anims) for (p in ma.parts) {
-            if (p!!.ints[1] >= 8 && p!!.ints[1] <= 10) for (data in p!!.moves) data[1] = data[1] * 1000 / std[0]
-            if (p!!.ints[1] == 11) for (data in p!!.moves) data[1] = data[1] * 3600 / std[1]
-            if (p!!.ints[1] == 12) for (data in p!!.moves) data[1] = data[1] * 1000 / std[2]
+            if (p!!.ints[1] >= 8 && p.ints[1] <= 10) for (data in p.moves) data[1] = data[1] * 1000 / std[0]
+            if (p.ints[1] == 11) for (data in p.moves) data[1] = data[1] * 3600 / std[1]
+            if (p.ints[1] == 12) for (data in p.moves) data[1] = data[1] * 1000 / std[2]
         }
         std[0] = 1000
         std[1] = 3600

@@ -28,7 +28,7 @@ abstract class ContWaveAb protected constructor(a: AttackWave, p: Double, ead: E
         if (t == Data.Companion.W_TIME) {
             atk.capture()
             for (e in atk.capt) if (e.getAbi() and Data.Companion.AB_WAVES > 0) {
-                if (e is Entity) (e as Entity).anim.getEff(Data.Companion.STPWAVE)
+                if (e is Entity) e.anim.getEff(Data.Companion.STPWAVE)
                 activate = false
                 return
             }

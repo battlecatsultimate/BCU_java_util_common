@@ -20,7 +20,7 @@ class AtkModelEnemy(ent: EEnemy, d0: Double) : AtkModelEntity(ent, d0) {
             var mult: Double = proc.mult * 0.01
             if (!conf.fix_buff) {
                 mult *= (e as EEnemy).mult
-                mula *= (e as EEnemy).mula
+                mula *= e.mula
             }
             var l0 = 0
             var l1 = 9
@@ -39,7 +39,7 @@ class AtkModelEnemy(ent: EEnemy, d0: Double) : AtkModelEntity(ent, d0) {
         }
     }
 
-    protected override fun getAttack(ind: Int, proc: Proc): Int {
+    override fun getAttack(ind: Int, proc: Proc): Int {
         var atk: Int = atks.get(ind)
         extraAtk(ind)
         if (abis.get(ind) == 1) setProc(ind, proc)
@@ -48,11 +48,11 @@ class AtkModelEnemy(ent: EEnemy, d0: Double) : AtkModelEntity(ent, d0) {
         return atk
     }
 
-    protected override fun getBaseAtk(ind: Int): Int {
+    override fun getBaseAtk(ind: Int): Int {
         return atks.get(ind)
     }
 
-    protected override fun getProc(ind: Int): Proc? {
+    override fun getProc(ind: Int): Proc? {
         return if (e.status.get(Data.Companion.P_CURSE).get(0) > 0 && e.status.get(Data.Companion.P_SEAL).get(0) == 0) cursed[ind] else super.getProc(ind)
     }
 

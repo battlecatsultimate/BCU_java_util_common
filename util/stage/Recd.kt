@@ -36,8 +36,7 @@ class Recd : Data {
     var st: Stage? = null
 
     @JCConstructor
-    constructor() {
-    }
+    constructor()
 
     constructor(blu: BasisLU?, sta: Stage?, stars: Int, con: IntArray, se: Long) {
         lu = blu

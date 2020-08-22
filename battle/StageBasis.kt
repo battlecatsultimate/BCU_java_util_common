@@ -154,7 +154,7 @@ class StageBasis(stage: EStage, bas: BasisLU, ints: IntArray, seed: Long) : Batt
         return false
     }
 
-    protected override fun performDeepCopy() {
+    override fun performDeepCopy() {
         super.performDeepCopy()
         for (er in rege) er.updateCopy(BattleObj.Companion.hardCopy(this) as StageBasis, BattleObj.Companion.hardCopy(er.map.get(this)))
     }

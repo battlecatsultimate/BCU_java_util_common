@@ -19,7 +19,7 @@ class ContWaveCanon(a: AttackWave, p: Double, private val canid: Int) : ContWave
         return 2.5
     }
 
-    protected override fun nextWave() {
+    override fun nextWave() {
         val np: Double = pos - 405
         ContWaveCanon(AttackWave(atk, np, Data.Companion.NYRAN.get(canid)), np, canid)
         CommonStatic.setSE(Data.Companion.SE_CANNON.get(canid).get(1))

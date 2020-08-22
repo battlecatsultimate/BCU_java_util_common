@@ -56,7 +56,7 @@ open class EAnimD<T>(ia: AnimI<*, T>, mm: MaModel, anim: MaAnim?) : EAnimI(ia, m
         ma!!.update(f, this, rotate)
     }
 
-    protected override fun performDeepCopy() {
+    override fun performDeepCopy() {
         super.performDeepCopy()
         (copy as EAnimD<*>).setTime(f)
     }

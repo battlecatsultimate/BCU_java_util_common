@@ -15,7 +15,7 @@ open class VFile<T : FileData?> : Comparable<VFile<T>?> {
     var mark = 0
 
     /** constructor for root directory  */
-    protected constructor(str: String) : this(null, str) {}
+    protected constructor(str: String) : this(null, str)
 
     /** constructor for directory  */
     constructor(par: VFile<T>?, str: String) {

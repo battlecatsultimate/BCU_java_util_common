@@ -56,7 +56,7 @@ internal open class Mirror : BattleField {
     }
 
     /** process the user action  */
-    protected override fun actions() {
+    override fun actions() {
         val rec = rl.get()
         if (rec and 1 > 0) act_mon()
         if (rec and 2 > 0) act_can()

@@ -98,10 +98,10 @@ open class FixIndexList<T>(cls: Class<T>?) : Data() {
     @Throws(Exception::class)
     fun zgen(e: JsonElement) {
         val cls = arr.javaClass.componentType as Class<T>
-        val jarr: JsonArray = e.getAsJsonArray()
+        val jarr: JsonArray = e.asJsonArray
         for (i in 0 until jarr.size()) {
-            val ji: JsonObject = jarr.get(i).getAsJsonObject()
-            val ind: Int = ji.get("ind").getAsInt()
+            val ji: JsonObject = jarr.get(i).asJsonObject
+            val ind: Int = ji.get("ind").asInt
             val `val`: T = JsonDecoder.Companion.decode(ji.get("val"), cls)
             this[ind] = `val`
         }

@@ -34,7 +34,7 @@ class AtkModelUnit(ent: Entity, d0: Double) : AtkModelEntity(ent, d0) {
         }
     }
 
-    protected override fun getAttack(ind: Int, proc: Proc): Int {
+    override fun getAttack(ind: Int, proc: Proc): Int {
         var atk: Int = atks.get(ind)
         if (abis.get(ind) == 1) {
             setProc(ind, proc)
@@ -46,11 +46,11 @@ class AtkModelUnit(ent: Entity, d0: Double) : AtkModelEntity(ent, d0) {
         return atk
     }
 
-    protected override fun getBaseAtk(ind: Int): Int {
+    override fun getBaseAtk(ind: Int): Int {
         return atks.get(ind)
     }
 
-    protected override fun getProc(ind: Int): Proc? {
+    override fun getProc(ind: Int): Proc? {
         return if (e.status.get(Data.Companion.P_SEAL).get(0) > 0) super.getProc(ind) else buffed[ind]
     }
 

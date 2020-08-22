@@ -27,7 +27,7 @@ class Formatter private constructor(private val str: String, private val obj: An
         @JsonField
         var useSecond = false
 
-        constructor() {}
+        constructor()
         constructor(ene: Boolean, sec: Boolean) {
             isEnemy = ene
             useSecond = sec

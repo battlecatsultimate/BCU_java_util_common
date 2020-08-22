@@ -63,7 +63,7 @@ class CharaGroup : Data, Indexable<PackData?, CharaGroup?>, Comparable<CharaGrou
     }
 
     fun allow(u: Unit?): Boolean {
-        return if (type == 0 && !set.contains(u) || type == 2 && set.contains(u)) false else true
+        return !(type == 0 && !set.contains(u) || type == 2 && set.contains(u))
     }
 
     fun combine(cg: CharaGroup): CharaGroup {

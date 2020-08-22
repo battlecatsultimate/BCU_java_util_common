@@ -133,11 +133,11 @@ abstract class AtkModelEntity protected constructor(val e: Entity, private val r
     companion object {
         fun getIns(e: Entity, d0: Double): AtkModelEntity? {
             if (e is EEnemy) {
-                val ee: EEnemy = e as EEnemy
+                val ee: EEnemy = e
                 return AtkModelEnemy(ee, d0)
             }
             if (e is EUnit) {
-                val eu: EUnit = e as EUnit
+                val eu: EUnit = e
                 return AtkModelUnit(eu, d0)
             }
             return null

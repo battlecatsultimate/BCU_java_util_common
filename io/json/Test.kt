@@ -824,8 +824,8 @@ object Test {
             @JsonField(generic = [Test.JsonTest_1.JsonB::class, Int::class], gen = GenType.GEN, generator = "gen", ser = SerType.FUNC, serializer = "ser")
             var list: HashMap<Test.JsonTest_1.JsonB, Int>? = null
             fun gen(cls: Class<*>, elem: JsonElement): Any? {
-                if (cls == Test.JsonTest_1.JsonB::class.java) return parent.list[elem.getAsString()]
-                return if (cls == Int::class.java) elem.getAsInt() * 10 else null
+                if (cls == Test.JsonTest_1.JsonB::class.java) return parent.list[elem.asString]
+                return if (cls == Int::class.java) elem.asInt * 10 else null
             }
 
             fun ser(b: Test.JsonTest_1.JsonB): Any {

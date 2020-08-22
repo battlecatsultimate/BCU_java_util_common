@@ -25,8 +25,7 @@ class Form : Animable<AnimU<*>?, UType?>, BasedCopable<Form?, Unit?> {
         var fid = 0
 
         @JCConstructor
-        constructor() {
-        }
+        constructor()
 
         @JCConstructor
         constructor(f: Form) {
@@ -99,7 +98,7 @@ class Form : Animable<AnimU<*>?, UType?>, BasedCopable<Form?, Unit?> {
 
     fun getExplanation(): Array<String?> {
         val exp: Array<String?> = MultiLangCont.Companion.getStatic().FEXP.getCont(this)
-        return exp ?: arrayOfNulls(0)
+        return exp
     }
 
     fun getPCoin(): PCoin? {

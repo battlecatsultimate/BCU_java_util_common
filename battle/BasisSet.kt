@@ -134,9 +134,9 @@ class BasisSet : Basis, Copable<BasisSet?> {
                 FileReader(f).use { r ->
                     val je: JsonElement = JsonParser.parseReader(r)
                     r.close()
-                    val jel: JsonElement = je.getAsJsonObject().get("list")
+                    val jel: JsonElement = je.asJsonObject.get("list")
                     JsonDecoder.Companion.decode<Array<BasisSet>>(jel, Array<BasisSet>::class.java)
-                    val cur: Int = je.getAsJsonObject().get("current").getAsInt()
+                    val cur: Int = je.asJsonObject.get("current").asInt
                     setCurrent(list()[cur])
                 }
             } catch (e: Exception) {

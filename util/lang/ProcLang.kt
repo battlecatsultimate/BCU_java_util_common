@@ -59,7 +59,7 @@ class ProcLang private constructor() {
 
         @JsonField(tag = "class", io = IOType.R)
         fun readClass(elem: JsonElement?) {
-            fill("", cls, if (elem == null) null else elem.getAsJsonObject())
+            fill("", cls, if (elem == null) null else elem.asJsonObject)
         }
 
         @JsonField(tag = "class", io = IOType.W)
@@ -107,7 +107,7 @@ class ProcLang private constructor() {
 
     private val map: MutableMap<String, ItemLang> = LinkedHashMap()
     operator fun get(i: Int): ItemLang {
-        return get(Proc::class.java.getDeclaredFields().get(i).getName())
+        return get(Proc::class.java.declaredFields.get(i).name)
     }
 
     operator fun get(str: String): ItemLang? {
@@ -116,7 +116,7 @@ class ProcLang private constructor() {
 
     fun ser(): JsonObject {
         val obj = JsonObject()
-        for (f in Proc::class.java.getDeclaredFields()) {
+        for (f in Proc::class.java.declaredFields) {
             val name = f.name
             obj.add(name, JsonEncoder.Companion.encode(map[name]))
         }
@@ -131,8 +131,8 @@ class ProcLang private constructor() {
         @Throws(Exception::class)
         fun gen(elem: JsonElement?): ProcLang {
             val ans = ProcLang()
-            val obj: JsonObject? = if (elem == null) null else elem.getAsJsonObject()
-            for (f in Proc::class.java.getDeclaredFields()) {
+            val obj: JsonObject? = if (elem == null) null else elem.asJsonObject
+            for (f in Proc::class.java.declaredFields) {
                 val name = f.name
                 val item = ItemLang(name, f.type)
                 if (obj != null && obj.has(name)) JsonDecoder.Companion.inject<ItemLang>(obj.get(name), ItemLang::class.java, item) else item.readClass(null)

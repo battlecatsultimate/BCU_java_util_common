@@ -53,11 +53,11 @@ class MultiLangCont<I, T> : CommonStatic.Lang() {
 
     companion object {
         operator fun get(o: Any): String? {
-            if (o is MapColc) return getStatic().MCNAME.getCont(o as MapColc)
-            if (o is StageMap) return getStatic().SMNAME.getCont(o as StageMap)
+            if (o is MapColc) return getStatic().MCNAME.getCont(o)
+            if (o is StageMap) return getStatic().SMNAME.getCont(o)
             if (o is Stage) return getStatic().STNAME.getCont(o)
             if (o is Form) return getStatic().FNAME.getCont(o)
-            return if (o is Enemy) getStatic().ENAME.getCont(o as Enemy) else null
+            return if (o is Enemy) getStatic().ENAME.getCont(o) else null
         }
 
         fun getStatic(): MultiLangStatics {

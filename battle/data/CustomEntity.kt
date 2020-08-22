@@ -32,10 +32,10 @@ abstract class CustomEntity : DataEntity() {
         var c = 1
         for (adm in atks!!) if (adm!!.pre > 0) {
             ans += temp / c
-            temp = if (adm!!.getDire() > 0) adm!!.atk else 0
+            temp = if (adm.getDire() > 0) adm.atk else 0
             c = 1
         } else {
-            temp += if (adm!!.getDire() > 0) adm!!.atk else 0
+            temp += if (adm.getDire() > 0) adm.atk else 0
             c++
         }
         ans += temp / c

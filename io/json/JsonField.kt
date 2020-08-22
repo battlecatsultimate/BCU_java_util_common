@@ -68,7 +68,7 @@ annotation class JsonField(val alias: Array<KClass<*>> = [], val block: Boolean 
     class Handler {
         val list: MutableList<Any?> = ArrayList()
 
-        constructor() {}
+        constructor()
         constructor(jarr: JsonArray, cls: Class<*>, dec: JsonDecoder) {
             var cls = cls
             val n: Int = jarr.size()
