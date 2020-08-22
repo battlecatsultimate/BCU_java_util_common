@@ -76,8 +76,9 @@ public class FixIndexList<T> extends Data {
 		}
 
 		public void reorder(int ori, int fin) {
-			if (ori < fin) {
+			if (fin > ori)
 				fin--;
+			if (ori < fin) {
 				int val = order[ori];
 				for (int i = ori; i < fin; i++)
 					order[i] = order[i + 1];
