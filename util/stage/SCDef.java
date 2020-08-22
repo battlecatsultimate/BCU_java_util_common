@@ -179,7 +179,7 @@ public class SCDef implements Copable<SCDef> {
     public Set<Enemy> getAllEnemy() {
         Set<Enemy> l = new TreeSet<>();
         for (Line dat : datas)
-            l.addAll(Identifier.getOr(dat.enemy).getPossible());
+            l.addAll(Identifier.getOr(dat.enemy, AbEnemy.class).getPossible());
         for (AbEnemy e : getSummon())
             l.addAll(e.getPossible());
         return l;

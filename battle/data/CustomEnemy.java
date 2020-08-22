@@ -62,7 +62,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
         Set<AbEnemy> ans = new TreeSet<>();
         for (AtkDataModel adm : atks)
             if (adm.proc.SUMMON.prob > 0)
-                ans.add((AbEnemy) Identifier.getOr(adm.proc.SUMMON.id));
+                ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
         return ans;
     }
 
