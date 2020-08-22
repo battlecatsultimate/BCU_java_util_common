@@ -1,6 +1,8 @@
-package common.io.assetsimportimport
+package common.io.assetsimport
 
-common.pack.Contextimport common.pack.UserProfileimport common.util.Data
+import common.pack.Context
+import common.pack.UserProfile
+import common.util.Data
 import java.io.Fileimport
 
 java.lang.Exceptionimport java.lang.annotation .Documentedimport java.lang.annotation .Retentionimport java.lang.annotation .RetentionPolicyimport java.lang.reflect.Fieldimport java.lang.reflect.Modifierimport java.util.*import java.util.function.Consumer
