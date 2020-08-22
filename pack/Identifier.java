@@ -103,7 +103,7 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
     @SuppressWarnings("unchecked")
     public T get() {
         IndexContainer cont = getCont();
-        return cont.getList(cls, (r, l) -> r == null ? l.get(id) : r, null);
+        return (T) cont.getList(cls, (r, l) -> r == null ? l.get(id) : r, null);
     }
 
     public IndexContainer getCont() {

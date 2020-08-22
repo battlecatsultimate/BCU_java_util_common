@@ -8,7 +8,7 @@ import common.util.anim.MaModel;
 
 public class WaveAnim extends AnimI<WaveAnim, WaveAnim.WaveType> {
 
-    public enum WaveType implements AnimType<WaveAnim, WaveType> {
+    public enum WaveType implements AnimI.AnimType<WaveAnim, WaveType> {
         DEF
     }
 
