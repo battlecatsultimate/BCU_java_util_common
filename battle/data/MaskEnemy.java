@@ -9,17 +9,17 @@ import java.util.TreeSet;
 
 public interface MaskEnemy extends MaskEntity {
 
-    double getDrop();
+	double getDrop();
 
-    @Override
-    Enemy getPack();
+	@Override
+	Enemy getPack();
 
-    int getStar();
+	int getStar();
 
-    default Set<AbEnemy> getSummon() {
-        return new TreeSet<AbEnemy>();
-    }
+	default Set<AbEnemy> getSummon() {
+		return new TreeSet<AbEnemy>();
+	}
 
-    double multi(Basis b);
+	double multi(Basis b);
 
 }

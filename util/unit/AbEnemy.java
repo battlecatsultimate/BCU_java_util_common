@@ -13,18 +13,18 @@ import java.util.Set;
 @IndexCont(PackData.class)
 public interface AbEnemy extends Comparable<AbEnemy>, Indexable<PackData, AbEnemy> {
 
-    @Override
+	@Override
 	default int compareTo(AbEnemy e) {
-        return getID().compareTo(e.getID());
-    }
+		return getID().compareTo(e.getID());
+	}
 
-    EEnemy getEntity(StageBasis sb, Object obj, double mul, double mul1, int d0, int d1, int m);
+	EEnemy getEntity(StageBasis sb, Object obj, double mul, double mul1, int d0, int d1, int m);
 
-    VImg getIcon();
+	VImg getIcon();
 
-    @Override
+	@Override
 	Identifier<AbEnemy> getID();
 
-    Set<Enemy> getPossible();
+	Set<Enemy> getPossible();
 
 }

@@ -9,120 +9,120 @@ import common.system.fake.FakeImage.Marker;
 
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
-    protected static class AnimCIKeeper implements AnimU.ImageKeeper {
+	protected static class AnimCIKeeper implements AnimU.ImageKeeper {
 
-        public final Source.AnimLoader loader;
-        private FakeImage num;
-        private boolean ediLoaded = false;
-        private VImg edi;
-        private VImg uni;
+		public final Source.AnimLoader loader;
+		private FakeImage num;
+		private boolean ediLoaded = false;
+		private VImg edi;
+		private VImg uni;
 
-        private AnimCIKeeper(Source.AnimLoader al) {
-            loader = al;
-        }
+		private AnimCIKeeper(Source.AnimLoader al) {
+			loader = al;
+		}
 
-        @Override
-        public VImg getEdi() {
-            if (ediLoaded)
-                return edi;
-            ediLoaded = true;
-            edi = loader.getEdi();
-            if (edi != null)
-                edi.mark(Marker.EDI);
-            return edi;
-        }
+		@Override
+		public VImg getEdi() {
+			if (ediLoaded)
+				return edi;
+			ediLoaded = true;
+			edi = loader.getEdi();
+			if (edi != null)
+				edi.mark(Marker.EDI);
+			return edi;
+		}
 
-        @Override
-        public ImgCut getIC() {
-            return loader.getIC();
-        }
+		@Override
+		public ImgCut getIC() {
+			return loader.getIC();
+		}
 
-        @Override
-        public MaAnim[] getMA() {
-            return loader.getMA();
-        }
+		@Override
+		public MaAnim[] getMA() {
+			return loader.getMA();
+		}
 
-        @Override
-        public MaModel getMM() {
-            return loader.getMM();
-        }
+		@Override
+		public MaModel getMM() {
+			return loader.getMM();
+		}
 
-        public ResourceLocation getName() {
-            return loader.getName();
-        }
+		public ResourceLocation getName() {
+			return loader.getName();
+		}
 
-        @Override
-        public FakeImage getNum() {
-            if (num != null && num.bimg() != null && num.isValid())
-                return num;
-            return num = loader.getNum();
-        }
+		@Override
+		public FakeImage getNum() {
+			if (num != null && num.bimg() != null && num.isValid())
+				return num;
+			return num = loader.getNum();
+		}
 
-        public int getStatus() {
-            return loader.getStatus();
-        }
+		public int getStatus() {
+			return loader.getStatus();
+		}
 
-        @Override
-        public VImg getUni() {
-            if (uni != null)
-                return uni;
-            uni = loader.getUni();
-            if (uni != null)
-                uni.mark(Marker.UNI);
-            else
-                uni = CommonStatic.getBCAssets().slot[0];
-            return uni;
-        }
+		@Override
+		public VImg getUni() {
+			if (uni != null)
+				return uni;
+			uni = loader.getUni();
+			if (uni != null)
+				uni.mark(Marker.UNI);
+			else
+				uni = CommonStatic.getBCAssets().slot[0];
+			return uni;
+		}
 
-        public void setEdi(VImg vedi) {
-            edi = vedi;
+		public void setEdi(VImg vedi) {
+			edi = vedi;
 
-            if (vedi != null)
-                vedi.mark(Marker.EDI);
+			if (vedi != null)
+				vedi.mark(Marker.EDI);
 
-            ediLoaded = true;
-        }
+			ediLoaded = true;
+		}
 
-        public void setNum(FakeImage fimg) {
-            num = fimg;
-        }
+		public void setNum(FakeImage fimg) {
+			num = fimg;
+		}
 
-        public void setUni(VImg vuni) {
-            uni = vuni;
-            uni.mark(Marker.UNI);
-        }
+		public void setUni(VImg vuni) {
+			uni = vuni;
+			uni.mark(Marker.UNI);
+		}
 
-        @Override
-        public void unload() {
-        }
+		@Override
+		public void unload() {
+		}
 
-    }
+	}
 
-    public ResourceLocation id;
+	public ResourceLocation id;
 
-    public AnimCI(Source.AnimLoader acl) {
-        super(new AnimCIKeeper(acl));
-        id = loader.getName();
-    }
+	public AnimCI(Source.AnimLoader acl) {
+		super(new AnimCIKeeper(acl));
+		id = loader.getName();
+	}
 
-    @Override
-    public void load() {
-        try {
-            super.load();
-            if (getEdi() != null)
-                getEdi().check();
-            if (getUni() != null)
-                getUni().check();
-        } catch (Exception e) {
-            e.printStackTrace();
-            CommonStatic.def.exit(false);
-        }
-        validate();
-    }
+	@Override
+	public void load() {
+		try {
+			super.load();
+			if (getEdi() != null)
+				getEdi().check();
+			if (getUni() != null)
+				getUni().check();
+		} catch (Exception e) {
+			e.printStackTrace();
+			CommonStatic.def.exit(false);
+		}
+		validate();
+	}
 
-    @Override
-    public String toString() {
-        return id.id;
-    }
+	@Override
+	public String toString() {
+		return id.id;
+	}
 
 }

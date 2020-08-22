@@ -4,36 +4,36 @@ import java.io.IOException;
 
 public interface FakeImage {
 
-    enum Marker {
-        BG, EDI, UNI, RECOLOR, RECOLORED
-    }
+	enum Marker {
+		BG, EDI, UNI, RECOLOR, RECOLORED
+	}
 
-    static FakeImage read(Object o) throws IOException {
-        return ImageBuilder.builder.build(o);
-    }
+	static FakeImage read(Object o) throws IOException {
+		return ImageBuilder.builder.build(o);
+	}
 
-    static boolean write(FakeImage img, String str, Object o) throws IOException {
-        return ImageBuilder.builder.write(img, str, o);
-    }
+	static boolean write(FakeImage img, String str, Object o) throws IOException {
+		return ImageBuilder.builder.write(img, str, o);
+	}
 
-    Object bimg();
+	Object bimg();
 
-    int getHeight();
+	int getHeight();
 
-    int getRGB(int i, int j);
+	int getRGB(int i, int j);
 
-    FakeImage getSubimage(int i, int j, int k, int l);
+	FakeImage getSubimage(int i, int j, int k, int l);
 
-    int getWidth();
+	int getWidth();
 
-    Object gl();
+	Object gl();
 
-    boolean isValid();
+	boolean isValid();
 
-    default void mark(Marker m) {
-    }
+	default void mark(Marker m) {
+	}
 
-    void setRGB(int i, int j, int p);
+	void setRGB(int i, int j, int p);
 
-    void unload();
+	void unload();
 }

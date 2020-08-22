@@ -15,64 +15,64 @@ import java.util.Queue;
 
 public interface FileData {
 
-    default byte[] getBytes() {
-        try {
-            byte[] ans = new byte[size()];
-            InputStream is = getStream();
-            int r = is.read(ans);
-            is.close();
-            if (r != size())
-                CommonStatic.ctx.printErr(ErrType.FATAL, "failed to read data");
-            return ans;
-        } catch (Exception e) {
-            CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read data");
-            return null;
-        }
-    }
+	default byte[] getBytes() {
+		try {
+			byte[] ans = new byte[size()];
+			InputStream is = getStream();
+			int r = is.read(ans);
+			is.close();
+			if (r != size())
+				CommonStatic.ctx.printErr(ErrType.FATAL, "failed to read data");
+			return ans;
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read data");
+			return null;
+		}
+	}
 
-    FakeImage getImg();
+	FakeImage getImg();
 
-    InputStream getStream();
+	InputStream getStream();
 
-    default Queue<String> readLine() {
-        InputStream is = getStream();
-        try {
-            Queue<String> ans = new ArrayDeque<>();
-            InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-            BufferedReader reader = new BufferedReader(isr);
-            String temp = null;
-            while ((temp = reader.readLine()) != null)
-                ans.add(temp);
-            reader.close();
-            return ans;
-        } catch (Exception e) {
-            CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read lines");
-            return null;
-        }
-    }
+	default Queue<String> readLine() {
+		InputStream is = getStream();
+		try {
+			Queue<String> ans = new ArrayDeque<>();
+			InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+			BufferedReader reader = new BufferedReader(isr);
+			String temp = null;
+			while ((temp = reader.readLine()) != null)
+				ans.add(temp);
+			reader.close();
+			return ans;
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read lines");
+			return null;
+		}
+	}
 
-    int size();
+	int size();
 
 }
 
 interface ByteData extends FileData {
 
-    @Override
-    byte[] getBytes();
+	@Override
+	byte[] getBytes();
 
-    @Override
-    default FakeImage getImg() {
-        return Data.err(() -> FakeImage.read(getBytes()));
-    }
+	@Override
+	default FakeImage getImg() {
+		return Data.err(() -> FakeImage.read(getBytes()));
+	}
 
-    @Override
-    default InputStream getStream() {
-        return new ByteArrayInputStream(getBytes());
-    }
+	@Override
+	default InputStream getStream() {
+		return new ByteArrayInputStream(getBytes());
+	}
 
-    @Override
-    default int size() {
-        return getBytes().length;
-    }
+	@Override
+	default int size() {
+		return getBytes().length;
+	}
 
 }

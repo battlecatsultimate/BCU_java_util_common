@@ -6,34 +6,34 @@ import common.util.Data.Proc;
 
 public interface MaskAtk extends BattleStatic {
 
-    default int getAltAbi() {
-        return 0;
-    }
+	default int getAltAbi() {
+		return 0;
+	}
 
-    int getAtk();
+	int getAtk();
 
-    default int getDire() {
-        return 1;
-    }
+	default int getDire() {
+		return 1;
+	}
 
-    int getLongPoint();
+	int getLongPoint();
 
-    default int getMove() {
-        return 0;
-    }
+	default int getMove() {
+		return 0;
+	}
 
-    Proc getProc();
+	Proc getProc();
 
-    int getShortPoint();
+	int getShortPoint();
 
-    default int getTarget() {
-        return Data.TCH_N;
-    }
+	default int getTarget() {
+		return Data.TCH_N;
+	}
 
-    boolean isRange();
+	boolean isRange();
 
-    default int loopCount() {
-        return -1;
-    }
+	default int loopCount() {
+		return -1;
+	}
 
 }

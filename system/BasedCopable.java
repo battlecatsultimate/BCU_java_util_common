@@ -7,18 +7,18 @@ import java.util.Map;
 
 public interface BasedCopable<T, B> extends Cloneable, Copable<T> {
 
-    @StaticPermitted(StaticPermitted.Type.TEMP)
-    Map<Class<?>, Object> map = new HashMap<>();
+	@StaticPermitted(StaticPermitted.Type.TEMP)
+	Map<Class<?>, Object> map = new HashMap<>();
 
-    @Override
-    @SuppressWarnings("unchecked")
-    default T copy() {
-        B base = (B) map.get(getClass());
-        if (base == null)
-            return null;
-        return copy(base);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	default T copy() {
+		B base = (B) map.get(getClass());
+		if (base == null)
+			return null;
+		return copy(base);
+	}
 
-    T copy(B b);
+	T copy(B b);
 
 }

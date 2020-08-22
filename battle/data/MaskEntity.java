@@ -11,82 +11,82 @@ import common.util.pack.Soul;
 
 public interface MaskEntity extends BattleStatic {
 
-    int allAtk();
+	int allAtk();
 
-    int getAbi();
+	int getAbi();
 
-    Proc getAllProc();
+	Proc getAllProc();
 
-    /**
-     * get the attack animation length
-     */
-    default int getAnimLen() {
-        return getPack().anim.getAtkLen();
-    }
+	/**
+	 * get the attack animation length
+	 */
+	default int getAnimLen() {
+		return getPack().anim.getAtkLen();
+	}
 
-    int getAtkCount();
+	int getAtkCount();
 
-    int getAtkLoop();
+	int getAtkLoop();
 
-    MaskAtk getAtkModel(int ind);
+	MaskAtk getAtkModel(int ind);
 
-    Identifier<Soul> getDeathAnim();
+	Identifier<Soul> getDeathAnim();
 
-    int getHb();
+	int getHb();
 
-    int getHp();
+	int getHp();
 
-    /**
-     * get the attack period
-     */
+	/**
+	 * get the attack period
+	 */
 	int getItv();
 
-    /**
-     * get the Enemy/Form this data represents
-     */
+	/**
+	 * get the Enemy/Form this data represents
+	 */
 	Animable<AnimU<?>, UType> getPack();
 
-    int getPost();
+	int getPost();
 
-    Proc getProc();
+	Proc getProc();
 
-    int getRange();
+	int getRange();
 
-    MaskAtk getRepAtk();
+	MaskAtk getRepAtk();
 
-    default AtkDataModel getResurrection() {
-        return null;
-    }
+	default AtkDataModel getResurrection() {
+		return null;
+	}
 
-    default AtkDataModel getRevenge() {
-        return null;
-    }
+	default AtkDataModel getRevenge() {
+		return null;
+	}
 
-    int getShield();
+	int getShield();
 
-    int getSpeed();
+	int getSpeed();
 
-    /**
-     * get waiting time
-     */
+	/**
+	 * get waiting time
+	 */
 	int getTBA();
 
-    default int getTouch() {
-        return Data.TCH_N;
-    }
+	default int getTouch() {
+		return Data.TCH_N;
+	}
 
-    int getType();
+	int getType();
 
-    int getWidth();
+	int getWidth();
 
-    boolean isLD();
+	boolean isLD();
 
-    boolean isOmni();
+	boolean isOmni();
 
-    boolean isRange();
+	boolean isRange();
 
-    int[][] rawAtkData();
+	int[][] rawAtkData();
 
-    int touchBase();
+	int touchBase();
 
 }

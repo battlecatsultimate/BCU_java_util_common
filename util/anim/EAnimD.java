@@ -5,74 +5,74 @@ import common.system.fake.FakeGraphics;
 
 public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
-    public T type;
+	public T type;
 
-    protected MaAnim ma;
+	protected MaAnim ma;
 
-    protected int f = -1;
+	protected int f = -1;
 
-    public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim) {
-        super(ia, mm);
-        ma = anim;
-    }
+	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim) {
+		super(ia, mm);
+		ma = anim;
+	}
 
-    @SuppressWarnings("unchecked")
-    public void changeAnim(T t) {
-        f = -1;
-        ma = ((AnimD<?, T>) anim()).getMaAnim(t);
-        type = t;
-    }
+	@SuppressWarnings("unchecked")
+	public void changeAnim(T t) {
+		f = -1;
+		ma = ((AnimD<?, T>) anim()).getMaAnim(t);
+		type = t;
+	}
 
-    public boolean done() {
-        return f > ma.max;
-    }
+	public boolean done() {
+		return f > ma.max;
+	}
 
-    @Override
-    public void draw(FakeGraphics g, P ori, double siz) {
-        if (f == -1) {
-            f = 0;
-            setup();
-        }
-        set(g);
-        g.translate(ori.x, ori.y);
-        for (EPart e : order) {
-            P p = P.newP(siz, siz);
-            e.drawPart(g, p);
-            P.delete(p);
-        }
-    }
+	@Override
+	public void draw(FakeGraphics g, P ori, double siz) {
+		if (f == -1) {
+			f = 0;
+			setup();
+		}
+		set(g);
+		g.translate(ori.x, ori.y);
+		for (EPart e : order) {
+			P p = P.newP(siz, siz);
+			e.drawPart(g, p);
+			P.delete(p);
+		}
+	}
 
-    @Override
-    public int ind() {
-        return f;
-    }
+	@Override
+	public int ind() {
+		return f;
+	}
 
-    @Override
-    public int len() {
-        return ma.max + 1;
-    }
+	@Override
+	public int len() {
+		return ma.max + 1;
+	}
 
-    @Override
-    public void setTime(int value) {
-        setup();
-        f = value;
-        ma.update(f, this, true);
-    }
+	@Override
+	public void setTime(int value) {
+		setup();
+		f = value;
+		ma.update(f, this, true);
+	}
 
-    public void setup() {
-        ma.update(0, this, false);
-    }
+	public void setup() {
+		ma.update(0, this, false);
+	}
 
-    @Override
-    public void update(boolean rotate) {
-        f++;
-        ma.update(f, this, rotate);
-    }
+	@Override
+	public void update(boolean rotate) {
+		f++;
+		ma.update(f, this, rotate);
+	}
 
-    @Override
-    protected void performDeepCopy() {
-        super.performDeepCopy();
-        ((EAnimD<?>) copy).setTime(f);
-    }
+	@Override
+	protected void performDeepCopy() {
+		super.performDeepCopy();
+		((EAnimD<?>) copy).setTime(f);
+	}
 
 }
