@@ -12,6 +12,8 @@ import common.pack.UserProfile;
 import common.util.Data;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -37,8 +39,8 @@ public class Admin {
 		}
 
 		@Override
-		public File getLangFile(String file) {
-			return new File("./assets/lang/en/" + file);
+		public InputStream getLangFile(String file) {
+			return Data.err(() -> new FileInputStream(new File("./assets/lang/en/" + file)));
 		}
 
 		@Override

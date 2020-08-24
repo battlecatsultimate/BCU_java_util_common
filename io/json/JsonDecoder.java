@@ -122,6 +122,8 @@ public class JsonDecoder {
 			Method m = ccls.getMethod(par.curjfld.generator(), Class.class, JsonElement.class);
 			return m.invoke(par.obj, cls, elem);
 		}
+		if (elem.isJsonObject() && elem.getAsJsonObject().has("_class"))
+			cls = Class.forName(elem.getAsJsonObject().get("_class").getAsString());
 		if (cls.getAnnotation(JsonClass.class) != null)
 			return decodeObject(elem, cls, par);
 		throw new JsonException(Type.UNDEFINED, elem, "class not possible to generate");

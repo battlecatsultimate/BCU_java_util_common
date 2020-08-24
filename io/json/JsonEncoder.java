@@ -102,7 +102,7 @@ public class JsonEncoder {
 			return encodeSet((Set<?>) obj, par);
 		if (obj instanceof Map)
 			return encodeMap((Map<?, ?>) obj, par);
-		throw new JsonException(Type.UNDEFINED, null, "object " + obj + " not defined");
+		throw new JsonException(Type.UNDEFINED, null, "object " + obj + ":" + obj.getClass() + " not defined");
 	}
 
 	private static JsonElement encodeList(List<?> list, JsonEncoder par) throws Exception {
@@ -173,7 +173,11 @@ public class JsonEncoder {
 				String tag = jf.tag().length() == 0 ? f.getName() : jf.tag();
 				f.setAccessible(true);
 				curjfld = jf;
-				ans.add(tag, encode(f.get(obj), getInvoker()));
+				Object val = f.get(obj);
+				JsonElement elem = encode(val, getInvoker());
+				if (elem.isJsonObject() && val != null && val.getClass() != f.getType())
+					elem.getAsJsonObject().addProperty("_class", val.getClass().getName());
+				ans.add(tag, elem);
 				curjfld = null;
 			}
 		for (Method m : cls.getDeclaredMethods())

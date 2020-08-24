@@ -7,6 +7,7 @@ import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGetter;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonClass.RType;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.system.BasedCopable;
@@ -17,7 +18,7 @@ import common.util.anim.EAnimU;
 import common.util.lang.MultiLangCont;
 
 @JCGeneric(Form.FormJson.class)
-@JsonClass
+@JsonClass(read = RType.FILL)
 public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopable<Form, Unit> {
 
 	@JsonClass(noTag = NoTag.LOAD)

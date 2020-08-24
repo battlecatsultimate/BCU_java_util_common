@@ -3,8 +3,8 @@ package common.util.stage;
 import common.CommonStatic;
 import common.io.InStream;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
-import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-@JsonClass
+@IndexContainer.IndexCont(StageMap.class)
+@JsonClass(noTag = NoTag.LOAD)
 public class Stage extends Data
 		implements BasedCopable<Stage, StageMap>, BattleStatic, IndexContainer.Indexable<StageMap, Stage> {
 
@@ -103,34 +104,32 @@ public class Stage extends Data
 	}
 
 	public static final MapColc CLIPMC = new MapColc.ClipMapColc();
-
 	public static final StageMap CLIPSM = CLIPMC.maps.get(0);
 
-	public StageInfo info;
+	private static final int[] CH_CASTLES = { 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 32, 31, 30, 29, 28, 27,
+			26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 46,
+			47, 45, 47, 47, 45, 45 };
 
+	@JsonField(block = true)
+	public StageInfo info;
+	@JsonField(block = true)
 	public List<Recd> recd = new ArrayList<>();
 
 	public final Identifier<Stage> id;
-
-	@JsonField
 	public String name = "";
-
-	@JsonField
 	public boolean non_con, trail;
-
-	@JsonField
 	public int len, health, max, mush;
 	public Identifier<CastleImg> castle;
-
 	public Identifier<Background> bg;
-
 	public Identifier<Music> mus0, mus1;
-	@JsonField
 	public long loop0, loop1;
-	@JsonField
 	public SCDef data;
-	@JsonField(gen = GenType.GEN)
 	public Limit lim;
+
+	@JsonClass.JCConstructor
+	public Stage() {
+		id = null;
+	}
 
 	public Stage(Identifier<Stage> id) {
 		this.id = id;
@@ -183,6 +182,8 @@ public class Stage extends Data
 			temp = qs.poll();
 			String[] strs = temp.split(",");
 			int cas = CommonStatic.parseIntN(strs[0]);
+			if (cas == -1)
+				cas = CH_CASTLES[id.id];
 			if (sm.cast != -1)
 				cas += sm.cast * 1000;
 			castle = Identifier.parseInt(cas, CastleImg.class);

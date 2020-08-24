@@ -5,7 +5,9 @@ import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
+import common.pack.PackData.UserPack;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
@@ -230,6 +232,13 @@ public abstract class Source {
 			AnimCE.map().values().forEach(e -> e.save());
 		}
 
+		public static void saveWorkspace() {
+			for (UserPack up : UserProfile.getUserPacks())
+				if (up.source instanceof Workspace)
+					CommonStatic.ctx.noticeErr(() -> ((Workspace) up.source).save(up), ErrType.WARN,
+							"failed to save pack " + up.desc.name);
+		}
+
 		public static ResourceLocation validate(ResourceLocation rl) {
 			// FIXME find valid path
 			return rl;
@@ -259,6 +268,14 @@ public abstract class Source {
 		@Override
 		public FakeImage readImage(String path) throws IOException {
 			return ImageBuilder.builder.build(getFile(path));
+		}
+
+		public void save(UserPack up) throws IOException {
+			File f = getFile("pack.json");
+			Context.check(f);
+			FileWriter fw = new FileWriter(f);
+			fw.write(JsonEncoder.encode(up).toString());
+			fw.close();
 		}
 
 		@Override

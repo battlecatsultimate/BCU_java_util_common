@@ -93,6 +93,8 @@ public class FixIndexList<T> extends Data {
 
 		@Override
 		public void set(int ind, T t) {
+			while (arr.length <= ind)
+				expand(arr.length * 2);
 			boolean fill = arr[ind] == null && t != null;
 			boolean dele = arr[ind] != null && t == null;
 			super.set(ind, t);
@@ -249,6 +251,7 @@ public class FixIndexList<T> extends Data {
 				JsonObject ent = new JsonObject();
 				ent.addProperty("ind", i);
 				ent.add("val", JsonEncoder.encode(arr[i]));
+				data.add(ent);
 			}
 		return data;
 	}

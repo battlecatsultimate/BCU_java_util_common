@@ -2,6 +2,7 @@ package common.util.stage;
 
 import common.CommonStatic;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
@@ -20,6 +21,7 @@ import java.util.Queue;
 
 import com.google.gson.JsonParser;
 
+@IndexContainer.IndexCont(MapColc.class)
 @JsonClass
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		IndexContainer.Indexable<MapColc, StageMap>, IndexContainer.SingleIC<Stage> {
@@ -55,10 +57,11 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	@SuppressWarnings("unchecked")
 	@ContGetter
-	public static StageMap get(String id) {
-		return Identifier.get(JsonDecoder.decode(JsonParser.parseString(id), Identifier.class));
+	public static StageMap get(String str) {
+		return Identifier.get(JsonDecoder.decode(JsonParser.parseString(str), Identifier.class));
 	}
 
+	@JsonField
 	public final Identifier<StageMap> id;
 	public final List<Limit> lim = new ArrayList<>();
 	public StageMapInfo info;
@@ -71,6 +74,11 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	public int price = 1, retyp, pllim, set, cast = -1;
 	@JsonField
 	public int[] stars = new int[] { 100 };
+
+	@JCConstructor
+	public StageMap() {
+		this.id = null;
+	}
 
 	public StageMap(Identifier<StageMap> id) {
 		this.id = id;
@@ -113,7 +121,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	@Override
 	public Identifier<StageMap> getID() {
-		return null;
+		return id;
 	}
 
 	@Override

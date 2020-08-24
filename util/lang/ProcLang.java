@@ -11,7 +11,6 @@ import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.IOType;
-import common.pack.Context.ErrType;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.Data.Proc;
@@ -20,8 +19,8 @@ import common.util.lang.LocaleCenter.Binder;
 import common.util.lang.LocaleCenter.DisplayItem;
 import common.util.lang.LocaleCenter.ObjBinder;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -141,10 +140,9 @@ public class ProcLang {
 	}
 
 	private static void read() throws Exception {
-		File f = CommonStatic.ctx.getLangFile("proc.json");
-		if (!f.exists())
-			CommonStatic.ctx.printErr(ErrType.FATAL, "cannot find proc.json");
-		JsonElement elem = JsonParser.parseReader(new FileReader(f));
+		InputStream f = CommonStatic.ctx.getLangFile("proc.json");
+		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f));
+		f.close();
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);
 		store().setLang(proc);
 	}

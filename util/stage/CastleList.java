@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import common.io.json.JsonClass;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
@@ -10,6 +11,7 @@ import common.util.stage.MapColc.PackMapColc;
 
 import java.util.*;
 
+@JsonClass
 public abstract class CastleList extends FixIndexMap<CastleImg> implements IndexContainer {
 
 	public static class DefCasList extends CastleList {
@@ -38,6 +40,7 @@ public abstract class CastleList extends FixIndexMap<CastleImg> implements Index
 		}
 	}
 
+	@JsonClass
 	public static class PackCasList extends CastleList {
 
 		public final UserPack pack;

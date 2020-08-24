@@ -28,7 +28,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 		 */
 		public static StageMap getMap(int mid) {
 			Map<String, MapColc> map = UserProfile.getRegister(REG_MAPCOLC, MapColc.class);
-			MapColc mc = map.get(Data.trio(mid / 1000));
+			MapColc mc = map.get(Data.hex(mid / 1000));
 			if (mc == null)
 				return null;
 			return mc.maps.get(mid % 1000);
@@ -36,7 +36,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		public static DefMapColc getMap(String id) {
 			return (DefMapColc) UserProfile.getRegister(REG_MAPCOLC, MapColc.class)
-					.get(Data.trio(UserProfile.getRegister(REG_IDMAP, Integer.class).get(id)));
+					.get(Data.hex(UserProfile.getRegister(REG_IDMAP, Integer.class).get(id)));
 		}
 
 		public static void read() {
@@ -98,7 +98,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		private DefMapColc() {
 			id = 3;
-			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.trio(id), this);
+			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.hex(id), this);
 			name = "CH";
 			String abbr = "./org/stage/CH/stageNormal/stageNormal";
 			for (int i = 0; i < 3; i++) {
@@ -181,7 +181,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 		private DefMapColc(String st, int ID, List<VFile<?>> stage, VFile<?> map) {
 			name = st;
 			id = ID;
-			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.trio(id), this);
+			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.hex(id), this);
 			for (VFile<?> m : map.list()) {
 				String str = m.getName();
 				int len = str.length();
@@ -213,7 +213,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		@Override
 		public String getSID() {
-			return Data.trio(id);
+			return Data.hex(id);
 		}
 
 		@Override
@@ -233,11 +233,14 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		public PackMapColc(UserPack pack) {
 			this.pack = pack;
+			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
 		}
 
+		@SuppressWarnings("deprecation")
 		@Deprecated
 		public PackMapColc(UserPack pack, InStream is) throws VerFixerException {
 			this.pack = pack;
+			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
 			int val = getVer(is.nextString());
 			if (val != 308)
 				throw new VerFixerException("MapColc requires 308, got " + val);

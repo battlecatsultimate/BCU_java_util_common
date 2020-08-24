@@ -1,8 +1,12 @@
 package common.util;
 
+import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
 import common.system.Copable;
+
 import org.jetbrains.annotations.Nullable;
 
+@JsonClass(noTag = NoTag.LOAD)
 public class EREnt<X> implements BattleStatic, Copable<EREnt<X>> {
 
 	@Nullable

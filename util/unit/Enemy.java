@@ -6,6 +6,8 @@ import common.battle.data.CustomEnemy;
 import common.battle.data.DataEnemy;
 import common.battle.data.MaskEnemy;
 import common.battle.entity.EEnemy;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.system.VImg;
 import common.system.files.VFile;
@@ -26,10 +28,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+@JsonClass.JCGeneric(Identifier.class)
+@JsonClass
 public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
+	@JsonClass.JCIdentifier
+	@JsonField
 	public final Identifier<AbEnemy> id;
+	@JsonField
 	public final MaskEnemy de;
+	@JsonField
 	public String name = "";
 	public boolean inDic = false;
 

@@ -2,15 +2,19 @@ package common.io.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
+import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.Preload;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.io.assets.Admin;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField.GenType;
 import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.Data;
 
 import java.io.File;
@@ -211,8 +215,41 @@ public class Test {
 
 	}
 
+	public static class JsonTest_3 {
+
+		@JsonClass
+		public static class JsonA<T> {
+
+			@JsonField
+			public T obj;
+
+		}
+
+		@JsonClass
+		public static class JsonB {
+
+			@JsonField
+			public int val = 0;
+
+		}
+
+		public static void test() throws Exception {
+			System.out.println(Class.forName(JsonB.class.getName()));
+			JsonA<JsonB> a = new JsonA<>();
+			a.obj = new JsonB();
+			a.obj.val = 10;
+			String json = JsonEncoder.encode(a).toString();
+			System.out.println(json);
+			JsonA<JsonB> x = JsonDecoder.decode(JsonParser.parseString(json), JsonA.class);
+			System.out.println(JsonEncoder.encode(x).toString());
+		}
+
+	}
+
 	public static void main(String[] args) throws Exception {
-		JsonTest_2.test();
+		UserProfile.profile();
+		CommonStatic.ctx = new Admin.AdminContext();
+		JsonTest_3.test();
 		// testIO();
 	}
 

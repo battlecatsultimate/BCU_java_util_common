@@ -14,9 +14,11 @@ import common.util.EntRand;
 import java.util.Set;
 import java.util.TreeSet;
 
+@JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
+	@JsonClass.JCIdentifier
 	@JsonField
 	public final Identifier<AbEnemy> id;
 

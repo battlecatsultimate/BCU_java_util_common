@@ -61,10 +61,11 @@ public interface IndexContainer {
 
 		FixIndexMap<T> getFIM();
 
+		@SuppressWarnings("unchecked")
 		@Override
 		@Deprecated
 		default <X extends R, R extends Indexable<?, R>> Identifier<R> getID(Class<X> cls, int ind) {
-			return null;
+			return (Identifier<R>) getID(ind);
 		}
 
 		default Identifier<T> getID(int ind) {
@@ -82,10 +83,11 @@ public interface IndexContainer {
 			return new Identifier<T>(getSID(), getFIM().cls, getFIM().nextInd());
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		@Deprecated
 		default <X extends R, R extends Indexable<?, R>> Identifier<R> getNextID(Class<X> cls) {
-			return null;
+			return (Identifier<R>) getNextID();
 		}
 
 	}
