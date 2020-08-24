@@ -54,10 +54,10 @@ public abstract class Source {
 			this.pack = pack;
 			this.id = id;
 		}
-		
+
 		@JsonClass.JCGetter
 		public AnimCI getAnim() {
-			if(pack.equals(LOCAL))
+			if (pack.equals(LOCAL))
 				return AnimCE.map().get(id);
 			return UserProfile.getUserPack(pack).source.loadAnimation(id);
 		}

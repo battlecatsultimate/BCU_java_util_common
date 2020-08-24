@@ -104,7 +104,9 @@ public class Admin {
 			"\\./org/unit/..././..._.\\.png", "\\./org/unit/..././udi..._.\\.png" };
 
 	public static void main(String[] args) throws Exception {
+		UserProfile.profile();
 		CommonStatic.ctx = new AdminContext();
+		// testInternet();
 		// AssetLoader.merge();
 		searchForStaticFields();
 	}
@@ -180,6 +182,10 @@ public class Admin {
 		for (Field field : flist) {
 			System.out.println(field);
 		}
+	}
+
+	public static void testInternet() throws Exception {
+		// FIXME
 	}
 
 	public static void write() throws Exception {
