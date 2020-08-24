@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.CommonStatic.EditLink;
 import common.io.InStream;
 import common.io.OutStream;
+import common.io.json.JsonClass;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Stack;
 
+@JsonClass.JCGeneric(ResourceLocation.class)
 public class AnimCE extends AnimCI {
 
 	private static class AnimCELoader implements Source.AnimLoader {

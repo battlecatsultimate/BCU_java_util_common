@@ -66,6 +66,11 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	public final UnitInfo info = new UnitInfo();
 
+	@JsonClass.JCConstructor
+	public Unit() {
+		id = null;
+	}
+
 	public Unit(Identifier<Unit> identifier) {
 		id = identifier;
 	}

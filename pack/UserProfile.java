@@ -145,7 +145,8 @@ public class UserProfile {
 	}
 
 	public static void loadPacks() {
-		CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to convert old format");
+		// FIXME CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to
+		// convert old format");
 		File packs = CommonStatic.ctx.getPackFolder();
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
 		UserProfile profile = profile();
@@ -159,9 +160,9 @@ public class UserProfile {
 				}
 
 		if (workspace.exists())
-			for (File f : packs.listFiles())
+			for (File f : workspace.listFiles())
 				if (f.isDirectory()) {
-					File main = CommonStatic.ctx.getWorkspaceFile("./" + f.getName() + "/main.pack.json");
+					File main = CommonStatic.ctx.getWorkspaceFile("./" + f.getName() + "/pack.json");
 					if (!main.exists())
 						continue;
 					UserPack pack = CommonStatic.ctx.noticeErr(() -> readJsonPack(main), ErrType.WARN,

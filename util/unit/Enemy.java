@@ -7,6 +7,7 @@ import common.battle.data.DataEnemy;
 import common.battle.data.MaskEnemy;
 import common.battle.entity.EEnemy;
 import common.io.json.JsonClass;
+import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.system.VImg;
@@ -40,6 +41,12 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	@JsonField
 	public String name = "";
 	public boolean inDic = false;
+
+	@JsonClass.JCConstructor
+	public Enemy() {
+		id = null;
+		de = null;
+	}
 
 	public Enemy(Identifier<AbEnemy> hash, AnimU<?> ac, CustomEnemy ce) {
 		id = hash;
@@ -129,6 +136,11 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		Set<Enemy> te = new TreeSet<>();
 		te.add(this);
 		return te;
+	}
+
+	@OnInjected
+	public void onInjected() {
+		((CustomEnemy) de).pack = this;
 	}
 
 	@Override

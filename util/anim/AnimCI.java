@@ -1,12 +1,14 @@
 package common.util.anim;
 
 import common.CommonStatic;
+import common.io.json.JsonClass;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 
+@JsonClass.JCGeneric(ResourceLocation.class)
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 	protected static class AnimCIKeeper implements AnimU.ImageKeeper {
@@ -98,6 +100,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 	}
 
+	@JsonClass.JCIdentifier
 	public ResourceLocation id;
 
 	public AnimCI(Source.AnimLoader acl) {

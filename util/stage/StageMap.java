@@ -58,7 +58,8 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	@SuppressWarnings("unchecked")
 	@ContGetter
 	public static StageMap get(String str) {
-		return Identifier.get(JsonDecoder.decode(JsonParser.parseString(str), Identifier.class));
+		Identifier<StageMap> id = JsonDecoder.decode(JsonParser.parseString(str), Identifier.class);
+		return Identifier.get(id);
 	}
 
 	@JsonField

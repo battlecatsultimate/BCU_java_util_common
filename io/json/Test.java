@@ -233,6 +233,7 @@ public class Test {
 
 		}
 
+		@SuppressWarnings("unchecked")
 		public static void test() throws Exception {
 			System.out.println(Class.forName(JsonB.class.getName()));
 			JsonA<JsonB> a = new JsonA<>();

@@ -7,6 +7,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
+import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.IOType;
 import common.pack.IndexContainer.Indexable;
 import common.util.Data;
@@ -14,10 +15,10 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-@JsonClass
+@JsonClass(read = RType.FILL)
 public class FixIndexList<T> extends Data {
 
-	@JsonClass
+	@JsonClass(read = RType.FILL)
 	public static class FixIndexMap<T extends Indexable<?, ?>> extends FixIndexList<T> implements Iterable<T> {
 
 		private class Itr implements Iterator<T> {
@@ -39,7 +40,6 @@ public class FixIndexList<T> extends Data {
 		@JsonField
 		private int[] order;
 
-		@JsonField
 		public final Class<T> cls;
 
 		public FixIndexMap(Class<T> cls) {

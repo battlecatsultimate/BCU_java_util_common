@@ -282,9 +282,18 @@ public class JsonDecoder {
 			throw new JsonException(Type.TYPE_MISMATCH, elem, "this element is not object for " + cls);
 		JsonObject jobj = elem.getAsJsonObject();
 		JsonClass jc = cls.getAnnotation(JsonClass.class);
-		if (jc.read() == JsonClass.RType.FILL)
-			throw new JsonException(Type.FUNC, null, "RType FILL requires GenType FILL or GEN");
-		else if (jc.read() == JsonClass.RType.DATA)
+		if (jc.read() == JsonClass.RType.FILL) {
+			if (par != null) {
+				Object val = par.curfld.get(par.obj);
+				if (val != null)
+					if (cls.getAnnotation(JsonClass.class) != null)
+						return inject(par, elem.getAsJsonObject(), cls, val);
+					else
+						return val;
+			}
+			throw new JsonException(Type.FUNC, null,
+					"RType FILL requires GenType FILL or GEN, or implicit GenType FILL: " + cls + ", " + elem);
+		} else if (jc.read() == JsonClass.RType.DATA)
 			return inject(par, jobj, cls, null);
 		else if (jc.read() == JsonClass.RType.MANUAL) {
 			String func = jc.generator();

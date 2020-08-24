@@ -5,6 +5,7 @@ import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.json.JsonClass;
 import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
@@ -52,6 +53,13 @@ public abstract class Source {
 		public ResourceLocation(String pack, String id) {
 			this.pack = pack;
 			this.id = id;
+		}
+		
+		@JsonClass.JCGetter
+		public AnimCI getAnim() {
+			if(pack.equals(LOCAL))
+				return AnimCE.map().get(id);
+			return UserProfile.getUserPack(pack).source.loadAnimation(id);
 		}
 
 	}
@@ -261,8 +269,8 @@ public abstract class Source {
 		}
 
 		@Override
-		public AnimCI loadAnimation(String name) {
-			return new AnimCI(new SourceAnimLoader(new ResourceLocation(id, name), null));
+		public AnimCE loadAnimation(String name) {
+			return new AnimCE(new ResourceLocation(id, name));
 		}
 
 		@Override

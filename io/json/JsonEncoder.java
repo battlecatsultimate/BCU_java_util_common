@@ -61,7 +61,7 @@ public class JsonEncoder {
 				}
 			if (!found)
 				throw new JsonException(Type.TYPE_MISMATCH, null, "class not present in JCGeneric");
-			for (Field f : cls.getDeclaredFields()) {
+			for (Field f : cls.getFields()) {
 				JCIdentifier jcgw = f.getAnnotation(JCIdentifier.class);
 				if (jcgw != null && f.getType() == alias)
 					return encode(f.get(obj), par);

@@ -8,6 +8,7 @@ import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGetter;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
+import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.system.BasedCopable;
@@ -126,6 +127,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		if (pc != null)
 			return pc.full;
 		return du;
+	}
+
+	@OnInjected
+	public void onInjected() {
+		((CustomUnit) du).pack = this;
 	}
 
 	public int[] regulateLv(int[] mod, int[] lv) {
