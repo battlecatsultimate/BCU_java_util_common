@@ -157,6 +157,7 @@ public class AnimCE extends AnimCI {
 			else
 				anims[i] = new MaAnim();
 		loader.setNum(ori.getNum());
+		types = AnimU.TYPE7;
 		parts = imgcut.cut(ori.getNum());
 		if (ori instanceof AnimU<?>) {
 			AnimU<?> au = (AnimU<?>) ori;
@@ -164,6 +165,7 @@ public class AnimCE extends AnimCI {
 			setUni(au.getUni());
 		}
 		standardize();
+		saved = false;
 		save();
 		history("initial");
 	}
@@ -177,6 +179,8 @@ public class AnimCE extends AnimCI {
 		for (int i = 0; i < 7; i++)
 			anims[i] = new MaAnim();
 		parts = imgcut.cut(getNum());
+		saved = false;
+		save();
 		history("initial");
 	}
 

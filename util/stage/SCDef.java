@@ -101,11 +101,12 @@ public class SCDef implements Copable<SCDef> {
 	@JsonField(gen = GenType.FILL)
 	public final FixIndexList<SCGroup> sub = new FixIndexList<>(SCGroup.class);
 	@JsonField(generic = { Identifier.class, Integer.class })
-	public final Map<Identifier<AbEnemy>, Integer> smap = new TreeMap<>();
+	public final TreeMap<Identifier<AbEnemy>, Integer> smap = new TreeMap<>();
 	@JsonField
 	public int sdef = 0;
 
-	protected SCDef() {
+	@JCConstructor
+	public SCDef() {
 	}
 
 	protected SCDef(InStream is, int ver) {

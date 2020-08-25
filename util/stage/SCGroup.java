@@ -28,6 +28,11 @@ public class SCGroup extends Data implements BasedCopable<SCGroup, Integer> {
 	@JsonField
 	private final int[] max = { -1, -1, -1, -1 };
 
+	@JsonClass.JCConstructor
+	public SCGroup() {
+		id = -1;
+	}
+
 	public SCGroup(int ID, int... ns) {
 		id = ID;
 		for (int i = 0; i < ns.length; i++)

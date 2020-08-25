@@ -27,7 +27,6 @@ public class UserProfile {
 	private static final String REG_POOL = "_pools";
 	private static final String REG_STATIC = "_statics";
 
-	// TODO load username and password
 	@StaticPermitted(StaticPermitted.Type.ENV)
 	private static UserProfile profile = null;
 
@@ -75,9 +74,12 @@ public class UserProfile {
 	 * get a PackData from a String
 	 */
 	public static PackData getPack(String str) {
+		UserProfile profile = profile();
 		if (str.equals(Identifier.DEF))
-			return profile().def;
-		return profile().packmap.get(str);
+			return profile.def;
+		if (profile.pending != null)
+			return profile.pending.get(str);
+		return profile.packmap.get(str);
 	}
 
 	/**

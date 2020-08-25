@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCGetter;
 import common.io.json.JsonException.Type;
 import common.io.json.JsonField.GenType;
@@ -80,22 +79,15 @@ public class JsonDecoder {
 		if (Set.class.isAssignableFrom(cls))
 			return decodeSet(elem, cls, par);
 		// alias
-		if (cls.getAnnotation(JCGeneric.class) != null && par != null && par.curjfld.alias().length > par.index) {
-			JCGeneric jcg = cls.getAnnotation(JCGeneric.class);
+		if (par != null && par.curjfld.alias().length > par.index) {
 			Class<?> alias = par.curjfld.alias()[par.index];
-			boolean found = false;
-			for (Class<?> ala : jcg.value())
-				if (ala == alias) {
-					found = true;
-					break;
-				}
-			if (!found)
-				throw new JsonException(Type.TYPE_MISMATCH, null, "class not present in JCGeneric");
-			Object input = decode(elem, alias, par);
-			for (Method m : alias.getDeclaredMethods())
-				if (m.getAnnotation(JCGetter.class) != null)
-					return m.invoke(input);
-			throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGenericRead present");
+			if (alias != cls && alias != void.class) {
+				Object input = decode(elem, alias, par);
+				for (Method m : alias.getDeclaredMethods())
+					if (m.getAnnotation(JCGetter.class) != null)
+						return m.invoke(input);
+				throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGetter present");
+			}
 		}
 		// fill existing object
 		if (par != null && par.curjfld.gen() == GenType.FILL) {
@@ -126,7 +118,7 @@ public class JsonDecoder {
 			cls = Class.forName(elem.getAsJsonObject().get("_class").getAsString());
 		if (cls.getAnnotation(JsonClass.class) != null)
 			return decodeObject(elem, cls, par);
-		throw new JsonException(Type.UNDEFINED, elem, "class not possible to generate");
+		throw new JsonException(Type.UNDEFINED, elem, "class not possible to generate: " + cls);
 	}
 
 	@SuppressWarnings("unchecked")

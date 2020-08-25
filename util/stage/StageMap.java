@@ -14,7 +14,6 @@ import common.util.Data;
 import common.util.lang.MultiLangCont;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 @IndexContainer.IndexCont(MapColc.class)
@@ -59,7 +58,8 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	@JsonField
 	public final Identifier<StageMap> id;
-	public final List<Limit> lim = new ArrayList<>();
+	@JsonField(generic = Limit.class)
+	public final ArrayList<Limit> lim = new ArrayList<>();
 	public StageMapInfo info;
 
 	@JsonField(generic = Stage.class)

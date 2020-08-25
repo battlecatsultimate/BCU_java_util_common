@@ -6,8 +6,8 @@ import common.battle.data.PCoin;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCIdentifier;
-import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
+import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
@@ -23,7 +23,7 @@ import java.util.Queue;
 
 @IndexCont(PackData.class)
 @JCGeneric(Identifier.class)
-@JsonClass(noTag = NoTag.LOAD)
+@JsonClass
 public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, Unit> {
 
 	public static class UnitInfo {
@@ -57,9 +57,12 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	}
 
+	@JsonField
 	@JCIdentifier
 	public final Identifier<Unit> id;
+	@JsonField
 	public int rarity, max, maxp;
+	@JsonField(gen = GenType.GEN)
 	public Form[] forms;
 	@JsonField(alias = Identifier.class)
 	public UnitLevel lv;

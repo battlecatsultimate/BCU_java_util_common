@@ -5,8 +5,8 @@ import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCIdentifier;
+import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
-import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
@@ -20,7 +20,7 @@ import common.util.unit.Level;
 import java.util.TreeMap;
 
 @IndexCont(PackData.class)
-@JsonClass()
+@JsonClass(noTag = NoTag.LOAD)
 public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> {
 
 	@StaticPermitted
@@ -28,14 +28,16 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 
 	@JsonField(generic = { CharaGroup.class, int[].class }, alias = Identifier.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
-
-	@JsonField(gen = GenType.FILL)
 	public int[][] rares = new int[RARITY_TOT][6];
-
 	public int[] all = new int[6];
 	@JCIdentifier
 	public Identifier<LvRestrict> id;
 	public String name = "";
+
+	@JsonClass.JCConstructor
+	public LvRestrict() {
+
+	}
 
 	public LvRestrict(Identifier<LvRestrict> ID) {
 		all = MAX.clone();

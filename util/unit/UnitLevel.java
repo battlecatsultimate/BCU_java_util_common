@@ -1,6 +1,8 @@
 package common.util.unit;
 
 import common.io.InStream;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
@@ -9,13 +11,18 @@ import common.pack.PackData;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonClass
+@JsonClass.JCGeneric(Identifier.class)
 @IndexCont(PackData.class)
 public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
+	@JsonField
 	public final int[] lvs = new int[3];
 
 	public final List<Unit> units = new ArrayList<>();
 
+	@JsonField
+	@JsonClass.JCIdentifier
 	public Identifier<UnitLevel> id;
 
 	public UnitLevel(Identifier<UnitLevel> ID, InStream is) {

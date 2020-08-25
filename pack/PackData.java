@@ -248,6 +248,7 @@ public abstract class PackData implements IndexContainer {
 			source = s;
 			editable = source instanceof Workspace;
 			mc = new PackMapColc(this);
+			castles = new PackCasList(this);
 		}
 
 		/**
@@ -307,8 +308,8 @@ public abstract class PackData implements IndexContainer {
 
 	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
 	public final FixIndexMap<EneRand> randEnemies = new FixIndexMap<>(EneRand.class);
-	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
 	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
+	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
 	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);

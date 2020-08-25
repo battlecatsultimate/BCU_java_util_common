@@ -1,6 +1,7 @@
 package common.util.stage;
 
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.RType;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
@@ -40,7 +41,7 @@ public abstract class CastleList extends FixIndexMap<CastleImg> implements Index
 		}
 	}
 
-	@JsonClass
+	@JsonClass(read = RType.FILL)
 	public static class PackCasList extends CastleList {
 
 		public final UserPack pack;

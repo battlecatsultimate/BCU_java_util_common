@@ -31,6 +31,11 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 	@JsonField(generic = Unit.class, alias = Identifier.class)
 	public final TreeSet<Unit> set = new TreeSet<>();
 
+	@JsonClass.JCConstructor
+	public CharaGroup() {
+
+	}
+
 	public CharaGroup(CharaGroup cg) {
 		type = cg.type;
 		set.addAll(cg.set);

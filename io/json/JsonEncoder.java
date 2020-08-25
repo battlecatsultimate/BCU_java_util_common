@@ -175,7 +175,7 @@ public class JsonEncoder {
 				curjfld = jf;
 				Object val = f.get(obj);
 				JsonElement elem = encode(val, getInvoker());
-				if (elem.isJsonObject() && val != null && val.getClass() != f.getType())
+				if (elem.isJsonObject() && curjfld.alias().length == 0 && val != null && val.getClass() != f.getType())
 					elem.getAsJsonObject().addProperty("_class", val.getClass().getName());
 				ans.add(tag, elem);
 				curjfld = null;

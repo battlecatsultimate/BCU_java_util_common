@@ -7,6 +7,7 @@ import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonEncoder;
+import common.io.json.JsonField;
 import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
 import common.system.VImg;
@@ -44,11 +45,18 @@ public abstract class Source {
 		VImg getUni();
 	}
 
+	@JsonClass
 	public static class ResourceLocation {
 
 		public static final String LOCAL = "_local";
-		public String pack;
-		public String id;
+
+		@JsonField
+		public String pack, id;
+
+		@JsonClass.JCConstructor
+		public ResourceLocation() {
+
+		}
 
 		public ResourceLocation(String pack, String id) {
 			this.pack = pack;
@@ -60,6 +68,11 @@ public abstract class Source {
 			if (pack.equals(LOCAL))
 				return AnimCE.map().get(id);
 			return UserProfile.getUserPack(pack).source.loadAnimation(id);
+		}
+
+		@Override
+		public String toString() {
+			return pack + "/" + id;
 		}
 
 	}
