@@ -150,6 +150,8 @@ public class AssetLoader {
 		try {
 			File folder = CommonStatic.ctx.getAssetFile("./assets/");
 			Set<String> ans = new TreeSet<>();
+			if(!folder.exists())
+				return ans;
 			for (File f : folder.listFiles()) {
 				if (f.getName().endsWith(".assets.bcuzips")) {
 					AssetHeader header = new AssetHeader();

@@ -66,7 +66,7 @@ public class UpdateCheck {
 		}
 
 		public AssetJson[] assets;
-		public String[] pc_lib;
+		public String[] pc_libs;
 		public long text_update;
 		public int music;
 
@@ -114,12 +114,13 @@ public class UpdateCheck {
 	public static List<Downloader> checkMusic(int count) {
 		boolean[] exi = new boolean[count];
 		File music = CommonStatic.ctx.getAssetFile("./music/");
-		for (File m : music.listFiles())
-			if (m.getName().length() == 7 && m.getName().endsWith(".ogg")) {
-				Integer id = Data.ignore(() -> Integer.parseInt(m.getName().substring(0, 3)));
-				if (id != null)
-					exi[id] = true;
-			}
+		if (music.exists())
+			for (File m : music.listFiles())
+				if (m.getName().length() == 7 && m.getName().endsWith(".ogg")) {
+					Integer id = Data.ignore(() -> Integer.parseInt(m.getName().substring(0, 3)));
+					if (id != null)
+						exi[id] = true;
+				}
 		List<Downloader> ans = new ArrayList<>();
 		for (int i = 0; i < count; i++)
 			if (!exi[i]) {
@@ -133,14 +134,13 @@ public class UpdateCheck {
 
 	public static List<Downloader> checkPCLibs(UpdateJson json) throws Exception {
 		File lib = new File("./BCU_lib");
-		if (!lib.exists())
-			throw new Exception("required libraries not installed, internet connection required");
 		List<Downloader> libs = new ArrayList<>();
 		if (json != null) {
 			Set<String> str = new HashSet<>();
-			Collections.addAll(str, json.pc_lib);
-			for (File f : lib.listFiles())
-				str.remove(f.getName());
+			Collections.addAll(str, json.pc_libs);
+			if (lib.exists())
+				for (File f : lib.listFiles())
+					str.remove(f.getName());
 			for (String s : str)
 				libs.add(new Downloader(URL_RES + "jar/BCU_lib/" + s, new File("./BCU_lib/" + s),
 						new File("./BCU_lib/.temp.jar"), "downloading BCU library " + s));
