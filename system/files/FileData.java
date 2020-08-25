@@ -3,10 +3,8 @@ package common.system.files;
 import common.CommonStatic;
 import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
-import common.util.Data;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -52,27 +50,5 @@ public interface FileData {
 	}
 
 	int size();
-
-}
-
-interface ByteData extends FileData {
-
-	@Override
-	byte[] getBytes();
-
-	@Override
-	default FakeImage getImg() {
-		return Data.err(() -> FakeImage.read(getBytes()));
-	}
-
-	@Override
-	default InputStream getStream() {
-		return new ByteArrayInputStream(getBytes());
-	}
-
-	@Override
-	default int size() {
-		return getBytes().length;
-	}
 
 }

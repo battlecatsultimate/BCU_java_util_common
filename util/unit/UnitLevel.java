@@ -12,8 +12,6 @@ import java.util.List;
 @IndexCont(PackData.class)
 public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
-	public static UnitLevel def;
-
 	public final int[] lvs = new int[3];
 
 	public final List<Unit> units = new ArrayList<>();

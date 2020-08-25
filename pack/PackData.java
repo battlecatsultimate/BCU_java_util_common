@@ -160,7 +160,7 @@ public abstract class PackData implements IndexContainer {
 				u.lv = l.get(ind);
 				l.get(ind).units.add(u);
 			}
-			UnitLevel.def = l.get(2);
+			CommonStatic.getBCAssets().defLv = l.get(2);
 			qs = VFile.readLine("./org/data/unitbuy.csv");
 			for (Unit u : lu) {
 				String[] strs = qs.poll().split(",");

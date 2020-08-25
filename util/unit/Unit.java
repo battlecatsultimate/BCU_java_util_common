@@ -81,7 +81,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		max = 50;
 		maxp = 0;
 		rarity = 4;
-		lv = UnitLevel.def;
+		lv = CommonStatic.getBCAssets().defLv;
 		lv.units.add(this);
 	}
 

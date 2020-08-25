@@ -1,5 +1,6 @@
 package common.util.anim;
 
+import common.io.assets.Admin.StaticPermitted;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 
@@ -27,9 +28,11 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 		WALK, IDLE, ATK, HB, ENTER, BURROW_DOWN, BURROW_MOVE, BURROW_UP
 	}
 
+	@StaticPermitted
 	public static final UType[] TYPE4 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB };
+	@StaticPermitted
 	public static final UType[] TYPE5 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB, UType.ENTER };
-
+	@StaticPermitted
 	public static final UType[] TYPE7 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB, UType.BURROW_DOWN,
 			UType.BURROW_MOVE, UType.BURROW_UP };
 

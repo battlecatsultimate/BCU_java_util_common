@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import common.CommonStatic;
+import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.util.Data;
@@ -23,6 +24,7 @@ public class WebFileIO {
 
 	public static final int SMOOTH = 1 << 16, FAST = 1 << 18, MAX = 1 << 20;
 
+	@StaticPermitted(StaticPermitted.Type.TEMP)
 	private static HttpTransport transport;
 
 	public static boolean download(int size, String url, File file, Consumer<Progress> c) {

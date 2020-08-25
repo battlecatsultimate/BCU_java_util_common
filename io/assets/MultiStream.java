@@ -1,4 +1,4 @@
-package common.io;
+package common.io.assets;
 
 import common.CommonStatic;
 import common.pack.Context.ErrType;

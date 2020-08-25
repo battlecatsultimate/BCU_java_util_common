@@ -19,6 +19,7 @@ import common.util.pack.NyCastle;
 import common.util.pack.WaveAnim;
 import common.util.stage.Music;
 import common.util.unit.Combo;
+import common.util.unit.UnitLevel;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -79,6 +80,9 @@ public class CommonStatic {
 
 		// RandStage
 		public final int[][] randRep = new int[5][];
+		
+		// def unit level
+		public UnitLevel defLv;
 
 	}
 
