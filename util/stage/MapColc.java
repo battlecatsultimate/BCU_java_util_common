@@ -356,7 +356,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 	private static final String REG_MAPCOLC = "MapColc";
 
 	@StaticPermitted
-	private static final String[] strs = new String[] { "rc", "ec", "sc", "wc" };
+	private static final String[] strs = new String[] { "rc", "ec", "wc", "sc" };
 
 	@ContGetter
 	public static MapColc get(String id) {

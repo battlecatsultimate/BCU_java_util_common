@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Comparable<Identifier<?>>, Cloneable {
 
-	public static final String DEF = "_default";
+	public static final String DEF = "000000";
 
 	static final String STATIC_FIXER = "id_fixer";
 

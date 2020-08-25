@@ -88,7 +88,7 @@ public class UserProfile {
 		Map<String, Set> pool = getRegister(REG_POOL, Set.class);
 		Set<T> ans = pool.get(id);
 		if (ans == null)
-			pool.put(id, ans = new HashSet<>());
+			pool.put(id, ans = new LinkedHashSet<>());
 		return ans;
 	}
 
@@ -99,7 +99,7 @@ public class UserProfile {
 	public static <T> Map<String, T> getRegister(String id, Class<T> cls) {
 		Map<String, T> ans = (Map<String, T>) profile().registers.get(id);
 		if (ans == null)
-			profile().registers.put(id, ans = new HashMap<>());
+			profile().registers.put(id, ans = new LinkedHashMap<>());
 		return ans;
 	}
 

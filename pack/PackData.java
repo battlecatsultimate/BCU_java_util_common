@@ -46,6 +46,7 @@ public abstract class PackData implements IndexContainer {
 		public VFileRoot<FileDesc> root = new VFileRoot<>(".");
 
 		protected DefPack() {
+
 		}
 
 		@Override
@@ -80,6 +81,22 @@ public abstract class PackData implements IndexContainer {
 			Orb.read();
 			progress.accept("loading musics");
 			loadMusic();
+			progress.accept("process data");
+			this.enemies.reset();
+			this.randEnemies.reset();
+			this.units.reset();
+			this.unitLevels.reset();
+			this.groups.reset();
+			this.lvrs.reset();
+			this.bgs.reset();
+			this.musics.reset();
+			for (CastleList cl : CastleList.map().values())
+				cl.reset();
+			for (MapColc mc : MapColc.values()) {
+				mc.maps.reset();
+				for (StageMap sm : mc.maps)
+					sm.list.reset();
+			}
 		}
 
 		private void loadCharaGroup() {

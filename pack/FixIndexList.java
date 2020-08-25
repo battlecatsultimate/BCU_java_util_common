@@ -91,6 +91,16 @@ public class FixIndexList<T> extends Data {
 			}
 		}
 
+		public void reset() {
+			int ind = 0;
+			for (int i = 0; i < arr.length; i++) {
+				if (arr[i] != null)
+					order[ind++] = i;
+				if (ind == size)
+					return;
+			}
+		}
+
 		@Override
 		public void set(int ind, T t) {
 			while (arr.length <= ind)

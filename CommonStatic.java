@@ -80,7 +80,7 @@ public class CommonStatic {
 
 		// RandStage
 		public final int[][] randRep = new int[5][];
-		
+
 		// def unit level
 		public UnitLevel defLv;
 

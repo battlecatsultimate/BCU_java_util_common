@@ -7,11 +7,8 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
-import common.pack.Context.ErrType;
-import common.util.Data;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,36 +24,25 @@ public class WebFileIO {
 	@StaticPermitted(StaticPermitted.Type.TEMP)
 	private static HttpTransport transport;
 
-	public static boolean download(int size, String url, File file, Consumer<Progress> c) {
-		try {
-			Data.err(() -> Context.check(file));
-			OutputStream out = new FileOutputStream(file);
-			impl(size, url, out, c);
-			System.out.println("download success: " + url);
-			return true;
-		} catch (Exception e) {
-			CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to download " + url);
-			return false;
-		}
+	public static void download(int size, String url, File file, Consumer<Progress> c) throws Exception {
+		Context.check(file);
+		OutputStream out = new FileOutputStream(file);
+		impl(size, url, out, c);
+		System.out.println("download success: " + url);
 	}
 
-	public static boolean download(String url, File file) {
-		return download(FAST, url, file, null);
+	public static void download(String url, File file) throws Exception {
+		download(FAST, url, file, null);
 	}
 
-	public static boolean download(String url, File file, Consumer<Progress> c) {
-		return download(SMOOTH, url, file, c);
+	public static void download(String url, File file, Consumer<Progress> c) throws Exception {
+		download(SMOOTH, url, file, c);
 	}
 
-	public static JsonElement read(String url) {
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			impl(FAST, url, out, null);
-			return JsonParser.parseReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
-		} catch (Exception e) {
-			CommonStatic.ctx.noticeErr(e, ErrType.WARN, "cannot connect to internet");
-			return null;
-		}
+	public static JsonElement read(String url) throws Exception {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		impl(FAST, url, out, null);
+		return JsonParser.parseReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
 	}
 
 	private static void impl(int size, String url, OutputStream out, Consumer<Progress> c) throws Exception {

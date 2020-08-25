@@ -106,9 +106,10 @@ public class Admin {
 	public static void main(String[] args) throws Exception {
 		UserProfile.profile();
 		CommonStatic.ctx = new AdminContext();
+		UpdateCheck.checkAsset(UpdateCheck.checkUpdate(), "pc");
 		// testInternet();
 		// AssetLoader.merge();
-		searchForStaticFields();
+		// searchForStaticFields();
 	}
 
 	public static boolean preload(FileDesc fd) {

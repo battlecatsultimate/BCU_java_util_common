@@ -3,8 +3,6 @@ package common.util.stage;
 import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
@@ -18,8 +16,6 @@ import common.util.lang.MultiLangCont;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-
-import com.google.gson.JsonParser;
 
 @IndexContainer.IndexCont(MapColc.class)
 @JsonClass
@@ -55,11 +51,10 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@ContGetter
 	public static StageMap get(String str) {
-		Identifier<StageMap> id = JsonDecoder.decode(JsonParser.parseString(str), Identifier.class);
-		return Identifier.get(id);
+		String[] strs = str.split("/");
+		return new Identifier<>(strs[0], StageMap.class, Integer.parseInt(strs[1])).get();
 	}
 
 	@JsonField
@@ -127,7 +122,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	@Override
 	public String getSID() {
-		return JsonEncoder.encode(id).toString();
+		return id.pack + "/" + id.id;
 	}
 
 	@Override
