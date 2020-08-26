@@ -15,6 +15,7 @@ import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
 import common.system.files.FileData;
+import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.*;
 import common.util.pack.Background;
@@ -22,6 +23,7 @@ import common.util.stage.CastleImg;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -260,9 +262,29 @@ public abstract class Source {
 							"failed to save pack " + up.desc.name);
 		}
 
-		public static ResourceLocation validate(ResourceLocation rl) {
-			// FIXME find valid path
-			return rl;
+		public static void validateAnimation(ResourceLocation rl) {
+			rl.id = validateString(rl.id);
+			String id = rl.id;
+			int num = 0;
+			while (CommonStatic.ctx.getWorkspaceFile("./" + rl.pack + "/animations/" + rl.id).exists())
+				rl.id = id + "_" + (num++);
+		}
+
+		public static String validateString(String str) {
+			if (str == null || str.length() == 0)
+				str = "no_name";
+			str = str.replaceAll("[^0-9a-z_]", "_");
+			if (str.charAt(0) < 'a')
+				str = "a_" + str;
+			return str;
+		}
+
+		public static String validateWorkspace(String str) {
+			String id = validateString(str);
+			int num = 0;
+			while (CommonStatic.ctx.getWorkspaceFile("./" + str).exists())
+				str = id + "_" + (num++);
+			return id;
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
@@ -273,12 +295,27 @@ public abstract class Source {
 			super(id);
 		}
 
+		@Override
+		public void delete() {
+			getFile("").delete();
+		}
+
 		public File getBGFile(Identifier<Background> id) {
 			return getFile("./backgrounds/" + Data.trio(id.id) + ".png");
 		}
 
 		public File getCasFile(Identifier<CastleImg> id) {
 			return getFile("./castles/" + Data.trio(id.id) + ".png");
+		}
+
+		@Override
+		public FileData getFileData(String string) {
+			return new FDFile(getFile(string));
+		}
+
+		@Override
+		public String[] listFile(String path) {
+			return getFile(path).list();
 		}
 
 		@Override
@@ -323,6 +360,30 @@ public abstract class Source {
 		public ZipSource(ZipDesc desc) {
 			super(desc.desc.id);
 			zip = desc;
+		}
+
+		@Override
+		public void delete() {
+			zip.delete();
+		}
+
+		@Override
+		public FileData getFileData(String string) {
+			return zip.tree.find(string).getData();
+		}
+
+		@Override
+		public String[] listFile(String path) {
+			VFile<FileDesc> dir = zip.tree.find(path);
+			Collection<VFile<FileDesc>> col = dir.list();
+			if (col == null)
+				return null;
+			String[] ans = new String[col.size()];
+			int i = 0;
+			for (VFile<FileDesc> vf : col) {
+				ans[i++] = vf.name;
+			}
+			return ans;
 		}
 
 		@Override
@@ -372,6 +433,12 @@ public abstract class Source {
 	public Source(String id) {
 		this.id = id;
 	}
+
+	public abstract void delete();
+
+	public abstract FileData getFileData(String string);
+
+	public abstract String[] listFile(String path);
 
 	public abstract AnimCI loadAnimation(String name);
 

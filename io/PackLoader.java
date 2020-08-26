@@ -133,6 +133,10 @@ public class PackLoader {
 			offset = off;
 		}
 
+		public void delete() {
+			loader.file.delete();
+		}
+
 		public boolean match(byte[] data) {
 			return Arrays.equals(data, loader.key);
 		}

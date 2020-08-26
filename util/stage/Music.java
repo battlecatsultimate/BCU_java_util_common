@@ -1,16 +1,22 @@
 package common.util.stage;
 
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
 import common.system.files.FileData;
 
+@JsonClass
 @IndexCont(PackData.class)
+@JsonClass.JCGeneric(Identifier.class)
 public class Music implements Indexable<PackData, Music> {
 
+	@JsonField
+	@JsonClass.JCIdentifier
 	public final Identifier<Music> id;
-	public final FileData data;
+	public FileData data;
 
 	public Music(Identifier<Music> id, FileData fd) {
 		this.id = id;

@@ -107,8 +107,9 @@ public class AnimCE extends AnimCI {
 	private static final String REG_LOCAL_ANIM = "local_animation";
 
 	public static String getAvailable(String string) {
-		// FIXME Auto-generated method stub
-		return string;
+		ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, string);
+		Workspace.validateAnimation(rl);
+		return rl.id;
 	}
 
 	public static Map<String, AnimCE> map() {
@@ -139,6 +140,7 @@ public class AnimCE extends AnimCI {
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
 		id = new ResourceLocation("_local", st);
+		Workspace.validateAnimation(id);
 		map().put(id.id, this);
 	}
 
@@ -206,15 +208,6 @@ public class AnimCE extends AnimCI {
 		return history.peek().name;
 	}
 
-	public void hardSave(String str) {
-		if (id == null) {
-			id = Workspace.validate(new ResourceLocation("_local", str));
-			map().put(id.id, this);
-		}
-		saved = false;
-		save();
-	}
-
 	public void ICedited() {
 		check();
 		parts = imgcut.cut(getNum());
@@ -241,13 +234,15 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void localize(String pack) {
+		check();
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().remove(id.id);
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
 		id.pack = pack;
+		Workspace.validateAnimation(id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
-			map().put(str, this);
+			map().put(id.id, this);
 		saver.saveAll();
 	}
 
@@ -315,13 +310,15 @@ public class AnimCE extends AnimCI {
 	}
 
 	public void renameTo(String str) {
+		check();
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().remove(id.id);
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
 		id.id = str;
+		Workspace.validateAnimation(id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
-			map().put(str, this);
+			map().put(id.id, this);
 		saver.saveAll();
 		unSave("rename (not applicapable for undo)");
 	}

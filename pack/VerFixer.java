@@ -11,6 +11,7 @@ import common.pack.PackData.UserPack;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDFile;
+import common.system.files.FileData;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimCI;
@@ -520,6 +521,20 @@ public abstract class VerFixer extends Source {
 
 	private VerFixer(String id) {
 		super(id);
+	}
+
+	@Override
+	public void delete() {
+	}
+
+	@Override
+	public FileData getFileData(String str) {
+		return null;
+	}
+
+	@Override
+	public String[] listFile(String str) {
+		return null;
 	}
 
 	@Override

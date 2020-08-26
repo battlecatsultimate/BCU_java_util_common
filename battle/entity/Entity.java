@@ -511,7 +511,7 @@ public abstract class Entity extends AbEntity {
 			}
 			if (atkTime == 0) {
 				e.waitTime = e.data.getTBA();
-				e.anim.setAnim(UType.ATK);
+				e.anim.setAnim(UType.IDLE);
 			}
 		}
 	}

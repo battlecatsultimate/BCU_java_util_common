@@ -185,10 +185,6 @@ public class Admin {
 		}
 	}
 
-	public static void testInternet() throws Exception {
-		// FIXME
-	}
-
 	public static void write() throws Exception {
 		for (int i = 1; i <= 9; i++) {
 			File f = new File("./assets/" + Data.hex(i));

@@ -269,8 +269,7 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public void delete() {
-			// FIXME Auto-generated method stub
-
+			source.delete();
 		}
 
 		public void forceRemoveParent(String id) {
@@ -289,7 +288,16 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public void loadMusics() {
-			// FIXME
+			String[] path = source.listFile("./musics");
+			musics.clear();
+			if (path != null)
+				for (String str : path)
+					if (str.length() == 7 && str.endsWith(".ogg")) {
+						Integer ind = Data.ignore(() -> Integer.parseInt(str));
+						if (ind != null)
+							add(musics, ind, id -> new Music(id, source.getFileData("./musics/" + str)));
+					}
+			musics.reset();
 		}
 
 		public boolean relyOn(String id) {
