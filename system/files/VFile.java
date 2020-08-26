@@ -44,13 +44,6 @@ public class VFile implements Comparable<VFile> {
 	public int mark;
 
 	/**
-	 * constructor for root directory
-	 */
-	protected VFile(String str) {
-		this(null, str);
-	}
-
-	/**
 	 * constructor for directory
 	 */
 	public VFile(VFile par, String str) {
@@ -72,6 +65,13 @@ public class VFile implements Comparable<VFile> {
 		data = fd;
 		if (parent != null)
 			parent.subs.put(name, this);
+	}
+
+	/**
+	 * constructor for root directory
+	 */
+	protected VFile(String str) {
+		this(null, str);
 	}
 
 	@Override
