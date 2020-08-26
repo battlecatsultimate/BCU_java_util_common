@@ -11,6 +11,7 @@ import common.util.pack.Background;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -31,6 +32,8 @@ public class Formatter {
 		public boolean isEnemy;
 		@JsonField
 		public boolean useSecond;
+
+		public DecimalFormat df = new DecimalFormat("#.##");
 
 		public Context() {
 		}
@@ -59,7 +62,7 @@ public class Formatter {
 		}
 
 		public String toSecond(int time) {
-			return "" + (time * 100 / 30 / 100.0);
+			return df.format((double)time/30.0);
 		}
 
 	}
@@ -394,7 +397,7 @@ public class Formatter {
 			for (int i = 0; i < args.length; i++)
 				args[i] = list.get(i).eval();
 			for (Method m : ms)
-				if (m.getName().equals(name) && m.getParameterCount() == list.size())
+				if (m.getName().equals(name) && m.getParameterTypes().length == list.size())
 					return m.invoke(parent, args);
 			throw new Exception("function " + name + " not found for class " + parent.getClass());
 		}
