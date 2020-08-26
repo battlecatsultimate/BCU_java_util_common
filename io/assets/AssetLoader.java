@@ -14,11 +14,13 @@ import common.pack.Context.ErrType;
 import common.pack.PackData.PackDesc;
 import common.system.files.FDFile;
 import common.system.files.VFile;
+import common.system.files.VFileRoot;
 import common.util.Data;
 
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 @StaticPermitted
 public class AssetLoader {
@@ -78,12 +80,16 @@ public class AssetLoader {
 
 	private static final int LEN = 1024;
 
-	public static void load() {
+	public static void load(Consumer<Double> prog) {
 		try {
 			File folder = CommonStatic.ctx.getAssetFile("./assets/");
-			for (File f : folder.listFiles()) {
-				if (f.getName().endsWith(".assets.bcuzips")) {
-					List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f);
+			File[] fs = folder.listFiles();
+			for (int i = 0; i < fs.length; i++) {
+				prog.accept(1.0 * i / fs.length);
+				int I = i;
+				if (fs[i].getName().endsWith(".assets.bcuzips")) {
+					Consumer<Double> con = (d) -> prog.accept((I + d) / fs.length);
+					List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, fs[i], con);
 					for (ZipDesc zip : list)
 						if (Data.getVer(zip.desc.BCU_VERSION) <= Data.getVer(CORE_VER)) {
 							VFile.getBCFileTree().merge(zip.tree);
@@ -95,8 +101,11 @@ public class AssetLoader {
 		}
 		try {
 			File folder = new File("./assets/custom");
-			if (folder.exists())
-				add(VFile.getBCFileTree(), folder);
+			if (folder.exists()) {
+				VFileRoot vr = new VFileRoot(".");
+				add(vr, folder);
+				VFile.getBCFileTree().merge(vr);
+			}
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read custom asset");
 		}

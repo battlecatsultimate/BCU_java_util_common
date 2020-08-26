@@ -60,8 +60,10 @@ public class Admin {
 
 		@Override
 		public void initProfile() {
-			AssetLoader.load();
+			AssetLoader.load((d) -> {
+			});
 			UserProfile.getBCData().load((str) -> {
+			}, (d) -> {
 			});
 			BasisSet.read();
 			// UserProfile.loadPacks(); TODO

@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class UserProfile {
@@ -146,7 +147,7 @@ public class UserProfile {
 		return p;
 	}
 
-	public static void loadPacks() {
+	public static void loadPacks(Consumer<Double> prog) {
 		// FIXME CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to
 		// convert old format");
 		File packs = CommonStatic.ctx.getPackFolder();
@@ -173,8 +174,10 @@ public class UserProfile {
 						profile.pending.put(pack.desc.id, pack);
 				}
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
+		int tot = queue.size();
+		int ind = 0;
 		while (queue.removeIf(profile::add))
-			;
+			prog.accept(1.0 * (ind++) / tot);
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 	}

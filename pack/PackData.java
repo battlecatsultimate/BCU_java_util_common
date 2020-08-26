@@ -53,13 +53,13 @@ public abstract class PackData implements IndexContainer {
 			return Identifier.DEF;
 		}
 
-		public void load(Consumer<String> progress) {
+		public void load(Consumer<String> progress, Consumer<Double> bar) {
 			progress.accept("loading basic images");
 			Res.readData();
 			progress.accept("loading enemies");
-			loadEnemies();
+			loadEnemies(bar);
 			progress.accept("loading units");
-			loadUnits();
+			loadUnits(bar);
 			progress.accept("loading auxiliary data");
 			Combo.readFile();
 			PCoin.read();
@@ -118,8 +118,13 @@ public abstract class PackData implements IndexContainer {
 			}
 		}
 
-		private void loadEnemies() {
-			VFile.get("./org/enemy/").list().forEach(p -> enemies.add(new Enemy(p)));
+		private void loadEnemies(Consumer<Double> bar) {
+			int i = 0;
+			Collection<VFile> list = VFile.get("./org/enemy/").list();
+			for (VFile p : list) {
+				enemies.add(new Enemy(p));
+				bar.accept(1.0 * (i++) / list.size());
+			}
 			Queue<String> qs = VFile.readLine("./org/data/t_unit.csv");
 			qs.poll();
 			qs.poll();
@@ -162,8 +167,13 @@ public abstract class PackData implements IndexContainer {
 				souls.add(new Soul(pre + Data.trio(i) + mid + Data.trio(i), i));
 		}
 
-		private void loadUnits() {
-			VFile.get("./org/unit").list().forEach(p -> units.add(new Unit(p)));
+		private void loadUnits(Consumer<Double> bar) {
+			int x = 0;
+			Collection<VFile> list = VFile.get("./org/unit").list();
+			for (VFile p : list) {
+				units.add(new Unit(p));
+				bar.accept(1.0 * (x++) / list.size());
+			}
 			Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
 			List<Unit> lu = units.getList();
 			FixIndexList<UnitLevel> l = unitLevels;

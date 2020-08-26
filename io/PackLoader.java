@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 @StaticPermitted
 public class PackLoader {
@@ -175,12 +176,15 @@ public class PackLoader {
 			fis.close();
 		}
 
-		private void load() throws Exception {
-			for (FileDesc fd : files)
+		private void load(Consumer<Double> con) throws Exception {
+			int i = 0;
+			for (FileDesc fd : files) {
 				if (loader.context.getPreload(this).preload(fd))
 					fd.data = new FDByte(loader.decode(fd.size));
 				else
 					loader.fis.skip(regulate(fd.size + PASSWORD));
+				con.accept(1.0 * (i++) / files.length);
+			}
 		}
 
 		private void save(FileSaver saver) throws Exception {
@@ -300,8 +304,8 @@ public class PackLoader {
 		private final byte[] key;
 		private final boolean useRAF;
 
-		private FileLoader(Preloader cont, FileInputStream stream, int off, File file, boolean useRAF)
-				throws Exception {
+		private FileLoader(Preloader cont, FileInputStream stream, int off, File file, boolean useRAF,
+				Consumer<Double> con) throws Exception {
 			context = cont;
 			this.file = file;
 			this.fis = stream;
@@ -319,7 +323,7 @@ public class PackLoader {
 			JsonElement je = JsonParser.parseString(desc);
 			int offset = off + HEADER + PASSWORD * 2 + 4 + regulate(size);
 			pack = JsonDecoder.inject(je, ZipDesc.class, new ZipDesc(this, offset));
-			pack.load();
+			pack.load(con);
 		}
 
 		private byte[] decode(int size) throws Exception {
@@ -430,14 +434,18 @@ public class PackLoader {
 		asset.offset = HEADER + 4 + size;
 	}
 
-	public static List<ZipDesc> readAssets(Preloader cont, File f) throws Exception {
+	public static List<ZipDesc> readAssets(Preloader cont, File f, Consumer<Double> prog) throws Exception {
 		FileInputStream fis = new FileInputStream(f);
 		AssetHeader header = new AssetHeader();
 		read(fis, header);
 		List<ZipDesc> ans = new ArrayList<>();
 		int off = header.offset;
+		int i = 0;
 		for (AssetEntry ent : header.list) {
-			ZipDesc zip = new FileLoader(cont, fis, off, f, true).pack;
+			int I = i++;
+			prog.accept(1.0 * I / header.list.size());
+			Consumer<Double> con = (d) -> prog.accept((I + d) / header.list.size());
+			ZipDesc zip = new FileLoader(cont, fis, off, f, true, con).pack;
 			ans.add(zip);
 			off += ent.size;
 		}
@@ -447,7 +455,8 @@ public class PackLoader {
 
 	public static ZipDesc readPack(Preload cont, File f) throws Exception {
 		FileInputStream fis = new FileInputStream(f);
-		ZipDesc ans = new FileLoader((desc) -> cont, fis, 0, f, false).pack;
+		ZipDesc ans = new FileLoader((desc) -> cont, fis, 0, f, false, (d) -> {
+		}).pack;
 		fis.close();
 		return ans;
 	}
