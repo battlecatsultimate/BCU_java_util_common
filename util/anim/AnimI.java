@@ -15,7 +15,7 @@ public abstract class AnimI<A extends AnimI<A, T>, T extends Enum<T> & AnimI.Ani
 	protected static String[] translate(AnimType<?, ?>... anim) {
 		String[] ans = new String[anim.length];
 		for (int i = 0; i < ans.length; i++)
-			ans[i] = MultiLangCont.getStatic().ANIMNAME.getCont(anim[i]);
+			ans[i] = MultiLangCont.getStatic().getAnimName(anim[i]);
 		return ans;
 	}
 

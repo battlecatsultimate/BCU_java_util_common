@@ -712,7 +712,7 @@ public class Data {
 	 * 0: Current speed * (100 + n)% type 1: Current speed + n type 2: Fixed speed
 	 */
 	public static final int P_SPEED = 36;
-	public static final int PROC_TOT = 40;// 37
+	public static final int PROC_TOT = 37;// 37
 	public static final int PROC_WIDTH = 6;
 
 	public static final int WT_WAVE = 1;

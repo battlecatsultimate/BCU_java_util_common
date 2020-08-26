@@ -11,6 +11,7 @@ import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,7 +30,23 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
 		public final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
-		public final MultiLangCont<AnimI.AnimType<?, ?>, String> ANIMNAME = new MultiLangCont<>();
+
+		protected final MultiLangCont<AnimI.AnimType<?, ?>, String> ANIMNAME = new MultiLangCont<>();
+		protected final boolean[] loaded_anim = new boolean[LOC_CODE.length];
+
+		public void clear() {
+			Arrays.fill(loaded_anim, false);
+			ProcLang.clear();
+		}
+
+		public String getAnimName(AnimI.AnimType<?, ?> type) {
+			int lang = CommonStatic.getConfig().lang;
+			if (!loaded_anim[lang]) {
+				loaded_anim[lang] = true;
+				AnimTypeLocale.read();
+			}
+			return ANIMNAME.getCont(type);
+		}
 
 	}
 
