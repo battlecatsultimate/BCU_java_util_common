@@ -47,7 +47,7 @@ public abstract class ContWaveAb extends ContAb {
 				}
 			sb.getAttack(atk);
 			tempAtk = true;
-			if (atk.getProc().WAVE.exists())
+			if (atk.getProc().WAVE.lv > 0)
 				nextWave();
 		}
 		if (maxt == t)

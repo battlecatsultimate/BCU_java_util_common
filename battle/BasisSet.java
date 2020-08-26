@@ -19,6 +19,7 @@ import common.pack.VerFixer.VerFixerException;
 import common.system.Copable;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		def();
 		File f = CommonStatic.ctx.getUserFile("./basis.json");
 		if (f.exists())
-			try (Reader r = new FileReader(f)) {
+			try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
 				JsonElement je = JsonParser.parseReader(r);
 				r.close();
 				JsonElement jel = je.getAsJsonObject().get("list");

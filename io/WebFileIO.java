@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class WebFileIO {
@@ -42,7 +43,8 @@ public class WebFileIO {
 	public static JsonElement read(String url) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		impl(FAST, url, out, null);
-		return JsonParser.parseReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
+		return JsonParser.parseReader(
+				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
 	private static void impl(int size, String url, OutputStream out, Consumer<Progress> c) throws Exception {
@@ -53,7 +55,7 @@ public class WebFileIO {
 			request.setUnsuccessfulResponseHandler(
 					new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
 			request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(new ExponentialBackOff()));
-
+			request.setReadTimeout(5000);
 		});
 		downloader.setChunkSize(size);
 		downloader.setProgressListener(new Progress(c));

@@ -118,7 +118,7 @@ public class UpdateCheck {
 			for (File m : music.listFiles())
 				if (m.getName().length() == 7 && m.getName().endsWith(".ogg")) {
 					Integer id = Data.ignore(() -> Integer.parseInt(m.getName().substring(0, 3)));
-					if (id != null)
+					if (id != null && id < count && id >= 0)
 						exi[id] = true;
 				}
 		List<Downloader> ans = new ArrayList<>();

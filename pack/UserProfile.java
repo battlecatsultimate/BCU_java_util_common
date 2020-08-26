@@ -13,11 +13,11 @@ import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
-
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
@@ -190,7 +190,7 @@ public class UserProfile {
 
 	public static UserPack readJsonPack(File f) throws Exception {
 		File folder = f.getParentFile();
-		Reader r = new FileReader(f);
+		Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8);
 		JsonElement elem = JsonParser.parseReader(r);
 		r.close();
 		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
@@ -200,7 +200,7 @@ public class UserProfile {
 
 	public static UserPack readZipPack(File f) throws Exception {
 		ZipDesc zip = PackLoader.readPack(CommonStatic.ctx::preload, f);
-		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"));
+		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"), StandardCharsets.UTF_8);
 		JsonElement elem = JsonParser.parseReader(r);
 		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
 		r.close();
