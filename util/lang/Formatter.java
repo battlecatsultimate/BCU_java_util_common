@@ -62,7 +62,7 @@ public class Formatter {
 		}
 
 		public String toSecond(int time) {
-			return df.format((double)time/30.0);
+			return df.format(time / 30.0);
 		}
 
 	}

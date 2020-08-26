@@ -90,7 +90,7 @@ public class UpdateCheck {
 	public static List<Downloader> checkAsset(UpdateJson json, String type) throws Exception {
 		Set<String> local = AssetLoader.previewAssets();
 		Set<String> req = new HashSet<>(UserProfile.getPool(REG_REQLIB, String.class));
-		req.removeIf(id -> local.contains("assets_" + id));
+		req.removeIf(id -> local.contains("asset_" + id));
 		if (json == null && req.size() > 0)
 			throw new Exception("missing required libraries: " + req + ", internet connection required");
 		List<Downloader> set = new ArrayList<Downloader>();

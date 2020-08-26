@@ -27,6 +27,8 @@ public class AtkModelEnemy extends AtkModelEntity {
 	public void summon(SUMMON proc, Entity ent, Object acs) {
 		AbEnemy ene = (AbEnemy) Identifier.get(proc.id);
 		SUMMON.TYPE conf = proc.type;
+		if (conf.same_health && ent.health <= 0)
+			return;
 		int time = proc.time;
 		int allow = b.st.data.allow(b, ene);
 		if (ene != null && (allow >= 0 || conf.ignore_limit)) {

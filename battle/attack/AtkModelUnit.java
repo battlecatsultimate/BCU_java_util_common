@@ -32,6 +32,8 @@ public class AtkModelUnit extends AtkModelEntity {
 	public void summon(SUMMON proc, Entity ent, Object acs) {
 		Unit u = Identifier.getOr(proc.id, Unit.class);
 		SUMMON.TYPE conf = proc.type;
+		if (conf.same_health && ent.health <= 0)
+			return;
 		int time = proc.time;
 		if (u != null && (b.entityCount(-1) < b.max_num || conf.ignore_limit)) {
 			double up = ent.pos + getDire() * proc.dis;

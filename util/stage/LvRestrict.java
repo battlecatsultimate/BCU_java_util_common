@@ -21,6 +21,7 @@ import java.util.TreeMap;
 
 @IndexCont(PackData.class)
 @JsonClass(noTag = NoTag.LOAD)
+@JsonClass.JCGeneric(Identifier.class)
 public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> {
 
 	@StaticPermitted

@@ -99,6 +99,11 @@ public abstract class PackData implements IndexContainer {
 			}
 		}
 
+		@Override
+		public String toString() {
+			return "Default BC Data";
+		}
+
 		private void loadCharaGroup() {
 			Queue<String> qs = VFile.readLine("./org/data/Charagroup.csv");
 			qs.poll();
@@ -290,6 +295,11 @@ public abstract class PackData implements IndexContainer {
 		public boolean relyOn(String id) {
 			// FIXME
 			return false;
+		}
+
+		@Override
+		public String toString() {
+			return desc.name == null ? desc.id : desc.name;
 		}
 
 		void load() throws Exception {

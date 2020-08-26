@@ -25,7 +25,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		UserProfile.profile();
 		CommonStatic.ctx = new Admin.AdminContext();
-		BufferedReader r = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("proc.json")));
+		BufferedReader r = new BufferedReader(new InputStreamReader(CommonStatic.ctx.getLangFile("proc.json")));
 		String str = null;
 		while ((str = r.readLine()) != null)
 			System.out.println(str);
