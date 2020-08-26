@@ -5,7 +5,6 @@ import common.CommonStatic;
 import common.battle.data.DataEnemy;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
-import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.AssetLoader;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
@@ -43,7 +42,7 @@ public abstract class PackData implements IndexContainer {
 
 	public static class DefPack extends PackData {
 
-		public VFileRoot<FileDesc> root = new VFileRoot<>(".");
+		public VFileRoot root = new VFileRoot(".");
 
 		protected DefPack() {
 

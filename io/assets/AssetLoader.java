@@ -12,6 +12,7 @@ import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.PackData.PackDesc;
+import common.system.files.FDFile;
 import common.system.files.VFile;
 import common.util.Data;
 
@@ -92,6 +93,13 @@ public class AssetLoader {
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");
 		}
+		try {
+			File folder = new File("./assets/custom");
+			if (folder.exists())
+				add(VFile.getBCFileTree(), folder);
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read custom asset");
+		}
 	}
 
 	public static void merge() throws Exception {
@@ -169,6 +177,14 @@ public class AssetLoader {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to preview asset");
 			return null;
 		}
+	}
+
+	private static void add(VFile vf, File f) {
+		for (File fi : f.listFiles())
+			if (fi.isDirectory())
+				add(new VFile(vf, fi.getName()), fi);
+			else
+				new VFile(vf, fi.getName(), new FDFile(fi));
 	}
 
 	private static Preload getPreload(ZipDesc desc) {

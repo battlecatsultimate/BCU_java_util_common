@@ -25,7 +25,7 @@ public abstract class CastleList extends FixIndexMap<CastleImg> implements Index
 			str = name;
 			map().put(id, this);
 			defset().add(this);
-			for (VFile<?> vf : VFile.get("./org/img/" + name).list())
+			for (VFile vf : VFile.get("./org/img/" + name).list())
 				add(new CastleImg(getNextID(CastleImg.class), new VImg(vf)));
 
 		}

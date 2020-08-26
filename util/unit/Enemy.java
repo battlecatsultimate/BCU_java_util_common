@@ -62,7 +62,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		anim = old.anim;
 	}
 
-	public Enemy(VFile<?> f) {
+	public Enemy(VFile f) {
 		id = new Identifier<>(Identifier.DEF, Enemy.class, CommonStatic.parseIntN(f.getName()));
 		String str = "./org/enemy/" + Data.trio(id.id) + "/";
 		de = new DataEnemy(this);

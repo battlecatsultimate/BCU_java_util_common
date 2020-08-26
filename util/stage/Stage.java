@@ -173,7 +173,7 @@ public class Stage extends Data
 	}
 
 	@SuppressWarnings("deprecation")
-	protected Stage(Identifier<Stage> id, VFile<?> f, int type) {
+	protected Stage(Identifier<Stage> id, VFile f, int type) {
 		this.id = id;
 		StageMap sm = getCont();
 		if (sm.info != null)

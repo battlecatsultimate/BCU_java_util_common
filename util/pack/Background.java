@@ -30,7 +30,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public static void read() {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		String path = "./org/battle/bg/";
-		for (VFile<?> vf : VFile.get("./org/battle/bg").list()) {
+		for (VFile vf : VFile.get("./org/battle/bg").list()) {
 			String name = vf.getName();
 			if (name.length() != 11 || !name.endsWith(".imgcut"))
 				continue;
@@ -42,7 +42,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		aux.ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
-		for (VFile<?> vf : VFile.get("./org/img/bg/").list())
+		for (VFile vf : VFile.get("./org/img/bg/").list())
 			if (vf.getName().length() == 9) {
 				int[] ints = new int[15];
 				try {

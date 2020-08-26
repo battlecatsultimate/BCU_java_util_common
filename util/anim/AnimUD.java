@@ -12,7 +12,7 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 	static class DefImgLoader implements AnimU.ImageKeeper {
 
 		private final String spath;
-		private final VFile<?> fnum, fedi, funi;
+		private final VFile fnum, fedi, funi;
 		private FileData dnum;
 		private FakeImage num;
 		private VImg edi, uni;

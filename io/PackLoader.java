@@ -118,7 +118,7 @@ public class PackLoader {
 		@JsonField(gen = GenType.GEN)
 		public FileDesc[] files;
 
-		public VFileRoot<FileDesc> tree = new VFileRoot<>(".");
+		public VFileRoot tree = new VFileRoot(".");
 
 		private int offset;
 		private FileLoader loader;
@@ -148,7 +148,7 @@ public class PackLoader {
 		}
 
 		public InputStream readFile(String path) {
-			FileDesc fd = tree.find(path).getData();
+			FileDesc fd = (FileDesc) tree.find(path).getData();
 			System.out.println("stream requested: " + fd.path + ", " + fd.size);
 			return CommonStatic.ctx.noticeErr(() -> new FileLoader.FLStream(loader, offset + fd.offset, fd.size),
 					ErrType.ERROR, "failed to read bcuzip at " + path);

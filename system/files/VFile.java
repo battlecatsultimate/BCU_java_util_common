@@ -1,31 +1,30 @@
 package common.system.files;
 
 import common.CommonStatic;
-import common.io.PackLoader.ZipDesc.FileDesc;
 import common.pack.UserProfile;
 
 import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class VFile<T extends FileData> implements Comparable<VFile<T>> {
+public class VFile implements Comparable<VFile> {
 
-	public static VFile<FileDesc> get(String str) {
+	public static VFile get(String str) {
 		return getBCFileTree().find(str);
 	}
 
-	public static final VFileRoot<FileDesc> getBCFileTree() {
+	public static final VFileRoot getBCFileTree() {
 		return UserProfile.getBCData().root;
 	}
 
-	public static VFile<? extends FileData> getFile(String path) {
+	public static VFile getFile(String path) {
 		if (path.startsWith("./org/") || path.startsWith("./lang/"))
 			return getBCFileTree().find(path);
 		if (path.startsWith("./res/")) {
 			File f = CommonStatic.def.route(path);
 			if (!f.exists())
 				return null;
-			return new VFile<FDFile>(null, f.getName(), new FDFile(f));
+			return new VFile(null, f.getName(), new FDFile(f));
 		}
 		return null;
 	}
@@ -36,11 +35,11 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	public String name;
 
-	protected VFile<T> parent;
+	protected VFile parent;
 
-	private final Map<String, VFile<T>> subs;
+	private final Map<String, VFile> subs;
 
-	private T data;
+	private FileData data;
 
 	public int mark;
 
@@ -54,7 +53,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	/**
 	 * constructor for directory
 	 */
-	protected VFile(VFile<T> par, String str) {
+	public VFile(VFile par, String str) {
 		parent = par;
 		name = str;
 		subs = new TreeMap<>();
@@ -66,7 +65,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	/**
 	 * constructor for data file
 	 */
-	protected VFile(VFile<T> par, String str, T fd) {
+	public VFile(VFile par, String str, FileData fd) {
 		parent = par;
 		name = str;
 		subs = null;
@@ -76,13 +75,13 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	}
 
 	@Override
-	public int compareTo(VFile<T> o) {
+	public int compareTo(VFile o) {
 		return name.compareTo(o.name);
 	}
 
 	public int countSubDire() {
 		int ans = 0;
-		for (VFile<T> f : subs.values())
+		for (VFile f : subs.values())
 			if (f.subs != null)
 				ans++;
 		return ans;
@@ -92,13 +91,13 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		parent.subs.remove(name);
 	}
 
-	public T getData() {
+	public FileData getData() {
 		return data;
 	}
 
-	public List<VFile<T>> getIf(Predicate<VFile<T>> p) {
-		List<VFile<T>> ans = new ArrayList<VFile<T>>();
-		for (VFile<T> v : list()) {
+	public List<VFile> getIf(Predicate<VFile> p) {
+		List<VFile> ans = new ArrayList<VFile>();
+		for (VFile v : list()) {
 			if (p.test(v))
 				ans.add(v);
 			if (v.subs != null)
@@ -111,7 +110,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		return name;
 	}
 
-	public VFile<T> getParent() {
+	public VFile getParent() {
 		return parent;
 	}
 
@@ -121,14 +120,14 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		return name;
 	}
 
-	public Collection<VFile<T>> list() {
+	public Collection<VFile> list() {
 		return subs == null ? null : subs.values();
 	}
 
-	public void merge(VFile<T> f) throws Exception {
+	public void merge(VFile f) throws Exception {
 		if (subs == null || f.subs == null)
 			throw new Exception("merge can only happen for folders");
-		for (VFile<T> fi : f.subs.values()) {
+		for (VFile fi : f.subs.values()) {
 			fi.parent = this;
 			if (fi.subs == null || !subs.containsKey(fi.name))
 				subs.put(fi.name, fi);
@@ -137,12 +136,12 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		}
 	}
 
-	public void replace(T t) {
+	public void replace(FileData t) {
 		delete();
-		new VFile<T>(parent, name, t);
+		new VFile(parent, name, t);
 	}
 
-	public void setData(T fd) {
+	public void setData(FileData fd) {
 		data = fd;
 	}
 

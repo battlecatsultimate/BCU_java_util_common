@@ -2,14 +2,13 @@ package common.system;
 
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
-import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.ImgCore;
 import common.util.anim.ImgCut;
 
 public class VImg extends ImgCore {
 
-	private final VFile<? extends FileData> file;
+	private final VFile file;
 
 	public String name = "";
 
@@ -23,7 +22,7 @@ public class VImg extends ImgCore {
 		if (o instanceof String)
 			file = VFile.getFile((String) o);
 		else if (o instanceof VFile)
-			file = (VFile<?>) o;
+			file = (VFile) o;
 		else
 			file = null;
 		if (file == null)

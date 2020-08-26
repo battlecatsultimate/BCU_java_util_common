@@ -29,7 +29,7 @@ public class AnimCE extends AnimCI {
 	private static class AnimCELoader implements Source.AnimLoader {
 
 		private static VImg optional(String str) {
-			VFile<?> fv = VFile.getFile(str);
+			VFile fv = VFile.getFile(str);
 			if (fv == null)
 				return null;
 			return new VImg(fv);

@@ -57,17 +57,17 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("CA", 27);
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
-			VFile<?> f = VFile.get("./org/stage/");
+			VFile f = VFile.get("./org/stage/");
 			if (f == null)
 				return;
-			for (VFile<?> fi : f.list()) {
+			for (VFile fi : f.list()) {
 				if (fi.getName().equals("CH"))
 					continue;
 				if (fi.getName().equals("D"))
 					continue;
-				List<VFile<?>> list = new ArrayList<>(fi.list());
-				VFile<?> map = list.get(0);
-				List<VFile<?>> stage = new ArrayList<>();
+				List<VFile> list = new ArrayList<>(fi.list());
+				VFile map = list.get(0);
+				List<VFile> stage = new ArrayList<>();
 				for (int i = 1; i < list.size(); i++)
 					if (list.get(i).list() != null)
 						stage.addAll(list.get(i).list());
@@ -112,8 +112,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			add(11, id -> new StageMap(id, abbr + "2_2_Invasion.csv", 2)).name = "CotC 3 Invasion";
 			add(12, id -> new StageMap(id, abbr + "1_1_Z.csv", 2)).name = "ItF 2 Zombie";
 			add(13, id -> new StageMap(id, abbr + "1_2_Z.csv", 2)).name = "ItF 3 Zombie";
-			VFile<?> stz = VFile.get("./org/stage/CH/stageZ/");
-			for (VFile<?> vf : stz.list()) {
+			VFile stz = VFile.get("./org/stage/CH/stageZ/");
+			for (VFile vf : stz.list()) {
 				String str = vf.getName();
 				int id0 = -1, id1 = -1;
 				try {
@@ -132,8 +132,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				else if (id0 == 6)
 					maps.get(13).add(id1, id -> new Stage(id, vf, 0));
 			}
-			VFile<?> stw = VFile.get("./org/stage/CH/stageW/");
-			for (VFile<?> vf : stw.list()) {
+			VFile stw = VFile.get("./org/stage/CH/stageW/");
+			for (VFile vf : stw.list()) {
 				String str = vf.getName();
 				int id0 = -1, id1 = -1;
 				try {
@@ -145,8 +145,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				}
 				maps.get(id0 - 1).add(id1, id -> new Stage(id, vf, 1));
 			}
-			VFile<?> sts = VFile.get("./org/stage/CH/stageSpace/");
-			for (VFile<?> vf : sts.list()) {
+			VFile sts = VFile.get("./org/stage/CH/stageSpace/");
+			for (VFile vf : sts.list()) {
 				String str = vf.getName();
 				if (str.length() > 20) {
 					maps.get(11).add(0, id -> new Stage(id, vf, 0));
@@ -163,8 +163,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				maps.get(id0 - 1).add(id1, id -> new Stage(id, vf, 1));
 			}
 
-			VFile<?> st = VFile.get("./org/stage/CH/stage/");
-			for (VFile<?> vf : st.list()) {
+			VFile st = VFile.get("./org/stage/CH/stage/");
+			for (VFile vf : st.list()) {
 				String str = vf.getName();
 				int id0 = -1;
 				try {
@@ -178,11 +178,11 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			maps.get(9).stars = new int[] { 100, 200, 400 };
 		}
 
-		private DefMapColc(String st, int ID, List<VFile<?>> stage, VFile<?> map) {
+		private DefMapColc(String st, int ID, List<VFile> stage, VFile map) {
 			name = st;
 			id = ID;
 			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.hex(id), this);
-			for (VFile<?> m : map.list()) {
+			for (VFile m : map.list()) {
 				String str = m.getName();
 				int len = str.length();
 				int id = -1;
@@ -195,7 +195,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				add(id, ind -> new StageMap(ind, m.getData()));
 			}
 
-			for (VFile<?> s : stage) {
+			for (VFile s : stage) {
 				String str = s.getName();
 				int len = str.length();
 				int id0 = -1, id1 = -1;

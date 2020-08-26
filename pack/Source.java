@@ -3,7 +3,6 @@ package common.pack;
 import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
-import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonEncoder;
@@ -374,13 +373,13 @@ public abstract class Source {
 
 		@Override
 		public String[] listFile(String path) {
-			VFile<FileDesc> dir = zip.tree.find(path);
-			Collection<VFile<FileDesc>> col = dir.list();
+			VFile dir = zip.tree.find(path);
+			Collection<VFile> col = dir.list();
 			if (col == null)
 				return null;
 			String[] ans = new String[col.size()];
 			int i = 0;
-			for (VFile<FileDesc> vf : col) {
+			for (VFile vf : col) {
 				ans[i++] = vf.name;
 			}
 			return ans;
@@ -422,7 +421,7 @@ public abstract class Source {
 			return ans;
 		}
 
-		private FileDesc loadAnimationFile(ResourceLocation id, String path) {
+		private FileData loadAnimationFile(ResourceLocation id, String path) {
 			return zip.tree.find("./animations/" + id.id + "/" + path).getData();
 		}
 

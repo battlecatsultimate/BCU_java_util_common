@@ -88,7 +88,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		lv.units.add(this);
 	}
 
-	public Unit(VFile<?> p) {
+	public Unit(VFile p) {
 		id = new Identifier<>(Identifier.DEF, Unit.class, CommonStatic.parseIntN(p.getName()));
 		String str = "./org/unit/" + Data.trio(id.id) + "/";
 		Queue<String> qs = VFile.readLine(str + "unit" + Data.trio(id.id) + ".csv");
