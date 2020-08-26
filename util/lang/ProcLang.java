@@ -141,6 +141,8 @@ public class ProcLang {
 
 	private static void read() throws Exception {
 		InputStream f = CommonStatic.ctx.getLangFile("proc.json");
+		if (f == null)
+			f = ProcLang.class.getResourceAsStream("proc.json");
 		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f));
 		f.close();
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);

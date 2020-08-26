@@ -110,7 +110,7 @@ public class AssetLoader {
 			}
 			for (Entry<String, Map<String, File>> emain : map.entrySet()) {
 				File target = CommonStatic.ctx.getAssetFile("./assets/" + emain.getKey() + "xxxx.assets.bcuzips");
-				File dst = CommonStatic.ctx.getAssetFile("./assets/.temp.assets.bcuzips");
+				File dst = CommonStatic.ctx.getAssetFile("./assets/.assets.bcuzips.temp");
 				Context.check(dst);
 				FileOutputStream fos = new FileOutputStream(dst);
 				AssetHeader header = new AssetHeader();
@@ -141,7 +141,6 @@ public class AssetLoader {
 				dst.renameTo(target);
 			}
 		} catch (Exception e) {
-			// TODO corruption prevention
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to merge asset");
 		}
 	}
@@ -150,7 +149,7 @@ public class AssetLoader {
 		try {
 			File folder = CommonStatic.ctx.getAssetFile("./assets/");
 			Set<String> ans = new TreeSet<>();
-			if(!folder.exists())
+			if (!folder.exists())
 				return ans;
 			for (File f : folder.listFiles()) {
 				if (f.getName().endsWith(".assets.bcuzips")) {
@@ -160,6 +159,9 @@ public class AssetLoader {
 					fis.close();
 					for (AssetEntry ent : header.list)
 						ans.add(ent.desc.id);
+				}
+				if (f.getName().endsWith(".asset.bcuzip")) {
+					ans.add(PackLoader.readPack((fd) -> false, f).desc.id);
 				}
 			}
 			return ans;

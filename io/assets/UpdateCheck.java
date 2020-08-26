@@ -104,8 +104,8 @@ public class UpdateCheck {
 			if (local.contains("asset_" + aj.id))
 				continue;
 			String url = URL_NEW + aj.id + ".asset.bcuzip";
-			File temp = CommonStatic.ctx.getAssetFile("./assets/.temp.asset.bcuzip");
-			File target = CommonStatic.ctx.getAssetFile("./assets/" + aj.id + ".assets.bcuzip");
+			File temp = CommonStatic.ctx.getAssetFile("./assets/.asset.bcuzip.temp");
+			File target = CommonStatic.ctx.getAssetFile("./assets/" + aj.id + ".asset.bcuzip");
 			set.add(new Downloader(url, target, temp, aj.desc));
 		}
 		return set;
@@ -124,8 +124,8 @@ public class UpdateCheck {
 		List<Downloader> ans = new ArrayList<>();
 		for (int i = 0; i < count; i++)
 			if (!exi[i]) {
-				File target = CommonStatic.ctx.getAssetFile("./music" + Data.trio(i) + ".ogg");
-				File temp = CommonStatic.ctx.getAssetFile("./music/.temp.ogg");
+				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
+				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
 				String url = URL_RES + "music/" + Data.trio(i) + ".ogg";
 				ans.add(new Downloader(url, target, temp, "music " + Data.trio(i)));
 			}
@@ -143,7 +143,7 @@ public class UpdateCheck {
 					str.remove(f.getName());
 			for (String s : str)
 				libs.add(new Downloader(URL_RES + "jar/BCU_lib/" + s, new File("./BCU_lib/" + s),
-						new File("./BCU_lib/.temp.jar"), "downloading BCU library " + s));
+						new File("./BCU_lib/.jar.temp"), "downloading BCU library " + s));
 		}
 		return libs;
 	}

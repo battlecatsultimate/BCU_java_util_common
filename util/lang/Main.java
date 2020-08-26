@@ -6,12 +6,15 @@ import common.CommonStatic;
 import common.io.assets.Admin;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
+import common.pack.UserProfile;
 import common.util.Data.Proc;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter.Context;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -20,11 +23,20 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
+		UserProfile.profile();
 		CommonStatic.ctx = new Admin.AdminContext();
+		BufferedReader r = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("proc.json")));
+		String str = null;
+		while ((str = r.readLine()) != null)
+			System.out.println(str);
+		r.close();
+	}
+
+	public static void test() throws Exception {
 		Scanner sc = new Scanner(System.in);
 		String str;
 		while (!(str = sc.nextLine()).equals("exit"))
-			loop(args = str.split(" "));
+			loop(str.split(" "));
 		sc.close();
 	}
 
