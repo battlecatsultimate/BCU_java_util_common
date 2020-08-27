@@ -83,19 +83,23 @@ public class AssetLoader {
 	public static void load(Consumer<Double> prog) {
 		try {
 			File folder = CommonStatic.ctx.getAssetFile("./assets/");
-			File[] fs = folder.listFiles();
-			for (int i = 0; i < fs.length; i++) {
-				prog.accept(1.0 * i / fs.length);
+			TreeMap<String, File> map = new TreeMap<>();
+			for (File f : folder.listFiles())
+				if (f.getName().endsWith(".assets.bcuzips"))
+					map.put(f.getName(), f);
+			int i = 0;
+			TreeMap<String, ZipDesc> zips = new TreeMap<>();
+			for (File f : map.values()) {
 				int I = i;
-				if (fs[i].getName().endsWith(".assets.bcuzips")) {
-					Consumer<Double> con = (d) -> prog.accept((I + d) / fs.length);
-					List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, fs[i], con);
-					for (ZipDesc zip : list)
-						if (Data.getVer(zip.desc.BCU_VERSION) <= Data.getVer(CORE_VER)) {
-							VFile.getBCFileTree().merge(zip.tree);
-						}
-				}
+				prog.accept(1.0 * (i++) / map.size());
+				Consumer<Double> con = (d) -> prog.accept((I + d) / map.size());
+				List<ZipDesc> list = PackLoader.readAssets(AssetLoader::getPreload, f, con);
+				for (ZipDesc zip : list)
+					if (Data.getVer(zip.desc.BCU_VERSION) <= Data.getVer(CORE_VER))
+						zips.put(zip.desc.id, zip);
 			}
+			for (ZipDesc zip : zips.values())
+				VFile.getBCFileTree().merge(zip.tree);
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");
 		}

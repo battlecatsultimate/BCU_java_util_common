@@ -24,8 +24,23 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 	}
 
-	public enum UType implements AnimI.AnimType<AnimU<?>, UType> {
-		WALK, IDLE, ATK, HB, ENTER, BURROW_DOWN, BURROW_MOVE, BURROW_UP
+	public interface EditableType {
+		boolean rotate();
+	}
+
+	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {
+		WALK(false), IDLE(false), ATK(true), HB(false), ENTER(true), BURROW_DOWN(true), BURROW_MOVE(false),
+		BURROW_UP(true);
+		private final boolean rotate;
+
+		private UType(boolean rotate) {
+			this.rotate = rotate;
+		}
+
+		@Override
+		public boolean rotate() {
+			return rotate;
+		}
 	}
 
 	@StaticPermitted
