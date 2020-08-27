@@ -103,7 +103,7 @@ public class JsonDecoder {
 			if (par.curjfld.generator().length() == 0) {
 				Constructor<?> cst = null;
 				for (Constructor<?> ci : cls.getDeclaredConstructors())
-					if (ci.getParameterCount() == 1 && ci.getParameters()[0].getType().isAssignableFrom(ccls))
+					if (ci.getParameterTypes().length == 1 && ci.getParameterTypes()[0].isAssignableFrom(ccls))
 						cst = ci;
 				if (cst == null)
 					throw new JsonException(Type.FUNC, null, "no constructor found: " + cls);
@@ -396,7 +396,7 @@ public class JsonDecoder {
 				continue;
 			if (curjfld.io() == JsonField.IOType.RW)
 				throw new JsonException(Type.FUNC, null, "functional fields should not have RW type");
-			if (m.getParameterCount() != 1)
+			if (m.getParameterTypes().length != 1)
 				throw new JsonException(Type.FUNC, null, "parameter count should be 1");
 			String tag = curjfld.tag();
 			if (tag.length() == 0)
@@ -404,7 +404,7 @@ public class JsonDecoder {
 			if (!jobj.has(tag))
 				continue;
 			JsonElement elem = jobj.get(tag);
-			Class<?> ccls = m.getParameters()[0].getType();
+			Class<?> ccls = m.getParameterTypes()[0];
 			m.invoke(obj, decode(elem, ccls, getInvoker()));
 		}
 		if (oni != null)

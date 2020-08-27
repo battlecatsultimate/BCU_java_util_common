@@ -24,7 +24,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 4. {@code GenType} {@code FILL} mode, on {@code RType} {@code SET} or
  * {@code FILL} object field only, allows injection on pre-existing objects. Can
  * use on primitive arrays. Not applicable to Collections. <br>
- * 5. {@Code GenType} {@code GEN} mode, use parameter {@code generator} to
+ * 5. {@code GenType} {@code GEN} mode, use parameter {@code generator} to
  * specify function name, must be static function declared in this class<br>
  * <hr>
  * Forbidden pairs:
