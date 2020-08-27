@@ -122,7 +122,10 @@ public class UserProfile {
 	 * get a UserPack from a String
 	 */
 	public static UserPack getUserPack(String id) {
-		return profile().packmap.get(id);
+		UserProfile profile = profile();
+		if (profile.pending != null)
+			return profile.pending.get(id);
+		return profile.packmap.get(id);
 	}
 
 	/**
@@ -166,7 +169,7 @@ public class UserProfile {
 			for (File f : workspace.listFiles())
 				if (f.isDirectory()) {
 					File main = CommonStatic.ctx.getWorkspaceFile("./" + f.getName() + "/pack.json");
-					if (!main.exists())
+					if (!main.exists() || main.length() == 0)
 						continue;
 					UserPack pack = CommonStatic.ctx.noticeErr(() -> readJsonPack(main), ErrType.WARN,
 							"failed to load workspace pack " + f);
@@ -203,7 +206,7 @@ public class UserProfile {
 
 	public static UserPack readZipPack(File f) throws Exception {
 		ZipDesc zip = PackLoader.readPack(CommonStatic.ctx::preload, f);
-		Reader r = new InputStreamReader(zip.readFile("./main.pack.json"), StandardCharsets.UTF_8);
+		Reader r = new InputStreamReader(zip.readFile("./pack.json"), StandardCharsets.UTF_8);
 		JsonElement elem = JsonParser.parseReader(r);
 		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
 		r.close();

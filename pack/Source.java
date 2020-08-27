@@ -19,6 +19,9 @@ import common.util.Data;
 import common.util.anim.*;
 import common.util.pack.Background;
 import common.util.stage.CastleImg;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -299,6 +302,32 @@ public abstract class Source {
 			getFile("").delete();
 		}
 
+		public void export(UserPack pack, String password, Consumer<Double> prog) {
+			for (Enemy e : pack.enemies) {
+				AnimCE anim = (AnimCE) e.anim;
+				if (anim.id.pack.equals(ResourceLocation.LOCAL))
+					anim.localize();
+			}
+			for (Unit u : pack.units)
+				for (Form f : u.forms) {
+					AnimCE anim = (AnimCE) f.anim;
+					if (anim.id.pack.equals(ResourceLocation.LOCAL))
+						anim.localize();
+				}
+			File tar = CommonStatic.ctx.getAuxFile("./exports/" + id + ".pack.bcuzip");
+			File dst = CommonStatic.ctx.getAuxFile("./exports/.pack.bcuzip.temp");
+			File src = CommonStatic.ctx.getWorkspaceFile("./" + id);
+			try {
+				if (tar.exists())
+					Context.delete(tar);
+				Context.check(dst);
+				PackLoader.writePack(dst, src, pack.desc, password, prog);
+				dst.renameTo(tar);
+			} catch (Exception e) {
+				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to export pack");
+			}
+		}
+
 		public File getBGFile(Identifier<Background> id) {
 			return getFile("./backgrounds/" + Data.trio(id.id) + ".png");
 		}
@@ -327,14 +356,6 @@ public abstract class Source {
 			return ImageBuilder.builder.build(getFile(path));
 		}
 
-		public void save(UserPack up) throws IOException {
-			File f = getFile("pack.json");
-			Context.check(f);
-			FileWriter fw = new FileWriter(f);
-			fw.write(JsonEncoder.encode(up).toString());
-			fw.close();
-		}
-
 		@Override
 		public InputStream streamFile(String path) throws IOException {
 			return new FileInputStream(getFile(path));
@@ -348,6 +369,14 @@ public abstract class Source {
 
 		private File getFile(String path) {
 			return CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + path);
+		}
+
+		private void save(UserPack up) throws IOException {
+			File f = getFile("pack.json");
+			Context.check(f);
+			FileWriter fw = new FileWriter(f);
+			fw.write(JsonEncoder.encode(up).toString());
+			fw.close();
 		}
 
 	}
@@ -374,6 +403,8 @@ public abstract class Source {
 		@Override
 		public String[] listFile(String path) {
 			VFile dir = zip.tree.find(path);
+			if (dir == null)
+				return null;
 			Collection<VFile> col = dir.list();
 			if (col == null)
 				return null;
@@ -400,7 +431,7 @@ public abstract class Source {
 			return zip.readFile(path);
 		}
 
-		public Workspace unzip(String password) throws Exception {
+		public Workspace unzip(String password, Consumer<Double> prog) throws Exception {
 			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
 				return null;
 			File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/main.pack.json");
@@ -417,7 +448,7 @@ public abstract class Source {
 				File file = ans.getFile(id);
 				Context.check(file.createNewFile(), "create", file);
 				return file;
-			});
+			}, prog);
 			return ans;
 		}
 

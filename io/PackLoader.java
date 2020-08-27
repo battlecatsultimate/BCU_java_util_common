@@ -17,6 +17,7 @@ import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.PackData;
 import common.system.fake.FakeImage;
@@ -150,17 +151,19 @@ public class PackLoader {
 
 		public InputStream readFile(String path) {
 			FileDesc fd = (FileDesc) tree.find(path).getData();
-			System.out.println("stream requested: " + fd.path + ", " + fd.size);
+			CommonStatic.ctx.printErr(ErrType.DEBUG, "stream requested: " + fd.path + ", " + fd.size);
 			return CommonStatic.ctx.noticeErr(() -> new FileLoader.FLStream(loader, offset + fd.offset, fd.size),
 					ErrType.ERROR, "failed to read bcuzip at " + path);
 		}
 
-		public void unzip(PatchFile func) throws Exception {
+		public void unzip(PatchFile func, Consumer<Double> prog) throws Exception {
 			InputStream fis = new FileInputStream(loader.file);
 			fis.skip(offset);
+			int x = 0;
 			for (FileDesc fd : files) {
 				int n = regulate(fd.size) / PASSWORD;
 				File dest = func.getFile(fd.path);
+				Context.check(dest);
 				OutputStream fos = new FileOutputStream(dest);
 				byte[] bs = new byte[PASSWORD];
 				Cipher cipher = decrypt(loader.key);
@@ -172,6 +175,7 @@ public class PackLoader {
 					fos.write(ans);
 				}
 				fos.close();
+				prog.accept(1.0 * (x++) / files.length);
 			}
 			fis.close();
 		}
@@ -187,7 +191,8 @@ public class PackLoader {
 			}
 		}
 
-		private void save(FileSaver saver) throws Exception {
+		private void save(FileSaver saver, Consumer<Double> prog) throws Exception {
+			int x = 0;
 			for (FileDesc fd : files) {
 				FileInputStream fis = new FileInputStream(fd.file);
 				int rem = fd.size;
@@ -202,6 +207,7 @@ public class PackLoader {
 					saver.save(cipher, data, rem == 0);
 				}
 				fis.close();
+				prog.accept(1.0 * (x++) / files.length);
 			}
 		}
 
@@ -348,7 +354,8 @@ public class PackLoader {
 
 		private int len;
 
-		private FileSaver(File dst, File folder, PackData.PackDesc pd, String password) throws Exception {
+		private FileSaver(File dst, File folder, PackData.PackDesc pd, String password, Consumer<Double> prog)
+				throws Exception {
 			List<FileDesc> fs = new ArrayList<>();
 			for (File fi : folder.listFiles())
 				addFiles(fs, fi, "./");
@@ -362,7 +369,7 @@ public class PackLoader {
 			DataIO.fromInt(len, 0, bytedesc.length);
 			fos.write(len);
 			save(encrypt(key), bytedesc, true);
-			desc.save(this);
+			desc.save(this, prog);
 			fos.close();
 		}
 
@@ -470,8 +477,9 @@ public class PackLoader {
 		fos.write(data);
 	}
 
-	public static void writePack(File dst, File folder, PackData.PackDesc pd, String password) throws Exception {
-		new FileSaver(dst, folder, pd, password);
+	public static void writePack(File dst, File folder, PackData.PackDesc pd, String password, Consumer<Double> prog)
+			throws Exception {
+		new FileSaver(dst, folder, pd, password, prog);
 	}
 
 	private static int regulate(int size) {

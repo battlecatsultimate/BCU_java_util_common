@@ -18,7 +18,8 @@ public class Limit extends Data implements BattleStatic {
 
 		public DefLimit(String[] strs) {
 			int mid = Integer.parseInt(strs[0]);
-			DefMapColc.getMap(mid).lim.add(this);
+			StageMap map = DefMapColc.getMap(mid);
+			map.lim.add(this);
 			star = Integer.parseInt(strs[1]);
 			sid = Integer.parseInt(strs[2]);
 			rare = Integer.parseInt(strs[3]);

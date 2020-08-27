@@ -15,11 +15,14 @@ import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
+import common.util.Animable;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -125,8 +128,15 @@ public class AnimCE extends AnimCI {
 	public AnimCE(ResourceLocation resourceLocation) {
 		super(new SourceAnimLoader(resourceLocation, null));
 		id = resourceLocation;
-		map().put(id.id, this);
+		if (id.pack == ResourceLocation.LOCAL)
+			map().put(id.id, this);
 		history("initial");
+	}
+
+	public AnimCE(ResourceLocation rl, AnimD<?, ?> ori) {
+		super(new SourceAnimLoader(rl, null));
+		id = rl;
+		copyFrom(ori);
 	}
 
 	/**
@@ -146,30 +156,7 @@ public class AnimCE extends AnimCI {
 
 	public AnimCE(String str, AnimD<?, ?> ori) {
 		this(str);
-		loaded = true;
-		partial = true;
-		imgcut = ori.imgcut.clone();
-		mamodel = ori.mamodel.clone();
-		if (mamodel.confs.length < 1)
-			mamodel.confs = new int[2][6];
-		anims = new MaAnim[7];
-		for (int i = 0; i < 7; i++)
-			if (i < ori.anims.length)
-				anims[i] = ori.anims[i].clone();
-			else
-				anims[i] = new MaAnim();
-		loader.setNum(ori.getNum());
-		types = AnimU.TYPE7;
-		parts = imgcut.cut(ori.getNum());
-		if (ori instanceof AnimU<?>) {
-			AnimU<?> au = (AnimU<?>) ori;
-			setEdi(au.getEdi());
-			setUni(au.getUni());
-		}
-		standardize();
-		saved = false;
-		save();
-		history("initial");
+		copyFrom(ori);
 	}
 
 	public void createNew() {
@@ -233,17 +220,29 @@ public class AnimCE extends AnimCI {
 		validate();
 	}
 
-	public void localize(String pack) {
+	public void localize() {
 		check();
-		if (id.pack.equals(ResourceLocation.LOCAL))
-			map().remove(id.id);
+		map().remove(id.id);
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
-		id.pack = pack;
-		Workspace.validateAnimation(id);
-		if (id.pack.equals(ResourceLocation.LOCAL))
-			map().put(id.id, this);
-		saver.saveAll();
+		for (UserPack pack : UserProfile.getUserPacks())
+			if (pack.editable) {
+				List<Animable<AnimU<?>, UType>> list = new ArrayList<>();
+				for (Enemy e : pack.enemies)
+					if (e.anim == this)
+						list.add(e);
+				for (Unit u : pack.units)
+					for (Form f : u.forms)
+						if (f.anim == this)
+							list.add(f);
+				if (list.size() == 0)
+					continue;
+				ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id);
+				Workspace.validateAnimation(rl);
+				AnimCE tar = new AnimCE(rl, this);
+				for (Animable<AnimU<?>, UType> a : list)
+					a.anim = tar;
+			}
 	}
 
 	public void merge(AnimCE a, int x, int y) {
@@ -432,6 +431,33 @@ public class AnimCE extends AnimCI {
 	protected void partial() {
 		super.partial();
 		standardize();
+	}
+
+	private void copyFrom(AnimD<?, ?> ori) {
+		loaded = true;
+		partial = true;
+		imgcut = ori.imgcut.clone();
+		mamodel = ori.mamodel.clone();
+		if (mamodel.confs.length < 1)
+			mamodel.confs = new int[2][6];
+		anims = new MaAnim[7];
+		for (int i = 0; i < 7; i++)
+			if (i < ori.anims.length)
+				anims[i] = ori.anims[i].clone();
+			else
+				anims[i] = new MaAnim();
+		loader.setNum(ori.getNum());
+		types = AnimU.TYPE7;
+		parts = imgcut.cut(ori.getNum());
+		if (ori instanceof AnimU<?>) {
+			AnimU<?> au = (AnimU<?>) ori;
+			setEdi(au.getEdi());
+			setUni(au.getUni());
+		}
+		standardize();
+		saved = false;
+		save();
+		history("initial");
 	}
 
 	private void history(String str) {

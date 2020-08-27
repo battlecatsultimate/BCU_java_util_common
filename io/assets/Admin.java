@@ -21,6 +21,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 @StaticPermitted
 public class Admin {
@@ -36,6 +37,11 @@ public class Admin {
 		@Override
 		public File getAssetFile(String string) {
 			return new File("./assets/" + string);
+		}
+
+		@Override
+		public File getAuxFile(String string) {
+			return new File(string);
 		}
 
 		@Override
@@ -108,7 +114,40 @@ public class Admin {
 	public static void main(String[] args) throws Exception {
 		UserProfile.profile();
 		CommonStatic.ctx = new AdminContext();
-		UpdateCheck.checkAsset(UpdateCheck.checkUpdate(), "pc");
+		Consumer<Double> prog = (d) -> System.out.print("\b\b\b" + (int) (d * 100) + "%" + (d < 0.1 ? " " : ""));
+		if (args.length > 3 && args[0].equals("encode")) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 3; i < args.length; i++) {
+				sb.append(args[i]);
+				if (i < args.length - 1)
+					sb.append(' ');
+			}
+			String desc = sb.toString();
+			System.out.println("id: " + args[1]);
+			System.out.println("version: " + args[2]);
+			System.out.println("description: " + desc);
+			System.out.print("0% ");
+			write(args[1], args[2], desc, prog);
+			System.out.println();
+			return;
+		}
+		if (args.length > 1 && args[0].equals("decode")) {
+			ZipDesc zip = PackLoader.readPack((fd) -> false, new File(args[1]));
+			System.out.println("id: " + zip.desc.id);
+			System.out.println("version: " + zip.desc.BCU_VERSION);
+			System.out.println("description: " + zip.desc.desc);
+			System.out.print("0% ");
+			zip.unzip(path -> new File("./output/" + path), prog);
+			System.out.println();
+			return;
+		}
+		System.out.println("parameter: decode [id] - deocde a bcuzip");
+		System.out.println("parameter: encode [id], [version], [description...]");
+		System.out.println("\tid - 6 digit number, the name of the folder");
+		System.out.println("\tversion - the minimum version of BCU Core, 0.5.0.0 is the minimum");
+		System.out.println("\tenter any string for description, white space is allowed");
+
+		// UpdateCheck.checkAsset(UpdateCheck.checkUpdate(), "pc");
 		// testInternet();
 		// AssetLoader.merge();
 		// searchForStaticFields();
@@ -187,17 +226,16 @@ public class Admin {
 		}
 	}
 
-	public static void write() throws Exception {
-		for (int i = 1; i <= 9; i++) {
-			File f = new File("./assets/" + Data.hex(i));
-			File dst = new File("./assets/assets/" + Data.hex(i) + ".asset.bcuzip");
-			Context.check(dst);
-			PackDesc pd = new PackDesc("asset_" + Data.hex(i));
-			pd.author = "PONOS";
-			pd.BCU_VERSION = "0.5.0.0";
-			pd.desc = "default required asset " + Data.hex(i);
-			PackLoader.writePack(dst, f, pd, "battlecatsultimate");
-		}
+	public static void write(String id, String ver, String desc, Consumer<Double> prog) throws Exception {
+		File f = new File("./" + id);
+		File dst = new File("./" + id + ".asset.bcuzip");
+		Context.check(dst);
+		PackDesc pd = new PackDesc("asset_" + id);
+		pd.author = "PONOS";
+		pd.BCU_VERSION = ver;
+		pd.desc = desc;
+		PackLoader.writePack(dst, f, pd, "battlecatsultimate", prog);
+
 	}
 
 }

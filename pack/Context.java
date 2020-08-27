@@ -9,7 +9,7 @@ import java.io.InputStream;
 public interface Context {
 
 	enum ErrType {
-		FATAL, ERROR, WARN, INFO, NEW, CORRUPT
+		FATAL, ERROR, WARN, INFO, NEW, CORRUPT, DEBUG
 	}
 
 	interface RunExc {
@@ -48,6 +48,8 @@ public interface Context {
 	boolean confirmDelete();
 
 	File getAssetFile(String string);
+
+	File getAuxFile(String string);
 
 	InputStream getLangFile(String file);
 
