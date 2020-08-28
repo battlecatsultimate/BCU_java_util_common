@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import common.CommonStatic;
@@ -82,6 +83,7 @@ public class UpdateCheck {
 
 	public static final String URL_RES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
+	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-resources/commits?path=resources/lang&per_page=1";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -109,6 +111,21 @@ public class UpdateCheck {
 			set.add(new Downloader(url, target, temp, aj.desc));
 		}
 		return set;
+	}
+
+	public static boolean checkLang() throws Exception {
+		JsonElement je = WebFileIO.read(URL_LANG_CHECK);
+		JsonArray arr = je.getAsJsonArray();
+		if (arr.size() == 0)
+			return true;
+		String date = arr.get(0).getAsJsonObject().get("commit").getAsJsonObject().get("author").getAsJsonObject()
+				.get("date").getAsString();
+		String local = CommonStatic.getConfig().langTimeStamp;
+		if(local.equals(date))
+			return true;
+		
+		CommonStatic.getConfig().langTimeStamp = local;
+		return true;
 	}
 
 	public static List<Downloader> checkMusic(int count) {

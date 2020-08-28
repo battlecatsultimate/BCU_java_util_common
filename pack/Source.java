@@ -48,6 +48,7 @@ public abstract class Source {
 
 		VImg getUni();
 	}
+
 	@JsonClass
 	public static class ResourceLocation {
 
@@ -83,6 +84,7 @@ public abstract class Source {
 		}
 
 	}
+
 	@StaticPermitted
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
@@ -161,6 +163,7 @@ public abstract class Source {
 		}
 
 	}
+
 	public static class SourceAnimSaver {
 
 		private final ResourceLocation id;
@@ -236,6 +239,7 @@ public abstract class Source {
 		}
 
 	}
+
 	public static class Workspace extends Source {
 
 		public static List<AnimCE> loadAnimations(String id) {

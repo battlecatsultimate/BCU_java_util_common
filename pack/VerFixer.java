@@ -390,8 +390,8 @@ public abstract class VerFixer extends Source {
 	public static void fix() throws Exception {
 		transform();
 		readPacks();
-		Context.delete(new File("./res"));
-		Context.delete(new File("./pack"));
+		//Context.delete(new File("./res"));
+		//Context.delete(new File("./pack"));
 	}
 
 	@SuppressWarnings("deprecation")

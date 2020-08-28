@@ -114,6 +114,14 @@ public class Admin {
 	public static void main(String[] args) throws Exception {
 		UserProfile.profile();
 		CommonStatic.ctx = new AdminContext();
+		UpdateCheck.checkLang();
+		// UpdateCheck.checkAsset(UpdateCheck.checkUpdate(), "pc");
+		// testInternet();
+		// AssetLoader.merge();
+		// searchForStaticFields();
+	}
+	
+	public static void ziphandler(String[] args) throws Exception {
 		Consumer<Double> prog = (d) -> System.out.print("\b\b\b" + (int) (d * 100) + "%" + (d < 0.1 ? " " : ""));
 		if (args.length > 3 && args[0].equals("encode")) {
 			StringBuilder sb = new StringBuilder();
@@ -147,10 +155,6 @@ public class Admin {
 		System.out.println("\tversion - the minimum version of BCU Core, 0.5.0.0 is the minimum");
 		System.out.println("\tenter any string for description, white space is allowed");
 
-		// UpdateCheck.checkAsset(UpdateCheck.checkUpdate(), "pc");
-		// testInternet();
-		// AssetLoader.merge();
-		// searchForStaticFields();
 	}
 
 	public static boolean preload(FileDesc fd) {

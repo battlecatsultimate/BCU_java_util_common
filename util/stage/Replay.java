@@ -25,6 +25,8 @@ import common.util.stage.MapColc.DefMapColc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -45,6 +47,30 @@ public class Replay extends Data {
 		getRecd(is, new ResourceLocation(stage.getCont().getCont().getSID(), str));
 	}
 
+	public static Replay read(InputStream fis) throws IOException {
+		byte[] header = new byte[PackLoader.HEAD_DATA.length];
+		fis.read(header);
+		if (!Arrays.equals(header, PackLoader.HEAD_DATA)) {
+			byte[] len = new byte[4];
+			fis.read(len);
+			int size = DataIO.toInt(DataIO.translate(len), 0);
+			byte[] json = new byte[size];
+			fis.read(json);
+			JsonElement elem = JsonParser.parseString(new String(json));
+			Replay rep = JsonDecoder.decode(elem, Replay.class);
+			fis.read(len);
+			size = DataIO.toInt(DataIO.translate(len), 0);
+			int[] data = new int[size];
+			for (int i = 0; i < size; i++) {
+				fis.read(len);
+				data[i] = DataIO.toInt(DataIO.translate(len), 0);
+			}
+			rep.action = data;
+			return rep;
+		}
+		return null;
+	}
+
 	public static void read() {
 		File fold = CommonStatic.def.route("./replay/");
 		if (fold.exists()) {
@@ -55,39 +81,22 @@ public class Replay extends Data {
 					String name = str.substring(0, str.length() - 7);
 					InStream is = CommonStatic.def.readBytes(fi);
 					Replay rec = getRecd(is, new ResourceLocation(ResourceLocation.LOCAL, name));
+					rec.write();
 					getMap().put(name, rec);
 				}
 			}
 		}
+		fold.delete();
 		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.REPLAY);
 		if (f.exists())
 			for (File fi : f.listFiles())
 				if (fi.getName().endsWith(".replay"))
 					try {
-						FileInputStream fis = new FileInputStream(fi);
-						byte[] header = new byte[PackLoader.HEAD_DATA.length];
-						fis.read(header);
-						if (!Arrays.equals(header, PackLoader.HEAD_DATA)) {
-							byte[] len = new byte[4];
-							fis.read(len);
-							int size = DataIO.toInt(DataIO.translate(len), 0);
-							byte[] json = new byte[size];
-							fis.read(json);
-							JsonElement elem = JsonParser.parseString(new String(json));
-							Replay rep = JsonDecoder.decode(elem, Replay.class);
-							fis.read(len);
-							size = DataIO.toInt(DataIO.translate(len), 0);
-							int[] data = new int[size];
-							for (int i = 0; i < size; i++) {
-								fis.read(len);
-								data[i] = DataIO.toInt(DataIO.translate(len), 0);
-							}
-							rep.action = data;
-							getMap().put(rep.rl.id, rep);
-						} else {
-							CommonStatic.ctx.printErr(ErrType.WARN, "invalid file " + fi.getName());
-						}
+						InputStream fis = new FileInputStream(fi);
+						Replay rep = read(fis);
 						fis.close();
+						if (rep == null)
+							CommonStatic.ctx.printErr(ErrType.WARN, "corrupted replay file " + fi.getName());
 					} catch (Exception e) {
 						CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to load replay " + fi.getName());
 					}
@@ -95,12 +104,8 @@ public class Replay extends Data {
 
 	private static Replay getRecd(InStream is, ResourceLocation name) {
 		int val = getVer(is.nextString());
-		if (val >= 401)
-			return zread$000401(is, name);
-		return null;
-	}
-
-	private static Replay zread$000401(InStream is, ResourceLocation name) {
+		if (val < 401)
+			return null;
 		long seed = is.nextLong();
 		int[] conf = is.nextIntsB();
 		int star = is.nextInt();
@@ -228,6 +233,7 @@ public class Replay extends Data {
 			tmp.renameTo(tar);
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to save replay " + rl);
+			Data.err(() -> Context.delete(tmp));
 		}
 	}
 
