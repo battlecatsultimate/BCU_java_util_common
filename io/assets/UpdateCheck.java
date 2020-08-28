@@ -17,6 +17,7 @@ import common.io.WebFileIO;
 import common.io.assets.UpdateCheck.UpdateJson.AssetJson;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
+import common.pack.Context;
 import common.pack.UserProfile;
 import common.io.json.JsonClass.NoTag;
 import common.util.Data;
@@ -80,10 +81,14 @@ public class UpdateCheck {
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
-
 	public static final String URL_RES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-resources/commits?path=resources/lang&per_page=1";
+	public static final String URL_LANG_DOWN = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang/";
+
+	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh" };
+	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
+			"StageName.txt", "UnitName.txt", "EnemyName.txt", "proc.json", "animation_type.json" };
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -113,19 +118,33 @@ public class UpdateCheck {
 		return set;
 	}
 
-	public static boolean checkLang() throws Exception {
-		JsonElement je = WebFileIO.read(URL_LANG_CHECK);
-		JsonArray arr = je.getAsJsonArray();
-		if (arr.size() == 0)
-			return true;
-		String date = arr.get(0).getAsJsonObject().get("commit").getAsJsonObject().get("author").getAsJsonObject()
-				.get("date").getAsString();
+	public static Context.SupExc<List<Downloader>> checkLang(String[] codes, String[] files) {
 		String local = CommonStatic.getConfig().langTimeStamp;
-		if(local.equals(date))
-			return true;
-		
-		CommonStatic.getConfig().langTimeStamp = local;
-		return true;
+		File f = CommonStatic.ctx.getAssetFile("./lang");
+		String path = f.getPath() + "/";
+		return () -> {
+			JsonElement je0 = WebFileIO.read(URL_LANG_CHECK);
+			JsonArray arr0 = je0.getAsJsonArray();
+			if (arr0.size() == 0)
+				return null;
+			String date = arr0.get(0).getAsJsonObject().get("commit").getAsJsonObject().get("author").getAsJsonObject()
+					.get("date").getAsString();
+			if (date.equals(local))
+				return null;
+			List<Downloader> list = new ArrayList<>();
+			for (int i = 0; i < codes.length; i++) {
+				String lang = codes[i] + "/";
+				File tmp = new File(path + lang + ".temp");
+				for (String str : files) {
+					String url = URL_LANG_DOWN + lang + str;
+					File dst = new File(path + lang + str);
+					String desc = "downloading file " + lang + str;
+					list.add(new Downloader(url, dst, tmp, desc));
+				}
+			}
+			CommonStatic.getConfig().langTimeStamp = date;
+			return list;
+		};
 	}
 
 	public static List<Downloader> checkMusic(int count) {

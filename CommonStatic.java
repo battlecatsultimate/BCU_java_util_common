@@ -88,9 +88,9 @@ public class CommonStatic {
 
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Config {
-		
+
 		public String langTimeStamp;
-		
+
 		// ImgCore
 		public int deadOpa = 10, fullOpa = 90;
 		public int[] ints = new int[] { 1, 1, 1, 2 };

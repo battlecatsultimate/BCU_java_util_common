@@ -1,6 +1,7 @@
 package common.battle;
 
 import common.io.InStream;
+import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
@@ -12,6 +13,7 @@ import common.util.unit.Unit;
 
 import java.util.List;
 
+@JsonClass
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
 	public static BasisLU zread(InStream is) {
@@ -69,18 +71,18 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		name = "lineup " + bs.lb.size();
 	}
 
-	protected BasisLU(BasisSet bs, LineUp line, String str, int[] ints) {
-		t = new Treasure(this, bs.t());
-		name = str;
-		lu = line;
-		nyc = ints;
-	}
-
 	protected BasisLU(BasisSet bs, BasisLU bl) {
 		t = new Treasure(this, bs.t());
 		lu = new LineUp(bl.lu);
 		name = "lineup " + bs.lb.size();
 		nyc = bl.nyc.clone();
+	}
+
+	protected BasisLU(BasisSet bs, LineUp line, String str, int[] ints) {
+		t = new Treasure(this, bs.t());
+		name = str;
+		lu = line;
+		nyc = ints;
 	}
 
 	private BasisLU(int ver, InStream is) {

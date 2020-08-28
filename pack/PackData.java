@@ -303,7 +303,6 @@ public abstract class PackData implements IndexContainer {
 				for (String str : path)
 					if (str.length() == 7 && str.endsWith(".ogg")) {
 						Integer ind = Data.ignore(() -> Integer.parseInt(str.substring(0, 3)));
-						System.out.println(ind);
 						if (ind != null)
 							add(musics, ind, id -> new Music(id, source.getFileData("./musics/" + str)));
 					}

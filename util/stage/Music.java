@@ -18,6 +18,12 @@ public class Music implements Indexable<PackData, Music> {
 	public final Identifier<Music> id;
 	public FileData data;
 
+	@JsonClass.JCConstructor
+	@Deprecated
+	public Music() {
+		id = null;
+	}
+
 	public Music(Identifier<Music> id, FileData fd) {
 		this.id = id;
 		data = fd;

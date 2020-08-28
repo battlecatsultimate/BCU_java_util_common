@@ -7,11 +7,8 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
-import common.pack.Context.ErrType;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,7 +29,6 @@ public class WebFileIO {
 		Context.check(file);
 		OutputStream out = new FileOutputStream(file);
 		impl(size, url, out, c, 0);
-		CommonStatic.ctx.printErr(ErrType.DEBUG, "download success: " + url);
 	}
 
 	public static void download(String url, File file) throws Exception {
@@ -45,7 +41,7 @@ public class WebFileIO {
 
 	public static JsonElement read(String url) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		impl(FAST, url, out, null, 2000);
+		impl(FAST, url, out, null, 5000);
 		return JsonParser.parseReader(
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}

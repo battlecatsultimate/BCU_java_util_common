@@ -47,30 +47,6 @@ public class Replay extends Data {
 		getRecd(is, new ResourceLocation(stage.getCont().getCont().getSID(), str));
 	}
 
-	public static Replay read(InputStream fis) throws IOException {
-		byte[] header = new byte[PackLoader.HEAD_DATA.length];
-		fis.read(header);
-		if (!Arrays.equals(header, PackLoader.HEAD_DATA)) {
-			byte[] len = new byte[4];
-			fis.read(len);
-			int size = DataIO.toInt(DataIO.translate(len), 0);
-			byte[] json = new byte[size];
-			fis.read(json);
-			JsonElement elem = JsonParser.parseString(new String(json));
-			Replay rep = JsonDecoder.decode(elem, Replay.class);
-			fis.read(len);
-			size = DataIO.toInt(DataIO.translate(len), 0);
-			int[] data = new int[size];
-			for (int i = 0; i < size; i++) {
-				fis.read(len);
-				data[i] = DataIO.toInt(DataIO.translate(len), 0);
-			}
-			rep.action = data;
-			return rep;
-		}
-		return null;
-	}
-
 	public static void read() {
 		File fold = CommonStatic.def.route("./replay/");
 		if (fold.exists()) {
@@ -100,6 +76,30 @@ public class Replay extends Data {
 					} catch (Exception e) {
 						CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to load replay " + fi.getName());
 					}
+	}
+
+	public static Replay read(InputStream fis) throws IOException {
+		byte[] header = new byte[PackLoader.HEAD_DATA.length];
+		fis.read(header);
+		if (!Arrays.equals(header, PackLoader.HEAD_DATA)) {
+			byte[] len = new byte[4];
+			fis.read(len);
+			int size = DataIO.toInt(DataIO.translate(len), 0);
+			byte[] json = new byte[size];
+			fis.read(json);
+			JsonElement elem = JsonParser.parseString(new String(json));
+			Replay rep = JsonDecoder.decode(elem, Replay.class);
+			fis.read(len);
+			size = DataIO.toInt(DataIO.translate(len), 0);
+			int[] data = new int[size];
+			for (int i = 0; i < size; i++) {
+				fis.read(len);
+				data[i] = DataIO.toInt(DataIO.translate(len), 0);
+			}
+			rep.action = data;
+			return rep;
+		}
+		return null;
 	}
 
 	private static Replay getRecd(InStream is, ResourceLocation name) {
