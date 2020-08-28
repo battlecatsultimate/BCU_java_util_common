@@ -23,6 +23,8 @@ public class AtkModelUnit extends AtkModelEntity {
 		Unit u = UnitStore.get(proc[1], true);
 		int conf = proc[4];
 		int time = proc[5];
+		if ((conf & 16) != 0 && e.health <= 0)
+			return;
 		// conf 4
 		if (u != null && (b.entityCount(-1) < b.max_num || (conf & 4) > 0)) {
 			double up = ent.pos + getDire() * proc[2];

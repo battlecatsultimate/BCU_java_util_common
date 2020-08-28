@@ -18,6 +18,8 @@ public class AtkModelEnemy extends AtkModelEntity {
 		int conf = proc[4];
 		int time = proc[5];
 		int allow = b.st.data.allow(b, ene);
+		if ((conf & 16) != 0 && e.health <= 0)
+			return;
 		// conf 4
 		if (ene != null && (allow >= 0 || (conf & 4) > 0)) {
 			double ep = ent.pos + getDire() * proc[2];
