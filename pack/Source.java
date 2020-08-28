@@ -48,7 +48,6 @@ public abstract class Source {
 
 		VImg getUni();
 	}
-
 	@JsonClass
 	public static class ResourceLocation {
 
@@ -74,13 +73,16 @@ public abstract class Source {
 			return UserProfile.getUserPack(pack).source.loadAnimation(id);
 		}
 
+		public String getPath(String type) {
+			return "./" + pack + "/" + type + "/" + id;
+		}
+
 		@Override
 		public String toString() {
 			return pack + "/" + id;
 		}
 
 	}
-
 	@StaticPermitted
 	public static class SourceAnimLoader implements Source.AnimLoader {
 
@@ -159,7 +161,6 @@ public abstract class Source {
 		}
 
 	}
-
 	public static class SourceAnimSaver {
 
 		private final ResourceLocation id;
@@ -235,18 +236,17 @@ public abstract class Source {
 		}
 
 	}
-
 	public static class Workspace extends Source {
 
 		public static List<AnimCE> loadAnimations(String id) {
 			if (id == null)
 				id = ResourceLocation.LOCAL;
-			File folder = CommonStatic.ctx.getWorkspaceFile("./" + id + "/animations/");
+			File folder = CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + ANIM + "/");
 			List<AnimCE> list = new ArrayList<>();
 			if (!folder.exists() || !folder.isDirectory())
 				return list;
 			for (File f : folder.listFiles()) {
-				String path = "./" + id + "/animations/" + f.getName() + "/sprite.png";
+				String path = "./" + id + "/" + ANIM + "/" + f.getName() + "/sprite.png";
 				if (f.isDirectory() && CommonStatic.ctx.getWorkspaceFile(path).exists())
 					list.add(new AnimCE(new ResourceLocation(id, f.getName())));
 			}
@@ -264,11 +264,11 @@ public abstract class Source {
 							"failed to save pack " + up.desc.name);
 		}
 
-		public static void validateAnimation(ResourceLocation rl) {
+		public static void validate(String folder, ResourceLocation rl) {
 			rl.id = validateString(rl.id);
 			String id = rl.id;
 			int num = 0;
-			while (CommonStatic.ctx.getWorkspaceFile("./" + rl.pack + "/animations/" + rl.id).exists())
+			while (CommonStatic.ctx.getWorkspaceFile("./" + rl.pack + "/" + folder + "/" + rl.id).exists())
 				rl.id = id + "_" + (num++);
 		}
 
@@ -290,7 +290,7 @@ public abstract class Source {
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
-			return new FDFile(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id + "/" + str));
+			return new FDFile(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/" + ANIM + "/" + id.id + "/" + str));
 		}
 
 		public Workspace(String id) {
@@ -329,11 +329,11 @@ public abstract class Source {
 		}
 
 		public File getBGFile(Identifier<Background> id) {
-			return getFile("./backgrounds/" + Data.trio(id.id) + ".png");
+			return getFile("./" + BG + "/" + Data.trio(id.id) + ".png");
 		}
 
 		public File getCasFile(Identifier<CastleImg> id) {
-			return getFile("./castles/" + Data.trio(id.id) + ".png");
+			return getFile("./" + CASTLE + "/" + Data.trio(id.id) + ".png");
 		}
 
 		@Override
@@ -434,7 +434,7 @@ public abstract class Source {
 		public Workspace unzip(String password, Consumer<Double> prog) throws Exception {
 			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
 				return null;
-			File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/main.pack.json");
+			File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/pack.json");
 			File folder = f.getParentFile();
 			if (folder.exists()) {
 				if (!CommonStatic.ctx.confirmDelete())
@@ -453,10 +453,20 @@ public abstract class Source {
 		}
 
 		private FileData loadAnimationFile(ResourceLocation id, String path) {
-			return zip.tree.find("./animations/" + id.id + "/" + path).getData();
+			return zip.tree.find("./" + ANIM + "/" + id.id + "/" + path).getData();
 		}
 
 	}
+
+	public static final String ANIM = "animations";
+
+	public static final String BG = "bgs";
+
+	public static final String CASTLE = "castles";
+
+	public static final String MUSIC = "musics";
+
+	public static final String REPLAY = "replays";
 
 	public final String id;
 

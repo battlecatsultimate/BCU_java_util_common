@@ -1,10 +1,9 @@
 package common.battle;
 
 import common.CommonStatic.FakeKey;
-import common.io.OutStream;
 import common.util.BattleObj;
 import common.util.stage.EStage;
-import common.util.stage.Recd;
+import common.util.stage.Replay;
 import common.util.stage.Stage;
 
 import java.util.ArrayList;
@@ -16,22 +15,21 @@ public class SBCtrl extends BattleField {
 
 	public final List<Integer> action = new ArrayList<>();
 
-	public final Recd re;
+	public final Replay re;
 
 	public SBCtrl(FakeKey kh, Stage stage, int star, BasisLU bas, int[] ints, long seed) {
 		super(new EStage(stage, star), bas, ints, seed);
-		re = new Recd(bas, stage, star, ints, seed);
+		re = new Replay(bas, stage, star, ints, seed);
 		keys = kh;
 	}
 
-	protected SBCtrl(FakeKey kh, StageBasis sb, Recd r) {
+	protected SBCtrl(FakeKey kh, StageBasis sb, Replay r) {
 		super(sb);
 		keys = kh;
 		re = r.clone();
 	}
 
-	public Recd getData() {
-		re.name = "";
+	public Replay getData() {
 		re.action = sb.rx.write();
 		re.len = sb.time;
 		return re;
@@ -100,19 +98,15 @@ class Recorder extends BattleObj {
 		}
 	}
 
-	protected OutStream write() {
-		OutStream os = OutStream.getIns();
+	protected int[] write() {
 		if (rep > 0) {
 			recd.add(num);
 			recd.add(rep);
 		}
-		num = 0;
-		rep = 0;
-		os.writeInt(recd.size());
-		for (int i : recd)
-			os.writeInt(i);
-		os.terminate();
-		return os;
+		int[] ans = new int[recd.size()];
+		for (int i = 0; i < recd.size(); i++)
+			ans[i] = recd.get(i);
+		return ans;
 	}
 
 }

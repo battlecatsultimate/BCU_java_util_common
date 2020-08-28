@@ -9,6 +9,7 @@ import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
+import common.pack.Source.ResourceLocation;
 import common.pack.VerFixer.VerFixerException;
 import common.system.BasedCopable;
 import common.system.files.VFile;
@@ -116,7 +117,7 @@ public class Stage extends Data
 	@JsonField(block = true)
 	public StageInfo info;
 	@JsonField(block = true)
-	public List<Recd> recd = new ArrayList<>();
+	public List<Replay> recd = new ArrayList<>();
 
 	public final Identifier<Stage> id;
 	public String name = "";
@@ -128,6 +129,8 @@ public class Stage extends Data
 	public long loop0, loop1;
 	public SCDef data;
 	public Limit lim;
+	@JsonField(generic = Replay.class, alias = ResourceLocation.class)
+	public final ArrayList<Replay> arr = new ArrayList<>();
 
 	@JsonClass.JCConstructor
 	public Stage() {
@@ -167,7 +170,7 @@ public class Stage extends Data
 		int t = is.nextInt();
 		for (int i = 0; i < t; i++) {
 			String name = is.nextString();
-			Recd.getRecd(this, is.subStream(), name);
+			Replay.getRecd(this, is.subStream(), name);
 		}
 		validate();
 	}
@@ -291,7 +294,7 @@ public class Stage extends Data
 	}
 
 	public void setName(String str) {
-		// TODO validate str = MainBCU.validate(str);
+		// FIXME validate str = MainBCU.validate(str);
 		while (!checkName(str))
 			str += "'";
 		name = str;

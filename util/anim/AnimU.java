@@ -6,6 +6,10 @@ import common.system.fake.FakeImage;
 
 public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>, AnimU.UType> {
 
+	public interface EditableType {
+		boolean rotate();
+	}
+
 	public interface ImageKeeper {
 
 		VImg getEdi();
@@ -22,10 +26,6 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 		void unload();
 
-	}
-
-	public interface EditableType {
-		boolean rotate();
 	}
 
 	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {

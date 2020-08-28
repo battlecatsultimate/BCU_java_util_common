@@ -64,12 +64,6 @@ public strictfp abstract class DataIO {
 		return ans;
 	}
 
-	public static P toABP(int[] datas, int index) {
-		double x = toShort(datas, index);
-		double y = toShort(datas, index + 2);
-		return new P(x * 0.1 - 200, y * 0.1 - 200);
-	}
-
 	/**
 	 * read a number from a byte[] start from index
 	 */
@@ -84,6 +78,13 @@ public strictfp abstract class DataIO {
 
 	public static float toFloat(int[] datas, int index) {
 		return Float.intBitsToFloat(toInt(datas, index));
+	}
+
+	public static int toInt(byte[] datas, int index) {
+		int ans = 0;
+		for (int i = 0; i < 4; i++)
+			ans += (datas[index + i] & 0xff) << (i * 8);
+		return ans;
 	}
 
 	public static int toInt(int[] datas, int index) {

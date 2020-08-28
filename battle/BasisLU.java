@@ -61,6 +61,11 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	@JsonField(gen = GenType.FILL)
 	public int[] nyc = new int[3];
 
+	public BasisLU() {
+		t = new Treasure(this);
+		lu = new LineUp();
+	}
+
 	public BasisLU(BasisSet bs) {
 		t = new Treasure(this, bs.t());
 		lu = new LineUp();

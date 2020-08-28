@@ -54,11 +54,6 @@ public class EAnimU extends EAnimD<AnimU.UType> {
 		g.delete(at);
 	}
 
-	@Override
-	public void update(boolean rotate) {
-		super.update(type.rotate());
-	}
-
 	/**
 	 * make this animation a component of another, used in warp and kb
 	 */
@@ -67,6 +62,11 @@ public class EAnimU extends EAnimD<AnimU.UType> {
 			ent[0].setPara(null);
 		else
 			ent[0].setPara(base.ent[1]);
+	}
+
+	@Override
+	public void update(boolean rotate) {
+		super.update(type.rotate());
 	}
 
 }

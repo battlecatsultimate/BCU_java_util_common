@@ -886,6 +886,8 @@ public abstract class Entity extends AbEntity {
 				double d1 = em.pos + em.getProc().REVIVE.dis_1;
 				if ((d0 - e.pos) * (d1 - e.pos) > 0)
 					continue;
+				if (em.kb.kbType == INT_WARP)
+					continue;
 				REVIVE.TYPE conf = em.getProc().REVIVE.type;
 				if (!conf.revive_non_zombie && (e.type & TB_ZOMBIE) == 0)
 					continue;

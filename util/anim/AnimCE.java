@@ -111,7 +111,7 @@ public class AnimCE extends AnimCI {
 
 	public static String getAvailable(String string) {
 		ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, string);
-		Workspace.validateAnimation(rl);
+		Workspace.validate(Source.ANIM, rl);
 		return rl.id;
 	}
 
@@ -150,7 +150,7 @@ public class AnimCE extends AnimCI {
 	public AnimCE(String st) {
 		super(new AnimCELoader(st));
 		id = new ResourceLocation("_local", st);
-		Workspace.validateAnimation(id);
+		Workspace.validate(Source.ANIM, id);
 		map().put(id.id, this);
 	}
 
@@ -238,7 +238,7 @@ public class AnimCE extends AnimCI {
 				if (list.size() == 0)
 					continue;
 				ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id);
-				Workspace.validateAnimation(rl);
+				Workspace.validate(Source.ANIM, rl);
 				AnimCE tar = new AnimCE(rl, this);
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
@@ -315,7 +315,7 @@ public class AnimCE extends AnimCI {
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
 		id.id = str;
-		Workspace.validateAnimation(id);
+		Workspace.validate(Source.ANIM, id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().put(id.id, this);
 		saver.saveAll();

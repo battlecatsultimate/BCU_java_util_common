@@ -1,16 +1,15 @@
 package common.battle;
 
 import common.CommonStatic.FakeKey;
-import common.io.InStream;
 import common.util.stage.EStage;
-import common.util.stage.Recd;
+import common.util.stage.Replay;
 
 public class SBRply extends Mirror {
 
-	private final Recd r;
+	private final Replay r;
 	private final MirrorSet mir;
 
-	public SBRply(Recd re) {
+	public SBRply(Replay re) {
 		super(re);
 		r = re;
 		mir = new MirrorSet(r);
@@ -63,9 +62,9 @@ class Mirror extends BattleField {
 		rl = sr.rl.clone();
 	}
 
-	protected Mirror(Recd r) {
+	protected Mirror(Replay r) {
 		super(new EStage(r.st, r.star), r.lu, r.conf, r.seed);
-		rl = new Release(r.action.translate());
+		rl = new Release(r.action);
 	}
 
 	/**
@@ -97,7 +96,7 @@ class MirrorSet {
 	private final int len;
 	protected final int size;
 
-	protected MirrorSet(Recd r) {
+	protected MirrorSet(Replay r) {
 		len = r.len + 1;
 		size = (int) Math.sqrt(len);
 		mis = new Mirror[size];
@@ -136,11 +135,8 @@ class Release {
 	protected final int[] recd;
 	private int ind, rec, rex;
 
-	protected Release(InStream in) {
-		int n = in.nextInt();
-		recd = new int[n];
-		for (int i = 0; i < n; i++)
-			recd[i] = in.nextInt();
+	protected Release(int[] action) {
+		recd = action;
 	}
 
 	private Release(Release r) {

@@ -324,7 +324,7 @@ public class PackLoader {
 			fis.read(key);
 			byte[] len = new byte[4];
 			fis.read(len);
-			int size = DataIO.toInt(DataIO.translate(len), 0);
+			int size = DataIO.toInt(len, 0);
 			String desc = new String(decode(size));
 			JsonElement je = JsonParser.parseString(desc);
 			int offset = off + HEADER + PASSWORD * 2 + 4 + regulate(size);
@@ -397,7 +397,7 @@ public class PackLoader {
 
 	private static final String HEAD_STR = "battlecatsultimate";
 
-	private static final byte[] HEAD_DATA = getMD5(HEAD_STR.getBytes(), HEADER);
+	public static final byte[] HEAD_DATA = getMD5(HEAD_STR.getBytes(), HEADER);
 
 	private static final byte[] INIT_VECTOR = getMD5("battlecatsultimate".getBytes(), 16);
 
@@ -432,7 +432,7 @@ public class PackLoader {
 			throw new Exception("Corrupted File: header not match");
 		byte[] len = new byte[4];
 		fis.read(len);
-		int size = DataIO.toInt(DataIO.translate(len), 0);
+		int size = DataIO.toInt(len, 0);
 		byte[] data = new byte[size];
 		fis.read(data);
 		String desc = new String(data);
