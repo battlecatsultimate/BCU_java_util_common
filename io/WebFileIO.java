@@ -25,31 +25,31 @@ public class WebFileIO {
 	@StaticPermitted(StaticPermitted.Type.TEMP)
 	private static HttpTransport transport;
 
-	public static void download(int size, String url, File file, Consumer<Progress> c) throws Exception {
+	public static void download(int size, String url, File file, Consumer<Progress> c, boolean direct) throws Exception {
 		Context.check(file);
 		OutputStream out = new FileOutputStream(file);
-		impl(size, url, out, c, 0);
+		impl(size, url, out, c, 0, direct);
 	}
 
 	public static void download(String url, File file) throws Exception {
-		download(FAST, url, file, null);
+		download(FAST, url, file, null, false);
 	}
 
-	public static void download(String url, File file, Consumer<Progress> c) throws Exception {
-		download(SMOOTH, url, file, c);
+	public static void download(String url, File file, Consumer<Progress> c, boolean direct) throws Exception {
+		download(SMOOTH, url, file, c, direct);
 	}
 
 	public static JsonElement read(String url) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		impl(FAST, url, out, null, 5000);
+		impl(FAST, url, out, null, 5000, false);
 		return JsonParser.parseReader(
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
-	private static void impl(int size, String url, OutputStream out, Consumer<Progress> c, int timeout)
+	private static void impl(int size, String url, OutputStream out, Consumer<Progress> c, int timeout, boolean direct)
 			throws Exception {
 		if (transport == null)
-			transport = GoogleNetHttpTransport.newTrustedTransport();
+			transport = new com.google.api.client.http.javanet.NetHttpTransport();
 		GenericUrl gurl = new GenericUrl(url);
 		MediaHttpDownloader downloader = new MediaHttpDownloader(transport, (request) -> {
 			if (timeout == 0) {
@@ -60,7 +60,14 @@ public class WebFileIO {
 				request.setConnectTimeout(timeout);
 				request.setReadTimeout(timeout);
 			}
+
+			request.setEncoding(null);
 		});
+
+		if(timeout > 0 || direct) {
+			downloader.setDirectDownloadEnabled(true);
+		}
+
 		downloader.setChunkSize(size);
 		downloader.setProgressListener(new Progress(c));
 		downloader.download(gurl, out);
