@@ -41,8 +41,8 @@ public class WebFileIO {
 		download(FAST, url, file, null, false);
 	}
 
-	public static void download(String url, File file, Consumer<Double> c) throws Exception {
-		download(SMOOTH, url, file, c, false);
+	public static void download(String url, File file, Consumer<Double> c, boolean direct) throws Exception {
+		download(SMOOTH, url, file, c, direct);
 	}
 
 	public static JsonElement read(String url) throws Exception {
@@ -52,8 +52,7 @@ public class WebFileIO {
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
-	private static void impl(int size, String url, OutputStream out, Consumer<Double> c, int timeout)
-			throws Exception {
+	private static void impl(int size, String url, OutputStream out, Consumer<Double> c, int timeout) throws Exception {
 		if (transport == null)
 			transport = new com.google.api.client.http.javanet.NetHttpTransport();
 		GenericUrl gurl = new GenericUrl(url);

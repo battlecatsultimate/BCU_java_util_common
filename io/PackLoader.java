@@ -82,8 +82,7 @@ public class PackLoader {
 				file = f;
 				size = (int) f.length();
 				offset = parent.len;
-				parent.len += (size & 0xF) == 0 ? size : (size | 0xF) + 1;
-				parent.len += PASSWORD;
+				parent.len += regulate(size);
 			}
 
 			@Deprecated
@@ -167,8 +166,6 @@ public class PackLoader {
 				OutputStream fos = new FileOutputStream(dest);
 				byte[] bs = new byte[PASSWORD];
 				Cipher cipher = decrypt(loader.key);
-				fis.read(bs);
-				cipher.update(bs);
 				for (int i = 0; i < n; i++) {
 					fis.read(bs);
 					byte[] ans = i == n - 1 ? cipher.doFinal(bs) : cipher.update(bs);
@@ -186,7 +183,7 @@ public class PackLoader {
 				if (loader.context.getPreload(this).preload(fd))
 					fd.data = new FDByte(loader.decode(fd.size));
 				else
-					loader.fis.skip(regulate(fd.size + PASSWORD));
+					loader.fis.skip(regulate(fd.size));
 				con.accept(1.0 * (i++) / files.length);
 			}
 		}
@@ -225,7 +222,7 @@ public class PackLoader {
 			private int index;
 
 			private FLStream(FileLoader ld, int offset, int size) throws Exception {
-				len = (size & 0xF) == 0 ? size : (size | 0xF) + 1;
+				len = regulate(size);
 				for (int i = 0; i <= 6; i++) {
 					if (i == 6 || len < 1 << i + 13) {
 						LEN = 1 << i + 10;
@@ -236,9 +233,6 @@ public class PackLoader {
 				this.size = size;
 				cipher = decrypt(ld.key);
 				fis = MultiStream.getStream(ld.file, offset, ld.useRAF);
-				byte[] init = new byte[PASSWORD];
-				fis.read(init, 0, PASSWORD);
-				cipher.update(init, 0, PASSWORD, new byte[0], 0);
 				index = LEN;
 			}
 
@@ -327,13 +321,13 @@ public class PackLoader {
 			int size = DataIO.toInt(len, 0);
 			String desc = new String(decode(size));
 			JsonElement je = JsonParser.parseString(desc);
-			int offset = off + HEADER + PASSWORD * 2 + 4 + regulate(size);
+			int offset = off + HEADER + PASSWORD + 4 + regulate(size);
 			pack = JsonDecoder.inject(je, ZipDesc.class, new ZipDesc(this, offset));
 			pack.load(con);
 		}
 
 		private byte[] decode(int size) throws Exception {
-			int len = regulate(size) + PASSWORD;
+			int len = regulate(size);
 			byte[] bs = new byte[len];
 			fis.read(bs);
 			bs = decrypt(key).doFinal(bs);
@@ -404,7 +398,7 @@ public class PackLoader {
 	public static Cipher decrypt(byte[] key) throws Exception {
 		IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR);
 		SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+		Cipher cipher = Cipher.getInstance("AES/CBC/NOPADDING");
 		cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 		return cipher;
 	}
@@ -412,7 +406,7 @@ public class PackLoader {
 	public static Cipher encrypt(byte[] key) throws Exception {
 		IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR);
 		SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+		Cipher cipher = Cipher.getInstance("AES/CBC/NOPADDING");
 		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 		return cipher;
 	}

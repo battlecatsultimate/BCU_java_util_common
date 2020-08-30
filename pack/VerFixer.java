@@ -263,10 +263,11 @@ public abstract class VerFixer extends Source {
 		@Override
 		@SuppressWarnings("deprecation")
 		protected void load() throws Exception {
+			data.desc.name = is.nextString();
 			loadEnemies(is.subStream());
 			loadUnits(is.subStream());
-			loadBackgrounds(is.subStream());
 			loadCastles(is.subStream());
+			loadBackgrounds(is.subStream());
 			loadMusics(is.subStream());
 			data.mc = new PackMapColc(data, is);
 			is = null;
@@ -479,8 +480,9 @@ public abstract class VerFixer extends Source {
 			for (VerFixer p : list) {
 				boolean all = true;
 				for (String pre : p.data.desc.dependency)
-					if (!map.containsKey(pre) || map.get(pre).is != null)
+					if (!pre.equals("000000") && (!map.containsKey(pre) || map.get(pre).is != null))
 						all = false;
+				System.out.println(p.data.desc.dependency);
 				if (all) {
 					p.load();
 					rem++;
@@ -564,6 +566,7 @@ public abstract class VerFixer extends Source {
 		id.pack = target;
 		@SuppressWarnings("deprecation")
 		AnimCE ce = new AnimCE(al);
+		ce.check();
 		new SourceAnimSaver(id, ce).saveAll();
 		return new AnimCE(id);
 	}

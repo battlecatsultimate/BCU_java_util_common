@@ -152,7 +152,7 @@ public class Stage extends Data
 		this(id);
 		int val = getVer(is.nextString());
 		if (val != 409)
-			throw new VerFixerException("stage version has to be 409, got" + val);
+			throw new VerFixerException("stage version has to be 409, got " + val);
 		name = is.nextString();
 		bg = Identifier.parseInt(is.nextInt(), Background.class);
 		castle = Identifier.parseInt(is.nextInt(), CastleImg.class);
