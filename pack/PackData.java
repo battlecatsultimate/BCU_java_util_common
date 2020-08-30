@@ -226,6 +226,11 @@ public abstract class PackData implements IndexContainer {
 			this.id = id;
 			this.dependency = new ArrayList<>();
 		}
+
+		@Override
+		public String toString() {
+			return name + " - " + id;
+		}
 	}
 
 	@JsonClass(read = RType.FILL)

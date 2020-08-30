@@ -5,6 +5,7 @@ import common.io.OutStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Source;
 import common.pack.UserProfile;
@@ -89,7 +90,8 @@ public class CommonStatic {
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Config {
 
-		public String langTimeStamp;
+		@JsonField(generic = { String.class, String.class })
+		public HashMap<String, String> localLangMap = new HashMap<>();
 
 		// ImgCore
 		public int deadOpa = 10, fullOpa = 90;

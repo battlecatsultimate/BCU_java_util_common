@@ -3,12 +3,13 @@ package common.io.assets;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import common.CommonStatic;
@@ -24,14 +25,20 @@ import common.util.Data;
 
 public class UpdateCheck {
 
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class ContentJson {
+		public String name, sha, download_url;
+	}
+
 	public static class Downloader {
 
 		public final String url;
 		public final File target;
 		public final File temp;
 		public final String desc;
-
 		public final boolean direct;
+
+		public Runnable post;
 
 		private Downloader(String url, File target, File temp, String desc, boolean direct) {
 			this.url = url;
@@ -47,7 +54,10 @@ public class UpdateCheck {
 			if (temp.exists())
 				temp.delete();
 			WebFileIO.download(url, temp, prog, direct);
+			if (!target.getParentFile().exists())
+				target.getParentFile().mkdirs();
 			temp.renameTo(target);
+			post.run();
 		}
 
 		@Override
@@ -86,10 +96,8 @@ public class UpdateCheck {
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
 	public static final String URL_RES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
-	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-resources/commits?path=resources/lang&per_page=1";
-	public static final String URL_LANG_DOWN = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang/";
+	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
 
-	
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
 	}
@@ -119,27 +127,29 @@ public class UpdateCheck {
 	}
 
 	public static Context.SupExc<List<Downloader>> checkLang(String[] files) {
-		String local = CommonStatic.getConfig().langTimeStamp;
+		Map<String, String> local = CommonStatic.getConfig().localLangMap;
 		File f = CommonStatic.ctx.getAssetFile("./lang");
 		String path = f.getPath() + "/";
 		return () -> {
 			JsonElement je0 = WebFileIO.read(URL_LANG_CHECK);
-			JsonArray arr0 = je0.getAsJsonArray();
-			if (arr0.size() == 0)
-				return null;
-			String date = arr0.get(0).getAsJsonObject().get("commit").getAsJsonObject().get("author").getAsJsonObject()
-					.get("date").getAsString();
-			if (date.equals(local))
-				return null;
+			ContentJson[] cont = JsonDecoder.decode(je0, ContentJson[].class);
+			Map<String, ContentJson> map = new HashMap<>();
 			List<Downloader> list = new ArrayList<>();
+			for (ContentJson c : cont)
+				map.put(c.name, c);
 			for (String str : files) {
-				File tmp = new File(path + ".temp");
-				String url = URL_LANG_DOWN + str.replace('/', '-');
+				ContentJson cj = map.get(str.replace('/', '-'));
+				if (cj == null)
+					continue;
 				File dst = new File(path + str);
-				String desc = "downloading file " + str;
-				list.add(new Downloader(url, dst, tmp, desc, true));
+				if (!dst.exists() || !cj.sha.equals(local.get(str))) {
+					File tmp = new File(path + ".temp");
+					String desc = "download language file " + str;
+					Downloader d = new Downloader(cj.download_url, dst, tmp, desc, false);
+					list.add(d);
+					d.post = () -> local.put(str, cj.sha);
+				}
 			}
-			CommonStatic.getConfig().langTimeStamp = date;
 			return list;
 		};
 	}

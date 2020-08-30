@@ -1,6 +1,5 @@
 package common.io;
 
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.http.*;
 import com.google.api.client.util.ExponentialBackOff;
@@ -25,7 +24,8 @@ public class WebFileIO {
 	@StaticPermitted(StaticPermitted.Type.TEMP)
 	private static HttpTransport transport;
 
-	public static void download(int size, String url, File file, Consumer<Progress> c, boolean direct) throws Exception {
+	public static void download(int size, String url, File file, Consumer<Progress> c, boolean direct)
+			throws Exception {
 		Context.check(file);
 		OutputStream out = new FileOutputStream(file);
 		impl(size, url, out, c, 0, direct);
@@ -41,7 +41,7 @@ public class WebFileIO {
 
 	public static JsonElement read(String url) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		impl(FAST, url, out, null, 5000, false);
+		impl(FAST, url, out, null, 5000, true);
 		return JsonParser.parseReader(
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
@@ -60,16 +60,15 @@ public class WebFileIO {
 				request.setConnectTimeout(timeout);
 				request.setReadTimeout(timeout);
 			}
-
 			request.setEncoding(null);
 		});
 
-		if(timeout > 0 || direct) {
+		if (timeout > 0 || direct) {
 			downloader.setDirectDownloadEnabled(true);
+		} else {
+			downloader.setChunkSize(size);
+			downloader.setProgressListener(new Progress(c));
 		}
-
-		downloader.setChunkSize(size);
-		downloader.setProgressListener(new Progress(c));
 		downloader.download(gurl, out);
 		out.close();
 

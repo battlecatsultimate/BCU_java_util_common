@@ -6,7 +6,6 @@ import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.assets.UpdateCheck.Downloader;
 import common.pack.Context;
 import common.pack.PackData.PackDesc;
 import common.pack.UserProfile;
