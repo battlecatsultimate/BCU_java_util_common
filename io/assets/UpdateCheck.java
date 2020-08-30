@@ -31,11 +31,14 @@ public class UpdateCheck {
 		public final File temp;
 		public final String desc;
 
-		private Downloader(String url, File target, File temp, String desc) {
+		public final boolean direct;
+
+		private Downloader(String url, File target, File temp, String desc, boolean direct) {
 			this.url = url;
 			this.target = target;
 			this.temp = temp;
 			this.desc = desc;
+			this.direct = direct;
 		}
 
 		public void run(Consumer<Progress> prog) throws Exception {
@@ -43,7 +46,7 @@ public class UpdateCheck {
 				target.delete();
 			if (temp.exists())
 				temp.delete();
-			WebFileIO.download(url, temp, prog);
+			WebFileIO.download(url, temp, prog, direct);
 			temp.renameTo(target);
 		}
 
@@ -110,7 +113,7 @@ public class UpdateCheck {
 			String url = URL_NEW + aj.id + ".asset.bcuzip";
 			File temp = CommonStatic.ctx.getAssetFile("./assets/.asset.bcuzip.temp");
 			File target = CommonStatic.ctx.getAssetFile("./assets/" + aj.id + ".asset.bcuzip");
-			set.add(new Downloader(url, target, temp, aj.desc));
+			set.add(new Downloader(url, target, temp, aj.desc, false));
 		}
 		return set;
 	}
@@ -134,7 +137,7 @@ public class UpdateCheck {
 				String url = URL_LANG_DOWN + str.replace('/', '-');
 				File dst = new File(path + str);
 				String desc = "downloading file " + str;
-				list.add(new Downloader(url, dst, tmp, desc));
+				list.add(new Downloader(url, dst, tmp, desc, true));
 			}
 			CommonStatic.getConfig().langTimeStamp = date;
 			return list;
@@ -157,7 +160,7 @@ public class UpdateCheck {
 				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
 				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
 				String url = URL_RES + "music/" + Data.trio(i) + ".ogg";
-				ans.add(new Downloader(url, target, temp, "music " + Data.trio(i)));
+				ans.add(new Downloader(url, target, temp, "music " + Data.trio(i), false));
 			}
 		return ans;
 	}
@@ -173,7 +176,7 @@ public class UpdateCheck {
 					str.remove(f.getName());
 			for (String s : str)
 				libs.add(new Downloader(URL_RES + "jar/BCU_lib/" + s, new File("./BCU_lib/" + s),
-						new File("./BCU_lib/.jar.temp"), "downloading BCU library " + s));
+						new File("./BCU_lib/.jar.temp"), "downloading BCU library " + s, false));
 		}
 		return libs;
 	}
