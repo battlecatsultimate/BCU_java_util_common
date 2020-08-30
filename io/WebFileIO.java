@@ -34,25 +34,25 @@ public class WebFileIO {
 		if (direct)
 			direct(url, out, c);
 		else
-			impl(size, url, out, c, 0, direct);
+			impl(size, url, out, c, 0);
 	}
 
 	public static void download(String url, File file) throws Exception {
 		download(FAST, url, file, null, false);
 	}
 
-	public static void download(String url, File file, Consumer<Double> c, boolean direct) throws Exception {
-		download(SMOOTH, url, file, c, direct);
+	public static void download(String url, File file, Consumer<Double> c) throws Exception {
+		download(SMOOTH, url, file, c, false);
 	}
 
 	public static JsonElement read(String url) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		impl(FAST, url, out, null, 5000, true);
+		impl(FAST, url, out, null, 5000);
 		return JsonParser.parseReader(
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
-	private static void impl(int size, String url, OutputStream out, Consumer<Double> c, int timeout, boolean direct)
+	private static void impl(int size, String url, OutputStream out, Consumer<Double> c, int timeout)
 			throws Exception {
 		if (transport == null)
 			transport = new com.google.api.client.http.javanet.NetHttpTransport();
@@ -69,7 +69,7 @@ public class WebFileIO {
 			request.setEncoding(null);
 		});
 
-		if (timeout > 0 || direct) {
+		if (timeout > 0) {
 			downloader.setDirectDownloadEnabled(true);
 		} else {
 			downloader.setChunkSize(size);

@@ -144,7 +144,7 @@ public class UpdateCheck {
 				if (!dst.exists() || !cj.sha.equals(local.get(str))) {
 					File tmp = new File(path + ".temp");
 					String desc = "download language file " + str;
-					Downloader d = new Downloader(cj.download_url, dst, tmp, desc, false);
+					Downloader d = new Downloader(cj.download_url, dst, tmp, desc, true);
 					list.add(d);
 					d.post = () -> local.put(str, cj.sha);
 				}
