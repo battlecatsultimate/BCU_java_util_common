@@ -41,8 +41,8 @@ public class WebFileIO {
 		download(FAST, url, file, null, false);
 	}
 
-	public static void download(String url, File file, Consumer<Double> c) throws Exception {
-		download(SMOOTH, url, file, c, false);
+	public static void download(String url, File file, Consumer<Double> c, boolean direct) throws Exception {
+		download(SMOOTH, url, file, c, direct);
 	}
 
 	public static JsonElement read(String url) throws Exception {
