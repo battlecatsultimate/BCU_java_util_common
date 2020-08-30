@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import com.google.gson.JsonElement;
 
 import common.CommonStatic;
-import common.io.Progress;
 import common.io.WebFileIO;
 import common.io.assets.UpdateCheck.UpdateJson.AssetJson;
 import common.io.json.JsonClass;
@@ -48,7 +47,7 @@ public class UpdateCheck {
 			this.direct = direct;
 		}
 
-		public void run(Consumer<Progress> prog) throws Exception {
+		public void run(Consumer<Double> prog) throws Exception {
 			if (target.exists())
 				target.delete();
 			if (temp.exists())

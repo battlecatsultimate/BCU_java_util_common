@@ -13,9 +13,9 @@ public class Progress implements MediaHttpDownloaderProgressListener {
 	public double prog = 0;
 	public long tot, cur;
 
-	private final Consumer<Progress> c;
+	private final Consumer<Double> c;
 
-	protected Progress(Consumer<Progress> cons) {
+	protected Progress(Consumer<Double> cons) {
 		c = cons;
 		update();
 	}
@@ -40,7 +40,7 @@ public class Progress implements MediaHttpDownloaderProgressListener {
 
 	protected void update() {
 		if (c != null)
-			c.accept(this);
+			c.accept(prog);
 	}
 
 }
