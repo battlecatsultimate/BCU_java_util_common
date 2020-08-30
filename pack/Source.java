@@ -11,7 +11,6 @@ import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
 import common.system.files.FileData;
 import common.system.files.VFile;
@@ -294,7 +293,11 @@ public abstract class Source {
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
-			return new FDFile(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/" + ANIM + "/" + id.id + "/" + str));
+			String path = "./" + id.pack + "/" + ANIM + "/" + id.id + "/" + str;
+			File f = CommonStatic.ctx.getWorkspaceFile(path);
+			if (!f.exists())
+				return null;
+			return new FDFile(f);
 		}
 
 		public Workspace(String id) {
@@ -326,7 +329,7 @@ public abstract class Source {
 					Context.delete(tar);
 				Context.check(dst);
 				PackLoader.writePack(dst, src, pack.desc, password, prog);
-				dst.renameTo(tar);
+				Context.renameTo(dst, tar);
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to export pack");
 			}
@@ -356,8 +359,8 @@ public abstract class Source {
 		}
 
 		@Override
-		public FakeImage readImage(String path) throws IOException {
-			return ImageBuilder.builder.build(getFile(path));
+		public VImg readImage(String path, int ind) {
+			return new VImg(VFile.getFile(getFile(path + "/" + Data.trio(ind))));
 		}
 
 		@Override
@@ -371,16 +374,16 @@ public abstract class Source {
 			return new FileOutputStream(f);
 		}
 
-		private File getFile(String path) {
-			return CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + path);
-		}
-
-		private void save(UserPack up) throws IOException {
+		protected void save(UserPack up) throws IOException {
 			File f = getFile("pack.json");
 			Context.check(f);
 			FileWriter fw = new FileWriter(f);
 			fw.write(JsonEncoder.encode(up).toString());
 			fw.close();
+		}
+
+		private File getFile(String path) {
+			return CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + path);
 		}
 
 	}
@@ -426,8 +429,8 @@ public abstract class Source {
 		}
 
 		@Override
-		public FakeImage readImage(String path) throws Exception {
-			return zip.tree.find(path).getData().getImg();
+		public VImg readImage(String path, int ind) {
+			return new VImg(zip.tree.find(path + "/" + Data.trio(ind)));
 		}
 
 		@Override
@@ -489,7 +492,7 @@ public abstract class Source {
 	/**
 	 * read images from file. Use it
 	 */
-	public abstract FakeImage readImage(String path) throws Exception;
+	public abstract VImg readImage(String path, int ind);
 
 	/**
 	 * used for streaming music. Do not use it for images and small text files

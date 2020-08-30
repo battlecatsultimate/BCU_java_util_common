@@ -32,6 +32,7 @@ public class Limit extends Data implements BattleStatic {
 
 	}
 
+	@JsonClass
 	public static class PackLimit extends Limit {
 
 		@JsonField
@@ -45,10 +46,11 @@ public class Limit extends Data implements BattleStatic {
 			int ver = Data.getVer(is.nextString());
 			if (ver != 308)
 				throw new VerFixerException("Limit requires ver 308, got " + ver);
-			int g = is.nextInt();
+
 			name = is.nextString();
 			sid = is.nextInt();
 			star = is.nextInt();
+			int g = is.nextInt();
 			if (g >= 0)
 				group = mc.groups.get(g);
 			int l = is.nextInt();

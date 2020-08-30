@@ -245,7 +245,7 @@ public abstract class PackData implements IndexContainer {
 		@JsonField(gen = GenType.FILL)
 		public PackCasList castles;
 
-		public final Source source;
+		public Source source;
 
 		public boolean editable;
 		public boolean loaded = false;
@@ -259,6 +259,7 @@ public abstract class PackData implements IndexContainer {
 		public UserPack(PackDesc desc, Source s) {
 			this.desc = desc;
 			source = s;
+			castles = new PackCasList(this);
 		}
 
 		public UserPack(Source s, PackDesc desc, JsonElement elem) {
@@ -266,8 +267,8 @@ public abstract class PackData implements IndexContainer {
 			this.elem = elem;
 			source = s;
 			editable = source instanceof Workspace;
-			mc = new PackMapColc(this);
 			castles = new PackCasList(this);
+			mc = new PackMapColc(this);
 		}
 
 		/**
@@ -353,6 +354,8 @@ public abstract class PackData implements IndexContainer {
 	public <R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def) {
 		if (cls == Unit.class)
 			def = func.reduce(def, units);
+		if (cls == UnitLevel.class)
+			def = func.reduce(def, unitLevels);
 		if (cls == Enemy.class || cls == AbEnemy.class)
 			def = func.reduce(def, enemies);
 		if (cls == EneRand.class || cls == AbEnemy.class)

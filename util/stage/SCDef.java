@@ -33,7 +33,7 @@ public class SCDef implements Copable<SCDef> {
 		}
 
 		public Line(int[] arr) {
-			enemy = Identifier.parseInt(arr[E], Enemy.class);
+			enemy = Identifier.parseInt(arr[E], AbEnemy.class);
 			number = arr[N];
 			boss = arr[B];
 			multiple = arr[M];
@@ -84,7 +84,7 @@ public class SCDef implements Copable<SCDef> {
 				scd.sdef = is.nextInt();
 				n = is.nextInt();
 				for (int i = 0; i < n; i++)
-					scd.smap.put(Identifier.parseInt(is.nextInt(), Enemy.class), is.nextInt());
+					scd.smap.put(Identifier.parseInt(is.nextInt(), AbEnemy.class), is.nextInt());
 				n = is.nextInt();
 				for (int i = 0; i < n; i++) {
 					SCGroup scg = SCGroup.zread(is);

@@ -151,8 +151,8 @@ public class Stage extends Data
 	public Stage(UserPack pack, Identifier<Stage> id, InStream is) throws VerFixerException {
 		this(id);
 		int val = getVer(is.nextString());
-		if (val != 409)
-			throw new VerFixerException("stage version has to be 409, got " + val);
+		if (val < 407)
+			throw new VerFixerException("stage version has to be higher than 407, got " + val);
 		name = is.nextString();
 		bg = Identifier.parseInt(is.nextInt(), Background.class);
 		castle = Identifier.parseInt(is.nextInt(), CastleImg.class);
@@ -161,8 +161,14 @@ public class Stage extends Data
 		mus0 = Identifier.parseInt(is.nextInt(), Music.class);
 		mush = is.nextInt();
 		mus1 = Identifier.parseInt(is.nextInt(), Music.class);
-		loop0 = is.nextLong();
-		loop1 = is.nextLong();
+		if (val == 408) {
+			loop0 = is.nextInt();
+			loop1 = is.nextInt();
+		}
+		if (val == 409) {
+			loop0 = is.nextLong();
+			loop1 = is.nextLong();
+		}
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
 		data = SCDef.zread(is.subStream());

@@ -2,10 +2,14 @@ package common.util.pack;
 
 import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
+import common.io.json.JsonClass;
+import common.io.json.JsonDecoder.OnInjected;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
+import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.VImg;
@@ -19,6 +23,8 @@ import common.util.pack.WaveAnim.WaveType;
 import java.util.Queue;
 
 @IndexCont(PackData.class)
+@JsonClass.JCGeneric(Identifier.class)
+@JsonClass
 public class Background extends AnimI<Background, Background.BGWvType> implements Indexable<PackData, Background> {
 
 	public enum BGWvType implements AnimI.AnimType<Background, BGWvType> {
@@ -56,15 +62,27 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 			}
 	}
 
-	public final Identifier<Background> id;
-	public final VImg img;
-	public final int[][] cs = new int[4][3];
-	private final WaveAnim uwav, ewav;
+	@JsonClass.JCIdentifier
+	@JsonField
+	public Identifier<Background> id;
+	public VImg img;
+	@JsonField
+	public int[][] cs = new int[4][3];
+	private WaveAnim uwav, ewav;
 
 	public int ic;
 	public boolean top;
 
 	public FakeImage[] parts = null;
+
+	@JsonClass.JCConstructor
+	public Background() {
+		ic = 1;
+		top = true;
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		uwav = aux.defu;
+		ewav = aux.defe;
+	}
 
 	public Background(Identifier<Background> id, VImg vimg) {
 		this.id = id;
@@ -164,6 +182,11 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	@Override
 	public String[] names() {
 		return new String[] { toString(), "enemy wave", "unit wave" };
+	}
+
+	@OnInjected
+	public void onInjected() {
+		img = ((PackData.UserPack) getCont()).source.readImage(Source.BG, id.id);
 	}
 
 	@Override

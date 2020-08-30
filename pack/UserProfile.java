@@ -78,9 +78,13 @@ public class UserProfile {
 		UserProfile profile = profile();
 		if (str.equals(Identifier.DEF))
 			return profile.def;
-		if (profile.pending != null)
+		if (profile.fixpending != null && profile.fixpending.containsKey(str))
+			return profile.fixpending.get(str).data;
+		if (profile.pending != null && profile.pending.containsKey(str))
 			return profile.pending.get(str);
-		return profile.packmap.get(str);
+		if (profile.packmap.containsKey(str))
+			return profile.packmap.get(str);
+		return null;
 	}
 
 	/**
@@ -151,10 +155,12 @@ public class UserProfile {
 	}
 
 	public static void loadPacks(Consumer<Double> prog) {
-		//FIXME CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to convert old format");
+		UserProfile profile = profile();
+		CommonStatic.ctx.noticeErr(() -> VerFixer.fix(profile.fixpending), ErrType.FATAL,
+				"failed to convert old format");
+		profile.fixpending = null;
 		File packs = CommonStatic.ctx.getPackFolder();
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
-		UserProfile profile = profile();
 		if (packs.exists())
 			for (File f : packs.listFiles())
 				if (f.getName().endsWith(".pack.bcuzip")) {
@@ -230,6 +236,7 @@ public class UserProfile {
 
 	private final Map<String, Map<String, ?>> registers = new HashMap<>();
 
+	private Map<String, VerFixer> fixpending = new HashMap<>();
 	private Map<String, UserPack> pending = new HashMap<>();
 
 	private UserProfile() {

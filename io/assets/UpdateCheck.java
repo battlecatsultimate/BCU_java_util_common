@@ -57,7 +57,7 @@ public class UpdateCheck {
 				target.getParentFile().mkdirs();
 			temp.renameTo(target);
 
-			if(post != null) {
+			if (post != null) {
 				post.run();
 			}
 		}

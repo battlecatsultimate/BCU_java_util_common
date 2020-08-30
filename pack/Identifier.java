@@ -3,6 +3,9 @@ package common.pack;
 import common.io.json.JsonClass;
 import common.util.Data;
 import common.util.stage.CastleImg;
+import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
+import common.util.unit.Enemy;
 
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
@@ -50,6 +53,14 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 	@Deprecated
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Identifier parseIntRaw(int v, Class<?> cls) {
+		if (cls == AbEnemy.class) {
+			if (v < 1000 || v % 1000 < 500)
+				cls = Enemy.class;
+			else {
+				cls = EneRand.class;
+				v -= 500;
+			}
+		}
 		if (cls == null || cls.isInterface() || !IndexContainer.Indexable.class.isAssignableFrom(cls))
 			cls = UserProfile.getStatic(STATIC_FIXER, () -> new VerFixer.IdFixer(null)).parse(v, cls);
 		String pack = cls != CastleImg.class && v / 1000 == 0 ? DEF : Data.hex(v / 1000);

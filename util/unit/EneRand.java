@@ -95,7 +95,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		for (int i = 0; i < n; i++) {
 			EREnt<Identifier<AbEnemy>> ere = new EREnt<>();
 			list.add(ere);
-			ere.ent = Identifier.parseInt(is.nextInt(), EneRand.class);
+			ere.ent = Identifier.parseInt(is.nextInt(), AbEnemy.class);
 			ere.multi = is.nextInt();
 			ere.share = is.nextInt();
 		}

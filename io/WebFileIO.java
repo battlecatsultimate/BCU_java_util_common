@@ -52,6 +52,20 @@ public class WebFileIO {
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
+	private static void direct(String url, OutputStream out, Consumer<Double> prog) throws IOException {
+		URLConnection conn = new URL(url).openConnection();
+		InputStream is = conn.getInputStream();
+		int n, ava = 0, count = 0;
+		byte[] buffer = new byte[BUFFER];
+		while ((n = is.read(buffer)) != -1) {
+			out.write(buffer, 0, n);
+			count += n;
+			if ((ava = is.available()) > 0)
+				prog.accept(1.0 * count / ava);
+		}
+		out.close();
+	}
+
 	private static void impl(int size, String url, OutputStream out, Consumer<Double> c, int timeout) throws Exception {
 		if (transport == null)
 			transport = new com.google.api.client.http.javanet.NetHttpTransport();
@@ -75,20 +89,6 @@ public class WebFileIO {
 			downloader.setProgressListener(new Progress(c));
 		}
 		downloader.download(gurl, out);
-		out.close();
-	}
-
-	private static void direct(String url, OutputStream out, Consumer<Double> prog) throws IOException {
-		URLConnection conn = new URL(url).openConnection();
-		InputStream is = conn.getInputStream();
-		int n, ava = 0, count = 0;
-		byte[] buffer = new byte[BUFFER];
-		while ((n = is.read(buffer)) != -1) {
-			out.write(buffer, 0, n);
-			count += n;
-			if ((ava = is.available()) > 0)
-				prog.accept(1.0 * count / ava);
-		}
 		out.close();
 	}
 

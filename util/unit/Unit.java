@@ -11,7 +11,10 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
+import common.pack.Source.ResourceLocation;
+import common.pack.Source.Workspace;
 import common.pack.PackData;
+import common.pack.Source;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
@@ -108,8 +111,10 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		lv.units.add(u);
 		forms = new Form[u.forms.length];
 		for (int i = 0; i < forms.length; i++) {
-			String str = AnimCE.getAvailable(id + "-" + i);
-			AnimCE ac = new AnimCE(str, u.forms[i].anim);
+			String str = id + "-" + i;
+			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, str);
+			Workspace.validate(Source.ANIM, rl);
+			AnimCE ac = new AnimCE(rl, u.forms[i].anim);
 			CustomUnit cu = new CustomUnit();
 			cu.importData(u.forms[i].du);
 			forms[i] = new Form(this, i, str, ac, cu);

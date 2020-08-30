@@ -17,10 +17,16 @@ public class VFile implements Comparable<VFile> {
 		return UserProfile.getBCData().root;
 	}
 
+	public static VFile getFile(File f) {
+		if (!f.exists())
+			return null;
+		return new VFile(null, f.getName(), new FDFile(f));
+	}
+
 	public static VFile getFile(String path) {
-		if (path.startsWith("./org/") || path.startsWith("./lang/"))
+		if (path.startsWith("./org/"))
 			return getBCFileTree().find(path);
-		if (path.startsWith("./res/")) {
+		if (path.startsWith("./workspace/")) {
 			File f = CommonStatic.def.route(path);
 			if (!f.exists())
 				return null;

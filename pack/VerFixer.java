@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,12 +71,13 @@ public abstract class VerFixer extends Source {
 		@Override
 		@SuppressWarnings("deprecation")
 		protected void load() throws VerFixerException {
+			data.desc.name = is.nextString();
 			loadEnemies(is.subStream());
-			loadUnits(is.subStream());
-			loadBackgrounds(is.subStream());
 			loadCastles(is.subStream());
-			loadMusics(is.subStream());
+			loadBackgrounds(is.subStream());
+			loadUnits(is.subStream());
 			data.mc = new PackMapColc(data, is);
+			loadMusics();
 			is = null;
 		}
 
@@ -87,7 +87,7 @@ public abstract class VerFixer extends Source {
 				throw new VerFixerException("DIYAnim expects version 401, got " + ver);
 			int type = is.nextInt();
 			if (type == 0)
-				return new AnimCE(is.nextString());
+				return new AnimCE(new ResourceLocation(ResourceLocation.LOCAL, is.nextString()));
 			else if (type == 1)
 				return decodeAnim(id, is.subStream(), r);
 			throw new VerFixerException("DIYAnim expects type 0 or 1, got " + 2);
@@ -113,7 +113,7 @@ public abstract class VerFixer extends Source {
 						continue;
 					}
 					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/backgrounds/" + str);
-					fi.renameTo(fx);
+					Context.renameTo(fi, fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
 						data.bgs.set(val, new Background(new Identifier<>(id, Background.class, val), bimg));
@@ -157,7 +157,7 @@ public abstract class VerFixer extends Source {
 						continue;
 					}
 					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/castles/" + str);
-					fi.renameTo(fx);
+					Context.renameTo(fi, fx);
 					VImg bimg = CommonStatic.def.readReal(fx);
 					if (val >= 0 && bimg != null)
 						data.castles.set(val, new CastleImg(new Identifier<>(id, CastleImg.class, val), bimg));
@@ -186,13 +186,13 @@ public abstract class VerFixer extends Source {
 			int n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int hash = is.nextInt();
-				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash + 500)); // TODO rand enemies
+				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash));
 				e.zread(is.subStream());
 				data.randEnemies.set(hash, e);
 			}
 		}
 
-		private void loadMusics(InStream is) {
+		private void loadMusics() {
 			File f = CommonStatic.def.route("./res/img/" + id + "/music/");
 			if (f.exists() && f.isDirectory()) {
 				File[] fs = f.listFiles();
@@ -210,7 +210,7 @@ public abstract class VerFixer extends Source {
 						continue;
 					}
 					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/musics/" + str);
-					fi.renameTo(fx);
+					Context.renameTo(fi, fx);
 					if (val >= 0)
 						data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(fx)));
 				}
@@ -232,7 +232,8 @@ public abstract class VerFixer extends Source {
 			for (int i = 0; i < n; i++) {
 				int ind = is.nextInt();
 				Unit u = new Unit(new Identifier<>(id, Unit.class, ind));
-				u.lv = Identifier.parseInt(is.nextInt(), UnitLevel.class).get();
+				Identifier<UnitLevel> lvid = Identifier.parseInt(is.nextInt(), UnitLevel.class);
+				u.lv = lvid.get();
 				u.lv.units.add(u);
 				u.max = is.nextInt();
 				u.maxp = is.nextInt();
@@ -327,7 +328,7 @@ public abstract class VerFixer extends Source {
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int hash = is.nextInt();
-				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash + 500));// TODO randEnemy
+				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash));
 				e.zread(is.subStream());
 				data.randEnemies.set(hash, e);
 			}
@@ -341,7 +342,8 @@ public abstract class VerFixer extends Source {
 			for (int i = 0; i < n; i++) {
 				int val = is.nextInt();
 				File f = ImgReader.loadMusicFile(is, r, Integer.parseInt(id), val);
-				f.renameTo(CommonStatic.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
+				Context.renameTo(f,
+						CommonStatic.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
 				data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(f)));
 			}
 		}
@@ -388,17 +390,17 @@ public abstract class VerFixer extends Source {
 		}
 	}
 
-	public static void fix() throws Exception {
+	public static void fix(Map<String, VerFixer> map) throws Exception {
 		transform();
-		readPacks();
-		// Context.delete(new File("./res"));
+		readPacks(map);
+		Context.delete(new File("./res"));
 		// Context.delete(new File("./pack"));
 	}
 
 	@SuppressWarnings("deprecation")
 	private static VerFixer fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
 		int ver = Data.getVer(is.nextString());
-		if (ver != 400)
+		if (ver < 400)
 			throw new VerFixerException("unexpected bcuenemy data version: " + ver + ", requires 400");
 		PackDesc desc = new PackDesc(Data.hex(is.nextInt()));
 		int n = is.nextByte();
@@ -422,7 +424,8 @@ public abstract class VerFixer extends Source {
 		for (int i = 0; i < n; i++)
 			desc.dependency.add(Data.hex(head.nextInt()));
 		desc.BCU_VERSION = Data.revVer(head.nextInt());
-		if (!desc.BCU_VERSION.startsWith("4.11"))
+		System.out.println(desc.BCU_VERSION);
+		if (!desc.BCU_VERSION.startsWith("4.11")) // FIXME throw
 			new VerFixerException("unexpected pack BCU version: " + desc.BCU_VERSION + ", requires 4.11.x");
 		desc.time = head.nextString();
 		desc.version = head.nextInt();
@@ -436,7 +439,6 @@ public abstract class VerFixer extends Source {
 
 	private static void move(String a, String b) {
 		File f = new File(a);
-		System.out.println(a + "|" + b);// TODO
 		if (!f.exists())
 			return;
 		File bf = new File(b);
@@ -445,10 +447,8 @@ public abstract class VerFixer extends Source {
 		f.renameTo(new File(b));
 	}
 
-	private static void readPacks() throws Exception {
+	private static void readPacks(Map<String, VerFixer> map) throws Exception {
 		File f = CommonStatic.def.route("./pack/");
-		Map<String, File> fmap = new HashMap<>();
-		Map<String, VerFixer> map = new HashMap<>();
 		if (f.exists()) {
 			for (File file : f.listFiles()) {
 				String str = file.getName();
@@ -458,7 +458,6 @@ public abstract class VerFixer extends Source {
 				if (!g.exists())
 					g = file;
 				VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(g), CommonStatic.def.getReader(g));
-				fmap.put(pack.id, file);
 				map.put(pack.id, pack);
 
 			}
@@ -474,6 +473,7 @@ public abstract class VerFixer extends Source {
 				VerFixer fix = fix_bcuenemy(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(file));
 				list.removeIf(p -> p.id == fix.id);
 				list.add(fix);
+				map.put(fix.id, fix);
 			}
 		while (list.size() > 0) {
 			int rem = 0;
@@ -482,18 +482,20 @@ public abstract class VerFixer extends Source {
 				for (String pre : p.data.desc.dependency)
 					if (!pre.equals("000000") && (!map.containsKey(pre) || map.get(pre).is != null))
 						all = false;
-				System.out.println(p.data.desc.dependency);
 				if (all) {
+					p.data.desc.dependency.remove("000000");
 					p.load();
+					Workspace w = new Workspace(p.id);
+					p.data.source = w;
+					w.save(p.data);
+					UserProfile.profile().packmap.put(p.id, p.data);
 					rem++;
 				}
 			}
 			list.removeIf(p -> p.is == null);
 			if (rem == 0) {
-				for (VerFixer p : list) {
-					map.remove(p.id);
+				for (VerFixer p : list)
 					CommonStatic.ctx.printErr(ErrType.WARN, "Failed to load " + p.data.desc);
-				}
 				break;
 			}
 		}
@@ -551,12 +553,12 @@ public abstract class VerFixer extends Source {
 	}
 
 	@Override
-	public FakeImage readImage(String path) throws Exception {
+	public VImg readImage(String path, int ind) {
 		return null;
 	}
 
 	@Override
-	public InputStream streamFile(String path) throws Exception {
+	public InputStream streamFile(String path) {
 		return null;
 	}
 
@@ -564,6 +566,8 @@ public abstract class VerFixer extends Source {
 		AnimLoader al = CommonStatic.def.loadAnim(is, r);
 		ResourceLocation id = al.getName();
 		id.pack = target;
+		if (!target.equals(ResourceLocation.LOCAL))
+			Workspace.validate(Source.ANIM, id);
 		@SuppressWarnings("deprecation")
 		AnimCE ce = new AnimCE(al);
 		ce.check();

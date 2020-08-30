@@ -45,6 +45,14 @@ public interface Context {
 		check(f.delete(), "delete", f);
 	}
 
+	static void renameTo(File a, File b) {
+		if (!b.getParentFile().exists())
+			b.getParentFile().mkdirs();
+		if (b.exists())
+			b.delete();
+		a.renameTo(b);
+	}
+
 	boolean confirmDelete();
 
 	File getAssetFile(String string);

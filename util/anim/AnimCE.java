@@ -14,7 +14,6 @@ import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.files.VFile;
 import common.util.Animable;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
@@ -28,69 +27,6 @@ import java.util.Stack;
 
 @JsonClass.JCGeneric(ResourceLocation.class)
 public class AnimCE extends AnimCI {
-
-	private static class AnimCELoader implements Source.AnimLoader {
-
-		private static VImg optional(String str) {
-			VFile fv = VFile.getFile(str);
-			if (fv == null)
-				return null;
-			return new VImg(fv);
-		}
-
-		private final String pre, name;
-
-		private AnimCELoader(String str) {
-			name = str;
-			pre = "./res/anim/" + str + "/";
-		}
-
-		@Override
-		public VImg getEdi() {
-			return optional(pre + "edi.png");
-		}
-
-		@Override
-		public ImgCut getIC() {
-			return ImgCut.newIns(pre + name + ".imgcut");
-		}
-
-		@Override
-		public MaAnim[] getMA() {
-			MaAnim[] anims = new MaAnim[7];
-			for (int i = 0; i < 4; i++)
-				anims[i] = MaAnim.newIns(pre + name + "0" + i + ".maanim");
-			for (int i = 0; i < 3; i++)
-				anims[i + 4] = MaAnim.newIns(pre + name + "_zombie0" + i + ".maanim");
-			return anims;
-		}
-
-		@Override
-		public MaModel getMM() {
-			return MaModel.newIns(pre + name + ".mamodel");
-		}
-
-		@Override
-		public ResourceLocation getName() {
-			return new ResourceLocation("_local", name);
-		}
-
-		@Override
-		public FakeImage getNum() {
-			return VFile.getFile(pre + name + ".png").getData().getImg();
-		}
-
-		@Override
-		public int getStatus() {
-			return 0;
-		}
-
-		@Override
-		public VImg getUni() {
-			return optional(pre + "uni.png");
-		}
-
-	}
 
 	private class History {
 
@@ -145,18 +81,6 @@ public class AnimCE extends AnimCI {
 	@Deprecated
 	public AnimCE(Source.AnimLoader al) {
 		super(al);
-	}
-
-	public AnimCE(String st) {
-		super(new AnimCELoader(st));
-		id = new ResourceLocation("_local", st);
-		Workspace.validate(Source.ANIM, id);
-		map().put(id.id, this);
-	}
-
-	public AnimCE(String str, AnimD<?, ?> ori) {
-		this(str);
-		copyFrom(ori);
 	}
 
 	public void createNew() {
