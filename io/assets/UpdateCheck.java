@@ -86,10 +86,7 @@ public class UpdateCheck {
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-resources/commits?path=resources/lang&per_page=1";
 	public static final String URL_LANG_DOWN = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang/";
 
-	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh" };
-	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
-			"StageName.txt", "UnitName.txt", "EnemyName.txt", "proc.json", "animation_type.json" };
-
+	
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
 	}
@@ -118,7 +115,7 @@ public class UpdateCheck {
 		return set;
 	}
 
-	public static Context.SupExc<List<Downloader>> checkLang(String[] codes, String[] files) {
+	public static Context.SupExc<List<Downloader>> checkLang(String[] files) {
 		String local = CommonStatic.getConfig().langTimeStamp;
 		File f = CommonStatic.ctx.getAssetFile("./lang");
 		String path = f.getPath() + "/";
@@ -132,15 +129,12 @@ public class UpdateCheck {
 			if (date.equals(local))
 				return null;
 			List<Downloader> list = new ArrayList<>();
-			for (int i = 0; i < codes.length; i++) {
-				String lang = codes[i] + "/";
-				File tmp = new File(path + lang + ".temp");
-				for (String str : files) {
-					String url = URL_LANG_DOWN + lang + str;
-					File dst = new File(path + lang + str);
-					String desc = "downloading file " + lang + str;
-					list.add(new Downloader(url, dst, tmp, desc));
-				}
+			for (String str : files) {
+				File tmp = new File(path + ".temp");
+				String url = URL_LANG_DOWN + str.replace('/', '-');
+				File dst = new File(path + str);
+				String desc = "downloading file " + str;
+				list.add(new Downloader(url, dst, tmp, desc));
 			}
 			CommonStatic.getConfig().langTimeStamp = date;
 			return list;

@@ -151,8 +151,7 @@ public class UserProfile {
 	}
 
 	public static void loadPacks(Consumer<Double> prog) {
-		// FIXME CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to
-		// convert old format");
+		CommonStatic.ctx.noticeErr(VerFixer::fix, ErrType.FATAL, "failed to convert old format");
 		File packs = CommonStatic.ctx.getPackFolder();
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
 		UserProfile profile = profile();

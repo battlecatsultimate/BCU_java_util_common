@@ -115,8 +115,6 @@ public class Admin {
 	public static void main(String[] args) throws Exception {
 		UserProfile.profile();
 		CommonStatic.ctx = new AdminContext();
-		for (Downloader d : UpdateCheck.checkLang(UpdateCheck.PC_LANG_CODES, UpdateCheck.PC_LANG_FILES).get())
-			Data.err(() -> d.run((prog) -> System.out.println(prog.prog)));
 		// UpdateCheck.checkAsset(UpdateCheck.checkUpdate(), "pc");
 		// testInternet();
 		// AssetLoader.merge();

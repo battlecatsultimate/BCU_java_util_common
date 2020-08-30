@@ -435,8 +435,12 @@ public abstract class VerFixer extends Source {
 
 	private static void move(String a, String b) {
 		File f = new File(a);
+		System.out.println(a+"|"+b);//TODO
 		if (!f.exists())
 			return;
+		File bf = new File(b);
+		if(!bf.getParentFile().exists())
+			bf.getParentFile().mkdirs();
 		f.renameTo(new File(b));
 	}
 
@@ -495,9 +499,11 @@ public abstract class VerFixer extends Source {
 
 	private static void transform() throws IOException {
 		File f = new File("./res/anim/");
+		if(!f.exists())
+			return;
 		for (String fi : f.list()) {
 			String pa = "./res/anim/" + fi + "/";
-			String pb = "./workspace/_local/" + fi + "/";
+			String pb = "./workspace/_local/animations/" + fi + "/";
 			move(pa + fi + ".png", pb + SP);
 			move(pa + "edi.png", pb + EDI);
 			move(pa + "uni.png", pb + UNI);
