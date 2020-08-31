@@ -120,6 +120,9 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 		int val = pack.compareTo(identifier.pack);
 		if (val != 0)
 			return val;
+		val = Integer.compare(cls.hashCode(), identifier.cls.hashCode());
+		if (val != 0)
+			return val;
 		return Integer.compare(id, identifier.id);
 	}
 

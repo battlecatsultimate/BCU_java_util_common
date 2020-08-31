@@ -3,13 +3,16 @@ package common.util.stage;
 import common.CommonStatic;
 import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.json.Dependency;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
+import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
 import common.pack.Source.ResourceLocation;
+import common.pack.UserProfile;
 import common.pack.VerFixer.VerFixerException;
 import common.system.BasedCopable;
 import common.system.files.VFile;
@@ -295,8 +298,13 @@ public class Stage extends Data
 	}
 
 	public boolean isSuitable(String pack) {
-		// FIXME suitable
-		return false;
+		Dependency dep = Dependency.collect(this);
+		PackDesc desc = UserProfile.getUserPack(pack).desc;
+		dep.map.remove(Identifier.DEF);
+		dep.map.remove(pack);
+		for (String str : desc.dependency)
+			dep.map.remove(str);
+		return dep.map.size() == 0;
 	}
 
 	public void setName(String str) {

@@ -6,6 +6,7 @@ import common.battle.data.DataEnemy;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.io.assets.AssetLoader;
+import common.io.json.Dependency;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.NoTag;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
@@ -288,7 +290,13 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public void forceRemoveParent(String id) {
-			// FIXME Auto-generated method stub
+			Dependency dep = Dependency.collect(this);
+			if (dep.map.containsKey(id))
+				for (Set<Identifier<?>> set : dep.map.get(id).values())
+					for (Identifier<?> identifier : set) {
+						identifier.pack = Identifier.DEF;
+						identifier.id = 0;
+					}
 
 		}
 
@@ -316,8 +324,8 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public boolean relyOn(String id) {
-			// FIXME
-			return false;
+			Dependency dep = Dependency.collect(this);
+			return dep.map.containsKey(id);
 		}
 
 		@Override
