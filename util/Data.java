@@ -2,6 +2,8 @@ package common.util;
 
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.json.FieldOrder;
+import common.io.json.FieldOrder.Order;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonEncoder;
@@ -23,24 +25,31 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class ARMOR extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class BURROW extends ProcItem {
+			@Order(0)
 			public int count;
+			@Order(1)
 			public int dis;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class CRITI extends ProcItem {
+			@Order(0)
 			public int type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class IMU extends ProcItem {
+			@Order(0)
 			public int mult;
 		}
 
@@ -58,8 +67,12 @@ public class Data {
 				return (IntType) super.clone();
 			}
 
+			public Field[] getDeclaredFields() {
+				return FieldOrder.getDeclaredFields(this.getClass());
+			}
+
 			public IntType load(int val) throws Exception {
-				Field[] fs = this.getClass().getDeclaredFields();
+				Field[] fs = getDeclaredFields();
 				for (int i = 0; i < fs.length;) {
 					BitCount c = fs[i].getAnnotation(BitCount.class);
 					if (c == null) {
@@ -74,7 +87,7 @@ public class Data {
 			}
 
 			public int toInt() throws Exception {
-				Field[] fs = this.getClass().getDeclaredFields();
+				Field[] fs = getDeclaredFields();
 				int ans = 0;
 				for (int i = 0; i < fs.length;) {
 					BitCount c = fs[i].getAnnotation(BitCount.class);
@@ -95,17 +108,25 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class MOVEWAVE extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int speed;
+			@Order(2)
 			public int width;
+			@Order(3)
 			public int time;
+			@Order(4)
 			public int dis;
+			@Order(5)
 			public int itv;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class PM extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int mult;
 		}
 
@@ -115,19 +136,27 @@ public class Data {
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
 				@BitCount(2)
+				@Order(0)
 				public int damage_type;
+				@Order(1)
 				public boolean unstackable;
 			}
 
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public int damage;
+			@Order(3)
 			public int itv;
+			@Order(4)
 			public TYPE type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class PROB extends ProcItem {
+			@Order(0)
 			public int prob;
 		}
 
@@ -135,7 +164,7 @@ public class Data {
 
 			public ProcItem clear() {
 				try {
-					Field[] fs = this.getClass().getDeclaredFields();
+					Field[] fs = getDeclaredFields();
 					for (Field f : fs)
 						if (f.getType() == int.class)
 							f.set(this, 0);
@@ -155,7 +184,7 @@ public class Data {
 			public ProcItem clone() {
 				try {
 					ProcItem ans = (ProcItem) super.clone();
-					Field[] fs = this.getClass().getDeclaredFields();
+					Field[] fs = getDeclaredFields();
 					for (Field f : fs)
 						if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(ans, ((IntType) f.get(this)).clone());
@@ -170,7 +199,7 @@ public class Data {
 
 			public boolean exists() {
 				try {
-					Field[] fs = this.getClass().getDeclaredFields();
+					Field[] fs = getDeclaredFields();
 					for (Field f : fs)
 						if (f.getType() == int.class) {
 							Object o = f.get(this);
@@ -186,7 +215,7 @@ public class Data {
 			@Deprecated
 			public int get(int i) {
 				try {
-					Field f = this.getClass().getDeclaredFields()[i];
+					Field f = getDeclaredFields()[i];
 					return f.getType() == int.class ? f.getInt(this) : ((IntType) f.get(this)).toInt();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -194,9 +223,13 @@ public class Data {
 				}
 			}
 
+			public Field[] getDeclaredFields() {
+				return FieldOrder.getDeclaredFields(this.getClass());
+			}
+
 			@Deprecated
 			public ProcItem load(int[] data) throws Exception {
-				Field[] fs = this.getClass().getDeclaredFields();
+				Field[] fs = getDeclaredFields();
 				for (int i = 0; i < Math.min(data.length, fs.length); i++)
 					if (fs[i].getType() == int.class)
 						fs[i].set(this, data[i]);
@@ -229,7 +262,7 @@ public class Data {
 			@Deprecated
 			public void set(int i, int v) {
 				try {
-					Field f = this.getClass().getDeclaredFields()[i];
+					Field f = getDeclaredFields()[i];
 					if (f.getType() == int.class)
 						f.set(this, v);
 				} catch (Exception e) {
@@ -239,7 +272,7 @@ public class Data {
 
 			public void set(ProcItem pi) {
 				try {
-					Field[] fs = this.getClass().getDeclaredFields();
+					Field[] fs = getDeclaredFields();
 					for (Field f : fs)
 						if (f.getType().isPrimitive())
 							f.set(this, f.get(pi));
@@ -263,14 +296,19 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class PT extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class PTD extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public int dis;
 		}
 
@@ -280,30 +318,47 @@ public class Data {
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
 				@BitCount(2)
+				@Order(0)
 				public int range_type;
+				@Order(1)
 				public boolean imu_zkill;
+				@Order(2)
 				public boolean revive_non_zombie;
+				@Order(3)
 				public boolean revive_others;
 			}
 
+			@Order(0)
 			public int count;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public int health;
-			public int dis_0, dis_1;
+			@Order(3)
+			public int dis_0;
+			@Order(4)
+			public int dis_1;
+			@Order(5)
 			public TYPE type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class SPEED extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public int speed;
+			@Order(3)
 			public int type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class STRONG extends ProcItem {
+			@Order(0)
 			public int health;
+			@Order(1)
 			public int mult;
 		}
 
@@ -314,21 +369,34 @@ public class Data {
 			public static class TYPE extends IntType {
 
 				@BitCount(2)
+				@Order(0)
 				public int anim_type;
+				@Order(1)
 				public boolean ignore_limit;
+				@Order(2)
 				public boolean fix_buff;
+				@Order(3)
 				public boolean same_health;
+				@Order(4)
 				public boolean random_layer;
+				@Order(5)
 				public boolean on_hit;
+				@Order(6)
 				public boolean on_kill;
 
 			}
 
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public Identifier<?> id;
+			@Order(2)
 			public int dis;
+			@Order(3)
 			public int mult;
+			@Order(4)
 			public TYPE type;
+			@Order(5)
 			public int time;
 		}
 
@@ -337,40 +405,54 @@ public class Data {
 
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
+				@Order(0)
 				public boolean kill;
 			}
 
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public Identifier<Background> id;
+			@Order(3)
 			public TYPE type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class VOLC extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int dis_0;
+			@Order(2)
 			public int dis_1;
+			@Order(3)
 			public int time;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class WAVE extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int lv;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class WEAK extends ProcItem {
+			@Order(0)
 			public int prob;
+			@Order(1)
 			public int time;
+			@Order(2)
 			public int mult;
 		}
 
 		public static Proc blank() {
 			Proc ans = new Proc();
 			try {
-				Field[] fs = Proc.class.getDeclaredFields();
+				Field[] fs = getDeclaredFields();
 				for (int i = 0; i < fs.length; i++) {
 					fs[i].setAccessible(true);
 					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
@@ -382,14 +464,18 @@ public class Data {
 			return ans;
 		}
 
+		public static Field[] getDeclaredFields() {
+			return FieldOrder.getDeclaredFields(Proc.class);
+		}
+
 		public static String getName(int i) {
-			return Proc.class.getDeclaredFields()[i].getName();
+			return getDeclaredFields()[i].getName();
 		}
 
 		public static Proc load(int[][] data) {
 			Proc ans = new Proc();
 			try {
-				Field[] fs = Proc.class.getDeclaredFields();
+				Field[] fs = getDeclaredFields();
 				for (int i = 0; i < Math.min(data.length, fs.length); i++) {
 					fs[i].setAccessible(true);
 					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
@@ -399,53 +485,87 @@ public class Data {
 			}
 			return ans;
 		}
-
+		@Order(0)
 		public final PTD KB = null;
+		@Order(1)
 		public final PT STOP = null;
+		@Order(2)
 		public final PT SLOW = null;
+		@Order(3)
 		public final PM CRIT = null;
+		@Order(4)
 		public final WAVE WAVE = null;
+		@Order(5)
 		public final WEAK WEAK = null;
+		@Order(6)
 		public final PROB BREAK = null;
+		@Order(7)
 		public final PTD WARP = null;
+		@Order(8)
 		public final PT CURSE = null;
+		@Order(9)
 		public final STRONG STRONG = null;
+		@Order(10)
 		public final PROB LETHAL = null;
+		@Order(11)
 		public final BURROW BURROW = null;
+		@Order(12)
 		public final REVIVE REVIVE = null;
+		@Order(13)
 		public final IMU IMUKB = null;
+		@Order(14)
 		public final IMU IMUSTOP = null;
+		@Order(15)
 		public final IMU IMUSLOW = null;
+		@Order(16)
 		public final IMU IMUWAVE = null;
+		@Order(17)
 		public final IMU IMUWEAK = null;
+		@Order(18)
 		public final IMU IMUWARP = null;
+		@Order(19)
 		public final IMU IMUCURSE = null;
+		@Order(20)
 		public final PROB SNIPER = null;
+		@Order(21)
 		public final PT TIME = null;
+		@Order(22)
 		public final PT SEAL = null;
+		@Order(23)
 		public final SUMMON SUMMON = null;
+		@Order(24)
 		public final MOVEWAVE MOVEWAVE = null;
+		@Order(25)
 		public final THEME THEME = null;
+		@Order(26)
 		public final POISON POISON = null;
+		@Order(27)
 		public final PROB BOSS = null;
+		@Order(28)
 		public final CRITI CRITI = null;
+		@Order(29)
 		public final PM SATK = null;
+		@Order(30)
 		public final PT IMUATK = null;
+		@Order(31)
 		public final PM POIATK = null;
+		@Order(32)
 		public final VOLC VOLC = null;
+		@Order(33)
 		public final IMU IMUPOIATK = null;
-
+		@Order(34)
 		public final IMU IMUVOLC = null;
-
+		@Order(35)
 		public final ARMOR ARMOR = null;
 
+		@Order(36)
 		public final SPEED SPEED = null;
 
 		@Override
 		public Proc clone() {
 			try {
 				Proc ans = new Proc();
-				Field[] fs = this.getClass().getDeclaredFields();
+				Field[] fs = getDeclaredFields();
 				for (Field f : fs) {
 					f.setAccessible(true);
 					f.set(ans, ((ProcItem) f.get(this)).clone());
@@ -469,7 +589,7 @@ public class Data {
 
 		public ProcItem getArr(int i) {
 			try {
-				return (ProcItem) Proc.class.getDeclaredFields()[i].get(this);
+				return (ProcItem) getDeclaredFields()[i].get(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

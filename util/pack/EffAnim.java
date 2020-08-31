@@ -1,6 +1,8 @@
 package common.util.pack;
 
 import common.CommonStatic;
+import common.io.json.FieldOrder;
+import common.io.json.FieldOrder.Order;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
@@ -75,66 +77,123 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 
 	public static class EffAnimStore {
 
+		@Order(0)
 		public EffAnim<DefEff> A_DOWN;
+		@Order(1)
 		public EffAnim<DefEff> A_E_DOWN;
+		@Order(2)
 		public EffAnim<DefEff> A_UP;
+		@Order(3)
 		public EffAnim<DefEff> A_E_UP;
+		@Order(4)
 		public EffAnim<DefEff> A_SLOW;
+		@Order(5)
 		public EffAnim<DefEff> A_E_SLOW;
+		@Order(6)
 		public EffAnim<DefEff> A_STOP;
+		@Order(7)
 		public EffAnim<DefEff> A_E_STOP;
+		@Order(8)
 		public EffAnim<DefEff> A_SHIELD;
+		@Order(9)
 		public EffAnim<DefEff> A_E_SHIELD;
+		@Order(10)
 		public EffAnim<DefEff> A_FARATTACK;
+		@Order(11)
 		public EffAnim<DefEff> A_E_FARATTACK;
+		@Order(12)
 		public EffAnim<DefEff> A_WAVE_INVALID;
+		@Order(13)
 		public EffAnim<DefEff> A_E_WAVE_INVALID;
+		@Order(14)
 		public EffAnim<DefEff> A_WAVE_STOP;
+		@Order(15)
 		public EffAnim<DefEff> A_E_WAVE_STOP;
+		@Order(16)
 		public EffAnim<DefEff> A_WAVEGUARD;// unused
+		@Order(17)
 		public EffAnim<DefEff> A_E_WAVEGUARD;// unused
+		@Order(18)
 		public EffAnim<DefEff> A_EFF_INV;
+		@Order(19)
 		public EffAnim<DefEff> A_EFF_DEF;// unused
+		@Order(20)
 		public EffAnim<DefEff> A_Z_STRONG;
+		@Order(21)
 		public EffAnim<BarrierEff> A_B;
+		@Order(22)
 		public EffAnim<BarEneEff> A_E_B;
+		@Order(23)
 		public EffAnim<WarpEff> A_W;
+		@Order(24)
 		public EffAnim<WarpEff> A_W_C;
+		@Order(25)
 		public EffAnim<DefEff> A_CURSE;
+		@Order(26)
 		public EffAnim<ZombieEff> A_ZOMBIE;
+		@Order(27)
 		public EffAnim<DefEff> A_SHOCKWAVE;
+		@Order(28)
 		public EffAnim<DefEff> A_CRIT;
+		@Order(29)
 		public EffAnim<KBEff> A_KB;
+		@Order(30)
 		public EffAnim<SniperEff> A_SNIPER;
+		@Order(31)
 		public EffAnim<ZombieEff> A_U_ZOMBIE;
+		@Order(32)
 		public EffAnim<BarrierEff> A_U_B;
+		@Order(33)
 		public EffAnim<BarEneEff> A_U_E_B;
+		@Order(34)
 		public EffAnim<DefEff> A_SEAL;
+		@Order(35)
 		public EffAnim<DefEff> A_POI0;
+		@Order(36)
 		public EffAnim<DefEff> A_POI1;
+		@Order(37)
 		public EffAnim<DefEff> A_POI2;
+		@Order(38)
 		public EffAnim<DefEff> A_POI3;
+		@Order(39)
 		public EffAnim<DefEff> A_POI4;
+		@Order(40)
 		public EffAnim<DefEff> A_POI5;
+		@Order(41)
 		public EffAnim<DefEff> A_POI6;
+		@Order(42)
 		public EffAnim<DefEff> A_POI7;
+		@Order(43)
 		public EffAnim<DefEff> A_SATK;
+		@Order(44)
 		public EffAnim<DefEff> A_IMUATK;
+		@Order(45)
 		public EffAnim<DefEff> A_POISON;
+		@Order(46)
 		public EffAnim<VolcEff> A_VOLC;
+		@Order(47)
 		public EffAnim<VolcEff> A_E_VOLC;
+		@Order(48)
 		public EffAnim<DefEff> A_E_CURSE;
+		@Order(49)
 		public EffAnim<DefEff> A_WAVE;
+		@Order(50)
 		public EffAnim<DefEff> A_E_WAVE;
+		@Order(51)
 		public EffAnim<ArmorEff> A_ARMOR;
+		@Order(52)
 		public EffAnim<ArmorEff> A_E_ARMOR;
+		@Order(53)
 		public EffAnim<SpeedEff> A_SPEED;
+		@Order(54)
 		public EffAnim<SpeedEff> A_E_SPEED;
+		@Order(55)
 		public EffAnim<WeakUpEff> A_WEAK_UP;
+		@Order(56)
 		public EffAnim<WeakUpEff> A_E_WEAK_UP;
 
 		public EffAnim<?>[] values() {
-			Field[] fld = EffAnimStore.class.getDeclaredFields();
+			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
 			EffAnim<?>[] ans = new EffAnim[fld.length];
 			Data.err(() -> {
 				for (int i = 0; i < ans.length; i++)
@@ -144,7 +203,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 
 		private void set(int i, EffAnim<DefEff> eff) {
-			err(() -> EffAnimStore.class.getDeclaredFields()[i].set(this, eff));
+			err(() -> FieldOrder.getDeclaredFields(EffAnimStore.class)[i].set(this, eff));
 		}
 
 	}

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
+import common.io.json.FieldOrder;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonClass.WType;
@@ -74,7 +75,7 @@ public class ProcLang {
 		}
 
 		private void fill(JsonObject ans, String pre, Class<?> c) {
-			for (Field f : c.getDeclaredFields()) {
+			for (Field f : FieldOrder.getDeclaredFields(c)) {
 				if (IntType.class.isAssignableFrom(f.getType()))
 					fill(ans, f.getName() + ".", f.getType());
 				else
@@ -83,7 +84,7 @@ public class ProcLang {
 		}
 
 		private void fill(String pre, Class<?> c, JsonObject obj) {
-			for (Field f : c.getDeclaredFields()) {
+			for (Field f : FieldOrder.getDeclaredFields(c)) {
 				if (IntType.class.isAssignableFrom(f.getType())) {
 					fill(f.getName() + ".", f.getType(), obj);
 				} else {
@@ -124,7 +125,7 @@ public class ProcLang {
 	public static ProcLang gen(JsonElement elem) throws Exception {
 		ProcLang ans = new ProcLang();
 		JsonObject obj = elem == null ? null : elem.getAsJsonObject();
-		for (Field f : Proc.class.getDeclaredFields()) {
+		for (Field f : Proc.getDeclaredFields()) {
 			String name = f.getName();
 			ItemLang item = new ItemLang(name, f.getType());
 			if (obj != null && obj.has(name))
@@ -158,7 +159,7 @@ public class ProcLang {
 	}
 
 	public ItemLang get(int i) {
-		return get(Proc.class.getDeclaredFields()[i].getName());
+		return get(Proc.getDeclaredFields()[i].getName());
 	}
 
 	public ItemLang get(String str) {
@@ -167,7 +168,7 @@ public class ProcLang {
 
 	public JsonObject ser() {
 		JsonObject obj = new JsonObject();
-		for (Field f : Proc.class.getDeclaredFields()) {
+		for (Field f : Proc.getDeclaredFields()) {
 			String name = f.getName();
 			obj.add(name, JsonEncoder.encode(map.get(name)));
 		}

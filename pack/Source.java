@@ -70,7 +70,6 @@ public abstract class Source {
 		public AnimCI getAnim() {
 			if (pack.equals(LOCAL))
 				return AnimCE.map().get(id);
-			System.out.println(this);// FIXME
 			return UserProfile.getUserPack(pack).source.loadAnimation(id);
 		}
 
