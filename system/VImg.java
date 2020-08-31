@@ -18,16 +18,19 @@ public class VImg extends ImgCore {
 	private ImgCut ic;
 	private Marker marker;
 
-	public VImg(Object o) {
-		if (o instanceof String)
-			file = VFile.getFile((String) o);
-		else if (o instanceof VFile)
-			file = (VFile) o;
-		else
-			file = null;
-		if (file == null)
-			bimg = err(() -> FakeImage.read(o));
-		loaded = bimg != null;
+	public VImg(FakeImage fi) {
+		file = null;
+		bimg = fi;
+		loaded = true;
+	}
+
+	public VImg(String str) {
+		this(VFile.get(str));
+	}
+
+	public VImg(VFile vf) {
+		file = vf;
+		loaded = false;
 	}
 
 	public synchronized void check() {
@@ -51,8 +54,8 @@ public class VImg extends ImgCore {
 		ic = cut;
 	}
 
-	public void setImg(Object img) {
-		bimg = err(() -> FakeImage.read(img));
+	public void setImg(FakeImage img) {
+		bimg = img;
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];
 		loaded = true;

@@ -11,6 +11,7 @@ import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -126,7 +127,7 @@ public class CommonStatic {
 		static VImg readImg(InStream is, ImgReader r) {
 			if (r != null && !r.isNull())
 				return r.readImgOptional(is.nextString());
-			return new VImg(is.nextBytesI());
+			return ImageBuilder.toVImg(is.nextBytesI());
 		}
 
 		default boolean isNull() {

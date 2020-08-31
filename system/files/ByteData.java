@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import common.system.fake.FakeImage;
-import common.util.Data;
 
 interface ByteData extends FileData {
 
@@ -13,7 +12,7 @@ interface ByteData extends FileData {
 
 	@Override
 	default FakeImage getImg() {
-		return Data.err(() -> FakeImage.read(getBytes()));
+		return FakeImage.read(getBytes());
 	}
 
 	@Override

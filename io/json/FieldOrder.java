@@ -41,6 +41,7 @@ public class FieldOrder implements Comparable<FieldOrder> {
 	private final Field field;
 
 	private final int order;
+
 	private FieldOrder(Field f) {
 		field = f;
 		order = f.getAnnotation(Order.class).value();

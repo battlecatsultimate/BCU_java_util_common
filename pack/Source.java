@@ -114,8 +114,7 @@ public abstract class Source {
 			FileData edi = loader.loadFile(id, EDI);
 			if (edi == null)
 				return null;
-			return CommonStatic.ctx.noticeErr(() -> new VImg(FakeImage.read(edi)), ErrType.ERROR,
-					"failed to read Display Icon" + id);
+			return new VImg(FakeImage.read(edi));
 		}
 
 		@Override
@@ -143,8 +142,7 @@ public abstract class Source {
 
 		@Override
 		public FakeImage getNum() {
-			return CommonStatic.ctx.noticeErr(() -> FakeImage.read(loader.loadFile(id, SP)), ErrType.ERROR,
-					"failed to read sprite sheet " + id);
+			return FakeImage.read(loader.loadFile(id, SP));
 		}
 
 		@Override
@@ -157,8 +155,7 @@ public abstract class Source {
 			FileData uni = loader.loadFile(id, UNI);
 			if (uni == null)
 				return null;
-			return CommonStatic.ctx.noticeErr(() -> new VImg(FakeImage.read(uni)), ErrType.ERROR,
-					"failed to read deploy icon " + id);
+			return new VImg(FakeImage.read(uni));
 		}
 
 	}

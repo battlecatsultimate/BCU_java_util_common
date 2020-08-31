@@ -3,8 +3,6 @@ package common.system.files;
 import common.CommonStatic;
 import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
-import common.util.Data;
-
 import java.io.*;
 
 public class FDFile implements FileData {
@@ -31,7 +29,7 @@ public class FDFile implements FileData {
 
 	@Override
 	public FakeImage getImg() {
-		return Data.err(() -> FakeImage.read(file));
+		return FakeImage.read(file);
 	}
 
 	@Override

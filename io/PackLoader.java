@@ -93,7 +93,7 @@ public class PackLoader {
 
 			@Override
 			public FakeImage getImg() {
-				return data != null ? data.getImg() : Data.err(() -> FakeImage.read(this));
+				return data != null ? data.getImg() : FakeImage.read(this);
 			}
 
 			@Override
