@@ -39,9 +39,9 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 		@Override
 		public MaAnim[] getMA() {
 			MaAnim[] ma;
-			if (VFile.getFile(spath + "_zombie00.maanim") != null)
+			if (VFile.get(spath + "_zombie00.maanim") != null)
 				ma = new MaAnim[7];
-			else if (VFile.getFile(spath + "_entry.maanim") != null)
+			else if (VFile.get(spath + "_entry.maanim") != null)
 				ma = new MaAnim[5];
 			else
 				ma = new MaAnim[4];

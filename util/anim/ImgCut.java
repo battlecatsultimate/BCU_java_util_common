@@ -1,10 +1,10 @@
 package common.util.anim;
 
-import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.fake.FakeImage;
 import common.system.files.FileData;
+import common.system.files.VFile;
 import common.util.Data;
 
 import java.io.PrintStream;
@@ -22,7 +22,8 @@ public class ImgCut extends Data implements Cloneable {
 	}
 
 	public static ImgCut newIns(String path) {
-		return CommonStatic.def.readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
+		return new ImgCut(VFile.readLine(path));
+
 	}
 
 	public String name;

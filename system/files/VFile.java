@@ -23,6 +23,7 @@ public class VFile implements Comparable<VFile> {
 		return new VFile(null, f.getName(), new FDFile(f));
 	}
 
+	@Deprecated
 	public static VFile getFile(String path) {
 		if (path.startsWith("./org/"))
 			return getBCFileTree().find(path);
@@ -36,7 +37,7 @@ public class VFile implements Comparable<VFile> {
 	}
 
 	public static Queue<String> readLine(String str) {
-		return getFile(str).getData().readLine();
+		return get(str).getData().readLine();
 	}
 
 	public String name;

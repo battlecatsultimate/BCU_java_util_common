@@ -10,6 +10,7 @@ import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.system.files.FDFile;
 import common.system.files.FileData;
 import common.util.Data;
@@ -32,6 +33,7 @@ import java.util.Set;
 
 import static common.pack.Source.SourceAnimLoader.*;
 
+@SuppressWarnings("deprecation")
 public abstract class VerFixer extends Source {
 
 	public static class IdFixer {
@@ -63,6 +65,7 @@ public abstract class VerFixer extends Source {
 
 	}
 
+	@Deprecated
 	private static class EnemyFixer extends VerFixer {
 
 		public EnemyFixer(String id, ImgReader r) {
@@ -71,7 +74,6 @@ public abstract class VerFixer extends Source {
 		}
 
 		@Override
-		@SuppressWarnings("deprecation")
 		protected void load() throws VerFixerException {
 			data.desc.name = is.nextString();
 			loadEnemies(is.subStream());
@@ -116,7 +118,7 @@ public abstract class VerFixer extends Source {
 					}
 					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/backgrounds/" + str);
 					Context.renameTo(fi, fx);
-					VImg bimg = CommonStatic.def.readReal(fx);
+					VImg bimg = ImageBuilder.toVImg(fx);
 					if (val >= 0 && bimg != null)
 						data.bgs.set(val, new Background(new Identifier<>(id, Background.class, val), bimg));
 				}
@@ -160,7 +162,7 @@ public abstract class VerFixer extends Source {
 					}
 					File fx = CommonStatic.ctx.getWorkspaceFile("./" + id + "/castles/" + str);
 					Context.renameTo(fi, fx);
-					VImg bimg = CommonStatic.def.readReal(fx);
+					VImg bimg = ImageBuilder.toVImg(fx);
 					if (val >= 0 && bimg != null)
 						data.castles.set(val, new CastleImg(new Identifier<>(id, CastleImg.class, val), bimg));
 				}
@@ -256,6 +258,7 @@ public abstract class VerFixer extends Source {
 
 	}
 
+	@Deprecated
 	private static class PackFixer extends VerFixer {
 
 		public PackFixer(String id, ImgReader r) {
@@ -263,8 +266,8 @@ public abstract class VerFixer extends Source {
 			this.r = r;
 		}
 
+		@Deprecated
 		@Override
-		@SuppressWarnings("deprecation")
 		protected void load() throws Exception {
 			data.desc.name = is.nextString();
 			loadEnemies(is.subStream());
@@ -399,7 +402,6 @@ public abstract class VerFixer extends Source {
 		Context.delete(new File("./pack"));
 	}
 
-	@SuppressWarnings("deprecation")
 	private static VerFixer fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
 		int ver = Data.getVer(is.nextString());
 		if (ver < 400)
@@ -415,7 +417,6 @@ public abstract class VerFixer extends Source {
 		return fix;
 	}
 
-	@SuppressWarnings("deprecation")
 	private static VerFixer fix_bcupack(InStream is, ImgReader r) throws Exception {
 		int ver = Data.getVer(is.nextString());
 		if (ver != 402)
@@ -449,6 +450,7 @@ public abstract class VerFixer extends Source {
 		f.renameTo(new File(b));
 	}
 
+	@Deprecated
 	private static void readPacks(Map<String, VerFixer> map) throws Exception {
 		File f = CommonStatic.def.route("./pack/");
 		Set<String> packs = new HashSet<>();
@@ -536,6 +538,7 @@ public abstract class VerFixer extends Source {
 		}
 	}
 
+	@Deprecated
 	ImgReader r;
 
 	UserPack data;
@@ -575,13 +578,13 @@ public abstract class VerFixer extends Source {
 		return null;
 	}
 
+	@Deprecated
 	protected AnimCE decodeAnim(String target, InStream is, ImgReader r) {
 		AnimLoader al = CommonStatic.def.loadAnim(is, r);
 		ResourceLocation id = al.getName();
 		id.pack = target;
 		if (!target.equals(ResourceLocation.LOCAL))
 			Workspace.validate(Source.ANIM, id);
-		@SuppressWarnings("deprecation")
 		AnimCE ce = new AnimCE(al);
 		ce.check();
 		new SourceAnimSaver(id, ce).saveAll();

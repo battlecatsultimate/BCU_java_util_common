@@ -1,9 +1,9 @@
 package common.util.anim;
 
-import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.files.FileData;
+import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
 
@@ -23,7 +23,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 	}
 
 	public static MaModel newIns(String path) {
-		return CommonStatic.def.readSave(path, f -> f == null ? new MaModel() : new MaModel(f));
+		return new MaModel(VFile.readLine(path));
 	}
 
 	public int n, m;

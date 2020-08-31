@@ -1,9 +1,9 @@
 package common.util.anim;
 
-import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.files.FileData;
+import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
 
@@ -22,7 +22,7 @@ public class MaAnim extends Data implements BattleStatic {
 	}
 
 	public static MaAnim newIns(String str) {
-		return CommonStatic.def.readSave(str, f -> f == null ? new MaAnim() : new MaAnim(f));
+		return new MaAnim(VFile.readLine(str));
 	}
 
 	public int n;

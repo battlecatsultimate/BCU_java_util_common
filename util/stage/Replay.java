@@ -47,6 +47,7 @@ public class Replay extends Data {
 		getRecd(is, new ResourceLocation(stage.getCont().getCont().getSID(), str));
 	}
 
+	@Deprecated
 	public static void read() {
 		File fold = CommonStatic.def.route("./replay/");
 		if (fold.exists()) {

@@ -1,7 +1,6 @@
 package common;
 
 import common.io.InStream;
-import common.io.OutStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
@@ -23,13 +22,8 @@ import common.util.stage.Music;
 import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.*;
-import java.util.function.Function;
-
 import static java.lang.Character.isDigit;
 
 public class CommonStatic {
@@ -116,6 +110,7 @@ public class CommonStatic {
 
 	}
 
+	@Deprecated
 	public interface ImgReader {
 
 		static File loadMusicFile(InStream is, ImgReader r, int pid, int mid) {
@@ -141,51 +136,6 @@ public class CommonStatic {
 		VImg readImgOptional(String str);
 	}
 
-	public interface ImgWriter {
-
-		static boolean saveFile(OutStream os, ImgWriter w, File file) {
-			if (w != null)
-				os.writeString(w.saveFile(file));
-			else
-				try {
-					OutStream data = OutStream.getIns();
-					byte[] bs = new byte[(int) file.length()];
-					BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-					buf.read(bs, 0, bs.length);
-					buf.close();
-					data.writeBytesI(bs);
-					data.terminate();
-					os.accept(data);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return false;
-				}
-			return true;
-		}
-
-		static boolean writeImg(OutStream os, ImgWriter w, FakeImage img) {
-			if (w != null)
-				os.writeString(w.writeImg(img));
-			else
-				try {
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					FakeImage.write(img, "PNG", baos);
-					os.writeBytesI(baos.toByteArray());
-				} catch (Exception e) {
-					e.printStackTrace();
-					return false;
-				}
-			return true;
-		}
-
-		String saveFile(File f);
-
-		String writeImg(FakeImage img);
-
-		String writeImgOptional(VImg img);
-
-	}
-
 	public interface Itf {
 
 		/**
@@ -195,45 +145,23 @@ public class CommonStatic {
 
 		long getMusicLength(Music f);
 
+		@Deprecated
 		ImgReader getMusicReader(int pid, int mid);
 
+		@Deprecated
 		ImgReader getReader(File f);
 
+		@Deprecated
 		Source.AnimLoader loadAnim(InStream is, ImgReader r);
 
-		/**
-		 * show loading progress, empty is fine
-		 */
-		void prog(String str);
-
-		/**
-		 * read InStream from file
-		 */
+		@Deprecated
 		InStream readBytes(File fi);
 
-		/**
-		 * load read image instance
-		 */
-		VImg readReal(File fi);
-
-		/**
-		 * read strings from path
-		 */
-		<T> T readSave(String path, Function<Queue<String>, T> func);
-
+		@Deprecated
 		File route(String path);
 
 		void setSE(int ind);
 
-		/**
-		 * write OutStream into file
-		 */
-		boolean writeBytes(OutStream os, String path);
-
-		/**
-		 * Write error log to somewhere
-		 **/
-		void writeErrorLog(Exception e);
 	}
 
 	public static class Lang {
