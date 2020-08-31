@@ -125,11 +125,15 @@ public class UserProfile {
 	/**
 	 * get a UserPack from a String
 	 */
-	public static UserPack getUserPack(String id) {
+	public static UserPack getUserPack(String str) {
 		UserProfile profile = profile();
-		if (profile.pending != null)
-			return profile.pending.get(id);
-		return profile.packmap.get(id);
+		if (profile.fixpending != null && profile.fixpending.containsKey(str))
+			return profile.fixpending.get(str).data;
+		if (profile.pending != null && profile.pending.containsKey(str))
+			return profile.pending.get(str);
+		if (profile.packmap.containsKey(str))
+			return profile.packmap.get(str);
+		return null;
 	}
 
 	/**

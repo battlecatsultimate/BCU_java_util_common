@@ -25,8 +25,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static common.pack.Source.SourceAnimLoader.*;
 
@@ -342,9 +344,9 @@ public abstract class VerFixer extends Source {
 			for (int i = 0; i < n; i++) {
 				int val = is.nextInt();
 				File f = ImgReader.loadMusicFile(is, r, Integer.parseInt(id), val);
-				Context.renameTo(f,
-						CommonStatic.ctx.getWorkspaceFile("./.temp_" + val + "/musics/" + Data.trio(val) + ".ogg"));
-				data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(f)));
+				File fx = CommonStatic.ctx.getWorkspaceFile("./.temp_" + id + "/musics/" + Data.trio(val) + ".ogg");
+				Context.renameTo(f, fx);
+				data.musics.set(val, new Music(new Identifier<>(id, Music.class, val), new FDFile(fx)));
 			}
 		}
 
@@ -394,7 +396,7 @@ public abstract class VerFixer extends Source {
 		transform();
 		readPacks(map);
 		Context.delete(new File("./res"));
-		// Context.delete(new File("./pack"));
+		Context.delete(new File("./pack"));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -449,6 +451,7 @@ public abstract class VerFixer extends Source {
 
 	private static void readPacks(Map<String, VerFixer> map) throws Exception {
 		File f = CommonStatic.def.route("./pack/");
+		Set<String> packs = new HashSet<>();
 		if (f.exists()) {
 			for (File file : f.listFiles()) {
 				String str = file.getName();
@@ -459,6 +462,7 @@ public abstract class VerFixer extends Source {
 					g = file;
 				VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(g), CommonStatic.def.getReader(g));
 				map.put(pack.id, pack);
+				packs.add(pack.id);
 
 			}
 		}
@@ -485,10 +489,19 @@ public abstract class VerFixer extends Source {
 				if (all) {
 					p.data.desc.dependency.remove("000000");
 					p.load();
-					Workspace w = new Workspace(p.id);
-					p.data.source = w;
-					w.save(p.data);
-					UserProfile.profile().packmap.put(p.id, p.data);
+					if (p instanceof PackFixer) {
+						Workspace w = new Workspace(".temp_" + p.id);
+						p.data.source = w;
+						w.save(p.data);
+						w.export(p.data, p.data.desc.author, (d) -> {
+						});
+						File src = CommonStatic.ctx.getWorkspaceFile("./.temp_" + p.id);
+						Context.delete(src);
+					} else {
+						Workspace w = new Workspace(p.id);
+						p.data.source = w;
+						w.save(p.data);
+					}
 					rem++;
 				}
 			}

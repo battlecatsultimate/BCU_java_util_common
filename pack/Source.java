@@ -70,6 +70,7 @@ public abstract class Source {
 		public AnimCI getAnim() {
 			if (pack.equals(LOCAL))
 				return AnimCE.map().get(id);
+			System.out.println(this);// FIXME
 			return UserProfile.getUserPack(pack).source.loadAnimation(id);
 		}
 
@@ -309,30 +310,32 @@ public abstract class Source {
 			getFile("").delete();
 		}
 
-		public void export(UserPack pack, String password, Consumer<Double> prog) {
+		public void export(UserPack pack, String password, Consumer<Double> prog) throws Exception {
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
 				if (anim.id.pack.equals(ResourceLocation.LOCAL))
 					anim.localize();
+				if (anim.id.pack.startsWith(".temp_"))
+					anim.id.pack = anim.id.pack.substring(6);
 			}
 			for (Unit u : pack.units)
 				for (Form f : u.forms) {
 					AnimCE anim = (AnimCE) f.anim;
 					if (anim.id.pack.equals(ResourceLocation.LOCAL))
 						anim.localize();
+					if (anim.id.pack.startsWith(".temp_"))
+						anim.id.pack = anim.id.pack.substring(6);
 				}
-			File tar = CommonStatic.ctx.getAuxFile("./exports/" + id + ".pack.bcuzip");
-			File dst = CommonStatic.ctx.getAuxFile("./exports/.pack.bcuzip.temp");
+			save(pack);
+			String star = id.startsWith(".temp_") ? "./packs/" : "./exports/";
+			File tar = CommonStatic.ctx.getAuxFile(star + pack.getSID() + ".pack.bcuzip");
+			File dst = CommonStatic.ctx.getAuxFile(star + ".pack.bcuzip.temp");
 			File src = CommonStatic.ctx.getWorkspaceFile("./" + id);
-			try {
-				if (tar.exists())
-					Context.delete(tar);
-				Context.check(dst);
-				PackLoader.writePack(dst, src, pack.desc, password, prog);
-				Context.renameTo(dst, tar);
-			} catch (Exception e) {
-				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to export pack");
-			}
+			if (tar.exists())
+				Context.delete(tar);
+			Context.check(dst);
+			PackLoader.writePack(dst, src, pack.desc, password, prog);
+			Context.renameTo(dst, tar);
 		}
 
 		public File getBGFile(Identifier<Background> id) {
