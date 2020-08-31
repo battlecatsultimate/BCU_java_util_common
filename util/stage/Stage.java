@@ -308,7 +308,6 @@ public class Stage extends Data
 	}
 
 	public void setName(String str) {
-		// FIXME validate str = MainBCU.validate(str);
 		while (!checkName(str))
 			str += "'";
 		name = str;

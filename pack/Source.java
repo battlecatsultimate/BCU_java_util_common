@@ -18,6 +18,7 @@ import common.util.Data;
 import common.util.anim.*;
 import common.util.pack.Background;
 import common.util.stage.CastleImg;
+import common.util.stage.Replay;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -26,6 +27,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public abstract class Source {
@@ -465,16 +468,14 @@ public abstract class Source {
 	}
 
 	public static final String ANIM = "animations";
-
 	public static final String BG = "bgs";
-
 	public static final String CASTLE = "castles";
-
 	public static final String MUSIC = "musics";
-
 	public static final String REPLAY = "replays";
 
 	public final String id;
+
+	private Map<String, Replay> repMap = null;
 
 	public Source(String id) {
 		this.id = id;
@@ -483,6 +484,19 @@ public abstract class Source {
 	public abstract void delete();
 
 	public abstract FileData getFileData(String string);
+
+	public Map<String, Replay> getReplays() {
+		if (repMap != null)
+			return repMap;
+		String[] replays = listFile("./" + REPLAY);
+		repMap = new TreeMap<String, Replay>();
+		for (String rep : replays)
+			if (rep.endsWith(".replay")) {
+				FileData fd = getFileData("./" + REPLAY + "/" + rep);
+				repMap.put(rep, Data.err(() -> Replay.read(fd.getStream())));
+			}
+		return repMap;
+	}
 
 	public abstract String[] listFile(String path);
 

@@ -297,12 +297,6 @@ public abstract class PackData implements IndexContainer {
 						identifier.pack = Identifier.DEF;
 						identifier.id = 0;
 					}
-
-		}
-
-		public Collection<Replay> getReplays() {
-			// FIXME Auto-generated method stub
-			return null;
 		}
 
 		@Override

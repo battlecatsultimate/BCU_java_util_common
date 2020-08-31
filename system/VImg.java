@@ -67,8 +67,11 @@ public class VImg extends ImgCore {
 	}
 
 	public void unload() {
-		// FIXME Auto-generated method stub
-
+		if (file == null)
+			return;
+		bimg.unload();
+		bimg = null;
+		loaded = false;
 	}
 
 	private void load() {
