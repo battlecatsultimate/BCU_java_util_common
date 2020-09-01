@@ -200,11 +200,11 @@ public class Stage extends Data
 			if (cas == -1)
 				cas = CH_CASTLES[id.id];
 			if (sm.cast != -1)
-				cas += sm.cast * 1000;
+				cas = sm.cast * 1000 + cas;
 			castle = Identifier.parseInt(cas, CastleImg.class);
 			non_con = strs[1].equals("1");
 		} else {
-			castle = Identifier.parseInt(0, CastleImg.class);
+			castle = Identifier.parseInt(sm.cast * 1000 + CH_CASTLES[id.id], CastleImg.class);
 			non_con = false;
 		}
 		int intl = type == 2 ? 9 : 10;

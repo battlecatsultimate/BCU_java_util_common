@@ -42,6 +42,14 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static void read() {
 		def();
+		File old = CommonStatic.ctx.getUserFile("./basis.v");
+		if (old.exists()) {
+			@SuppressWarnings("deprecation")
+			InStream is = CommonStatic.def.readBytes(old);
+			CommonStatic.ctx.noticeErr(() -> read(is), ErrType.WARN, "failed to read basis data");
+			old.delete();
+			return;
+		}
 		File f = CommonStatic.ctx.getUserFile("./basis.json");
 		if (f.exists())
 			try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
