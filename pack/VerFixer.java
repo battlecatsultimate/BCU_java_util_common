@@ -399,7 +399,7 @@ public abstract class VerFixer extends Source {
 		transform();
 		readPacks(map);
 		Context.delete(CommonStatic.def.route("./res"));
-		// FIXME Context.delete(CommonStatic.def.route("./pack"));
+		Context.delete(CommonStatic.def.route("./pack"));
 	}
 
 	private static VerFixer fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
