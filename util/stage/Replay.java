@@ -17,6 +17,7 @@ import common.pack.PackData;
 import common.pack.Source;
 import common.pack.PackData.UserPack;
 import common.pack.Source.ResourceLocation;
+import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
 import common.util.Data;
@@ -44,7 +45,7 @@ public class Replay extends Data {
 	}
 
 	public static void getRecd(Stage stage, InStream is, String str) {
-		getRecd(is, new ResourceLocation(stage.getCont().getCont().getSID(), str));
+		stage.recd.add(getRecd(is, new ResourceLocation(stage.getCont().getCont().getSID(), str)));
 	}
 
 	@Deprecated
@@ -204,6 +205,39 @@ public class Replay extends Data {
 			len += action[i * 2 + 1];
 		}
 		return len;
+	}
+
+	public void localize(String pack) {
+		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		if (rl.pack.equals(ResourceLocation.LOCAL))
+			getMap().remove(rl.id);
+		rl.pack = pack;
+		Workspace.validate(Source.REPLAY, rl);
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		Context.renameTo(src, dst);
+	}
+
+	public void rename(String str) {
+		if (rl == null) {
+			rl = new ResourceLocation(ResourceLocation.LOCAL, str);
+			Workspace.validate(Source.REPLAY, rl);
+			write();
+			getMap().put(rl.id, this);
+			return;
+		}
+		if (rl.pack.equals(ResourceLocation.LOCAL))
+			getMap().remove(rl.id);
+		rl.id = str;
+		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		Workspace.validate(Source.REPLAY, rl);
+		if (rl.pack.equals(ResourceLocation.LOCAL))
+			getMap().put(rl.id, this);
+		if (!src.exists()) {
+			write();
+			return;
+		}
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		Context.renameTo(src, dst);
 	}
 
 	@Override

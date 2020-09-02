@@ -53,6 +53,8 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	@ContGetter
 	public static StageMap get(String str) {
 		String[] strs = str.split("/");
+		if (strs[0].equals(Stage.CLIPMC.getSID()))
+			return Stage.CLIPMC.maps.get(Integer.parseInt(strs[1]));
 		return new Identifier<>(strs[0], StageMap.class, Integer.parseInt(strs[1])).get();
 	}
 

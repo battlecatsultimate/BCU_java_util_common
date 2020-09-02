@@ -6,8 +6,15 @@ import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonException.Type;
 import common.pack.Identifier;
 import common.util.Data;
+import common.util.stage.CastleImg;
+import common.util.stage.CastleList;
+import common.util.stage.MapColc;
+import common.util.stage.MapColc.PackMapColc;
+import common.util.stage.Stage;
+import common.util.stage.StageMap;
 
 import java.lang.reflect.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -178,21 +185,58 @@ public class Dependency {
 		return set;
 	}
 
-	public Map<String, Map<Class<?>, Set<Identifier<?>>>> map = new TreeMap<>();
+	private Map<Class<?>, Map<String, Set<Identifier<?>>>> map = new HashMap<>();
+
+	public Map<Class<?>, Map<String, Set<Identifier<?>>>> getMap() {
+		return map;
+	}
+
+	public Set<String> getPacks() {
+		Set<String> ans = new TreeSet<>();
+		for (Entry<Class<?>, Map<String, Set<Identifier<?>>>> ent : map.entrySet()) {
+			Set<String> packs = ent.getValue().keySet();
+			if (ent.getKey() == CastleImg.class) {
+				for (String pack : packs) {
+					boolean def = false;
+					for (CastleList cl : CastleList.defset())
+						if (cl.getSID().equals(pack)) {
+							def = true;
+							break;
+						}
+					if (!def)
+						ans.add(pack);
+				}
+
+			} else if (ent.getKey() == Stage.class) {
+				for (String pack : packs) {
+					MapColc mc = StageMap.get(pack).getCont();
+					if (mc instanceof PackMapColc)
+						ans.add(mc.getSID());
+				}
+			} else if (ent.getKey() == StageMap.class) {
+				for (String pack : packs) {
+					MapColc mc = MapColc.get(pack);
+					if (mc instanceof PackMapColc)
+						ans.add(mc.getSID());
+				}
+			} else
+				ans.addAll(packs);
+		}
+		return ans;
+	}
 
 	protected void add(Identifier<?> id) {
-		Map<Class<?>, Set<Identifier<?>>> cont = null;
-		if (map.containsKey(id.pack))
-			cont = map.get(id.pack);
+		Map<String, Set<Identifier<?>>> cont = null;
+		if (map.containsKey(id.cls))
+			cont = map.get(id.cls);
 		else
-			map.put(id.pack, cont = new TreeMap<>());
+			map.put(id.cls, cont = new TreeMap<>());
 		Set<Identifier<?>> set = null;
-		if (cont.containsKey(id.cls))
-			set = cont.get(id.cls);
+		if (cont.containsKey(id.pack))
+			set = cont.get(id.pack);
 		else
-			cont.put(id.cls, set = new TreeSet<>());
+			cont.put(id.pack, set = new TreeSet<>());
 		set.add(id);
-
 	}
 
 }

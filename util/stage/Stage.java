@@ -26,6 +26,7 @@ import common.util.unit.Enemy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 @IndexContainer.IndexCont(StageMap.class)
 @JsonClass(noTag = NoTag.LOAD)
@@ -300,11 +301,13 @@ public class Stage extends Data
 	public boolean isSuitable(String pack) {
 		Dependency dep = Dependency.collect(this);
 		PackDesc desc = UserProfile.getUserPack(pack).desc;
-		dep.map.remove(Identifier.DEF);
-		dep.map.remove(pack);
+		Set<String> set = dep.getPacks();
+		System.out.println(set);// FIXME
+		set.remove(Identifier.DEF);
+		set.remove(pack);
 		for (String str : desc.dependency)
-			dep.map.remove(str);
-		return dep.map.size() == 0;
+			set.remove(str);
+		return set.size() == 0;
 	}
 
 	public void setName(String str) {

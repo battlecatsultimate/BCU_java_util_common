@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -295,12 +296,13 @@ public abstract class PackData implements IndexContainer {
 
 		public void forceRemoveParent(String id) {
 			Dependency dep = Dependency.collect(this);
-			if (dep.map.containsKey(id))
-				for (Set<Identifier<?>> set : dep.map.get(id).values())
-					for (Identifier<?> identifier : set) {
-						identifier.pack = Identifier.DEF;
-						identifier.id = 0;
-					}
+			if (dep.getPacks().contains(id))
+				for (Map<String, Set<Identifier<?>>> map : dep.getMap().values())
+					if (map.containsKey(id))
+						for (Identifier<?> identifier : map.get(id)) {
+							identifier.pack = Identifier.DEF;
+							identifier.id = 0;
+						}
 		}
 
 		public List<Replay> getReplays() {
@@ -331,7 +333,7 @@ public abstract class PackData implements IndexContainer {
 
 		public boolean relyOn(String id) {
 			Dependency dep = Dependency.collect(this);
-			return dep.map.containsKey(id);
+			return dep.getPacks().contains(id);
 		}
 
 		@Override
