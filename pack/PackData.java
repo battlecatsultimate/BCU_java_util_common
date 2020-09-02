@@ -7,6 +7,7 @@ import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.io.assets.AssetLoader;
 import common.io.json.Dependency;
+import common.io.json.FieldOrder.Order;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonClass.NoTag;
@@ -239,13 +240,16 @@ public abstract class PackData implements IndexContainer {
 	public static class UserPack extends PackData {
 
 		@JsonField
+		@Order(0)
 		public final PackDesc desc;
 
 		@JsonField(gen = GenType.FILL)
-		public PackMapColc mc;
+		@Order(1)
+		public PackCasList castles;
 
 		@JsonField(gen = GenType.FILL)
-		public PackCasList castles;
+		@Order(2)
+		public PackMapColc mc;
 
 		public Source source;
 
@@ -349,14 +353,23 @@ public abstract class PackData implements IndexContainer {
 		return UserProfile.getPack(str);
 	}
 
+	@Order(0)
 	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
+	@Order(1)
 	public final FixIndexMap<EneRand> randEnemies = new FixIndexMap<>(EneRand.class);
+	@Order(2)
 	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
+	@Order(3)
 	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
+	@Order(4)
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
+	@Order(5)
 	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
+	@Order(6)
 	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);
+	@Order(7)
 	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
+	@Order(8)
 	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
 
 	@Override

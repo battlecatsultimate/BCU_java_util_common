@@ -364,7 +364,7 @@ public class JsonDecoder {
 		if (curjcls == null)
 			throw new JsonException(Type.TYPE_MISMATCH, jobj, "no annotation for class " + curcls);
 
-		Field[] fs = cls.getDeclaredFields();
+		Field[] fs = FieldOrder.getDeclaredFields(cls);
 		for (Field f : fs) {
 			if (Modifier.isStatic(f.getModifiers()))
 				continue;

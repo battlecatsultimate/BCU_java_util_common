@@ -44,7 +44,8 @@ public class FieldOrder implements Comparable<FieldOrder> {
 
 	private FieldOrder(Field f) {
 		field = f;
-		order = f.getAnnotation(Order.class).value();
+		Order ord = f.getAnnotation(Order.class);
+		order = ord == null ? Integer.MAX_VALUE : ord.value();
 	}
 
 	@Override
