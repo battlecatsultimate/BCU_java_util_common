@@ -398,8 +398,8 @@ public abstract class VerFixer extends Source {
 	public static void fix(Map<String, VerFixer> map) throws Exception {
 		transform();
 		readPacks(map);
-		Context.delete(new File("./res"));
-		Context.delete(new File("./pack"));
+		Context.delete(CommonStatic.def.route("./res"));
+		Context.delete(CommonStatic.def.route("./pack"));
 	}
 
 	private static VerFixer fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
@@ -517,7 +517,7 @@ public abstract class VerFixer extends Source {
 	}
 
 	private static void transform() throws IOException {
-		File f = new File("./res/anim/");
+		File f = CommonStatic.def.route("./res/anim/");
 		if (!f.exists())
 			return;
 		for (String fi : f.list()) {

@@ -61,8 +61,6 @@ public interface Context {
 
 	InputStream getLangFile(String file);
 
-	File getPackFolder();
-
 	File getUserFile(String string);
 
 	File getWorkspaceFile(String relativePath);

@@ -163,7 +163,7 @@ public class UserProfile {
 		CommonStatic.ctx.noticeErr(() -> VerFixer.fix(profile.fixpending), ErrType.FATAL,
 				"failed to convert old format");
 		profile.fixpending = null;
-		File packs = CommonStatic.ctx.getPackFolder();
+		File packs = CommonStatic.ctx.getAuxFile("./packs");
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
 		if (packs.exists())
 			for (File f : packs.listFiles())
