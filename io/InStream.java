@@ -214,7 +214,7 @@ strictfp class ISStream implements InStream {
 
 	ISStream(File f) throws Exception {
 		raf = new RandomAccessFile(f, "r");
-		len = DataIO.readInt(raf::read);
+		len = DataIO.readInt(raf::read) + 4;
 		ind = 4;
 	}
 
@@ -231,8 +231,7 @@ strictfp class ISStream implements InStream {
 
 	@Override
 	public int nextByte() {
-		check();
-		ind++;
+		check(1);
 		return Data.err(() -> raf.read());
 	}
 
@@ -263,8 +262,10 @@ strictfp class ISStream implements InStream {
 
 	@Override
 	public InStream subStream() {
-		int len = nextInt();
-		return new ISStream(raf, ind, ind + len);
+		int n = nextInt();
+		ISStream is = new ISStream(raf, ind, ind + n);
+		ind += n;
+		return is;
 	}
 
 	@Override
@@ -273,13 +274,15 @@ strictfp class ISStream implements InStream {
 		return null;
 	}
 
-	private void check() {
+	private void check(int size) {
 		Data.err(() -> raf.seek(ind));
+		ind += size;
+		if (ind > len)
+			System.out.println("error: overread");
 	}
 
 	private <T> T check(int size, BiFunction<int[], Integer, T> func) {
-		check();
-		ind += size;
+		check(size);
 		return Data.err(() -> DataIO.readData(raf::read, size, func));
 	}
 
