@@ -326,16 +326,16 @@ public abstract class VerFixer extends Source {
 				CustomEnemy ce = new CustomEnemy();
 				ce.fillData(ver, is);
 				AnimCE ac = decodeAnim(".temp_" + id, is.subStream(), r);
-				Enemy e = new Enemy(new Identifier<>(id, Enemy.class, hash), ac, ce);
+				Enemy e = new Enemy(new Identifier<>(id, Enemy.class, hash % 1000), ac, ce);
 				e.name = str;
 				data.enemies.set(hash % 1000, e);
 			}
 			n = is.nextInt();
 			for (int i = 0; i < n; i++) {
 				int hash = is.nextInt();
-				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash));
+				EneRand e = new EneRand(new Identifier<>(id, EneRand.class, hash % 1000));
 				e.zread(is.subStream());
-				data.randEnemies.set(hash, e);
+				data.randEnemies.set(hash % 1000, e);
 			}
 		}
 
@@ -399,7 +399,7 @@ public abstract class VerFixer extends Source {
 		transform();
 		readPacks(map);
 		Context.delete(CommonStatic.def.route("./res"));
-		Context.delete(CommonStatic.def.route("./pack"));
+		// FIXME Context.delete(CommonStatic.def.route("./pack"));
 	}
 
 	private static VerFixer fix_bcuenemy(InStream is, ImgReader r) throws VerFixerException {
