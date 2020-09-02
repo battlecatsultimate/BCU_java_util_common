@@ -459,7 +459,8 @@ public abstract class Source {
 		}
 
 		private FileData loadAnimationFile(ResourceLocation id, String path) {
-			return zip.tree.find("./" + ANIM + "/" + id.id + "/" + path).getData();
+			VFile vf = zip.tree.find("./" + ANIM + "/" + id.id + "/" + path);
+			return vf == null ? null : vf.getData();
 		}
 
 	}
