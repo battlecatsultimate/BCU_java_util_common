@@ -1,5 +1,7 @@
 package common.io;
 
+import java.util.function.BiFunction;
+import common.pack.Context;
 import common.system.P;
 
 public strictfp abstract class DataIO {
@@ -62,6 +64,21 @@ public strictfp abstract class DataIO {
 		byte[] ans = new byte[4];
 		fromInt(ans, 0, n);
 		return ans;
+	}
+
+	public static <T> T readData(Context.SupExc<Integer> con, int n, BiFunction<int[], Integer, T> func)
+			throws Exception {
+		int[] data = new int[n];
+		for (int i = 0; i < n; i++)
+			data[i] = con.get();
+		return func.apply(data, 0);
+	}
+
+	public static int readInt(Context.SupExc<Integer> con) throws Exception {
+		int[] data = new int[4];
+		for (int i = 0; i < 4; i++)
+			data[i] = con.get();
+		return toInt(data, 0);
 	}
 
 	/**

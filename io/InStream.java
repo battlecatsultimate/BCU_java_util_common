@@ -1,46 +1,77 @@
 package common.io;
 
 import common.CommonStatic;
+import common.util.Data;
 
+import java.io.File;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
+import java.util.function.BiFunction;
 
 public strictfp interface InStream {
 
-	static InStream getIns(byte[] bs) {
-		int[] is = DataIO.translate(bs);
-		int sig = DataIO.toInt(is, 0);
-		if (sig == bs.length - 4) {
-			InStream ans = new InStreamDef(is, 4, is.length);
-			return ans;
-		}
-		throw new BCUException("Unsupported version");
+	static InStream getIns(File f) {
+		return Data.err(() -> new ISStream(f));
+	}
+
+	public default byte[] nextBytesB() {
+		int len = nextByte();
+		byte[] ints = new byte[len];
+		for (int i = 0; i < len; i++)
+			ints[i] = (byte) nextByte();
+		return ints;
+	}
+
+	public default byte[] nextBytesI() {
+		int len = nextInt();
+		byte[] ints = new byte[len];
+		for (int i = 0; i < len; i++)
+			ints[i] = (byte) nextByte();
+		return ints;
+	}
+
+	public default double[] nextDoubles() {
+		int len = nextByte();
+		double[] ints = new double[len];
+		for (int i = 0; i < len; i++)
+			ints[i] = nextDouble();
+		return ints;
+	}
+
+	public default int[] nextIntsB() {
+		int len = nextByte();
+		int[] ints = new int[len];
+		for (int i = 0; i < len; i++)
+			ints[i] = nextInt();
+		return ints;
+	}
+
+	public default int[][] nextIntsBB() {
+		int len = nextByte();
+		int[][] ints = new int[len][];
+		for (int i = 0; i < len; i++)
+			ints[i] = nextIntsB();
+		return ints;
+	}
+
+	public default String nextString() {
+		byte[] bts = nextBytesB();
+		return new String(bts, StandardCharsets.UTF_8);
 	}
 
 	boolean end();
 
 	int nextByte();
 
-	byte[] nextBytesB();
-
-	byte[] nextBytesI();
-
 	double nextDouble();
-
-	double[] nextDoubles();
 
 	float nextFloat();
 
 	int nextInt();
 
-	int[] nextIntsB();
-
-	int[][] nextIntsBB();
-
 	long nextLong();
 
 	int nextShort();
-
-	String nextString();
 
 	InStream subStream();
 
@@ -54,13 +85,13 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	private final int off, max;
 	private int index;
 
-	protected InStreamDef(InStreamDef isd) {
+	InStreamDef(InStreamDef isd) {
 		bs = isd.bs;
 		index = off = isd.index;
 		max = isd.max;
 	}
 
-	protected InStreamDef(int[] data, int ofs, int m) {
+	InStreamDef(int[] data, int ofs, int m) {
 		bs = data;
 		off = ofs;
 		max = m;
@@ -81,38 +112,11 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
-	public byte[] nextBytesB() {
-		int len = nextByte();
-		byte[] ints = new byte[len];
-		for (int i = 0; i < len; i++)
-			ints[i] = (byte) nextByte();
-		return ints;
-	}
-
-	@Override
-	public byte[] nextBytesI() {
-		int len = nextInt();
-		byte[] ints = new byte[len];
-		for (int i = 0; i < len; i++)
-			ints[i] = (byte) nextByte();
-		return ints;
-	}
-
-	@Override
 	public double nextDouble() {
 		check(8);
 		double ans = toDouble(bs, index);
 		index += 8;
 		return ans;
-	}
-
-	@Override
-	public double[] nextDoubles() {
-		int len = nextByte();
-		double[] ints = new double[len];
-		for (int i = 0; i < len; i++)
-			ints[i] = nextDouble();
-		return ints;
 	}
 
 	@Override
@@ -132,24 +136,6 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
-	public int[] nextIntsB() {
-		int len = nextByte();
-		int[] ints = new int[len];
-		for (int i = 0; i < len; i++)
-			ints[i] = nextInt();
-		return ints;
-	}
-
-	@Override
-	public int[][] nextIntsBB() {
-		int len = nextByte();
-		int[][] ints = new int[len][];
-		for (int i = 0; i < len; i++)
-			ints[i] = nextIntsB();
-		return ints;
-	}
-
-	@Override
 	public long nextLong() {
 		check(8);
 		long ans = toLong(bs, index);
@@ -163,12 +149,6 @@ strictfp class InStreamDef extends DataIO implements InStream {
 		int ans = toShort(bs, index);
 		index += 2;
 		return ans;
-	}
-
-	@Override
-	public String nextString() {
-		byte[] bts = nextBytesB();
-		return new String(bts, StandardCharsets.UTF_8);
 	}
 
 	public int pos() {
@@ -222,6 +202,85 @@ strictfp class InStreamDef extends DataIO implements InStream {
 					+ "/" + bs.length;
 			throw new BCUException(str);
 		}
+	}
+
+}
+
+strictfp class ISStream implements InStream {
+
+	private RandomAccessFile raf;
+
+	private int ind, len;
+
+	ISStream(File f) throws Exception {
+		raf = new RandomAccessFile(f, "r");
+		len = DataIO.readInt(raf::read);
+		ind = 4;
+	}
+
+	ISStream(RandomAccessFile raf, int ind, int len) {
+		this.raf = raf;
+		this.ind = ind;
+		this.len = len;
+	}
+
+	@Override
+	public boolean end() {
+		return ind == len;
+	}
+
+	@Override
+	public int nextByte() {
+		check();
+		ind++;
+		return Data.err(() -> raf.read());
+	}
+
+	@Override
+	public double nextDouble() {
+		return check(8, DataIO::toDouble);
+	}
+
+	@Override
+	public float nextFloat() {
+		return check(4, DataIO::toFloat);
+	}
+
+	@Override
+	public int nextInt() {
+		return check(4, DataIO::toInt);
+	}
+
+	@Override
+	public long nextLong() {
+		return check(8, DataIO::toLong);
+	}
+
+	@Override
+	public int nextShort() {
+		return check(2, DataIO::toShort);
+	}
+
+	@Override
+	public InStream subStream() {
+		int len = nextInt();
+		return new ISStream(raf, ind, ind + len);
+	}
+
+	@Override
+	public OutStream translate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void check() {
+		Data.err(() -> raf.seek(ind));
+	}
+
+	private <T> T check(int size, BiFunction<int[], Integer, T> func) {
+		check();
+		ind += size;
+		return Data.err(() -> DataIO.readData(raf::read, size, func));
 	}
 
 }

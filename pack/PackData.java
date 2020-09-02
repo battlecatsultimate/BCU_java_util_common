@@ -299,6 +299,14 @@ public abstract class PackData implements IndexContainer {
 					}
 		}
 
+		public List<Replay> getReplays() {
+			List<Replay> ans = new ArrayList<>();
+			for (StageMap sm : mc.maps)
+				for (Stage st : sm.list)
+					ans.addAll(st.recd);
+			return ans;
+		}
+
 		@Override
 		public String getSID() {
 			return desc.id;
@@ -332,14 +340,6 @@ public abstract class PackData implements IndexContainer {
 			elem = null;
 			loaded = true;
 			loadMusics();
-		}
-
-		public List<Replay> getReplays() {
-			List<Replay> ans = new ArrayList<>();
-			for (StageMap sm : mc.maps)
-				for (Stage st : sm.list)
-					ans.addAll(st.recd);
-			return ans;
 		}
 
 	}
