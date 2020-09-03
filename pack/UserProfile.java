@@ -175,7 +175,7 @@ public class UserProfile {
 						UserPack p = profile.pending.put(pack.desc.id, pack);
 
 						if(p != null) {
-							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource)p.source).getPackFile().getName()+" has same ID with "+((ZipSource)pack.source).getPackFile());
+							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource)p.source).getPackFile().getName()+" has same ID with "+((ZipSource)pack.source).getPackFile().getName());
 						}
 					}
 				}
