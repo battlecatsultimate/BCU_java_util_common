@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -294,15 +295,19 @@ public abstract class PackData implements IndexContainer {
 			source.delete();
 		}
 
-		public void forceRemoveParent(String id) {
+		public List<String> foreignList(String id) {
+			List<String> list = new ArrayList<>();
 			Dependency dep = Dependency.collect(this);
 			if (dep.getPacks().contains(id))
-				for (Map<String, Set<Identifier<?>>> map : dep.getMap().values())
-					if (map.containsKey(id))
-						for (Identifier<?> identifier : map.get(id)) {
-							identifier.pack = Identifier.DEF;
-							identifier.id = 0;
-						}
+				for (Entry<Class<?>, Map<String, Set<Identifier<?>>>> ent : dep.getMap().entrySet()) {
+					Map<String, Set<Identifier<?>>> map = ent.getValue();
+					if (map.containsKey(id) && map.get(id).size() > 0) {
+						list.add(ent.getKey().getSimpleName() + ":");
+						for (Identifier<?> identifier : map.get(id))
+							list.add("\t" + identifier.get().toString());
+					}
+				}
+			return list;
 		}
 
 		public List<Replay> getReplays() {
@@ -333,6 +338,7 @@ public abstract class PackData implements IndexContainer {
 
 		public boolean relyOn(String id) {
 			Dependency dep = Dependency.collect(this);
+			System.out.println("Pack: " + dep.getPacks());// FIXME
 			return dep.getPacks().contains(id);
 		}
 

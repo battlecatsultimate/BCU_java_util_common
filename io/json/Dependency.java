@@ -15,7 +15,6 @@ import common.util.stage.StageMap;
 
 import java.lang.reflect.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -90,6 +89,11 @@ public class Dependency {
 					return;
 				}
 			}
+			if (obj instanceof Iterable) {
+				for (Object o : (Iterable<?>) obj)
+					collect(set, o, par);
+				return;
+			}
 			JsonClass jc = cls.getAnnotation(JsonClass.class);
 			if (jc != null)
 				if (jc.write() == JsonClass.WType.DEF) {
@@ -103,16 +107,6 @@ public class Dependency {
 					collect(set, m.invoke(obj), null);
 					return;
 				}
-			if (obj instanceof List) {
-				for (Object o : (List<?>) obj)
-					collect(set, o, par);
-				return;
-			}
-			if (obj instanceof Set) {
-				for (Object o : (Set<?>) obj)
-					collect(set, o, par);
-				return;
-			}
 			if (obj instanceof Map) {
 				for (Entry<?, ?> ent : ((Map<?, ?>) obj).entrySet()) {
 					collect(set, ent.getKey(), par);

@@ -266,14 +266,18 @@ public class Stage extends Data
 		ans.len = len;
 		ans.health = health;
 		ans.max = max;
-		ans.bg = bg.clone();
-		ans.castle = castle.clone();
+		if (bg != null)
+			ans.bg = bg.clone();
+		if (castle != null)
+			ans.castle = castle.clone();
 		ans.name = name;
 		ans.data = data.copy();
 		if (lim != null)
 			ans.lim = lim.clone();
-		ans.mus0 = mus0.clone();
-		ans.mus1 = mus1.clone();
+		if (mus0 != null)
+			ans.mus0 = mus0.clone();
+		if (mus1 != null)
+			ans.mus1 = mus1.clone();
 		ans.mush = mush;
 		return ans;
 	}
@@ -298,16 +302,16 @@ public class Stage extends Data
 		return getCont().list.indexOf(this);
 	}
 
-	public boolean isSuitable(String pack) {
+	public Set<String> isSuitable(String pack) {
 		Dependency dep = Dependency.collect(this);
 		PackDesc desc = UserProfile.getUserPack(pack).desc;
 		Set<String> set = dep.getPacks();
-		System.out.println(set);// FIXME
+		System.out.println("Stage: " + set);// FIXME
 		set.remove(Identifier.DEF);
 		set.remove(pack);
 		for (String str : desc.dependency)
 			set.remove(str);
-		return set.size() == 0;
+		return set;
 	}
 
 	public void setName(String str) {

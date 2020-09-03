@@ -278,9 +278,10 @@ public class Data {
 							f.set(this, f.get(pi));
 						else if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(this, ((IntType) f.get(pi)).clone());
-						else if (f.getType() == Identifier.class)
-							f.set(this, ((Identifier<?>) f.get(pi)).clone());
-						else
+						else if (f.getType() == Identifier.class) {
+							Identifier<?> id = (Identifier<?>) f.get(pi);
+							f.set(this, id == null ? null : id.clone());
+						} else
 							throw new Exception("unknown field " + f.getType() + " " + f.getName());
 				} catch (Exception e) {
 					e.printStackTrace();
