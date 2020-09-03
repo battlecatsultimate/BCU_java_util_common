@@ -208,6 +208,9 @@ public class PackLoader {
 			}
 		}
 
+		public File getZipFile() {
+			return loader.file;
+		}
 	}
 
 	private static class FileLoader {

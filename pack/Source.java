@@ -437,6 +437,10 @@ public abstract class Source {
 			return zip.readFile(path);
 		}
 
+		public File getPackFile() {
+			return zip.getZipFile();
+		}
+
 		public Workspace unzip(String password, Consumer<Double> prog) throws Exception {
 			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
 				return null;

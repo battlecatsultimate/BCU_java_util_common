@@ -170,8 +170,14 @@ public class UserProfile {
 				if (f.getName().endsWith(".pack.bcuzip")) {
 					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
 							"failed to load external pack " + f);
-					if (pack != null)
-						profile.pending.put(pack.desc.id, pack);
+
+					if (pack != null) {
+						UserPack p = profile.pending.put(pack.desc.id, pack);
+
+						if(p != null) {
+							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource)p.source).getPackFile().getName()+" has same ID with "+((ZipSource)pack.source).getPackFile());
+						}
+					}
 				}
 
 		if (workspace.exists())
