@@ -6,6 +6,7 @@ import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.assets.AssetLoader;
 import common.io.json.JsonDecoder;
 import common.pack.Context.ErrType;
 import common.pack.PackData.DefPack;
@@ -13,6 +14,8 @@ import common.pack.PackData.PackDesc;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
+import common.util.Data;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -215,12 +218,22 @@ public class UserProfile {
 		JsonElement elem = JsonParser.parseReader(r);
 		r.close();
 		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
+
+		if(Data.getVer(desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {
+			CommonStatic.ctx.printErr(ErrType.WARN, "Pack "+f.getName()+" core version ("+desc.BCU_VERSION+") is higher than BCU core version ("+AssetLoader.CORE_VER+")");
+		}
+
 		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
 		return data;
 	}
 
 	public static UserPack readZipPack(File f) throws Exception {
 		ZipDesc zip = PackLoader.readPack(CommonStatic.ctx::preload, f);
+
+		if(Data.getVer(zip.desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {
+			CommonStatic.ctx.printErr(ErrType.WARN, "Pack "+f.getName()+" core version ("+zip.desc.BCU_VERSION+") is higher than BCU core version ("+AssetLoader.CORE_VER+")");
+		}
+
 		Reader r = new InputStreamReader(zip.readFile("./pack.json"), StandardCharsets.UTF_8);
 		JsonElement elem = JsonParser.parseReader(r);
 		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
