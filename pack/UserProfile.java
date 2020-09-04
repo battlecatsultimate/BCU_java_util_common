@@ -177,8 +177,9 @@ public class UserProfile {
 					if (pack != null) {
 						UserPack p = profile.pending.put(pack.desc.id, pack);
 
-						if(p != null) {
-							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource)p.source).getPackFile().getName()+" has same ID with "+((ZipSource)pack.source).getPackFile().getName());
+						if (p != null) {
+							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) p.source).getPackFile().getName()
+									+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
 						}
 					}
 				}
@@ -219,8 +220,9 @@ public class UserProfile {
 		r.close();
 		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
 
-		if(Data.getVer(desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {
-			CommonStatic.ctx.printErr(ErrType.WARN, "Pack "+f.getName()+" core version ("+desc.BCU_VERSION+") is higher than BCU core version ("+AssetLoader.CORE_VER+")");
+		if (Data.getVer(desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {
+			CommonStatic.ctx.printErr(ErrType.WARN, "Pack " + f.getName() + " core version (" + desc.BCU_VERSION
+					+ ") is higher than BCU core version (" + AssetLoader.CORE_VER + ")");
 		}
 
 		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
@@ -230,8 +232,9 @@ public class UserProfile {
 	public static UserPack readZipPack(File f) throws Exception {
 		ZipDesc zip = PackLoader.readPack(CommonStatic.ctx::preload, f);
 
-		if(Data.getVer(zip.desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {
-			CommonStatic.ctx.printErr(ErrType.WARN, "Pack "+f.getName()+" core version ("+zip.desc.BCU_VERSION+") is higher than BCU core version ("+AssetLoader.CORE_VER+")");
+		if (Data.getVer(zip.desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {
+			CommonStatic.ctx.printErr(ErrType.WARN, "Pack " + f.getName() + " core version (" + zip.desc.BCU_VERSION
+					+ ") is higher than BCU core version (" + AssetLoader.CORE_VER + ")");
 		}
 
 		Reader r = new InputStreamReader(zip.readFile("./pack.json"), StandardCharsets.UTF_8);
