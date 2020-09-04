@@ -1092,10 +1092,10 @@ public class Data {
 
 	public static int getVer(String ver) {
 		int ans = 0;
-		String[] strs = ver.split("\\.");
-		for (String str : strs) {
+		int[] strs = CommonStatic.parseIntsN(ver);
+		for (int str : strs) {
 			ans *= 100;
-			ans += Integer.parseInt(str);
+			ans += str;
 		}
 		return ans;
 	}
