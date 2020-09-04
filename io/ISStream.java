@@ -27,6 +27,9 @@ strictfp class ISStream extends InputStream implements InStream {
 	}
 
 	public int read() throws IOException {
+		if (ind == len)
+			return -1;
+		ind++;
 		return raf.read();
 	}
 
