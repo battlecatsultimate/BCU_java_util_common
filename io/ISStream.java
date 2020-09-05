@@ -1,6 +1,7 @@
 package common.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -10,17 +11,43 @@ import common.util.Data;
 
 strictfp class ISStream extends InputStream implements InStream {
 
-	private RandomAccessFile raf;
+	private static class FileTracer {
 
+		private RandomAccessFile raf;
+		private int ind;
+
+		protected FileTracer(File f) throws FileNotFoundException {
+			raf = new RandomAccessFile(f, "r");
+			ind = 0;
+		}
+
+		public int read() throws IOException {
+			ind++;
+			return raf.read();
+		}
+
+		public int read(byte b[], int off, int len) throws IOException {
+			ind += len;
+			return raf.read(b, off, len);
+		}
+
+		public void seek(int pos) throws IOException {
+			if (pos != ind)
+				raf.seek(ind = pos);
+		}
+
+	}
+
+	private FileTracer raf;
 	private int ind, len;
 
 	ISStream(File f) throws Exception {
-		raf = new RandomAccessFile(f, "r");
+		raf = new FileTracer(f);
 		len = DataIO.readInt(raf::read) + 4;
 		ind = 4;
 	}
 
-	ISStream(RandomAccessFile raf, int ind, int len) {
+	ISStream(FileTracer raf, int ind, int len) {
 		this.raf = raf;
 		this.ind = ind;
 		this.len = len;
@@ -31,6 +58,12 @@ strictfp class ISStream extends InputStream implements InStream {
 			return -1;
 		ind++;
 		return raf.read();
+	}
+
+	public int read(byte[] bs, int off, int rlen) throws IOException {
+		if (rlen + ind > len)
+			rlen = len - ind;
+		return raf.read(bs, off, rlen);
 	}
 
 	@Override
