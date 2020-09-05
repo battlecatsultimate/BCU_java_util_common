@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.Arrays;
 import java.util.function.BiFunction;
 
 import common.util.Data;
@@ -63,6 +64,8 @@ strictfp class ISStream extends InputStream implements InStream {
 	public int read(byte[] bs, int off, int rlen) throws IOException {
 		if (rlen + ind > len)
 			rlen = len - ind;
+		if (ind == len)
+			return -1;
 		ind += rlen;
 		return raf.read(bs, off, rlen);
 	}
