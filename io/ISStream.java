@@ -63,6 +63,7 @@ strictfp class ISStream extends InputStream implements InStream {
 	public int read(byte[] bs, int off, int rlen) throws IOException {
 		if (rlen + ind > len)
 			rlen = len - ind;
+		ind += rlen;
 		return raf.read(bs, off, rlen);
 	}
 
