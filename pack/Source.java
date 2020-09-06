@@ -406,6 +406,10 @@ public abstract class Source {
 			return zip.tree.find(string).getData();
 		}
 
+		public File getPackFile() {
+			return zip.getZipFile();
+		}
+
 		@Override
 		public String[] listFile(String path) {
 			VFile dir = zip.tree.find(path);
@@ -435,10 +439,6 @@ public abstract class Source {
 		@Override
 		public InputStream streamFile(String path) throws Exception {
 			return zip.readFile(path);
-		}
-
-		public File getPackFile() {
-			return zip.getZipFile();
 		}
 
 		public Workspace unzip(String password, Consumer<Double> prog) throws Exception {

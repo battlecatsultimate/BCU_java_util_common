@@ -138,6 +138,10 @@ public class PackLoader {
 			loader.file.delete();
 		}
 
+		public File getZipFile() {
+			return loader.file;
+		}
+
 		public boolean match(byte[] data) {
 			return Arrays.equals(data, loader.key);
 		}
@@ -206,10 +210,6 @@ public class PackLoader {
 				fis.close();
 				prog.accept(1.0 * (x++) / files.length);
 			}
-		}
-
-		public File getZipFile() {
-			return loader.file;
 		}
 	}
 

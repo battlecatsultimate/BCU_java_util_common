@@ -9,6 +9,7 @@ import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonClass
@@ -17,7 +18,7 @@ import java.util.List;
 public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	@JsonField
-	public final int[] lvs = new int[3];
+	public int[] lvs = new int[20];
 
 	public final List<Unit> units = new ArrayList<>();
 
@@ -32,27 +33,11 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	public UnitLevel(Identifier<UnitLevel> ID, UnitLevel ul) {
 		id = ID;
-		for (int i = 0; i < 3; i++)
-			lvs[i] = ul.lvs[i];
+		lvs = ul.lvs.clone();
 	}
 
 	public UnitLevel(int[] inp) {
-		int val = -1;
-		for (int i = 0; i < inp.length; i++) {
-			if (val != inp[i]) {
-				val = inp[i];
-				if (val == 10)
-					lvs[0] = i;
-				if (val == 5)
-					lvs[1] = i;
-				if (val == 0)
-					lvs[2] = i;
-			}
-		}
-		if (lvs[1] == 0)
-			lvs[1] = inp.length;
-		if (lvs[2] == 0)
-			lvs[2] = inp.length;
+		lvs = Arrays.copyOf(inp, 20);
 	}
 
 	@Override
@@ -77,19 +62,16 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	public double getMult(int lv) {
 		int dec = lv;
-		int pre = 0, mul = 20;
 		double d = 0.8;
 		for (int i = 0; i < lvs.length; i++) {
-			int dur = lvs[i] - pre;
-			if (dec > dur * 10) {
-				d += mul * dur * 0.1;
-				dec -= dur * 10;
+			int mul = lvs[i];
+			if (dec >= 10) {
+				d += mul * 0.1;
+				dec -= 10;
 			} else {
 				d += mul * dec * 0.01;
 				break;
 			}
-			mul /= 2;
-			pre = lvs[i];
 		}
 		return d;
 	}
@@ -108,6 +90,7 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	private void zread(InStream is) {
 		int ver = is.nextInt();
+		int lvs[] = new int[3];
 		if (ver == 1) {
 			int[] vs = is.nextIntsB();
 			lvs[0] = vs[0];
@@ -118,6 +101,13 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 			lvs[0] = vs[1][0];
 			lvs[1] = vs[2][0];
 			lvs[2] = vs[3][0];
+		}
+		int pre = 0, mul = 20;
+		for (int i = 0; i < 3; i++) {
+			for (int j = pre; j < lvs[i] / 10; j++)
+				this.lvs[j] = mul;
+			mul /= 2;
+			pre = lvs[i] / 10;
 		}
 	}
 
