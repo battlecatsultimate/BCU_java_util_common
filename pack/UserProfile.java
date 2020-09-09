@@ -114,6 +114,14 @@ public class UserProfile {
 	}
 
 	/**
+	 * Unregister object from registers
+	 * @param id ID of registered object
+	 */
+	public static void unregister(String id) {
+		profile().registers.remove(id);
+	}
+
+	/**
 	 * get a variable registered in the Registrar
 	 */
 	@SuppressWarnings("unchecked")
@@ -163,6 +171,15 @@ public class UserProfile {
 
 	public static void loadPacks(Consumer<Double> prog) {
 		UserProfile profile = profile();
+
+		if(profile.pending == null) {
+			profile.pending = new HashMap<>();
+		}
+
+		if(profile.fixpending == null) {
+			profile.fixpending = new HashMap<>();
+		}
+
 		CommonStatic.ctx.noticeErr(() -> VerFixer.fix(profile.fixpending), ErrType.FATAL,
 				"failed to convert old format");
 		profile.fixpending = null;
@@ -202,6 +219,16 @@ public class UserProfile {
 			prog.accept(1.0 * (ind++) / tot);
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
+	}
+
+	public static void unloadAllUserPacks() {
+		for (UserPack pack : getUserPacks()) {
+			pack.unregister();
+		}
+
+		profile().packmap.clear();
+		profile().packlist.clear();
+		profile().failed.clear();
 	}
 
 	public static UserProfile profile() {

@@ -292,7 +292,15 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public void delete() {
+			unregister();
+
+			UserProfile.profile().packmap.remove(getSID());
+
 			source.delete();
+		}
+
+		public void unregister() {
+			UserProfile.unregister(getSID());
 		}
 
 		public List<String> foreignList(String id) {
