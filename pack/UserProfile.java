@@ -114,14 +114,6 @@ public class UserProfile {
 	}
 
 	/**
-	 * Unregister object from registers
-	 * @param id ID of registered object
-	 */
-	public static void unregister(String id) {
-		profile().registers.remove(id);
-	}
-
-	/**
 	 * get a variable registered in the Registrar
 	 */
 	@SuppressWarnings("unchecked")
@@ -172,11 +164,11 @@ public class UserProfile {
 	public static void loadPacks(Consumer<Double> prog) {
 		UserProfile profile = profile();
 
-		if(profile.pending == null) {
+		if (profile.pending == null) {
 			profile.pending = new HashMap<>();
 		}
 
-		if(profile.fixpending == null) {
+		if (profile.fixpending == null) {
 			profile.fixpending = new HashMap<>();
 		}
 
@@ -219,16 +211,6 @@ public class UserProfile {
 			prog.accept(1.0 * (ind++) / tot);
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
-	}
-
-	public static void unloadAllUserPacks() {
-		for (UserPack pack : getUserPacks()) {
-			pack.unregister();
-		}
-
-		profile().packmap.clear();
-		profile().packlist.clear();
-		profile().failed.clear();
 	}
 
 	public static UserProfile profile() {
@@ -278,6 +260,25 @@ public class UserProfile {
 
 	public static void setStatic(String id, Object val) {
 		getRegister(REG_STATIC, Object.class).put(id, val);
+	}
+
+	public static void unloadAllUserPacks() {
+		for (UserPack pack : getUserPacks()) {
+			pack.unregister();
+		}
+
+		profile().packmap.clear();
+		profile().packlist.clear();
+		profile().failed.clear();
+	}
+
+	/**
+	 * Unregister object from registers
+	 * 
+	 * @param id ID of registered object
+	 */
+	public static void unregister(String id) {
+		profile().registers.remove(id);
 	}
 
 	public final DefPack def = new DefPack();

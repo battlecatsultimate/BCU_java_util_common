@@ -299,10 +299,6 @@ public abstract class PackData implements IndexContainer {
 			source.delete();
 		}
 
-		public void unregister() {
-			UserProfile.unregister(getSID());
-		}
-
 		public List<String> foreignList(String id) {
 			List<String> list = new ArrayList<>();
 			Dependency dep = Dependency.collect(this);
@@ -353,6 +349,10 @@ public abstract class PackData implements IndexContainer {
 		@Override
 		public String toString() {
 			return desc.name == null ? desc.id : desc.name;
+		}
+
+		public void unregister() {
+			UserProfile.unregister(getSID());
 		}
 
 		void load() throws Exception {

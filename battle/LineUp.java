@@ -369,7 +369,7 @@ public class LineUp extends Data {
 		for (int i = 0; i < m; i++) {
 			int uid = is.nextInt();
 			int[] lv = is.nextIntsB();
-			Unit u = Identifier.parseInt(uid, Unit.class).get();
+			Unit u = Identifier.getOr(Identifier.parseInt(uid, Unit.class), Unit.class);
 			int[][] orbs = null;
 			int existing = is.nextInt();
 			if (existing == 1) {

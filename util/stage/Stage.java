@@ -29,6 +29,7 @@ import java.util.Queue;
 import java.util.Set;
 
 @IndexContainer.IndexCont(StageMap.class)
+@JsonClass.JCGeneric(Identifier.class)
 @JsonClass(noTag = NoTag.LOAD)
 public class Stage extends Data
 		implements BasedCopable<Stage, StageMap>, BattleStatic, IndexContainer.Indexable<StageMap, Stage> {
@@ -120,9 +121,8 @@ public class Stage extends Data
 
 	@JsonField(block = true)
 	public StageInfo info;
-	@JsonField(block = true)
-	public List<Replay> recd = new ArrayList<>();
 
+	@JsonClass.JCIdentifier
 	public final Identifier<Stage> id;
 	public String name = "";
 	public boolean non_con, trail;
@@ -134,7 +134,7 @@ public class Stage extends Data
 	public SCDef data;
 	public Limit lim;
 	@JsonField(generic = Replay.class, alias = ResourceLocation.class)
-	public final ArrayList<Replay> arr = new ArrayList<>();
+	public ArrayList<Replay> recd = new ArrayList<>();
 
 	@JsonClass.JCConstructor
 	public Stage() {

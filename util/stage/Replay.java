@@ -20,6 +20,7 @@ import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
+import common.pack.Identifier;
 import common.util.Data;
 import common.util.stage.MapColc.DefMapColc;
 
@@ -30,8 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
-
-import org.intellij.lang.annotations.Identifier;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -45,7 +44,9 @@ public class Replay extends Data {
 	}
 
 	public static void getRecd(Stage stage, InStream is, String str) {
-		stage.recd.add(getRecd(is, new ResourceLocation(stage.getCont().getCont().getSID(), str)));
+		String sid = stage.getCont().getCont().getSID();
+		ResourceLocation rl = new ResourceLocation(".temp_" + sid, str);
+		stage.recd.add(getRecd(is, rl, stage));
 	}
 
 	@Deprecated
@@ -58,7 +59,7 @@ public class Replay extends Data {
 				if (str.endsWith(".replay")) {
 					String name = str.substring(0, str.length() - 7);
 					InStream is = CommonStatic.def.readBytes(fi);
-					Replay rec = getRecd(is, new ResourceLocation(ResourceLocation.LOCAL, name));
+					Replay rec = getRecd(is, new ResourceLocation(ResourceLocation.LOCAL, name), null);
 					rec.write();
 					getMap().put(name, rec);
 				}
@@ -83,7 +84,7 @@ public class Replay extends Data {
 	public static Replay read(InputStream fis) throws IOException {
 		byte[] header = new byte[PackLoader.HEAD_DATA.length];
 		fis.read(header);
-		if (!Arrays.equals(header, PackLoader.HEAD_DATA)) {
+		if (Arrays.equals(header, PackLoader.HEAD_DATA)) {
 			byte[] len = new byte[4];
 			fis.read(len);
 			int size = DataIO.toInt(DataIO.translate(len), 0);
@@ -104,7 +105,7 @@ public class Replay extends Data {
 		return null;
 	}
 
-	private static Replay getRecd(InStream is, ResourceLocation name) {
+	private static Replay getRecd(InStream is, ResourceLocation name, Stage st) {
 		int val = getVer(is.nextString());
 		if (val < 401)
 			return null;
@@ -114,24 +115,29 @@ public class Replay extends Data {
 		BasisLU lu = BasisLU.zread(is.subStream());
 		InStream action = is.subStream();
 		int pid = is.nextInt();
-		Stage st = null;
-		if (pid == 0) {
-			int id = is.nextInt();
-			StageMap sm = DefMapColc.getMap(id / 1000);
-			st = sm.list.get(id % 1000);
-			if (st == null) {
-				return null;
+		if (st == null)
+			if (pid == 0) {
+				int id = is.nextInt();
+				StageMap sm = DefMapColc.getMap(id / 1000);
+				st = sm.list.get(id % 1000);
+				if (st == null) {
+					return null;
+				}
+			} else {
+				st = zreads$000401(is, pid);
 			}
-		} else {
-			st = zreads$000401(is, pid);
+		else {
+			is.nextString();
+			is.nextString();
+			is.nextString();
 		}
-
-		Replay ans = new Replay(lu, st, star, conf, seed);
+		Replay ans = new Replay(lu, st.id, star, conf, seed);
 		int[] act = new int[action.nextInt()];
 		for (int i = 0; i < act.length; i++)
 			act[i] = action.nextInt();
 		ans.action = act;
 		ans.rl = name;
+		ans.write();
 		return ans;
 	}
 
@@ -171,12 +177,12 @@ public class Replay extends Data {
 	public int[] conf;
 	@JsonField
 	public int star, len;
-	@JsonField(alias = Identifier.class)
-	public Stage st;
+	@JsonField
+	public Identifier<Stage> st;
 	@JsonField
 	public BasisLU lu;
 	public int[] action;
-	public boolean avail, marked;
+	public boolean marked;// FIXME mark save
 
 	@JCConstructor
 	@Deprecated
@@ -184,13 +190,12 @@ public class Replay extends Data {
 
 	}
 
-	public Replay(BasisLU blu, Stage sta, int stars, int[] con, long se) {
+	public Replay(BasisLU blu, Identifier<Stage> sta, int stars, int[] con, long se) {
 		lu = blu;
 		st = sta;
 		star = stars;
 		conf = con;
 		seed = se;
-		avail = st != null;
 	}
 
 	@Override
@@ -205,6 +210,10 @@ public class Replay extends Data {
 			len += action[i * 2 + 1];
 		}
 		return len;
+	}
+
+	public boolean isAvail() {
+		return Identifier.getOr(st, Stage.class) != null;
 	}
 
 	public void localize(String pack) {
@@ -252,6 +261,8 @@ public class Replay extends Data {
 			Context.check(tmp);
 			if (tar.exists())
 				Context.delete(tar);
+			if (rl.pack.startsWith(".temp_"))
+				rl.pack = rl.pack.substring(6);
 			FileOutputStream fos = new FileOutputStream(tmp);
 			fos.write(PackLoader.HEAD_DATA);
 			byte[] head = JsonEncoder.encode(this).toString().getBytes();

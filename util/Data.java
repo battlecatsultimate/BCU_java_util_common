@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 public class Data {
 
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class Proc {
+	public static class Proc implements BattleStatic {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class ARMOR extends ProcItem {

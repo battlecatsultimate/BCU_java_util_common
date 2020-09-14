@@ -84,9 +84,12 @@ public class JsonDecoder {
 			if (alias != cls && alias != void.class) {
 				Object input = decode(elem, alias, par);
 				for (Method m : alias.getDeclaredMethods())
-					if (m.getAnnotation(JCGetter.class) != null)
-						return m.invoke(input);
-				throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGetter present");
+					if (m.getAnnotation(JCGetter.class) != null) {
+						Class<?> ret = m.getReturnType();
+						if (cls == ret || cls.isAssignableFrom(ret) || ret.isAssignableFrom(cls))
+							return m.invoke(input);
+					}
+				throw new JsonException(Type.TYPE_MISMATCH, null, "no JCGetter present: " + alias + "->" + cls);
 			}
 		}
 		// fill existing object
@@ -381,7 +384,11 @@ public class JsonDecoder {
 			JsonElement elem = jobj.get(tag);
 			f.setAccessible(true);
 			curfld = f;
-			f.set(obj, decode(elem, f.getType(), getInvoker()));
+			try {
+				f.set(obj, decode(elem, f.getType(), getInvoker()));
+			} catch (Exception e) {
+				throw new Exception("error at " + curcls + " in field " + f, e);
+			}
 			curfld = null;
 		}
 		Method oni = null;

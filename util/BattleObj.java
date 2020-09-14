@@ -156,7 +156,8 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 			try {
 				f.setAccessible(true);
 				f.set(copy, hardCopy(f.get(this)));
-			} catch (IllegalAccessException e3) {
+			} catch (Exception e3) {
+				System.out.println("failed to copy class " + getClass() + " at field " + f);
 				e3.printStackTrace();
 			}
 		}

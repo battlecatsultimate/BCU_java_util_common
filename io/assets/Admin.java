@@ -119,6 +119,8 @@ public class Admin {
 	public static boolean preload(FileDesc fd) {
 		if (fd.size < 1024)
 			return true;
+		if (fd.size > 65536)
+			return false;
 		for (String str : ANIMFL)
 			if (fd.path.endsWith(str))
 				return false;

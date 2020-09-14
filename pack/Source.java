@@ -18,6 +18,9 @@ import common.util.Data;
 import common.util.anim.*;
 import common.util.pack.Background;
 import common.util.stage.CastleImg;
+import common.util.stage.Replay;
+import common.util.stage.Stage;
+import common.util.stage.StageMap;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -75,6 +78,15 @@ public abstract class Source {
 
 		public String getPath(String type) {
 			return "./" + pack + "/" + type + "/" + id;
+		}
+
+		@JsonClass.JCGetter
+		public Replay getReplay() {
+			if (pack.equals(LOCAL))
+				return Replay.getMap().get(id);
+			Source s = UserProfile.getUserPack(pack).source;
+			String path = "./" + REPLAY + "/" + id + ".replay";
+			return Data.err(() -> Replay.read(s.getFileData(path).getStream()));
 		}
 
 		@Override
@@ -322,6 +334,12 @@ public abstract class Source {
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
 				}
+			for (StageMap sm : pack.mc.maps)
+				for (Stage st : sm.list)
+					for (Replay rep : st.recd)
+						if (rep != null && rep.rl.pack.startsWith(".temp_")) {
+							rep.rl.pack = rep.rl.pack.substring(6);
+						}
 			save(pack);
 			String star = id.startsWith(".temp_") ? "./packs/" : "./exports/";
 			File tar = CommonStatic.ctx.getAuxFile(star + pack.getSID() + ".pack.bcuzip");
