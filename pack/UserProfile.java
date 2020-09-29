@@ -272,6 +272,14 @@ public class UserProfile {
 		profile().failed.clear();
 	}
 
+	public static void unloadPack(UserPack pack) {
+		pack.unregister();;
+
+		profile().packmap.remove(pack.getSID());
+		profile().packlist.remove(pack);
+		profile().failed.remove(pack);
+	}
+
 	/**
 	 * Unregister object from registers
 	 * 
