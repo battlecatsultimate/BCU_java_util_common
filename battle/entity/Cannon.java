@@ -132,14 +132,14 @@ public class Cannon extends AtkModelAb {
 			if (id > 2 && id < 5) {
 				pos = b.ubase.pos;
 				for (Entity e : b.le)
-					if (e.dire == -1 && e.pos < pos)
+					if (e.dire == -1 && e.pos < pos && e.targetable(TCH_N | TCH_KB))
 						pos = e.pos;
 				pos -= NYRAN[id] / 2;
 			}
 			if (id == 2 || id == 6) {
 				pos = b.ebase.pos;
 				for (Entity e : b.le)
-					if (e.dire == 1 && e.pos > pos)
+					if (e.dire == 1 && e.pos > pos && e.targetable(TCH_N | TCH_KB))
 						pos = e.pos;
 			}
 		}

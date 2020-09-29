@@ -50,17 +50,17 @@ public class Limit extends Data implements BattleStatic {
 			name = is.nextString();
 			sid = is.nextInt();
 			star = is.nextInt();
+			rare = is.nextInt();
+			num = is.nextByte();
+			line = is.nextByte();
+			min = is.nextInt();
+			max = is.nextInt();
 			int g = is.nextInt();
 			if (g >= 0)
 				group = mc.groups.get(g);
 			int l = is.nextInt();
 			if (l >= 0)
 				lvr = mc.lvrs.get(l);
-			rare = is.nextInt();
-			num = is.nextByte();
-			line = is.nextByte();
-			min = is.nextInt();
-			max = is.nextInt();
 		}
 
 	}
