@@ -11,13 +11,16 @@ import common.util.unit.Unit;
 import java.util.Queue;
 
 public class PCoin extends Data {
+	public static final int FLAG_RELIC_SLOW = 69;
+	public static final int FLAG_RELIC_WEAK = 70;
 
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/data/SkillAcquisition.csv");
 		qs.poll();
 		for (String str : qs) {
 			String[] strs = str.trim().split(",");
-			if (strs.length == 62)
+
+			if (strs.length == 67)
 				new PCoin(strs);
 		}
 	}
@@ -27,14 +30,15 @@ public class PCoin extends Data {
 
 	public final DataUnit full;
 	public final int[] max;
-	public final int[][] info = new int[5][12];
+	public final int[][] info = new int[5][13];
 
 	private PCoin(String[] strs) {
 		id = CommonStatic.parseIntN(strs[0]);
 		max = new int[6];
+
 		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 12; j++)
-				info[i][j] = CommonStatic.parseIntN(strs[2 + i * 12 + j]);
+			for (int j = 0; j < 13; j++)
+				info[i][j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
 			max[i + 1] = info[i][1];
 			if (max[i + 1] == 0)
 				max[i + 1] = 1;
@@ -51,12 +55,12 @@ public class PCoin extends Data {
 			if (lvs[i + 1] == 0)
 				continue;
 			if (info[i][0] >= PC_CORRES.length) {
-				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]+"\nText ID is "+info[i][10]);
 				continue;
 			}
 			int[] type = PC_CORRES[info[i][0]];
 			if (type.length > 2 || type[0] == -1) {
-				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]+"\nText ID is "+info[i][10]);
 				continue;
 			}
 
@@ -75,9 +79,21 @@ public class PCoin extends Data {
 
 			if (type[0] == PC_P) {
 				ProcItem tar = ans.proc.getArr(type[1]);
-				for (int j = 0; j < 4; j++)
-					if (modifs[j] > 0)
-						tar.set(j, tar.get(j) + modifs[j]);
+
+				if(info[i][10] == FLAG_RELIC_SLOW || info[i][10] == FLAG_RELIC_WEAK) {
+					ans.type |= TB_RELIC;
+				}
+
+				if(type[1] == P_VOLC) {
+					tar.set(0, modifs[0]);
+					tar.set(1, modifs[2]);
+					tar.set(2, modifs[3]);
+					tar.set(3, modifs[1] * 20);
+				} else {
+					for (int j = 0; j < 4; j++)
+						if (modifs[j] > 0)
+							tar.set(j, tar.get(j) + modifs[j]);
+				}
 				if (type[1] == P_STRONG)
 					tar.set(0, 100 - tar.get(0));
 				if (type[1] == P_WEAK)
@@ -109,4 +125,17 @@ public class PCoin extends Data {
 		return ans;
 	}
 
+	public boolean isRelicSlow(int index) {
+		if(index < 0 || index >= info.length)
+			return false;
+
+		return info[index][10] == FLAG_RELIC_SLOW && info[index][0] == 3;
+	}
+
+	public boolean isRelicWeak(int index) {
+		if(index < 0 || index >= info.length)
+			return false;
+
+		return info[index][10] == FLAG_RELIC_WEAK && info[index][0] == 1;
+	}
 }

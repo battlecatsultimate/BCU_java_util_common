@@ -847,11 +847,17 @@ public class Data {
 	public static final int PC2_SPEED = 2;
 	public static final int PC2_COST = 3;
 	public static final int PC2_CD = 4;
+	// -1 for None
+	// 0 for Proc
+	// 1 for Ability
+	// 2 for Base stat
+	// 3 for Immune
+	// 4 for Trait
 	public static final int[][] PC_CORRES = new int[][] { // NP value table
 			{ -1, 0 }, // 0:
-			{ 0, P_WEAK }, // 1: weak, reversed health
+			{ 0, P_WEAK }, // 1: weak, reversed health or relic-weak
 			{ 0, P_STOP }, // 2: stop
-			{ 0, P_SLOW }, // 3: slow
+			{ 0, P_SLOW }, // 3: slow or relic-slow
 			{ 1, AB_ONLY, 0 }, // 4:
 			{ 1, AB_GOOD, 0 }, // 5:
 			{ 1, AB_RESIST, 0 }, // 6:
@@ -894,13 +900,18 @@ public class Data {
 			{ -1, 0 }, // 43:
 			{ -1, 0 }, // 44:
 			{ -1, 0 }, // 45:
-			{ -1, 0 }, // 46:
-			{ -1, 0 }, // 47:
+			{ 3, P_IMUSLOW }, // 46: immune to slow
+			{ 3, P_IMUKB }, // 47: immune to kb
 			{ 3, P_IMUWAVE }, // 48: immune to wave
 			{ 3, P_IMUWARP }, // 49: immune to warp
-			{ -1, 0 }, // 50:
+			{ 0, P_SATK }, // 50: savage blow
 			{ 0, P_IMUATK }, // 51: immune to attack
-			{ -1, 0 } };
+			{ 0, P_IMUPOIATK }, // 52: resist to poison ?
+			{ 3, P_IMUPOIATK }, // 53: immune to poison
+			{ 0, P_IMUVOLC }, // 54: resist to surge ?
+			{ 3, P_IMUVOLC }, // 55: immune to surge
+			{ 0, P_VOLC }, // 56: surge, level up to chance up
+			};
 
 	// foot icon index used in battle
 	public static final int INV = -1;
