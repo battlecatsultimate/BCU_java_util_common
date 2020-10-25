@@ -611,10 +611,10 @@
         }
     },
     "SATK": {
-        "abbr_name": "Strong Hit",
-        "full_name": "Strong Hit",
+        "abbr_name": "savage blow",
+        "full_name": "Savage Blow",
         "tooltip": null,
-        "format": "(prob)% chance to deal a string hit with (mult)% damage",
+        "format": "(prob)% chance to deal a savage blow with (mult)% damage",
         "class": {
             "prob": {
                 "name": "chance",
