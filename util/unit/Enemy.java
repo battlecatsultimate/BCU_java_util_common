@@ -73,9 +73,10 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	public List<Stage> findApp() {
 		List<Stage> ans = new ArrayList<>();
-		for (Stage st : MapColc.getAllStage())
-			if (st.contains(this))
+		for (Stage st : MapColc.getAllStage()) {
+			if (st != null && st.contains(this))
 				ans.add(st);
+		}
 		return ans;
 	}
 

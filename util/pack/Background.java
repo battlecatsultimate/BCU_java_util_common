@@ -20,6 +20,7 @@ import common.system.files.VFile;
 import common.util.anim.*;
 import common.util.pack.WaveAnim.WaveType;
 
+import java.util.Arrays;
 import java.util.Queue;
 
 @IndexCont(PackData.class)

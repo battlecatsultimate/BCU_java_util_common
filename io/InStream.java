@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.util.Data;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public strictfp interface InStream {
@@ -75,6 +76,9 @@ public strictfp interface InStream {
 
 	OutStream translate();
 
+	default void close() throws IOException {
+
+	}
 }
 
 strictfp class InStreamDef extends DataIO implements InStream {

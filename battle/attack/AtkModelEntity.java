@@ -198,11 +198,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 		if (proc.CRIT.exists() && proc.CRIT.mult == 0)
 			proc.CRIT.mult = 200;
-		if (proc.IMUKB.exists() && proc.KB.dis == 0)
+		if (proc.KB.exists() && proc.KB.dis == 0)
 			proc.KB.dis = KB_DIS[INT_KB];
-		if (proc.IMUKB.exists() && proc.KB.time == 0)
+		if (proc.KB.exists() && proc.KB.time == 0)
 			proc.KB.time = KB_TIME[INT_KB];
-		proc.POISON.damage *= ratk;
 		if (proc.BOSS.exists())
 			b.lea.add(new EAnimCont(e.pos, e.layer, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
 	}

@@ -27,6 +27,7 @@ import common.util.unit.Unit;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -451,7 +452,9 @@ public abstract class Source {
 
 		@Override
 		public VImg readImage(String path, int ind) {
-			return new VImg(zip.tree.find(path + "/" + Data.trio(ind)));
+			String fullPath = path.startsWith("./") ? path + "/" + Data.trio(ind) + ".png" : "./" + path + "/" + Data.trio(ind) + ".png";
+
+			return new VImg(zip.tree.find(fullPath));
 		}
 
 		@Override
@@ -488,7 +491,7 @@ public abstract class Source {
 	}
 
 	public static final String ANIM = "animations";
-	public static final String BG = "bgs";
+	public static final String BG = "backgrounds";
 	public static final String CASTLE = "castles";
 	public static final String MUSIC = "musics";
 	public static final String REPLAY = "replays";

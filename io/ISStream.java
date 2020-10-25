@@ -36,6 +36,9 @@ strictfp class ISStream extends InputStream implements InStream {
 				raf.seek(ind = pos);
 		}
 
+		public void close() throws IOException {
+			raf.close();
+		}
 	}
 
 	private FileTracer raf;
@@ -133,4 +136,8 @@ strictfp class ISStream extends InputStream implements InStream {
 		return Data.err(() -> DataIO.readData(raf::read, size, func));
 	}
 
+	@Override
+	public void close() throws IOException {
+		raf.close();
+	}
 }

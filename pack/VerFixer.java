@@ -22,6 +22,7 @@ import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
 import common.util.unit.*;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +75,7 @@ public abstract class VerFixer extends Source {
 		}
 
 		@Override
-		protected void load() throws VerFixerException {
+		protected void load() throws VerFixerException, IOException {
 			data.desc.name = is.nextString();
 			loadEnemies(is.subStream());
 			loadCastles(is.subStream());
@@ -82,6 +83,7 @@ public abstract class VerFixer extends Source {
 			loadUnits(is.subStream());
 			data.mc = new PackMapColc(data, is);
 			loadMusics();
+			is.close();
 			is = null;
 		}
 
@@ -276,6 +278,7 @@ public abstract class VerFixer extends Source {
 			loadBackgrounds(is.subStream());
 			loadMusics(is.subStream());
 			data.mc = new PackMapColc(data, is);
+			is.close();
 			is = null;
 		}
 
@@ -390,7 +393,8 @@ public abstract class VerFixer extends Source {
 		private void writeImgs(VImg img, String type, String name) throws IOException {
 			String path = "./.temp_" + id + "/" + type + "/" + name;
 			File f = CommonStatic.ctx.getWorkspaceFile(path);
-			FakeImage.write(img.getImg(), "", f);
+			String format = name.endsWith(".png") ? "PNG" : "";
+			FakeImage.write(img.getImg(), format, f);
 			img.unload();
 		}
 	}
@@ -398,6 +402,13 @@ public abstract class VerFixer extends Source {
 	public static void fix(Map<String, VerFixer> map) throws Exception {
 		transform();
 		readPacks(map);
+
+		//Close all ISStream before deleting
+		for(VerFixer fix : map.values()) {
+			if(fix.is != null)
+				fix.is.close();
+		}
+
 		Context.delete(CommonStatic.def.route("./res"));
 		Context.delete(CommonStatic.def.route("./pack"));
 	}

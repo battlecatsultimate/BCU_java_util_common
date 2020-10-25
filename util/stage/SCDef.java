@@ -161,7 +161,7 @@ public class SCDef implements Copable<SCDef> {
 
 	public boolean contains(Enemy e) {
 		for (Line dat : datas)
-			if (dat.enemy == e.id)
+			if (dat.enemy.equals(e.id))
 				return true;
 		return false;
 	}
