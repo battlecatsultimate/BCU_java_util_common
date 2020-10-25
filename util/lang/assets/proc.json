@@ -236,16 +236,16 @@
             },
             "dis_0": {
                 "name": "point 0",
-                "tooltip": "advaneced: ranged revive point 0. Applicapable only when revive others is enabled"
+                "tooltip": "advanced: ranged revive point 0. Applicable only when revive others is enabled"
             },
             "dis_1": {
                 "name": "point 1",
-                "tooltip": "advaneced: ranged revive point 1. Applicapable only when revive others is enabled"
+                "tooltip": "advanced: ranged revive point 1. Applicable only when revive others is enabled"
             },
             "type.range_type": {
                 "name": "range type",
                 "tooltip": [
-                    "Applicapable only when revive others is enabled",
+                    "Applicable only when revive others is enabled",
                     "0 for effective in range when in normal state. ",
                     "1 for effective in range when present on the stage. ",
                     "2 for effective for allies once passed the range as long as it is on the stage. ",
@@ -258,7 +258,7 @@
             },
             "type.revive_non_zombie": {
                 "name": "non-zombie",
-                "tooltip": "revive non-zombie as well. Applicapable only when revive others is enabled"
+                "tooltip": "revive non-zombie as well. Applicable only when revive others is enabled"
             },
             "type.revive_others": {
                 "name": "revive others",
@@ -428,7 +428,7 @@
             },
             "mult": {
                 "name": "buff",
-                "tooltip": "Buff of the summoned entity, relative to thios entity by default, fixed buff if you enable fix buff"
+                "tooltip": "Buff of the summoned entity, relative to this entity by default, fixed buff if you enable fix buff"
             },
             "type.anim_type": {
                 "name": "summon anim",
@@ -440,7 +440,7 @@
             },
             "type.ignore_limit": {
                 "name": "ignore limit",
-                "tooltip": "ignore the stage entity limit. Be careful with this, don't sommon too much. It can break the game"
+                "tooltip": "ignore the stage entity limit. Be careful with this, don't summon too much. It can break the game"
             },
             "type.fix_buff": {
                 "name": "fix buff",
@@ -470,7 +470,7 @@
                 "tooltip": [
                     "Summon if and only if this attack kills targets.",
                     " Summon per target killed, distance origins are set to the targets' positions.",
-                    " Multuple summon possible for ranged attack."
+                    " Multiple summon possible for ranged attack."
                 ]
             },
             "time": {
@@ -509,7 +509,7 @@
             },
             "dis": {
                 "name": "distance",
-                "tooltip": "dsecribes the location of the center of the hitbox when initiated"
+                "tooltip": "describes the location of the center of the hitbox when initiated"
             },
             "itv": {
                 "name": "interval",
