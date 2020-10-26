@@ -64,7 +64,7 @@ public class AnimCE extends AnimCI {
 	public AnimCE(ResourceLocation resourceLocation) {
 		super(new SourceAnimLoader(resourceLocation, null));
 		id = resourceLocation;
-		if (id.pack == ResourceLocation.LOCAL)
+		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().put(id.id, this);
 		history("initial");
 	}
@@ -73,6 +73,10 @@ public class AnimCE extends AnimCI {
 		super(new SourceAnimLoader(rl, null));
 		id = rl;
 		copyFrom(ori);
+
+		if(id.pack.equals(ResourceLocation.LOCAL)) {
+			map().put(id.id, this);
+		}
 	}
 
 	/**

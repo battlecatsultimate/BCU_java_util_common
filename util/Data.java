@@ -203,6 +203,10 @@ public class Data {
 					for (Field f : fs)
 						if (f.getType() == int.class) {
 							Object o = f.get(this);
+
+							if(f.getName().equals("prob") && ((Integer) o) == 0)
+								return false;
+
 							if (((Integer) o) != 0)
 								return true;
 						}

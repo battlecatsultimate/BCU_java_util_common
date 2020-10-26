@@ -9,6 +9,7 @@ import common.pack.IndexContainer.Indexable;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
+import common.util.Data;
 
 @IndexCont(CastleList.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -38,4 +39,11 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 		img = UserProfile.getUserPack(id.pack).source.readImage(Source.CASTLE, id.id);
 	}
 
+	@Override
+	public String toString() {
+		if(id == null)
+			return super.toString();
+
+		return id.toString();
+	}
 }
