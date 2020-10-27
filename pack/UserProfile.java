@@ -48,7 +48,7 @@ public class UserProfile {
 	public static <T> List<T> getAll(String pack, Class<T> cls) {
 		List<PackData> list = new ArrayList<>();
 		list.add(profile().def);
-		if (pack != null) {
+		if (pack != null && !pack.equals(Identifier.DEF)) {
 			UserPack userpack = profile().packmap.get(pack);
 			list.add(userpack);
 			for (String dep : userpack.desc.dependency)
