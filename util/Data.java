@@ -902,7 +902,7 @@ public class Data {
 			{ 4, TB_WHITE, 0 }, // 41:
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
-			{ -1, 0 }, // 44:
+			{ 3, P_IMUWEAK }, // 44: immune to weak
 			{ 3, P_IMUSTOP }, // 45: immune to freeze
 			{ 3, P_IMUSLOW }, // 46: immune to slow
 			{ 3, P_IMUKB }, // 47: immune to kb

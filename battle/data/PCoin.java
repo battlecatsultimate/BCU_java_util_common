@@ -59,7 +59,7 @@ public class PCoin extends Data {
 				continue;
 			}
 			int[] type = PC_CORRES[info[i][0]];
-			if (type.length > 2 || type[0] == -1) {
+			if (type[0] == -1) {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]+"\nText ID is "+info[i][10]);
 				continue;
 			}
