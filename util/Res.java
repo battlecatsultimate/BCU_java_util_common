@@ -211,6 +211,9 @@ public class Res extends ImgCore {
 		}
 		aux.battle[0][3] = new VImg(parts[81]);
 
+		for(int i = 0; i < aux.timer.length; i++)
+			aux.timer[i] = new VImg(parts[i + 83]);
+
 		ImgCut ic002 = ImgCut.newIns("./org/page/img002.imgcut");
 		VImg img002 = new VImg("./org/page/img002.png");
 

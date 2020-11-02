@@ -27,7 +27,6 @@ import common.util.unit.Unit;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -408,7 +407,7 @@ public abstract class Source {
 
 	public static class ZipSource extends Source {
 
-		private final ZipDesc zip;
+		public final ZipDesc zip;
 
 		public ZipSource(ZipDesc desc) {
 			super(desc.desc.id);

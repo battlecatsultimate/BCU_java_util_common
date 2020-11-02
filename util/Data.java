@@ -903,7 +903,7 @@ public class Data {
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
 			{ -1, 0 }, // 44:
-			{ -1, 0 }, // 45:
+			{ 3, P_IMUSTOP }, // 45: immune to freeze
 			{ 3, P_IMUSLOW }, // 46: immune to slow
 			{ 3, P_IMUKB }, // 47: immune to kb
 			{ 3, P_IMUWAVE }, // 48: immune to wave

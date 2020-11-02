@@ -127,6 +127,7 @@ public class Stage extends Data
 	public String name = "";
 	public boolean non_con, trail;
 	public int len, health, max, mush;
+	public int timeLimit = 0;
 	public Identifier<CastleImg> castle;
 	public Identifier<Background> bg;
 	public Identifier<Music> mus0, mus1;
@@ -214,6 +215,8 @@ public class Stage extends Data
 		health = Integer.parseInt(strs[1]);
 		bg = Identifier.parseInt(Integer.parseInt(strs[4]), Background.class);
 		max = Integer.parseInt(strs[5]);
+		timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
+		trail = timeLimit != 0;
 		int isBase = Integer.parseInt(strs[6]) - 2;
 		List<int[]> ll = new ArrayList<>();
 
@@ -231,7 +234,7 @@ public class Stage extends Data
 				data[2] *= 2;
 				data[3] *= 2;
 				data[4] *= 2;
-				if (intl > 9 && data[5] > 100 && data[9] == 100) {
+				if (timeLimit == 0 && intl > 9 && data[5] > 100 && data[9] == 100) {
 					data[9] = data[5];
 					data[5] = 100;
 				}
@@ -331,7 +334,13 @@ public class Stage extends Data
 	}
 
 	protected void validate() {
-		trail = data.isTrail();
+		if(trail)
+			return;
+
+		if(getCont().getCont().getSID().equals("000006") || getCont().getCont().getSID().equals("000011"))
+			trail = data.isTrail();
+		else
+			trail = false;
 	}
 
 	private boolean checkName(String str) {

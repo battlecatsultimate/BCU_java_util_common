@@ -40,6 +40,9 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 		lvs = Arrays.copyOf(inp, 20);
 	}
 
+	@JsonClass.JCConstructor
+	public UnitLevel() {}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

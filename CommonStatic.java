@@ -42,6 +42,7 @@ public class CommonStatic {
 		public VImg[][] num = new VImg[9][11];
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[4][];
+		public VImg[] timer = new VImg[11];
 
 		// Background resources
 		public MaModel ewavm, uwavm;

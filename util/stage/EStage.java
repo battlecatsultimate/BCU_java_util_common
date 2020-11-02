@@ -34,10 +34,17 @@ public class EStage extends BattleObj {
 	 * add n new enemies to StageBasis
 	 */
 	public EEnemy allow() {
+		if(s.trail && s.timeLimit != 0 && s.timeLimit * 60 * 30 - b.time < 0)
+			return null;
+
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
 			if (inHealth(data) && s.data.allow(b, data.group) && rem[i] == 0 && num[i] != -1) {
-				rem[i] = data.respawn_0 + (int) (b.r.nextDouble() * (data.respawn_1 - data.respawn_0));
+				if(!s.trail && data.respawn_0 >= data.respawn_1)
+					rem[i] = data.respawn_0;
+				else
+					rem[i] = data.respawn_0 + (int) (b.r.nextDouble() * (data.respawn_1 - data.respawn_0));
+
 				if (num[i] > 0) {
 					num[i]--;
 					if (num[i] == 0)
@@ -108,7 +115,7 @@ public class EStage extends BattleObj {
 	}
 
 	private boolean inHealth(Line line) {
-		int c0 = line.castle_0;
+		int c0 = !s.trail ? Math.min(line.castle_0, 100) : line.castle_0;
 		int c1 = line.castle_1;
 		double d = !s.trail ? b.getEBHP() * 100 : b.ebase.maxH - b.ebase.health;
 		return c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
