@@ -86,8 +86,8 @@ public class PCoin extends Data {
 
 				if(type[1] == P_VOLC) {
 					tar.set(0, modifs[0]);
-					tar.set(1, modifs[2]);
-					tar.set(2, modifs[3]);
+					tar.set(1, modifs[2] / 4);
+					tar.set(2, (modifs[2] + modifs[3]) / 4);
 					tar.set(3, modifs[1] * 20);
 				} else {
 					for (int j = 0; j < 4; j++)
