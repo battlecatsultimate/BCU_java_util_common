@@ -11,20 +11,32 @@ import common.util.anim.ImgCut;
 
 public class Res extends ImgCore {
 
-	public static P getBase(AbEntity ae, SymCoord coor) {
+	public static P getBase(AbEntity ae, SymCoord coor, boolean dojo) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
-		long h = ae.health;
-		if (h < 0)
-			h = 0;
-		int[] val0 = getLab(h);
-		int[] val1 = getLab(ae.maxH);
-		FakeImage[] input = new FakeImage[val0.length + val1.length + 1];
-		for (int i = 0; i < val0.length; i++)
-			input[i] = aux.num[5][val0[i]].getImg();
-		input[val0.length] = aux.num[5][10].getImg();
-		for (int i = 0; i < val1.length; i++)
-			input[val0.length + i + 1] = aux.num[5][val1[i]].getImg();
-		return coor.draw(input);
+
+		if(ae.dire == 1 && dojo) {
+			FakeImage[] input = new FakeImage[15];
+			for(int i = 0; i < 7; i++)
+				input[i] = aux.num[5][11].getImg();
+			input[7] = aux.num[5][10].getImg();
+			for(int i = 0; i < 7; i++)
+				input[i+8] = aux.num[5][11].getImg();
+
+			return coor.draw(input);
+		} else {
+			long h = ae.health;
+			if (h < 0)
+				h = 0;
+			int[] val0 = getLab(h);
+			int[] val1 = getLab(ae.maxH);
+			FakeImage[] input = new FakeImage[val0.length + val1.length + 1];
+			for (int i = 0; i < val0.length; i++)
+				input[i] = aux.num[5][val0[i]].getImg();
+			input[val0.length] = aux.num[5][10].getImg();
+			for (int i = 0; i < val1.length; i++)
+				input[val0.length + i + 1] = aux.num[5][val1[i]].getImg();
+			return coor.draw(input);
+		}
 	}
 
 	public static P getCost(int cost, boolean enable, SymCoord coor) {
@@ -201,6 +213,7 @@ public class Res extends ImgCore {
 		FakeImage[] parts = ic001.cut(img001.getImg());
 		int[] vals = new int[] { 5, 19, 30, 40, 51, 62, 73, 88, 115 };
 		int[] adds = new int[] { 1, 2, 2, 0, 0, 1, 1, 1, 0 };
+		aux.num[5] = new VImg[12];
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 10; j++)
 				aux.num[i][j] = new VImg(parts[vals[i] - 5 + j]);
@@ -208,6 +221,8 @@ public class Res extends ImgCore {
 				aux.num[i][10] = new VImg(parts[vals[i] + 5]);
 			if (adds[i] == 2)
 				aux.num[i][10] = new VImg(parts[vals[i] - 6]);
+			if (i == 5)
+				aux.num[i][11] = new VImg(parts[108]);
 		}
 		aux.battle[0][3] = new VImg(parts[81]);
 

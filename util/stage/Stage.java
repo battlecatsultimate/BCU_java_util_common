@@ -216,6 +216,8 @@ public class Stage extends Data
 		bg = Identifier.parseInt(Integer.parseInt(strs[4]), Background.class);
 		max = Integer.parseInt(strs[5]);
 		timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
+		if(timeLimit != 0)
+			health = Integer.MAX_VALUE;
 		trail = timeLimit != 0;
 		int isBase = Integer.parseInt(strs[6]) - 2;
 		List<int[]> ll = new ArrayList<>();
