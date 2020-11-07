@@ -96,6 +96,9 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		if (ints[51] == 1)
 			proc.IMUWEAK.mult = 100;
 		try {
+			if(ints.length < 68) {
+				death = Identifier.parseInt(0, Soul.class);
+			}
 			if (ints[52] == 1)
 				a |= AB_ZKILL;
 			if (ints[53] == 1)

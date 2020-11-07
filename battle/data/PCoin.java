@@ -94,7 +94,7 @@ public class PCoin extends Data {
 						if (modifs[j] > 0)
 							tar.set(j, tar.get(j) + modifs[j]);
 				}
-				if (type[1] == P_STRONG)
+				if (type[1] == P_STRONG && modifs[0] != 0)
 					tar.set(0, 100 - tar.get(0));
 				if (type[1] == P_WEAK)
 					tar.set(2, 100 - tar.get(2));
