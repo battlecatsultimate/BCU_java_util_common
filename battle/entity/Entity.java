@@ -791,15 +791,15 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void doRevive(int c) {
-			if (c == 1)
-				e.status[P_REVIVE][0]--;
-			else if (c == 2)
-				extraRev++;
 			int deadAnim = minRevTime();
 			EffAnim<ZombieEff> ea = effas().A_ZOMBIE;
 			deadAnim += ea.getEAnim(ZombieEff.REVIVE).len();
 			e.status[P_REVIVE][1] = deadAnim;
 			e.health = e.maxH * maxRevHealth() / 100;
+			if (c == 1)
+				e.status[P_REVIVE][0]--;
+			else if (c == 2)
+				extraRev++;
 		}
 
 		private int maxRevHealth() {

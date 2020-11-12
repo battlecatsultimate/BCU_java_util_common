@@ -162,6 +162,9 @@ public class StageBasis extends BattleObj {
 
 	protected boolean act_can() {
 		if (can == max_can) {
+			if(canon.id == BASE_WALL && entityCount(-1) >= max_num)
+				return false;
+			
 			canon.activate();
 			can = 0;
 			return true;

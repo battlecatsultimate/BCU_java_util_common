@@ -89,6 +89,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if (ints[49] == 1)
 			t |= TB_INFH;
 		death = Identifier.parseInt(ints[54], Soul.class);
+		if(ints[54] == -1 && ints[63] == 1)
+			death = Identifier.parseInt(9, Soul.class);
 		atk1 = ints[55];
 		atk2 = ints[56];
 		pre1 = ints[57];
