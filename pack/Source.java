@@ -476,7 +476,7 @@ public abstract class Source {
 			Workspace ans = new Workspace(id);
 			zip.unzip(id -> {
 				File file = ans.getFile(id);
-				Context.check(file.createNewFile(), "create", file);
+				Context.check(file);
 				return file;
 			}, prog);
 			return ans;

@@ -1623,7 +1623,7 @@ public abstract class Entity extends AbEntity {
 			if (!b) {
 				bdist = 0;
 				kbTime = -4;
-				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP);
+				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP)-2;
 			}
 		}
 		if (!acted && kbTime == -4) {

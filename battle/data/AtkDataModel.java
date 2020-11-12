@@ -39,7 +39,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		targ = adm.targ;
 		alt = adm.alt;
 		move = adm.move;
-		proc = proc.clone();
+		proc = adm.proc == null ? Proc.blank() : adm.proc.clone();
 	}
 
 	protected AtkDataModel(CustomEntity ent, InStream is) {
