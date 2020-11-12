@@ -135,7 +135,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		SUMMON proc = atk.getProc().SUMMON;
 		if (proc.exists()) {
 			SUMMON.TYPE conf = proc.type;
-			if (conf.on_hit || conf.on_kill && e.health <= 0)
+			if (conf.on_hit || (conf.on_kill && e.health <= 0))
 				summon(proc, e, e);
 		}
 	}
