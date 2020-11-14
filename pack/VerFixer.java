@@ -22,7 +22,6 @@ import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
 import common.util.unit.*;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
