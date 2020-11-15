@@ -392,6 +392,8 @@ public abstract class VerFixer extends Source {
 		private void writeImgs(VImg img, String type, String name) throws IOException {
 			String path = "./.temp_" + id + "/" + type + "/" + name;
 			File f = CommonStatic.ctx.getWorkspaceFile(path);
+			if(!f.exists())
+				Context.check(f);
 			String format = name.endsWith(".png") ? "PNG" : "";
 			FakeImage.write(img.getImg(), format, f);
 			img.unload();
