@@ -158,8 +158,8 @@ public class Orb extends Data {
 		return ORB_ATK_MULTI[grade] * atk.getAtk() / 100;
 	}
 
-	public int getRes(int grade, MaskAtk atk) {
-		return -ORB_RES_MULTI[grade] * atk.getAtk() / 100;
+	public int getRes(int grade, int atk) {
+		return (100-ORB_RES_MULTI[grade]) * atk / 100;
 	}
 
 	public int getSlots() {

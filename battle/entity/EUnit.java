@@ -77,7 +77,7 @@ public class EUnit extends Entity {
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
-		ans += getOrbRes(atk.type, atk.matk);
+		ans = getOrbRes(atk.type, ans);
 
 		return ans;
 	}
@@ -121,13 +121,13 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private int getOrbRes(int trait, MaskAtk matk) {
+	private int getOrbRes(int trait, int atk) {
 		Orb orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level.getOrbs() == null)
 			return 0;
 
-		int ans = 0;
+		int ans = atk;
 
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
@@ -136,7 +136,7 @@ public class EUnit extends Entity {
 			if (line[ORB_TYPE] == Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0)
 				continue;
 
-			ans += orb.getRes(line[ORB_GRADE], matk);
+			ans = orb.getRes(line[ORB_GRADE], ans);
 		}
 
 		return ans;
