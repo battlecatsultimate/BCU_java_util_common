@@ -125,7 +125,7 @@ public class EUnit extends Entity {
 		Orb orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level.getOrbs() == null)
-			return 0;
+			return atk;
 
 		int ans = atk;
 
