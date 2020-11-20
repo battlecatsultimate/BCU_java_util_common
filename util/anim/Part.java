@@ -149,6 +149,8 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 
 					es[ints[0]].alter(ints[1], vd);
 					break;
+				} else if(ints[1] == 0) {
+					es[ints[0]].alter(ints[1], moves[i][1]);
 				}
 			}
 		if (n > 0 && frame > moves[n - 1][0])
