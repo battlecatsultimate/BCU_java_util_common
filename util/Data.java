@@ -623,9 +623,10 @@ public class Data {
 	public static final int SE_WARP_ENTER = 73;
 	public static final int SE_WARP_EXIT = 74;
 	public static final int SE_BOSS = 45;
-	public static final int SE_SPEND_FAIL = 15;// TODO
-	public static final int SE_SPEND_SUC = 19;// TODO
-	public static final int SE_SPEND_REF = 27;// TODO
+	public static final int SE_SPEND_FAIL = 15;
+	public static final int SE_SPEND_SUC = 19;
+	public static final int SE_SPEND_REF = 27;
+	public static final int SE_CANNON_CHARGE = 28;
 	public static final int SE_BARRIER_ABI = 70;
 	public static final int SE_BARRIER_NON = 71;
 	public static final int SE_BARRIER_ATK = 72;

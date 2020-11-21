@@ -1,5 +1,6 @@
 package common.battle;
 
+import common.CommonStatic;
 import common.util.BattleObj;
 import common.util.stage.Limit;
 
@@ -52,8 +53,12 @@ public class ELineUp extends BattleObj {
 	protected void update() {
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++)
-				if (cool[i][j] > 0)
+				if (cool[i][j] > 0) {
 					cool[i][j]--;
+
+					if(cool[i][j] == 0)
+						CommonStatic.setSE(SE_SPEND_REF);
+				}
 	}
 
 }

@@ -162,13 +162,17 @@ public class StageBasis extends BattleObj {
 
 	protected boolean act_can() {
 		if (can == max_can) {
-			if(canon.id == BASE_WALL && entityCount(-1) >= max_num)
+			if(canon.id == BASE_WALL && entityCount(-1) >= max_num) {
+				CommonStatic.setSE(SE_SPEND_FAIL);
 				return false;
-			
+			}
+
+			CommonStatic.setSE(SE_SPEND_SUC);
 			canon.activate();
 			can = 0;
 			return true;
 		}
+		CommonStatic.setSE(SE_SPEND_FAIL);
 		return false;
 	}
 
@@ -178,6 +182,7 @@ public class StageBasis extends BattleObj {
 
 	protected boolean act_mon() {
 		if (work_lv < 8 && mon > next_lv) {
+			CommonStatic.setSE(SE_SPEND_SUC);
 			mon -= next_lv;
 			work_lv++;
 			next_lv = b.t().getLvCost(work_lv);
@@ -186,6 +191,7 @@ public class StageBasis extends BattleObj {
 				next_lv = -1;
 			return true;
 		}
+		CommonStatic.setSE(SE_SPEND_FAIL);
 		return false;
 	}
 
@@ -198,20 +204,38 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_spawn(int i, int j, boolean boo) {
-		if (ubase.health == 0)
+		if (ubase.health == 0) {
 			return false;
-		if (elu.cool[i][j] > 0)
+		}
+		if (elu.cool[i][j] > 0) {
+			if(boo) {
+				CommonStatic.setSE(SE_SPEND_FAIL);
+			}
+
 			return false;
-		if (elu.price[i][j] == -1)
+		}
+		if (elu.price[i][j] == -1) {
 			return false;
-		if (elu.price[i][j] > mon)
+		}
+		if (elu.price[i][j] > mon) {
+			if(boo) {
+				CommonStatic.setSE(SE_SPEND_FAIL);
+			}
 			return false;
+		}
 		if (locks[i][j] || boo) {
-			if (entityCount(-1) >= max_num)
+			if (entityCount(-1) >= max_num) {
+				if(boo) {
+					CommonStatic.setSE(SE_SPEND_FAIL);
+				}
+
 				return false;
+			}
 			EForm f = b.lu.efs[i][j];
-			if (f == null)
+			if (f == null) {
 				return false;
+			}
+			CommonStatic.setSE(SE_SPEND_SUC);
 			elu.get(i, j);
 			EUnit eu = f.getEntity(this);
 			eu.added(-1, st.len - 700);
@@ -251,6 +275,9 @@ public class StageBasis extends BattleObj {
 				}
 			}
 			elu.update();
+			if(can == max_can-1) {
+				CommonStatic.setSE(SE_CANNON_CHARGE);
+			}
 			can++;
 			max_mon = b.t().getMaxMon(work_lv);
 			mon += b.t().getMonInc(work_lv);
@@ -270,19 +297,19 @@ public class StageBasis extends BattleObj {
 			if (sniper != null)
 				sniper.update();
 
-			tempe.forEach(ec -> ec.update());
+			tempe.forEach(EntCont::update);
 		}
 		for (int i = 0; i < le.size(); i++)
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
 
 		if (s_stop == 0) {
-			lw.forEach(wc -> wc.update());
-			lea.forEach(e -> e.update());
+			lw.forEach(ContAb::update);
+			lea.forEach(EAnimCont::update);
 			lw.addAll(tlw);
 			tlw.clear();
 		}
-		la.forEach(a -> a.excuse());
+		la.forEach(AttackAb::excuse);
 		la.clear();
 		if (s_stop == 0) {
 			ebase.postUpdate();
@@ -306,7 +333,7 @@ public class StageBasis extends BattleObj {
 		if (s_stop == 0) {
 			le.removeIf(e -> e.anim.dead == 0);
 			lw.removeIf(w -> !w.activate);
-			lea.removeIf(a -> a.done());
+			lea.removeIf(EAnimCont::done);
 		}
 		updateTheme();
 		if (s_stop > 0)
