@@ -1299,7 +1299,7 @@ public abstract class Entity extends AbEntity {
 		if (ext == 0)
 			ext = maxH;
 		if (status[P_ARMOR][0] > 0) {
-			damage *= (100 + status[P_ARMOR][1]) / 100;
+			damage *= (100 + status[P_ARMOR][1]) / 100.0;
 		}
 		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))
 			interrupt(INT_HB, KB_DIS[INT_HB]);
