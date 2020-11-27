@@ -151,9 +151,9 @@ public class Treasure extends Data {
 				return 30 + 3 * bslv[3] / 2;
 		else if (type == 6)
 			if (bslv[6] > 10)
-				return 250 + 15 * (bslv[6] - 10);
+				return 200 + 12 * (bslv[6] - 10);
 			else
-				return 200 + 5 * bslv[6];
+				return 160 + 4 * bslv[6];
 		else if (type == 7)
 			if (bslv[7] > 10)
 				return 60 + 6 * (bslv[7] - 10);

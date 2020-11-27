@@ -58,7 +58,7 @@ public class Cannon extends AtkModelAb {
 		double rat = BattleConst.ratio;
 		int h = (int) (640 * rat * siz);
 		g.setColor(FakeGraphics.MAGENTA);
-		double d0 = pos, ra = NYRAN[id];
+		double d0 = pos, ra = id == BASE_BARRIER ? b.b.t().getCanonProcTime(id) : NYRAN[id];
 		if (id == BASE_STOP || id == BASE_WATER)
 			d0 -= ra / 2;
 		if (id == BASE_BARRIER)
