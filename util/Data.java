@@ -1084,6 +1084,8 @@ public class Data {
 	public static final int[] ORB_ATK_MULTI = { 100, 200, 300, 400, 500 }; // Atk orb multiplication
 	public static final int[] ORB_RES_MULTI = { 4, 8, 12, 16, 20 }; // Resist orb multiplication
 
+	public static final int MUSIC_DELAY = 2344; //Music change delay with milliseconds accuracy
+
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
 	public static EffAnimStore effas() {
