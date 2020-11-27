@@ -31,10 +31,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Consumer;
 
 @StaticPermitted
@@ -146,6 +143,21 @@ public class PackLoader {
 			return Arrays.equals(data, loader.key);
 		}
 
+		public String getKey() {
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < loader.key.length; i++) {
+				String hex = Integer.toHexString(0xFF & loader.key[i]);
+
+				if(hex.length() == 1)
+					sb.append('0');
+
+				sb.append(hex);
+			}
+
+			return sb.toString();
+		}
+
 		@OnInjected
 		public void onInjected() {
 			for (FileDesc fd : files)
@@ -173,12 +185,35 @@ public class PackLoader {
 				for (int i = 0; i < n; i++) {
 					fis.read(bs);
 					byte[] ans = i == n - 1 ? cipher.doFinal(bs) : cipher.update(bs);
+
+					if(i == n -1) {
+						ans = unpad(ans);
+					}
+
 					fos.write(ans);
 				}
 				fos.close();
 				prog.accept(1.0 * (x++) / files.length);
 			}
 			fis.close();
+		}
+
+		private byte[] unpad(byte[] data) {
+			int pad = 0;
+
+			for(int i = 0; i < data.length; i++) {
+				if(data[data.length -1 - i] == 0)
+					pad++;
+				else
+					break;
+			}
+
+			byte[] res = new byte[data.length - pad];
+
+			if (res.length >= 0)
+				System.arraycopy(data, 0, res, 0, res.length);
+
+			return res;
 		}
 
 		private void load(Consumer<Double> con) throws Exception {

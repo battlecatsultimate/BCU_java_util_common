@@ -26,8 +26,13 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 
 import java.io.*;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -277,7 +282,6 @@ public abstract class Source {
 		}
 
 		public static void validate(String folder, ResourceLocation rl) {
-			rl.id = validateString(rl.id);
 			String id = rl.id;
 			int num = 0;
 			while (CommonStatic.ctx.getWorkspaceFile("./" + rl.pack + "/" + folder + "/" + rl.id).exists())
@@ -288,7 +292,7 @@ public abstract class Source {
 			if (str == null || str.length() == 0)
 				str = "no_name";
 			str = str.replaceAll("[^0-9a-z_]", "_");
-			if (str.charAt(0) < 'a')
+			if (str.charAt(0) < '0')
 				str = "a_" + str;
 			return str;
 		}
@@ -299,6 +303,26 @@ public abstract class Source {
 			while (CommonStatic.ctx.getWorkspaceFile("./" + str).exists())
 				str = id + "_" + (num++);
 			return id;
+		}
+
+		public static String generateMD5ID() {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSS");
+			Date now = new Date();
+
+			String current = sdf.format(now);
+
+			try {
+				MessageDigest md5 = MessageDigest.getInstance("MD5");
+
+				byte[] digest = md5.digest(current.getBytes());
+				BigInteger big = new BigInteger(1, digest);
+
+				return big.toString(16);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+
+				return "INVALID";
+			}
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
@@ -315,7 +339,11 @@ public abstract class Source {
 
 		@Override
 		public void delete() {
-			getFile("").delete();
+			try {
+				Context.delete(getFile(""));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		public void export(UserPack pack, String password, Consumer<Double> prog) throws Exception {

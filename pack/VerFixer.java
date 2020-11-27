@@ -439,7 +439,6 @@ public abstract class VerFixer extends Source {
 		for (int i = 0; i < n; i++)
 			desc.dependency.add(Data.hex(head.nextInt()));
 		desc.BCU_VERSION = Data.revVer(head.nextInt());
-		System.out.println(desc.BCU_VERSION);
 		if (!desc.BCU_VERSION.startsWith("4.11")) // FIXME throw
 			new VerFixerException("unexpected pack BCU version: " + desc.BCU_VERSION + ", requires 4.11.x");
 		desc.time = head.nextString();
