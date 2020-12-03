@@ -79,6 +79,15 @@ public class AttackSimple extends AttackAb {
 			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0, layer);
 		}
 
+		if(capt.size() > 0 && proc.MINIWAVE.exists()) {
+			int dire = model.getDire();
+			int wid = dire == 1 ? W_E_WID : W_U_WID;
+			int addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2;
+			double p0 = model.getPos() + dire * addp;
+
+			new ContWaveDef(new AttackWave(this, p0, wid, WT_MINI), p0, layer);
+		}
+
 		if (capt.size() > 0 && proc.VOLC.exists()) {
 			int dire = model.getDire();
 			VOLC volc = proc.VOLC;

@@ -4,6 +4,7 @@ import common.battle.StageBasis;
 import common.battle.attack.AtkModelEnemy;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackWave;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
@@ -59,6 +60,9 @@ public class EUnit extends Entity {
 
 	@Override
 	protected int getDamage(AttackAb atk, int ans) {
+		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
+			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
+		}
 		if (atk.model instanceof AtkModelEnemy) {
 			int overlap = type & atk.type;
 			if (overlap != 0 && (getAbi() & AB_GOOD) != 0)

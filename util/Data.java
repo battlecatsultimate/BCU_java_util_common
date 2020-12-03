@@ -1,12 +1,12 @@
 package common.util;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.FieldOrder;
+import common.io.json.*;
 import common.io.json.FieldOrder.Order;
-import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
@@ -16,11 +16,12 @@ import common.util.pack.EffAnim.EffAnimStore;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 @StaticPermitted
 public class Data {
 
-	@JsonClass(noTag = NoTag.LOAD)
+	@JsonClass(read = JsonClass.RType.MANUAL, write = JsonClass.WType.CLASS, generator = "genProc", serializer = "serProc")
 	public static class Proc implements BattleStatic {
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -445,23 +446,32 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class MINIWAVE extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int lv;
+			@Order(2)
+			public int multi;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class WEAK extends ProcItem {
 			@Order(0)
 			public int prob;
 			@Order(1)
 			public int time;
 			@Order(2)
-			public int mult;
+			public int mult = 20;
 		}
 
 		public static Proc blank() {
 			Proc ans = new Proc();
 			try {
 				Field[] fs = getDeclaredFields();
-				for (int i = 0; i < fs.length; i++) {
-					fs[i].setAccessible(true);
-					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
-
+				for (Field f : fs) {
+					f.setAccessible(true);
+					f.set(ans, ((ProcItem) f.getType().newInstance()).clear());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -481,9 +491,14 @@ public class Data {
 			Proc ans = new Proc();
 			try {
 				Field[] fs = getDeclaredFields();
-				for (int i = 0; i < Math.min(data.length, fs.length); i++) {
+				for (int i = 0; i < fs.length; i++) {
 					fs[i].setAccessible(true);
-					fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
+
+					if(i < data.length) {
+						fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
+					} else {
+						fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -567,6 +582,9 @@ public class Data {
 		@Order(36)
 		public final SPEED SPEED = null;
 
+		@Order(37)
+		public final MINIWAVE MINIWAVE = null;
+
 		@Override
 		public Proc clone() {
 			try {
@@ -574,7 +592,8 @@ public class Data {
 				Field[] fs = getDeclaredFields();
 				for (Field f : fs) {
 					f.setAccessible(true);
-					f.set(ans, ((ProcItem) f.get(this)).clone());
+					if(f.get(this) != null)
+						f.set(ans, ((ProcItem) f.get(this)).clone());
 					f.setAccessible(false);
 				}
 				return ans;
@@ -605,6 +624,53 @@ public class Data {
 		@Override
 		public String toString() {
 			return JsonEncoder.encode(this).toString();
+		}
+
+		public JsonObject serProc() {
+			JsonObject obj = new JsonObject();
+
+			for(Field f : getDeclaredFields()) {
+				try {
+					String tag = f.getName();
+					ProcItem proc = (ProcItem) f.get(this);
+
+					if(proc.exists()) {
+						obj.add(tag, JsonEncoder.encode(proc));
+					}
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+
+			return obj;
+		}
+
+		public static Proc genProc(JsonElement elem) {
+			Proc proc = Proc.blank();
+
+			if(elem == null)
+				return proc;
+
+			JsonObject obj = elem.getAsJsonObject();
+
+			if(obj == null)
+				return proc;
+
+			for(Field f : getDeclaredFields()) {
+				String tag = f.getName();
+
+				try {
+					if(obj.has(tag) && !obj.get(tag).isJsonNull()) {
+						f.setAccessible(true);
+
+						f.set(proc, JsonDecoder.decode(obj.get(tag), f.getType()));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			return proc;
 		}
 
 	}
@@ -839,13 +905,15 @@ public class Data {
 	 * 0: Current speed * (100 + n)% type 1: Current speed + n type 2: Fixed speed
 	 */
 	public static final int P_SPEED = 36;
-	public static final int PROC_TOT = 37;// 37
+	public static final int P_MINIWAVE = 37;
+	public static final int PROC_TOT = 38;// 38
 	public static final int PROC_WIDTH = 6;
 
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;
 	public static final int WT_CANN = 2;
 	public static final int WT_VOLC = 4;
+	public static final int WT_MINI = 5;
 	public static final int PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
 	public static final int PC2_HP = 0;
 	public static final int PC2_ATK = 1;
@@ -1058,6 +1126,7 @@ public class Data {
 	public static final int W_E_WID = 500;
 	public static final int W_U_WID = 400;
 	public static final int W_TIME = 3;
+	public static final int W_MINI_TIME = 2; // mini wave spawn interval
 	public static final int E_IMU = -1;
 	public static final int E_IWAVE = -2;
 	public static final int E_SWAVE = -3;

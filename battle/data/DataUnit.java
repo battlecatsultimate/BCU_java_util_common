@@ -70,8 +70,14 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			a |= AB_EARN;
 		if (ints[34] == 1)
 			a |= AB_BASE;
-		proc.WAVE.prob = ints[35];
-		proc.WAVE.lv = ints[36];
+		if(ints.length < 95 || ints[94] != 1) {
+			proc.WAVE.prob = ints[35];
+			proc.WAVE.lv = ints[36];
+		} else {
+			proc.MINIWAVE.prob = ints[35];
+			proc.MINIWAVE.lv = ints[36];
+			proc.MINIWAVE.multi = 20;
+		}
 		proc.WEAK.prob = ints[37];
 		proc.WEAK.time = ints[38];
 		proc.WEAK.mult = ints[39];

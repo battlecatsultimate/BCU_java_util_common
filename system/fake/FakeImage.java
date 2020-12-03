@@ -60,4 +60,6 @@ public interface FakeImage {
 	void setRGB(int i, int j, int p);
 
 	void unload();
+
+	FakeImage cloneImage();
 }

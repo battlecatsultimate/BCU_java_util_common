@@ -24,6 +24,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		type = 0;
 		price = 50;
 		resp = 60;
+		System.out.println("PACK : "+pack);
 	}
 
 	public void fillData(int ver, InStream is) {

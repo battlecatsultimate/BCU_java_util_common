@@ -182,7 +182,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 	protected void setProc(int ind, Proc proc) {
 		String[] par = { "CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
-				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED" };
+				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "MINIWAVE" };
 
 		for (String s0 : par)
 			if (getProc(ind).get(s0).perform(b.r))
@@ -204,6 +204,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc.KB.time = KB_TIME[INT_KB];
 		if (proc.BOSS.exists())
 			b.lea.add(new EAnimCont(e.pos, e.layer, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
+		if (proc.MINIWAVE.exists() && proc.MINIWAVE.multi == 0)
+			proc.MINIWAVE.multi = 20;
 	}
 
 	protected abstract void summon(SUMMON sprc, Entity ent, Object acs);

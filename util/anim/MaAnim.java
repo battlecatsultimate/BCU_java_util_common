@@ -13,6 +13,10 @@ import java.util.Queue;
 public class MaAnim extends Data implements BattleStatic {
 
 	public static MaAnim newIns(FileData f) {
+		if(f == null) {
+			return new MaAnim();
+		}
+
 		try {
 			return new MaAnim(f.readLine());
 		} catch (Exception e) {

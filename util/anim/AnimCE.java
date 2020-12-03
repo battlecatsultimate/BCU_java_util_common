@@ -374,7 +374,7 @@ public class AnimCE extends AnimCI {
 				anims[i] = ori.anims[i].clone();
 			else
 				anims[i] = new MaAnim();
-		loader.setNum(ori.getNum());
+		loader.setNum(ori.getNum().cloneImage());
 		types = AnimU.TYPE7;
 		parts = imgcut.cut(ori.getNum());
 		if (ori instanceof AnimU<?>) {
@@ -435,4 +435,12 @@ public class AnimCE extends AnimCI {
 		std[2] = 1000;
 	}
 
+	@Override
+	public boolean equals(Object that) {
+		if(that instanceof AnimCE) {
+			return this.id.id.equals(((AnimCE) that).id.id);
+		} else {
+			return false;
+		}
+	}
 }

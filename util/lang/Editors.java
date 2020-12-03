@@ -430,6 +430,19 @@ public class Editors {
 			}
 		}));
 
+		map().put("MINIWAVE", new EditControl<>(Proc.MINIWAVE.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+
+			if (t.prob == 0) {
+				t.lv = 0;
+			}
+
+			t.lv = MathUtil.clip(t.lv, 1, 20);
+
+			if(t.multi == 0)
+				t.multi = 20;
+		}));
+
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

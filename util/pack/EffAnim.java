@@ -191,6 +191,10 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<WeakUpEff> A_WEAK_UP;
 		@Order(56)
 		public EffAnim<WeakUpEff> A_E_WEAK_UP;
+		@Order(57)
+		public EffAnim<DefEff> A_MINIWAVE;
+		@Order(58)
+		public EffAnim<DefEff> A_E_MINIWAVE;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -391,6 +395,12 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vcu = new VImg("./org/battle/s11/skill011.png");
 		ImgCut iccu = ImgCut.newIns("./org/battle/s11/skill011.imgcut");
 		effas.A_E_CURSE = new EffAnim<>("./org/battle/s11/skill_curse_e", vcu, iccu, DefEff.values());
+		VImg vmw = new VImg("./org/battle/s12/skill012.png");
+		ImgCut icmw = ImgCut.newIns("./org/battle/s12/skill012.imgcut");
+		effas.A_MINIWAVE = new EffAnim<>("./org/battle/s12/skill_smallwave_attack", vmw, icmw, DefEff.values());
+		vmw = new VImg("./org/battle/s13/skill013.png");
+		icmw = ImgCut.newIns("./org/battle/s13/skill013.imgcut");
+		effas.A_E_MINIWAVE = new EffAnim<>("./org/battle/s13/skill_smallwave_attack_e", vmw, icmw, DefEff.values());
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {

@@ -13,6 +13,9 @@ import java.util.Queue;
 public class ImgCut extends Data implements Cloneable {
 
 	public static ImgCut newIns(FileData f) {
+		if(f == null)
+			return new ImgCut();
+
 		try {
 			return new ImgCut(f.readLine());
 		} catch (Exception e) {

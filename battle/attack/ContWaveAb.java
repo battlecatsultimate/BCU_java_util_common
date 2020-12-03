@@ -36,7 +36,7 @@ public abstract class ContWaveAb extends ContAb {
 	@Override
 	public void update() {
 		tempAtk = false;
-		if (t == W_TIME) {
+		if (t == (atk.waveType == WT_MINI ? W_MINI_TIME : W_TIME)) {
 			atk.capture();
 			for (AbEntity e : atk.capt)
 				if ((e.getAbi() & AB_WAVES) > 0) {
@@ -47,7 +47,9 @@ public abstract class ContWaveAb extends ContAb {
 				}
 			sb.getAttack(atk);
 			tempAtk = true;
-			if (atk.getProc().WAVE.lv > 0)
+			if (atk.waveType == WT_MINI && atk.proc.MINIWAVE.lv > 0)
+				nextWave();
+			else if(atk.waveType == WT_WAVE && atk.getProc().WAVE.lv > 0)
 				nextWave();
 		}
 		if (maxt == t)

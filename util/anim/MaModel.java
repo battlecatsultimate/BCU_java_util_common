@@ -13,6 +13,10 @@ import java.util.*;
 public class MaModel extends Data implements Cloneable, BattleStatic {
 
 	public static MaModel newIns(FileData f) {
+		if(f == null) {
+			return new MaModel();
+		}
+
 		try {
 			return new MaModel(f.readLine());
 		} catch (Exception e) {
