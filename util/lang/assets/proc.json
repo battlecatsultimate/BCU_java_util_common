@@ -268,9 +268,9 @@
     },
     "IMUKB": {
         "abbr_name": "imu. KB",
-        "full_name": "Immune/Resistant to KB",
+        "full_name": "Immune/Resist to KB",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] to Knock Back",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Knockback[(mult<100){ (_left)Reduces (mult)% of distance(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -280,9 +280,9 @@
     },
     "IMUSTOP": {
         "abbr_name": "imu. Stop",
-        "full_name": "Immune/Resistant to Stop",
+        "full_name": "Immune/Resist to Stop",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] to Stop",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Stop[(mult<100){ (_left)Reduces (mult)% of time(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -292,9 +292,9 @@
     },
     "IMUSLOW": {
         "abbr_name": "imu. Slow",
-        "full_name": "Immune/Resistant to Slow",
+        "full_name": "Immune/Resist to Slow",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] to Slow",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Slow[(mult<100){ (_left)Reduces (mult)% of time(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -304,9 +304,9 @@
     },
     "IMUWAVE": {
         "abbr_name": "imu. Wave",
-        "full_name": "Immune/Resistant to Wave",
+        "full_name": "Immune/Resist to Wave",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] to wave",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Wave[(mult<100){ (_left)Reduces (mult)% of damage(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -316,9 +316,9 @@
     },
     "IMUWEAK": {
         "abbr_name": "imu. Weak",
-        "full_name": "Immune/Resistant to Weak",
+        "full_name": "Immune/Resist to Weak",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] Weak",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Weaken[(mult<100){ (_left)Reduces (mult)% of time(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -328,9 +328,9 @@
     },
     "IMUWARP": {
         "abbr_name": "imu. Warp",
-        "full_name": "Immune/Resistant to Warp",
+        "full_name": "Immune/Resist to Warp",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] Warp",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Warp[(mult<100){ (_left)Reduces (mult)% of time(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -340,9 +340,9 @@
     },
     "IMUCURSE": {
         "abbr_name": "imu. Curse",
-        "full_name": "Immune/Resistant to Curse",
+        "full_name": "Immune/Resist to Curse",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] Curse",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Curse[(mult<100){ (_left)Reduces (mult)% of time(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -611,10 +611,10 @@
         }
     },
     "SATK": {
-        "abbr_name": "savage blow",
-        "full_name": "Savage Blow",
+        "abbr_name": "Strong Hit",
+        "full_name": "Strong Hit",
         "tooltip": null,
-        "format": "(prob)% chance to deal a savage blow with (mult)% damage",
+        "format": "(prob)% chance to deal a string hit with (mult)% damage",
         "class": {
             "prob": {
                 "name": "chance",
@@ -684,9 +684,9 @@
     },
     "IMUPOIATK": {
         "abbr_name": "imu. toxic",
-        "full_name": "Immune/Resistant to Toxic",
+        "full_name": "Immune/Resist to Toxic",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] toxic damage",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Toxic[(mult<100){ (_left)Reduces (mult)% of damage(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -696,9 +696,9 @@
     },
     "IMUVOLC": {
         "abbr_name": "imu. Surge",
-        "full_name": "Immune/Resistant to Surge",
+        "full_name": "Immune/Resist to Surge",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100){(mult)% Resistant}] Surge damage",
+        "format": "[(mult==100){Immune}(mult<100){Resist}] to Surge Attack[(mult<100){ (_left)Reduces (mult)% of damage(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -756,7 +756,6 @@
             }
         }
     },
-
     "MINIWAVE" : {
         "abbr_name" : "mini wave",
         "full_name" : "Mini Wave",

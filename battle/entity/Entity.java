@@ -1363,7 +1363,7 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
-	 * can be targeted by the cat with Targer ability of trait t
+	 * can be targeted by the cat with Target ability of trait t
 	 */
 	@Override
 	public boolean targetable(int t) {

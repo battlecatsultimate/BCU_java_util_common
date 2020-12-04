@@ -49,7 +49,7 @@ public abstract class ContWaveAb extends ContAb {
 			tempAtk = true;
 			if (atk.waveType == WT_MINI && atk.proc.MINIWAVE.lv > 0)
 				nextWave();
-			else if(atk.waveType == WT_WAVE && atk.getProc().WAVE.lv > 0)
+			else if(atk.waveType != WT_MINI && atk.getProc().WAVE.lv > 0)
 				nextWave();
 		}
 		if (maxt == t)

@@ -718,7 +718,7 @@
             "(prob)% 확률로 (_dispTime(time)) 동안 속도 [(speed>=0){증가}(speed<0){감소}] (_left)",
 			"타겟[(type==0){에게 속도 (_abs(speed)) [(speed>=0){부여}(speed<0){감소}]}",
             "(type==1){이 (_abs(speed))% 만큼 [(speed>=0){더 빠르게}(speed<0){더 느리게}] 이동}",
-            "(type==2){의 속도를 (_abs(speed)) 로 변경}](_right)"
+            "(type==2){의 속도를 (speed) 로 변경}](_right)"
         ],
         "class": {
             "prob": {
