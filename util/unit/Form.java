@@ -159,7 +159,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	@Override
 	public String toString() {
-		String base = uid.id + "-" + fid + " ";
+		String base = (uid == null ? "NULL" : uid.id) + "-" + fid + " ";
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return base + desp;

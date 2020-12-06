@@ -3,6 +3,7 @@ package common.util.unit;
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
+import common.io.json.FieldOrder;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCIdentifier;
@@ -20,6 +21,7 @@ import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.lang.MultiLangCont;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -62,12 +64,16 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	@JsonField
 	@JCIdentifier
+	@FieldOrder.Order(0)
 	public final Identifier<Unit> id;
 	@JsonField
+	@FieldOrder.Order(1)
 	public int rarity, max, maxp;
 	@JsonField(gen = GenType.GEN)
+	@FieldOrder.Order(2)
 	public Form[] forms;
 	@JsonField(alias = Identifier.class)
+	@FieldOrder.Order(3)
 	public UnitLevel lv;
 
 	public final UnitInfo info = new UnitInfo();
@@ -162,12 +168,11 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	@Override
 	public String toString() {
-		String desp = MultiLangCont.get(forms[0]);
+		String desp = MultiLangCont.get(forms == null ? null : forms[0]);
 		if (desp != null && desp.length() > 0)
 			return Data.trio(id.id) + " " + desp;
 		if (forms[0].name.length() > 0)
 			return Data.trio(id.id) + " " + forms[0].name;
 		return Data.trio(id.id);
 	}
-
 }

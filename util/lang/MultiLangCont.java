@@ -51,6 +51,9 @@ public class MultiLangCont<I, T> extends Lang {
 	}
 
 	public static String get(Object o) {
+		if (o == null)
+			return null;
+
 		if (o instanceof MapColc)
 			return getStatic().MCNAME.getCont((MapColc) o);
 		if (o instanceof StageMap)

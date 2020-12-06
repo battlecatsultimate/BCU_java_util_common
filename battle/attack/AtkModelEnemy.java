@@ -44,7 +44,6 @@ public class AtkModelEnemy extends AtkModelEntity {
 				l0 = l1 = e.layer;
 			EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, l0, l1);
 			ee.layer = (int) (b.r.nextDouble() * (l1-l0)) + l0;
-			System.out.println(ee.layer);
 			ee.group = allow;
 			if (ep < ee.data.getWidth())
 				ep = ee.data.getWidth();
