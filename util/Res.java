@@ -6,6 +6,7 @@ import common.battle.entity.AbEntity;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
+import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 
@@ -50,7 +51,7 @@ public class Res extends ImgCore {
 		return coor.draw(input);
 	}
 
-	public static P getMoney(int mon, int max, SymCoord coor) {
+	public static P getMoney(int mon, int max, FakeGraphics g, int w) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		int[] val0 = getLab(mon);
 		int[] val1 = getLab(max);
@@ -60,7 +61,10 @@ public class Res extends ImgCore {
 		input[val0.length] = aux.num[0][10].getImg();
 		for (int i = 0; i < val1.length; i++)
 			input[val0.length + i + 1] = aux.num[0][val1[i]].getImg();
-		return coor.draw(input);
+
+		SymCoord sym = new SymCoord(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
+
+		return sym.draw(input);
 	}
 
 	public static P getWorkerLv(int lv, boolean enable, SymCoord coor) {
@@ -207,7 +211,7 @@ public class Res extends ImgCore {
 	private static void readBattle() {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		aux.battle[0] = new VImg[4];
-		aux.battle[1] = new VImg[12];
+		aux.battle[1] = new VImg[22];
 		aux.battle[2] = new VImg[5];
 		ImgCut ic001 = ImgCut.newIns("./org/page/img001.imgcut");
 		VImg img001 = new VImg("./org/page/img001.png");
@@ -241,6 +245,34 @@ public class Res extends ImgCore {
 		aux.battle[1][1] = new VImg(parts[7]);
 		for (int i = 0; i < 10; i++)
 			aux.battle[1][2 + i] = new VImg(parts[11 + i]);
+
+		//jp fire
+		aux.battle[1][12] = new VImg(parts[9]);
+		aux.battle[1][13] = new VImg(parts[10]);
+
+		ic002 = ImgCut.newIns("./org/page/img002_en.imgcut");
+		img002 = new VImg("./org/page/img002_en.png");
+		parts = ic002.cut(img002.getImg());
+		//en fire
+		aux.battle[1][14] = new VImg(parts[9]);
+		aux.battle[1][15] = new VImg(parts[10]);
+
+		ic002 = ImgCut.newIns("./org/page/img002_ko.imgcut");
+		img002 = new VImg("./org/page/img002_ko.png");
+		parts = ic002.cut(img002.getImg());
+		//kr fire
+		aux.battle[1][16] = new VImg(parts[9]);
+		aux.battle[1][17] = new VImg(parts[10]);
+
+		ic002 = ImgCut.newIns("./org/page/img002_tw.imgcut");
+		img002 = new VImg("./org/page/img002_tw.png");
+		parts = ic002.cut(img002.getImg());
+		//tw fire
+		aux.battle[1][18] = new VImg(parts[9]);
+		aux.battle[1][19] = new VImg(parts[10]);
+
+		aux.battle[1][20] = new VImg(parts[0]);
+		aux.battle[1][21] = new VImg(parts[1]);
 		aux.battle[2][0] = new VImg(parts[27]);
 		aux.battle[2][1] = new VImg(parts[29]);
 		aux.battle[2][2] = new VImg(parts[32]);

@@ -159,7 +159,7 @@ public class Cannon extends AtkModelAb {
 				Proc proc = Proc.blank();
 				if (id == 0) {
 					// basic canon
-					proc.WAVE.lv = 12;
+					proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
 					proc.SNIPER.prob = 1;
 					double wid = NYRAN[0];
 					double p = b.ubase.pos - wid / 2 + 100;

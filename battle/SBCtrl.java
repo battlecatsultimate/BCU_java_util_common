@@ -57,23 +57,26 @@ public class SBCtrl extends BattleField {
 			rec |= 4;
 			keys.remove(-1, 2);
 		}
-		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 5; j++) {
-				boolean b0 = keys.pressed(i, j);
-				boolean b1 = action.contains(i * 5 + j);
-				if (keys.pressed(-2, 0) || action.contains(10))
-					if (b0) {
-						act_lock(i, j);
-						rec |= 1 << (i * 5 + j + 3);
-						keys.remove(i, j);
-					} else if (b1) {
-						act_lock(i, j);
-						rec |= 1 << (i * 5 + j + 3);
-						action.remove((Object) (i * 5 + j));
-					}
-				if (act_spawn(i, j, b0 || b1) && (b0 || b1))
-					rec |= 1 << (i * 5 + j + 13);
-			}
+		if ((keys.pressed(-3, 0)) && act_change()) {
+			rec |= 1 << 23;
+			keys.remove(-3, 0);
+		}
+		for (int j = 0; j < 5; j++) {
+			boolean b0 = keys.pressed(sb.frontLineup, j);
+			boolean b1 = action.contains(sb.frontLineup * 5 + j);
+			if (keys.pressed(-2, 0) || action.contains(10))
+				if (b0) {
+					act_lock(sb.frontLineup, j);
+					rec |= 1 << (sb.frontLineup * 5 + j + 3);
+					keys.remove(sb.frontLineup, j);
+				} else if (b1) {
+					act_lock(sb.frontLineup, j);
+					rec |= 1 << (sb.frontLineup * 5 + j + 3);
+					action.remove((Object) (sb.frontLineup * 5 + j));
+				}
+			if (act_spawn(sb.frontLineup, j, b0 || b1) && (b0 || b1))
+				rec |= 1 << (sb.frontLineup * 5 + j + 13);
+		}
 		action.clear();
 		sb.rx.add(rec);
 

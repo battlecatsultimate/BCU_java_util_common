@@ -15,6 +15,7 @@ import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
 import common.util.unit.EForm;
 import common.util.unit.EneRand;
+import common.util.unit.Form;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,8 +44,13 @@ public class StageBasis extends BattleObj {
 	public final int[] conf;
 	public final CopRand r;
 	public final Recorder rx = new Recorder();
+	public final boolean isOneLineup;
+	public int changeFrame = -1;
+	public int changeDivision = -1;
 
 	public int work_lv, max_mon, can, max_can, next_lv, max_num;
+	public int frontLineup = 0;
+	public boolean lineupChanging = false;
 	public double mon;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
@@ -96,6 +102,16 @@ public class StageBasis extends BattleObj {
 		else
 			sniper = null;
 		next_lv = bas.t().getLvCost(work_lv);
+
+		boolean oneLine = true;
+		for(Form f : b.lu.fs[1]) {
+			if(f != null) {
+				oneLine = false;
+				break;
+			}
+		}
+
+		isOneLineup = oneLine;
 	}
 
 	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
@@ -203,7 +219,19 @@ public class StageBasis extends BattleObj {
 		return false;
 	}
 
+	protected boolean act_change() {
+		if(lineupChanging || isOneLineup || ubase.health == 0)
+			return false;
+		lineupChanging = true;
+		changeFrame = 10;
+		changeDivision = changeFrame / 2;
+		return true;
+	}
+
 	protected boolean act_spawn(int i, int j, boolean boo) {
+		if (lineupChanging)
+			return false;
+
 		if (ubase.health == 0) {
 			return false;
 		}
@@ -342,6 +370,18 @@ public class StageBasis extends BattleObj {
 		temp_s_stop = 0;
 		can = Math.min(max_can, Math.max(0, can));
 		mon = Math.min(max_mon, Math.max(0, mon));
+
+		if(changeFrame != -1) {
+			changeFrame--;
+
+			if(changeFrame == 0) {
+				changeFrame = -1;
+				changeDivision = -1;
+				lineupChanging = false;
+			} else if(changeFrame == changeDivision-1) {
+				frontLineup = 1 - frontLineup;
+			}
+		}
 	}
 
 	private void updateTheme() {
