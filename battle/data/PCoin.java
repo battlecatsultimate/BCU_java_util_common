@@ -13,6 +13,7 @@ import java.util.Queue;
 public class PCoin extends Data {
 	public static final int FLAG_RELIC_SLOW = 69;
 	public static final int FLAG_RELIC_WEAK = 70;
+	public static final int FLAG_ZOMBIE_KB = 73;
 
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/data/SkillAcquisition.csv");
@@ -84,6 +85,10 @@ public class PCoin extends Data {
 					ans.type |= TB_RELIC;
 				}
 
+				if(info[i][10] == FLAG_ZOMBIE_KB) {
+					ans.type |= TB_ZOMBIE;
+				}
+
 				if(type[1] == P_VOLC) {
 					tar.set(0, modifs[0]);
 					tar.set(1, modifs[2] / 4);
@@ -137,5 +142,12 @@ public class PCoin extends Data {
 			return false;
 
 		return info[index][10] == FLAG_RELIC_WEAK && info[index][0] == 1;
+	}
+
+	public boolean isZombieKB(int index) {
+		if(index < 0 || index >= info.length)
+			return false;
+
+		return info[index][10] == FLAG_ZOMBIE_KB && info[index][0] == 8;
 	}
 }

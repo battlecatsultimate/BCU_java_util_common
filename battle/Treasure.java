@@ -325,7 +325,7 @@ public class Treasure extends Data {
 	 * get canon recharge time
 	 */
 	protected int CanonTime(int map) {
-		int base = 1503 + 50 * (tech[LV_CATK] - tech[LV_RECH]);
+		int base = 1500 + 50 * (tech[LV_CATK] - tech[LV_RECH]);
 		if (trea[T_RECH] <= 300)
 			base -= (int) (1.5 * trea[T_RECH]);
 		else
