@@ -1155,6 +1155,8 @@ public class Data {
 
 	public static final int MUSIC_DELAY = 2344; //Music change delay with milliseconds accuracy
 
+	public static final int LINEUP_CHANGE_TIME = 6; //in frame
+
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
 	public static EffAnimStore effas() {

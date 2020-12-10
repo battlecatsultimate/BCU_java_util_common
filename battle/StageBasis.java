@@ -7,6 +7,7 @@ import common.battle.entity.*;
 import common.pack.Identifier;
 import common.util.BattleObj;
 import common.util.CopRand;
+import common.util.Data;
 import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
 import common.util.pack.EffAnim.DefEff;
@@ -223,7 +224,7 @@ public class StageBasis extends BattleObj {
 		if(lineupChanging || isOneLineup || ubase.health == 0)
 			return false;
 		lineupChanging = true;
-		changeFrame = 10;
+		changeFrame = Data.LINEUP_CHANGE_TIME;
 		changeDivision = changeFrame / 2;
 		return true;
 	}
