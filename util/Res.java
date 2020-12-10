@@ -51,7 +51,7 @@ public class Res extends ImgCore {
 		return coor.draw(input);
 	}
 
-	public static P getMoney(int mon, int max, FakeGraphics g, int w) {
+	public static P getMoney(int mon, int max, SymCoord sym) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		int[] val0 = getLab(mon);
 		int[] val1 = getLab(max);
@@ -61,8 +61,6 @@ public class Res extends ImgCore {
 		input[val0.length] = aux.num[0][10].getImg();
 		for (int i = 0; i < val1.length; i++)
 			input[val0.length + i + 1] = aux.num[0][val1[i]].getImg();
-
-		SymCoord sym = new SymCoord(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
 
 		return sym.draw(input);
 	}
