@@ -149,9 +149,15 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 			if (top && parts.length > TOP) {
 				int tw = (int) (parts[TOP].getWidth() * siz);
 				int th = (int) (parts[TOP].getHeight() * siz);
+
+				y += fh - th;
+
 				for (int x = off; x < rect.x; x += tw)
 					if (x + tw > 0)
 						g.drawImage(parts[TOP], x, y, tw, th);
+
+				if(y > 0)
+					g.gradRect(0, 0, (int) rect.x, y, 0, 0, cs[0], 0, y, cs[1]);
 			} else {
 				g.gradRect(0, 0, (int) rect.x, fh + y, 0, y, cs[0], 0, y + fh, cs[1]);
 			}

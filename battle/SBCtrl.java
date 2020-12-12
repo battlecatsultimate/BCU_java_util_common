@@ -61,6 +61,15 @@ public class SBCtrl extends BattleField {
 			rec |= 1 << 23;
 			keys.remove(-3, 0);
 		}
+
+		for(int i = 0; i < 2; i++) {
+			for(int j = 0; j < 5; j++) {
+				if(sb.locks[i][j]) {
+					act_spawn(i, j, false);
+				}
+			}
+		}
+
 		for (int j = 0; j < 5; j++) {
 			boolean b0 = keys.pressed(sb.frontLineup, j);
 			boolean b1 = action.contains(sb.frontLineup * 5 + j);
