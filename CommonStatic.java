@@ -13,19 +13,18 @@ import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.anim.ImgCut;
-import common.util.anim.MaAnim;
-import common.util.anim.MaModel;
 import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
-import common.util.pack.WaveAnim;
 import common.util.stage.Music;
 import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
 
 import java.io.File;
 import java.util.*;
+
 import static java.lang.Character.isDigit;
 
+@SuppressWarnings("DeprecatedIsStillUsed")
 public class CommonStatic {
 
 	public interface BattleConst {
@@ -45,9 +44,6 @@ public class CommonStatic {
 		public VImg[] timer = new VImg[11];
 
 		// Background resources
-		public MaModel ewavm, uwavm;
-		public MaAnim ewava, uwava;
-		public WaveAnim defu, defe;
 		public final List<ImgCut> iclist = new ArrayList<>();
 
 		// Available data for atk/res orb, will be used for GUI
@@ -280,17 +276,17 @@ public class CommonStatic {
 	}
 
 	public static String toArrayFormat(int... data) {
-		String res = "{";
+		StringBuilder res = new StringBuilder("{");
 
 		for (int i = 0; i < data.length; i++) {
 			if (i == data.length - 1) {
-				res += data[i] + "}";
+				res.append(data[i]).append("}");
 			} else {
-				res += data[i] + ", ";
+				res.append(data[i]).append(", ");
 			}
 		}
 
-		return res;
+		return res.toString();
 	}
 
 }

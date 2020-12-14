@@ -18,9 +18,7 @@ import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.VFile;
 import common.util.anim.*;
-import common.util.pack.WaveAnim.WaveType;
 
-import java.util.Arrays;
 import java.util.Queue;
 
 @IndexCont(PackData.class)
@@ -43,17 +41,18 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 				continue;
 			aux.iclist.add(ImgCut.newIns(path + name));
 		}
-		aux.uwavm = MaModel.newIns("./org/battle/bg/bg_01.mamodel");
-		aux.ewavm = MaModel.newIns("./org/battle/bg/bg_02.mamodel");
-		aux.uwava = MaAnim.newIns("./org/battle/bg/bg_01.maanim");
-		aux.ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
 		for (VFile vf : VFile.get("./org/img/bg/").list())
 			if (vf.getName().length() == 9) {
 				int[] ints = new int[15];
 				try {
-					String[] strs = qs.poll().split(",");
+					String q = qs.poll();
+
+					if(q == null)
+						continue;
+
+					String[] strs = q.split(",");
 					for (int i = 0; i < 15; i++)
 						ints[i] = Integer.parseInt(strs[i]);
 				} catch (Exception e) {
@@ -69,7 +68,6 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public VImg img;
 	@JsonField
 	public int[][] cs = new int[4][3];
-	private WaveAnim uwav, ewav;
 
 	public int ic;
 	public boolean top;
@@ -80,9 +78,6 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public Background() {
 		ic = 1;
 		top = true;
-		BCAuxAssets aux = CommonStatic.getBCAssets();
-		uwav = aux.defu;
-		ewav = aux.defe;
 	}
 
 	public Background(Identifier<Background> id, VImg vimg) {
@@ -90,9 +85,6 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		img = vimg;
 		ic = 1;
 		top = true;
-		BCAuxAssets aux = CommonStatic.getBCAssets();
-		uwav = aux.defu;
-		ewav = aux.defe;
 	}
 
 	private Background(VImg vimg, int[] ints) {
@@ -104,18 +96,6 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		UserProfile.getBCData().bgs.add(this);
-		BCAuxAssets aux = CommonStatic.getBCAssets();
-		if (id <= 107) {
-			uwav = new WaveAnim(this, aux.uwavm, aux.uwava);
-			ewav = new WaveAnim(this, aux.ewavm, aux.ewava);
-		} else {
-			uwav = aux.defu;
-			ewav = aux.defe;
-		}
-		if (id == 0) {
-			aux.defu = uwav;
-			aux.defe = ewav;
-		}
 	}
 
 	@Override
@@ -128,8 +108,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 	public Background copy(Identifier<Background> id) {
 		Background bg = new Background(id, new VImg(img.getImg()));
-		for (int i = 0; i < 4; i++)
-			bg.cs[i] = cs[i];
+		System.arraycopy(cs, 0, bg.cs, 0, 4);
 		bg.top = top;
 		bg.ic = ic;
 		return bg;
@@ -171,11 +150,11 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	}
 
 	@Override
-	public EAnimD<WaveType> getEAnim(BGWvType t) {
+	public EAnimD<EffAnim.DefEff> getEAnim(BGWvType t) {
 		if (t == BGWvType.ENEMY)
-			return ewav.getEAnim(WaveAnim.WaveType.DEF);
+			return effas().A_E_WAVE.getEAnim(EffAnim.DefEff.DEF);
 		else if (t == BGWvType.UNIT)
-			return uwav.getEAnim(WaveAnim.WaveType.DEF);
+			return effas().A_WAVE.getEAnim(EffAnim.DefEff.DEF);
 		else
 			return null;
 	}
@@ -197,6 +176,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		return new String[] { toString(), "enemy wave", "unit wave" };
 	}
 
+	@SuppressWarnings("unused")
 	@OnInjected
 	public void onInjected() {
 		img = ((PackData.UserPack) getCont()).source.readImage(Source.BG, id.id);

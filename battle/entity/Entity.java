@@ -31,6 +31,7 @@ import java.util.Set;
 /**
  * Entity class for units and enemies
  */
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public abstract class Entity extends AbEntity {
 
 	public static class AnimManager extends BattleObj {
@@ -206,13 +207,12 @@ public abstract class Entity extends AbEntity {
 				for (int i = 0; i < A_POIS.length; i++)
 					if ((mask & (1 << i)) > 0) {
 						int id = A_POIS[i];
-						effs[id] = ((EffAnim<DefEff>) arr[id]).getEAnim(DefEff.DEF);
+						effs[id] = ((EffAnim<DefEff>) arr[i]).getEAnim(DefEff.DEF);
 					}
 
 			}
 			if (t == P_SEAL) {
-				int id = A_SEAL;
-				effs[id] = effas().A_SEAL.getEAnim(DefEff.DEF);
+				effs[A_SEAL] = effas().A_SEAL.getEAnim(DefEff.DEF);
 			}
 			if (t == P_STRONG) {
 				int id = dire == -1 ? A_UP : A_E_UP;
@@ -306,16 +306,13 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 			if (status[P_IMUATK][0] == 0) {
-				int id = A_IMUATK;
-				effs[id] = null;
+				effs[A_IMUATK] = null;
 			}
 			if (status[P_POISON][0] == 0) {
-				int id = A_POI0;
-				effs[id] = null;
+				effs[A_POI0] = null;
 			}
 			if (status[P_SEAL][0] == 0) {
-				int id = A_SEAL;
-				effs[id] = null;
+				effs[A_SEAL] = null;
 			}
 			if (status[P_LETHAL][1] == 0) {
 				int id = dire == -1 ? A_SHIELD : A_E_SHIELD;
@@ -593,7 +590,7 @@ public abstract class Entity extends AbEntity {
 				e.updateMove(-mov, -mov);
 			else {
 				double lim = e.getLim();
-				e.pos -= (mov < lim ? mov : lim) * e.dire;
+				e.pos -= Math.min(mov, lim) * e.dire;
 			}
 		}
 
@@ -1414,7 +1411,7 @@ public abstract class Entity extends AbEntity {
 
 		// update wait and attack state
 		if (kbTime == 0) {
-			boolean binatk = kbTime >= 0 && waitTime + kbTime + atkm.atkTime == 0;
+			boolean binatk = waitTime + kbTime + atkm.atkTime == 0;
 			binatk = binatk && touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
@@ -1666,7 +1663,7 @@ public abstract class Entity extends AbEntity {
 		touch = true;
 		double[] ds = aam.touchRange();
 		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1]);
-		boolean blds = false;
+		boolean blds;
 		if (data.isLD() || data.isOmni()) {
 			double bpos = basis.getBase(dire).pos;
 			blds = (bpos - pos) * dire > data.touchBase();

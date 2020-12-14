@@ -57,15 +57,20 @@ public class SBCtrl extends BattleField {
 			rec |= 4;
 			keys.remove(-1, 2);
 		}
-		if ((keys.pressed(-3, 0)) && act_change()) {
-			rec |= 1 << 23;
+		if ((keys.pressed(-3, 0) || action.contains(-4)) && act_change_up()) {
+			rec |= 1 << 24;
 			keys.remove(-3, 0);
+		}
+		if (action.contains(-5) && act_change_down()) {
+			rec |= 1 << 25;
 		}
 
 		for(int i = 0; i < 2; i++) {
 			for(int j = 0; j < 5; j++) {
 				if(sb.locks[i][j]) {
 					act_spawn(i, j, false);
+
+					rec |= 1 << (i * 5 + j + 13);
 				}
 			}
 		}

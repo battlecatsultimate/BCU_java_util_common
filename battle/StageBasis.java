@@ -46,6 +46,7 @@ public class StageBasis extends BattleObj {
 	public final CopRand r;
 	public final Recorder rx = new Recorder();
 	public final boolean isOneLineup;
+	public boolean goingUp = true;
 	public int changeFrame = -1;
 	public int changeDivision = -1;
 
@@ -220,10 +221,21 @@ public class StageBasis extends BattleObj {
 		return false;
 	}
 
-	protected boolean act_change() {
+	protected boolean act_change_up() {
 		if(lineupChanging || isOneLineup || ubase.health == 0)
 			return false;
 		lineupChanging = true;
+		goingUp = true;
+		changeFrame = Data.LINEUP_CHANGE_TIME;
+		changeDivision = changeFrame / 2;
+		return true;
+	}
+
+	protected boolean act_change_down() {
+		if(lineupChanging || isOneLineup || ubase.health == 0)
+			return false;
+		lineupChanging = true;
+		goingUp = false;
 		changeFrame = Data.LINEUP_CHANGE_TIME;
 		changeDivision = changeFrame / 2;
 		return true;

@@ -36,8 +36,12 @@ public abstract class BattleField {
 		return sb.act_sniper();
 	}
 
-	protected boolean act_change() {
-		return sb.act_change();
+	protected boolean act_change_up() {
+		return sb.act_change_up();
+	}
+
+	protected boolean act_change_down() {
+		return sb.act_change_down();
 	}
 
 	protected boolean act_spawn(int i, int j, boolean boo) {
