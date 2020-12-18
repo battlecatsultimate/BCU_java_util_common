@@ -1,5 +1,6 @@
 package common.util.unit;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import common.CommonStatic;
 import common.battle.data.*;
 import common.io.json.JsonClass;
@@ -67,6 +68,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		du = null;
 		unit = u;
 		uid = unit.id;
+		orbs = new Orb(-1);
 	}
 
 	public Form(Unit u, int f, String str, AnimU<?> ac, CustomUnit cu) {

@@ -15,10 +15,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -264,6 +261,7 @@ public class JsonDecoder {
 			par.index = 1;
 			Object ent = decode(obj.get("val"), par.curjfld.generic()[1], par);
 			par.index = 0;
+
 			val.put(key, ent);
 		}
 		return val;
