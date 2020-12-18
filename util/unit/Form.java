@@ -1,6 +1,5 @@
 package common.util.unit;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import common.CommonStatic;
 import common.battle.data.*;
 import common.io.json.JsonClass;
@@ -46,11 +45,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	}
 
 	public static String lvString(int[] lvs) {
-		String str = "Lv." + lvs[0] + ", {";
+		StringBuilder str = new StringBuilder("Lv." + lvs[0] + ", {");
 		for (int i = 1; i < 5; i++)
-			str += lvs[i] + ",";
-		str += lvs[5] + "}";
-		return str;
+			str.append(lvs[i]).append(",");
+		str.append(lvs[5]).append("}");
+		return str.toString();
 	}
 
 	@JsonField
@@ -138,8 +137,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	public int[] regulateLv(int[] mod, int[] lv) {
 		if (mod != null)
-			for (int i = 0; i < Math.min(mod.length, 6); i++)
-				lv[i] = mod[i];
+			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, 6));
 		int[] maxs = new int[6];
 		maxs[0] = unit.max + unit.maxp;
 		PCoin pc = null;
