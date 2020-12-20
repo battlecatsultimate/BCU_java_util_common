@@ -757,10 +757,10 @@
         }
     },
     "MINIWAVE" : {
-        "abbr_name" : "mini wave",
-        "full_name" : "Mini Wave",
-        "tooltip" : null,
-        "format" : "(prob)% chance to create a Lv.(lv) mini wave (_left)Gives target (multi)% of activator's damage(_right)",
+        "abbr_name" : "mini-wave",
+        "full_name" : "Mini-Wave",
+        "tooltip" : "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
+        "format" : "(prob)% chance to create a Lv.(lv) mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
         "class" : {
             "prob" : {
                 "name" : "chance",
