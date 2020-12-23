@@ -78,6 +78,7 @@ public abstract class Source {
 		public AnimCI getAnim() {
 			if (pack.equals(LOCAL))
 				return AnimCE.map().get(id);
+
 			return UserProfile.getUserPack(pack).source.loadAnimation(id);
 		}
 
@@ -499,8 +500,10 @@ public abstract class Source {
 					return null;
 				Context.delete(f);
 			}
-			Context.check(folder.mkdirs(), "create", folder);
-			Context.check(f.createNewFile(), "create", f);
+			if(!folder.exists())
+				Context.check(folder.mkdirs(), "create", folder);
+			if(!f.exists())
+				Context.check(f.createNewFile(), "create", f);
 			Workspace ans = new Workspace(id);
 			zip.unzip(id -> {
 				File file = ans.getFile(id);

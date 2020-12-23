@@ -2,6 +2,7 @@ package common.battle.attack;
 
 import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
+import common.battle.entity.Sniper;
 import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
 
@@ -29,7 +30,7 @@ public class AttackSimple extends AttackAb {
 		double pos = model.getPos();
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
 		capt.clear();
-		if (canon > -2)
+		if (canon > -2 || model instanceof Sniper)
 			le.remove(model.b.ebase);
 		if ((abi & AB_ONLY) == 0)
 			capt.addAll(le);

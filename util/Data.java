@@ -4,9 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.*;
+import common.io.json.FieldOrder;
 import common.io.json.FieldOrder.Order;
+import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonDecoder;
+import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
@@ -16,7 +19,6 @@ import common.util.pack.EffAnim.EffAnimStore;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 @StaticPermitted
 public class Data {
@@ -152,7 +154,7 @@ public class Data {
 			@Order(3)
 			public int itv;
 			@Order(4)
-			public TYPE type;
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -187,9 +189,9 @@ public class Data {
 					ProcItem ans = (ProcItem) super.clone();
 					Field[] fs = getDeclaredFields();
 					for (Field f : fs)
-						if (IntType.class.isAssignableFrom(f.getType()))
+						if (IntType.class.isAssignableFrom(f.getType()) && f.get(this) != null) {
 							f.set(ans, ((IntType) f.get(this)).clone());
-						else if (f.getType() == Identifier.class && f.get(this) != null)
+						} else if (f.getType() == Identifier.class && f.get(this) != null)
 							f.set(ans, ((Identifier<?>) f.get(this)).clone());
 					return ans;
 				} catch (Exception e) {
@@ -250,8 +252,6 @@ public class Data {
 			public boolean perform(CopRand r) {
 				try {
 					Field f = this.getClass().getDeclaredField("prob");
-					if (f == null)
-						return exists();
 					int prob = f.getInt(this);
 					if (prob == 0)
 						return false;
@@ -345,7 +345,7 @@ public class Data {
 			@Order(4)
 			public int dis_1;
 			@Order(5)
-			public TYPE type;
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -401,7 +401,7 @@ public class Data {
 			@Order(3)
 			public int mult;
 			@Order(4)
-			public TYPE type;
+			public TYPE type = new TYPE();
 			@Order(5)
 			public int time;
 		}
@@ -422,7 +422,7 @@ public class Data {
 			@Order(2)
 			public Identifier<Background> id;
 			@Order(3)
-			public TYPE type;
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -466,17 +466,7 @@ public class Data {
 		}
 
 		public static Proc blank() {
-			Proc ans = new Proc();
-			try {
-				Field[] fs = getDeclaredFields();
-				for (Field f : fs) {
-					f.setAccessible(true);
-					f.set(ans, ((ProcItem) f.getType().newInstance()).clear());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return ans;
+			return new Proc();
 		}
 
 		public static Field[] getDeclaredFields() {
@@ -507,83 +497,83 @@ public class Data {
 		}
 
 		@Order(0)
-		public final PTD KB = null;
+		public final PTD KB = new PTD();
 		@Order(1)
-		public final PT STOP = null;
+		public final PT STOP = new PT();
 		@Order(2)
-		public final PT SLOW = null;
+		public final PT SLOW = new PT();
 		@Order(3)
-		public final PM CRIT = null;
+		public final PM CRIT = new PM();
 		@Order(4)
-		public final WAVE WAVE = null;
+		public final WAVE WAVE = new WAVE();
 		@Order(5)
-		public final WEAK WEAK = null;
+		public final WEAK WEAK = new WEAK();
 		@Order(6)
-		public final PROB BREAK = null;
+		public final PROB BREAK = new PROB();
 		@Order(7)
-		public final PTD WARP = null;
+		public final PTD WARP = new PTD();
 		@Order(8)
-		public final PT CURSE = null;
+		public final PT CURSE = new PT();
 		@Order(9)
-		public final STRONG STRONG = null;
+		public final STRONG STRONG = new STRONG();
 		@Order(10)
-		public final PROB LETHAL = null;
+		public final PROB LETHAL = new PROB();
 		@Order(11)
-		public final BURROW BURROW = null;
+		public final BURROW BURROW = new BURROW();
 		@Order(12)
-		public final REVIVE REVIVE = null;
+		public final REVIVE REVIVE = new REVIVE();
 		@Order(13)
-		public final IMU IMUKB = null;
+		public final IMU IMUKB = new IMU();
 		@Order(14)
-		public final IMU IMUSTOP = null;
+		public final IMU IMUSTOP = new IMU();
 		@Order(15)
-		public final IMU IMUSLOW = null;
+		public final IMU IMUSLOW = new IMU();
 		@Order(16)
-		public final IMU IMUWAVE = null;
+		public final IMU IMUWAVE = new IMU();
 		@Order(17)
-		public final IMU IMUWEAK = null;
+		public final IMU IMUWEAK = new IMU();
 		@Order(18)
-		public final IMU IMUWARP = null;
+		public final IMU IMUWARP = new IMU();
 		@Order(19)
-		public final IMU IMUCURSE = null;
+		public final IMU IMUCURSE = new IMU();
 		@Order(20)
-		public final PROB SNIPER = null;
+		public final PROB SNIPER = new PROB();
 		@Order(21)
-		public final PT TIME = null;
+		public final PT TIME = new PT();
 		@Order(22)
-		public final PT SEAL = null;
+		public final PT SEAL = new PT();
 		@Order(23)
-		public final SUMMON SUMMON = null;
+		public final SUMMON SUMMON = new SUMMON();
 		@Order(24)
-		public final MOVEWAVE MOVEWAVE = null;
+		public final MOVEWAVE MOVEWAVE = new MOVEWAVE();
 		@Order(25)
-		public final THEME THEME = null;
+		public final THEME THEME = new THEME();
 		@Order(26)
-		public final POISON POISON = null;
+		public final POISON POISON = new POISON();
 		@Order(27)
-		public final PROB BOSS = null;
+		public final PROB BOSS = new PROB();
 		@Order(28)
-		public final CRITI CRITI = null;
+		public final CRITI CRITI = new CRITI();
 		@Order(29)
-		public final PM SATK = null;
+		public final PM SATK = new PM();
 		@Order(30)
-		public final PT IMUATK = null;
+		public final PT IMUATK = new PT();
 		@Order(31)
-		public final PM POIATK = null;
+		public final PM POIATK = new PM();
 		@Order(32)
-		public final VOLC VOLC = null;
+		public final VOLC VOLC = new VOLC();
 		@Order(33)
-		public final IMU IMUPOIATK = null;
+		public final IMU IMUPOIATK = new IMU();
 		@Order(34)
-		public final IMU IMUVOLC = null;
+		public final IMU IMUVOLC = new IMU();
 		@Order(35)
-		public final ARMOR ARMOR = null;
+		public final ARMOR ARMOR = new ARMOR();
 
 		@Order(36)
-		public final SPEED SPEED = null;
+		public final SPEED SPEED = new SPEED();
 
 		@Order(37)
-		public final MINIWAVE MINIWAVE = null;
+		public final MINIWAVE MINIWAVE = new MINIWAVE();
 
 		@Override
 		public Proc clone() {
@@ -862,8 +852,9 @@ public class Data {
 	public static final int P_SNIPER = 20;
 	public static final int P_TIME = 21;
 	public static final int P_SEAL = 22;
-	/** 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time */
 	/**
+	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time
+	 *
 	 * +0: direct, +1: warp, +2:burrow, +4:disregard limit, +8: fix buff, +16: same
 	 * health, +32: diff layer, +64 on hit, +128 on kill
 	 */
@@ -962,7 +953,7 @@ public class Data {
 			{ 2, PC2_HP }, // 32: inc HP
 			{ 4, TB_RED, 0 }, // 33:
 			{ 4, TB_FLOAT, 0 }, // 34:
-			{ 4, TB_BLACK, 0 }, // 35:
+			{ 4, TB_BLACK, 0 }, // 35: targeting black
 			{ 4, TB_METAL, 0 }, // 36:
 			{ 4, TB_ANGEL }, // 37: targeting angle
 			{ 4, TB_ALIEN }, // 38: targeting alien

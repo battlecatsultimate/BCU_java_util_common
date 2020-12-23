@@ -341,7 +341,7 @@ public class Treasure extends Data {
 	protected int getLvCost(int lv) {
 		int t = tech[LV_WORK];
 		int base = t < 8 ? 30 + 10 * t : 20 * t - 40;
-		return base * lv;
+		return lv == 8 ? -1 : base * lv;
 	}
 
 	/**
