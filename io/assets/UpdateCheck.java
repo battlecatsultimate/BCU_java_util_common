@@ -39,7 +39,7 @@ public class UpdateCheck {
 
 		public Runnable post;
 
-		private Downloader(String url, File target, File temp, String desc, boolean direct) {
+		public Downloader(String url, File target, File temp, String desc, boolean direct) {
 			this.url = url;
 			this.target = target;
 			this.temp = temp;

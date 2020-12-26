@@ -355,7 +355,7 @@ public abstract class PackData implements IndexContainer {
 			UserProfile.unregister(getSID());
 		}
 
-		void load() throws Exception {
+		public void load() throws Exception {
 			JsonDecoder.inject(elem, UserPack.class, this);
 			elem = null;
 			loaded = true;
