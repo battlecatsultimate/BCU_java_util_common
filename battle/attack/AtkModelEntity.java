@@ -175,7 +175,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected Proc getProc(int ind) {
-		if (e.status[P_SEAL][0] > 0)
+		if (e.status[P_SEAL][0] > 0 && ind < sealed.length)
 			return sealed[ind];
 		return data.getAtkModel(ind).getProc();
 	}

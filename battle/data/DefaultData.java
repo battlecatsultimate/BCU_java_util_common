@@ -60,12 +60,12 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public boolean isLD() {
-		return lds > 0 && ldr * lds >= 0;
+		return ldr > 0;
 	}
 
 	@Override
 	public boolean isOmni() {
-		return lds > 0 && -ldr > lds;
+		return ldr < 0;
 	}
 
 	@Override

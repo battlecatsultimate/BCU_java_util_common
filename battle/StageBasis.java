@@ -56,6 +56,7 @@ public class StageBasis extends BattleObj {
 	public double mon;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
+	public int respawnTime;
 	public Background bg;
 
 	private final List<AttackAb> la = new ArrayList<>();
@@ -97,6 +98,12 @@ public class StageBasis extends BattleObj {
 		can = max_can * bas.getInc(C_C_INI) / 100;
 		canon = new Cannon(this, nyc[0]);
 		conf = ints;
+
+		if(st.minSpawn == st.maxSpawn || st.minSpawn <= 0 || st.maxSpawn <= 0)
+			respawnTime = 1;
+		else
+			respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextDouble());
+
 		if ((conf[0] & 1) > 0)
 			work_lv = 8;
 		if ((conf[0] & 2) > 0)
@@ -308,13 +315,23 @@ public class StageBasis extends BattleObj {
 		if (s_stop == 0) {
 
 			int allow = st.max - entityCount(1);
-			if (time % 2 == 1 && ebase.health > 0 && allow > 0) {
+			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
 					e.added(1, e.mark == 1 ? 801 : 700);
 					le.add(e);
+
+					if(st.minSpawn == st.maxSpawn || st.minSpawn <= 0 || st.maxSpawn <= 0)
+						respawnTime = 1;
+					else {
+						respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextDouble());
+					}
 				}
 			}
+
+			if(respawnTime > 0)
+				respawnTime--;
+
 			elu.update();
 			if(can == max_can-1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);

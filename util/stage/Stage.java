@@ -128,6 +128,7 @@ public class Stage extends Data
 	public boolean non_con, trail;
 	public int len, health, max, mush;
 	public int timeLimit = 0;
+	public int minSpawn = 1, maxSpawn = 1;
 	public Identifier<CastleImg> castle;
 	public Identifier<Background> bg;
 	public Identifier<Music> mus0, mus1;
@@ -213,6 +214,8 @@ public class Stage extends Data
 		String[] strs = qs.poll().split(",");
 		len = Integer.parseInt(strs[0]);
 		health = Integer.parseInt(strs[1]);
+		minSpawn = Integer.parseInt(strs[2]);
+		maxSpawn = Integer.parseInt(strs[3]);
 		bg = Identifier.parseInt(Integer.parseInt(strs[4]), Background.class);
 		max = Integer.parseInt(strs[5]);
 		timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
