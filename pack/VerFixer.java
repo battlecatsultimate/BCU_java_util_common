@@ -470,10 +470,7 @@ public abstract class VerFixer extends Source {
 				String str = file.getName();
 				if (!str.endsWith(".bcupack"))
 					continue;
-				File g = CommonStatic.def.route("./res/data/" + str.replace(".bcupack", ".bcudata"));
-				if (!g.exists())
-					g = file;
-				VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(g), CommonStatic.def.getReader(g));
+				VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(file));
 				map.put(pack.id, pack);
 				packs.add(pack.id);
 
