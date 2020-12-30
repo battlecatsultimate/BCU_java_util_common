@@ -38,7 +38,12 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 					return (T) ans;
 			}
 		}
-		return (T) new Identifier(DEF, cls, 0).get();
+
+		if(cls == EneRand.class) {
+			return (T) new Identifier(DEF, Enemy.class, 0).get();
+		} else {
+			return (T) new Identifier(DEF, cls, 0).get();
+		}
 	}
 
 	/**
@@ -127,7 +132,7 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 	}
 
 	public boolean equals(Identifier<T> o) {
-		return pack.equals(o.pack) && id == o.id;
+		return pack.equals(o.pack) && id == o.id && o.cls == cls;
 	}
 
 	@JsonClass.JCGetter

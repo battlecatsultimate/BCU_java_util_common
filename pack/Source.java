@@ -27,13 +27,11 @@ import common.util.unit.Unit;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class Source {
@@ -306,24 +304,19 @@ public abstract class Source {
 			return id;
 		}
 
-		public static String generateMD5ID() {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSS");
-			Date now = new Date();
+		public static String generatePackID() {
+			String format = "abcdefghijklmnopqrstuvwxyz0123456789";
+			Random random = new Random();
 
-			String current = sdf.format(now);
+			StringBuilder result = new StringBuilder();
 
-			try {
-				MessageDigest md5 = MessageDigest.getInstance("MD5");
+			while(result.length() < 8) {
+				char ch = format.charAt((int) (random.nextFloat() * format.length()));
 
-				byte[] digest = md5.digest(current.getBytes());
-				BigInteger big = new BigInteger(1, digest);
-
-				return big.toString(16);
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-
-				return "INVALID";
+				result.append(ch);
 			}
+
+			return result.toString();
 		}
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
@@ -491,7 +484,7 @@ public abstract class Source {
 		}
 
 		public Workspace unzip(String password, Consumer<Double> prog) throws Exception {
-			if (!zip.match(PackLoader.getMD5(password.getBytes(), 16)))
+			if (!zip.match(PackLoader.getMD5(password.getBytes(StandardCharsets.UTF_8), 16)))
 				return null;
 			File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/pack.json");
 			File folder = f.getParentFile();

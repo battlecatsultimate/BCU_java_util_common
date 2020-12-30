@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -90,7 +91,7 @@ public class Replay extends Data {
 			int size = DataIO.toInt(DataIO.translate(len), 0);
 			byte[] json = new byte[size];
 			fis.read(json);
-			JsonElement elem = JsonParser.parseString(new String(json));
+			JsonElement elem = JsonParser.parseString(new String(json, StandardCharsets.UTF_8));
 			Replay rep = JsonDecoder.decode(elem, Replay.class);
 			fis.read(len);
 			size = DataIO.toInt(DataIO.translate(len), 0);

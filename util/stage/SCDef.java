@@ -13,6 +13,7 @@ import common.pack.PackData.PackDesc;
 import common.system.Copable;
 import common.util.Data;
 import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import java.util.*;
 import java.util.Map.Entry;
@@ -160,9 +161,17 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	public boolean contains(Enemy e) {
-		for (Line dat : datas)
-			if (dat.enemy.equals(e.id))
-				return true;
+		for (Line dat : datas) {
+			if(dat.enemy.cls == EneRand.class) {
+				EneRand rand = (EneRand) Identifier.get(dat.enemy);
+
+				if(rand != null && rand.contains(e.id, dat.enemy))
+					return true;
+			} else if(dat.enemy.cls == Enemy.class) {
+				if (dat.enemy.equals(e.id))
+					return true;
+			}
+		}
 		return false;
 	}
 

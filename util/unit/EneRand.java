@@ -71,6 +71,8 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		return te;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return id.id + " - " + name + " (" + id.pack + ")";
@@ -101,4 +103,28 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		}
 	}
 
+	@Override
+	public boolean contains(Identifier<AbEnemy> e, Identifier<AbEnemy> origin) {
+		for(EREnt<Identifier<AbEnemy>> id :list) {
+			Identifier<AbEnemy> i = id.ent;
+
+			if(i == null)
+				continue;
+
+			if(origin.equals(i))
+				continue;
+
+			if(i.cls == EneRand.class) {
+				EneRand rand = (EneRand) Identifier.get(i);
+
+				if(rand != null && rand.contains(e, origin))
+					return true;
+			} else if(i.cls == Enemy.class) {
+				if(i.pack.equals(e.pack) && i.id == e.id)
+					return true;
+			}
+		}
+
+		return false;
+	}
 }

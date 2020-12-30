@@ -30,6 +30,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.function.Consumer;
@@ -143,19 +144,8 @@ public class PackLoader {
 			return Arrays.equals(data, loader.key);
 		}
 
-		public String getKey() {
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < loader.key.length; i++) {
-				String hex = Integer.toHexString(0xFF & loader.key[i]);
-
-				if(hex.length() == 1)
-					sb.append('0');
-
-				sb.append(hex);
-			}
-
-			return sb.toString();
+		public boolean matchKey(String key) {
+			return match(getMD5(key.getBytes(), 16));
 		}
 
 		@OnInjected
@@ -357,7 +347,7 @@ public class PackLoader {
 			byte[] len = new byte[4];
 			fis.read(len);
 			int size = DataIO.toInt(len, 0);
-			String desc = new String(decode(size));
+			String desc = new String(decode(size), StandardCharsets.UTF_8);
 			JsonElement je = JsonParser.parseString(desc);
 			int offset = off + HEADER + PASSWORD + 4 + regulate(size);
 			pack = JsonDecoder.inject(je, ZipDesc.class, new ZipDesc(this, offset));
@@ -392,10 +382,10 @@ public class PackLoader {
 			for (File fi : folder.listFiles())
 				addFiles(fs, fi, "./");
 			ZipDesc desc = new ZipDesc(pd, fs.toArray(new FileDesc[0]));
-			byte[] bytedesc = JsonEncoder.encode(desc).toString().getBytes();
+			byte[] bytedesc = JsonEncoder.encode(desc).toString().getBytes(StandardCharsets.UTF_8);
 			fos = new FileOutputStream(dst);
 			fos.write(HEAD_DATA);
-			key = getMD5(password.getBytes(), PASSWORD);
+			key = getMD5(password.getBytes(StandardCharsets.UTF_8), PASSWORD);
 			fos.write(key);
 			byte[] len = new byte[4];
 			DataIO.fromInt(len, 0, bytedesc.length);
@@ -467,7 +457,7 @@ public class PackLoader {
 		int size = DataIO.toInt(len, 0);
 		byte[] data = new byte[size];
 		fis.read(data);
-		String desc = new String(data);
+		String desc = new String(data, StandardCharsets.UTF_8);
 		JsonElement je = JsonParser.parseString(desc);
 		JsonDecoder.inject(je, AssetHeader.class, asset);
 		asset.offset = HEADER + 4 + size;

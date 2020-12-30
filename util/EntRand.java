@@ -56,6 +56,7 @@ public abstract class EntRand<X> extends Data {
 		return null;
 	}
 
+	public abstract boolean contains(X x, X origin);
 }
 
 interface Lock<X> {
