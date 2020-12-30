@@ -187,6 +187,8 @@ public abstract class Source {
 		}
 
 		public void delete() {
+			anim.unload();
+
 			CommonStatic.ctx.noticeErr(
 					() -> Context.delete(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id)),
 					ErrType.ERROR, "failed to delete animation: " + id);
