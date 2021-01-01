@@ -265,8 +265,17 @@ public abstract class Source {
 				return list;
 			for (File f : folder.listFiles()) {
 				String path = "./" + id + "/" + ANIM + "/" + f.getName() + "/sprite.png";
-				if (f.isDirectory() && CommonStatic.ctx.getWorkspaceFile(path).exists())
-					list.add(new AnimCE(new ResourceLocation(id, f.getName())));
+
+				if (AnimCE.map().containsKey(f.getName()))
+					list.add(AnimCE.map().get(f.getName()));
+				else
+					if (f.isDirectory() && CommonStatic.ctx.getWorkspaceFile(path).exists()) {
+						AnimCE anim = new AnimCE(new ResourceLocation(id, f.getName()));
+
+						list.add(anim);
+
+						AnimCE.map().put(f.getName(), anim);
+					}
 			}
 			return list;
 		}
@@ -346,7 +355,7 @@ public abstract class Source {
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
 				if (anim.id.pack.equals(ResourceLocation.LOCAL))
-					anim.localize();
+					anim.localize(pack);
 				if (anim.id.pack.startsWith(".temp_"))
 					anim.id.pack = anim.id.pack.substring(6);
 			}
@@ -354,7 +363,7 @@ public abstract class Source {
 				for (Form f : u.forms) {
 					AnimCE anim = (AnimCE) f.anim;
 					if (anim.id.pack.equals(ResourceLocation.LOCAL))
-						anim.localize();
+						anim.localize(pack);
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
 				}

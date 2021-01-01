@@ -33,7 +33,7 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 		if (id != null) {
 			IndexContainer ic = (IndexContainer) getContainer(id.cls, id.pack);
 			if (ic != null) {
-				Object ans = ic.getList(cls, (r, l) -> r == null ? l.get(id.id) : r, null);
+				Object ans = ic.getList(id.cls, (r, l) -> r == null ? l.get(id.id) : r, null);
 				if (ans != null)
 					return (T) ans;
 			}

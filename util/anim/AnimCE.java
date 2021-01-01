@@ -64,8 +64,6 @@ public class AnimCE extends AnimCI {
 	public AnimCE(ResourceLocation resourceLocation) {
 		super(new SourceAnimLoader(resourceLocation, null));
 		id = resourceLocation;
-		if (id.pack.equals(ResourceLocation.LOCAL))
-			map().put(id.id, this);
 		history("initial");
 	}
 
@@ -148,29 +146,46 @@ public class AnimCE extends AnimCI {
 		validate();
 	}
 
-	public void localize() {
+	public void localize(UserPack pac) {
 		check();
-		map().remove(id.id);
-		SourceAnimSaver saver = new SourceAnimSaver(id, this);
-		saver.delete();
-		for (UserPack pack : UserProfile.getUserPacks())
-			if (pack.editable) {
+		if(pac != null) {
+			if (pac.editable) {
 				List<Animable<AnimU<?>, UType>> list = new ArrayList<>();
-				for (Enemy e : pack.enemies)
+				for (Enemy e : pac.enemies)
 					if (e.anim == this)
 						list.add(e);
-				for (Unit u : pack.units)
+				for (Unit u : pac.units)
 					for (Form f : u.forms)
 						if (f.anim == this)
 							list.add(f);
 				if (list.size() == 0)
-					continue;
-				ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id);
+					return;
+				ResourceLocation rl = new ResourceLocation(pac.getSID(), id.id);
 				Workspace.validate(Source.ANIM, rl);
 				AnimCE tar = new AnimCE(rl, this);
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
 			}
+		} else {
+			for (UserPack pack : UserProfile.getUserPacks())
+				if (pack.editable) {
+					List<Animable<AnimU<?>, UType>> list = new ArrayList<>();
+					for (Enemy e : pack.enemies)
+						if (e.anim == this)
+							list.add(e);
+					for (Unit u : pack.units)
+						for (Form f : u.forms)
+							if (f.anim == this)
+								list.add(f);
+					if (list.size() == 0)
+						continue;
+					ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id);
+					Workspace.validate(Source.ANIM, rl);
+					AnimCE tar = new AnimCE(rl, this);
+					for (Animable<AnimU<?>, UType> a : list)
+						a.anim = tar;
+				}
+		}
 	}
 
 	public void merge(AnimCE a, int x, int y) {
