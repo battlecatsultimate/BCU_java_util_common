@@ -1337,8 +1337,11 @@ public abstract class Entity extends AbEntity {
 		if (health > 0)
 			tempearn = false;
 
-		if (isBase && health < 0)
+		if (isBase && health < 0) {
 			health = 0;
+			atkm.stopAtk();
+			anim.setAnim(UType.HB);
+		}
 
 		acted = false;
 	}
@@ -1415,11 +1418,11 @@ public abstract class Entity extends AbEntity {
 			binatk = binatk && touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
-			if (!acted && binatk)
+			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
 
 			// update waiting state
-			if ((waitTime > 0 || !touchEnemy) && touch && atkm.atkTime == 0)
+			if ((waitTime > 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
 				anim.setAnim(UType.IDLE);
 			if (waitTime > 0)
 				waitTime--;
@@ -1674,7 +1677,8 @@ public abstract class Entity extends AbEntity {
 			blds = le.size() == 0;
 		if (status[P_STOP][0] == 0 && blds) {
 			touch = false;
-			anim.setAnim(UType.WALK);
+			if (health > 0)
+				anim.setAnim(UType.WALK);
 			updateMove(-1, 0);
 		}
 		touchEnemy = touch;
