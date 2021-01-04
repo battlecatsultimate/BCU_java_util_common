@@ -407,6 +407,8 @@ public abstract class Entity extends AbEntity {
 				if (effs[i] != null)
 					effs[i].update(false);
 
+			if (e.isBase && e.health <= 0)
+				return;
 			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || e.kb.kbType != INT_SW))
 				anim.update(false);
 			if (back != null)
@@ -1418,11 +1420,11 @@ public abstract class Entity extends AbEntity {
 			binatk = binatk && touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
-			if (!acted && binatk && health > 0)
+			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
 
 			// update waiting state
-			if ((waitTime > 0 || !touchEnemy) && touch && atkm.atkTime == 0 && health > 0)
+			if ((waitTime > 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
 				anim.setAnim(UType.IDLE);
 			if (waitTime > 0)
 				waitTime--;
