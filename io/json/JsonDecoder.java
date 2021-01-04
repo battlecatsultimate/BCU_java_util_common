@@ -262,7 +262,8 @@ public class JsonDecoder {
 			Object ent = decode(obj.get("val"), par.curjfld.generic()[1], par);
 			par.index = 0;
 
-			val.put(key, ent);
+			if(key != null)
+				val.put(key, ent);
 		}
 		return val;
 

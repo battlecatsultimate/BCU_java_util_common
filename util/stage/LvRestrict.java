@@ -118,7 +118,7 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			for (Form f : fs)
 				if (f != null) {
 					int[] mlv = valid(f).getLvs();
-					int[] flv = lu.map.get(f.unit).getLvs();
+					int[] flv = lu.map.get(f.unit.id).getLvs();
 					for (int i = 0; i < 6; i++)
 						if (mlv[i] < flv[i])
 							return false;
@@ -162,7 +162,7 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null)
-					lu.map.put(f.unit, valid(f));
+					lu.map.put(f.unit.id, valid(f));
 		lu.renew();
 	}
 

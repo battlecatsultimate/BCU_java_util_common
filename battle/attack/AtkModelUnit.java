@@ -19,7 +19,10 @@ public class AtkModelUnit extends AtkModelEntity {
 		bas = ent.basis.b;
 		buffed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < buffed.length; i++) {
-			buffed[i] = data.getAtkModel(i).getProc().clone();
+			if(data.getAtkModel(i).getProc() == null)
+				buffed[i] = Proc.blank();
+			else
+				buffed[i] = data.getAtkModel(i).getProc().clone();
 			buffed[i].STOP.time = (buffed[i].STOP.time * (100 + bas.getInc(C_STOP))) / 100;
 			buffed[i].SLOW.time = (buffed[i].SLOW.time * (100 + bas.getInc(C_SLOW))) / 100;
 			buffed[i].WEAK.time = (buffed[i].WEAK.time * (100 + bas.getInc(C_WEAK))) / 100;
@@ -35,7 +38,7 @@ public class AtkModelUnit extends AtkModelEntity {
 		if (conf.same_health && ent.health <= 0)
 			return;
 		int time = proc.time;
-		if (u != null && (b.entityCount(-1) < b.max_num || conf.ignore_limit)) {
+		if (b.entityCount(-1) < b.max_num || conf.ignore_limit) {
 			double up = ent.pos + getDire() * proc.dis;
 			EForm ef = new EForm(u.forms[0], u.max);
 			EUnit eu = ef.getEntity(b);

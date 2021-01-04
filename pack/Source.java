@@ -5,6 +5,7 @@ import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.pack.Context.ErrType;
@@ -14,6 +15,7 @@ import common.system.fake.FakeImage;
 import common.system.files.FDFile;
 import common.system.files.FileData;
 import common.system.files.VFile;
+import common.util.Animable;
 import common.util.Data;
 import common.util.anim.*;
 import common.util.pack.Background;
@@ -96,6 +98,16 @@ public abstract class Source {
 		@Override
 		public String toString() {
 			return pack + "/" + id;
+		}
+
+		@JsonDecoder.OnInjected
+		public void onInjectSource() {
+			Object zip = UserProfile.getStatic(UserProfile.CURRENT_PACK, () -> null);
+
+			if(this.pack.equals(LOCAL) && zip instanceof ZipSource) {
+				this.pack = ((ZipSource) zip).id;
+				this.id = "_mapped_" + this.id;
+			}
 		}
 
 	}
@@ -354,16 +366,18 @@ public abstract class Source {
 		public void export(UserPack pack, String password, Consumer<Double> prog) throws Exception {
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
-				if (anim.id.pack.equals(ResourceLocation.LOCAL))
-					anim.localize(pack);
+				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
+					new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+				}
 				if (anim.id.pack.startsWith(".temp_"))
 					anim.id.pack = anim.id.pack.substring(6);
 			}
 			for (Unit u : pack.units)
 				for (Form f : u.forms) {
 					AnimCE anim = (AnimCE) f.anim;
-					if (anim.id.pack.equals(ResourceLocation.LOCAL))
-						anim.localize(pack);
+					if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
+						new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+					}
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
 				}

@@ -1,6 +1,7 @@
 package common.pack;
 
 import common.io.PackLoader.ZipDesc.FileDesc;
+import common.system.P;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,6 +82,16 @@ public interface Context {
 		try {
 			return r.get();
 		} catch (Exception e) {
+			noticeErr(e, t, str);
+			return null;
+		}
+	}
+
+	default <T> T noticeErr(Context.SupExc<T> r, ErrType t, String str, Runnable onFail) {
+		try {
+			return r.get();
+		} catch (Exception e) {
+			onFail.run();
 			noticeErr(e, t, str);
 			return null;
 		}

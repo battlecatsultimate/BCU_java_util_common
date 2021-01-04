@@ -62,7 +62,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		sealed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < sealed.length; i++) {
 			sealed[i] = Proc.blank();
-			sealed[i].MOVEWAVE.set(data.getAtkModel(i).getProc().MOVEWAVE);
+			if(data.getAtkModel(i).getProc() != null)
+				sealed[i].MOVEWAVE.set(data.getAtkModel(i).getProc().MOVEWAVE);
 		}
 	}
 

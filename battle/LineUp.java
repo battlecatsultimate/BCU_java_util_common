@@ -21,8 +21,8 @@ public class LineUp extends Data {
 		return id.pack.equals(Identifier.DEF) && id.id == com;
 	}
 
-	@JsonField(generic = { Unit.class, Level.class }, alias = { Identifier.class })
-	public final TreeMap<Unit, Level> map = new TreeMap<>();
+	@JsonField(generic = { Identifier.class, Level.class })
+	public final TreeMap<Identifier<Unit>, Level> map = new TreeMap<>();
 
 	@JsonField(alias = Form.FormJson.class)
 	public final Form[][] fs = new Form[2][5];
@@ -55,7 +55,7 @@ public class LineUp extends Data {
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++)
 				fs[i][j] = ref.fs[i][j];
-		for (Entry<Unit, Level> e : ref.map.entrySet()) {
+		for (Entry<Identifier<Unit>, Level> e : ref.map.entrySet()) {
 			map.put(e.getKey(), e.getValue().clone());
 		}
 		renew();
@@ -90,9 +90,9 @@ public class LineUp extends Data {
 	 * get level of an Unit, if no date recorded, record default one
 	 */
 	public synchronized Level getLv(Unit u) {
-		if (!map.containsKey(u))
+		if (!map.containsKey(u.id))
 			setLv(u, u.getPrefLvs());
-		return map.get(u);
+		return map.get(u.id);
 	}
 
 	/**
@@ -207,14 +207,14 @@ public class LineUp extends Data {
 		boolean sub = updating;
 		updating = true;
 
-		Level l = map.get(u);
+		Level l = map.get(u.id);
 
 		if (l != null) {
 			l.setLvs(lv);
 		} else {
 			l = new Level(lv);
 
-			map.put(u, l);
+			map.put(u.id, l);
 		}
 
 		if (!sub)
@@ -229,13 +229,13 @@ public class LineUp extends Data {
 		// lvs must be generated before doing something with orbs
 		boolean sub = updating;
 		updating = true;
-		Level l = map.get(u);
+		Level l = map.get(u.id);
 		if (l != null) {
 			l.setLvs(lvs);
 			l.setOrbs(orbs);
 		} else {
 			l = new Level(lvs, orbs);
-			map.put(u, l);
+			map.put(u.id, l);
 		}
 		if (!sub)
 			renewEForm();
@@ -376,7 +376,7 @@ public class LineUp extends Data {
 				orbs = is.nextIntsBB();
 			}
 			if (u != null)
-				map.put(u, new Level(lv, orbs));
+				map.put(u.id, new Level(lv, orbs));
 		}
 		arrange();
 	}

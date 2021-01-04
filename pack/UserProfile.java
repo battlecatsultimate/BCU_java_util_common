@@ -30,6 +30,7 @@ public class UserProfile {
 
 	private static final String REG_POOL = "_pools";
 	private static final String REG_STATIC = "_statics";
+	protected static final String CURRENT_PACK = "_current_pack";
 
 	@StaticPermitted(StaticPermitted.Type.ENV)
 	private static UserProfile profile = null;
@@ -181,7 +182,7 @@ public class UserProfile {
 			for (File f : packs.listFiles())
 				if (f.getName().endsWith(".pack.bcuzip")) {
 					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
-							"failed to load external pack " + f);
+							"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
 
 					if (pack != null) {
 						UserPack p = profile.pending.put(pack.desc.id, pack);
@@ -247,9 +248,18 @@ public class UserProfile {
 		}
 
 		Reader r = new InputStreamReader(zip.readFile("./pack.json"), StandardCharsets.UTF_8);
+
+		ZipSource zs = new ZipSource(zip);
+
+		setStatic(CURRENT_PACK, zs);
+
 		JsonElement elem = JsonParser.parseReader(r);
-		UserPack data = new UserPack(new ZipSource(zip), zip.desc, elem);
+
+		UserPack data = new UserPack(zs, zip.desc, elem);
 		r.close();
+
+		setStatic(CURRENT_PACK, null);
+
 		return data;
 	}
 
