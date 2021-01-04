@@ -407,8 +407,6 @@ public abstract class Entity extends AbEntity {
 				if (effs[i] != null)
 					effs[i].update(false);
 
-			if (e.isBase && e.health <= 0)
-				return;
 			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || e.kb.kbType != INT_SW))
 				anim.update(false);
 			if (back != null)
