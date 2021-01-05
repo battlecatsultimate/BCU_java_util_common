@@ -218,6 +218,7 @@ public abstract class PackData implements IndexContainer {
 		public String desc;
 		public String time;
 		public int version;
+		public boolean allowAnim = false;
 		@JsonField(generic = String.class)
 		public ArrayList<String> dependency;
 
