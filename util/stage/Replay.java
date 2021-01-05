@@ -77,6 +77,8 @@ public class Replay extends Data {
 						fis.close();
 						if (rep == null)
 							CommonStatic.ctx.printErr(ErrType.WARN, "corrupted replay file " + fi.getName());
+						else
+							getMap().put(fi.getName().replace(".replay", ""), rep);
 					} catch (Exception e) {
 						CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to load replay " + fi.getName());
 					}
