@@ -78,6 +78,17 @@ public interface Context {
 		}
 	}
 
+	default boolean noticeErr(Context.RunExc r, ErrType t, String str, Runnable onFail) {
+		try {
+			r.run();
+			return true;
+		} catch (Exception e) {
+			noticeErr(e, t, str);
+			onFail.run();
+			return false;
+		}
+	}
+
 	default <T> T noticeErr(Context.SupExc<T> r, ErrType t, String str) {
 		try {
 			return r.get();

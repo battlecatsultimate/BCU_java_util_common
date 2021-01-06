@@ -28,10 +28,7 @@ import common.util.unit.Unit;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class Source {
@@ -103,6 +100,7 @@ public abstract class Source {
 			Object zip = UserProfile.getStatic(UserProfile.CURRENT_PACK, () -> null);
 
 			if(this.pack.equals(LOCAL) && zip instanceof ZipSource) {
+				System.out.println(((ZipSource) zip).id);
 				this.pack = ((ZipSource) zip).id;
 				this.id = "_mapped_" + this.id;
 			}
@@ -439,7 +437,7 @@ public abstract class Source {
 		protected void save(UserPack up) throws IOException {
 			File f = getFile("pack.json");
 			Context.check(f);
-			FileWriter fw = new FileWriter(f);
+			OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
 			fw.write(JsonEncoder.encode(up).toString());
 			fw.close();
 		}

@@ -76,7 +76,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public static void write() {
 		File target = CommonStatic.ctx.getUserFile("./basis.json");
 		File temp = CommonStatic.ctx.getUserFile("./.temp.basis.json");
-		try (Writer w = new FileWriter(temp)) {
+		try (Writer w = new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.UTF_8)) {
 			Context.check(temp);
 			List<BasisSet> list = list();
 			int cur = list.indexOf(current());

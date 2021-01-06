@@ -322,7 +322,7 @@ public class UserProfile {
 		packlist.add(pack);
 		if (!canAdd(pack))
 			return false;
-		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc)) {
+		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null))) {
 			failed.add(pack);
 			return true;
 		}

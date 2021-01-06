@@ -35,6 +35,7 @@ import java.util.Map;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import main.Opts;
 
 @JsonClass
 @JsonClass.JCGeneric(ResourceLocation.class)
@@ -58,11 +59,16 @@ public class Replay extends Data {
 			for (File fi : fs) {
 				String str = fi.getName();
 				if (str.endsWith(".replay")) {
-					String name = str.substring(0, str.length() - 7);
-					InStream is = CommonStatic.def.readBytes(fi);
-					Replay rec = getRecd(is, new ResourceLocation(ResourceLocation.LOCAL, name), null);
-					rec.write();
-					getMap().put(name, rec);
+					try {
+						String name = str.substring(0, str.length() - 7);
+						InStream is = CommonStatic.def.readBytes(fi);
+						Replay rec = getRecd(is, new ResourceLocation(ResourceLocation.LOCAL, name), null);
+						rec.write();
+						getMap().put(name, rec);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Opts.pop("Failed to reformat "+fi.getName(), "Reformat failed");
+					}
 				}
 			}
 		}
