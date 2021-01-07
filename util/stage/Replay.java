@@ -72,7 +72,12 @@ public class Replay extends Data {
 				}
 			}
 		}
-		fold.delete();
+		try {
+			Context.delete(fold);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Opts.pop("Failed to remove folder : "+fold.getName(), "Deletion filed");
+		}
 		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.REPLAY);
 		if (f.exists())
 			for (File fi : f.listFiles())
