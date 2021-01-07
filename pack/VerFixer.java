@@ -91,8 +91,14 @@ public abstract class VerFixer extends Source {
 			if (ver != 401)
 				throw new VerFixerException("DIYAnim expects version 401, got " + ver);
 			int type = is.nextInt();
-			if (type == 0)
-				return new AnimCE(new ResourceLocation(ResourceLocation.LOCAL, is.nextString()));
+			if (type == 0) {
+				String id = is.nextString();
+				AnimCE anim = new AnimCE(new ResourceLocation(ResourceLocation.LOCAL, id));
+
+				AnimCE.map().put(id, anim);
+
+				return anim;
+			}
 			else if (type == 1)
 				return decodeAnim(id, is.subStream(), r);
 			throw new VerFixerException("DIYAnim expects type 0 or 1, got " + 2);

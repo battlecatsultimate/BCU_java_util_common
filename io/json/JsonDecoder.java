@@ -386,7 +386,7 @@ public class JsonDecoder {
 			try {
 				f.set(obj, decode(elem, f.getType(), getInvoker()));
 			} catch (Exception e) {
-				throw new Exception("error at " + curcls + " in field " + f, e);
+				throw new Exception("error at " + curcls + " in field " + f +" | Elem : "+elem, e);
 			}
 			curfld = null;
 		}
