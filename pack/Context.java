@@ -1,7 +1,6 @@
 package common.pack;
 
 import common.io.PackLoader.ZipDesc.FileDesc;
-import common.system.P;
 
 import java.io.File;
 import java.io.IOException;

@@ -35,6 +35,11 @@ public class Admin {
 		}
 
 		@Override
+		public boolean confirmDelete(File f) {
+			return true;
+		}
+
+		@Override
 		public File getAssetFile(String string) {
 			return new File("./assets/" + string);
 		}
