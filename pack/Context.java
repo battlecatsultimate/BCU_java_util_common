@@ -56,6 +56,8 @@ public interface Context {
 
 	boolean confirmDelete();
 
+	boolean confirmDelete(File f);
+
 	File getAssetFile(String string);
 
 	File getAuxFile(String string);

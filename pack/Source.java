@@ -510,7 +510,7 @@ public abstract class Source {
 			File f = CommonStatic.ctx.getWorkspaceFile("./" + id + "/pack.json");
 			File folder = f.getParentFile();
 			if (folder.exists()) {
-				if (!CommonStatic.ctx.confirmDelete())
+				if (!CommonStatic.ctx.confirmDelete(f))
 					return null;
 				Context.delete(f);
 			}
