@@ -82,8 +82,16 @@ public class UpdateCheck {
 
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class JarJson {
+			public int ver;
+			public String desc;
+			public boolean isRelease;
+		}
+
 		public AssetJson[] assets;
 		public String[] pc_libs;
+		public JarJson[] pc_update;
 		public long text_update;
 		public int music;
 
