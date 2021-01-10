@@ -22,6 +22,11 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void damaged(AttackAb atk) {
+		if(atk.isLongAtk)
+			sb.lea.add(new EAnimCont(pos, atk.layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
+		else
+			sb.lea.add(new EAnimCont(pos, atk.layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
+
 		int ans = atk.atk;
 		if ((atk.abi & AB_BASE) > 0)
 			ans *= 4;

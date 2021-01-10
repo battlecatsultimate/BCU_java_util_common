@@ -134,13 +134,21 @@ public abstract class Entity extends AbEntity {
 			if (effs[eftp] != null) {
 				effs[eftp].draw(g, p, siz);
 			}
-			for (EAnimD<?> eae : effs) {
+			for(int i = 0; i < effs.length; i++) {
+				EAnimD<?> eae = effs[i];
+
+				double offset = 0.0;
+
+				if(i == A_B || i == A_E_B)
+					offset = -25.0 * siz;
+
 				if (eae == null)
 					continue;
 				g.setTransform(at);
-				eae.draw(g, new P(x, p.y), siz);
+				eae.draw(g, new P(x, p.y+offset), siz * 0.75);
 				x -= EWID * e.dire * siz;
 			}
+
 			g.delete(at);
 		}
 
@@ -236,20 +244,20 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (t == BREAK_ABI) {
-				int id = dire == -1 ? A_U_E_B : A_E_B;
-				effs[id] = (dire == -1 ? effas().A_U_E_B : effas().A_E_B).getEAnim(BarEneEff.BREAK);
+				int id = dire == -1 ? A_B : A_E_B;
+				effs[id] = (dire == -1 ? effas().A_B : effas().A_E_B).getEAnim(BarrierEff.BREAK);
 				status[P_BREAK][0] = effs[id].len();
 				CommonStatic.setSE(SE_BARRIER_ABI);
 			}
 			if (t == BREAK_ATK) {
-				int id = dire == -1 ? A_U_E_B : A_E_B;
-				effs[id] = (dire == -1 ? effas().A_U_E_B : effas().A_E_B).getEAnim(BarEneEff.DESTR);
+				int id = dire == -1 ? A_B : A_E_B;
+				effs[id] = (dire == -1 ? effas().A_B : effas().A_E_B).getEAnim(BarrierEff.DESTR);
 				status[P_BREAK][0] = effs[id].len();
 				CommonStatic.setSE(SE_BARRIER_ATK);
 			}
 			if (t == BREAK_NON) {
-				int id = dire == -1 ? A_U_B : A_B;
-				effs[id] = (dire == -1 ? effas().A_U_B : effas().A_B).getEAnim(BarrierEff.END);
+				int id = dire == -1 ? A_B : A_E_B;
+				effs[id] = (dire == -1 ? effas().A_B : effas().A_E_B).getEAnim(BarrierEff.NONE);
 				status[P_BREAK][0] = effs[id].len();
 				CommonStatic.setSE(SE_BARRIER_NON);
 			}
@@ -329,7 +337,7 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 			if (status[P_BREAK][0] == 0) {
-				int id = dire == -1 ? A_U_B : A_B;
+				int id = dire == -1 ? A_B : A_E_B;
 				effs[id] = null;
 			} else
 				status[P_BREAK][0]--;
@@ -1110,6 +1118,13 @@ public abstract class Entity extends AbEntity {
 		damage += dmg;
 		zx.damaged(atk);
 		tempearn |= (atk.abi & AB_EARN) > 0;
+
+		//75.0 is guessed value compared from BC
+		if(atk.isLongAtk)
+			basis.lea.add(new EAnimCont(pos, atk.layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
+		else
+			basis.lea.add(new EAnimCont(pos, atk.layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
+
 		if (atk.getProc().CRIT.mult > 0) {
 			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF)));
 			CommonStatic.setSE(SE_CRIT);

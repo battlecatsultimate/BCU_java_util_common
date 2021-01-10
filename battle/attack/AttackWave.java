@@ -12,7 +12,7 @@ public class AttackWave extends AttackAb {
 	protected final Set<Entity> incl;
 
 	public AttackWave(AttackSimple a, double p0, double wid, int wt) {
-		super(a, p0 - wid / 2, p0 + wid / 2);
+		super(a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = wt;
 		incl = new HashSet<>();
 		if(waveType == WT_MINI)
@@ -22,7 +22,7 @@ public class AttackWave extends AttackAb {
 	}
 
 	public AttackWave(AttackWave a, double p0, double wid) {
-		super(a, p0 - wid / 2, p0 + wid / 2);
+		super(a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = a.waveType;
 		incl = a.incl;
 		if(waveType == WT_MINI)

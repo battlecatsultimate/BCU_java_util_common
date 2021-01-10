@@ -33,7 +33,6 @@ public class AnimTypeLocale {
 		Collections.addAll(TYPES, UType.values());
 		Collections.addAll(TYPES, WaveType.values());
 		Collections.addAll(TYPES, EffAnim.ArmorEff.values());
-		Collections.addAll(TYPES, EffAnim.BarEneEff.values());
 		Collections.addAll(TYPES, EffAnim.BarrierEff.values());
 		Collections.addAll(TYPES, EffAnim.DefEff.values());
 		Collections.addAll(TYPES, EffAnim.KBEff.values());

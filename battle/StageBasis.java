@@ -10,6 +10,7 @@ import common.util.CopRand;
 import common.util.Data;
 import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
+import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
@@ -41,6 +42,8 @@ public class StageBasis extends BattleObj {
 	public final List<ContAb> lw = new ArrayList<>();
 	public final List<ContAb> tlw = new ArrayList<>();
 	public final List<EAnimCont> lea = new ArrayList<>();
+	public final List<EAnimCont> ebaseSmoke = new ArrayList<>();
+	public final List<EAnimCont> ubaseSmoke = new ArrayList<>();
 	public final Set<EneRand> rege = new HashSet<>();
 	public final int[] conf;
 	public final CopRand r;
@@ -357,6 +360,7 @@ public class StageBasis extends BattleObj {
 
 			tempe.forEach(EntCont::update);
 		}
+
 		for (int i = 0; i < le.size(); i++)
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
@@ -364,25 +368,49 @@ public class StageBasis extends BattleObj {
 		if (s_stop == 0) {
 			lw.forEach(ContAb::update);
 			lea.forEach(EAnimCont::update);
+			ebaseSmoke.forEach(EAnimCont::update);
+			ubaseSmoke.forEach(EAnimCont::update);
 			lw.addAll(tlw);
 			tlw.clear();
 		}
 		la.forEach(AttackAb::excuse);
 		la.clear();
-		if (s_stop == 0) {
+
+		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();
+
 			if (!lethal && ebase.health <= 0 && est.hasBoss()) {
 				lethal = true;
 				ebase.health = 1;
 			}
-			if (ebase.health <= 0)
+		}
+
+		if (s_stop == 0) {
+			if (ebase.health <= 0) {
 				for (int i = 0; i < le.size(); i++)
 					if (le.get(i).dire == 1)
 						le.get(i).kill();
-			if (ubase.health <= 0)
+
+				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
+					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
+					int y = (int) (-256 * r.nextDouble());
+
+					ebaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
+				}
+			}
+
+			if (ubase.health <= 0) {
 				for (int i = 0; i < le.size(); i++)
 					if (le.get(i).dire == -1)
 						le.get(i).kill();
+
+				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
+					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
+					int y = (int) (-256 * r.nextDouble());
+
+					ubaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
+				}
+			}
 		}
 		for (int i = 0; i < le.size(); i++)
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
@@ -392,6 +420,8 @@ public class StageBasis extends BattleObj {
 			le.removeIf(e -> e.anim.dead == 0);
 			lw.removeIf(w -> !w.activate);
 			lea.removeIf(EAnimCont::done);
+			ebaseSmoke.removeIf(EAnimCont::done);
+			ubaseSmoke.removeIf(EAnimCont::done);
 		}
 		updateTheme();
 		if (s_stop > 0)

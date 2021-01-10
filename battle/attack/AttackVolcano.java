@@ -13,7 +13,7 @@ public class AttackVolcano extends AttackAb {
 	protected final HashMap<Entity, Integer> vcapt;
 
 	public AttackVolcano(AttackSimple a, double sta, double end) {
-		super(a, sta, end);
+		super(a, sta, end, false);
 		vcapt = new HashMap<>();
 		this.sta = sta;
 		this.end = end;

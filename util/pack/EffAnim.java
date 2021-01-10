@@ -29,23 +29,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 	}
 
-	public enum BarEneEff implements EffType<BarEneEff> {
-		BREAK("_breaker"), DESTR("_destruction");
-
-		private final String path;
-
-		BarEneEff(String str) {
-			path = str;
-		}
-
-		@Override
-		public String path() {
-			return path;
-		}
-	}
-
 	public enum BarrierEff implements EffType<BarrierEff> {
-		BREAK("_breaker"), DESTR("_destruction"), DURING("_during"), START("_start"), END("_end");
+		BREAK("_breaker"), DESTR("_destruction"), NONE("");
 
 		private final String path;
 
@@ -122,7 +107,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		@Order(21)
 		public EffAnim<BarrierEff> A_B;
 		@Order(22)
-		public EffAnim<BarEneEff> A_E_B;
+		public EffAnim<BarrierEff> A_E_B;
 		@Order(23)
 		public EffAnim<WarpEff> A_W;
 		@Order(24)
@@ -141,10 +126,6 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<SniperEff> A_SNIPER;
 		@Order(31)
 		public EffAnim<ZombieEff> A_U_ZOMBIE;
-		@Order(32)
-		public EffAnim<BarrierEff> A_U_B;
-		@Order(33)
-		public EffAnim<BarEneEff> A_U_E_B;
 		@Order(34)
 		public EffAnim<DefEff> A_SEAL;
 		@Order(35)
@@ -195,6 +176,10 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<DefEff> A_MINIWAVE;
 		@Order(58)
 		public EffAnim<DefEff> A_E_MINIWAVE;
+		@Order(59)
+		public EffAnim<DefEff> A_ATK_SMOKE;
+		@Order(60)
+		public EffAnim<DefEff> A_WHITE_SMOKE;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -339,6 +324,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 			vfs[i] = new VImg(stfs[i] + ski + i + ".png");
 			icfs[i] = ImgCut.newIns(stfs[i] + ski + i + ".imgcut");
 		}
+		effas.A_ATK_SMOKE = new EffAnim<>(stra+"attack_smoke", va, ica, DefEff.values());
+		effas.A_WHITE_SMOKE = new EffAnim<>(stra+"white_smoke", va, ica, DefEff.values());
 		effas.A_SHOCKWAVE = new EffAnim<>(stra + "boss_welcome", va, ica, DefEff.values());
 		effas.A_CRIT = new EffAnim<>(stra + "critical", va, ica, DefEff.values());
 		effas.A_KB = new EffAnim<>(stra + "kb", va, ica, KBEff.values());
@@ -354,12 +341,9 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		effas.A_EFF_INV = new EffAnim<>(stfs[0] + ski + "effect_invalid", vfs[0], icfs[0], DefEff.values());
 		effas.A_EFF_DEF = new EffAnim<>(stfs[0] + ski + "effectdef", vfs[0], icfs[0], DefEff.values());
 		effas.A_Z_STRONG = new EffAnim<>(stfs[1] + ski + "zombie_strong", vfs[1], icfs[1], DefEff.values());
-		effas.A_B = new EffAnim<>(stfs[2] + ski + "barrier", vfs[2], icfs[2], BarrierEff.values());
-		effas.A_U_B = new EffAnim<>(stfs[2] + ski + "barrier", vfs[2], icfs[2], BarrierEff.values());
-		effas.A_U_B.rev = true;
-		effas.A_E_B = new EffAnim<>(stfs[2] + ski + "barrier_e", vfs[2], icfs[2], BarEneEff.values());
-		effas.A_U_E_B = new EffAnim<>(stfs[2] + ski + "barrier_e", vfs[2], icfs[2], BarEneEff.values());
-		effas.A_U_E_B.rev = true;
+		effas.A_B = new EffAnim<>(stfs[2] + ski + "barrier_e", vfs[2], icfs[2], BarrierEff.values());
+		effas.A_B.rev = true;
+		effas.A_E_B = new EffAnim<>(stfs[2] + ski + "barrier_e", vfs[2], icfs[2], BarrierEff.values());
 		effas.A_W = new EffAnim<>(stfs[2] + ski + "warp", vfs[2], icfs[2], WarpEff.values());
 		effas.A_W_C = new EffAnim<>(stfs[2] + ski + "warp_chara", vfs[2], icfs[2], WarpEff.values());
 		String strs = "./org/battle/sniper/";
