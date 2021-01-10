@@ -89,9 +89,16 @@ public class UpdateCheck {
 			public boolean isRelease;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class ApkJson {
+			public String ver;
+			public boolean isTest;
+		}
+
 		public AssetJson[] assets;
 		public String[] pc_libs;
 		public JarJson[] pc_update;
+		public ApkJson[] apk_update;
 		public long text_update;
 		public int music;
 
