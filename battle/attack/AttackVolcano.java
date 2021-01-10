@@ -35,7 +35,7 @@ public class AttackVolcano extends AttackAb {
 	public void excuse() {
 		process();
 		for (AbEntity e : capt) {
-			if (e.isBase())
+			if (e.isBase() && !(e instanceof Entity))
 				continue;
 			if (e instanceof Entity) {
 				e.damaged(this);
