@@ -1081,7 +1081,7 @@ public abstract class Entity extends AbEntity {
 
 		if ((atk.waveType & WT_VOLC) > 0) {
 			if (getProc().IMUVOLC.mult > 0) {
-				anim.getEff(INV);
+				anim.getEff(P_WAVE);
 				return;
 			}
 
