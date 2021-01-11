@@ -102,8 +102,10 @@ public class StageBasis extends BattleObj {
 		canon = new Cannon(this, nyc[0]);
 		conf = ints;
 
-		if(st.minSpawn == st.maxSpawn || st.minSpawn <= 0 || st.maxSpawn <= 0)
+		if(st.minSpawn <= 0 || st.maxSpawn <= 0)
 			respawnTime = 1;
+		else if(st.minSpawn == st.maxSpawn)
+			respawnTime = st.minSpawn;
 		else
 			respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextDouble());
 
@@ -328,8 +330,10 @@ public class StageBasis extends BattleObj {
 					e.added(1, e.mark == 1 ? 801 : 700);
 					le.add(e);
 
-					if(st.minSpawn == st.maxSpawn || st.minSpawn <= 0 || st.maxSpawn <= 0)
+					if(st.minSpawn <= 0 || st.maxSpawn <= 0)
 						respawnTime = 1;
+					else if(st.minSpawn == st.maxSpawn)
+						respawnTime = st.minSpawn;
 					else {
 						respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextDouble());
 					}
