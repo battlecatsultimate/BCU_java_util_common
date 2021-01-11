@@ -315,6 +315,10 @@ public class StageBasis extends BattleObj {
 				le.add(e.ent);
 			return e.t == 0;
 		});
+
+		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0)
+			ebase.update();
+
 		if (s_stop == 0) {
 
 			int allow = st.max - entityCount(1);
@@ -353,7 +357,6 @@ public class StageBasis extends BattleObj {
 				shock = false;
 			}
 
-			ebase.update();
 			canon.update();
 			if (sniper != null)
 				sniper.update();
