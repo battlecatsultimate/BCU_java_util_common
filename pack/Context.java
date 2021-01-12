@@ -115,4 +115,5 @@ public interface Context {
 
 	void printErr(ErrType t, String str);
 
+	void loadProg(String str);
 }

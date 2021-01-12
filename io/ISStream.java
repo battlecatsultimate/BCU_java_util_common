@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.Arrays;
 import java.util.function.BiFunction;
 
 import common.util.Data;
@@ -127,8 +128,10 @@ strictfp class ISStream extends InputStream implements InStream {
 	private void check(int size) {
 		Data.err(() -> raf.seek(ind));
 		ind += size;
-		if (ind > len)
+		if (ind > len) {
+			System.out.println(Arrays.deepToString(Thread.currentThread().getStackTrace()));
 			System.out.println("error: overread");
+		}
 	}
 
 	private <T> T check(int size, BiFunction<int[], Integer, T> func) {

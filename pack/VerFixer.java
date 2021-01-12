@@ -21,6 +21,7 @@ import common.util.stage.CastleImg;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
 import common.util.unit.*;
+import page.LoadPage;
 
 import java.io.File;
 import java.io.IOException;
@@ -498,6 +499,20 @@ public abstract class VerFixer extends Source {
 		while (list.size() > 0) {
 			int rem = 0;
 			for (VerFixer p : list) {
+				String loadProg;
+
+				if(p.data != null) {
+					if(p.data.editable) {
+						loadProg = "Fixing "+p.data.getSID()+".bcuenemy";
+					} else {
+						loadProg = "Fixing "+p.data.getSID()+".bcupack";
+					}
+				} else {
+					loadProg = null;
+				}
+
+				CommonStatic.ctx.loadProg(loadProg);
+
 				boolean all = true;
 				for (String pre : p.data.desc.dependency)
 					if (!pre.equals("000000") && (!map.containsKey(pre) || map.get(pre).is != null))

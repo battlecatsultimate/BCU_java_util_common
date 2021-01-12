@@ -70,6 +70,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public int[][] cs = new int[4][3];
 
 	public int ic;
+	@JsonField
 	public boolean top;
 
 	public FakeImage[] parts = null;

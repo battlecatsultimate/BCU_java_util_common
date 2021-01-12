@@ -91,6 +91,11 @@ public class Admin {
 			(t == ErrType.INFO ? System.out : System.err).println(str);
 		}
 
+		@Override
+		public void loadProg(String str) {
+			System.out.println(str);
+		}
+
 	}
 
 	@Documented
