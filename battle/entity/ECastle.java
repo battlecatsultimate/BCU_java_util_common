@@ -31,16 +31,17 @@ public class ECastle extends AbEntity {
 		if ((atk.abi & AB_BASE) > 0)
 			ans *= 4;
 		int satk = atk.getProc().SATK.mult;
-		if (satk > 0)
+		if (satk > 0) {
 			ans *= (100 + satk) * 0.01;
 			sb.lea.add(new EAnimCont(pos, 9, effas().A_SATK.getEAnim(DefEff.DEF)));
 			CommonStatic.setSE(SE_SATK);
+		}
 		if (atk.getProc().CRIT.mult > 0) {
 			ans *= 0.01 * atk.getProc().CRIT.mult;
 			sb.lea.add(new EAnimCont(pos, 9, effas().A_CRIT.getEAnim(DefEff.DEF)));
 			CommonStatic.setSE(SE_CRIT);
-		} else
-			CommonStatic.setSE(SE_HIT_BASE);
+		}
+		CommonStatic.setSE(SE_HIT_BASE);
 		health -= ans;
 		if (health > maxH)
 			health = maxH;
