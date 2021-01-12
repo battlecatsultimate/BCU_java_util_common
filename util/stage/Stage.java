@@ -153,6 +153,16 @@ public class Stage extends Data
 		data = new SCDef(0);
 	}
 
+	public Stage(StageMap sm) {
+		this.id = sm.getNextID();
+		len = 3000;
+		health = 60000;
+		max = 8;
+		name = "stage " + sm.list.size();
+		lim = new Limit();
+		data = new SCDef(0);
+	}
+
 	@Deprecated
 	public Stage(UserPack pack, Identifier<Stage> id, InStream is) throws VerFixerException {
 		this(id);
@@ -270,7 +280,7 @@ public class Stage extends Data
 
 	@Override
 	public Stage copy(StageMap sm) {
-		Stage ans = new Stage(sm.getNextID());
+		Stage ans = new Stage(sm);
 		ans.len = len;
 		ans.health = health;
 		ans.max = max;
