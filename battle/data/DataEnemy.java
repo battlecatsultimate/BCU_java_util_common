@@ -56,8 +56,14 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		int a = 0;
 		if (ints[26] == 1)
 			a |= AB_BASE;
-		proc.WAVE.prob = ints[27];
-		proc.WAVE.lv = ints[28];
+		if(ints.length < 87 || ints[86] != 1) {
+			proc.WAVE.prob = ints[27];
+			proc.WAVE.lv = ints[28];
+		} else {
+			proc.MINIWAVE.prob = ints[27];
+			proc.MINIWAVE.lv = ints[28];
+			proc.MINIWAVE.multi = 20;
+		}
 		proc.WEAK.prob = ints[29];
 		proc.WEAK.time = ints[30];
 		proc.WEAK.mult = ints[31];
