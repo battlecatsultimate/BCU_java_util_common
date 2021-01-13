@@ -168,7 +168,7 @@ public abstract class PackData implements IndexContainer {
 		private void loadSoul() {
 			String pre = "./org/battle/soul/";
 			String mid = "/battle_soul_";
-			for (int i = 0; i < 13; i++)
+			for (int i = 0; i < 16; i++)
 				souls.add(new Soul(pre + Data.trio(i) + mid + Data.trio(i), i));
 		}
 
