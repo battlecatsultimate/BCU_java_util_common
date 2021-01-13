@@ -108,8 +108,8 @@ public class UpdateCheck {
 
 	static {
 		addRequiredAssets("000001", "000002", "000003", "000004", "000005", "000006", "000007",
-				"000008", "000009", "000010", "090900", "090901", "091000", "0910001", "100000",
-				"100001", "100002", "100100", "100101", "100102", "100103", "100104");
+				"000008", "000009", "090900", "091000", "0910001", "100000",
+				"100002", "100100", "100102", "100103", "100104");
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
