@@ -21,7 +21,6 @@ import common.util.stage.CastleImg;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Music;
 import common.util.unit.*;
-import page.LoadPage;
 
 import java.io.File;
 import java.io.IOException;
