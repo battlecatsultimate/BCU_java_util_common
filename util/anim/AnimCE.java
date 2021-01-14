@@ -18,6 +18,7 @@ import common.util.Animable;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import jogl.util.AmbImage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -245,6 +246,7 @@ public class AnimCE extends AnimCI {
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().put(id.id, this);
 		saver.saveAll();
+		reloImg();
 		unSave("rename (not applicapable for undo)");
 	}
 

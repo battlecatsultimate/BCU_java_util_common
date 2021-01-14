@@ -78,7 +78,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 	@Override
 	protected Proc getProc(int ind) {
-		if (e.status[P_CURSE][0] > 0 && e.status[P_SEAL][0] == 0)
+		if (e.status[P_CURSE][0] > 0 && e.status[P_SEAL][0] == 0 && ind < cursed.length)
 			return cursed[ind];
 		return super.getProc(ind);
 	}
