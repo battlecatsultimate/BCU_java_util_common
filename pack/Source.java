@@ -100,7 +100,6 @@ public abstract class Source {
 			Object zip = UserProfile.getStatic(UserProfile.CURRENT_PACK, () -> null);
 
 			if(this.pack.equals(LOCAL) && zip instanceof ZipSource) {
-				System.out.println(((ZipSource) zip).id);
 				this.pack = ((ZipSource) zip).id;
 				this.id = "_mapped_" + this.id;
 			}
