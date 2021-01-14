@@ -18,7 +18,6 @@ import common.util.Animable;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import jogl.util.AmbImage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
