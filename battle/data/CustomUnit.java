@@ -3,6 +3,8 @@ package common.battle.data;
 import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
+import common.pack.Identifier;
+import common.util.pack.Soul;
 import common.util.unit.Form;
 
 @JsonClass
@@ -24,6 +26,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		type = 0;
 		price = 50;
 		resp = 60;
+		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
 	}
 
 	public void fillData(int ver, InStream is) {
