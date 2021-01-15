@@ -93,7 +93,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 	}
 
 	protected int getMax() {
-		return ints[2] > 1 ? fir + (max - fir) * ints[2] : max;
+		return ints[2] > 1 ? fir + (max - fir) * ints[2] - off : max - off;
 	}
 
 	protected void restore(InStream is) {
