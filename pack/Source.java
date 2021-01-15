@@ -270,7 +270,9 @@ public abstract class Source {
 			List<AnimCE> list = new ArrayList<>();
 			if (!folder.exists() || !folder.isDirectory())
 				return list;
-			for (File f : folder.listFiles()) {
+			File[] files = folder.listFiles();
+			Arrays.sort(files);
+			for (File f : files) {
 				String path = "./" + id + "/" + ANIM + "/" + f.getName() + "/sprite.png";
 
 				if (AnimCE.map().containsKey(f.getName()))
