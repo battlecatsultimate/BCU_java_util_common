@@ -35,7 +35,6 @@ import java.util.Map;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import main.Opts;
 
 @JsonClass
 @JsonClass.JCGeneric(ResourceLocation.class)
