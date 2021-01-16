@@ -67,7 +67,7 @@ public class Replay extends Data {
 						getMap().put(name, rec);
 					} catch (Exception e) {
 						e.printStackTrace();
-						Opts.pop("Failed to reformat "+fi.getName(), "Reformat failed");
+						CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to reformat "+fi.getName());
 					}
 				}
 			}
@@ -76,7 +76,7 @@ public class Replay extends Data {
 			Context.delete(fold);
 		} catch (IOException e) {
 			e.printStackTrace();
-			Opts.pop("Failed to remove folder : "+fold.getName(), "Deletion filed");
+			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to remove folder : "+fold.getName());
 		}
 		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.REPLAY);
 		if (f.exists())
