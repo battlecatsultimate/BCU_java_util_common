@@ -52,6 +52,13 @@ public class WebFileIO {
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
+	public static JsonElement directRead(String url) throws Exception {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		direct(url, out, (v) -> {});
+		return JsonParser.parseReader(
+				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
+	}
+
 	private static void direct(String url, OutputStream out, Consumer<Double> prog) throws IOException {
 		URLConnection conn = new URL(url).openConnection();
 		InputStream is = conn.getInputStream();
@@ -81,6 +88,10 @@ public class WebFileIO {
 			}
 			request.setEncoding(null);
 		});
+
+		if(size == FAST) {
+			downloader.setDirectDownloadEnabled(false);
+		}
 
 		if (timeout > 0) {
 			downloader.setDirectDownloadEnabled(true);

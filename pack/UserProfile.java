@@ -309,7 +309,7 @@ public class UserProfile {
 	private final Map<String, Map<String, ?>> registers = new HashMap<>();
 
 	private Map<String, VerFixer> fixpending = new HashMap<>();
-	private Map<String, UserPack> pending = new HashMap<>();
+	public Map<String, UserPack> pending = new HashMap<>();
 
 	private UserProfile() {
 	}

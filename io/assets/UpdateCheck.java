@@ -150,7 +150,7 @@ public class UpdateCheck {
 		File f = CommonStatic.ctx.getAssetFile("./lang");
 		String path = f.getPath() + "/";
 		return () -> {
-			JsonElement je0 = WebFileIO.read(URL_LANG_CHECK);
+			JsonElement je0 = WebFileIO.directRead(URL_LANG_CHECK);
 			ContentJson[] cont = JsonDecoder.decode(je0, ContentJson[].class);
 			Map<String, ContentJson> map = new HashMap<>();
 			List<Downloader> list = new ArrayList<>();
