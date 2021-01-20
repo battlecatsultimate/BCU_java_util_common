@@ -352,15 +352,6 @@ public class StageBasis extends BattleObj {
 			mon += b.t().getMonInc(work_lv);
 
 			est.update();
-			if (shock > -1) {
-				if (shock-- == 0) {
-					for (int i = 0; i < le.size(); i++)
-						if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0)
-							le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
-					lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
-					CommonStatic.setSE(SE_BOSS);
-				}
-			}
 
 			canon.update();
 			if (sniper != null)
@@ -420,9 +411,20 @@ public class StageBasis extends BattleObj {
 				}
 			}
 		}
+
 		for (int i = 0; i < le.size(); i++)
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).postUpdate();
+
+		if (shock > -1) {
+			if (shock-- == 0) {
+				for (int i = 0; i < le.size(); i++)
+					if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0)
+						le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
+				lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
+				CommonStatic.setSE(SE_BOSS);
+			}
+		}
 
 		if (s_stop == 0) {
 			le.removeIf(e -> e.anim.dead == 0);
