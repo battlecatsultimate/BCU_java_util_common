@@ -57,7 +57,7 @@ public class StageBasis extends BattleObj {
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
 	public double mon;
-	public boolean shock = false;
+	public int shock = -1;
 	public int time, s_stop, temp_s_stop;
 	public int respawnTime;
 	public Background bg;
@@ -352,13 +352,14 @@ public class StageBasis extends BattleObj {
 			mon += b.t().getMonInc(work_lv);
 
 			est.update();
-			if (shock) {
-				for (int i = 0; i < le.size(); i++)
-					if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0)
-						le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
-				lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
-				CommonStatic.setSE(SE_BOSS);
-				shock = false;
+			if (shock > -1) {
+				if (shock-- == 0) {
+					for (int i = 0; i < le.size(); i++)
+						if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0)
+							le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
+					lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
+					CommonStatic.setSE(SE_BOSS);
+				}
 			}
 
 			canon.update();

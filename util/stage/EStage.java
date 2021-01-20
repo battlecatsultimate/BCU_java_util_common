@@ -50,8 +50,8 @@ public class EStage extends BattleObj {
 					if (num[i] == 0)
 						num[i] = -1;
 				}
-				if (data.boss == 1)
-					b.shock = true;
+				if (data.boss == 1 && b.shock == -1)
+					b.shock = 1;
 
 				double multi = (data.multiple == 0 ? 100 : data.multiple) * mul * 0.01;
 				double mulatk = (data.multiple == 0 ? 100 : data.mult_atk) * mul * 0.01;
