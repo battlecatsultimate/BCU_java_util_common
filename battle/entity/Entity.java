@@ -5,6 +5,7 @@ import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
 import common.pack.Identifier;
@@ -93,6 +94,8 @@ public abstract class Entity extends AbEntity {
 		 */
 		public void draw(FakeGraphics gra, P p, double siz) {
 			if (dead > 0) {
+				//100 is guessed value comparing from BC
+				p.y -= 100 * siz;
 				soul.draw(gra, p, siz);
 				return;
 			}
@@ -129,10 +132,10 @@ public abstract class Entity extends AbEntity {
 				return;
 
 			FakeTransform at = g.getTransform();
-			int EWID = 48;
+			int EWID = 36;
 			double x = p.x;
 			if (effs[eftp] != null) {
-				effs[eftp].draw(g, p, siz);
+				effs[eftp].draw(g, p, siz * 0.75);
 			}
 			for(int i = 0; i < effs.length; i++) {
 				EAnimD<?> eae = effs[i];
@@ -142,7 +145,7 @@ public abstract class Entity extends AbEntity {
 				if(i == A_B || i == A_E_B)
 					offset = -25.0 * siz;
 
-				if (eae == null)
+				if (eae == null || i == eftp)
 					continue;
 				g.setTransform(at);
 				eae.draw(g, new P(x, p.y+offset), siz * 0.75);
@@ -281,6 +284,12 @@ public abstract class Entity extends AbEntity {
 
 				effs[id] = eff.getEAnim(index);
 			}
+
+			if (t == HEAL) {
+				EffAnim<DefEff> eff = effas().A_HEAL;
+
+				effs[A_HEAL] = eff.getEAnim(DefEff.DEF);
+			}
 		}
 
 		/**
@@ -350,6 +359,11 @@ public abstract class Entity extends AbEntity {
 			if (status[P_SPEED][0] == 0) {
 				int id = dire == -1 ? A_SPEED : A_E_SPEED;
 				effs[id] = null;
+			}
+
+			if(effs[A_HEAL] != null) {
+				if(effs[A_HEAL].done())
+					effs[A_HEAL] = null;
 			}
 
 			efft--;
@@ -1064,7 +1078,7 @@ public abstract class Entity extends AbEntity {
 	public void damaged(AttackAb atk) {
 		int dmg = getDamage(atk, atk.atk);
 		// if immune to wave and the attack is wave, jump out
-		if ((atk.waveType & WT_WAVE) > 0) {
+		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
 			if (getProc().IMUWAVE.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUWAVE.mult == 100)
@@ -1084,7 +1098,6 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_WAVE);
 				return;
 			}
-
 		}
 
 		tokens.add(atk);
@@ -1118,6 +1131,9 @@ public abstract class Entity extends AbEntity {
 		damage += dmg;
 		zx.damaged(atk);
 		tempearn |= (atk.abi & AB_EARN) > 0;
+
+		if(atk instanceof AttackSimple && atk.atk < 0)
+			anim.getEff(HEAL);
 
 		//75.0 is guessed value compared from BC
 		if(atk.isLongAtk)

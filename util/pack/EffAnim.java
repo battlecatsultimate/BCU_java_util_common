@@ -180,6 +180,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<DefEff> A_ATK_SMOKE;
 		@Order(60)
 		public EffAnim<DefEff> A_WHITE_SMOKE;
+		@Order(61)
+		public EffAnim<DefEff> A_HEAL;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -472,6 +474,11 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		vwea = new VImg(weakup + ".png");
 		icwea = ImgCut.newIns(weakup + ".imgcut");
 		effas.A_E_WEAK_UP = new EffAnim<>(weakup, vwea, icwea, WeakUpEff.values());
+
+		String heal = stfs[3] + "heal/heal";
+		VImg vheal = new VImg(heal + ".png");
+		ImgCut icheal = ImgCut.newIns(heal+".imgcut");
+		effas.A_HEAL = new EffAnim<>(heal, vheal, icheal, DefEff.values());
 	}
 
 	private final VImg vimg;

@@ -257,9 +257,9 @@ public class Editors {
 
 		map().put("WAVE", new EditControl<>(Proc.WAVE.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
+			t.lv = MathUtil.clip(t.lv, 1, 20);
 			if (t.prob == 0)
 				t.lv = 0;
-			t.lv = MathUtil.clip(t.lv, 1, 20);
 		}));
 
 		map().put("WEAK", new EditControl<>(Proc.WEAK.class, (t) -> {

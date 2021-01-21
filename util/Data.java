@@ -462,7 +462,7 @@ public class Data {
 			@Order(1)
 			public int time;
 			@Order(2)
-			public int mult = 20;
+			public int mult;
 		}
 
 		public static Proc blank() {
@@ -984,6 +984,7 @@ public class Data {
 	public static final int BREAK_ABI = -4;
 	public static final int BREAK_ATK = -5;
 	public static final int BREAK_NON = -6;
+	public static final int HEAL = -7;
 
 	// Combo index
 	public static final int C_ATK = 0;
@@ -1068,8 +1069,11 @@ public class Data {
 	public static final int A_E_SPEED = 52;
 	public static final int A_WEAK_UP = 53;
 	public static final int A_E_WEAK_UP = 54;
+	public static final int A_ATK_SMOKE = 55;
+	public static final int A_WHITE_SMOKE = 56;
+	public static final int A_HEAL = 57;
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 55;
+	public static final int A_TOT = 58;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;
