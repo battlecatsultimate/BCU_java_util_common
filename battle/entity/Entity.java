@@ -500,6 +500,8 @@ public abstract class Entity extends AbEntity {
 			preID = 0;
 			preTime = pres[0];
 			e.anim.setAnim(UType.ATK);
+			e.update();
+			e.anim.update();
 		}
 
 		private void stopAtk() {
