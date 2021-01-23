@@ -1412,7 +1412,7 @@ public abstract class Entity extends AbEntity {
 		int ex = getProc().REVIVE.type.revive_others ? TCH_ZOMBX : 0;
 		if (kbTime == -1)
 			return TCH_SOUL | ex;
-		if (status[P_REVIVE][1] > 0)
+		if (status[P_REVIVE][1] > 14)
 			return TCH_CORPSE | ex;
 		if (status[P_BURROW][2] > 0)
 			return n | TCH_UG | ex;
