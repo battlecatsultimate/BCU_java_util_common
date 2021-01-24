@@ -105,7 +105,7 @@ public abstract class Entity extends AbEntity {
 			if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
 				if (corpse != null) {
 					gra.setTransform(at);
-					anim.changeAnim(UType.WALK);
+					anim.changeAnim(UType.WALK, false);
 				}
 			} else {
 				gra.delete(at);
@@ -376,9 +376,9 @@ public abstract class Entity extends AbEntity {
 		private void kbAnim() {
 			int t = e.kb.kbType;
 			if (t != INT_SW && t != INT_WARP)
-				setAnim(UType.HB);
+				setAnim(UType.HB, true);
 			else {
-				setAnim(UType.WALK);
+				setAnim(UType.WALK, false);
 				anim.update(false);
 			}
 			if (t == INT_WARP) {
@@ -416,10 +416,13 @@ public abstract class Entity extends AbEntity {
 			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
 		}
 
-		private int setAnim(UType t) {
+		private int setAnim(UType t, boolean skip) {
 			if (anim.type != t)
-				anim.changeAnim(t);
-			return anim.len();
+				anim.changeAnim(t, skip);
+			if (skip)
+				return anim.len() - 1;
+			else
+				return anim.len();
 		}
 
 		private void update() {
@@ -498,10 +501,8 @@ public abstract class Entity extends AbEntity {
 			atkTime = e.data.getAnimLen();
 			loop--;
 			preID = 0;
-			preTime = pres[0];
-			e.anim.setAnim(UType.ATK);
-			e.update();
-			e.anim.update();
+			preTime = pres[0] - 1;
+			e.anim.setAnim(UType.ATK, true);
 		}
 
 		private void stopAtk() {
@@ -532,7 +533,7 @@ public abstract class Entity extends AbEntity {
 			}
 			if (atkTime == 0) {
 				e.waitTime = e.data.getTBA();
-				e.anim.setAnim(UType.IDLE);
+				e.anim.setAnim(UType.IDLE, true);
 			}
 		}
 	}
@@ -640,7 +641,7 @@ public abstract class Entity extends AbEntity {
 
 				time++;
 			} else {
-				e.anim.setAnim(UType.WALK);
+				e.anim.setAnim(UType.WALK, true);
 				if (e.status[P_WARP][0] > 0)
 					e.status[P_WARP][0]--;
 				if (e.status[P_WARP][1] > 0)
@@ -659,7 +660,7 @@ public abstract class Entity extends AbEntity {
 			e.kbTime--;
 			if (e.kbTime == 0) {
 				e.anim.back = null;
-				e.anim.setAnim(UType.WALK);
+				e.anim.setAnim(UType.WALK, true);
 
 				kbDuration = 0;
 				initPos = 0;
@@ -921,10 +922,14 @@ public abstract class Entity extends AbEntity {
 			if (status[P_REVIVE][1] > 0) {
 				e.acted = true;
 				EffAnim<ZombieEff> ea = e.dire == -1 ? effas().A_U_ZOMBIE : effas().A_ZOMBIE;
-				if (anim.corpse == null)
+				if (anim.corpse == null) {
 					anim.corpse = ea.getEAnim(ZombieEff.DOWN);
-				if (status[P_REVIVE][1] == ea.getEAnim(ZombieEff.REVIVE).len())
+					anim.corpse.setTime(0);
+				}
+				if (status[P_REVIVE][1] == ea.getEAnim(ZombieEff.REVIVE).len()) {
 					anim.corpse = ea.getEAnim(ZombieEff.REVIVE);
+					anim.corpse.setTime(0);
+				}
 				status[P_REVIVE][1]--;
 				if (anim.corpse != null)
 					anim.corpse.update(false);
@@ -1373,7 +1378,7 @@ public abstract class Entity extends AbEntity {
 		if (isBase && health < 0) {
 			health = 0;
 			atkm.stopAtk();
-			anim.setAnim(UType.HB);
+			anim.setAnim(UType.HB, true);
 		}
 
 		acted = false;
@@ -1412,7 +1417,7 @@ public abstract class Entity extends AbEntity {
 		int ex = getProc().REVIVE.type.revive_others ? TCH_ZOMBX : 0;
 		if (kbTime == -1)
 			return TCH_SOUL | ex;
-		if (status[P_REVIVE][1] > 14)
+		if (status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
 			return TCH_CORPSE | ex;
 		if (status[P_BURROW][2] > 0)
 			return n | TCH_UG | ex;
@@ -1448,7 +1453,7 @@ public abstract class Entity extends AbEntity {
 		// update wait and attack state
 		if (kbTime == 0) {
 			boolean binatk = waitTime + kbTime + atkm.atkTime == 0;
-			binatk = binatk && touchEnemy && atkm.loop != 0 && nstop;
+			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
 			if (!acted && binatk && !(isBase && health <= 0))
@@ -1456,7 +1461,7 @@ public abstract class Entity extends AbEntity {
 
 			// update waiting state
 			if ((waitTime > 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
-				anim.setAnim(UType.IDLE);
+				anim.setAnim(UType.IDLE, true);
 			if (waitTime > 0)
 				waitTime--;
 
@@ -1634,7 +1639,7 @@ public abstract class Entity extends AbEntity {
 			if (ntbs) {
 				// setup burrow state
 				status[P_BURROW][0]--;
-				status[P_BURROW][2] = anim.setAnim(UType.BURROW_DOWN);
+				status[P_BURROW][2] = anim.setAnim(UType.BURROW_DOWN, true);
 				kbTime = -2;
 			}
 		}
@@ -1644,7 +1649,7 @@ public abstract class Entity extends AbEntity {
 			status[P_BURROW][2]--;
 			if (status[P_BURROW][2] == 0) {
 				kbTime = -3;
-				anim.setAnim(UType.BURROW_MOVE);
+				anim.setAnim(UType.BURROW_MOVE, true);
 				bdist = data.getRepAtk().getProc().BURROW.dis;
 			}
 		}
@@ -1656,7 +1661,7 @@ public abstract class Entity extends AbEntity {
 			if (!b) {
 				bdist = 0;
 				kbTime = -4;
-				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP)-2;
+				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP, true) - 2;
 			}
 		}
 		if (!acted && kbTime == -4) {
@@ -1711,7 +1716,7 @@ public abstract class Entity extends AbEntity {
 		if (status[P_STOP][0] == 0 && blds) {
 			touch = false;
 			if (health > 0)
-				anim.setAnim(UType.WALK);
+				anim.setAnim(UType.WALK, true);
 			updateMove(-1, 0);
 		}
 		touchEnemy = touch;

@@ -66,7 +66,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 	public int getAtkLen() {
 		partial();
-		return anims[2].len + 1;
+		return anims[2].len;
 	}
 
 	@Override

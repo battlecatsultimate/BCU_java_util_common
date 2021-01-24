@@ -17,14 +17,16 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void changeAnim(T t) {
+	public void changeAnim(T t, boolean skip) {
 		f = -1;
 		ma = ((AnimD<?, T>) anim()).getMaAnim(t);
 		type = t;
+		if (skip)
+			setTime(0);
 	}
 
 	public boolean done() {
-		return f > ma.max;
+		return f == ma.max;
 	}
 
 	@Override

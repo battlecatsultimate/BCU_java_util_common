@@ -6,6 +6,7 @@ import common.battle.data.PCoin;
 import common.battle.entity.EUnit;
 import common.util.Data;
 import common.util.anim.AnimU;
+import common.util.anim.EAnimU;
 
 public class EForm extends Data {
 
@@ -37,7 +38,9 @@ public class EForm extends Data {
 
 	public EUnit getEntity(StageBasis b) {
 		double d = f.unit.lv.getMult(level.getLvs()[0]);
-		EUnit e = new EUnit(b, du, f.getEAnim(AnimU.UType.WALK), d, level);
+		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
+		walkAnim.setTime(0);
+		EUnit e = new EUnit(b, du, walkAnim, d, level);
 		return e;
 	}
 

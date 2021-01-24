@@ -35,10 +35,10 @@ public class ContVolcano extends ContAb {
 	@Override
 	public void update() {
 		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != VolcEff.DURING) {
-			anim.changeAnim(VolcEff.DURING);
+			anim.changeAnim(VolcEff.DURING, false);
 			CommonStatic.setSE(SE_VOLC_LOOP);
 		} else if (t > VOLC_PRE + aliveTime && anim.type != VolcEff.END)
-			anim.changeAnim(VolcEff.END);
+			anim.changeAnim(VolcEff.END, false);
 
 		if (t > VOLC_PRE && t < VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
 			CommonStatic.setSE(SE_VOLC_LOOP);

@@ -119,7 +119,9 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	public EEnemy getEntity(StageBasis b, Object obj, double mul, double mul2, int d0, int d1, int m) {
 		mul *= de.multi(b.b);
 		mul2 *= de.multi(b.b);
-		return new EEnemy(b, de, getEAnim(UType.WALK), mul, mul2, d0, d1, m);
+		EAnimU walkAnim = getEAnim(UType.WALK);
+		walkAnim.setTime(0);
+		return new EEnemy(b, de, walkAnim, mul, mul2, d0, d1, m);
 	}
 
 	@Override
