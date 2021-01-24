@@ -105,7 +105,7 @@ public abstract class Entity extends AbEntity {
 			if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
 				if (corpse != null) {
 					gra.setTransform(at);
-					anim.changeAnim(UType.WALK, false);
+					anim.changeAnim(UType.IDLE, false);
 				}
 			} else {
 				gra.delete(at);
@@ -379,7 +379,7 @@ public abstract class Entity extends AbEntity {
 				setAnim(UType.HB, true);
 			else {
 				setAnim(UType.WALK, false);
-				anim.update(false);
+				anim.setTime(0);
 			}
 			if (t == INT_WARP) {
 				e.kbTime = status[P_WARP][0];
