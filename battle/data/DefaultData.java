@@ -11,7 +11,7 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int allAtk() {
-		return (int) ((atk + atk1 + atk2) * (1 + proc.CRIT.prob * 0.01));
+		return (int) (atk + atk1 + atk2);
 	}
 
 	@Override
