@@ -1436,6 +1436,9 @@ public abstract class Entity extends AbEntity {
 	 */
 	@Override
 	public void update() {
+		// update proc effects
+		updateProc();
+
 		// if this entity is in kb state, do kbmove()
 		// eneity can move right after kbmove, no need to mark acted
 		if (kbTime > 0)
@@ -1473,9 +1476,6 @@ public abstract class Entity extends AbEntity {
 			if (status[P_STOP][0] == 0 && atkm.atkTime > 0)
 				atkm.updateAttack();
 		}
-
-		// update proc effects
-		updateProc();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
