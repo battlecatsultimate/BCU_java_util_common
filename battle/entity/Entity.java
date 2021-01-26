@@ -432,7 +432,8 @@ public abstract class Entity extends AbEntity {
 				if (effs[i] != null)
 					effs[i].update(false);
 
-			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || e.kb.kbType != INT_SW))
+			boolean checkKB = e.kb.kbType != INT_SW && e.kb.kbType != INT_WARP;
+			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || checkKB))
 				anim.update(false);
 			if (back != null)
 				back.update(false);
@@ -641,7 +642,7 @@ public abstract class Entity extends AbEntity {
 
 				time++;
 			} else {
-				e.anim.setAnim(UType.WALK, true);
+				e.anim.setAnim(UType.IDLE, false);
 				if (e.status[P_WARP][0] > 0)
 					e.status[P_WARP][0]--;
 				if (e.status[P_WARP][1] > 0)
@@ -1148,12 +1149,15 @@ public abstract class Entity extends AbEntity {
 		else
 			basis.lea.add(new EAnimCont(pos, atk.layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
 
+		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF)));
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75.0));
 			CommonStatic.setSE(SE_CRIT);
 		}
+
+		//75.0 is guessed value compared from BC
 		if (atk.getProc().SATK.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF)));
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75.0));
 			CommonStatic.setSE(SE_SATK);
 		}
 
