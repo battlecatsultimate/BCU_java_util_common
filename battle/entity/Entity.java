@@ -653,6 +653,7 @@ public abstract class Entity extends AbEntity {
 					kbDis = 0;
 					e.anim.getEff(P_WARP);
 					e.status[P_WARP][2] = 0;
+					e.kbTime -= 11;
 				}
 			}
 			if (kbType == INT_HB && e.data.getRevenge() != null)
