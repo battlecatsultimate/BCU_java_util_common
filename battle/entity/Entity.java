@@ -1448,8 +1448,14 @@ public abstract class Entity extends AbEntity {
 		zx.updateRevive();
 
 		// do move check if available, move if possible
-		if (kbTime == 0 && !acted && atkm.atkTime == 0)
-			updateTouch();
+		if (kbTime == 0 && !acted && atkm.atkTime == 0) {
+			if (!touchEnemy) {
+				if (health > 0)
+					anim.setAnim(UType.WALK, true);
+				updateMove(-1, 0);
+			}
+			checkTouch();
+		}
 
 		boolean nstop = status[P_STOP][0] == 0;
 
@@ -1518,7 +1524,6 @@ public abstract class Entity extends AbEntity {
 	 * endpoint
 	 */
 	protected boolean updateMove(double maxl, double extmov) {
-		acted = true;
 		double max = (basis.getBase(dire).pos - pos) * dire - data.touchBase();
 		if (maxl >= 0)
 			max = Math.min(max, maxl);
@@ -1702,9 +1707,9 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
-	 * update touch state, move if possible
+	 * verify touch state
 	 */
-	private void updateTouch() {
+	public void checkTouch() {
 		touch = true;
 		double[] ds = aam.touchRange();
 		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1]);
@@ -1717,12 +1722,8 @@ public abstract class Entity extends AbEntity {
 			blds &= le.size() == 0;
 		} else
 			blds = le.size() == 0;
-		if (status[P_STOP][0] == 0 && blds) {
+		if (status[P_STOP][0] == 0 && blds)
 			touch = false;
-			if (health > 0)
-				anim.setAnim(UType.WALK, true);
-			updateMove(-1, 0);
-		}
 		touchEnemy = touch;
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
