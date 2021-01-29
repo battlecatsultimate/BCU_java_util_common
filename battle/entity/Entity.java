@@ -533,6 +533,7 @@ public abstract class Entity extends AbEntity {
 				preTime--;
 			}
 			if (atkTime == 0) {
+				e.canBurrow = true;
 				e.waitTime = e.data.getTBA();
 				e.anim.setAnim(UType.IDLE, true);
 			}
@@ -1059,6 +1060,16 @@ public abstract class Entity extends AbEntity {
 
 	private final Proc sealed = Proc.blank();
 
+	/**
+	 * determines when the entity can burrow
+	 */
+	protected boolean canBurrow = true;
+
+	/**
+	 * temporary value for move check
+	 */
+	protected boolean moved = false;
+
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double d0, double d1) {
 		super(d1 < 0 ? b.st.health : (int) (de.getHp() * d1));
 		basis = b;
@@ -1448,6 +1459,9 @@ public abstract class Entity extends AbEntity {
 		// update revive status, mark acted
 		zx.updateRevive();
 
+		boolean nstop = status[P_STOP][0] == 0;
+		canBurrow |= atkm.loop < data.getAtkLoop() - 1;
+
 		// do move check if available, move if possible
 		if (kbTime == 0 && !acted && atkm.atkTime == 0) {
 			if (!touchEnemy) {
@@ -1458,10 +1472,8 @@ public abstract class Entity extends AbEntity {
 			checkTouch();
 		}
 
-		boolean nstop = status[P_STOP][0] == 0;
-
 		// update burrow state if not stopped
-		if (nstop)
+		if (nstop && canBurrow)
 			updateBurrow();
 
 		// update wait and attack state
@@ -1480,7 +1492,7 @@ public abstract class Entity extends AbEntity {
 				waitTime--;
 
 			// update attack status when in attack state
-			if (status[P_STOP][0] == 0 && atkm.atkTime > 0)
+			if (nstop && atkm.atkTime > 0)
 				atkm.updateAttack();
 		}
 	}
@@ -1525,6 +1537,9 @@ public abstract class Entity extends AbEntity {
 	 * endpoint
 	 */
 	protected boolean updateMove(double maxl, double extmov) {
+		if (moved)
+			canBurrow = true;
+		moved = true;
 		double max = (basis.getBase(dire).pos - pos) * dire - data.touchBase();
 		if (maxl >= 0)
 			max = Math.min(max, maxl);

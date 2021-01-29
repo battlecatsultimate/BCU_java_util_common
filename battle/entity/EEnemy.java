@@ -20,6 +20,8 @@ public class EEnemy extends Entity {
 		isBase = mark == -1;
 		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
 		type = de.getType();
+
+		canBurrow = mark != 1;
 	}
 
 	@Override
