@@ -150,9 +150,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		if(getCont() instanceof PackData.UserPack) {
 			PackData.UserPack pack = (PackData.UserPack) getCont();
 
-			if(UserProfile.isOlderPack(pack, "0.5.0.4")) {
-				System.out.println("Reorder trait data : "+id);
-
+			if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
 				((CustomEnemy) de).type = Data.reorderTrait(((CustomEnemy) de).type);
 			}
 		}

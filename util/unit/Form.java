@@ -144,8 +144,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
 
 				if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
-					System.out.println("Reorder Trait : "+uid);
-
 					((CustomUnit) du).type = Data.reorderTrait(((CustomUnit) du).type);
 				}
 			}

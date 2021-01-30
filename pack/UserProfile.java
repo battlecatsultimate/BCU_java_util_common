@@ -95,8 +95,6 @@ public class UserProfile {
 		int thisVersion = Data.getVer(ver);
 		int thatVersion = Data.getVer(pack.desc.BCU_VERSION);
 
-		System.out.println(thatVersion);
-
 		return thatVersion < thisVersion;
 	}
 
