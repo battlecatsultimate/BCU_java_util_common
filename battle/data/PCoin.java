@@ -11,11 +11,6 @@ import common.util.unit.Unit;
 import java.util.Queue;
 
 public class PCoin extends Data {
-	public static final int FLAG_RELIC_SLOW = 69;
-	public static final int FLAG_RELIC_WEAK = 70;
-	public static final int FLAG_ZOMBIE_KB = 73;
-	public static final int FLAG_METAL_SLOW = 72;
-
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/data/SkillAcquisition.csv");
 		qs.poll();
@@ -31,11 +26,14 @@ public class PCoin extends Data {
 	private final DataUnit du;
 
 	public final DataUnit full;
+	public final int type;
 	public final int[] max;
 	public final int[][] info = new int[5][13];
 
 	private PCoin(String[] strs) {
 		id = CommonStatic.parseIntN(strs[0]);
+		type = CommonStatic.parseIntN(strs[1]);
+
 		max = new int[6];
 
 		for (int i = 0; i < 5; i++) {
@@ -66,6 +64,10 @@ public class PCoin extends Data {
 				continue;
 			}
 
+			if(this.type != 0) {
+				ans.type |= this.type;
+			}
+
 			int maxlv = info[i][1];
 			int[] modifs = new int[4];
 			if (maxlv > 1) {
@@ -81,18 +83,6 @@ public class PCoin extends Data {
 
 			if (type[0] == PC_P) {
 				ProcItem tar = ans.proc.getArr(type[1]);
-
-				if(info[i][10] == FLAG_RELIC_SLOW || info[i][10] == FLAG_RELIC_WEAK) {
-					ans.type |= TB_RELIC;
-				}
-
-				if(info[i][10] == FLAG_ZOMBIE_KB) {
-					ans.type |= TB_ZOMBIE;
-				}
-
-				if(info[i][10] == FLAG_METAL_SLOW) {
-					ans.type |= TB_METAL;
-				}
 
 				if(type[1] == P_VOLC) {
 					tar.set(0, modifs[0]);
@@ -110,7 +100,7 @@ public class PCoin extends Data {
 					tar.set(2, 100 - tar.get(2));
 			} else if (type[0] == PC_AB)
 				ans.abi |= type[1];
-			else if (type[0] == PC_BASE)
+			else if (type[0] == PC_BASE) {
 				if (type[1] == PC2_HP)
 					ans.hp *= 1 + modifs[0] * 0.01;
 				else if (type[1] == PC2_ATK) {
@@ -124,56 +114,12 @@ public class PCoin extends Data {
 					ans.respawn -= modifs[0];
 				else if (type[1] == PC2_COST)
 					ans.price -= modifs[0];
-				else
-					;
-			else if (type[0] == PC_IMU)
+			} else if (type[0] == PC_IMU)
 				ans.proc.getArr(type[1]).set(0, 100);
 			else if (type[0] == PC_TRAIT)
 				ans.type |= type[1];
 
 		}
 		return ans;
-	}
-
-	public boolean flagRelic(int index) {
-		if(index < 0 || index >= info.length)
-			return false;
-
-		return info[index][10] == FLAG_RELIC_SLOW || info[index][10] == FLAG_RELIC_WEAK;
-	}
-
-	public boolean flagZombie(int index) {
-		if(index < 0 || index >= info.length)
-			return false;
-
-		return info[index][10] == FLAG_ZOMBIE_KB;
-	}
-
-	public boolean flagMetal(int index) {
-		if(index < 0 || index >= info.length)
-			return false;
-
-		return info[index][10] == FLAG_METAL_SLOW;
-	}
-
-	public boolean isRelicSlow(int index) {
-		if(index < 0 || index >= info.length)
-			return false;
-
-		return info[index][10] == FLAG_RELIC_SLOW && info[index][0] == 3;
-	}
-
-	public boolean isRelicWeak(int index) {
-		if(index < 0 || index >= info.length)
-			return false;
-
-		return info[index][10] == FLAG_RELIC_WEAK && info[index][0] == 1;
-	}
-
-	public boolean isZombieKB(int index) {
-		if(index < 0 || index >= info.length)
-			return false;
-
-		return info[index][10] == FLAG_ZOMBIE_KB && info[index][0] == 8;
 	}
 }
