@@ -699,29 +699,29 @@ public class Data {
 	public static final int RARITY_TOT = 6;
 
 	// trait bit filter
-	public static final int TB_WHITE = 1;
-	public static final int TB_RED = 2;
-	public static final int TB_FLOAT = 4;
-	public static final int TB_BLACK = 8;
-	public static final int TB_METAL = 16;
-	public static final int TB_ANGEL = 32;
-	public static final int TB_ALIEN = 64;
-	public static final int TB_ZOMBIE = 128;
-	public static final int TB_RELIC = 256;
+	public static final int TB_RED = 1;
+	public static final int TB_FLOAT = 2;
+	public static final int TB_BLACK = 4;
+	public static final int TB_METAL = 8;
+	public static final int TB_ANGEL = 16;
+	public static final int TB_ALIEN = 32;
+	public static final int TB_ZOMBIE = 64;
+	public static final int TB_RELIC = 128;
+	public static final int TB_WHITE = 256;
 	public static final int TB_EVA = 512;
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
 
 	// trait index
-	public static final int TRAIT_WHITE = 0;
-	public static final int TRAIT_RED = 1;
-	public static final int TRAIT_FLOAT = 2;
-	public static final int TRAIT_BLACK = 3;
-	public static final int TRAIT_METAL = 4;
-	public static final int TRAIT_ANGEL = 5;
-	public static final int TRAIT_ALIEN = 6;
-	public static final int TRAIT_ZOMBIE = 7;
-	public static final int TRAIT_RELIC = 8;
+	public static final int TRAIT_RED = 0;
+	public static final int TRAIT_FLOAT = 1;
+	public static final int TRAIT_BLACK = 2;
+	public static final int TRAIT_METAL = 3;
+	public static final int TRAIT_ANGEL = 4;
+	public static final int TRAIT_ALIEN = 5;
+	public static final int TRAIT_ZOMBIE = 6;
+	public static final int TRAIT_RELIC = 7;
+	public static final int TRAIT_WHITE = 8;
 	public static final int TRAIT_EVA = 9;
 	public static final int TRAIT_WITCH = 10;
 	public static final int TRAIT_INFH = 11;
@@ -1214,4 +1214,45 @@ public class Data {
 		return str + i;
 	}
 
+	public static int reorderTrait(int oldTrait) {
+		int newTrait = 0;
+
+		for(int i = 0; i < TRAIT_TOT; i++) {
+			if(((oldTrait >> i) & 1) > 0) {
+				switch (i) {
+					case 0:
+						newTrait |= TB_WHITE;
+						break;
+					case 1:
+						newTrait |= TB_RED;
+						break;
+					case 2:
+						newTrait |= TB_FLOAT;
+						break;
+					case 3:
+						newTrait |= TB_BLACK;
+						break;
+					case 4:
+						newTrait |= TB_METAL;
+						break;
+					case 5:
+						newTrait |= TB_ANGEL;
+						break;
+					case 6:
+						newTrait |= TB_ALIEN;
+						break;
+					case 7:
+						newTrait |= TB_ZOMBIE;
+						break;
+					case 8:
+						newTrait |= TB_RELIC;
+						break;
+					default:
+						newTrait |= 1 << i;
+				}
+			}
+		}
+
+		return newTrait;
+	}
 }

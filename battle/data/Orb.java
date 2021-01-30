@@ -21,31 +21,6 @@ import java.util.Queue;
 
 public class Orb extends Data {
 
-	public static int getTrait(int trait) {
-		switch (trait) {
-		case 0:
-			return TB_RED;
-		case 1:
-			return TB_FLOAT;
-		case 2:
-			return TB_BLACK;
-		case 3:
-			return TB_METAL;
-		case 4:
-			return TB_ANGEL;
-		case 5:
-			return TB_ALIEN;
-		case 6:
-			return TB_ZOMBIE;
-		case 7:
-			return TB_RELIC;
-		case 8:
-			return TB_WHITE;
-		default:
-			return 0;
-		}
-	}
-
 	public static void read() {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		try {
@@ -59,7 +34,7 @@ public class Orb extends Data {
 				for (int i = 0; i < strs.length; i++) {
 					int t = CommonStatic.parseIntN(strs[i]);
 					if (t == 1)
-						value |= getTrait(i);
+						value |= 1 << i;
 				}
 				aux.DATA.put(key, value);
 				key++;

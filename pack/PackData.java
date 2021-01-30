@@ -237,6 +237,20 @@ public abstract class PackData implements IndexContainer {
 		public String toString() {
 			return name + " - " + id;
 		}
+
+		@Override
+		public PackDesc clone() {
+			PackDesc desc = new PackDesc(id);
+
+			desc.author = author;
+			desc.name = name;
+			desc.desc = this.desc;
+			desc.time = time;
+			desc.version = version;
+			desc.allowAnim = allowAnim;
+
+			return desc;
+		}
 	}
 
 	@JsonClass(read = RType.FILL)
@@ -363,6 +377,11 @@ public abstract class PackData implements IndexContainer {
 			loaded = true;
 			loadMusics();
 			UserProfile.setStatic(UserProfile.CURRENT_PACK, null);
+
+			//Since it succeeded to load all data, update Core version of this workspace pack
+			if(editable) {
+				desc.BCU_VERSION = AssetLoader.CORE_VER;
+			}
 		}
 
 	}

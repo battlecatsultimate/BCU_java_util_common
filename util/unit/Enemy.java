@@ -10,6 +10,8 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.files.VFile;
 import common.util.Animable;
@@ -144,6 +146,16 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	@OnInjected
 	public void onInjected() {
 		((CustomEnemy) de).pack = this;
+
+		if(getCont() instanceof PackData.UserPack) {
+			PackData.UserPack pack = (PackData.UserPack) getCont();
+
+			if(UserProfile.isOlderPack(pack, "0.5.0.4")) {
+				System.out.println("Reorder trait data : "+id);
+
+				((CustomEnemy) de).type = Data.reorderTrait(((CustomEnemy) de).type);
+			}
+		}
 	}
 
 	@Override

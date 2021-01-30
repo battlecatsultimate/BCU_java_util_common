@@ -91,6 +91,15 @@ public class UserProfile {
 		return null;
 	}
 
+	public static boolean isOlderPack(UserPack pack, String ver) {
+		int thisVersion = Data.getVer(ver);
+		int thatVersion = Data.getVer(pack.desc.BCU_VERSION);
+
+		System.out.println(thatVersion);
+
+		return thatVersion < thisVersion;
+	}
+
 	/**
 	 * get a set registered in the Registrar
 	 */
@@ -236,6 +245,7 @@ public class UserProfile {
 		}
 
 		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
+
 		return data;
 	}
 

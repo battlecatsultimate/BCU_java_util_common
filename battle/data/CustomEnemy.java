@@ -99,5 +99,4 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		star = is.nextByte();
 		drop = is.nextInt();
 	}
-
 }

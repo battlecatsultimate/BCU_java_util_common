@@ -392,7 +392,7 @@ public abstract class Source {
 			if (tar.exists())
 				Context.delete(tar);
 			Context.check(dst);
-			PackLoader.writePack(dst, src, pack.desc, password, prog);
+			PackLoader.writePack(dst, src, pack.desc.clone(), password, prog);
 			Context.renameTo(dst, tar);
 		}
 

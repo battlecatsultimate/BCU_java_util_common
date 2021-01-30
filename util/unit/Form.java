@@ -11,8 +11,11 @@ import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.system.BasedCopable;
 import common.util.Animable;
+import common.util.Data;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
@@ -133,6 +136,20 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@OnInjected
 	public void onInjected() {
 		((CustomUnit) du).pack = this;
+
+		if((unit != null || uid != null)) {
+			Unit u = unit == null ? uid.get() : unit;
+
+			if(u.getCont() instanceof PackData.UserPack) {
+				PackData.UserPack pack = (PackData.UserPack) u.getCont();
+
+				if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
+					System.out.println("Reorder Trait : "+uid);
+
+					((CustomUnit) du).type = Data.reorderTrait(((CustomUnit) du).type);
+				}
+			}
+		}
 	}
 
 	public int[] regulateLv(int[] mod, int[] lv) {
