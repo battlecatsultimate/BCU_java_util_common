@@ -82,7 +82,7 @@ public class EEnemy extends Entity {
 	protected double getLim() {
 		double ans = 0;
 		if (mark == 1)
-			ans = pos - 800 - data.getWidth();
+			ans = pos - 700 - anim.getMaModel().confs[0][2] * 6;
 		else
 			ans = pos - data.getWidth();
 		return ans < 0 ? 0 : ans;
