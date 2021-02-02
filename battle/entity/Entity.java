@@ -19,6 +19,7 @@ import common.util.Data.Proc.REVIVE;
 import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
+import common.util.anim.MaModel;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
@@ -87,6 +88,10 @@ public abstract class Entity extends AbEntity {
 			e = ent;
 			anim = ea;
 			status = e.status;
+		}
+
+		protected MaModel getMaModel() {
+			return anim.anim().mamodel;
 		}
 
 		/**
