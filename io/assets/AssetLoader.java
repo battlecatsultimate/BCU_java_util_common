@@ -124,6 +124,8 @@ public class AssetLoader {
 					Map<String, File> sub = map.computeIfAbsent("custom", k -> new TreeMap<>());
 
 					sub.put("custom", f);
+
+					continue;
 				}
 
 				if (f.getName().endsWith(".asset.bcuzip")) {
