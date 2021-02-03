@@ -150,7 +150,7 @@ public abstract class Entity extends AbEntity {
 				if(i == A_B || i == A_E_B)
 					offset = -25.0 * siz;
 
-				if (eae == null || i == eftp)
+				if (eae == null)
 					continue;
 				g.setTransform(at);
 				eae.draw(g, new P(x, p.y+offset), siz * 0.75);
@@ -1546,10 +1546,15 @@ public abstract class Entity extends AbEntity {
 			canBurrow = true;
 		moved = true;
 		double max = (basis.getBase(dire).pos - pos) * dire - data.touchBase();
+
+		//Must subtract 1600 from length because of gap between battle field ans bases
+		if(data.touchBase() >= basis.st.len - 1600)
+			max = 0;
+
 		if (maxl >= 0)
 			max = Math.min(max, maxl);
 
-		double mov = isBase ? 0 : status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
+		double mov = status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
 
 		if (status[P_SPEED][0] > 0 && status[P_SLOW][0] <= 0) {
 			if (status[P_SPEED][2] == 0) {

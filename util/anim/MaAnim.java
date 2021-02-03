@@ -76,8 +76,7 @@ public class MaAnim extends Data implements BattleStatic {
 				max = parts[i].getMax();
 		len = 1;
 		for (int i = 0; i < n; i++)
-			if (parts[i].getMax() - parts[i].off > len)
-				len = parts[i].getMax() - parts[i].off;
+			len = Math.max(len, parts[i].getMax());
 	}
 
 	public void write(PrintStream ps) {

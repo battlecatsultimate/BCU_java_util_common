@@ -120,17 +120,30 @@ public class AssetLoader {
 			File folder = CommonStatic.ctx.getAssetFile("./assets/");
 			Map<String, Map<String, File>> map = new TreeMap<>();
 			for (File f : folder.listFiles()) {
+				if(f.getName().endsWith("custom.asset.bcuzip")) {
+					Map<String, File> sub = map.computeIfAbsent("custom", k -> new TreeMap<>());
+
+					sub.put("custom", f);
+				}
+
 				if (f.getName().endsWith(".asset.bcuzip")) {
 					String pre = f.getName().substring(0, 2);
 					String name = f.getName().substring(0, 6);
-					Map<String, File> sub = map.get(pre);
-					if (sub == null)
-						map.put(pre, sub = new TreeMap<>());
+					Map<String, File> sub = map.computeIfAbsent(pre, k -> new TreeMap<>());
 					sub.put(name, f);
 				}
 			}
+
 			for (Entry<String, Map<String, File>> emain : map.entrySet()) {
-				File target = CommonStatic.ctx.getAssetFile("./assets/" + emain.getKey() + "xxxx.assets.bcuzips");
+				String targetName;
+
+				if(emain.getKey().equals("custom")) {
+					targetName = "./assets/"+emain.getKey()+".assets.bcuzips";
+				} else {
+					targetName = "./assets/" + emain.getKey() + "xxxx.assets.bcuzips";
+				}
+
+				File target = CommonStatic.ctx.getAssetFile(targetName);
 				File dst = CommonStatic.ctx.getAssetFile("./assets/.assets.bcuzips.temp");
 				Context.check(dst);
 				FileOutputStream fos = new FileOutputStream(dst);
@@ -155,7 +168,8 @@ public class AssetLoader {
 					fis = new FileInputStream(efile);
 					stream(fos, fis);
 					fis.close();
-					Context.delete(efile);
+					if(!efile.getName().endsWith("custom.asset.bcuzip"))
+						Context.delete(efile);
 				}
 				fos.close();
 				Context.delete(target);
