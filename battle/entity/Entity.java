@@ -1547,7 +1547,7 @@ public abstract class Entity extends AbEntity {
 		moved = true;
 		double max = (basis.getBase(dire).pos - pos) * dire - data.touchBase();
 
-		//Must subtract 1600 from length because of gap between battle field ans bases
+		//Must subtract 1600 from length because of gap between battle field and bases
 		if(data.touchBase() >= basis.st.len - 1600)
 			max = 0;
 

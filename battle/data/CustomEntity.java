@@ -237,6 +237,7 @@ public abstract class CustomEntity extends DataEntity {
 		range = is.nextInt();
 		abi = is.nextInt();
 		type = is.nextInt();
+		type = Data.reorderTrait(type);
 		width = is.nextInt();
 		shield = is.nextInt();
 		tba = is.nextInt();
