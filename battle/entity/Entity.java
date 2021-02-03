@@ -1469,7 +1469,7 @@ public abstract class Entity extends AbEntity {
 
 		// do move check if available, move if possible
 		if (kbTime == 0 && !acted && atkm.atkTime == 0) {
-			if (!touchEnemy) {
+			if (!touch) {
 				if (health > 0)
 					anim.setAnim(UType.WALK, true);
 				updateMove(-1, 0);
