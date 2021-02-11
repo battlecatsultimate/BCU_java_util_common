@@ -232,6 +232,48 @@ public class CommonStatic {
 		return ans;
 	}
 
+	public static String[] getPackEntityID(String input) {
+		String[] result = new String[2];
+
+		StringBuilder packID = new StringBuilder();
+		StringBuilder entityID = new StringBuilder();
+
+		boolean packEnd = false;
+		boolean findDigit = false;
+
+		for(int i = 0; i < input.length(); i++) {
+			if(!packEnd) {
+				if(Character.toString(input.charAt(i)).matches("[0-9a-z]"))
+					packID.append(input.charAt(i));
+				else {
+					packEnd = true;
+					findDigit = true;
+				}
+			} else {
+				if(findDigit) {
+					if(Character.isDigit(input.charAt(i))) {
+						entityID.append(input.charAt(i));
+						findDigit = false;
+					}
+				} else {
+					if(Character.isDigit(input.charAt(i))) {
+						entityID.append(input.charAt(i));
+					} else if(input.charAt(i) == 'r') {
+						entityID.append(input.charAt(i));
+						break;
+					} else {
+						break;
+					}
+				}
+			}
+		}
+
+		result[0] = packID.toString();
+		result[1] = entityID.toString();
+
+		return result;
+	}
+
 	public static long parseLongN(String str) {
 		long ans;
 		try {

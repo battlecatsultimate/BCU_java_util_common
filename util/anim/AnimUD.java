@@ -52,6 +52,9 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 			if (ma.length == 7)
 				for (int i = 0; i < 3; i++)
 					ma[i + 4] = MaAnim.newIns(spath + "_zombie0" + i + ".maanim");
+
+			ma = filterValidAnims(ma);
+
 			return ma;
 		}
 
@@ -86,6 +89,20 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 			}
 		}
 
+		private MaAnim[] filterValidAnims(MaAnim[] original) {
+			int end = 0;
+
+			for(int i = 0; i < original.length; i ++ ) {
+				if(original[i] != null && original[i].n != 0)
+					end = i;
+			}
+
+			MaAnim[] fixed = new MaAnim[end+1];
+
+			System.arraycopy(original, 0, fixed, 0, end + 1);
+
+			return fixed;
+		}
 	}
 
 	public AnimUD(String path, String name, String edi, String uni) {

@@ -37,11 +37,10 @@ public class ContMove extends ContAb {
 		double rat = BattleConst.ratio;
 		int h = (int) (640 * rat * siz);
 		gra.setColor(FakeGraphics.MAGENTA);
-		double d0 = -ran / 2;
-		double ra = ran;
+		double d0 = -ran / 2.0;
 		int x = (int) (d0 * rat * siz + p.x);
 		int y = (int) p.y;
-		int w = (int) (ra * rat * siz);
+		int w = (int) ((double) ran * rat * siz);
 		if (tempAtk)
 			gra.fillRect(x, y, w, h);
 		else

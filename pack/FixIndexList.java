@@ -11,6 +11,8 @@ import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.IOType;
 import common.pack.IndexContainer.Indexable;
 import common.util.Data;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -70,6 +72,7 @@ public class FixIndexList<T> extends Data {
 			return ans;
 		}
 
+		@NotNull
 		@Override
 		public Iterator<T> iterator() {
 			return new Itr();
@@ -78,13 +81,11 @@ public class FixIndexList<T> extends Data {
 		public void reorder(int ori, int fin) {
 			if (ori < fin) {
 				int val = order[ori];
-				for (int i = ori; i < fin; i++)
-					order[i] = order[i + 1];
+				System.arraycopy(order, ori + 1, order, ori, fin - ori);
 				order[fin] = val;
 			} else if (ori > fin) {
 				int val = order[ori];
-				for (int i = ori; i > fin; i--)
-					order[i] = order[i - 1];
+				if (ori - fin >= 0) System.arraycopy(order, fin, order, fin + 1, ori - fin);
 				order[fin] = val;
 			}
 		}
@@ -134,6 +135,21 @@ public class FixIndexList<T> extends Data {
 			return getList().toArray((T[]) Array.newInstance(cls, 0));
 		}
 
+		public List<T> getRawList() {
+			List<T> ans = new ArrayList<>();
+
+			for (T t : arr) {
+				if (t != null)
+					ans.add(t);
+			}
+
+			return ans;
+		}
+
+		@SuppressWarnings("unchecked")
+		public T[] toRawArray() {
+			return getRawList().toArray((T[]) Array.newInstance(cls, 0));
+		}
 	}
 
 	protected T[] arr;
@@ -150,8 +166,7 @@ public class FixIndexList<T> extends Data {
 	}
 
 	public void clear() {
-		for (int i = 0; i < arr.length; i++)
-			arr[i] = null;
+		Arrays.fill(arr, null);
 		size = 0;
 	}
 
