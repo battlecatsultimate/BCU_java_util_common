@@ -13,7 +13,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	public Form pack;
 
 	@JsonField
-	public int price, resp;
+	public int price, resp, back, front;
 
 	public CustomUnit() {
 		rep = new AtkDataModel(this);
@@ -26,6 +26,8 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		type = 0;
 		price = 50;
 		resp = 60;
+		back = 0;
+		front = 9;
 		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
 	}
 
@@ -35,12 +37,12 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 
 	@Override
 	public int getBack() {
-		return 9;
+		return back;
 	}
 
 	@Override
 	public int getFront() {
-		return 0;
+		return front;
 	}
 
 	@Override
@@ -70,6 +72,8 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 			MaskUnit mu = (MaskUnit) de;
 			price = mu.getPrice();
 			resp = mu.getRespawn();
+			back = Math.min(mu.getBack(), mu.getFront());
+			front = Math.max(mu.getBack(), mu.getFront());
 		}
 	}
 
