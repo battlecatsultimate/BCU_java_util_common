@@ -57,7 +57,7 @@ public class StageBasis extends BattleObj {
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
 	public double mon;
-	public int shock = -1;
+	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
 	public int respawnTime;
 	public Background bg;
@@ -418,16 +418,16 @@ public class StageBasis extends BattleObj {
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).postUpdate();
 
-		if (shock > -1) {
-			if (shock-- == 0) {
-				for (int i = 0; i < le.size(); i++)
-					if (le.get(i).dire == -1 && (le.get(i).touchable() & TCH_N) > 0) {
-						le.get(i).interrupt(INT_SW, KB_DIS[INT_SW]);
-						le.get(i).postUpdate();
-					}
-				lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
-				CommonStatic.setSE(SE_BOSS);
+		if (shock) {
+			for (Entity entity : le) {
+				if (entity.dire == -1 && (entity.touchable() & TCH_N) > 0) {
+					entity.interrupt(INT_SW, KB_DIS[INT_SW]);
+					entity.postUpdate();
+				}
 			}
+			lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
+			CommonStatic.setSE(SE_BOSS);
+			shock = false;
 		}
 
 		if (s_stop == 0) {
