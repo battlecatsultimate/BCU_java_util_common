@@ -136,6 +136,18 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return name;
 	}
 
+	public EPart getFa() {
+		return fa;
+	}
+
+	public MaModel getModel() {
+		return model;
+	}
+
+	public EPart[] getParts() {
+		return ent;
+	}
+
 	protected void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
@@ -213,7 +225,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return fa.getSize().times(sca).times(gsca * mi * mi);
 	}
 
-	private double opa() {
+	public double opa() {
 		if (opacity == 0)
 			return 0;
 		if (fa != null)
@@ -227,6 +239,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			fa.transform(g, sizer);
 			siz = fa.getSize().times(sizer);
 		}
+
 		P tpos = P.newP(pos).times(siz);
 
 		if (ent[0] != this) {

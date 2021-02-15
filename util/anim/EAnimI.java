@@ -81,4 +81,7 @@ public abstract class EAnimI extends BattleObj {
 		copy = null;
 	}
 
+	public EPart[] getOrder() {
+		return order;
+	}
 }
