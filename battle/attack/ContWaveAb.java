@@ -17,15 +17,20 @@ public abstract class ContWaveAb extends ContAb {
 	private final int maxt;
 	private boolean tempAtk;
 
-	protected ContWaveAb(AttackWave a, double p, EAnimD<?> ead, int layer) {
+	protected ContWaveAb(AttackWave a, double p, EAnimD<?> ead, int layer, boolean delay) {
 		super(a.model.b, p, layer);
 		atk = a;
 		anim = ead;
-		maxt = anim.len();
+		maxt = anim.len() - 1;
+		anim.setTime(1);
+		if (delay)
+			t = -2;
 	}
 
 	@Override
 	public void draw(FakeGraphics gra, P p, double siz) {
+		if (t < 0)
+			return;
 		FakeTransform at = gra.getTransform();
 		anim.draw(gra, p, siz);
 		gra.setTransform(at);
@@ -36,7 +41,15 @@ public abstract class ContWaveAb extends ContAb {
 	@Override
 	public void update() {
 		tempAtk = false;
-		if (t == (atk.waveType == WT_MINI ? W_MINI_TIME : W_TIME)) {
+		boolean isMini = atk.waveType == WT_MINI;
+		if (t == (isMini ? W_MINI_TIME - 1 : W_TIME)) {
+			if (isMini && atk.proc.MINIWAVE.lv > 0)
+				nextWave();
+			else if (!isMini && atk.getProc().WAVE.lv > 0)
+				nextWave();
+		}
+		// guessed attack time compared from game
+		if (t == (isMini ? 4 : 6)) {
 			atk.capture();
 			for (AbEntity e : atk.capt)
 				if ((e.getAbi() & AB_WAVES) > 0) {
@@ -47,14 +60,11 @@ public abstract class ContWaveAb extends ContAb {
 				}
 			sb.getAttack(atk);
 			tempAtk = true;
-			if (atk.waveType == WT_MINI && atk.proc.MINIWAVE.lv > 0)
-				nextWave();
-			else if(atk.waveType != WT_MINI && atk.getProc().WAVE.lv > 0)
-				nextWave();
 		}
 		if (maxt == t)
 			activate = false;
-		anim.update(false);
+		if (t >= 0)
+			anim.update(false);
 		t++;
 	}
 
