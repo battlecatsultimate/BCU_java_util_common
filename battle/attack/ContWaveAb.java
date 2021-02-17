@@ -13,6 +13,7 @@ public abstract class ContWaveAb extends ContAb {
 
 	protected final AttackWave atk;
 	protected final EAnimD<?> anim;
+	protected ContWaveDef nextWave;
 	private int t = 0;
 	private final int maxt;
 	private boolean tempAtk;
@@ -42,22 +43,30 @@ public abstract class ContWaveAb extends ContAb {
 	public void update() {
 		tempAtk = false;
 		boolean isMini = atk.waveType == WT_MINI;
+		// guessed attack point compared from BC
+		int attack = (isMini ? 4 : 6);
+		if (t == 0)
+			CommonStatic.setSE(SE_WAVE);
+		// guessed wave block time compared from BC
+		if (t >= (isMini ? 1 : 2) && t <= attack) {
+			atk.capture();
+			for (AbEntity e : atk.capt)
+				if ((e.getAbi() & AB_WAVES) > 0) {
+					if (e instanceof Entity)
+						((Entity) e).anim.getEff(STPWAVE);
+					deactivate();
+					return;
+				}
+		}
+		if (!activate)
+			return;
 		if (t == (isMini ? W_MINI_TIME - 1 : W_TIME)) {
 			if (isMini && atk.proc.MINIWAVE.lv > 0)
 				nextWave();
 			else if (!isMini && atk.getProc().WAVE.lv > 0)
 				nextWave();
 		}
-		// guessed attack time compared from game
-		if (t == (isMini ? 4 : 6)) {
-			atk.capture();
-			for (AbEntity e : atk.capt)
-				if ((e.getAbi() & AB_WAVES) > 0) {
-					if (e instanceof Entity)
-						((Entity) e).anim.getEff(STPWAVE);
-					activate = false;
-					return;
-				}
+		if (t == attack) {
 			sb.getAttack(atk);
 			tempAtk = true;
 		}
@@ -66,6 +75,15 @@ public abstract class ContWaveAb extends ContAb {
 		if (t >= 0)
 			anim.update(false);
 		t++;
+	}
+
+	/**
+	 * kill all consecutive waves
+	 */
+	protected void deactivate() {
+		activate = false;
+		if (nextWave != null)
+			nextWave.deactivate();
 	}
 
 	protected void drawAxis(FakeGraphics gra, P p, double siz) {

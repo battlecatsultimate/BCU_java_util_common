@@ -8,8 +8,6 @@ public class ContWaveDef extends ContWaveAb {
 
 	protected ContWaveDef(AttackWave a, double p, int layer, boolean delay) {
 		super(a, p, (a.dire == 1 ? a.waveType == WT_MINI ? effas().A_E_MINIWAVE : effas().A_E_WAVE : a.waveType == WT_MINI ? effas().A_MINIWAVE : effas().A_WAVE).getEAnim(DefEff.DEF), layer, delay);
-
-		CommonStatic.setSE(SE_WAVE);
 	}
 
 	@Override
@@ -17,6 +15,6 @@ public class ContWaveDef extends ContWaveAb {
 		int dire = atk.model.getDire();
 		double np = pos + W_PROG * dire;
 		int wid = dire == 1 ? W_E_WID : W_U_WID;
-		new ContWaveDef(new AttackWave(atk, np, wid), np, layer, false);
+		nextWave = new ContWaveDef(new AttackWave(atk, np, wid), np, layer, false);
 	}
 }
