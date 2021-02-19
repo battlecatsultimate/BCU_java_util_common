@@ -1162,9 +1162,9 @@ public abstract class Entity extends AbEntity {
 
 		//75.0 is guessed value compared from BC
 		if(atk.isLongAtk)
-			basis.lea.add(new EAnimCont(pos, atk.layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
 		else
-			basis.lea.add(new EAnimCont(pos, atk.layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
