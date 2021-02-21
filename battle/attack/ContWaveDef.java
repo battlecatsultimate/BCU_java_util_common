@@ -1,13 +1,12 @@
 package common.battle.attack;
 
-import common.CommonStatic;
-import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.DefEff;
 
 public class ContWaveDef extends ContWaveAb {
 
 	protected ContWaveDef(AttackWave a, double p, int layer, boolean delay) {
 		super(a, p, (a.dire == 1 ? a.waveType == WT_MINI ? effas().A_E_MINIWAVE : effas().A_E_WAVE : a.waveType == WT_MINI ? effas().A_MINIWAVE : effas().A_WAVE).getEAnim(DefEff.DEF), layer, delay);
+		soundEffect = SE_WAVE;
 	}
 
 	@Override

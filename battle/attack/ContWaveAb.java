@@ -14,6 +14,7 @@ public abstract class ContWaveAb extends ContAb {
 	protected final AttackWave atk;
 	protected final EAnimD<?> anim;
 	protected ContWaveDef nextWave;
+	protected int soundEffect;
 	private int t = 0;
 	private final int maxt;
 	private boolean tempAtk;
@@ -45,9 +46,9 @@ public abstract class ContWaveAb extends ContAb {
 		boolean isMini = atk.waveType == WT_MINI;
 		// guessed attack point compared from BC
 		int attack = (isMini ? 4 : 6);
-		if (t == 0)
-			CommonStatic.setSE(SE_WAVE);
 		// guessed wave block time compared from BC
+		if (t == 0)
+			CommonStatic.setSE(soundEffect);
 		if (t >= (isMini ? 1 : 2) && t <= attack) {
 			atk.capture();
 			for (AbEntity e : atk.capt)

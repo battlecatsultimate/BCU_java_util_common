@@ -12,6 +12,7 @@ public class ContWaveCanon extends ContWaveAb {
 	public ContWaveCanon(AttackWave a, double p, int id) {
 		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, false);
 		canid = id;
+		soundEffect = SE_CANNON[canid][1];
 	}
 
 	@Override
@@ -33,7 +34,6 @@ public class ContWaveCanon extends ContWaveAb {
 	protected void nextWave() {
 		double np = pos - 405;
 		new ContWaveCanon(new AttackWave(atk, np, NYRAN[canid]), np, canid);
-		CommonStatic.setSE(SE_CANNON[canid][1]);
 	}
 
 }
