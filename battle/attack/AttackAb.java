@@ -16,6 +16,7 @@ public abstract class AttackAb extends BattleObj {
 	public final MaskAtk matk;
 	public final int layer;
 	public final boolean isLongAtk;
+	public int duration;
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
 
@@ -23,7 +24,7 @@ public abstract class AttackAb extends BattleObj {
 	protected final List<AbEntity> capt = new ArrayList<>();
 	protected double sta, end;
 
-	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk) {
+	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
@@ -33,6 +34,7 @@ public abstract class AttackAb extends BattleObj {
 		abi = eab;
 		sta = p0;
 		end = p1;
+		this.duration = time;
 		this.matk = matk;
 		this.layer = layer;
 		this.isLongAtk = isLongAtk;
@@ -50,6 +52,7 @@ public abstract class AttackAb extends BattleObj {
 		canon = a.canon;
 		sta = STA;
 		end = END;
+		this.duration = 1;
 		this.matk = a.matk;
 		this.layer = a.layer;
 		this.isLongAtk = isLongAtk;
@@ -70,6 +73,7 @@ public abstract class AttackAb extends BattleObj {
 	}
 
 	protected void process() {
+		duration--;
 		for (AbEntity ae : capt) {
 			if (ae instanceof Entity) {
 				Entity e = (Entity) ae;

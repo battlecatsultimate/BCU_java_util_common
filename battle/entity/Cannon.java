@@ -21,7 +21,7 @@ public class Cannon extends AtkModelAb {
 	private int preTime = 0;
 	private EUnit wall = null;
 	public double pos;
-	private boolean tempAtk;
+	private int duration = 0;
 
 	public Cannon(StageBasis sb, int type) {
 		super(sb);
@@ -66,7 +66,7 @@ public class Cannon extends AtkModelAb {
 		int x = (int) ((d0 - pos) * rat * siz + ori.x);
 		int y = (int) ori.y;
 		int w = (int) (ra * rat * siz);
-		if (tempAtk)
+		if (duration > 0)
 			g.fillRect(x, y, w, h);
 		else
 			g.drawRect(x, y, w, h);
@@ -100,7 +100,8 @@ public class Cannon extends AtkModelAb {
 	}
 
 	public void update() {
-		tempAtk = false;
+		if (duration > 0)
+			duration--;
 		if (anim != null && anim.done()) {
 			anim = null;
 			if (id > 2 && id < 5) {
@@ -134,7 +135,7 @@ public class Cannon extends AtkModelAb {
 				for (Entity e : b.le)
 					if (e.dire == -1 && e.pos < pos && (e.touchable() & (TCH_N | TCH_KB)) != 0)
 						pos = e.pos;
-				pos -= NYRAN[id] / 2;
+				pos -= NYRAN[id] / 2.0;
 			}
 			if (id == 2 || id == 6) {
 				pos = b.ebase.pos;
@@ -164,15 +165,15 @@ public class Cannon extends AtkModelAb {
 					double wid = NYRAN[0];
 					double p = b.ubase.pos - wid / 2 + 100;
 					int atk = b.b.t().getCanonAtk();
-					AttackCanon eatk = new AttackCanon(this, atk, -1, 0, proc, 0, 0);
+					AttackCanon eatk = new AttackCanon(this, atk, -1, 0, proc, 0, 0, 1);
 					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
 				} else if (id == 1) {
 					// slow canon
 					proc.SLOW.time = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_SLOW)) / 100;
 					int wid = NYRAN[1];
 					int spe = 137;
-					double p = b.ubase.pos - wid / 2 + spe;
-					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0);
+					double p = b.ubase.pos - wid / 2.0 + spe;
+					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0,1);
 					new ContMove(eatk, p, wid, spe, 1, 31, 0, 9);
 				} else if (id == 2) {
 					// wall canon
@@ -181,17 +182,17 @@ public class Cannon extends AtkModelAb {
 					wall = null;
 				} else if (id == 3) {
 					// freeze canon
-					tempAtk = true;
+					duration = 1;
 					proc.STOP.time = b.b.t().getCanonProcTime(id) * (100 + b.b.getInc(C_STOP)) / 100;
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCanonMulti(id) / 100);
 					int rad = NYRAN[3] / 2;
-					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos + rad));
+					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos + rad, duration));
 				} else if (id == 4) {
 					// water canon
-					tempAtk = true;
+					duration = 1;
 					proc.CRIT.mult = -(int) (b.b.t().getCanonMulti(id) / 10);
 					int rad = NYRAN[4] / 2;
-					b.getAttack(new AttackCanon(this, 1, 0, 0, proc, pos - rad, pos + rad));
+					b.getAttack(new AttackCanon(this, 1, 0, 0, proc, pos - rad, pos + rad, duration));
 				} else if (id == 5) {
 					// zombie canon
 					proc.WAVE.lv = 12;
@@ -199,28 +200,29 @@ public class Cannon extends AtkModelAb {
 					proc.STOP.time = b.b.t().getCanonProcTime(5) * (100 + b.b.getInc(C_STOP)) / 100;
 					proc.SNIPER.prob = 1;
 					double p = b.ubase.pos - wid / 2 + 100;
-					AttackCanon eatk = new AttackCanon(this, 0, TB_ZOMBIE, AB_ONLY | AB_ZKILL, proc, 0, 0);
+					AttackCanon eatk = new AttackCanon(this, 0, TB_ZOMBIE, AB_ONLY | AB_ZKILL, proc, 0, 0, 1);
 					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
 				} else if (id == 6) {
 					// barrier canon
-					tempAtk = true;
+					// guessed hit box time
+					duration = 11;
 					proc.BREAK.prob = 1;
 					proc.KB.dis = KB_DIS[INT_KB];
 					proc.KB.time = KB_TIME[INT_KB];
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCanonMulti(id) / 100);
 					int rad = b.b.t().getCanonProcTime(id);
-					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos));
+					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos, duration));
 
 					atka = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK);
 					exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
 				} else if (id == 7) {
 					// curse cannon
-					tempAtk = true;
+					duration = 1;
 					proc.CURSE.time = (b.b.t().getCanonProcTime(id));
 					int wid = NYRAN[7];
 					int spe = 137;
-					double p = b.ubase.pos - wid / 2 + spe;
-					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0);
+					double p = b.ubase.pos - wid / 2.0 + spe;
+					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0, duration);
 					new ContMove(eatk, p, wid, spe, 1, 31, 0, 9);
 				}
 			}

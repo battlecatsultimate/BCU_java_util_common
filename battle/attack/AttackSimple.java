@@ -11,16 +11,17 @@ import java.util.List;
 
 public class AttackSimple extends AttackAb {
 
+	private final List<AbEntity> attacked = new ArrayList<>();
 	private final boolean range;
 
 	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, boolean isr,
-			MaskAtk matk, int layer, boolean isLongAtk) {
-		super(ent, ATK, t, eab, pro, p0, p1, matk, layer, isLongAtk);
+			MaskAtk matk, int layer, boolean isLongAtk, int duration) {
+		super(ent, ATK, t, eab, pro, p0, p1, matk, layer, isLongAtk, duration);
 		range = isr;
 	}
 
 	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk) {
-		this(ent, ATK, t, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk);
+		this(ent, ATK, t, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}
@@ -32,12 +33,12 @@ public class AttackSimple extends AttackAb {
 		capt.clear();
 		if (canon > -2 || model instanceof Sniper)
 			le.remove(model.b.ebase);
-		if ((abi & AB_ONLY) == 0)
-			capt.addAll(le);
-		else
-			for (AbEntity e : le)
-				if (e.targetable(type))
-					capt.add(e);
+		for (AbEntity e : le) {
+			if (((abi & AB_ONLY) == 0 || e.targetable(type)) && !attacked.contains(e)) {
+				capt.add(e);
+				attacked.add(e);
+			}
+		}
 		if (!range) {
 			if (capt.size() == 0)
 				return;

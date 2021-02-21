@@ -158,7 +158,6 @@ public class StageBasis extends BattleObj {
 	public void getAttack(AttackAb a) {
 		if (a == null)
 			return;
-		a.capture();
 		la.add(a);
 	}
 
@@ -374,8 +373,9 @@ public class StageBasis extends BattleObj {
 			lw.addAll(tlw);
 			tlw.clear();
 		}
+		la.forEach(AttackAb::capture);
 		la.forEach(AttackAb::excuse);
-		la.clear();
+		la.removeIf(a -> a.duration <= 0);
 
 		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();
