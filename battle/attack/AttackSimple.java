@@ -11,6 +11,9 @@ import java.util.List;
 
 public class AttackSimple extends AttackAb {
 
+	/**
+	 * avoid attacking already attacked enemies for lasting attacks
+	 */
 	private final List<AbEntity> attacked = new ArrayList<>();
 	private final boolean range;
 
