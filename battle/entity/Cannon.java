@@ -48,7 +48,8 @@ public class Cannon extends AtkModelAb {
 		if (exta != null)
 			exta.draw(g, ori, siz);
 		g.setTransform(at);
-		if (!CommonStatic.getConfig().ref || id == BASE_H || id == BASE_SLOW || id == BASE_GROUND) {
+		boolean waveOrBeam = id == BASE_H || id == BASE_SLOW || id == BASE_GROUND || id == BASE_CURSE;
+		if (!CommonStatic.getConfig().ref || waveOrBeam) {
 			g.delete(at);
 			return;
 		}
@@ -217,12 +218,11 @@ public class Cannon extends AtkModelAb {
 					exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
 				} else if (id == 7) {
 					// curse cannon
-					duration = 1;
 					proc.CURSE.time = (b.b.t().getCanonProcTime(id));
 					int wid = NYRAN[7];
 					int spe = 137;
 					double p = b.ubase.pos - wid / 2.0 + spe;
-					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0, duration);
+					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0, 1);
 					new ContExtend(eatk, p, wid, spe, 1, 31, 0, 9);
 				}
 			}
