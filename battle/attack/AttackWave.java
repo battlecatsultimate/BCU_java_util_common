@@ -31,6 +31,16 @@ public class AttackWave extends AttackAb {
 			proc.WAVE.lv--;
 	}
 
+	public AttackWave(AttackWave a, double pos, double start, double end) {
+		super(a, pos - start, pos + end, false);
+		waveType = a.waveType;
+		incl = a.incl;
+		if(waveType == WT_MINI)
+			proc.MINIWAVE.lv--;
+		else
+			proc.WAVE.lv--;
+	}
+
 	@Override
 	public void capture() {
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
