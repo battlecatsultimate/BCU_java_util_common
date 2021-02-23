@@ -21,8 +21,8 @@ public class ContExtend extends ContAb {
         itv = conf[2];
         t = itv;
         rem = conf[3];
-        start = end = conf[0] / 2;
         rep = conf[4];
+        start = end = conf[0] / 2;
         rept = rep > 0 ? rep : -1;
         atk = new AttackWave(as, 0, 0, WT_MOVE);
     }
@@ -37,10 +37,11 @@ public class ContExtend extends ContAb {
         double rat = BattleConst.ratio;
         int h = (int) (640 * rat * siz);
         gra.setColor(FakeGraphics.MAGENTA);
-        double d0 = -(start + end) / 2.0;
+        double d0 = Math.min(start, end);
+        double ra = Math.abs(start) + Math.abs(end);
         int x = (int) (d0 * rat * siz + p.x);
         int y = (int) p.y;
-        int w = (int) ((double) (start + end) * rat * siz);
+        int w = (int) -(ra * rat * siz);
         if (tempAtk)
             gra.fillRect(x, y, w, h);
         else
