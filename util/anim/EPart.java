@@ -161,7 +161,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
 		if (extType == 0)
-			drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
+			drawImg(g, bimg, tpiv, sc, opa(), glow, 1.0 * extend / model.ints[0]);
 		else if (extType == 1)
 			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
 					glow == 1, 1.0 * extend / model.ints[0]);

@@ -25,17 +25,20 @@ public class ImgCore extends Data {
 			g.setRenderingHint(i, CommonStatic.getConfig().ints[i]);
 	}
 
-	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, boolean glow,
+	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, int glow,
 			double extend) {
-		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5)
-			if (!glow)
-				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
+		boolean glowSupport = (glow >= 1 && glow <= 3) || glow == -1;
+		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5) {
+			if (glowSupport)
+				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), glow);
 			else
-				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), 1);
-		else if (glow)
-			g.setComposite(FakeGraphics.BLEND, 256, 1);
-		else
-			g.setComposite(FakeGraphics.DEF, 0, 0);
+				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
+		} else {
+			if (glowSupport)
+				g.setComposite(FakeGraphics.BLEND, 256, glow);
+			else
+				g.setComposite(FakeGraphics.DEF, 0, 0);
+		}
 		if (extend == 0)
 			drawImage(g, bimg, -piv.x, -piv.y, sc.x, sc.y);
 		else {
