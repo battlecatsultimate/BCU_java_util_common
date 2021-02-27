@@ -13,7 +13,7 @@ public abstract class ContWaveAb extends ContAb {
 
 	protected final AttackWave atk;
 	protected final EAnimD<?> anim;
-	protected ContWaveDef nextWave;
+	protected ContWaveAb nextWave;
 	protected int soundEffect;
 	private int t = 0;
 	private final int maxt;
