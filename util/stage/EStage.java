@@ -85,6 +85,10 @@ public class EStage extends BattleObj {
 		if (data.castle_0 == 0) {
 			num[ind] = -1;
 			double multi = data.multiple * mul * 0.01;
+
+			if(sb.st.getCont().getCont().getSID().equals("000006") || sb.st.getCont().getCont().getSID().equals("000011"))
+				multi = Integer.MAX_VALUE;
+
 			double mulatk = data.mult_atk * mul * 0.01;
 			AbEnemy e = Identifier.getOr(data.enemy, AbEnemy.class);
 			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, -1);
