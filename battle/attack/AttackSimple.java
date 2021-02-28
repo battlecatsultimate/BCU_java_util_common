@@ -7,14 +7,16 @@ import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AttackSimple extends AttackAb {
 
 	/**
 	 * avoid attacking already attacked enemies for lasting attacks
 	 */
-	private final List<AbEntity> attacked = new ArrayList<>();
+	private final Set<AbEntity> attacked = new HashSet<>();
 	private final boolean range;
 
 	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, boolean isr,
@@ -33,15 +35,16 @@ public class AttackSimple extends AttackAb {
 	public void capture() {
 		double pos = model.getPos();
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
+		le.removeIf(attacked::contains);
 		capt.clear();
 		if (canon > -2 || model instanceof Sniper)
 			le.remove(model.b.ebase);
-		for (AbEntity e : le) {
-			if (((abi & AB_ONLY) == 0 || e.targetable(type)) && !attacked.contains(e)) {
-				capt.add(e);
-				attacked.add(e);
-			}
-		}
+		if ((abi & AB_ONLY) == 0)
+			capt.addAll(le);
+		else
+			for (AbEntity e : le)
+				if (e.targetable(type))
+					capt.add(e);
 		if (!range) {
 			if (capt.size() == 0)
 				return;
@@ -72,8 +75,10 @@ public class AttackSimple extends AttackAb {
 			new ContMove(this, p0, mw.width, mw.speed, 1, mw.time, mw.itv, layer);
 			return;
 		}
-		for (AbEntity e : capt)
+		for (AbEntity e : capt) {
 			e.damaged(this);
+			attacked.add(e);
+		}
 		if (capt.size() > 0 && proc.WAVE.exists()) {
 			int dire = model.getDire();
 			int wid = dire == 1 ? W_E_WID : W_U_WID;
