@@ -42,6 +42,8 @@ public interface FileData {
 			while ((temp = reader.readLine()) != null)
 				ans.add(temp);
 			reader.close();
+			isr.close();
+			is.close();
 			return ans;
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read lines");
