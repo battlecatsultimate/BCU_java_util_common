@@ -401,7 +401,7 @@ public abstract class Entity extends AbEntity {
 				back = effas().A_KB.getEAnim(KBEff.ASS);
 
 			// Z-kill icon
-			if (e.health <= 0 && e.zx.tempZK) {
+			if (e.health <= 0 && e.zx.tempZK && (e.type & TB_ZOMBIE) != 0) {
 				EAnimD<DefEff> eae = effas().A_Z_STRONG.getEAnim(DefEff.DEF);
 				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
 				CommonStatic.setSE(SE_ZKILL);
