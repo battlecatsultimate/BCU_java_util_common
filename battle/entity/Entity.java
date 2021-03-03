@@ -1495,7 +1495,7 @@ public abstract class Entity extends AbEntity {
 				atkm.setUp();
 
 			// update waiting state
-			if ((waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
+			if (nstop && (waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
 				anim.setAnim(UType.IDLE, true);
 			if (waitTime > 0)
 				waitTime--;
