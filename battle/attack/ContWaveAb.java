@@ -7,7 +7,6 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
 import common.util.anim.EAnimD;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public abstract class ContWaveAb extends ContAb {
@@ -41,7 +40,7 @@ public abstract class ContWaveAb extends ContAb {
 	}
 
 	/**
-	 * kill all consecutive waves
+	 * kill every related wave
 	 */
 	protected void deactivate() {
 		waves.forEach(w -> w.activate = false);
