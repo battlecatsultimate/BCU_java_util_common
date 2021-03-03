@@ -196,7 +196,7 @@ public class Cannon extends AtkModelAb {
 					b.getAttack(new AttackCanon(this, 1, 0, 0, proc, pos - rad, pos + rad, duration));
 				} else if (id == 5) {
 					// zombie canon
-					proc.WAVE.lv = 12;
+					proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
 					double wid = NYRAN[5];
 					proc.STOP.time = b.b.t().getCanonProcTime(5) * (100 + b.b.getInc(C_STOP)) / 100;
 					proc.SNIPER.prob = 1;
