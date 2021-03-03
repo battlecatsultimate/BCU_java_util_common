@@ -382,10 +382,8 @@ public abstract class Entity extends AbEntity {
 			int t = e.kb.kbType;
 			if (t != INT_SW && t != INT_WARP)
 				setAnim(UType.HB, true);
-			else {
+			else
 				setAnim(UType.WALK, false);
-				anim.setTime(0);
-			}
 			if (t == INT_WARP) {
 				e.kbTime = status[P_WARP][0];
 				getEff(P_WARP);
@@ -399,6 +397,8 @@ public abstract class Entity extends AbEntity {
 				back = effas().A_KB.getEAnim(KBEff.SW);
 			if (t == INT_ASS)
 				back = effas().A_KB.getEAnim(KBEff.ASS);
+			if (t != INT_WARP)
+				e.kbTime += 1;
 
 			// Z-kill icon
 			if (e.health <= 0 && e.zx.tempZK && (e.type & TB_ZOMBIE) != 0) {
@@ -632,39 +632,6 @@ public abstract class Entity extends AbEntity {
 		 * end of KB: check whether it's killed, deal with revive
 		 */
 		private void updateKB() {
-			if (kbType != INT_WARP && kbType != INT_KB) {
-				double mov = kbDis / e.kbTime;
-				kbDis -= mov;
-				kbmove(mov);
-			} else if (kbType == INT_KB) {
-				if (time == 1) {
-					kbDuration = e.kbTime;
-				}
-
-				double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
-				mov *= -e.dire;
-
-				kbmove(mov);
-
-				time++;
-			} else {
-				e.anim.setAnim(UType.IDLE, false);
-				if (e.status[P_WARP][0] > 0)
-					e.status[P_WARP][0]--;
-				if (e.status[P_WARP][1] > 0)
-					e.status[P_WARP][1]--;
-				EffAnim<WarpEff> ea = effas().A_W;
-				if (e.kbTime == ea.len(WarpEff.EXIT)) {
-					kbmove(kbDis);
-					kbDis = 0;
-					e.anim.getEff(P_WARP);
-					e.status[P_WARP][2] = 0;
-					e.kbTime -= 11;
-				}
-			}
-			if (kbType == INT_HB && e.data.getRevenge() != null)
-				if (KB_TIME[INT_HB] - e.kbTime == e.data.getRevenge().pre)
-					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount()));
 			e.kbTime--;
 			if (e.kbTime == 0) {
 				e.anim.back = null;
@@ -676,6 +643,41 @@ public abstract class Entity extends AbEntity {
 
 				if (e.health <= 0)
 					e.preKill();
+			} else {
+				if (kbType != INT_WARP && kbType != INT_KB) {
+					double mov = kbDis / e.kbTime;
+					kbDis -= mov;
+					kbmove(mov);
+				} else if (kbType == INT_KB) {
+					if (time == 1) {
+						kbDuration = e.kbTime;
+					}
+
+					double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
+					mov *= -e.dire;
+
+					kbmove(mov);
+
+					time++;
+				} else {
+					e.anim.setAnim(UType.IDLE, false);
+					if (e.status[P_WARP][0] > 0)
+						e.status[P_WARP][0]--;
+					if (e.status[P_WARP][1] > 0)
+						e.status[P_WARP][1]--;
+					EffAnim<WarpEff> ea = effas().A_W;
+					if (e.kbTime + 1 == ea.len(WarpEff.EXIT)) {
+						kbmove(kbDis);
+						kbDis = 0;
+						e.anim.getEff(P_WARP);
+						e.status[P_WARP][2] = 0;
+						e.kbTime -= 11;
+					}
+				}
+				if (kbType == INT_HB && e.data.getRevenge() != null) {
+					if (KB_TIME[INT_HB] - e.kbTime == e.data.getRevenge().pre)
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount()));
+				}
 			}
 		}
 	}
@@ -1456,11 +1458,6 @@ public abstract class Entity extends AbEntity {
 		// update proc effects
 		updateProc();
 
-		// if this entity is in kb state, do kbmove()
-		// eneity can move right after kbmove, no need to mark acted
-		if (kbTime > 0)
-			kb.updateKB();
-
 		// update revive status, mark acted
 		zx.updateRevive();
 
@@ -1475,8 +1472,14 @@ public abstract class Entity extends AbEntity {
 					anim.setAnim(UType.WALK, true);
 				updateMove(-1, 0);
 			}
-			checkTouch();
 		}
+
+		// if this entity is in kb state, do kbmove()
+		if (kbTime > 0)
+			kb.updateKB();
+
+		// check touch after KB or move
+		checkTouch();
 
 		// update burrow state if not stopped
 		if (nstop && canBurrow)
