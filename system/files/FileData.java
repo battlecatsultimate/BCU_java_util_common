@@ -5,6 +5,7 @@ import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -38,14 +39,21 @@ public interface FileData {
 			Queue<String> ans = new ArrayDeque<>();
 			InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
 			BufferedReader reader = new BufferedReader(isr);
-			String temp = null;
+			String temp;
 			while ((temp = reader.readLine()) != null)
 				ans.add(temp);
 			reader.close();
+			isr.close();
 			return ans;
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read lines");
 			return null;
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

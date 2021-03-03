@@ -121,7 +121,7 @@ public class UpdateCheck {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
 	}
 
-	public static List<Downloader> checkAsset(UpdateJson json, String type) throws Exception {
+	public static List<Downloader> checkAsset(UpdateJson json, String... type) throws Exception {
 		Set<String> local = AssetLoader.previewAssets();
 		Set<String> req = new HashSet<>(UserProfile.getPool(REG_REQLIB, String.class));
 		req.removeIf(id -> local.contains("asset_" + id));
@@ -133,7 +133,7 @@ public class UpdateCheck {
 		for (AssetJson aj : json.assets) {
 			if (Data.getVer(aj.ver) > Data.getVer(AssetLoader.CORE_VER))
 				continue;
-			if (!aj.type.equals("core") && !aj.type.equals(type))
+			if (!aj.type.equals("core") && !contains(type, aj.type))
 				continue;
 			if (local.contains("asset_" + aj.id))
 				continue;
@@ -143,6 +143,15 @@ public class UpdateCheck {
 			set.add(new Downloader(url, target, temp, aj.desc, false));
 		}
 		return set;
+	}
+
+	private static boolean contains(String[] arr, String str) {
+		for (String s : arr) {
+			if (s.equals(str))
+				return true;
+		}
+
+		return false;
 	}
 
 	public static Context.SupExc<List<Downloader>> checkLang(String[] files) {
