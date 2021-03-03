@@ -11,29 +11,26 @@ import common.util.pack.EffAnim.DefEff;
 
 public abstract class AtkModelEntity extends AtkModelAb {
 
-	public static AtkModelEntity getIns(Entity e, double d0) {
+	public static AtkModelEntity getIns(Entity e, double d0, double d1) {
 		if (e instanceof EEnemy) {
 			EEnemy ee = (EEnemy) e;
 			return new AtkModelEnemy(ee, d0);
 		}
 		if (e instanceof EUnit) {
 			EUnit eu = (EUnit) e;
-			return new AtkModelUnit(eu, d0);
+			return new AtkModelUnit(eu, d0, d1);
 		}
 		return null;
-
 	}
 
 	protected final MaskEntity data;
 	public final Entity e;
 	protected final int[] atks, abis, act;
 	protected final BattleObj[] acs;
-	private final double ratk;
 	private final Proc[] sealed;
 
-	protected AtkModelEntity(Entity ent, double d0) {
+	protected AtkModelEntity(Entity ent, double d0, double d1) {
 		super(ent.basis);
-		ratk = d0;
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
@@ -42,7 +39,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		act = new int[raw.length + 2];
 		acs = new BattleObj[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
-			atks[i] = (int) (raw[i][0] * d0);
+			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
@@ -167,8 +164,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected abstract int getAttack(int ind, Proc proc);
-
-	protected abstract int getBaseAtk(int ind);
 
 	@Override
 	protected int getLayer() {

@@ -14,8 +14,8 @@ public class AtkModelUnit extends AtkModelEntity {
 	private final BasisLU bas;
 	private final Proc[] buffed;
 
-	protected AtkModelUnit(Entity ent, double d0) {
-		super(ent, d0);
+	protected AtkModelUnit(Entity ent, double d0, double d1) {
+		super(ent, d0, d1);
 		bas = ent.basis.b;
 		buffed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < buffed.length; i++) {
@@ -69,11 +69,6 @@ public class AtkModelUnit extends AtkModelEntity {
 		if (e.status[P_STRONG][0] != 0)
 			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;
 		return atk;
-	}
-
-	@Override
-	protected int getBaseAtk(int ind) {
-		return atks[ind];
 	}
 
 	@Override

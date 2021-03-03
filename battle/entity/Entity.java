@@ -1077,11 +1077,11 @@ public abstract class Entity extends AbEntity {
 	 */
 	protected boolean moved = false;
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double d0, double d1) {
+	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double tAtk, double lvAtk, double d1) {
 		super((int) (de.getHp() * d1));
 		basis = b;
 		data = de;
-		aam = AtkModelEntity.getIns(this, d0);
+		aam = AtkModelEntity.getIns(this, tAtk, lvAtk);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
 		barrier = de.getShield();
