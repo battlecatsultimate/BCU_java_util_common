@@ -68,9 +68,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				List<VFile> list = new ArrayList<>(fi.list());
 				VFile map = list.get(0);
 				List<VFile> stage = new ArrayList<>();
-				for (int i = 1; i < list.size(); i++)
+				for (int i = 1; i < list.size(); i++) {
+					if(fi.getName().equals("N") && list.get(i).getName().contains("stageRN-1"))
+						continue;
+
 					if (list.get(i).list() != null)
 						stage.addAll(list.get(i).list());
+				}
 				new DefMapColc(fi.getName(), idmap.get(fi.getName()), stage, map);
 			}
 			new DefMapColc();
