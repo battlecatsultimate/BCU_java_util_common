@@ -1484,25 +1484,23 @@ public abstract class Entity extends AbEntity {
 
 		// update wait and attack state
 		if (kbTime == 0) {
-			// update waiting state
-			if ((waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
-				anim.setAnim(UType.IDLE, true);
-			if (!nstop)
-				return;
-
 			boolean binatk = waitTime + atkm.atkTime == 0;
-			binatk &= touchEnemy && atkm.loop != 0;
+			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
 			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
-		}
-		if (waitTime > 0)
-			waitTime--;
 
-		// update attack status when in attack state
-		if (atkm.atkTime > 0)
-			atkm.updateAttack();
+			// update waiting state
+			if ((waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
+				anim.setAnim(UType.IDLE, true);
+			if (waitTime > 0)
+				waitTime--;
+
+			// update attack status when in attack state
+			if (atkm.atkTime > 0 && nstop)
+				atkm.updateAttack();
+		}
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
