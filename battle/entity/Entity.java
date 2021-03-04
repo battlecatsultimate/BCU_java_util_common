@@ -424,10 +424,7 @@ public abstract class Entity extends AbEntity {
 		private int setAnim(UType t, boolean skip) {
 			if (anim.type != t)
 				anim.changeAnim(t, skip);
-			if (skip)
-				return anim.len() - 1;
-			else
-				return anim.len();
+			return anim.len();
 		}
 
 		private void update() {
@@ -1451,7 +1448,7 @@ public abstract class Entity extends AbEntity {
 
 	/**
 	 * update the entity. order of update: <br>
-	 * KB -> revive -> move -> burrow -> attack -> wait
+	 * revive -> move -> KB -> burrow -> wait -> attack
 	 */
 	@Override
 	public void update() {
@@ -1467,7 +1464,7 @@ public abstract class Entity extends AbEntity {
 		// do move check if available, move if possible
 		if (kbTime == 0 && !acted && atkm.atkTime == 0) {
 			checkTouch();
-			if (!touch) {
+			if (!touch && nstop) {
 				if (health > 0)
 					anim.setAnim(UType.WALK, true);
 				updateMove(-1, 0);
@@ -1487,23 +1484,25 @@ public abstract class Entity extends AbEntity {
 
 		// update wait and attack state
 		if (kbTime == 0) {
-			boolean binatk = waitTime + kbTime + atkm.atkTime == 0;
-			binatk &= touchEnemy && atkm.loop != 0 && nstop;
+			// update waiting state
+			if ((waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
+				anim.setAnim(UType.IDLE, true);
+			if (!nstop)
+				return;
+
+			boolean binatk = waitTime + atkm.atkTime == 0;
+			binatk &= touchEnemy && atkm.loop != 0;
 
 			// if it can attack, setup attack state
 			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
-
-			// update waiting state
-			if (nstop && (waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
-				anim.setAnim(UType.IDLE, true);
-			if (waitTime > 0)
-				waitTime--;
-
-			// update attack status when in attack state
-			if (nstop && atkm.atkTime > 0)
-				atkm.updateAttack();
 		}
+		if (waitTime > 0)
+			waitTime--;
+
+		// update attack status when in attack state
+		if (atkm.atkTime > 0)
+			atkm.updateAttack();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
@@ -1750,9 +1749,10 @@ public abstract class Entity extends AbEntity {
 			if (blds)
 				le.remove(basis.getBase(dire));
 			blds &= le.size() == 0;
-		} else
+		} else {
 			blds = le.size() == 0;
-		if (status[P_STOP][0] == 0 && blds)
+		}
+		if (blds)
 			touch = false;
 		touchEnemy = touch;
 		if ((getAbi() & AB_ONLY) > 0) {
