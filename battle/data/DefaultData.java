@@ -11,7 +11,7 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int allAtk() {
-		return (int) (atk + atk1 + atk2);
+		return atk + atk1 + atk2;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int getTBA() {
-		return getItv() - getAnimLen();
+		return tba * 2;
 	}
 
 	@Override

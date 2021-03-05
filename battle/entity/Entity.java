@@ -7,6 +7,7 @@ import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.pack.Identifier;
 import common.system.P;
@@ -512,7 +513,8 @@ public abstract class Entity extends AbEntity {
 			if (atkTime > 0) {
 				atkTime = 0;
 				preTime = 0;
-				if (preID == multi)
+				// todo: handle or convert TBA in custom entities
+				if (preID == multi && e.data instanceof CustomEntity)
 					e.waitTime = e.data.getTBA();
 			}
 		}
@@ -529,15 +531,23 @@ public abstract class Entity extends AbEntity {
 						;
 					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
 					e.basis.getAttack(e.aam.getAttack(tempAtk));
-					if (preID < multi)
+					if (preID < multi) {
 						preTime = pres[preID];
+					} else {
+						// todo: handle or convert TBA in custom entities
+						if (!(e.data instanceof CustomEntity))
+							e.waitTime = Math.max(e.data.getTBA() - 1, 0);
+					}
 				}
 				preTime--;
 			}
 			if (atkTime == 0) {
 				e.canBurrow = true;
-				e.waitTime = e.data.getTBA();
 				e.anim.setAnim(UType.IDLE, true);
+
+				// todo: handle or convert TBA in custom entities
+				if (e.data instanceof CustomEntity)
+					e.waitTime = e.data.getTBA();
 			}
 		}
 	}
@@ -1494,13 +1504,13 @@ public abstract class Entity extends AbEntity {
 			// update waiting state
 			if ((waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
 				anim.setAnim(UType.IDLE, true);
-			if (waitTime > 0)
-				waitTime--;
-
-			// update attack status when in attack state
-			if (atkm.atkTime > 0 && nstop)
-				atkm.updateAttack();
 		}
+		if (waitTime > 0)
+			waitTime--;
+
+		// update attack status when in attack state
+		if (atkm.atkTime > 0 && nstop)
+			atkm.updateAttack();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
