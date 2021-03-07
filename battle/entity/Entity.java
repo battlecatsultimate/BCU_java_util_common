@@ -529,7 +529,6 @@ public abstract class Entity extends AbEntity {
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
-						// todo: handle or convert TBA in custom entities
 						e.waitTime = Math.max(e.data.getTBA() - 1, 0);
 					}
 				}
