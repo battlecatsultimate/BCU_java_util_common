@@ -510,13 +510,8 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void stopAtk() {
-			if (atkTime > 0) {
-				atkTime = 0;
-				preTime = 0;
-				// todo: handle or convert TBA in custom entities
-				if (preID == multi && e.data instanceof CustomEntity)
-					e.waitTime = e.data.getTBA();
-			}
+			if (atkTime > 0)
+				atkTime = preTime = 0;
 		}
 
 		/**
@@ -535,8 +530,7 @@ public abstract class Entity extends AbEntity {
 						preTime = pres[preID];
 					} else {
 						// todo: handle or convert TBA in custom entities
-						if (!(e.data instanceof CustomEntity))
-							e.waitTime = Math.max(e.data.getTBA() - 1, 0);
+						e.waitTime = Math.max(e.data.getTBA() - 1, 0);
 					}
 				}
 				preTime--;
@@ -544,10 +538,6 @@ public abstract class Entity extends AbEntity {
 			if (atkTime == 0) {
 				e.canBurrow = true;
 				e.anim.setAnim(UType.IDLE, true);
-
-				// todo: handle or convert TBA in custom entities
-				if (e.data instanceof CustomEntity)
-					e.waitTime = e.data.getTBA();
 			}
 		}
 	}

@@ -33,9 +33,7 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int getItv() {
-		int len = getAnimLen();
-		int post = len - getLongPre();
-		return getLongPre() + Math.max(tba * 2 - 1, post);
+		return getLongPre() + Math.max(getTBA() - 1, getPost());
 	}
 
 	@Override

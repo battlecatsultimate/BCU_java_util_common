@@ -88,7 +88,10 @@ public abstract class CustomEntity extends DataEntity {
 
 	@Override
 	public int getItv() {
-		return getAnimLen() + tba;
+		int longPre = 0;
+		for (AtkDataModel adm : atks)
+			longPre += adm.pre;
+		return longPre + Math.max(getTBA() - 1, getPost());
 	}
 
 	@Override
