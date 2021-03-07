@@ -135,7 +135,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	@OnInjected
 	public void onInjected() {
-		((CustomUnit) du).pack = this;
+		CustomUnit form = (CustomUnit) du;
+		form.pack = this;
 
 		if((unit != null || uid != null)) {
 			Unit u = unit == null ? uid.get() : unit;
@@ -144,7 +145,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
 
 				if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
-					((CustomUnit) du).type = Data.reorderTrait(((CustomUnit) du).type);
+					form.type = Data.reorderTrait(form.type);
+				}
+
+				if (UserProfile.isOlderPack(pack, "0.5.2.0") && form.tba != 0) {
+					form.tba += form.getPost() + 1;
 				}
 			}
 		}

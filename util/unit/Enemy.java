@@ -145,13 +145,18 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	@OnInjected
 	public void onInjected() {
-		((CustomEnemy) de).pack = this;
+		CustomEnemy enemy = (CustomEnemy) de;
+		enemy.pack = this;
 
 		if(getCont() instanceof PackData.UserPack) {
 			PackData.UserPack pack = (PackData.UserPack) getCont();
 
-			if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
-				((CustomEnemy) de).type = Data.reorderTrait(((CustomEnemy) de).type);
+			if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
+				enemy.type = Data.reorderTrait(enemy.type);
+			}
+
+			if (UserProfile.isOlderPack(pack, "0.5.2.0") && enemy.tba != 0) {
+				enemy.tba += enemy.getPost() + 1;
 			}
 		}
 	}
