@@ -1447,21 +1447,18 @@ public abstract class Entity extends AbEntity {
 
 	/**
 	 * update the entity. order of update: <br>
-	 * revive -> move -> KB -> burrow -> wait -> attack
+	 *  move -> KB -> revive -> burrow -> wait -> attack
 	 */
 	@Override
 	public void update() {
 		// update proc effects
 		updateProc();
 
-		// update revive status, mark acted
-		zx.updateRevive();
-
 		boolean nstop = status[P_STOP][0] == 0;
 		canBurrow |= atkm.loop < data.getAtkLoop() - 1;
 
 		// do move check if available, move if possible
-		if (kbTime == 0 && !acted && atkm.atkTime == 0) {
+		if (kbTime == 0 && !acted && atkm.atkTime == 0 && status[P_REVIVE][1] == 0) {
 			checkTouch();
 			if (!touch && nstop) {
 				if (health > 0)
@@ -1473,6 +1470,9 @@ public abstract class Entity extends AbEntity {
 		// if this entity is in kb state, do kbmove()
 		if (kbTime > 0)
 			kb.updateKB();
+
+		// update revive status, mark acted
+		zx.updateRevive();
 
 		// check touch after KB or move
 		checkTouch();
