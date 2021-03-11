@@ -1384,7 +1384,7 @@ public abstract class Entity extends AbEntity {
 
 		// increase damage
 		int strong = getProc().STRONG.health;
-		if (status[P_STRONG][0] == 0 && strong > 0 && health * 100 <= maxH * strong) {
+		if ((touchable() & TCH_CORPSE) == 0 && status[P_STRONG][0] == 0 && strong > 0 && health * 100 <= maxH * strong) {
 			status[P_STRONG][0] = getProc().STRONG.mult;
 			anim.getEff(P_STRONG);
 		}
