@@ -1,12 +1,14 @@
 package common.battle.attack;
 
 import common.battle.BasisLU;
+import common.battle.data.PCoin;
 import common.battle.entity.EUnit;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
 import common.pack.Identifier;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.EForm;
+import common.util.unit.Level;
 import common.util.unit.Unit;
 
 public class AtkModelUnit extends AtkModelEntity {
@@ -14,8 +16,8 @@ public class AtkModelUnit extends AtkModelEntity {
 	private final BasisLU bas;
 	private final Proc[] buffed;
 
-	protected AtkModelUnit(Entity ent, double d0, double d1) {
-		super(ent, d0, d1);
+	protected AtkModelUnit(Entity ent, double d0, double d1, PCoin pcoin, Level lv) {
+		super(ent, d0, d1, pcoin, lv);
 		bas = ent.basis.b;
 		buffed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < buffed.length; i++) {

@@ -61,9 +61,7 @@ public class Treasure extends Data {
 	 * get cat attack multiplication
 	 */
 	public double getAtkMulti() {
-		double ini = 1 + trea[T_ATK] * 0.005;
-		double com = 1 + b.getInc(C_ATK) * 0.01;
-		return ini * com;
+		return 1 + trea[T_ATK] * 0.005;
 	}
 
 	/**
@@ -171,9 +169,7 @@ public class Treasure extends Data {
 	 * get cat health multiplication
 	 */
 	public double getDefMulti() {
-		double ini = 1 + trea[T_DEF] * 0.005;
-		double com = 1 + b.getInc(C_DEF) * 0.01;
-		return ini * com;
+		return 1 + trea[T_DEF] * 0.005;
 	}
 
 	/**
@@ -258,8 +254,7 @@ public class Treasure extends Data {
 	 * get attack multiplication from super massive damage ability
 	 */
 	public double getMASSIVESATK(int type) {
-		double ini = 5 + 1.0 / 3 * getFruit(type);
-		return ini;
+		return 5 + 1.0 / 3 * getFruit(type);
 	}
 
 	/**
@@ -275,8 +270,7 @@ public class Treasure extends Data {
 	 * get damage reduce multiplication from super resistant ability
 	 */
 	public double getRESISTSDEF(int type) {
-		double ini = 1.0 / 6 - 1.0 / 126 * getFruit(type);
-		return ini;
+		return 1.0 / 6 - 1.0 / 126 * getFruit(type);
 	}
 
 	/**

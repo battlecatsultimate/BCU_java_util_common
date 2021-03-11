@@ -101,14 +101,7 @@ public class PCoin extends Data {
 			} else if (type[0] == PC_AB)
 				ans.abi |= type[1];
 			else if (type[0] == PC_BASE) {
-				if (type[1] == PC2_HP)
-					ans.hp *= 1 + modifs[0] * 0.01;
-				else if (type[1] == PC2_ATK) {
-					double atk = 1 + modifs[0] * 0.01;
-					ans.atk *= atk;
-					ans.atk1 *= atk;
-					ans.atk2 *= atk;
-				} else if (type[1] == PC2_SPEED)
+				if (type[1] == PC2_SPEED)
 					ans.speed += modifs[0];
 				else if (type[1] == PC2_CD)
 					ans.respawn -= modifs[0];
@@ -121,5 +114,75 @@ public class PCoin extends Data {
 
 		}
 		return ans;
+	}
+
+	public double getAtkMultiplication(int[] lvs) {
+		if(lvs.length != 6)
+			return 1.0;
+
+		for(int i = 0; i < 5; i++) {
+			if(info[i][0] >= PC_CORRES.length)
+				continue;
+			if(lvs[i + 1] == 0)
+				continue;
+			int[] type = PC_CORRES[info[i][0]];
+
+			if(type[0] == -1)
+				continue;
+
+			if(type[0] == PC_BASE && type[1] == PC2_ATK) {
+				int maxlv = info[i][1];
+				int[] modifs = new int[4];
+				if (maxlv > 1) {
+					for (int j = 0; j < 4; j++) {
+						int v0 = info[i][2 + j * 2];
+						int v1 = info[i][3 + j * 2];
+						modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+					}
+				}
+				if (maxlv == 0)
+					for (int j = 0; j < 4; j++)
+						modifs[j] = info[i][3 + j * 2];
+
+				return 1 + modifs[0] * 0.01;
+			}
+		}
+
+		return 1.0;
+	}
+
+	public double getHPMultiplication(int[] lvs) {
+		if(lvs.length != 6)
+			return 1.0;
+
+		for(int i = 0; i < 5; i++) {
+			if(info[i][0] >= PC_CORRES.length)
+				continue;
+			if(lvs[i + 1] == 0)
+				continue;
+			int[] type = PC_CORRES[info[i][0]];
+
+			if(type[0] == -1)
+				continue;
+
+			if(type[0] == PC_BASE && type[1] == PC2_HP) {
+				int maxlv = info[i][1];
+				int[] modifs = new int[4];
+				if (maxlv > 1) {
+					for (int j = 0; j < 4; j++) {
+						int v0 = info[i][2 + j * 2];
+						int v1 = info[i][3 + j * 2];
+						modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+					}
+				}
+				if (maxlv == 0)
+					for (int j = 0; j < 4; j++)
+						modifs[j] = info[i][3 + j * 2];
+
+				return 1 + modifs[0] * 0.01;
+			}
+		}
+
+		return 1.0;
 	}
 }

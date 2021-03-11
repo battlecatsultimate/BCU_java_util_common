@@ -7,8 +7,8 @@ import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
-import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
+import common.battle.data.PCoin;
 import common.pack.Identifier;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -25,6 +25,7 @@ import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
+import common.util.unit.Level;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -1073,11 +1074,30 @@ public abstract class Entity extends AbEntity {
 	 */
 	protected boolean moved = false;
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double tAtk, double lvAtk, double d1) {
+	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double tAtk, double d1) {
 		super((int) (de.getHp() * d1));
 		basis = b;
 		data = de;
-		aam = AtkModelEntity.getIns(this, tAtk, lvAtk);
+		aam = AtkModelEntity.getEnemyAtk(this, tAtk);
+		anim = new AnimManager(this, ea);
+		atkm = new AtkManager(this);
+		barrier = de.getShield();
+		status[P_BURROW][0] = getProc().BURROW.count;
+		status[P_REVIVE][0] = getProc().REVIVE.count;
+		sealed.BURROW.set(data.getProc().BURROW);
+		sealed.REVIVE.count = data.getProc().REVIVE.count;
+		sealed.REVIVE.time = data.getProc().REVIVE.time;
+		sealed.REVIVE.health = data.getProc().REVIVE.health;
+	}
+
+	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double tAtk, double lvAtk, double tHP, PCoin pc, Level lv) {
+		super((pc != null && lv != null) ?
+				(int) Math.round((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int)((int) (Math.round(de.getHp() * lvAtk) * tHP) * pc.getHPMultiplication(lv.getLvs()))) :
+				(int) Math.round(1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvAtk) * tHP)
+		);
+		basis = b;
+		data = de;
+		aam = AtkModelEntity.getUnitAtk(this, tAtk, lvAtk, pc, lv);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
 		barrier = de.getShield();

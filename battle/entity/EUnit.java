@@ -8,6 +8,7 @@ import common.battle.attack.AttackWave;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
+import common.battle.data.PCoin;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
@@ -34,8 +35,8 @@ public class EUnit extends Entity {
 
 	protected final Level level;
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level) {
-		super(b, de, ea, d0, b.b.t().getAtkMulti(), d0 * b.b.t().getDefMulti());
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level, PCoin pc) {
+		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		type = de.getType();
 		this.level = level;

@@ -17,11 +17,10 @@ public class EForm extends Data {
 
 	public EForm(Form form, int... level) {
 		f = form;
-		int[] lvs = level;
-		this.level = new Level(lvs);
+		this.level = new Level(level);
 		PCoin pc = f.getPCoin();
 		if (pc != null)
-			du = pc.improve(lvs);
+			du = pc.improve(level);
 		else
 			du = form.du;
 	}
@@ -40,8 +39,7 @@ public class EForm extends Data {
 		double d = f.unit.lv.getMult(level.getLvs()[0]);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		EUnit e = new EUnit(b, du, walkAnim, d, level);
-		return e;
+		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
 	}
 
 	public int getPrice(int sta) {

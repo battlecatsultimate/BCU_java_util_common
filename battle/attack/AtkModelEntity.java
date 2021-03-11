@@ -1,26 +1,37 @@
 package common.battle.attack;
 
 import common.battle.data.MaskEntity;
+import common.battle.data.PCoin;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EUnit;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
+import common.util.Data;
 import common.util.Data.Proc.SUMMON;
 import common.util.pack.EffAnim.DefEff;
+import common.util.unit.Level;
 
 public abstract class AtkModelEntity extends AtkModelAb {
 
-	public static AtkModelEntity getIns(Entity e, double d0, double d1) {
+	/**
+	 * @param e The entity
+	 * @param d0 Level multiplication for EUnit, Magnification for EEnemy
+	 * @return returns AtkModelEntity with specified magnification values
+	 */
+	public static AtkModelEntity getEnemyAtk(Entity e, double d0) {
 		if (e instanceof EEnemy) {
 			EEnemy ee = (EEnemy) e;
 			return new AtkModelEnemy(ee, d0);
 		}
-		if (e instanceof EUnit) {
-			EUnit eu = (EUnit) e;
-			return new AtkModelUnit(eu, d0, d1);
-		}
 		return null;
+	}
+
+	public static AtkModelEntity getUnitAtk(Entity e, double treasure, double level, PCoin pcoin, Level lv) {
+		if(!(e instanceof EUnit))
+			return null;
+
+		return new AtkModelUnit(e, treasure, level, pcoin, lv);
 	}
 
 	protected final MaskEntity data;
@@ -40,6 +51,47 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		acs = new BattleObj[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
+			atks[i] = (int) Math.round((1 + ent.basis.b.getInc(Data.C_ATK) * 0.01) * atks[i]);
+			abis[i] = raw[i][2];
+			act[i] = data.getAtkModel(i).loopCount();
+			acs[i] = new BattleObj();
+		}
+		if (data.getRevenge() != null) {
+			atks[raw.length] = (int) (data.getRevenge().atk * d0);
+			abis[raw.length] = 1;
+			acs[raw.length] = new BattleObj();
+			act[raw.length] = data.getRevenge().loopCount();
+		}
+		if (data.getResurrection() != null) {
+			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
+			abis[raw.length + 1] = 1;
+			acs[raw.length + 1] = new BattleObj();
+			act[raw.length + 1] = data.getResurrection().loopCount();
+		}
+		sealed = new Proc[data.getAtkCount()];
+		for (int i = 0; i < sealed.length; i++) {
+			sealed[i] = Proc.blank();
+			if(data.getAtkModel(i).getProc() != null)
+				sealed[i].MOVEWAVE.set(data.getAtkModel(i).getProc().MOVEWAVE);
+		}
+	}
+
+	protected AtkModelEntity(Entity ent, double d0, double d1, PCoin pc, Level lv) {
+		super(ent.basis);
+		e = ent;
+		data = e.data;
+		int[][] raw = data.rawAtkData();
+		atks = new int[raw.length + 2];
+		abis = new int[raw.length + 2];
+		act = new int[raw.length + 2];
+		acs = new BattleObj[raw.length + 2];
+		for (int i = 0; i < raw.length; i++) {
+			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
+
+			if(pc != null && lv != null) {
+				atks[i] = (int) (pc.getAtkMultiplication(lv.getLvs()) * atks[i]);
+			}
+
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
