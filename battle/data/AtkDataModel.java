@@ -96,7 +96,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	@Override
 	public int getLongPoint() {
-		return isLD() ? ld1 : ce.range;
+		return ld1;
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	@Override
 	public int getShortPoint() {
-		return isLD() ? ld0 : -ce.width;
+		return ld0;
 	}
 
 	@Override
