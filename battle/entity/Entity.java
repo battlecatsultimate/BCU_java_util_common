@@ -1359,6 +1359,7 @@ public abstract class Entity extends AbEntity {
 		if (kbTime == -1)
 			return;
 		kbTime = -1;
+		atkm.stopAtk();
 		anim.kill();
 
 	}
