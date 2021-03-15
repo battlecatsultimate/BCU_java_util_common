@@ -9,7 +9,6 @@ import common.pack.IndexContainer.Indexable;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
-import common.util.Data;
 
 @IndexCont(CastleList.class)
 @JsonClass.JCGeneric(Identifier.class)

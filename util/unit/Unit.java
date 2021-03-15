@@ -12,16 +12,15 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
-import common.pack.Source.ResourceLocation;
-import common.pack.Source.Workspace;
 import common.pack.PackData;
 import common.pack.Source;
+import common.pack.Source.ResourceLocation;
+import common.pack.Source.Workspace;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.lang.MultiLangCont;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;

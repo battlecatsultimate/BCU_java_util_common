@@ -6,7 +6,6 @@ import common.battle.entity.AbEntity;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
-import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 
