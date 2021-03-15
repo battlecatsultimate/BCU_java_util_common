@@ -89,6 +89,7 @@ public class CommonStatic {
 		public int deadOpa = 10, fullOpa = 90;
 		public int[] ints = new int[] { 1, 1, 1, 2 };
 		public boolean ref = true, battle = false, icon = false;
+		public boolean twoRow = true;
 		// Lang
 		public int lang;
 	}
