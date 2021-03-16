@@ -1090,14 +1090,14 @@ public abstract class Entity extends AbEntity {
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
 	}
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double tAtk, double lvAtk, double tHP, PCoin pc, Level lv) {
+	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double lvMagnif, double tAtk, double tHP, PCoin pc, Level lv) {
 		super((pc != null && lv != null) ?
-				(int) Math.round((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int)((int) (Math.round(de.getHp() * lvAtk) * tHP) * pc.getHPMultiplication(lv.getLvs()))) :
-				(int) Math.round(1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvAtk) * tHP)
+				(int) Math.round((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int)((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getLvs()))) :
+				(int) Math.round((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
 		);
 		basis = b;
 		data = de;
-		aam = AtkModelEntity.getUnitAtk(this, tAtk, lvAtk, pc, lv);
+		aam = AtkModelEntity.getUnitAtk(this, tAtk, lvMagnif, pc, lv);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
 		barrier = de.getShield();
