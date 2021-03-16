@@ -86,7 +86,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		act = new int[raw.length + 2];
 		acs = new BattleObj[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
-			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
+			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
 
 			if(pc != null && lv != null) {
 				atks[i] = (int) (pc.getAtkMultiplication(lv.getLvs()) * atks[i]);
