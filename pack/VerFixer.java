@@ -476,9 +476,15 @@ public abstract class VerFixer extends Source {
 				String str = file.getName();
 				if (!str.endsWith(".bcupack"))
 					continue;
-				VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(file));
-				map.put(pack.id, pack);
-				packs.add(pack.id);
+				System.out.println(str);
+				try {
+					VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(file));
+					map.put(pack.id, pack);
+					packs.add(pack.id);
+				} catch (VerFixerException e) {
+					CommonStatic.ctx.noticeErr(e, ErrType.WARN, "The pack "+file.getName()+" has outdated format. Re-export this pack via BCU v4");
+					throw e;
+				}
 
 			}
 		}
