@@ -25,9 +25,10 @@ public abstract class CastleList extends FixIndexMap<CastleImg> implements Index
 			str = name;
 			map().put(id, this);
 			defset().add(this);
-			for (VFile vf : VFile.get("./org/img/" + name).list())
-				if (!vf.getName().matches("ec[0-9]+\\.png"))
+			for (VFile vf : VFile.get("./org/img/" + name).list()) {
+				if (vf.getName().matches(name+"[0-9]+\\.png"))
 					add(new CastleImg(getNextID(CastleImg.class), new VImg(vf)));
+			}
 
 		}
 
@@ -75,8 +76,7 @@ public abstract class CastleList extends FixIndexMap<CastleImg> implements Index
 		MapColc mc = sta.getCont().getCont();
 		if (!(mc instanceof PackMapColc))
 			return defset();
-		List<CastleList> list = new ArrayList<>();
-		list.addAll(defset());
+		List<CastleList> list = new ArrayList<>(defset());
 		UserPack pack = ((PackMapColc) mc).pack;
 		list.add(pack.castles);
 		for (String rel : pack.desc.dependency)
