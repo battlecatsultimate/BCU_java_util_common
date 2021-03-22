@@ -51,7 +51,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		acs = new BattleObj[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
-			atks[i] = (int) Math.round((1 + ent.basis.b.getInc(Data.C_ATK) * 0.01) * atks[i]);
+			atks[i] = atks[i];
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
@@ -71,7 +71,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		sealed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < sealed.length; i++) {
 			sealed[i] = Proc.blank();
-			if(data.getAtkModel(i).getProc() != null)
+			if (data.getAtkModel(i).getProc() != null)
 				sealed[i].MOVEWAVE.set(data.getAtkModel(i).getProc().MOVEWAVE);
 		}
 	}
@@ -88,9 +88,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
 
-			if(pc != null && lv != null) {
-				atks[i] = (int) (pc.getAtkMultiplication(lv.getLvs()) * atks[i]);
-			}
+			if (pc != null && lv != null)
+				atks[i] = (int) Math.round(pc.getAtkMultiplication(lv.getLvs()) * atks[i] * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
 
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
