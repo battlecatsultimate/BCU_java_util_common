@@ -164,7 +164,6 @@ public class Data {
 		}
 
 		public static abstract class ProcItem implements Cloneable {
-
 			public ProcItem clear() {
 				try {
 					Field[] fs = getDeclaredFields();
@@ -611,6 +610,15 @@ public class Data {
 			}
 		}
 
+		public boolean sharable(int i) {
+			if(i >= procSharable.length) {
+				System.out.println("Warning : "+i+" is out of index of procSharable");
+				return false;
+			} else {
+				return procSharable[i];
+			}
+		}
+
 		@Override
 		public String toString() {
 			return JsonEncoder.encode(this).toString();
@@ -899,6 +907,47 @@ public class Data {
 	public static final int P_MINIWAVE = 37;
 	public static final int PROC_TOT = 38;// 38
 	public static final int PROC_WIDTH = 6;
+
+	public static final boolean[] procSharable = {
+			false, //kb
+			false, //freeze
+			false, //slow
+			false, //critical
+			false, //wave
+			false, //weaken
+			false, //barrier breaker
+			false, //warp
+			false, //curse
+			true,  //strengthen
+			true,  //survive
+			true,  //burrow
+			true,  //revive
+			true,  //imu.kb
+			true,  //imu.freeze
+			true,  //imu.slow
+			true,  //imu.wave
+			true,  //imu.weaken
+			true,  //imu.warp
+			true,  //imu.curse
+			false, //sniper
+			false, //time
+			false, //seal
+			false, //summon
+			false, //move wave
+			false, //theme
+			false, //venom
+			false, //boss wave
+			true,  //imu. cirtical
+			false, //savage blow
+			true,  //invincibility
+			false, //poison
+			false, //volcano
+			true,  //imu.poison
+			true,  //imu.volcano
+			false, //armor
+			false, //haste
+			false  //miniwave
+	};
 
 	public static final int WT_WAVE = 1;
 	public static final int WT_MOVE = 2;

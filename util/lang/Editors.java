@@ -219,9 +219,7 @@ public class Editors {
 	}
 
 	static {
-		EditControl<Proc.PROB> prob = new EditControl<>(Proc.PROB.class, (t) -> {
-			t.prob = MathUtil.clip(t.prob, 0, 100);
-		});
+		EditControl<Proc.PROB> prob = new EditControl<>(Proc.PROB.class, (t) -> t.prob = MathUtil.clip(t.prob, 0, 100));
 
 		EditControl<Proc.PT> pt = new EditControl<>(Proc.PT.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -230,6 +228,8 @@ public class Editors {
 			else
 				t.time = Math.max(t.time, 1);
 		});
+
+		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> t.mult = Math.min(t.mult, 100));
 
 		map().put("KB", new EditControl<>(Proc.PTD.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -363,9 +363,7 @@ public class Editors {
 			}
 		}));
 
-		map().put("THEME", new EditControl<>(Proc.THEME.class, (t) -> {
-			t.prob = MathUtil.clip(t.prob, 0, 100);
-		}));
+		map().put("THEME", new EditControl<>(Proc.THEME.class, (t) -> t.prob = MathUtil.clip(t.prob, 0, 100)));
 
 		map().put("POISON", new EditControl<>(Proc.POISON.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -384,9 +382,7 @@ public class Editors {
 
 		map().put("BOSS", prob);
 
-		map().put("CRITI", new EditControl<>(Proc.CRITI.class, (t) -> {
-			t.type = MathUtil.clip(0, t.type, 2);
-		}));
+		map().put("CRITI", new EditControl<>(Proc.CRITI.class, (t) -> t.type = MathUtil.clip(0, t.type, 2)));
 
 		map().put("SATK", new EditControl<>(Proc.PM.class, (t) -> {
 			if (t.prob == 0)
@@ -435,14 +431,32 @@ public class Editors {
 
 			if (t.prob == 0) {
 				t.lv = 0;
+				t.multi = 0;
+			} else {
+				t.lv = MathUtil.clip(t.lv, 1, 20);
+
+				if(t.multi == 0)
+					t.multi = 20;
 			}
-
-			t.lv = MathUtil.clip(t.lv, 1, 20);
-
-			if(t.multi == 0)
-				t.multi = 20;
 		}));
 
+		map().put("IMUKB", imu);
+
+		map().put("IMUSTOP", imu);
+
+		map().put("IMUSLOW", imu);
+
+		map().put("IMUWAVE", imu);
+
+		map().put("IMUWEAK", imu);
+
+		map().put("IMUWARP", imu);
+
+		map().put("IMUCURSE", imu);
+
+		map().put("IMUPOIATK", imu);
+
+		map().put("IMUVOLC", imu);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {
