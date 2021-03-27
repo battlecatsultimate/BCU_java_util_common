@@ -198,7 +198,8 @@ public class Treasure extends Data {
 	 * max treasure & level should lead to -264f recharge
 	 */
 	public int getFinRes(int ori) {
-		double deduction = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3 + b.getInc(C_RESP);
+		double research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3;
+		double deduction = research + Math.floor(research * b.getInc(C_RESP) / 100);
 		return (int) Math.max(60, ori - deduction);
 	}
 

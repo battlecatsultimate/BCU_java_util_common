@@ -39,8 +39,6 @@ public class Combo extends Data {
 				continue;
 			for (int j = 0; j < 5; j++) {
 				aux.values[i][j] = Integer.parseInt(strs[j]);
-				if (i == C_RESP)
-					aux.values[i][j] *= 2.6;
 				if (i == C_C_SPE)
 					aux.values[i][j] = (aux.values[i][j] - 10) * 15;
 			}
