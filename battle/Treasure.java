@@ -195,10 +195,11 @@ public class Treasure extends Data {
 
 	/**
 	 * get processed cat cool down time
+	 * max treasure & level should lead to -264f recharge
 	 */
 	public int getFinRes(int ori) {
-		double dec = 6 - tech[LV_RES] * 6 - trea[T_RES] * 0.3 - b.getInc(C_RESP);
-		return (int) Math.max(60, ori + 10 + dec);
+		double deduction = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3 + b.getInc(C_RESP);
+		return (int) Math.max(60, ori - deduction);
 	}
 
 	/**
