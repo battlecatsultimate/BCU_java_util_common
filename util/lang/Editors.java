@@ -457,6 +457,8 @@ public class Editors {
 		map().put("IMUPOIATK", imu);
 
 		map().put("IMUVOLC", imu);
+
+		map().put("IMUSUMMON", imu);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

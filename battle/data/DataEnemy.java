@@ -128,6 +128,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.dis_0 = ints[82] / 4;
 		proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
 		proc.VOLC.time = ints[84] * VOLC_ITV;
+
 		abi = a;
 		type = t;
 

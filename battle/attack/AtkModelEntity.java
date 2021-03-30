@@ -184,8 +184,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		SUMMON proc = atk.getProc().SUMMON;
 		if (proc.exists()) {
 			SUMMON.TYPE conf = proc.type;
-			if (conf.on_hit || (conf.on_kill && e.health <= 0))
-				summon(proc, e, e);
+			if (conf.on_hit || (conf.on_kill && e.health <= 0)) {
+				int rst = e.getProc().IMUSUMMON.mult;
+				summon(proc, e, e, rst);
+			}
 		}
 	}
 
@@ -237,7 +239,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 					SUMMON sprc = getProc(ind).SUMMON;
 					SUMMON.TYPE conf = sprc.type;
 					if (!conf.on_hit && !conf.on_kill)
-						summon(sprc, e, acs[ind]);
+						summon(sprc, e, acs[ind],0);
 					else
 						proc.SUMMON.set(sprc);
 				} else
@@ -255,6 +257,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc.MINIWAVE.multi = 20;
 	}
 
-	protected abstract void summon(SUMMON sprc, Entity ent, Object acs);
+	protected abstract void summon(SUMMON sprc, Entity ent, Object acs, int resist);
 
 }

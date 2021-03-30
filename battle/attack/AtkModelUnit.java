@@ -34,27 +34,29 @@ public class AtkModelUnit extends AtkModelEntity {
 	}
 
 	@Override
-	public void summon(SUMMON proc, Entity ent, Object acs) {
-		Unit u = Identifier.getOr(proc.id, Unit.class);
-		SUMMON.TYPE conf = proc.type;
-		if (conf.same_health && ent.health <= 0)
-			return;
-		int time = proc.time;
-		if (b.entityCount(-1) < b.max_num || conf.ignore_limit) {
-			double up = ent.pos + getDire() * proc.dis;
-			EForm ef = new EForm(u.forms[0], u.max);
-			EUnit eu = ef.getEntity(b);
-			if (conf.same_health)
-				eu.health = e.health;
-			int l0 = 0, l1 = 9;
-			if (!conf.random_layer)
-				l0 = l1 = e.layer;
-			eu.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
-			eu.added(-1, (int) up);
-			b.tempe.add(new EntCont(eu, time));
-			eu.setSummon(conf.anim_type);
-		}
-
+	public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
+		if (resist < 100) {
+			Unit u = Identifier.getOr(proc.id, Unit.class);
+			SUMMON.TYPE conf = proc.type;
+			if (conf.same_health && ent.health <= 0)
+				return;
+			int time = proc.time;
+			if (b.entityCount(-1) < b.max_num || conf.ignore_limit) {
+				double up = ent.pos + getDire() * proc.dis;
+				EForm ef = new EForm(u.forms[0], u.max);
+				EUnit eu = ef.getEntity(b);
+				if (conf.same_health)
+					eu.health = e.health;
+				int l0 = 0, l1 = 9;
+				if (!conf.random_layer)
+					l0 = l1 = e.layer;
+				eu.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
+				eu.added(-1, (int) up);
+				b.tempe.add(new EntCont(eu, time));
+				eu.setSummon(conf.anim_type);
+			}
+		} else
+			ent.anim.getEff(INV);
 	}
 
 	@Override
