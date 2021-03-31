@@ -488,6 +488,10 @@
             "time": {
                 "name": "delay",
                 "tooltip": "delay of this summon"
+            },
+            "form": {
+                "name": "Form",
+                "tooltip": "Set which form of the unit you want to summon. Only applicable on Cat Units."
             }
         }
     },

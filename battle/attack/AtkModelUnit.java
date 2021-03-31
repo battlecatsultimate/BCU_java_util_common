@@ -10,6 +10,7 @@ import common.util.Data.Proc.SUMMON;
 import common.util.unit.EForm;
 import common.util.unit.Level;
 import common.util.unit.Unit;
+import org.jcodec.common.tools.MathUtil;
 
 public class AtkModelUnit extends AtkModelEntity {
 
@@ -42,9 +43,14 @@ public class AtkModelUnit extends AtkModelEntity {
 				return;
 			int time = proc.time;
 			if (b.entityCount(-1) < b.max_num || conf.ignore_limit) {
+				int[] lvl = {proc.mult + ((EUnit)e).lvl,0,0,0,0,0};
+				if (conf.fix_buff)
+					lvl[0] = proc.mult;
+				lvl[0] = MathUtil.clip(lvl[0], 1, u.max + u.maxp);
+				lvl[0] *= (100.0 - resist)/100;
 				double up = ent.pos + getDire() * proc.dis;
-				EForm ef = new EForm(u.forms[0], u.max);
-				EUnit eu = ef.getEntity(b);
+				EForm ef = new EForm(u.forms[proc.form - 1], lvl);
+				EUnit eu = ef.invokeEntity(b, lvl[0]);
 				if (conf.same_health)
 					eu.health = e.health;
 				int l0 = 0, l1 = 9;

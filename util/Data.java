@@ -403,6 +403,8 @@ public class Data {
 			public TYPE type = new TYPE();
 			@Order(5)
 			public int time;
+			@Order(6)
+			public int form;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)

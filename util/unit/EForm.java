@@ -42,6 +42,13 @@ public class EForm extends Data {
 		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
 	}
 
+	public EUnit invokeEntity(StageBasis b, int Lvl) {
+		double d = f.unit.lv.getMult(Lvl);
+		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
+		walkAnim.setTime(0);
+		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
+	}
+
 	public int getPrice(int sta) {
 		return (int) (du.getPrice() * (1 + sta * 0.5));
 	}

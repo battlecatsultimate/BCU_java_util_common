@@ -33,12 +33,15 @@ public class EUnit extends Entity {
 		}
 	}
 
+	public final int lvl;
+
 	protected final Level level;
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level, PCoin pc) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		type = de.getType();
+		lvl = level.getLvs()[0];
 		this.level = level;
 	}
 
