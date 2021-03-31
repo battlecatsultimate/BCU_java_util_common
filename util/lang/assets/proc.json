@@ -350,6 +350,18 @@
             }
         }
     },
+    "IMUSUMMON": {
+        "abbr_name": "imu. Summon",
+        "full_name": "Immune/Resistant to Summon",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon[(mult<100&mult>0){ (_left)Reduces (mult)% of summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Only applies to On Hit and On Kill summon."
+            }
+        }
+    },
     "SNIPER": {
         "abbr_name": "sniper",
         "full_name": "Sniper Style Knock Back",
@@ -395,7 +407,7 @@
         }
     },
     "SUMMON": {
-        "abbr_name": "summon",
+        "abbr_name": "SUMMON",
         "full_name": "Summon",
         "tooltip": null,
         "format": [
@@ -476,6 +488,10 @@
             "time": {
                 "name": "delay",
                 "tooltip": "delay of this summon"
+            },
+            "form": {
+                "name": "Form",
+                "tooltip": "Set which form of the unit you want to summon. Only applicable on Cat Units."
             }
         }
     },

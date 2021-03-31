@@ -403,6 +403,8 @@ public class Data {
 			public TYPE type = new TYPE();
 			@Order(5)
 			public int time;
+			@Order(6)
+			public int form;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -573,6 +575,9 @@ public class Data {
 
 		@Order(37)
 		public final MINIWAVE MINIWAVE = new MINIWAVE();
+
+		@Order(38)
+		public final IMU IMUSUMMON = new IMU();
 
 		@Override
 		public Proc clone() {
@@ -905,7 +910,8 @@ public class Data {
 	 */
 	public static final int P_SPEED = 36;
 	public static final int P_MINIWAVE = 37;
-	public static final int PROC_TOT = 38;// 38
+	public static final int P_IMUSUMMON = 38;
+	public static final int PROC_TOT = 39;// 39
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -946,7 +952,8 @@ public class Data {
 			true,  //imu.volcano
 			false, //armor
 			false, //haste
-			false  //miniwave
+			false, //miniwave
+			true  //imu.summon
 	};
 
 	public static final int WT_WAVE = 1;

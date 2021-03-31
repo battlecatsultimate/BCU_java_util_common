@@ -1,11 +1,13 @@
 package common.util.lang;
 
+import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.Data.Proc;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.LocaleCenter.Displayable;
 import common.util.lang.ProcLang.ItemLang;
+import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
 
 import java.lang.reflect.Field;
@@ -334,6 +336,7 @@ public class Editors {
 				t.id = null;
 				t.mult = 0;
 				t.time = 0;
+				t.form = 0;
 				t.type.anim_type = 0;
 				t.type.fix_buff = false;
 				t.type.ignore_limit = false;
@@ -342,8 +345,18 @@ public class Editors {
 				t.type.random_layer = false;
 				t.type.same_health = false;
 			} else {
-				t.mult = Math.max(1, t.mult);
 				t.time = Math.max(0, t.time);
+				try {
+					Unit u = Identifier.getOr(t.id, Unit.class);
+					t.form = MathUtil.clip(t.form, 1, u.forms.length);
+					if (!t.type.fix_buff)
+						t.mult = MathUtil.clip(t.mult, -u.max - u.maxp, u.max + u.maxp);
+					else
+						t.mult = MathUtil.clip(t.mult, 1, u.max + u.maxp);
+				} catch(ClassCastException r) {
+					t.form = 1;
+					t.mult = Math.max(1, t.mult);
+				};
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
 			}
 		}));
@@ -457,6 +470,8 @@ public class Editors {
 		map().put("IMUPOIATK", imu);
 
 		map().put("IMUVOLC", imu);
+
+		map().put("IMUSUMMON", imu);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

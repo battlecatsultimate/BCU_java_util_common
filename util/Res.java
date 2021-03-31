@@ -177,6 +177,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUVOLC] = new VImg(parts[243]);
 		aux.icon[1][P_CURSE] = new VImg(parts[289]);
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
+		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png");
 
 		aux.icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		aux.icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
