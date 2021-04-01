@@ -20,6 +20,8 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.lang.MultiLangCont;
+import main.MainBCU;
+import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +153,8 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	}
 
 	public int getPrefLv() {
-		return max + (rarity < 2 ? maxp : 0);
+		double ans = MathUtil.clip(max - (50 - MainBCU.prefLevel - (50 - max)),1, max) + (rarity < 2 && maxp > 0 ? ((MainBCU.prefLevel - 1) / 49.0) * maxp : 0);
+		return MathUtil.clip(Math.max(MainBCU.prefLevel,(int)ans),1,max + maxp);
 	}
 
 	public int[] getPrefLvs() {

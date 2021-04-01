@@ -29,6 +29,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		hp = 10000;
 		hb = 1;
 		type = 1;
+		diyType = 0;
 		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
 	}
 
