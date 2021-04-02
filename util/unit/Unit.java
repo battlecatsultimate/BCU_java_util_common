@@ -128,8 +128,6 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	public List<Combo> allCombo() {
 		List<Combo> ans = new ArrayList<>();
-		if (!id.pack.equals("_default"))
-			return ans;
 		for (Combo[] cs : CommonStatic.getBCAssets().combos)
 			for (Combo c : cs)
 				for (int[] is : c.units)
