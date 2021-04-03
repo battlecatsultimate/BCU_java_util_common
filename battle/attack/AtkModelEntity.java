@@ -90,7 +90,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 			if (pc != null && lv != null)
 				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getLvs()) * atks[i]) * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
-
+			else
+				atks[i] = (int) Math.round(atks[i] * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
