@@ -7,10 +7,13 @@ import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.AbEnemy;
+import common.util.unit.CustomTrait;
 import common.util.unit.Enemy;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.List;
 
 @JsonClass
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
@@ -29,7 +32,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		hp = 10000;
 		hb = 1;
 		type = 1;
-		diyType = 0;
+		customTraits = new ArrayList<>();
 		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
 	}
 

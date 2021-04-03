@@ -10,7 +10,7 @@ import common.util.pack.Soul;
 public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;
-	public int abi, type, diyType, width;
+	public int abi, type, width;
 	public int loop = -1, shield;
 	public Identifier<Soul> death;
 
