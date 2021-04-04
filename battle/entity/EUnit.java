@@ -41,7 +41,13 @@ public class EUnit extends Entity {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		type = de.getType();
-		lvl = level != null ? level.getLvs()[0] : 1;
+		// if level is null, update HP to match level
+		if (level == null) {
+			lvl = 1;
+			health = maxH = (int) (health * 0.01 * b.b.t().getCanonMulti(2));
+		} else {
+			lvl = level.getLvs()[0];
+		}
 		this.level = level;
 	}
 
