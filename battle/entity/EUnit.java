@@ -41,7 +41,7 @@ public class EUnit extends Entity {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		type = de.getType();
-		lvl = level.getLvs()[0];
+		lvl = level != null ? level.getLvs()[0] : 1;
 		this.level = level;
 	}
 
