@@ -5,16 +5,13 @@ import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
-import common.pack.PackData.UserPack;
 import common.util.pack.Soul;
 import common.util.unit.AbEnemy;
-import common.util.unit.CustomTrait;
 import common.util.unit.Enemy;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.List;
 
 @JsonClass
 public class CustomEnemy extends CustomEntity implements MaskEnemy {

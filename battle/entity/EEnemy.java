@@ -5,6 +5,7 @@ import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
+import common.battle.data.MaskEntity;
 import common.util.anim.EAnimU;
 
 public class EEnemy extends Entity {
@@ -46,12 +47,12 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	protected int getDamage(AttackAb atk, int ans) {
+	protected int getDamage(AttackAb atk, int ans, MaskEntity CDat) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk.model instanceof AtkModelUnit) {
-			int overlap = type & atk.type;
+			int overlap = Math.max(type & atk.type,ctargetable(atk.type,CDat) ? 1 : 0);
 			if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
 				ans *= basis.b.t().getGOODATK(overlap);
 			if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)

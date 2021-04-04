@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.battle.data.MaskEntity;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 public class AttackWave extends AttackAb {
 
 	protected final Set<Entity> incl;
+	public MaskEntity entdata;
 
 	public AttackWave(AttackSimple a, double p0, double wid, int wt) {
 		super(a, p0 - wid / 2, p0 + wid / 2, false);
@@ -62,7 +64,7 @@ public class AttackWave extends AttackAb {
 			if (e.isBase())
 				continue;
 			if (e instanceof Entity) {
-				e.damaged(this);
+				e.damaged(this, entdata);
 				incl.add((Entity) e);
 			}
 		}

@@ -253,6 +253,7 @@ public abstract class CustomEntity extends DataEntity {
 		loop = is.nextInt();
 		death = Identifier.parseInt(is.nextInt(), Soul.class);
 		common = is.nextInt() > 0;
+		// What do I have to put here to make custom traits work
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();
 		AtkDataModel[] set = new AtkDataModel[m];
@@ -267,10 +268,5 @@ public abstract class CustomEntity extends DataEntity {
 			rev = new AtkDataModel(this, is);
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
-		customTraits = new ArrayList<>();
-		int s = is.nextInt();
-		for (int i = 0; i < s; i++)
-			customTraits.set(i, Identifier.parseInt(is.nextInt(), CustomTrait.class));
 	}
-
 }

@@ -7,6 +7,7 @@ import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.pack.Identifier;
@@ -25,12 +26,10 @@ import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
+import common.util.unit.CustomTrait;
 import common.util.unit.Level;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Entity class for units and enemies
@@ -1092,8 +1091,8 @@ public abstract class Entity extends AbEntity {
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double lvMagnif, double tAtk, double tHP, PCoin pc, Level lv) {
 		super((pc != null && lv != null) ?
-				(int) Math.round((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int)((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getLvs()))) :
-				(int) Math.round((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
+				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getLvs()))) :
+				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
 		);
 		basis = b;
 		data = de;
@@ -1118,8 +1117,8 @@ public abstract class Entity extends AbEntity {
 	 * accept attack
 	 */
 	@Override
-	public void damaged(AttackAb atk) {
-		int dmg = getDamage(atk, atk.atk);
+	public void damaged(AttackAb atk, MaskEntity User) {
+		int dmg = getDamage(atk, atk.atk, User);
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
 			if (getProc().IMUWAVE.mult > 0)
@@ -1146,7 +1145,7 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = data.getProc().IMUATK;
-		if ((atk.dire == -1 || atk.type == -1 || receive(atk.type, -1)) && imuatk.prob > 0) {
+		if ((atk.dire == -1 || atk.type == -1 || receive(atk.type, -1)) || ctargetable(atk.type, User) && imuatk.prob > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.type, -1)));
 				anim.getEff(P_IMUATK);
@@ -1159,7 +1158,7 @@ public abstract class Entity extends AbEntity {
 			if (atk.getProc().BREAK.prob > 0) {
 				barrier = 0;
 				anim.getEff(BREAK_ABI);
-			} else if (getDamage(atk, atk.atk) >= barrier) {
+			} else if (getDamage(atk, atk.atk, User) >= barrier) {
 				barrier = 0;
 				anim.getEff(BREAK_ATK);
 				return;
@@ -1197,7 +1196,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		// process proc part
-		if (atk.type != -1 && !receive(atk.type, 1))
+		if (atk.type != -1 && !(receive(atk.type, 1) || ctargetable(atk.type, User)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -1299,7 +1298,7 @@ public abstract class Entity extends AbEntity {
 			if ((getAbi() & AB_POII) == 0 || atk.getProc().POISON.damage < 0) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				if (ws.type.damage_type == 1)
-					ws.damage = getDamage(atk, ws.damage);
+					ws.damage = getDamage(atk, ws.damage, User);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
@@ -1449,6 +1448,26 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
+	 * target but for custom entities, data is the attacked unit, user is the attacker
+	 */
+	public boolean ctargetable(int t, MaskEntity user) {
+		if (data instanceof CustomEntity) {
+			int siz = ((CustomEntity)data).customTraits.size();
+			if (t == 255 || t == 503 || t == 511)
+				for (int i = 0; i < siz; i++)
+					if (((CustomEntity)data).customTraits.get(i).get().targetType)
+						return true;
+			if (user instanceof CustomEntity) {
+				int Usiz = ((CustomEntity)user).customTraits.size();
+					for (int j = 0; j < Usiz; j++)
+						if (((CustomEntity)data).customTraits.contains(((CustomEntity)user).customTraits.get(j)))
+							return true;
+			}
+		}
+		return false; // No need to bother if not attacking a custom unit
+	}
+
+	/**
 	 * get touch mode bitmask
 	 */
 	@Override
@@ -1547,7 +1566,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * determine the amount of damage received from this attack
 	 */
-	protected abstract int getDamage(AttackAb atk, int ans);
+	protected abstract int getDamage(AttackAb atk, int ans, MaskEntity CDat);
 
 	/**
 	 * get max distance to go back
@@ -1776,7 +1795,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
 			for (int i = 0; i < le.size(); i++)
-				if (le.get(i).targetable(type))
+				if (le.get(i).targetable(type) || le.get(i).ctargetable(type, data))
 					touchEnemy = true;
 		}
 	}

@@ -13,7 +13,7 @@ import common.pack.IndexContainer.Indexable;
 
 public class CustomTrait extends Data implements Indexable<PackData, CustomTrait>, Comparable<CustomTrait> {
 
-    public String name = "new trait";
+    public String name = "new trait", icon;
     public boolean targetType;
     // Target type will be used to toggle whether Anti-Traited, Anti-Non Metal, or Anti-All units will target this trait or not
 
@@ -48,10 +48,7 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
 
     /*TODO List:
     - SOLVE READING CUSTOM TRAITS ERROR
-    - Add traits field to custom entities
-    - Display custom traits on info page
-    - Make custom traits actually effective in battle
-    - Assigning custom traits via editor, having them on the same column as vanilla traits
+    - Show traits from parent packs
     - Allowing users to assign an icon to their custom traits (and at the same time making this optional)
      */
 }

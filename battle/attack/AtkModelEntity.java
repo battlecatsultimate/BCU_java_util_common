@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.battle.entity.EAnimCont;
@@ -150,7 +151,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
-		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD() || data.isOmni());
+		return new AttackSimple(this, atk, e.type, e.data, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD() || data.isOmni());
 	}
 
 	@Override
