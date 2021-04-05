@@ -1,6 +1,7 @@
 package common.util.unit;
 
 import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
 import common.util.Data;
@@ -8,11 +9,11 @@ import common.pack.PackData;
 import common.pack.IndexContainer.Indexable;
 
 @IndexContainer.IndexCont(PackData.class)
-@JsonClass(noTag = JsonClass.NoTag.LOAD)
+@JsonClass
 @JsonClass.JCGeneric(Identifier.class)
-
 public class CustomTrait extends Data implements Indexable<PackData, CustomTrait>, Comparable<CustomTrait> {
 
+    @JsonField
     public String name = "new trait", icon;
     public boolean targetType;
     // Target type will be used to toggle whether Anti-Traited, Anti-Non Metal, or Anti-All units will target this trait or not
@@ -45,6 +46,12 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
     public String toString() {
         return id + " - " + name;
     }
+
+    @JsonClass.JCGetter
+    public static CustomTrait getter(Identifier<?> id) {
+        return (CustomTrait) Identifier.get(id);
+    }
+
 
     /*TODO List:
     - SOLVE READING CUSTOM TRAITS ERROR

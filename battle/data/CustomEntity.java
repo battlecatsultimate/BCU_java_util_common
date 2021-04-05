@@ -6,6 +6,7 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
+import common.pack.Source;
 import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.CustomTrait;
@@ -24,7 +25,8 @@ public abstract class CustomEntity extends DataEntity {
 
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
-	public List<Identifier<CustomTrait>> customTraits = new ArrayList<>();
+	@JsonField(generic = CustomTrait.class, alias = Identifier.class)
+	public List<Identifier<CustomTrait>> customTraits;
 
 	private Proc all;
 
@@ -253,7 +255,6 @@ public abstract class CustomEntity extends DataEntity {
 		loop = is.nextInt();
 		death = Identifier.parseInt(is.nextInt(), Soul.class);
 		common = is.nextInt() > 0;
-		// What do I have to put here to make custom traits work
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();
 		AtkDataModel[] set = new AtkDataModel[m];
