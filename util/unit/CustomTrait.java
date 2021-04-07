@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
-@JsonClass(noTag = JsonClass.NoTag.LOAD)
+@JsonClass
 public class CustomTrait extends Data implements Indexable<PackData, CustomTrait>, Comparable<CustomTrait> {
 
     @JsonField
