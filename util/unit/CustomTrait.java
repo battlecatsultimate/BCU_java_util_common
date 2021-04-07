@@ -70,4 +70,8 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
     public static CustomTrait getter(Identifier<?> id) {
         return (CustomTrait) Identifier.get(id);
     }
+
+    /*TODO List:
+    - Fix icon saving problem (Background and Castle might be helpful references)
+     */
 }

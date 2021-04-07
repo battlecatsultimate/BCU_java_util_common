@@ -6,7 +6,6 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
-import common.pack.Source;
 import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.CustomTrait;
