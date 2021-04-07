@@ -204,6 +204,16 @@ public class Treasure extends Data {
 	}
 
 	/**
+	 * get reverse cat cool down time
+	 */
+	public int getRevRes(int res) {
+		double research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3;
+		double addition = research + Math.floor(research * b.getInc(C_RESP) / 100);
+		return (int) Math.max(60, res + addition);
+
+	}
+
+	/**
 	 * get maximum fruit of certain trait bitmask
 	 */
 	public double getFruit(int type) {
@@ -273,17 +283,6 @@ public class Treasure extends Data {
 	 */
 	public double getRESISTSDEF(int type) {
 		return 1.0 / 6 - 1.0 / 126 * getFruit(type);
-	}
-
-	/**
-	 * get reverse cat cool down time
-	 */
-	public int getRevRes(int res) {
-		if (res < 60)
-			res = 60;
-		double dec = 6 - tech[LV_RES] * 6 - trea[T_RES] * 0.3 - b.getInc(C_RESP);
-		return (int) (res - 10 - dec);
-
 	}
 
 	/**
