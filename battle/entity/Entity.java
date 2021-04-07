@@ -26,7 +26,6 @@ import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
-import common.util.unit.CustomTrait;
 import common.util.unit.Level;
 
 import java.util.*;
@@ -1455,8 +1454,9 @@ public abstract class Entity extends AbEntity {
 			int siz = ((CustomEntity)data).customTraits.size();
 			if (t == 255 || t == 503 || t == 511)
 				for (int i = 0; i < siz; i++)
-					if (((CustomEntity)data).customTraits.get(i).get().targetType)
-						return true;
+					if (((CustomEntity)data).customTraits.get(i) != null)
+						if (((CustomEntity)data).customTraits.get(i).get().targetType)
+							return true;
 			if (user instanceof CustomEntity) {
 				int Usiz = ((CustomEntity)user).customTraits.size();
 					for (int j = 0; j < Usiz; j++)

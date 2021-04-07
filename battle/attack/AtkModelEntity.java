@@ -1,6 +1,5 @@
 package common.battle.attack;
 
-import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.battle.entity.EAnimCont;

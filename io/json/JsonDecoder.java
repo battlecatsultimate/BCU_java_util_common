@@ -102,9 +102,10 @@ public class JsonDecoder {
 			// default generator
 			if (par.curjfld.generator().length() == 0) {
 				Constructor<?> cst = null;
-				for (Constructor<?> ci : cls.getDeclaredConstructors())
+				for (Constructor<?> ci : cls.getDeclaredConstructors()) {
 					if (ci.getParameterTypes().length == 1 && ci.getParameterTypes()[0].isAssignableFrom(ccls))
 						cst = ci;
+				}
 				if (cst == null)
 					throw new JsonException(Type.FUNC, null, "no constructor found: " + cls);
 				Object val = cst.newInstance(par.obj);

@@ -22,6 +22,7 @@ import common.util.stage.CastleImg;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.unit.CustomTrait;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -404,6 +405,10 @@ public abstract class Source {
 			return getFile("./" + CASTLE + "/" + Data.trio(id.id) + ".png");
 		}
 
+		public File getTraitIconFile(Identifier<CustomTrait> id) {
+			return getFile("./" + TRAITICON + "/" + Data.trio(id.id) + ".png");
+		}
+
 		@Override
 		public FileData getFileData(String string) {
 			return new FDFile(getFile(string));
@@ -540,6 +545,7 @@ public abstract class Source {
 	public static final String CASTLE = "castles";
 	public static final String MUSIC = "musics";
 	public static final String REPLAY = "replays";
+	public static final String TRAITICON = "icons";
 
 	public final String id;
 

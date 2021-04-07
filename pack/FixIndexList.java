@@ -95,7 +95,7 @@ public class FixIndexList<T> extends Data {
 			if(ind < 0 || ind >= order.length || ind >= arr.length)
 				return super.get(ind);
 
-			return arr[ind];
+			return arr[order[ind]];
 		}
 
 		public void reset() {
