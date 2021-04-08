@@ -24,7 +24,10 @@ public abstract class CustomEntity extends DataEntity {
 
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
-	public List<Identifier<CustomTrait>> customTraits = new ArrayList<>();
+	@JsonField(generic = CustomTrait.class, alias = Identifier.class)
+	public ArrayList<Identifier<CustomTrait>> customTraits = new ArrayList<>();
+	@JsonField(generic = String.class)
+	public ArrayList<String> nullFixer = new ArrayList<>();
 
 	private Proc all;
 
@@ -217,7 +220,10 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
-		customTraits = ce.customTraits;
+		customTraits.clear();
+		customTraits.addAll(ce.customTraits);
+		nullFixer.clear();
+		nullFixer.addAll(ce.nullFixer);
 
 		rep = new AtkDataModel(this, ce.rep);
 
@@ -253,7 +259,6 @@ public abstract class CustomEntity extends DataEntity {
 		loop = is.nextInt();
 		death = Identifier.parseInt(is.nextInt(), Soul.class);
 		common = is.nextInt() > 0;
-		// What do I have to put here to make custom traits work
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();
 		AtkDataModel[] set = new AtkDataModel[m];

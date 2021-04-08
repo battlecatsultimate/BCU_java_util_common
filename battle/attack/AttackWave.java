@@ -27,6 +27,7 @@ public class AttackWave extends AttackAb {
 		super(a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = a.waveType;
 		incl = a.incl;
+		entdata = a.entdata;
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
 		else
@@ -37,6 +38,20 @@ public class AttackWave extends AttackAb {
 		super(a, pos - start, pos + end, false);
 		waveType = a.waveType;
 		incl = a.incl;
+		entdata = a.entdata;
+		if(waveType == WT_MINI)
+			proc.MINIWAVE.lv--;
+		else
+			proc.WAVE.lv--;
+	}
+
+	//Custom entity waves
+
+	public AttackWave(AttackSimple a, double p0, double wid, int wt, MaskEntity entity) {
+		super(a, p0 - wid / 2, p0 + wid / 2, false);
+		waveType = wt;
+		entdata = entity;
+		incl = new HashSet<>();
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
 		else
@@ -53,7 +68,7 @@ public class AttackWave extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.targetable(type))
+				if (e.targetable(type) || e.ctargetable(type, entdata))
 					capt.add(e);
 	}
 

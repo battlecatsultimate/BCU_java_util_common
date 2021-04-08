@@ -75,7 +75,7 @@ public class AttackSimple extends AttackAb {
 			MOVEWAVE mw = proc.MOVEWAVE;
 			int dire = model.getDire();
 			double p0 = model.getPos() + dire * mw.dis;
-			new ContMove(this, p0, mw.width, mw.speed, 1, mw.time, mw.itv, layer);
+			new ContMove(this, p0, entdata, mw.width, mw.speed, 1, mw.time, mw.itv, layer);
 			return;
 		}
 		for (AbEntity e : capt) {
@@ -89,8 +89,7 @@ public class AttackSimple extends AttackAb {
 			double p0 = model.getPos() + dire * addp;
 			// generate a wave when hits somebody
 
-			AttackWave wv = new AttackWave(this, p0, wid, WT_WAVE);
-			wv.entdata = entdata;
+			AttackWave wv = new AttackWave(this, p0, wid, WT_WAVE, entdata);
 			new ContWaveDef(wv , p0, layer, true);
 		}
 
@@ -99,8 +98,7 @@ public class AttackSimple extends AttackAb {
 			int wid = dire == 1 ? W_E_WID : W_U_WID;
 			int addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2;
 			double p0 = model.getPos() + dire * addp;
-			AttackWave wv = new AttackWave(this, p0, wid, WT_MINI);
-			wv.entdata = entdata;
+			AttackWave wv = new AttackWave(this, p0, wid, WT_MINI, entdata);
 			new ContWaveDef(wv , p0, layer, false);
 		}
 

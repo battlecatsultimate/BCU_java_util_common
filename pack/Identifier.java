@@ -1,14 +1,17 @@
 package common.pack;
 
+import common.battle.data.CustomEntity;
 import common.io.json.JsonClass;
 import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.unit.AbEnemy;
+import common.util.unit.CustomTrait;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Queue;
 
