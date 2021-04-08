@@ -98,6 +98,13 @@ public class FixIndexList<T> extends Data {
 			return arr[order[ind]];
 		}
 
+		public T getRaw(int ind) {
+			if(ind < 0 || ind >= arr.length)
+				return null;
+
+			return arr[ind];
+		}
+
 		public void reset() {
 			int ind = 0;
 			for (int i = 0; i < arr.length; i++) {

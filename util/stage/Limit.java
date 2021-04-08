@@ -27,7 +27,7 @@ public class Limit extends Data implements BattleStatic {
 			line = Integer.parseInt(strs[5]);
 			min = Integer.parseInt(strs[6]);
 			max = Integer.parseInt(strs[7]);
-			group = UserProfile.getBCData().groups.get(Integer.parseInt(strs[8]));
+			group = UserProfile.getBCData().groups.getRaw(Integer.parseInt(strs[8]));
 		}
 
 	}
