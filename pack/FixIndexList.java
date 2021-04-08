@@ -96,6 +96,16 @@ public class FixIndexList<T> extends Data {
 				return super.get(ind);
 
 			return arr[order[ind]];
+<<<<<<< Updated upstream
+=======
+		}
+
+		public T getRaw(int ind) {
+			if(ind < 0 || ind >= arr.length)
+				return null;
+
+			return arr[ind];
+>>>>>>> Stashed changes
 		}
 
 		public void reset() {
