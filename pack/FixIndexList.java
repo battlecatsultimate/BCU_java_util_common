@@ -96,8 +96,6 @@ public class FixIndexList<T> extends Data {
 				return super.get(ind);
 
 			return arr[order[ind]];
-<<<<<<< Updated upstream
-=======
 		}
 
 		public T getRaw(int ind) {
@@ -105,7 +103,6 @@ public class FixIndexList<T> extends Data {
 				return null;
 
 			return arr[ind];
->>>>>>> Stashed changes
 		}
 
 		public void reset() {

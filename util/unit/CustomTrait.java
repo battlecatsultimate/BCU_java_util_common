@@ -55,17 +55,12 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
     }
 
     public ImageIcon obtainIcon() {
-<<<<<<< Updated upstream
-        BufferedImage IconTwo = VImgToIcon(icon);
-        return new ImageIcon(IconTwo);
-=======
         try {
             BufferedImage IconTwo = VImgToIcon(icon);
             return new ImageIcon(IconTwo);
         } catch (NullPointerException np) {
             return null;
         }
->>>>>>> Stashed changes
     }
 
     @JsonDecoder.OnInjected
