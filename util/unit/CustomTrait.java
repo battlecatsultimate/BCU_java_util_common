@@ -71,7 +71,4 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
         return (CustomTrait) Identifier.get(id);
     }
 
-    /*TODO List:
-    - Fix import custom traits bug
-     */
 }
