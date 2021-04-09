@@ -64,6 +64,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public Orb orbs = null;
 	@JsonField
 	public String name = "";
+	@JsonField
+	public String explanation = "";
 
 	@JCConstructor
 	public Form(Unit u) {
@@ -188,4 +190,12 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return base;
 	}
 
+	public String descriptionGet() {
+		String[] desp = MultiLangCont.getDesc(this);
+		if (desp != null && desp[fid + 1].length() > 0)
+			return desp[fid + 1];
+		if (explanation.length() > 0)
+			return explanation;
+		return "";
+	}
 }

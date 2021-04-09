@@ -58,7 +58,8 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
         try {
             BufferedImage IconTwo = VImgToIcon(icon);
             return new ImageIcon(IconTwo);
-        } catch (NullPointerException np) {
+        } catch (NullPointerException npe) {
+            icon = null;
             return null;
         }
     }

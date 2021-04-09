@@ -36,7 +36,6 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 		public int[][] evo;
 		public int[] price = new int[10];
-		public String[][] explanation;
 		public int type;
 
 		public void fillBuy(String[] strs) {
@@ -54,7 +53,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 			}
 		}
 
-		public String[] getExplanation() {
+		public String[] getCatfruitExplanation() {
 			String[] exp = MultiLangCont.getStatic().CFEXP.getCont(this);
 			if (exp != null)
 				return exp;
