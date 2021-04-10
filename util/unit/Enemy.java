@@ -43,7 +43,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	@JsonField
 	public String name = "";
 	@JsonField
-	public String desc = "";
+	public String desc = "<br><br><br>";
 	public boolean inDic = false;
 
 	@JsonClass.JCConstructor

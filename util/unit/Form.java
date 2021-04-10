@@ -65,7 +65,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@JsonField
 	public String name = "";
 	@JsonField
-	public String explanation = "";
+	public String explanation = "<br><br><br>";
 
 	@JCConstructor
 	public Form(Unit u) {
