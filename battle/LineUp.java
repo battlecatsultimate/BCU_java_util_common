@@ -10,6 +10,7 @@ import common.util.Data;
 import common.util.unit.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -99,14 +100,14 @@ public class LineUp extends Data {
 	 * return how much space from 1st row a combo will need to put in this lineup
 	 */
 	public int occupance(Combo c) {
-		int[][] com = c.units;
-		int rem = com.length;
-		for (int i = 0; i < com.length; i++)
+		HashMap<Integer, Form> com = c.units;
+		int rem = com.size();
+		for (int i = 0; i < com.size(); i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (eq(f.uid, com[i][0]))
+				if (eq(f.uid, com.get(i).uid.id))
 					rem--;
 			}
 		return rem;
@@ -122,23 +123,25 @@ public class LineUp extends Data {
 	/**
 	 * apply a combo
 	 */
-	public void set(int[][] com) {
+	public void set(HashMap<Integer, Form> com) {
 		// if a unit in the lineup is present in the combo
 		boolean[] rep = new boolean[5];
 		// if a unit in the combo is already present in the lineup
-		boolean[] exi = new boolean[com.length];
+		boolean[] exi = new boolean[com.size()];
 		// the number of units required to inject
-		int rem = com.length;
-		for (int i = 0; i < com.length; i++)
+		int rem = com.size();
+		for (int i = 0; i < com.size(); i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = fs[0][j];
+				int unitID = com.get(i).uid.id;
+				int formID = com.get(i).fid;
 				if (f == null)
 					continue;
-				if (eq(f.uid, com[i][0])) {
+				if (eq(f.uid, unitID)) {
 					rep[j] = true;
 					exi[i] = true;
-					if (f.fid < com[i][1])
-						fs[0][j] = f.unit.forms[com[i][1]];
+					if (f.fid < formID)
+						fs[0][j] = f.unit.forms[formID];
 					loc[j]++;
 					rem--;
 				}
@@ -155,14 +158,14 @@ public class LineUp extends Data {
 			int del = rem - free;
 			while (del > 0) {
 				Combo c = coms.remove(0);
-				for (int i = 0; i < c.units.length; i++) {
-					if (c.units[i][0] == -1)
+				for (int i = 0; i < c.units.size(); i++) {
+					if (c.units.get(i).uid.id == -1)
 						break;
 					for (int j = 0; j < 5; j++) {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (!eq(f.uid, c.units[i][0]))
+						if (!eq(f.uid, c.units.get(i).uid.id))
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -173,9 +176,11 @@ public class LineUp extends Data {
 			}
 		}
 		for (int i = 0; i < 5; i++)
-			for (int[] is : com)
-				if (fs[1][i] != null && eq(fs[1][i].uid, is[0]))
+			for (int is : com.keySet())
+				if (fs[1][i] != null && eq(fs[1][i].uid, is)) {
 					fs[1][i] = null;
+					break;
+				}
 		arrange();
 		int emp = 0;
 		for (int i = 0; i < 10; i++)
@@ -193,8 +198,8 @@ public class LineUp extends Data {
 			while (exi[p])
 				p++;
 			setFS(getFS(i), j++);
-			int[] c = com[p++];
-			setFS(Identifier.parseInt(c[0], Unit.class).get().forms[c[1]], i++);
+			Form c = com.get(p++);
+			setFS(c, i++);
 			r++;
 		}
 		renew();
@@ -252,8 +257,8 @@ public class LineUp extends Data {
 				free++;
 			else if (loc[i] == 0) {
 				boolean b = true;
-				for (int[] is : c.units)
-					if (eq(fs[0][i].uid, is[0])) {
+				for (Form is : c.units.values())
+					if (eq(fs[0][i].uid, is.uid.id)) {
 						b = false;
 						break;
 					}
@@ -287,15 +292,16 @@ public class LineUp extends Data {
 		for (Combo[] cs : CommonStatic.getBCAssets().combos)
 			for (Combo c : cs) {
 				boolean b = true;
-				for (int i = 0; i < c.units.length; i++) {
-					if (c.units[i][0] == -1)
+				for (int i = 0; i < c.units.size(); i++) {
+					Form fu = c.units.get(i);
+					if (fu.uid.id == -1)
 						break;
 					boolean b0 = false;
 					for (int j = 0; j < 5; j++) {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (!eq(f.uid, c.units[i][0]) || f.fid < c.units[i][1])
+						if (!eq(f.uid, fu.uid.id) || f.fid < fu.fid)
 							continue;
 						b0 = true;
 						break;
@@ -308,12 +314,13 @@ public class LineUp extends Data {
 				if (b) {
 					tcom.add(c);
 					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
-					for (int i = 0; i < c.units.length; i++)
+					for (int i = 0; i < c.units.size(); i++)
 						for (int j = 0; j < 5; j++) {
+							Form fu = c.units.get(i);
 							Form f = fs[0][j];
 							if (f == null)
 								continue;
-							if (eq(f.uid, c.units[i][0]) && f.fid >= c.units[i][1])
+							if (eq(f.uid, fu.uid.id) && f.fid >= fu.fid)
 								loc[j]++;
 						}
 				}
