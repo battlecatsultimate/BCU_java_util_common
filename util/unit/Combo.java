@@ -2,10 +2,12 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
+import common.pack.Identifier;
 import common.system.files.VFile;
 import common.util.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 
@@ -54,21 +56,21 @@ public class Combo extends Data {
 	}
 
 	public final int name, show, id, type, lv;
-	public final int[][] units;
+	public final HashMap<Integer, Form> units;
 
 	private Combo(int ID, String str) {
 		id = ID;
 		String[] strs = str.split(",");
 		name = Integer.parseInt(strs[0]);
 		show = Integer.parseInt(strs[1]);
-		int n = 0;
+		int n;
 		for (n = 0; n < 5; n++)
 			if (Integer.parseInt(strs[2 + n * 2]) == -1)
 				break;
-		units = new int[n][2];
+		units = new HashMap<>();
 		for (int i = 0; i < n; i++) {
-			units[i][0] = Integer.parseInt(strs[2 + i * 2]);
-			units[i][1] = Integer.parseInt(strs[3 + i * 2]);
+			Identifier<Unit> u = Identifier.parseInt(Integer.parseInt(strs[2 + i * 2]), Unit.class);
+			units.put(i, u.get().forms[Integer.parseInt(strs[3 + i * 2])]);
 		}
 		type = Integer.parseInt(strs[12]);
 		lv = Integer.parseInt(strs[13]);

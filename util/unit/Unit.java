@@ -131,8 +131,8 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		List<Combo> ans = new ArrayList<>();
 		for (Combo[] cs : CommonStatic.getBCAssets().combos)
 			for (Combo c : cs)
-				for (int[] is : c.units)
-					if (is[0] == id.id) {
+				for (Form f : id.get().forms)
+					if (c.units.containsValue(f)) {
 						ans.add(c);
 						break;
 					}
