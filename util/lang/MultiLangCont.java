@@ -67,6 +67,17 @@ public class MultiLangCont<I, T> extends Lang {
 		return null;
 	}
 
+	public static String[] getDesc(Object o) {
+		if (o == null)
+			return null;
+
+		if (o instanceof Form)
+			return getStatic().FEXP.getCont((Form) o);
+		if (o instanceof Enemy)
+			return getStatic().EEXP.getCont((Enemy) o);
+		return null;
+	}
+
 	public static MultiLangStatics getStatic() {
 		return UserProfile.getStatic("MultiLangStatics", MultiLangStatics::new);
 	}

@@ -2,6 +2,7 @@ package common.battle.attack;
 
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
+import common.battle.data.MaskEntity;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
@@ -15,7 +16,7 @@ public class ContMove extends ContAb {
 	/**
 	 * conf: range, move, itrv, tot, rept,layer
 	 */
-	public ContMove(AttackSimple as, double p, int... conf) {
+	public ContMove(AttackSimple as, double p, MaskEntity entdat, int... conf) {
 		super(as.model.b, p, conf[5]);
 		move = conf[1];
 		itv = conf[2];
@@ -24,7 +25,7 @@ public class ContMove extends ContAb {
 		ran = conf[0];
 		rep = conf[4];
 		rept = rep > 0 ? rep : -1;
-		atk = new AttackWave(as, 0, 0, WT_MOVE);
+		atk = new AttackWave(as, 0, 0, WT_MOVE, entdat);
 	}
 
 	@Override

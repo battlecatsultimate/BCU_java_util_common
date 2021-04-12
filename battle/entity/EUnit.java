@@ -1,14 +1,13 @@
 package common.battle.entity;
 
+import common.CommonStatic;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelEnemy;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
-import common.battle.data.MaskAtk;
-import common.battle.data.MaskUnit;
-import common.battle.data.Orb;
-import common.battle.data.PCoin;
+import common.battle.data.*;
+import common.pack.Context;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
@@ -69,12 +68,12 @@ public class EUnit extends Entity {
 	}
 
 	@Override
-	protected int getDamage(AttackAb atk, int ans) {
+	protected int getDamage(AttackAb atk, int ans, MaskEntity CDat) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk.model instanceof AtkModelEnemy) {
-			int overlap = type & atk.type;
+			int overlap = Math.max(type & atk.type,ctargetable(atk.type,CDat) ? 1 : 0);
 			if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
 				ans *= basis.b.t().getGOODDEF(overlap);
 			if (overlap != 0 && (getAbi() & AB_RESIST) != 0)

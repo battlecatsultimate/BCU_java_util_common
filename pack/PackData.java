@@ -94,6 +94,7 @@ public abstract class PackData implements IndexContainer {
 			this.lvrs.reset();
 			this.bgs.reset();
 			this.musics.reset();
+			this.diyTrait.reset();
 			for (CastleList cl : CastleList.map().values())
 				cl.reset();
 			for (MapColc mc : MapColc.values()) {
@@ -409,6 +410,8 @@ public abstract class PackData implements IndexContainer {
 	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
 	@Order(8)
 	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
+	@Order(9)
+	public final FixIndexMap<CustomTrait> diyTrait = new FixIndexMap<>(CustomTrait.class);
 
 	@Override
 	@SuppressWarnings({ "rawtypes" })
@@ -429,6 +432,8 @@ public abstract class PackData implements IndexContainer {
 			def = func.reduce(def, musics);
 		if (cls == CharaGroup.class)
 			def = func.reduce(def, groups);
+		if (cls == CustomTrait.class)
+			def = func.reduce(def, diyTrait);
 		if (cls == LvRestrict.class)
 			def = func.reduce(def, lvrs);
 		return def;

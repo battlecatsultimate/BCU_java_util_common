@@ -1,6 +1,7 @@
 package common.battle.entity;
 
 import common.battle.attack.AttackAb;
+import common.battle.data.MaskEntity;
 import common.util.BattleObj;
 
 public abstract class AbEntity extends BattleObj {
@@ -20,7 +21,7 @@ public abstract class AbEntity extends BattleObj {
 		dire = d;
 	}
 
-	public abstract void damaged(AttackAb atk);
+	public abstract void damaged(AttackAb atk, MaskEntity User);
 
 	public abstract int getAbi();
 
@@ -29,6 +30,8 @@ public abstract class AbEntity extends BattleObj {
 	public abstract void postUpdate();
 
 	public abstract boolean targetable(int type);
+
+	public abstract boolean ctargetable(int t, MaskEntity user);
 
 	public abstract int touchable();
 
