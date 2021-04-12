@@ -100,7 +100,7 @@ public class LineUp extends Data {
 	 * return how much space from 1st row a combo will need to put in this lineup
 	 */
 	public int occupance(Combo c) {
-		HashMap<Integer, Form> com = c.units;
+		HashMap<Integer, Form> com = c.forms;
 		int rem = com.size();
 		for (int i = 0; i < com.size(); i++)
 			for (int j = 0; j < 5; j++) {
@@ -158,14 +158,14 @@ public class LineUp extends Data {
 			int del = rem - free;
 			while (del > 0) {
 				Combo c = coms.remove(0);
-				for (int i = 0; i < c.units.size(); i++) {
-					if (c.units.get(i).uid.id == -1)
+				for (int i = 0; i < c.forms.size(); i++) {
+					if (c.forms.get(i).uid.id == -1)
 						break;
 					for (int j = 0; j < 5; j++) {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (!eq(f.uid, c.units.get(i).uid.id))
+						if (!eq(f.uid, c.forms.get(i).uid.id))
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -257,7 +257,7 @@ public class LineUp extends Data {
 				free++;
 			else if (loc[i] == 0) {
 				boolean b = true;
-				for (Form is : c.units.values())
+				for (Form is : c.forms.values())
 					if (eq(fs[0][i].uid, is.uid.id)) {
 						b = false;
 						break;
@@ -292,8 +292,8 @@ public class LineUp extends Data {
 		for (Combo[] cs : CommonStatic.getBCAssets().combos)
 			for (Combo c : cs) {
 				boolean b = true;
-				for (int i = 0; i < c.units.size(); i++) {
-					Form fu = c.units.get(i);
+				for (int i = 0; i < c.forms.size(); i++) {
+					Form fu = c.forms.get(i);
 					if (fu.uid.id == -1)
 						break;
 					boolean b0 = false;
@@ -314,9 +314,9 @@ public class LineUp extends Data {
 				if (b) {
 					tcom.add(c);
 					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
-					for (int i = 0; i < c.units.size(); i++)
+					for (int i = 0; i < c.forms.size(); i++)
 						for (int j = 0; j < 5; j++) {
-							Form fu = c.units.get(i);
+							Form fu = c.forms.get(i);
 							Form f = fs[0][j];
 							if (f == null)
 								continue;

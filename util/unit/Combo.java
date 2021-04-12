@@ -3,15 +3,17 @@ package common.util.unit;
 import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
 import common.pack.Identifier;
+import common.pack.IndexContainer;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.lang.MultiLangCont;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 
-public class Combo extends Data {
+public class Combo extends Data implements IndexContainer.Indexable<IndexContainer, Combo> {
 
 	public static void readFile() {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -22,7 +24,7 @@ public class Combo extends Data {
 		for (String str : qs) {
 			if (str.length() < 20)
 				continue;
-			Combo c = new Combo(i++, str.trim());
+			Combo c = new Combo(Identifier.parseInt(i++, Combo.class), str.trim());
 			if (c.show > 0) {
 				list.add(c);
 				ns[c.type]++;
@@ -55,30 +57,45 @@ public class Combo extends Data {
 		}
 	}
 
-	public final int name, show, id, type, lv;
-	public final HashMap<Integer, Form> units;
+	public final Identifier<Combo> id;
 
-	private Combo(int ID, String str) {
+	public int show, type, lv, nameID;
+	public HashMap<Integer, Form> forms;
+
+	private Combo(Identifier<Combo> ID, String str) {
 		id = ID;
 		String[] strs = str.split(",");
-		name = Integer.parseInt(strs[0]);
+		nameID = Integer.parseInt(strs[0]);
 		show = Integer.parseInt(strs[1]);
 		int n;
 		for (n = 0; n < 5; n++)
 			if (Integer.parseInt(strs[2 + n * 2]) == -1)
 				break;
-		units = new HashMap<>();
+		forms = new HashMap<>();
 		for (int i = 0; i < n; i++) {
 			Identifier<Unit> u = Identifier.parseInt(Integer.parseInt(strs[2 + i * 2]), Unit.class);
-			units.put(i, u.get().forms[Integer.parseInt(strs[3 + i * 2])]);
+			forms.put(i, u.get().forms[Integer.parseInt(strs[3 + i * 2])]);
 		}
 		type = Integer.parseInt(strs[12]);
 		lv = Integer.parseInt(strs[13]);
 	}
 
-	@Override
-	public String toString() {
-		return name + "," + show;
+	public Combo(Identifier<Combo> ID) {
+		id = ID;
+		forms = new HashMap<>();
 	}
 
+	public String getName() {
+		return MultiLangCont.getStatic().COMNAME.getCont(nameID);
+	}
+
+	@Override
+	public String toString() {
+		return id.toString();
+	}
+
+	@Override
+	public Identifier<Combo> getID() {
+		return id;
+	}
 }
