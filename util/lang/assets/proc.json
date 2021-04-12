@@ -677,7 +677,7 @@
         "abbr_name": "surge",
         "full_name": "Surge",
         "tooltip": null,
-        "format": "(prob)% chance to create a surge attack for (_dispTime(time)) (_left)Created randomly between (dis_0) ~ (dis_1)(_right)",
+        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) (_left)Created within (dis_0) ~ (dis_1) range(_right)",
         "class": {
             "prob": {
                 "name": "chance",
