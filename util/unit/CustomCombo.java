@@ -31,7 +31,10 @@ public class CustomCombo extends Combo {
         forms.put(forms.size(), f);
     }
 
-    public void removeForm(Form f) {
-
+    public void removeForm(int index) {
+        forms.remove(index);
+        for (int ind : forms.keySet())
+            if (ind >= index)
+                forms.replace(ind - 1, forms.remove(ind - 1));
     }
 }
