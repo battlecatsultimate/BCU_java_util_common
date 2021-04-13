@@ -95,6 +95,7 @@ public abstract class PackData implements IndexContainer {
 			this.bgs.reset();
 			this.musics.reset();
 			this.diyTrait.reset();
+			this.diyCombo.reset();
 			for (CastleList cl : CastleList.map().values())
 				cl.reset();
 			for (MapColc mc : MapColc.values()) {
@@ -412,6 +413,8 @@ public abstract class PackData implements IndexContainer {
 	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
 	@Order(9)
 	public final FixIndexMap<CustomTrait> diyTrait = new FixIndexMap<>(CustomTrait.class);
+	@Order(10)
+	public final FixIndexMap<CustomCombo> diyCombo = new FixIndexMap<>(CustomCombo.class);
 
 	@Override
 	@SuppressWarnings({ "rawtypes" })
@@ -434,6 +437,8 @@ public abstract class PackData implements IndexContainer {
 			def = func.reduce(def, groups);
 		if (cls == CustomTrait.class)
 			def = func.reduce(def, diyTrait);
+		if (cls == CustomCombo.class)
+			def = func.reduce(def, diyCombo);
 		if (cls == LvRestrict.class)
 			def = func.reduce(def, lvrs);
 		return def;
