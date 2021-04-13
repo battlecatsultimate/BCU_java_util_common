@@ -1,3 +1,4 @@
+
 package common.battle;
 
 import common.CommonStatic;

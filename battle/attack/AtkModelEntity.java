@@ -150,7 +150,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
-		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD() || data.isOmni());
+		return new AttackSimple(this, atk, e.type, e.data, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD() || data.isOmni());
 	}
 
 	@Override

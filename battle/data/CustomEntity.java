@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
+import common.util.unit.CustomTrait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,10 @@ public abstract class CustomEntity extends DataEntity {
 
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
+	@JsonField(generic = CustomTrait.class, alias = Identifier.class)
+	public ArrayList<Identifier<CustomTrait>> customTraits = new ArrayList<>();
+	@JsonField(generic = String.class)
+	public ArrayList<String> nullFixer = new ArrayList<>();
 
 	private Proc all;
 
@@ -215,6 +220,11 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
+		customTraits.clear();
+		customTraits.addAll(ce.customTraits);
+		nullFixer.clear();
+		nullFixer.addAll(ce.nullFixer);
+
 		rep = new AtkDataModel(this, ce.rep);
 
 		List<AtkDataModel> temp = new ArrayList<>();
@@ -264,5 +274,4 @@ public abstract class CustomEntity extends DataEntity {
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
 	}
-
 }
