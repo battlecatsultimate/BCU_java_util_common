@@ -21,7 +21,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         for (String str : qs) {
             if (str.length() < 20)
                 continue;
-            DataCombo c = new DataCombo(Identifier.parseInt(i++, DataCombo.class), str.trim());
+            DataCombo c = new DataCombo(Identifier.parseInt(i++, Combo.class), str.trim());
             if (c.show > 0) {
                 list.add(c);
                 ns[c.type]++;
