@@ -22,7 +22,7 @@ import common.util.stage.CastleImg;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -405,7 +405,7 @@ public abstract class Source {
 			return getFile("./" + CASTLE + "/" + Data.trio(id.id) + ".png");
 		}
 
-		public File getTraitIconFile(Identifier<CustomTrait> id) {
+		public File getTraitIconFile(Identifier<Trait> id) {
 			return getFile("./" + TRAITICON + "/" + Data.trio(id.id) + ".png");
 		}
 

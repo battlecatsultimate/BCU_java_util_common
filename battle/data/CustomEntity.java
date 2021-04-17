@@ -8,7 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public abstract class CustomEntity extends DataEntity {
 
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
-	@JsonField(generic = CustomTrait.class, alias = Identifier.class)
-	public ArrayList<Identifier<CustomTrait>> customTraits = new ArrayList<>();
+	@JsonField(generic = Trait.class, alias = Identifier.class)
+	public ArrayList<Identifier<Trait>> customTraits = new ArrayList<>();
 	@JsonField(generic = String.class)
 	public ArrayList<String> nullFixer = new ArrayList<>();
 

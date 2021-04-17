@@ -86,7 +86,7 @@ public abstract class PackData implements IndexContainer {
 			progress.accept("loading musics");
 			loadMusic();
 			progress.accept("process data");
-			this.diyTrait.reset();
+			this.traits.reset();
 			this.enemies.reset();
 			this.randEnemies.reset();
 			this.units.reset();
@@ -394,7 +394,7 @@ public abstract class PackData implements IndexContainer {
 	}
 
 	@Order(0)
-	public final FixIndexMap<CustomTrait> diyTrait = new FixIndexMap<>(CustomTrait.class);
+	public final FixIndexMap<Trait> traits = new FixIndexMap<>(Trait.class);
 	@Order(1)
 	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
 	@Order(2)
@@ -419,8 +419,8 @@ public abstract class PackData implements IndexContainer {
 	@Override
 	@SuppressWarnings({ "rawtypes" })
 	public <R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def) {
-		if (cls == CustomTrait.class)
-			def = func.reduce(def, diyTrait);
+		if (cls == Trait.class)
+			def = func.reduce(def, traits);
 		if (cls == Unit.class)
 			def = func.reduce(def, units);
 		if (cls == UnitLevel.class)

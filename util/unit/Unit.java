@@ -131,9 +131,11 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	public List<Combo> allCombo() {
 		List<Combo> ans = new ArrayList<>();
-		for (Combo c : UserProfile.getBCData().combos)
+		List<Combo> comboList = UserProfile.getBCData().combos.getList();
+		UserProfile.getUserPacks().forEach(p -> comboList.addAll(p.combos.getList()));
+		for (Combo c : comboList)
 			for (Form f : id.get().forms)
-				if (Arrays.stream(c.forms).anyMatch(form -> form.uid.id == f.uid.id)) {
+				if (Arrays.stream(c.forms).anyMatch(form -> form.uid.compareTo(f.uid) == 0)) {
 					ans.add(c);
 					break;
 				}

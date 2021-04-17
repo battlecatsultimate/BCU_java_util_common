@@ -26,7 +26,7 @@ import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import common.util.unit.Level;
 
 import java.util.*;
@@ -1451,21 +1451,20 @@ public abstract class Entity extends AbEntity {
 	 * target but for custom entities, data is the attacked unit, user is the attacker
 	 */
 	public boolean ctargetable(int t, MaskEntity user) {
+		ArrayList<Identifier<Trait>> uct = user instanceof CustomEntity ? ((CustomEntity)user).customTraits : null;
 		if (data instanceof CustomEntity) {
-			ArrayList<Identifier<CustomTrait>> ect = ((CustomEntity)data).customTraits;
+			ArrayList<Identifier<Trait>> ect = ((CustomEntity)data).customTraits;
 			if (t == 255 || t == 503 || t == 511)
 				for (int i = 0; i < ect.size(); i++)
 					if (ect.get(i).get().targetType)
 						return true;
-			if (user instanceof CustomEntity) {
-				ArrayList<Identifier<CustomTrait>> uct = ((CustomEntity)user).customTraits;
+			if (uct != null) {
 					for (int j = 0; j < uct.size(); j++)
 						if (ect.contains(uct.get(j)))
 							return true;
 			}
 		}
-		else if (user instanceof CustomEntity) {
-			ArrayList<Identifier<CustomTrait>> uct = ((CustomEntity)user).customTraits;
+		else if (uct != null) {
 			if (type == 255 || type == 503 || type == 511)
 				for (int i = 0; i < uct.size(); i++)
 					if (uct.get(i).get().targetType)

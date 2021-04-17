@@ -4,7 +4,9 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.pack.Identifier;
 import common.util.Data;
+import java.util.ArrayList;
 import common.util.pack.Soul;
+import common.util.unit.Trait;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class DataEntity extends Data implements MaskEntity {
@@ -13,6 +15,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	public int abi, type, width;
 	public int loop = -1, shield;
 	public Identifier<Soul> death;
+	public ArrayList<Identifier<Trait>> traits;
 
 	@Override
 	public int getAbi() {
@@ -27,6 +30,11 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	@Override
 	public Identifier<Soul> getDeathAnim() {
 		return death;
+	}
+
+	@Override
+	public ArrayList<Identifier<Trait>> getTraits() {
+		return traits;
 	}
 
 	@Override

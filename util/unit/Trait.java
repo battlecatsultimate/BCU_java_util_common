@@ -14,14 +14,14 @@ import java.awt.image.BufferedImage;
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
-public class CustomTrait extends Data implements Indexable<PackData, CustomTrait>, Comparable<CustomTrait> {
+public class Trait extends Data implements Indexable<PackData, Trait>, Comparable<Trait> {
 
     @JsonField
     public String name = "new trait";
 
     @JsonClass.JCIdentifier
     @JsonField
-    public Identifier<CustomTrait> id;
+    public Identifier<Trait> id;
     public VImg icon = null;
 
     @JsonField
@@ -30,24 +30,26 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
 
 
     @JsonClass.JCConstructor
-    public CustomTrait() {}
-
-    public CustomTrait(CustomTrait ct) {
-        name = ct.name;
-        targetType = ct.targetType;
-        id = ct.id;
-        icon = ct.icon;
+    public Trait() {
+        id = null;
     }
 
-    public CustomTrait(Identifier<CustomTrait> id) {
+    public Trait(Trait t) {
+        name = t.name;
+        targetType = t.targetType;
+        id = t.id;
+        icon = t.icon;
+    }
+
+    public Trait(Identifier<Trait> id) {
         this.id = id;
     }
 
     @Override
-    public Identifier<CustomTrait> getID() { return id; }
+    public Identifier<Trait> getID() { return id; }
 
     @Override
-    public int compareTo(CustomTrait ctr) { return id.compareTo(ctr.id); }
+    public int compareTo(Trait tr) { return id.compareTo(tr.id); }
 
     @Override
     public String toString() {
@@ -72,5 +74,5 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
     private BufferedImage VImgToIcon(VImg vi) { return (BufferedImage)vi.getImg().bimg(); }
 
     @JsonClass.JCGetter
-    public static CustomTrait getter(Identifier<?> id) { return (CustomTrait) Identifier.get(id); }
+    public static Trait getter(Identifier<?> id) { return (Trait) Identifier.get(id); }
 }
