@@ -66,9 +66,9 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
     @FieldOrder.Order(1)
     public int lv, show, type;
 
-    @JsonField(gen = JsonField.GenType.GEN)
+    @JsonField(alias = Form.FormJson.class)
     @FieldOrder.Order(2)
-    public Form[] forms; // TODO: save properly
+    public Form[] forms;
 
     @JsonField
     @FieldOrder.Order(3)
