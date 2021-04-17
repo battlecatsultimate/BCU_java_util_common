@@ -190,7 +190,7 @@ public abstract class PackData implements IndexContainer {
 					lv[i] = Integer.parseInt(strs[i]);
 				UnitLevel ul = new UnitLevel(lv);
 				if (!l.contains(ul)) {
-					ul.id = new Identifier<UnitLevel>(Identifier.DEF, UnitLevel.class, l.size());
+					ul.id = new Identifier<>(Identifier.DEF, UnitLevel.class, l.size());
 					l.add(ul);
 				}
 				int ind = l.indexOf(ul);

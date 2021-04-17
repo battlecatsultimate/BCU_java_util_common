@@ -1,6 +1,7 @@
 package common.util.unit;
 
 import common.CommonStatic;
+import common.io.json.FieldOrder;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Queue;
 
+@IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public class Combo extends Data implements IndexContainer.Indexable<IndexContainer, Combo> {
@@ -57,15 +59,25 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 
     @JsonClass.JCIdentifier
     @JsonField
+    @FieldOrder.Order(0)
     public Identifier<Combo> id;
 
     @JsonField
+    @FieldOrder.Order(1)
     public int lv, show, type;
 
-    public Form[] forms;
+    @JsonField(gen = JsonField.GenType.GEN)
+    @FieldOrder.Order(2)
+    public Form[] forms; // TODO: save properly
 
     @JsonField
+    @FieldOrder.Order(3)
     public String name;
+
+    @JsonClass.JCConstructor
+    public Combo() {
+        id = null;
+    }
 
     protected Combo(Identifier<Combo> ID, String[] strs) {
         id = ID;
@@ -122,8 +134,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
     }
 
     public void addForm(Form f) {
-        Form[] formSrc = forms;
-        System.arraycopy(formSrc, 0, forms, 0, forms.length + 1);
+        forms = Arrays.copyOf(forms, forms.length + 1);
         forms[forms.length - 1] = f;
     }
 
