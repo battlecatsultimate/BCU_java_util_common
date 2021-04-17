@@ -94,6 +94,7 @@ public abstract class PackData implements IndexContainer {
 			this.lvrs.reset();
 			this.bgs.reset();
 			this.musics.reset();
+			this.combos.reset();
 			for (CastleList cl : CastleList.map().values())
 				cl.reset();
 			for (MapColc mc : MapColc.values()) {
@@ -433,6 +434,8 @@ public abstract class PackData implements IndexContainer {
 			def = func.reduce(def, groups);
 		if (cls == LvRestrict.class)
 			def = func.reduce(def, lvrs);
+		if (cls == Combo.class)
+			def = func.reduce(def, combos);
 		return def;
 	}
 

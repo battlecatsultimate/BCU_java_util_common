@@ -1,6 +1,8 @@
 package common.util.unit;
 
 import common.CommonStatic;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
 import common.pack.PackData;
@@ -9,11 +11,12 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Queue;
 
+@JsonClass.JCGeneric(Identifier.class)
+@JsonClass
 public class Combo extends Data implements IndexContainer.Indexable<IndexContainer, Combo> {
     public static void readFile() {
         CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -52,11 +55,16 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         }
     }
 
+    @JsonClass.JCIdentifier
+    @JsonField
     public Identifier<Combo> id;
 
+    @JsonField
     public int lv, show, type;
-    public HashMap<Integer, Form> forms;
 
+    public Form[] forms;
+
+    @JsonField
     public String name;
 
     protected Combo(Identifier<Combo> ID, String[] strs) {
@@ -67,10 +75,10 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         for (n = 0; n < 5; n++)
             if (Integer.parseInt(strs[2 + n * 2]) == -1)
                 break;
-        forms = new HashMap<>();
+        forms = new Form[n];
         for (int i = 0; i < n; i++) {
             Identifier<Unit> u = Identifier.parseInt(Integer.parseInt(strs[2 + i * 2]), Unit.class);
-            forms.put(i, u.get().forms[Integer.parseInt(strs[3 + i * 2])]);
+            forms[i] = u.get().forms[Integer.parseInt(strs[3 + i * 2])];
         }
         type = Integer.parseInt(strs[12]);
         lv = Integer.parseInt(strs[13]);
@@ -82,8 +90,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         lv = l;
         type = t;
         show = s;
-        forms = new HashMap<>();
-        forms.put(0, f);
+        forms = new Form[] { f };
     }
 
     @Override
@@ -115,13 +122,17 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
     }
 
     public void addForm(Form f) {
-        forms.put(forms.size(), f);
+        Form[] formSrc = forms;
+        System.arraycopy(formSrc, 0, forms, 0, forms.length + 1);
+        forms[forms.length - 1] = f;
     }
 
     public void removeForm(int index) {
-        forms.remove(index);
-        for (int ind : forms.keySet())
-            if (ind >= index)
-                forms.replace(ind - 1, forms.remove(ind - 1));
+        Form[] formSrc = new Form[forms.length - 1];
+        for (int i = 0, j = 0; i < forms.length; i++) {
+            if (i != index)
+                formSrc[j++] = forms[j];
+        }
+        forms = formSrc;
     }
 }

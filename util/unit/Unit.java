@@ -23,6 +23,7 @@ import common.util.anim.AnimCE;
 import common.util.lang.MultiLangCont;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -131,7 +132,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		List<Combo> ans = new ArrayList<>();
 		for (Combo c : UserProfile.getBCData().combos)
 			for (Form f : id.get().forms)
-				if (c.forms.containsValue(f)) {
+				if (Arrays.stream(c.forms).anyMatch(form -> form.uid.id == f.uid.id)) {
 					ans.add(c);
 					break;
 				}
