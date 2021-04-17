@@ -72,7 +72,5 @@ public class CustomTrait extends Data implements Indexable<PackData, CustomTrait
     private BufferedImage VImgToIcon(VImg vi) { return (BufferedImage)vi.getImg().bimg(); }
 
     @JsonClass.JCGetter
-    public static CustomTrait getter(Identifier<?> id) {
-        return (CustomTrait) Identifier.get(id);
-    }
+    public static CustomTrait getter(Identifier<?> id) { return (CustomTrait) Identifier.get(id); }
 }

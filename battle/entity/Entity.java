@@ -26,6 +26,7 @@ import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
+import common.util.unit.CustomTrait;
 import common.util.unit.Level;
 
 import java.util.*;
@@ -1451,17 +1452,24 @@ public abstract class Entity extends AbEntity {
 	 */
 	public boolean ctargetable(int t, MaskEntity user) {
 		if (data instanceof CustomEntity) {
-			int siz = ((CustomEntity)data).customTraits.size();
+			ArrayList<Identifier<CustomTrait>> ect = ((CustomEntity)data).customTraits;
 			if (t == 255 || t == 503 || t == 511)
-				for (int i = 0; i < siz; i++)
-					if (((CustomEntity)data).customTraits.get(i).get().targetType)
+				for (int i = 0; i < ect.size(); i++)
+					if (ect.get(i).get().targetType)
 						return true;
 			if (user instanceof CustomEntity) {
-				int Usiz = ((CustomEntity)user).customTraits.size();
-					for (int j = 0; j < Usiz; j++)
-						if (((CustomEntity)data).customTraits.contains(((CustomEntity)user).customTraits.get(j)))
+				ArrayList<Identifier<CustomTrait>> uct = ((CustomEntity)user).customTraits;
+					for (int j = 0; j < uct.size(); j++)
+						if (ect.contains(uct.get(j)))
 							return true;
 			}
+		}
+		else if (user instanceof CustomEntity) {
+			ArrayList<Identifier<CustomTrait>> uct = ((CustomEntity)user).customTraits;
+			if (type == 255 || type == 503 || type == 511)
+				for (int i = 0; i < uct.size(); i++)
+					if (uct.get(i).get().targetType)
+						return true;
 		}
 		return false; // No need to bother if not attacking a custom unit
 	}

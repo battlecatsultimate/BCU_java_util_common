@@ -1,17 +1,14 @@
 package common.pack;
 
-import common.battle.data.CustomEntity;
 import common.io.json.JsonClass;
 import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.unit.AbEnemy;
-import common.util.unit.CustomTrait;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Queue;
 
@@ -36,7 +33,7 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 		if (id != null) {
 			IndexContainer ic = (IndexContainer) getContainer(id.cls, id.pack);
 			if (ic != null) {
-				Object ans = ic.getList(id.cls, (r, l) -> r == null ? l.get(id.id) : r, null);
+				Object ans = ic.getList(id.cls, (r, l) -> r == null ? l.getRaw(id.id) : r, null);
 				if (ans != null)
 					return (T) ans;
 			}
@@ -142,7 +139,7 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 	@SuppressWarnings("unchecked")
 	public T get() {
 		IndexContainer cont = getCont();
-		return (T) cont.getList(cls, (r, l) -> r == null ? l.get(id) : r, null);
+		return (T) cont.getList(cls, (r, l) -> r == null ? l.getRaw(id) : r, null);
 	}
 
 	public IndexContainer getCont() {

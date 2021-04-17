@@ -411,19 +411,19 @@
         "full_name": "Summon",
         "tooltip": null,
         "format": [
-            "(prob)% chance to summon entity (_entity(id)) after (_dispTime(time)). ",
-            "Summon with a buff of (mult)%[(!type.fix_buff){ relative to the buff of this entity}]. ",
-            "Summoned [(type.on_hit){for every target it hits}",
-            "(type.on_kill&!type.on_hit){for every target it kills}",
-            "(!type.on_kill&!type.on_hit){on this attack}] with a distance of (dis) units to ",
-            "[(type.on_kill|type.on_hit){the positions of the targets}",
-            "(!type.on_hit&!type.on_kill){the position of this entity}]. ",
-            "Summon is [(type.ignore_limit){not }]restricted by the stage entity limit. ",
+            "(prob)% chance to summon a (mult)% [(!type.fix_buff){(_left)relative to summoner's buff(_right) }](_entity(id)) after (_dispTime(time)), ",
+            "one summoned (dis) range away from ",
+            "[(type.on_kill|type.on_hit){each target}",
+            "(!type.on_hit&!type.on_kill){the summoner}] ",
+            "[(type.on_hit){hit}",
+            "(type.on_kill&!type.on_hit){killed}",
+            "(!type.on_kill&!type.on_hit){on this attack}], ",
+            "[(type.same_health){Summoned entities will have the same health as this entity, }]",
+            "and is[(type.ignore_limit){n't}] restricted by the stage entity limit. ",
             "Summoned entities will be in [(!type.random_layer){the same layer as this entity}",
             "(type.random_layer){a random layer}]. ",
             "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
-            " animation[(type.anim_type==3){ and disable burrow for summoned entities}].",
-            "[(type.same_health){ Summoned entities will have the same health as this entity.}]"
+            " animation[(type.anim_type==3){ and disable burrow for summoned entities}]."
         ],
         "class": {
             "prob": {
