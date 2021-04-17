@@ -409,6 +409,8 @@ public abstract class PackData implements IndexContainer {
 	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
 	@Order(8)
 	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
+	@Order(9)
+	public final FixIndexMap<Combo> combos = new FixIndexMap<>(Combo.class);
 
 	@Override
 	@SuppressWarnings({ "rawtypes" })

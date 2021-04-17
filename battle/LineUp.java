@@ -6,6 +6,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.*;
 
@@ -289,8 +290,7 @@ public class LineUp extends Data {
 		List<Combo> tcom = new ArrayList<>();
 		inc = new int[C_TOT];
 		loc = new int[5];
-		for (Combo[] cs : CommonStatic.getBCAssets().combos)
-			for (Combo c : cs) {
+		for (Combo c : UserProfile.getBCData().combos) {
 				boolean b = true;
 				for (int i = 0; i < c.forms.size(); i++) {
 					Form fu = c.forms.get(i);

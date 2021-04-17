@@ -63,8 +63,6 @@ public class CommonStatic {
 		// EffAnim
 		public final EffAnimStore effas = new EffAnimStore();
 
-		// Combo
-		public final Combo[][] combos = new Combo[Data.C_TOT][];
 		public final int[][] values = new int[Data.C_TOT][5];
 		public int[][] filter;
 

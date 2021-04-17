@@ -3,8 +3,11 @@ package common.util.unit;
 import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.lang.MultiLangCont;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,24 +17,19 @@ import java.util.Queue;
 public class Combo extends Data implements IndexContainer.Indexable<IndexContainer, Combo> {
     public static void readFile() {
         CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
+        PackData.DefPack data = UserProfile.getBCData();
         Queue<String> qs = VFile.readLine("./org/data/NyancomboData.csv");
-        List<DataCombo> list = new ArrayList<>();
         int i = 0;
-        int[] ns = new int[C_TOT];
         for (String str : qs) {
-            if (str.length() < 20)
+            if (str.length() < 20) {
+                // data.combos.add(null);
                 continue;
-            DataCombo c = new DataCombo(Identifier.parseInt(i++, Combo.class), str.trim());
-            if (c.show > 0) {
-                list.add(c);
-                ns[c.type]++;
             }
+            String[] strs = str.trim().split(",");
+            Combo c = new Combo(Identifier.parseInt(i++, Combo.class), strs);
+            if (c.show > 0)
+                data.combos.add(c);
         }
-        for (i = 0; i < C_TOT; i++)
-            aux.combos[i] = new DataCombo[ns[i]];
-        ns = new int[C_TOT];
-        for (DataCombo c : list)
-            aux.combos[c.type][ns[c.type]++] = c;
 
         qs = VFile.readLine("./org/data/NyancomboParam.tsv");
         for (i = 0; i < C_TOT; i++) {
@@ -54,14 +52,16 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         }
     }
 
-    Identifier<Combo> id;
+    public Identifier<Combo> id;
 
     public int lv, show, type;
     public HashMap<Integer, Form> forms;
 
-    protected Combo(Identifier<Combo> ID, String str) {
+    public String name;
+
+    protected Combo(Identifier<Combo> ID, String[] strs) {
         id = ID;
-        String[] strs = str.split(",");
+        name = strs[0];
         show = Integer.parseInt(strs[1]);
         int n;
         for (n = 0; n < 5; n++)
@@ -76,8 +76,9 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         lv = Integer.parseInt(strs[13]);
     }
 
-    protected Combo(Identifier<Combo> ID, int l, int t, int s, Form f) {
+    public Combo(Identifier<Combo> ID, String n, int l, int t, int s, Form f) {
         id = ID;
+        name = n;
         lv = l;
         type = t;
         show = s;
@@ -93,5 +94,34 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
     @Override
     public Identifier<Combo> getID() {
         return id;
+    }
+
+    public String getName() {
+        String n = MultiLangCont.get(this);
+        if (n != null && n.length() > 0)
+            return n;
+        else if (name != null && name.length() > 0)
+            return name;
+        else
+            return null;
+    }
+
+    public void setType(int t) {
+        type = t;
+    }
+
+    public void setLv(int l) {
+        lv = l;
+    }
+
+    public void addForm(Form f) {
+        forms.put(forms.size(), f);
+    }
+
+    public void removeForm(int index) {
+        forms.remove(index);
+        for (int ind : forms.keySet())
+            if (ind >= index)
+                forms.replace(ind - 1, forms.remove(ind - 1));
     }
 }

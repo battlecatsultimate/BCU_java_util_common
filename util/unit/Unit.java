@@ -16,6 +16,7 @@ import common.pack.PackData;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
+import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
@@ -128,13 +129,12 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	public List<Combo> allCombo() {
 		List<Combo> ans = new ArrayList<>();
-		for (Combo[] cs : CommonStatic.getBCAssets().combos)
-			for (Combo c : cs)
-				for (Form f : id.get().forms)
-					if (c.forms.containsValue(f)) {
-						ans.add(c);
-						break;
-					}
+		for (Combo c : UserProfile.getBCData().combos)
+			for (Form f : id.get().forms)
+				if (c.forms.containsValue(f)) {
+					ans.add(c);
+					break;
+				}
 		return ans;
 	}
 
