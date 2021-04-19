@@ -128,8 +128,9 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
+			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_RES || trait.contains(UserProfile.getBCData().traits.get(line[ORB_TRAIT])))
+			if (line[ORB_TYPE] == Data.ORB_RES || !trait.contains(orbType))
 				continue;
 
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -149,8 +150,9 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
+			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_ATK || trait.contains(UserProfile.getBCData().traits.get(line[ORB_TRAIT])))
+			if (line[ORB_TYPE] == Data.ORB_ATK || !trait.contains(orbType))
 				continue;
 
 			ans = orb.getRes(line[ORB_GRADE], ans);
