@@ -25,7 +25,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		speed = 8;
 		hp = 1000;
 		hb = 1;
-		type = 0;
 		traits = new ArrayList<>();
 		price = 50;
 		resp = 60;

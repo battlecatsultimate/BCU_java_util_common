@@ -986,12 +986,7 @@ public abstract class Entity extends AbEntity {
 	public final int[][] status = new int[PROC_TOT][PROC_WIDTH];
 
 	/**
-	 * trait of enemy, also target trait of unit, use bitmask
-	 */
-	public int type;
-
-	/**
-	 * trait of enemy, also target trait of unit, use bitmask
+	 * trait of enemy, also target trait of unit, uses list
 	 */
 	public ArrayList<Trait> traits;
 

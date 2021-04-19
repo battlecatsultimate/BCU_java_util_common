@@ -80,7 +80,7 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         }
     }
 
-    // Convert Bitmask Type format to current format
+    // Convert Bitmask Type format to new format
     public static ArrayList<Trait> convertType(int type) {
         ArrayList<Trait> traits = new ArrayList<>();
         PackData.DefPack data = UserProfile.getBCData();
@@ -114,6 +114,4 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
 
     @JsonClass.JCGetter
     public static Trait getter(Identifier<?> id) { return (Trait) Identifier.get(id); }
-
-    //TODO: Implement Type-To-Trait converter for v5 packs when loaded, fix problem where Orbs effect procs regardless of orb trait
 }

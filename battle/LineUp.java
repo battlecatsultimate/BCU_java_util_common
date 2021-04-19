@@ -9,7 +9,6 @@ import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
-import common.pack.PackData.UserPack;
 import common.util.unit.*;
 
 import java.util.ArrayList;

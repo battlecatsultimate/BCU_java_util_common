@@ -2,7 +2,6 @@ package common.battle.attack;
 
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
-import common.battle.data.MaskEntity;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
