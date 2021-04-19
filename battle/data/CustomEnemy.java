@@ -32,6 +32,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		hb = 1;
 		type = 1;
 		traits = new ArrayList<>();
+		traits.add(UserProfile.getBCData().traits.get(TRAIT_RED));
 		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
 	}
 

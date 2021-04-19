@@ -115,5 +115,5 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     @JsonClass.JCGetter
     public static Trait getter(Identifier<?> id) { return (Trait) Identifier.get(id); }
 
-    //TODO: Reformat talents, implement custom entity trait loading stuffs
+    //TODO: Implement Type-To-Trait converter for v5 packs when loaded, fix problem where Orbs effect procs regardless of orb trait
 }
