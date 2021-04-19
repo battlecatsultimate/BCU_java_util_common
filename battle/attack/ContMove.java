@@ -16,7 +16,7 @@ public class ContMove extends ContAb {
 	/**
 	 * conf: range, move, itrv, tot, rept,layer
 	 */
-	public ContMove(AttackSimple as, double p, MaskEntity entdat, int... conf) {
+	public ContMove(AttackSimple as, double p, int... conf) {
 		super(as.model.b, p, conf[5]);
 		move = conf[1];
 		itv = conf[2];
@@ -25,7 +25,7 @@ public class ContMove extends ContAb {
 		ran = conf[0];
 		rep = conf[4];
 		rept = rep > 0 ? rep : -1;
-		atk = new AttackWave(as, 0, 0, WT_MOVE, entdat);
+		atk = new AttackWave(as, 0, 0, WT_MOVE);
 	}
 
 	@Override

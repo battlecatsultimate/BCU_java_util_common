@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.util.Data;
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	public int abi, type, width;
 	public int loop = -1, shield;
 	public Identifier<Soul> death;
-	public ArrayList<Identifier<Trait>> traits;
+	@JsonField(generic = Trait.class, alias = Identifier.class)
+	public ArrayList<Trait> traits = new ArrayList<>();
 
 	@Override
 	public int getAbi() {
@@ -33,7 +35,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	}
 
 	@Override
-	public ArrayList<Identifier<Trait>> getTraits() {
+	public ArrayList<Trait> getTraits() {
 		return traits;
 	}
 
@@ -60,11 +62,6 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	@Override
 	public int getSpeed() {
 		return speed;
-	}
-
-	@Override
-	public int getType() {
-		return type;
 	}
 
 	@Override

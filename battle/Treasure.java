@@ -6,7 +6,12 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.FixIndexList.FixIndexMap;
+import common.pack.UserProfile;
 import common.util.Data;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 @JsonClass(read = RType.FILL)
 public class Treasure extends Data {
@@ -216,30 +221,32 @@ public class Treasure extends Data {
 	/**
 	 * get maximum fruit of certain trait bitmask
 	 */
-	public double getFruit(int type) {
+	public double getFruit(ArrayList<Trait> types) {
 		double ans = 0;
-		if ((type & TB_RED) != 0)
+		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
+		if (types.contains(BCTraits.get(0)))
 			ans = Math.max(ans, fruit[T_RED]);
-		if ((type & TB_BLACK) != 0)
-			ans = Math.max(ans, fruit[T_BLACK]);
-		if ((type & TB_ANGEL) != 0)
-			ans = Math.max(ans, fruit[T_ANGEL]);
-		if ((type & TB_FLOAT) != 0)
+		if (types.contains(BCTraits.get(1)))
 			ans = Math.max(ans, fruit[T_FLOAT]);
-		if ((type & TB_ALIEN) != 0)
-			ans = Math.max(ans, fruit[T_ALIEN]);
-		if ((type & TB_METAL) != 0)
+		if (types.contains(BCTraits.get(2)))
+			ans = Math.max(ans, fruit[T_BLACK]);
+		if (types.contains(BCTraits.get(3)))
 			ans = Math.max(ans, fruit[T_METAL]);
-		if ((type & TB_ZOMBIE) != 0)
+		if (types.contains(BCTraits.get(4)))
+			ans = Math.max(ans, fruit[T_ANGEL]);
+		if (types.contains(BCTraits.get(5)))
+			ans = Math.max(ans, fruit[T_ALIEN]);
+		if (types.contains(BCTraits.get(6)))
 			ans = Math.max(ans, fruit[T_ZOMBIE]);
 		return ans * 0.01;
 	}
 
 	/**
 	 * get attack multiplication from strong against ability
+	 * @param traits - The traits
 	 */
-	public double getGOODATK(int type) {
-		double ini = 1.5 * (1 + 0.2 / 3 * getFruit(type));
+	public double getGOODATK(ArrayList<Trait> traits) {
+		double ini = 1.5 * (1 + 0.2 / 3 * getFruit(traits));
 		double com = 1 + b.getInc(C_GOOD) * 0.01;
 		return ini * com;
 	}
@@ -247,8 +254,8 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public double getGOODDEF(int type) {
-		double ini = 0.5 - 0.1 / 3 * getFruit(type);
+	public double getGOODDEF(ArrayList<Trait> traits) {
+		double ini = 0.5 - 0.1 / 3 * getFruit(traits);
 		double com = 1 - b.getInc(C_GOOD) * 0.01;
 		return ini * com;
 	}
@@ -256,8 +263,8 @@ public class Treasure extends Data {
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public double getMASSIVEATK(int type) {
-		double ini = 3 + 1.0 / 3 * getFruit(type);
+	public double getMASSIVEATK(ArrayList<Trait> traits) {
+		double ini = 3 + 1.0 / 3 * getFruit(traits);
 		double com = 1 + b.getInc(C_MASSIVE) * 0.01;
 		return ini * com;
 	}
@@ -265,15 +272,15 @@ public class Treasure extends Data {
 	/**
 	 * get attack multiplication from super massive damage ability
 	 */
-	public double getMASSIVESATK(int type) {
-		return 5 + 1.0 / 3 * getFruit(type);
+	public double getMASSIVESATK(ArrayList<Trait> traits) {
+		return 5 + 1.0 / 3 * getFruit(traits);
 	}
 
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public double getRESISTDEF(int type) {
-		double ini = 0.25 - 0.05 / 3 * getFruit(type);
+	public double getRESISTDEF(ArrayList<Trait> traits) {
+		double ini = 0.25 - 0.05 / 3 * getFruit(traits);
 		double com = 1 - b.getInc(C_RESIST) * 0.01;
 		return ini * com;
 	}
@@ -281,8 +288,8 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from super resistant ability
 	 */
-	public double getRESISTSDEF(int type) {
-		return 1.0 / 6 - 1.0 / 126 * getFruit(type);
+	public double getRESISTSDEF(ArrayList<Trait> traits) {
+		return 1.0 / 6 - 1.0 / 126 * getFruit(traits);
 	}
 
 	/**

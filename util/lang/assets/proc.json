@@ -393,7 +393,7 @@
     "SEAL": {
         "abbr_name": "seal",
         "full_name": "Seal",
-        "tooltip": "Seal will disable all abilities except Burrow, Metal, Suicide, Only-Attack, and basic Revive",
+        "tooltip": "Seal will disable all abilities except Burrow, Metal, Self-Destruct, Only-Attack, and basic Revive",
         "format": "(prob)% chance to seal target for (_dispTime(time)).",
         "class": {
             "prob": {

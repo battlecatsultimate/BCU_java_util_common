@@ -1,8 +1,10 @@
 package common.battle.entity;
 
 import common.battle.attack.AttackAb;
-import common.battle.data.MaskEntity;
 import common.util.BattleObj;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 public abstract class AbEntity extends BattleObj {
 
@@ -21,7 +23,7 @@ public abstract class AbEntity extends BattleObj {
 		dire = d;
 	}
 
-	public abstract void damaged(AttackAb atk, MaskEntity User);
+	public abstract void damaged(AttackAb atk);
 
 	public abstract int getAbi();
 
@@ -29,9 +31,7 @@ public abstract class AbEntity extends BattleObj {
 
 	public abstract void postUpdate();
 
-	public abstract boolean targetable(int type);
-
-	public abstract boolean ctargetable(int t, MaskEntity user);
+	public abstract boolean ctargetable(ArrayList<Trait> t, boolean targetOnly);
 
 	public abstract int touchable();
 

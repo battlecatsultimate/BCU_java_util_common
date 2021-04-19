@@ -3,11 +3,14 @@ package common.battle.data;
 import common.CommonStatic;
 import common.pack.Context.ErrType;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
 
+import java.util.ArrayList;
 import java.util.Queue;
 
 public class PCoin extends Data {
@@ -27,12 +30,14 @@ public class PCoin extends Data {
 
 	public final DataUnit full;
 	public final int type;
+	public final ArrayList<Trait> trait;
 	public final int[] max;
 	public final int[][] info = new int[5][13];
 
 	private PCoin(String[] strs) {
 		id = CommonStatic.parseIntN(strs[0]);
 		type = CommonStatic.parseIntN(strs[1]);
+		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
 
 		max = new int[6];
 
@@ -52,8 +57,6 @@ public class PCoin extends Data {
 	public DataUnit improve(int[] lvs) {
 		DataUnit ans = du.clone();
 		for (int i = 0; i < 5; i++) {
-			if (lvs[i + 1] == 0)
-				continue;
 			if (info[i][0] >= PC_CORRES.length) {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]+"\nText ID is "+info[i][10]);
 				continue;
@@ -63,10 +66,17 @@ public class PCoin extends Data {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info[i][0]+"\nText ID is "+info[i][10]);
 				continue;
 			}
-
-			if(this.type != 0) {
-				ans.type |= this.type;
+			if (lvs[i + 1] == 0) {
+				if (type[0] == PC_TRAIT) {
+					Trait types = UserProfile.getBCData().traits.get(type[1]);
+					ans.traits.remove(types);
+				}
+				continue;
 			}
+			//Targettings that come with a talent, such as Hyper Mr's
+			if (this.trait.size() > 0)
+				if (!ans.traits.contains(this.trait.get(0)))
+					ans.traits.add(this.trait.get(0));
 
 			int maxlv = info[i][1];
 			int[] modifs = new int[4];
@@ -109,9 +119,11 @@ public class PCoin extends Data {
 					ans.price -= modifs[0];
 			} else if (type[0] == PC_IMU)
 				ans.proc.getArr(type[1]).set(0, 100);
-			else if (type[0] == PC_TRAIT)
-				ans.type |= type[1];
-
+			else if (type[0] == PC_TRAIT) {
+				Trait types = UserProfile.getBCData().traits.get(type[1]);
+					if (!ans.traits.contains(types))
+						ans.traits.add(types);
+			}
 		}
 		return ans;
 	}

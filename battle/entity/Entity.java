@@ -7,10 +7,11 @@ import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
-import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -36,6 +37,11 @@ import java.util.*;
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public abstract class Entity extends AbEntity {
+
+	/**
+	 * Obtains BC's traits
+	 */
+	private static final List<Trait> BCTraits = UserProfile.getBCData().traits.getList();
 
 	public static class AnimManager extends BattleObj {
 
@@ -402,7 +408,7 @@ public abstract class Entity extends AbEntity {
 				e.kbTime += 1;
 
 			// Z-kill icon
-			if (e.health <= 0 && e.zx.tempZK && (e.type & TB_ZOMBIE) != 0) {
+			if (e.health <= 0 && e.zx.tempZK && e.traits.contains(BCTraits.get(TRAIT_ZOMBIE))) {
 				EAnimD<DefEff> eae = effas().A_Z_STRONG.getEAnim(DefEff.DEF);
 				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
 				CommonStatic.setSE(SE_ZKILL);
@@ -917,7 +923,7 @@ public abstract class Entity extends AbEntity {
 				if (em.kb.kbType == INT_WARP)
 					continue;
 				REVIVE.TYPE conf = em.getProc().REVIVE.type;
-				if (!conf.revive_non_zombie && (e.type & TB_ZOMBIE) == 0)
+				if (!conf.revive_non_zombie && e.traits.contains(BCTraits.get(TRAIT_ZOMBIE)))
 					continue;
 				int type = conf.range_type;
 				if (type == 0 && (em.touchable() & (TCH_N | TCH_EX)) == 0)
@@ -983,6 +989,11 @@ public abstract class Entity extends AbEntity {
 	 * trait of enemy, also target trait of unit, use bitmask
 	 */
 	public int type;
+
+	/**
+	 * trait of enemy, also target trait of unit, use bitmask
+	 */
+	public ArrayList<Trait> traits;
 
 	/**
 	 * attack model
@@ -1117,8 +1128,8 @@ public abstract class Entity extends AbEntity {
 	 * accept attack
 	 */
 	@Override
-	public void damaged(AttackAb atk, MaskEntity User) {
-		int dmg = getDamage(atk, atk.atk, User);
+	public void damaged(AttackAb atk) {
+		int dmg = getDamage(atk, atk.atk);
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
 			if (getProc().IMUWAVE.mult > 0)
@@ -1145,9 +1156,9 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = data.getProc().IMUATK;
-		if ((atk.dire == -1 || atk.type == -1 || receive(atk.type, -1)) || ctargetable(atk.type, User) && imuatk.prob > 0) {
+		if ((atk.dire == -1 || atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || receive(-1)) || ctargetable(atk.trait, false) && imuatk.prob > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
-				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.type, -1)));
+				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, -1)));
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
@@ -1158,7 +1169,7 @@ public abstract class Entity extends AbEntity {
 			if (atk.getProc().BREAK.prob > 0) {
 				barrier = 0;
 				anim.getEff(BREAK_ABI);
-			} else if (getDamage(atk, atk.atk, User) >= barrier) {
+			} else if (getDamage(atk, atk.atk) >= barrier) {
 				barrier = 0;
 				anim.getEff(BREAK_ATK);
 				return;
@@ -1196,7 +1207,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		// process proc part
-		if (atk.type != -1 && !(receive(atk.type, 1) || ctargetable(atk.type, User)))
+		if (!atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) && !(receive(1) || ctargetable(atk.trait, false)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -1216,10 +1227,10 @@ public abstract class Entity extends AbEntity {
 			anim.getEff(P_ARMOR);
 		}
 
-		double f = getFruit(atk.type, 1);
+		double f = getFruit(atk.trait, 1);
 		double time = 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
-		if (atk.type < 0 || atk.canon != -2)
+		if (atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || atk.canon != -2)
 			dist = time = 1;
 		if (atk.getProc().STOP.time > 0) {
 			int val = (int) (atk.getProc().STOP.time * time);
@@ -1298,7 +1309,7 @@ public abstract class Entity extends AbEntity {
 			if ((getAbi() & AB_POII) == 0 || atk.getProc().POISON.damage < 0) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				if (ws.type.damage_type == 1)
-					ws.damage = getDamage(atk, ws.damage, User);
+					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
@@ -1440,37 +1451,29 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
-	 * can be targeted by the cat with Target ability of trait t
+	 * can be targeted by units that have traits in common with the entity they're attacking
 	 */
+
 	@Override
-	public boolean targetable(int t) {
-		return (type & t) > 0 || isBase;
+	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) {
+		if (targetOnly && isBase) return true;
+		if (targetTraited(t))
+			for (int i = 0; i < traits.size(); i++)
+				if (traits.get(i).targetType)
+					return true;
+				for (int j = 0; j < t.size(); j++)
+				if (traits.contains(t.get(j)))
+					return true;
+		return false;
 	}
 
-	/**
-	 * target but for custom entities, data is the attacked unit, user is the attacker
-	 */
-	public boolean ctargetable(int t, MaskEntity user) {
-		ArrayList<Identifier<Trait>> uct = user instanceof CustomEntity ? ((CustomEntity)user).customTraits : null;
-		if (data instanceof CustomEntity) {
-			ArrayList<Identifier<Trait>> ect = ((CustomEntity)data).customTraits;
-			if (t == 255 || t == 503 || t == 511)
-				for (int i = 0; i < ect.size(); i++)
-					if (ect.get(i).get().targetType)
-						return true;
-			if (uct != null) {
-					for (int j = 0; j < uct.size(); j++)
-						if (ect.contains(uct.get(j)))
-							return true;
-			}
-		}
-		else if (uct != null) {
-			if (type == 255 || type == 503 || type == 511)
-				for (int i = 0; i < uct.size(); i++)
-					if (uct.get(i).get().targetType)
-						return true;
-		}
-		return false; // No need to bother if not attacking a custom unit
+	public boolean targetTraited(ArrayList<Trait> targets) {
+		PackData.DefPack deft = UserProfile.getBCData();
+		ArrayList<Trait> temp = new ArrayList<>();
+		for (Trait t : deft.traits)
+			if ((t.id.id != 3 && t.id.id < 8))
+				temp.add(t);
+		return targets.containsAll(temp);
 	}
 
 	/**
@@ -1572,7 +1575,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * determine the amount of damage received from this attack
 	 */
-	protected abstract int getDamage(AttackAb atk, int ans, MaskEntity CDat);
+	protected abstract int getDamage(AttackAb atk, int ans);
 
 	/**
 	 * get max distance to go back
@@ -1684,10 +1687,12 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * get the extra proc time due to fruits, for EEnemy only
 	 */
-	private double getFruit(int atktype, int dire) {
+	private double getFruit(ArrayList<Trait> trait, int dire) {
 		if (traitType() != dire)
 			return 0;
-		return basis.b.t().getFruit(atktype & type);
+		ArrayList<Trait> sharedTraits = new ArrayList<>(trait);
+		sharedTraits.retainAll(traits);
+		return basis.b.t().getFruit(sharedTraits);
 	}
 
 	/**
@@ -1702,12 +1707,10 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
-	 * can be effected by the ability targeting trait t
+	 * determines atk direction for procs and abilities
 	 */
-	private boolean receive(int t, int dire) {
-		if (traitType() != dire)
-			return true;
-		return (type & t) > 0;
+	private boolean receive(int dire) {
+		return traitType() != dire;
 	}
 
 	/**
@@ -1801,7 +1804,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
 			for (int i = 0; i < le.size(); i++)
-				if (le.get(i).targetable(type) || le.get(i).ctargetable(type, data))
+				if (le.get(i).ctargetable(data.getTraits(),true))
 					touchEnemy = true;
 		}
 	}

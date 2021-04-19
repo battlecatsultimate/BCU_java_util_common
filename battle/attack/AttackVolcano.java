@@ -1,6 +1,5 @@
 package common.battle.attack;
 
-import common.battle.data.MaskEntity;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 
@@ -9,18 +8,16 @@ import java.util.List;
 
 public class AttackVolcano extends AttackAb {
 
-	private final MaskEntity ent;
 	protected boolean attacked = false;
 
 	protected final HashMap<Entity, Integer> vcapt;
 
-	public AttackVolcano(AttackSimple a, MaskEntity entdata, double sta, double end) {
+	public AttackVolcano(AttackSimple a, double sta, double end) {
 		super(a, sta, end, false);
 		vcapt = new HashMap<>();
 		this.sta = sta;
 		this.end = end;
 		this.waveType = WT_VOLC;
-		this.ent = entdata;
 	}
 
 	@Override
@@ -30,7 +27,7 @@ public class AttackVolcano extends AttackAb {
 
 		capt.clear();
 		for (AbEntity e : le)
-			if (((abi & AB_ONLY) == 0 || ((e.targetable(type)) || e.ctargetable(type, ent))) && e instanceof Entity && !vcapt.containsKey(e))
+			if (((abi & AB_ONLY) == 0 || e.ctargetable(trait, true)) && e instanceof Entity && !vcapt.containsKey(e))
 				capt.add(e);
 	}
 
@@ -41,7 +38,7 @@ public class AttackVolcano extends AttackAb {
 			if (e.isBase() && !(e instanceof Entity))
 				continue;
 			if (e instanceof Entity) {
-				e.damaged(this, ent);
+				e.damaged(this);
 				vcapt.put((Entity) e, VOLC_ITV);
 				attacked = true;
 			}

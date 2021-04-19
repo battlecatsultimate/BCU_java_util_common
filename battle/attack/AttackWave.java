@@ -1,6 +1,5 @@
 package common.battle.attack;
 
-import common.battle.data.MaskEntity;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 
@@ -11,7 +10,6 @@ import java.util.Set;
 public class AttackWave extends AttackAb {
 
 	protected final Set<Entity> incl;
-	public MaskEntity entdata;
 
 	public AttackWave(AttackSimple a, double p0, double wid, int wt) {
 		super(a, p0 - wid / 2, p0 + wid / 2, false);
@@ -27,7 +25,6 @@ public class AttackWave extends AttackAb {
 		super(a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = a.waveType;
 		incl = a.incl;
-		entdata = a.entdata;
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
 		else
@@ -38,20 +35,6 @@ public class AttackWave extends AttackAb {
 		super(a, pos - start, pos + end, false);
 		waveType = a.waveType;
 		incl = a.incl;
-		entdata = a.entdata;
-		if(waveType == WT_MINI)
-			proc.MINIWAVE.lv--;
-		else
-			proc.WAVE.lv--;
-	}
-
-	//Custom entity waves
-
-	public AttackWave(AttackSimple a, double p0, double wid, int wt, MaskEntity entity) {
-		super(a, p0 - wid / 2, p0 + wid / 2, false);
-		waveType = wt;
-		entdata = entity;
-		incl = new HashSet<>();
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
 		else
@@ -68,7 +51,7 @@ public class AttackWave extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.targetable(type) || e.ctargetable(type, entdata))
+				if (e.ctargetable(trait, true))
 					capt.add(e);
 	}
 
@@ -79,7 +62,7 @@ public class AttackWave extends AttackAb {
 			if (e.isBase())
 				continue;
 			if (e instanceof Entity) {
-				e.damaged(this, entdata);
+				e.damaged(this);
 				incl.add((Entity) e);
 			}
 		}

@@ -4,8 +4,10 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
-import common.battle.data.MaskEntity;
 import common.util.pack.EffAnim.DefEff;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 public class ECastle extends AbEntity {
 
@@ -22,7 +24,7 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public void damaged(AttackAb atk, MaskEntity user) {
+	public void damaged(AttackAb atk) {
 		if(atk.isLongAtk)
 			sb.lea.add(new EAnimCont(pos, atk.layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
 		else
@@ -67,14 +69,7 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean targetable(int type) {
-		return true;
-	}
-
-	@Override
-	public boolean ctargetable(int t, MaskEntity user) {
-		return true;
-	}
+	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) { return true; }
 
 	@Override
 	public int touchable() {

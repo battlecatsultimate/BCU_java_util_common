@@ -35,7 +35,7 @@ public interface MaskEntity extends BattleStatic {
 
 	Identifier<Soul> getDeathAnim();
 
-	ArrayList<Identifier<Trait>> getTraits();
+	ArrayList<Trait> getTraits();
 
 	int getHb();
 
@@ -79,8 +79,6 @@ public interface MaskEntity extends BattleStatic {
 	default int getTouch() {
 		return Data.TCH_N;
 	}
-
-	int getType();
 
 	int getWidth();
 
