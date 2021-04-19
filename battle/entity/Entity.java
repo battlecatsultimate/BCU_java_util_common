@@ -1456,17 +1456,21 @@ public abstract class Entity extends AbEntity {
 			for (int i = 0; i < traits.size(); i++)
 				if (traits.get(i).targetType)
 					return true;
-				for (int j = 0; j < t.size(); j++)
-				if (traits.contains(t.get(j)))
+		if (targetTraited(traits))
+			for (int i = 0; i < t.size(); i++)
+				if (t.get(i).targetType)
 					return true;
+		for (int j = 0; j < t.size(); j++)
+			if (traits.contains(t.get(j)))
+				return true;
 		return false;
 	}
 
 	public boolean targetTraited(ArrayList<Trait> targets) {
 		PackData.DefPack deft = UserProfile.getBCData();
 		ArrayList<Trait> temp = new ArrayList<>();
-		for (Trait t : deft.traits)
-			if ((t.id.id != 3 && t.id.id < 8))
+		for (Trait t : deft.traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
+			if (t.id.id != TRAIT_METAL)
 				temp.add(t);
 		return targets.containsAll(temp);
 	}

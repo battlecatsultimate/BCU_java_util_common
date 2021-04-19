@@ -141,7 +141,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 		Form[] formSrc = new Form[forms.length - 1];
 		for (int i = 0, j = 0; i < forms.length; i++) {
 			if (i != index)
-				formSrc[j++] = forms[j];
+				formSrc[j++] = forms[i];
 		}
 		forms = formSrc;
 	}
