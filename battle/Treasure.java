@@ -107,15 +107,17 @@ public class Treasure extends Data {
 				return 200 + 15 * (bslv[4] - 10);
 			else
 				return 110 + 9 * bslv[4];
-		else if (type == 5)
+		else if (type == 5) // holy blast surface attack
 			if (bslv[5] > 20)
 				return 100 + 5 * (bslv[5] - 20);
 			else if (bslv[5] > 10)
 				return 25 + 7.5 * (bslv[5] - 10);
 			else
 				return 5 + 2 * bslv[5];
-		else if (type == -5)
-			if (bslv[5] > 10)
+		else if (type == -5) // holy blast burrow attack
+			if (bslv[5] > 20)
+				return 300 + 10 * (bslv[5] - 20);
+			else if (bslv[5] > 10)
 				return 150 + 15 * (bslv[5] - 10);
 			else
 				return 100 + 5 * bslv[5];
@@ -146,11 +148,11 @@ public class Treasure extends Data {
 				return 30 + 3 * (bslv[3] - 10);
 			else
 				return 15 + 3 * bslv[3] / 2;
-		else if (type == 5)
+		else if (type == 5) // holy blast
 			if (bslv[5] > 10)
-				return 45 + 3 * (bslv[3] - 10) / 2;
+				return 45 + 3 * (bslv[5] - 10) / 2;
 			else
-				return 30 + 3 * bslv[3] / 2;
+				return 30 + 3 * bslv[5] / 2;
 		else if (type == 6)
 			if (bslv[6] > 10)
 				return 250 + 15 * (bslv[6] - 10);
