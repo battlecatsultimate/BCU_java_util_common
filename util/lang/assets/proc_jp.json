@@ -4,7 +4,7 @@
     "full_name": "ふっとばす",
     "tooltip": null,
     "format": [
-      "(prob)%の確率で[(time>0&!=11){(_dispTime(time))}]",
+      "(prob)%の確率で[(time>0&time!=11){(_dispTime(time))}]",
       "ふっとばす[(dis>0&dis!=165){(dis)距離後方}(dis<0){距離前方}}]"
     ],
     "class": {
@@ -162,43 +162,43 @@
     "abbr_name": "inc. atk",
     "full_name": "Attack Up",
     "tooltip": null,
-    "format": "Attack increased by (mult)% after health drops below (health)%",
+    "format": "体力(health)％以下で(mult)%攻撃力上昇",
     "class": {
       "health": {
-        "name": "health",
+        "name": "体力%",
         "tooltip": null
       },
       "mult": {
-        "name": "increment",
+        "name": "増加百の分率",
         "tooltip": null
       }
     }
   },
   "LETHAL": {
-    "abbr_name": "lethal",
-    "full_name": "Lethal Strike",
+    "abbr_name": "生き残る",
+    "full_name": "度だけ生き残る",
     "tooltip": null,
-    "format": "(prob)% chance to survive lethal damage",
+    "format": "(prob)％の確率で1度だけ生き残る",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       }
     }
   },
   "BURROW": {
-    "abbr_name": "burrow",
-    "full_name": "Burrow",
+    "abbr_name": "地中",
+    "full_name": "地中移動",
     "tooltip": null,
-    "format": "Burrow [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}] through a distance of (dis)",
+    "format": "射程圏に入ると(dis)地中移動(count)回",
     "class": {
       "count": {
-        "name": "burrow count",
+        "name": "地下運動の数",
         "tooltip": "enter -1 for infinite times"
       },
       "dis": {
-        "name": "distance",
-        "tooltip": "burrow time is decided by speed and distance together"
+        "name": "射程",
+        "tooltip": "地下時間は速度と距離で一緒に決定されます"
       }
     }
   },

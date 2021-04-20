@@ -21,12 +21,12 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     public static void addBCTraits() {
         //Reads traits from BC and implements it into the main pack
         PackData.DefPack data = UserProfile.getBCData();
-        String[] traitNames = {"Red", "Floating", "Black", "Metal", "Angel", "Alien", "Zombie", "Relic", "White", "Witch", "EVA", "base", "cannon"};
+        String[] traitNames = {"Red", "Floating", "Black", "Metal", "Angel", "Alien", "Zombie", "Relic", "White", "EVA", "Witch", "base", "cannon"};
         for (int i = 0; i < traitNames.length ; i++) {
             Trait t = new Trait(data.getNextID(Trait.class));
             t.BCTrait = true;
             t.name = traitNames[i];
-            if (i < 9)
+            if (i < TRAIT_EVA)
                 t.icon = MainBCU.builder.toVImg(UtilPC.getIcon(3, i));
             data.traits.add(t);
         }
@@ -85,23 +85,29 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         ArrayList<Trait> traits = new ArrayList<>();
         PackData.DefPack data = UserProfile.getBCData();
         if ((type & TB_RED) != 0)
-            traits.add(data.traits.get(Data.TRAIT_RED));
+            traits.add(data.traits.get(TRAIT_RED));
         if ((type & TB_FLOAT) != 0)
-            traits.add(data.traits.get(Data.TRAIT_FLOAT));
+            traits.add(data.traits.get(TRAIT_FLOAT));
         if ((type & TB_BLACK) != 0)
-            traits.add(data.traits.get(Data.TRAIT_BLACK));
+            traits.add(data.traits.get(TRAIT_BLACK));
         if ((type & TB_METAL) != 0)
-            traits.add(data.traits.get(Data.TRAIT_METAL));
+            traits.add(data.traits.get(TRAIT_METAL));
         if ((type & TB_ANGEL) != 0)
-            traits.add(data.traits.get(Data.TRAIT_ANGEL));
+            traits.add(data.traits.get(TRAIT_ANGEL));
         if ((type & TB_ALIEN) != 0)
-            traits.add(data.traits.get(Data.TRAIT_ALIEN));
+            traits.add(data.traits.get(TRAIT_ALIEN));
         if ((type & TB_ZOMBIE) != 0)
-            traits.add(data.traits.get(Data.TRAIT_ZOMBIE));
+            traits.add(data.traits.get(TRAIT_ZOMBIE));
         if ((type & TB_RELIC) != 0)
-            traits.add(data.traits.get(Data.TRAIT_RELIC));
+            traits.add(data.traits.get(TRAIT_RELIC));
         if ((type & TB_WHITE) != 0)
-            traits.add(data.traits.get(Data.TRAIT_WHITE));
+            traits.add(data.traits.get(TRAIT_WHITE));
+        if ((type & TB_EVA) != 0)
+            traits.add(data.traits.get(TRAIT_EVA));
+        if ((type & TB_WITCH) != 0)
+            traits.add(data.traits.get(TRAIT_WITCH));
+        if ((type & TB_INFH) != 0)
+            traits.add(data.traits.get(TRAIT_INFH));
         return traits;
     }
 

@@ -50,9 +50,6 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		if (ints[18] == 1)
 			//Metal
 			traits.add(BCTraits.get(TRAIT_METAL));
-		if (ints[19] == 1)
-			//White
-			traits.add(BCTraits.get(TRAIT_WHITE));
 		if (ints[20] == 1)
 			//Angel
 			traits.add(BCTraits.get(TRAIT_ANGEL));
@@ -142,6 +139,9 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			if (ints[78] == 1)
 				//Relic
 				traits.add(BCTraits.get(TRAIT_RELIC));
+			if (ints[19] == 1)
+				//White
+				traits.add(BCTraits.get(TRAIT_WHITE));
 			if (ints[79] == 1)
 				proc.IMUCURSE.mult = 100;
 			if (ints[80] == 1)

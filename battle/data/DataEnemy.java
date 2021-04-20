@@ -48,9 +48,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if (ints[15] == 1)
 			//Metal
 			traits.add(BCTraits.get(TRAIT_METAL));
-		if (ints[16] == 1)
-			//White
-			traits.add(BCTraits.get(TRAIT_WHITE));
 		if (ints[17] == 1)
 			//Angel
 			traits.add(BCTraits.get(TRAIT_ANGEL));
@@ -133,6 +130,9 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if (ints[72] == 1)
 			//Relic
 			traits.add(BCTraits.get(TRAIT_RELIC));
+		if (ints[16] == 1)
+			//White
+			traits.add(BCTraits.get(TRAIT_WHITE));
 		proc.CURSE.prob = ints[73];
 		proc.CURSE.time = ints[74];
 		proc.SATK.prob = ints[75];
