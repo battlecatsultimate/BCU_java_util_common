@@ -242,7 +242,6 @@ public class Stage extends Data
 				if (temp.startsWith("0,"))
 					break;
 				String[] ss = temp.split(",");
-				System.out.println(temp+" | "+ss.length);
 				int[] data = new int[SCDef.SIZE];
 				for (int i = 0; i < intl; i++)
 					if(i < ss.length)
