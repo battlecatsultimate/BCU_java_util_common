@@ -10,7 +10,6 @@ import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.pack.Identifier;
-import common.pack.PackData;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -1467,9 +1466,8 @@ public abstract class Entity extends AbEntity {
 	}
 
 	public boolean targetTraited(ArrayList<Trait> targets) {
-		PackData.DefPack deft = UserProfile.getBCData();
 		ArrayList<Trait> temp = new ArrayList<>();
-		for (Trait t : deft.traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
+		for (Trait t : UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
 			if (t.id.id != TRAIT_METAL)
 				temp.add(t);
 		return targets.containsAll(temp);
