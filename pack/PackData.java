@@ -450,6 +450,8 @@ public abstract class PackData implements IndexContainer {
 			def = func.reduce(def, combos);
 		if (cls == LvRestrict.class)
 			def = func.reduce(def, lvrs);
+		if (cls == Combo.class)
+			def = func.reduce(def, combos);
 		return def;
 	}
 

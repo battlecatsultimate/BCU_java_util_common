@@ -105,7 +105,7 @@ public class LineUp extends Data {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (f.uid == form.uid)
+				if (f.unit == form.unit)
 					rem--;
 			}
 		return rem;
@@ -134,7 +134,7 @@ public class LineUp extends Data {
 				int formID = com[i].fid;
 				if (f == null)
 					continue;
-				if (f.uid == com[i].uid) {
+				if (f.unit == com[i].unit) {
 					rep[j] = true;
 					exi[i] = true;
 					if (f.fid < formID)
@@ -156,13 +156,13 @@ public class LineUp extends Data {
 			while (del > 0) {
 				Combo c = coms.remove(0);
 				for (int i = 0; i < c.forms.length; i++) {
-					if (c.forms[i].uid.id == -1)
+					if (c.forms[i] == null)
 						break;
 					for (int j = 0; j < 5; j++) {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (f.uid != c.forms[i].uid)
+						if (f.unit != c.forms[i].unit)
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -174,7 +174,7 @@ public class LineUp extends Data {
 		}
 		for (int i = 0; i < 5; i++)
 			for (Form form : com)
-				if (fs[1][i] != null && fs[1][i].uid == form.uid) {
+				if (fs[1][i] != null && fs[1][i].unit == form.unit) {
 					fs[1][i] = null;
 					break;
 				}
@@ -255,7 +255,7 @@ public class LineUp extends Data {
 			else if (loc[i] == 0) {
 				boolean b = true;
 				for (Form is : c.forms)
-					if (fs[0][i].uid == is.uid) {
+					if (fs[0][i].unit == is.unit) {
 						b = false;
 						break;
 					}
@@ -288,40 +288,40 @@ public class LineUp extends Data {
 		loc = new int[5];
 		for (PackData p : UserProfile.getAllPacks())
 			for (Combo c : p.combos) {
-					boolean b = true;
-					for (int i = 0; i < c.forms.length; i++) {
-						Form fu = c.forms[i];
-						if (fu.uid.id == -1)
+				boolean b = true;
+				for (int i = 0; i < c.forms.length; i++) {
+					Form fu = c.forms[i];
+					if (fu == null)
+						break;
+					boolean b0 = false;
+					for (int j = 0; j < 5; j++) {
+						Form f = fs[0][j];
+						if (f == null)
 							break;
-						boolean b0 = false;
-						for (int j = 0; j < 5; j++) {
-							Form f = fs[0][j];
-							if (f == null)
-								break;
-							if (f.uid != fu.uid || f.fid < fu.fid)
-								continue;
-							b0 = true;
-							break;
-						}
-						if (b0)
+						if (f.unit != fu.unit || f.fid < fu.fid)
 							continue;
-						b = false;
+						b0 = true;
 						break;
 					}
-					if (b) {
-						tcom.add(c);
-						inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
-						for (int i = 0; i < c.forms.length; i++)
-							for (int j = 0; j < 5; j++) {
-								Form fu = c.forms[i];
-								Form f = fs[0][j];
-								if (f == null)
-									continue;
-								if (f.uid == fu.uid && f.fid >= fu.fid)
-									loc[j]++;
-							}
-					}
+					if (b0)
+						continue;
+					b = false;
+					break;
 				}
+				if (b) {
+					tcom.add(c);
+					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
+					for (int i = 0; i < c.forms.length; i++)
+						for (int j = 0; j < 5; j++) {
+							Form fu = c.forms[i];
+							Form f = fs[0][j];
+							if (f == null)
+								continue;
+							if (f.unit == fu.unit && f.fid >= fu.fid)
+								loc[j]++;
+						}
+				}
+			}
 		for (int i = 0; i < coms.size(); i++)
 			if (!tcom.contains(coms.get(i))) {
 				coms.remove(i);

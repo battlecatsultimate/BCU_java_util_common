@@ -123,6 +123,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					}
 				}
 			}
+
 			add(9, id -> new StageMap(id, abbr + "0.csv", 1)).name = "EoC 1-3";
 			add(10, id -> new StageMap(id, abbr + "1_0_Z.csv", 2)).name = "ItF 1 Zombie";
 			add(11, id -> new StageMap(id, abbr + "2_2_Invasion.csv", 2)).name = "CotC 3 Invasion";

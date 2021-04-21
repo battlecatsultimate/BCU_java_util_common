@@ -1,7 +1,6 @@
 package common.util.unit;
 
 import common.CommonStatic;
-import common.io.json.FieldOrder;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -19,16 +18,15 @@ import java.util.Queue;
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public class Combo extends Data implements IndexContainer.Indexable<IndexContainer, Combo> {
+	
 	public static void readFile() {
 		CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
 		PackData.DefPack data = UserProfile.getBCData();
 		Queue<String> qs = VFile.readLine("./org/data/NyancomboData.csv");
 		int i = 0;
 		for (String str : qs) {
-			if (str.length() < 20) {
-				// data.combos.add(null);
+			if (str.length() < 20)
 				continue;
-			}
 			String[] strs = str.trim().split(",");
 			Combo c = new Combo(Identifier.parseInt(i++, Combo.class), strs);
 			if (c.show > 0)
@@ -58,19 +56,15 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 
 	@JsonClass.JCIdentifier
 	@JsonField
-	@FieldOrder.Order(0)
 	public Identifier<Combo> id;
 
 	@JsonField
-	@FieldOrder.Order(1)
 	public int lv, show, type;
 
 	@JsonField(alias = Form.FormJson.class)
-	@FieldOrder.Order(2)
 	public Form[] forms;
 
 	@JsonField
-	@FieldOrder.Order(3)
 	public String name;
 
 	@JsonClass.JCConstructor
