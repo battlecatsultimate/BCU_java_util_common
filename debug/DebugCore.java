@@ -455,15 +455,20 @@ public class DebugCore {
 
 	public static class StaticContainer implements Accessor {
 
-		public final List<StaticPointer> list = new ArrayList<>();
+		public final List<Entry> list = new ArrayList<>();
 
 		public StaticContainer(Class<?>... cls) {
 			for (Class<?> c : cls)
 				list.add(new StaticPointer(this, c));
 		}
 
+		public void setFocus(Object o) {
+			list.removeIf(e -> e instanceof SupplierEntry);
+			list.add(new SupplierEntry(this, "focus", () -> o));
+		}
+
 		@Override
-		public List<StaticPointer> getEntries() {
+		public List<? extends Entry> getEntries() {
 			return list;
 		}
 
@@ -598,6 +603,33 @@ public class DebugCore {
 			return parent;
 		}
 
+	}
+
+	public static StaticContainer DEBUG_LOCK = null;
+
+	/**
+	 * This method cannot be called by listeners, which are called through Event
+	 * Dispatch Threads.
+	 */
+	public static void sync_debug(Object o) {
+		if (DEBUG_LOCK == null)
+			return;
+		synchronized (DEBUG_LOCK) {
+			try {
+				if (o != null)
+					DEBUG_LOCK.setFocus(o);
+				DEBUG_LOCK.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void async_debug(Object o) {
+		if (DEBUG_LOCK == null)
+			return;
+		if (o != null)
+			DEBUG_LOCK.setFocus(o);
 	}
 
 }
