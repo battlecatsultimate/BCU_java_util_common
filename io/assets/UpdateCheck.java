@@ -18,6 +18,7 @@ import common.io.assets.UpdateCheck.UpdateJson.AssetJson;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.pack.Context;
+import common.pack.Context.ErrType;
 import common.pack.UserProfile;
 import common.io.json.JsonClass.NoTag;
 import common.util.Data;
@@ -31,7 +32,7 @@ public class UpdateCheck {
 
 	public static class Downloader {
 
-		public final String url;
+		public final String[] url;
 		public final File target;
 		public final File temp;
 		public final String desc;
@@ -39,7 +40,7 @@ public class UpdateCheck {
 
 		public Runnable post;
 
-		public Downloader(String url, File target, File temp, String desc, boolean direct) {
+		public Downloader(File target, File temp, String desc, boolean direct,String... url) {
 			this.url = url;
 			this.target = target;
 			this.temp = temp;
@@ -48,15 +49,25 @@ public class UpdateCheck {
 		}
 
 		public void run(Consumer<Double> prog) throws Exception {
-			if (target.exists())
-				target.delete();
 			if (temp.exists())
 				temp.delete();
-			WebFileIO.download(url, temp, prog, direct);
+			boolean success = false;
+			for (String u : url) {
+				try {
+					WebFileIO.download(u, temp, prog, direct);
+					success = true;
+					break;
+				} catch (Exception e) {
+					CommonStatic.ctx.printErr(ErrType.INFO, "failed to download " + u);
+				}
+			}
+			if (!success)
+				return;
 			if (!target.getParentFile().exists())
 				target.getParentFile().mkdirs();
+			if (target.exists())
+				target.delete();
 			temp.renameTo(target);
-
 			if (post != null) {
 				post.run();
 			}
@@ -107,15 +118,18 @@ public class UpdateCheck {
 	private static final String REG_REQLIB = "required_asset";
 
 	static {
-		addRequiredAssets("000001", "000002", "000003", "000004", "000005", "000006", "000007",
-				"000008", "000009", "090900", "091000", "091001", "100000",
-				"100002", "100100", "100102", "100103", "100104", "100200", "100201", "100203");
+		addRequiredAssets("000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009",
+				"090900", "091000", "091001", "100000", "100002", "100100", "100102", "100103", "100104", "100200",
+				"100201", "100203");
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
 	public static final String URL_RES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
+
+	public static final String ALT_RES = "https://gitee.com/lcy0x1/bcu-resources/raw/master/resources/";
+	public static final String ALT_NEW = "https://gitee.com/lcy0x1/bcu-assets/raw/master/assets/";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -138,9 +152,10 @@ public class UpdateCheck {
 			if (local.contains("asset_" + aj.id))
 				continue;
 			String url = URL_NEW + aj.id + ".asset.bcuzip";
+			String alt = ALT_NEW + aj.id + ".asset.bcuzip";
 			File temp = CommonStatic.ctx.getAssetFile("./assets/.asset.bcuzip.temp");
 			File target = CommonStatic.ctx.getAssetFile("./assets/" + aj.id + ".asset.bcuzip");
-			set.add(new Downloader(url, target, temp, aj.desc, false));
+			set.add(new Downloader(target, temp, aj.desc, false, url, alt));
 		}
 		return set;
 	}
@@ -173,7 +188,7 @@ public class UpdateCheck {
 				if (!dst.exists() || !cj.sha.equals(local.get(str))) {
 					File tmp = new File(path + ".temp");
 					String desc = "download language file " + str;
-					Downloader d = new Downloader(cj.download_url, dst, tmp, desc, true);
+					Downloader d = new Downloader(dst, tmp, desc, true, cj.download_url);
 					list.add(d);
 					d.post = () -> local.put(str, cj.sha);
 				}
@@ -198,7 +213,8 @@ public class UpdateCheck {
 				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
 				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
 				String url = URL_RES + "music/" + Data.trio(i) + ".ogg";
-				ans.add(new Downloader(url, target, temp, "music " + Data.trio(i), false));
+				String alt = ALT_RES + "music/" + Data.trio(i) + ".ogg";
+				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url, alt));
 			}
 		return ans;
 	}
@@ -212,9 +228,12 @@ public class UpdateCheck {
 			if (lib.exists())
 				for (File f : lib.listFiles())
 					str.remove(f.getName());
-			for (String s : str)
-				libs.add(new Downloader(URL_RES + "jar/BCU_lib/" + s, new File("./BCU_lib/" + s),
-						new File("./BCU_lib/.jar.temp"), "downloading BCU library " + s, false));
+			for (String s : str) {
+				String url = URL_RES + "jar/BCU_lib/" + s;
+				String alt = ALT_RES + "jar/BCU_lib/" + s;
+				libs.add(new Downloader(new File("./BCU_lib/" + s), new File("./BCU_lib/.jar.temp"),
+						"downloading BCU library " + s, false, url, alt));
+			}
 		}
 		return libs;
 	}

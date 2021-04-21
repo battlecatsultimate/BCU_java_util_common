@@ -105,11 +105,23 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(Data.hex(id), this);
 			name = "CH";
 			String abbr = "./org/stage/CH/stageNormal/stageNormal";
-			for (int i = 0; i < 3; i++) {
-				int I = i;
-				add(i, id -> new StageMap(id, abbr + "0_" + I + "_Z.csv", 1)).name = "EoC " + (i + 1) + " Zombie";
-				add(3 + i, id -> new StageMap(id, abbr + "1_" + I + ".csv", 2)).name = "ItF " + (i + 1);
-				add(6 + i, id -> new StageMap(id, abbr + "2_" + I + ".csv", 3)).name = "CotC " + (i + 1);
+			for(int j = 0; j < 3; j++) {
+				if(j == 0) {
+					for (int i = 0; i < 3; i++) {
+						int I = i;
+						add(i, id -> new StageMap(id, abbr + "0_" + I + "_Z.csv", 1)).name = "EoC " + (i + 1) + " Zombie";
+					}
+				} else if(j == 1) {
+					for (int i = 0; i < 3; i++) {
+						int I = i;
+						add(3 + i, id -> new StageMap(id, abbr + "1_" + I + ".csv", 2)).name = "ItF " + (i + 1);
+					}
+				} else {
+					for (int i = 0; i < 3; i++) {
+						int I = i;
+						add(6 + i, id -> new StageMap(id, abbr + "2_" + I + ".csv", 3)).name = "CotC " + (i + 1);
+					}
+				}
 			}
 			add(9, id -> new StageMap(id, abbr + "0.csv", 1)).name = "EoC 1-3";
 			add(10, id -> new StageMap(id, abbr + "1_0_Z.csv", 2)).name = "ItF 1 Zombie";

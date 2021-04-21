@@ -5,6 +5,9 @@ import common.battle.BasisLU;
 import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
 import common.util.pack.EffAnim.DefEff;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 public class ECastle extends AbEntity {
 
@@ -66,9 +69,7 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean targetable(int type) {
-		return true;
-	}
+	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) { return true; }
 
 	@Override
 	public int touchable() {

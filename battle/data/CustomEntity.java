@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +54,6 @@ public abstract class CustomEntity extends DataEntity {
 					all.getArr(i).set(adm.proc.getArr(i));
 		}
 		return all;
-	}
-
-	public Proc[] getAllProcs() {
-		int n = atks.length + 1;
-		Proc[] ans = new Proc[n];
-		ans[0] = rep.proc;
-		for (int i = 0; i < atks.length; i++)
-			ans[i + 1] = atks[i].proc;
-		return ans;
 	}
 
 	@Override
@@ -139,7 +131,7 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		type = de.getType();
+		traits = de.getTraits();
 		width = de.getWidth();
 		shield = de.getShield();
 		tba = de.getTBA();
@@ -215,6 +207,7 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
+
 		rep = new AtkDataModel(this, ce.rep);
 
 		List<AtkDataModel> temp = new ArrayList<>();
@@ -241,6 +234,10 @@ public abstract class CustomEntity extends DataEntity {
 		abi = is.nextInt();
 		type = is.nextInt();
 		type = Data.reorderTrait(type);
+		if (type != 0) {
+			traits = Trait.convertType(type);
+			type = 0;
+		}
 		width = is.nextInt();
 		shield = is.nextInt();
 		tba = is.nextInt();
@@ -264,5 +261,4 @@ public abstract class CustomEntity extends DataEntity {
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
 	}
-
 }

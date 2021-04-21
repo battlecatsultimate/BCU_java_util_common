@@ -16,12 +16,16 @@ import common.pack.PackData;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
+import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.lang.MultiLangCont;
+import main.MainBCU;
+import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -34,7 +38,6 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 		public int[][] evo;
 		public int[] price = new int[10];
-		public String[][] explanation;
 		public int type;
 
 		public void fillBuy(String[] strs) {
@@ -52,7 +55,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 			}
 		}
 
-		public String[] getExplanation() {
+		public String[] getCatfruitExplanation() {
 			String[] exp = MultiLangCont.getStatic().CFEXP.getCont(this);
 			if (exp != null)
 				return exp;
@@ -128,13 +131,14 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 	public List<Combo> allCombo() {
 		List<Combo> ans = new ArrayList<>();
-		for (Combo[] cs : CommonStatic.getBCAssets().combos)
-			for (Combo c : cs)
-				for (Form f : id.get().forms)
-					if (c.forms.containsValue(f)) {
-						ans.add(c);
-						break;
-					}
+		List<Combo> comboList = UserProfile.getBCData().combos.getList();
+		UserProfile.getUserPacks().forEach(p -> comboList.addAll(p.combos.getList()));
+		for (Combo c : comboList)
+			for (Form f : id.get().forms)
+				if (Arrays.stream(c.forms).anyMatch(form -> form.uid.compareTo(f.uid) == 0)) {
+					ans.add(c);
+					break;
+				}
 		return ans;
 	}
 
@@ -149,7 +153,8 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	}
 
 	public int getPrefLv() {
-		return max + (rarity < 2 ? maxp : 0);
+		double ans = MathUtil.clip(MainBCU.prefLevel,1, max) + (rarity < 2 && maxp > 0 ? ((MainBCU.prefLevel - 1) / 49.0) * maxp : 0);
+		return MathUtil.clip(Math.max(MainBCU.prefLevel,(int)ans),1,max + maxp);
 	}
 
 	public int[] getPrefLvs() {

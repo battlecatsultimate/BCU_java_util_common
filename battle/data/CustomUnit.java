@@ -7,6 +7,8 @@ import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 
+import java.util.ArrayList;
+
 @JsonClass
 public class CustomUnit extends CustomEntity implements MaskUnit {
 
@@ -23,7 +25,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		speed = 8;
 		hp = 1000;
 		hb = 1;
-		type = 0;
+		traits = new ArrayList<>();
 		price = 50;
 		resp = 60;
 		back = 0;

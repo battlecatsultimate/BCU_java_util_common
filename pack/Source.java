@@ -22,6 +22,7 @@ import common.util.stage.CastleImg;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.unit.Trait;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -360,7 +361,7 @@ public abstract class Source {
 			}
 		}
 
-		public void export(UserPack pack, String password, Consumer<Double> prog) throws Exception {
+		public void export(UserPack pack, String password, String parentPassword, Consumer<Double> prog) throws Exception {
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
 				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
@@ -392,7 +393,16 @@ public abstract class Source {
 			if (tar.exists())
 				Context.delete(tar);
 			Context.check(dst);
-			PackLoader.writePack(dst, src, pack.desc.clone(), password, prog);
+
+			PackData.PackDesc desc = pack.desc.clone();
+
+			if(parentPassword != null) {
+				desc.parentPassword = PackLoader.getMD5(parentPassword.getBytes(StandardCharsets.UTF_8), 16);
+			} else {
+				desc.parentPassword = null;
+			}
+
+			PackLoader.writePack(dst, src, desc, password, prog);
 			Context.renameTo(dst, tar);
 		}
 
@@ -402,6 +412,10 @@ public abstract class Source {
 
 		public File getCasFile(Identifier<CastleImg> id) {
 			return getFile("./" + CASTLE + "/" + Data.trio(id.id) + ".png");
+		}
+
+		public File getTraitIconFile(Identifier<Trait> id) {
+			return getFile("./" + TRAITICON + "/" + Data.trio(id.id) + ".png");
 		}
 
 		@Override
@@ -540,6 +554,7 @@ public abstract class Source {
 	public static final String CASTLE = "castles";
 	public static final String MUSIC = "musics";
 	public static final String REPLAY = "replays";
+	public static final String TRAITICON = "traitIcons";
 
 	public final String id;
 

@@ -5,6 +5,7 @@ import common.battle.entity.AbEntity;
 import common.battle.entity.Sniper;
 import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,14 +20,14 @@ public class AttackSimple extends AttackAb {
 	private final Set<AbEntity> attacked = new HashSet<>();
 	private final boolean range;
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, boolean isr,
-			MaskAtk matk, int layer, boolean isLongAtk, int duration) {
-		super(ent, ATK, t, eab, pro, p0, p1, matk, layer, isLongAtk, duration);
+	public AttackSimple(AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, double p0, double p1, boolean isr,
+						MaskAtk matk, int layer, boolean isLongAtk, int duration) {
+		super(ent, ATK, tr, eab, pro, p0, p1, matk, layer, isLongAtk, duration);
 		range = isr;
 	}
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk) {
-		this(ent, ATK, t, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
+	public AttackSimple(AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk) {
+		this(ent, ATK, tr, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}
@@ -43,7 +44,7 @@ public class AttackSimple extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.targetable(type))
+				if (e.ctargetable(trait, false))
 					capt.add(e);
 		if (!range) {
 			if (capt.size() == 0)
@@ -86,7 +87,7 @@ public class AttackSimple extends AttackAb {
 			double p0 = model.getPos() + dire * addp;
 			// generate a wave when hits somebody
 
-			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0, layer, true);
+			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE) , p0, layer, true);
 		}
 
 		if(capt.size() > 0 && proc.MINIWAVE.exists()) {
@@ -94,7 +95,6 @@ public class AttackSimple extends AttackAb {
 			int wid = dire == 1 ? W_E_WID : W_U_WID;
 			int addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2;
 			double p0 = model.getPos() + dire * addp;
-
 			new ContWaveDef(new AttackWave(this, p0, wid, WT_MINI), p0, layer, false);
 		}
 

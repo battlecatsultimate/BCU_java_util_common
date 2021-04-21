@@ -1007,15 +1007,15 @@ public class Data {
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK
 			{ 2, PC2_HP }, // 32: inc HP
-			{ 4, TB_RED, 0 }, // 33:
-			{ 4, TB_FLOAT, 0 }, // 34:
-			{ 4, TB_BLACK, 0 }, // 35: targeting black
-			{ 4, TB_METAL, 0 }, // 36:
-			{ 4, TB_ANGEL }, // 37: targeting angle
-			{ 4, TB_ALIEN }, // 38: targeting alien
-			{ 4, TB_ZOMBIE }, // 39: targeting zombie
-			{ 4, TB_RELIC }, // 40: targeting relic
-			{ 4, TB_WHITE, 0 }, // 41:
+			{ 4, TRAIT_RED, 0 }, // 33:
+			{ 4, TRAIT_FLOAT, 0 }, // 34:
+			{ 4, TRAIT_BLACK, 0 }, // 35: targeting black
+			{ 4, TRAIT_METAL, 0 }, // 36:
+			{ 4, TRAIT_ANGEL }, // 37: targeting angle
+			{ 4, TRAIT_ALIEN }, // 38: targeting alien
+			{ 4, TRAIT_ZOMBIE }, // 39: targeting zombie
+			{ 4, TRAIT_RELIC }, // 40: targeting relic
+			{ 4, TRAIT_WHITE, 0 }, // 41:
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
 			{ 3, P_IMUWEAK }, // 44: immune to weak

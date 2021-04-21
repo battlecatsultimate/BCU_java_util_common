@@ -1,9 +1,12 @@
 package common.battle.data;
 
 import common.CommonStatic;
+import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
@@ -30,26 +33,32 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		respawn = ints[7] * 2;
 		width = ints[9];
 		int t = 0;
+		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 		if (ints[10] == 1)
-			t |= TB_RED;
+			//Red
+			traits.add(BCTraits.get(TRAIT_RED));
 		isrange = ints[12] == 1;
 		pre = ints[13];
 		front = ints[14];
 		back = ints[15];
 		if (ints[16] == 1)
-			t |= TB_FLOAT;
+			//Floating
+			traits.add(BCTraits.get(TRAIT_FLOAT));
 		if (ints[17] == 1)
-			t |= TB_BLACK;
+			//Black
+			traits.add(BCTraits.get(TRAIT_BLACK));
 		if (ints[18] == 1)
-			t |= TB_METAL;
-		if (ints[19] == 1)
-			t |= TB_WHITE;
+			//Metal
+			traits.add(BCTraits.get(TRAIT_METAL));
 		if (ints[20] == 1)
-			t |= TB_ANGEL;
+			//Angel
+			traits.add(BCTraits.get(TRAIT_ANGEL));
 		if (ints[21] == 1)
-			t |= TB_ALIEN;
+			//Alien
+			traits.add(BCTraits.get(TRAIT_ALIEN));
 		if (ints[22] == 1)
-			t |= TB_ZOMBIE;
+			//Zombie
+			traits.add(BCTraits.get(TRAIT_ZOMBIE));
 		int a = 0;
 		if (ints[23] == 1)
 			a |= AB_GOOD;
@@ -128,7 +137,11 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			if (ints[77] == 1)
 				a |= AB_EKILL;
 			if (ints[78] == 1)
-				t |= TB_RELIC;
+				//Relic
+				traits.add(BCTraits.get(TRAIT_RELIC));
+			if (ints[19] == 1)
+				//White
+				traits.add(BCTraits.get(TRAIT_WHITE));
 			if (ints[79] == 1)
 				proc.IMUCURSE.mult = 100;
 			if (ints[80] == 1)

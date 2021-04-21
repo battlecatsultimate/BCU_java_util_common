@@ -4,8 +4,8 @@
         "full_name": "Knock Back",
         "tooltip": null,
         "format": [
-            "(prob)% chance to knock back with ",
-            "[(dis==0){default distance}(dis!=0){the distance of (dis)}] for ",
+            "(prob)% chance to knock back by ",
+            "[(dis==0){default distance}(dis!=0){(dis) distance away}] for ",
             "[(time==0){default duration}(time>0){(_dispTime(time))}]."
         ],
         "class": {
@@ -60,9 +60,9 @@
         "full_name": "Critical Hit",
         "tooltip": "deal more damage to enemies. See mult field for water cannon type attack.",
         "format": [
-            "(prob)% chance to critical",
+            "(prob)% chance to deal a critical hit",
             "[(mult>0&mult!=200){ that deals (mult)% damage to target}",
-            "(mult<0){ that deals the damage (_abs(mult))% of current health of target}]."
+            "(mult<0){ that deals (_abs(mult))% of metal entity's HP as damage}]."
         ],
         "class": {
             "prob": {
@@ -79,7 +79,7 @@
         "abbr_name": "wave",
         "full_name": "Wave",
         "tooltip": null,
-        "format": "(prob)% chance to create a Lv.(lv) wave",
+        "format": "(prob)% chance to create a Lv.(lv) wave attack",
         "class": {
             "prob": {
                 "name": "chance",
@@ -127,7 +127,7 @@
         "abbr_name": "warp",
         "full_name": "Warp",
         "tooltip": null,
-        "format": "(prob)% chance to warp target [(dis<0){front}(dis>=0){back}] for (_dispTime(time)) and distance of (_abs(dis))",
+        "format": "(prob)% chance to warp target [(dis<0){front}(dis>=0){back}] for (_dispTime(time)) to a distance of (_abs(dis))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -163,7 +163,7 @@
         "abbr_name": "inc. atk",
         "full_name": "Attack Up",
         "tooltip": null,
-        "format": "Attack increased to (mult)% after health dropped below (health)%",
+        "format": "Attack increased by (mult)% after health drops below (health)%",
         "class": {
             "health": {
                 "name": "health",
@@ -191,7 +191,7 @@
         "abbr_name": "burrow",
         "full_name": "Burrow",
         "tooltip": null,
-        "format": "Burrow [(count<0){infinite}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}] with the distance of (dis)",
+        "format": "Burrow [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}] through a distance of (dis)",
         "class": {
             "count": {
                 "name": "burrow count",
@@ -208,8 +208,8 @@
         "full_name": "Revive",
         "tooltip": "Basic Revive only includes first 3 parameter. Later parameters are used for Ranged Revive",
         "format": [
-            "Revive [(count<0){infinite}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}]",
-            " after (_dispTime(time)) with (health)% of max health.",
+            "Revive [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}]",
+            " after (_dispTime(time)) with (health)% of  max health.",
             "[(type.imu_zkill){ Immune to Zombie Killer ability.}]",
             "[(type.revive_others){ This ability will be applicable to other ",
             "[(type.revive_non_zombie){allies}]",
@@ -270,7 +270,7 @@
         "abbr_name": "imu. KB",
         "full_name": "Immune/Resist to KB",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Knockback[(mult<100&mult>0){ (_left)Reduces (mult)% of distance(_right)}(mult<0){ (_left)Increases distance (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Knockback[(mult<100&mult>0){ (_left)Reduces (mult)% of distance(_right)}(mult<0){ (_left)Increases distance by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -282,7 +282,7 @@
         "abbr_name": "imu. Stop",
         "full_name": "Immune/Resist to Stop",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Freeze[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases time (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Freeze[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -294,7 +294,7 @@
         "abbr_name": "imu. Slow",
         "full_name": "Immune/Resist to Slow",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Slow[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases time (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Slow[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -306,7 +306,7 @@
         "abbr_name": "imu. Wave",
         "full_name": "Immune/Resist to Wave",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Wave[(mult<100&mult>0){ (_left)Reduces (mult)% of damage(_right)}(mult<0){ (_left)Increases taken damage (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Wave[(mult<100&mult>0){ (_left)Reduces (mult)% of damage(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -318,7 +318,7 @@
         "abbr_name": "imu. Weak",
         "full_name": "Immune/Resist to Weak",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Weaken[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases time (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Weaken[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -330,7 +330,7 @@
         "abbr_name": "imu. Warp",
         "full_name": "Immune/Resist to Warp",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Warp[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases time (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Warp[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -342,7 +342,7 @@
         "abbr_name": "imu. Curse",
         "full_name": "Immune/Resist to Curse",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Curse[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases time (_abs(mult))% more(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Curse[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -366,7 +366,7 @@
         "abbr_name": "sniper",
         "full_name": "Sniper Style Knock Back",
         "tooltip": "This ability penetrates Knock Back Immunity",
-        "format": "(prob)% chance to knock back target with a sniper style",
+        "format": "(prob)% chance to deal sniper-styled knock back to target",
         "class": {
             "prob": {
                 "name": "chance",
@@ -393,7 +393,7 @@
     "SEAL": {
         "abbr_name": "seal",
         "full_name": "Seal",
-        "tooltip": "Seal will disable all abilities except Burrow, Metal, Suicide, Only-Attack, and basic Revive",
+        "tooltip": "Seal will disable all abilities except Burrow, Metal, Self-Destruct, Only-Attack, and basic Revive",
         "format": "(prob)% chance to seal target for (_dispTime(time)).",
         "class": {
             "prob": {
@@ -411,19 +411,19 @@
         "full_name": "Summon",
         "tooltip": null,
         "format": [
-            "(prob)% chance to summon entity (_entity(id)) after (_dispTime(time)). ",
-            "Summon with a buff of (mult)%[(!type.fix_buff){ relative to the buff of this entity}]. ",
-            "Summoned [(type.on_hit){for every target it hits}",
-            "(type.on_kill&!type.on_hit){for every target it kills}",
-            "(!type.on_kill&!type.on_hit){on this attack}] with a distance of (dis) units to ",
-            "[(type.on_kill|type.on_hit){the positions of the targets}",
-            "(!type.on_hit&!type.on_kill){the position of this entity}]. ",
-            "Summon is [(type.ignore_limit){not }]restricted by the stage entity limit. ",
+            "(prob)% chance to summon a (mult)% [(!type.fix_buff){(_left)relative to summoner's buff(_right) }](_entity(id)) after (_dispTime(time)), ",
+            "one summoned (dis) range away from ",
+            "[(type.on_kill|type.on_hit){each target}",
+            "(!type.on_hit&!type.on_kill){the summoner}] ",
+            "[(type.on_hit){hit}",
+            "(type.on_kill&!type.on_hit){killed}",
+            "(!type.on_kill&!type.on_hit){on this attack}], ",
+            "[(type.same_health){Summoned entities will have the same health as this entity, }]",
+            "and is[(type.ignore_limit){n't}] restricted by the stage entity limit. ",
             "Summoned entities will be in [(!type.random_layer){the same layer as this entity}",
             "(type.random_layer){a random layer}]. ",
             "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
-            " animation[(type.anim_type==3){ and disable burrow for summoned entities}].",
-            "[(type.same_health){ Summoned entities will have the same health as this entity.}]"
+            " animation[(type.anim_type==3){ and disable burrow for summoned entities}]."
         ],
         "class": {
             "prob": {
@@ -645,7 +645,7 @@
         "abbr_name": "Invi.",
         "full_name": "Invincibility",
         "tooltip": null,
-        "format": "(prob)% chance to invincibility for (_dispTime(time))",
+        "format": "(prob)% chance to gain invincibility for (_dispTime(time))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -661,7 +661,7 @@
         "abbr_name": "toxic",
         "full_name": "Toxic",
         "tooltip": null,
-        "format": "(prob)% chance to toxic (_left)Deals (mult)% of target's max health(_right)",
+        "format": "(prob)% chance to inflict toxic (_left)Deals (mult)% of target's max health(_right)",
         "class": {
             "prob": {
                 "name": "chance",
@@ -677,7 +677,7 @@
         "abbr_name": "surge",
         "full_name": "Surge",
         "tooltip": null,
-        "format": "(prob)% chance to surge attack for (_dispTime(time)) (_left)Created randomly between (dis_0) ~ (dis_1)(_right)",
+        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) (_left)Created within (dis_0) ~ (dis_1) range(_right)",
         "class": {
             "prob": {
                 "name": "chance",
@@ -775,7 +775,7 @@
         "abbr_name" : "mini-wave",
         "full_name" : "Mini-Wave",
         "tooltip" : "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
-        "format" : "(prob)% chance to (lv) lv. mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
+        "format" : "(prob)% chance to create a lv.(lv) mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
         "class" : {
             "prob" : {
                 "name" : "chance",

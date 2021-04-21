@@ -16,7 +16,6 @@ import common.util.anim.ImgCut;
 import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
 import common.util.stage.Music;
-import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
 
 import java.io.File;
@@ -63,8 +62,6 @@ public class CommonStatic {
 		// EffAnim
 		public final EffAnimStore effas = new EffAnimStore();
 
-		// Combo
-		public final Combo[][] combos = new Combo[Data.C_TOT][];
 		public final int[][] values = new int[Data.C_TOT][5];
 		public int[][] filter;
 
