@@ -255,7 +255,7 @@ public class LineUp extends Data {
 			else if (loc[i] == 0) {
 				boolean b = true;
 				for (Form is : c.forms)
-					if (fs[0][i].uid == is.uid)) {
+					if (fs[0][i].uid == is.uid) {
 						b = false;
 						break;
 					}
