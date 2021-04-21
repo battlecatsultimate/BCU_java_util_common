@@ -177,8 +177,8 @@ public class LineUp extends Data {
 			}
 		}
 		for (int i = 0; i < 5; i++)
-			for (int is = 0; i < com.length; i++)
-				if (fs[1][i] != null && eq(fs[1][i].uid, is)) {
+			for (int is = 0; is < com.length; is++)
+				if (fs[1][i] != null && eq(fs[1][i].uid, com[is].uid.id)) {
 					fs[1][i] = null;
 					break;
 				}
