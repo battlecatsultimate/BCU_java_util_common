@@ -20,10 +20,6 @@ import java.util.TreeMap;
 @JsonClass
 public class LineUp extends Data {
 
-	public static boolean eq(Identifier<Unit> id, Identifier<Unit> com) {
-		return id == com;
-	}
-
 	@JsonField(generic = { Identifier.class, Level.class })
 	public final TreeMap<Identifier<Unit>, Level> map = new TreeMap<>();
 
@@ -109,7 +105,7 @@ public class LineUp extends Data {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (eq(f.uid, form.uid))
+				if (f.uid == form.uid)
 					rem--;
 			}
 		return rem;
@@ -135,11 +131,10 @@ public class LineUp extends Data {
 		for (int i = 0; i < com.length; i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = fs[0][j];
-				Identifier<Unit> unitID = com[i].uid;
 				int formID = com[i].fid;
 				if (f == null)
 					continue;
-				if (eq(f.uid, unitID)) {
+				if (f.uid == com[i].uid) {
 					rep[j] = true;
 					exi[i] = true;
 					if (f.fid < formID)
@@ -167,7 +162,7 @@ public class LineUp extends Data {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (!eq(f.uid, c.forms[i].uid))
+						if (f.uid != c.forms[i].uid)
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -179,7 +174,7 @@ public class LineUp extends Data {
 		}
 		for (int i = 0; i < 5; i++)
 			for (Form form : com)
-				if (fs[1][i] != null && eq(fs[1][i].uid, form.uid)) {
+				if (fs[1][i] != null && fs[1][i].uid == form.uid) {
 					fs[1][i] = null;
 					break;
 				}
@@ -260,7 +255,7 @@ public class LineUp extends Data {
 			else if (loc[i] == 0) {
 				boolean b = true;
 				for (Form is : c.forms)
-					if (eq(fs[0][i].uid, is.uid)) {
+					if (fs[0][i].uid == is.uid)) {
 						b = false;
 						break;
 					}
@@ -303,7 +298,7 @@ public class LineUp extends Data {
 							Form f = fs[0][j];
 							if (f == null)
 								break;
-							if (!eq(f.uid, fu.uid) || f.fid < fu.fid)
+							if (f.uid != fu.uid || f.fid < fu.fid)
 								continue;
 							b0 = true;
 							break;
@@ -322,7 +317,7 @@ public class LineUp extends Data {
 								Form f = fs[0][j];
 								if (f == null)
 									continue;
-								if (eq(f.uid, fu.uid) && f.fid >= fu.fid)
+								if (f.uid == fu.uid && f.fid >= fu.fid)
 									loc[j]++;
 							}
 					}

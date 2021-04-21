@@ -209,15 +209,13 @@
     "format": [
       "倒された(_dispTime(time))後に体力(health)%で蘇生[(count<0){無制限}(count>=0){(count)}]回。",
       "[(type.imu_zkill){(_left)無効ゾンビキラー(_right)}]",
-      "[(type.revive_others){ This ability will be applicable to other ",
-      "[(type.revive_non_zombie){allies}]",
-      "[(!type.revive_non_zombie){zombie allies}] ",
-      "[(type.range_type>=2){that once being }]",
-      "in the range of (dis_0)~(dis_1) ",
-      "[(type.range_type==0){when this entity is on the stage and walking/waiting/attacking}]",
-      "[(type.range_type==1){when this entity is present on the stage}]",
-      "[(type.range_type==2){as long as this entity is present on the stage}]",
-      "[(type.range_type==3){effective forever}].}]"
+      "[(type.revive_others){(_left)",
+      "[(type.revive_non_zombie){この能力は他の味方に適用できます}(!type.revive_non_zombie){この能力は他のゾンビ仲間に適用できます}]",
+      "[(type.range_type>=2){から(dis_0)~(dis_1)の範囲にあるもの }]",
+      "[(type.range_type==0){ステージ上でアクティブな状態で}]",
+      "[(type.range_type==1){ステージ上で生きている間に}]",
+      "[(type.range_type==2){ステージ上でこのエンティティ}]",
+      "[(type.range_type==3){この実体から(dis_0)~(dis_1)の範囲にある間は永遠に。}].}]"
     ],
     "class": {
       "count": {
@@ -233,34 +231,34 @@
         "tooltip": "蘇生後の体力はパーセンテージで測定されます"
       },
       "dis_0": {
-        "name": "point 0",
-        "tooltip": "advanced: ranged revive point 0. Applicable only when revive others is enabled"
+        "name": "最小有効距離",
+        "tooltip": "リモートリバイブの最小有効範囲です。他の人の蘇生を有効にしている場合のみ適用されます（アドバンスド）"
       },
       "dis_1": {
-        "name": "point 1",
-        "tooltip": "advanced: ranged revive point 1. Applicable only when revive others is enabled"
+        "name": "最大有効距離",
+        "tooltip": "リモートリバイブの最大有効範囲です。他の人の蘇生を有効にしている場合のみ適用されます（アドバンスド）"
       },
       "type.range_type": {
-        "name": "range type",
+        "name": "リモートリバイバルタイプ",
         "tooltip": [
-          "Applicable only when revive others is enabled",
-          "0 for effective in range when in normal state. ",
-          "1 for effective in range when present on the stage. ",
-          "2 for effective for allies once passed the range as long as it is on the stage. ",
-          "3 for effective for allies once passed the range forever"
+          "0 = ステージ上での活動中に効果を発揮します。",
+          "1 = ステージ上で生きている間は効果的。",
+          "2 = エンティティがステージ上にあるときに効果を発揮します。",
+          "3 = 永遠に有効。",
+          " （アドバンスド）"
         ]
       },
       "type.imu_zkill": {
         "name": "無効ゾンビキラー",
-        "tooltip": "immune to Zombie Killer ability"
+        "tooltip": "ゾンビキラー能力への免疫"
       },
       "type.revive_non_zombie": {
-        "name": "non-zombie",
-        "tooltip": "revive non-zombie as well. Applicable only when revive others is enabled"
+        "name": "ゾンビではない味方の復活",
+        "tooltip": "ゾンビではない味方も復活させることができます（アドバンスド）"
       },
       "type.revive_others": {
-        "name": "revive others",
-        "tooltip": "toggle point for advanced range revive feature"
+        "name": "リモートリバイバル",
+        "tooltip": "高度なリモートリバイバル機能のトグルオプション"
       }
     }
   },
@@ -304,7 +302,7 @@
     "abbr_name": "無効波動",
     "full_name": "無効/遅くする耐性",
     "tooltip": null,
-    "format": "[(mult==100){無効}]波動[(mult<100&mult>0){ (_left)Reduces (mult)% of damage(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+    "format": "[(mult==100){無効}]波動[(mult<100&mult>0){ (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){ (_left)受けるダメージが(_abs(mult))%減少する(_right)}]",
     "class": {
       "mult": {
         "name": "確率",
@@ -349,22 +347,22 @@
     }
   },
   "IMUSUMMON": {
-    "abbr_name": "imu. Summon",
-    "full_name": "Immune/Resistant to Summon",
+    "abbr_name": "無効召喚",
+    "full_name": "無効/召喚耐性",
     "tooltip": null,
-    "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon[(mult<100&mult>0){ (_left)Reduces (mult)% of summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}]",
+    "format": "[(mult==100){無効}]「オンヒット」と「オンキル」召喚[(mult<100&mult>0){ (_left)召喚された実体の強さを(mult)%減少させる(_right)}(mult<0){ (_left)召喚された実体は(_abs(mult))%強くなる(_right)}]",
     "class": {
       "mult": {
         "name": "確率",
-        "tooltip": "Only applies to On Hit and On Kill summon."
+        "tooltip": "「オンヒット」と「オンキル」の召喚にのみ適用されます。"
       }
     }
   },
   "SNIPER": {
     "abbr_name": "スナイプ",
     "full_name": "スナイプふっとばす",
-    "tooltip": "This ability penetrates Knock Back Immunity",
-    "format": "(prob)% chance to deal sniper-styled knock back to target",
+    "tooltip": "この能力は「無効ふっとばす」を無視する。",
+    "format": "(prob)%の確率でターゲットをスナイプする。",
     "class": {
       "prob": {
         "name": "確率",
@@ -373,13 +371,13 @@
     }
   },
   "TIME": {
-    "abbr_name": "time",
-    "full_name": "Stop Time",
+    "abbr_name": "時間凍結",
+    "full_name": "時間凍結",
     "tooltip": "Unlike Stop, this ability freezes everything including waves, money gain, cat and enemy cool down, etc",
     "format": "(prob)% chance to stop time for (_dispTime(time))",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
@@ -389,24 +387,24 @@
     }
   },
   "SEAL": {
-    "abbr_name": "seal",
-    "full_name": "Seal",
-    "tooltip": "Seal will disable all abilities except Burrow, Metal, Self-Destruct, Only-Attack, and basic Revive",
-    "format": "(prob)% chance to seal target for (_dispTime(time)).",
+    "abbr_name": "封印",
+    "full_name": "封印の呪い",
+    "tooltip": "封印することで、ユニットのあらゆる能力が削除される（地下移動、メタル、自爆、みに攻撃、蘇生を除く（遠隔蘇生の効果は削除される））。",
+    "format": "(prob)%の確率で(_dispTime(time))封印の呪い",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "duration",
+        "name": "期限",
         "tooltip": null
       }
     }
   },
   "SUMMON": {
-    "abbr_name": "SUMMON",
-    "full_name": "Summon",
+    "abbr_name": "召喚",
+    "full_name": "召喚",
     "tooltip": null,
     "format": [
       "(prob)% chance to summon a (mult)% [(!type.fix_buff){(_left)relative to summoner's buff(_right) }](_entity(id)) after (_dispTime(time)), ",
@@ -425,7 +423,7 @@
     ],
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "id": {
@@ -433,15 +431,15 @@
         "tooltip": null
       },
       "dis": {
-        "name": "distance",
+        "name": "距離",
         "tooltip": "Distance from this entity by default, distance from the target if on hit or on kill is enabled"
       },
       "mult": {
-        "name": "buff",
+        "name": "強さ倍率",
         "tooltip": "Buff of the summoned entity, relative to this entity by default, fixed buff if you enable fix buff"
       },
       "type.anim_type": {
-        "name": "summon anim",
+        "name": "アニメーション",
         "tooltip": [
           "summon animation, 0 for no animation, 1 for warp animation,",
           " 2 for burrow animation, 3 for burrow animation and disable further burrow.",
@@ -468,7 +466,7 @@
         "tooltip": "By default, summoned entity will have the same layer as this entity. Enable this to make the layer randomized."
       },
       "type.on_hit": {
-        "name": "on hit",
+        "name": "オンヒット",
         "tooltip": [
           "Summon if and only if this attack hits targets.",
           " Summon per target attacked, distance origins are set to the targets' positions.",
@@ -476,7 +474,7 @@
         ]
       },
       "type.on_kill": {
-        "name": "on kill",
+        "name": "オンキル",
         "tooltip": [
           "Summon if and only if this attack kills targets.",
           " Summon per target killed, distance origins are set to the targets' positions.",
