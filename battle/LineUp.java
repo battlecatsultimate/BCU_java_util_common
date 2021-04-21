@@ -176,11 +176,17 @@ public class LineUp extends Data {
 			}
 		}
 		for (int i = 0; i < 5; i++)
-			for (int is : com.keySet())
-				if (fs[1][i] != null && eq(fs[1][i].uid, is)) {
+			for (int is : com.keySet()) {
+				Form f = com.get(is);
+
+				if (f == null)
+					continue;
+
+				if (fs[1][i] != null && eq(fs[1][i].uid, f.uid.id)) {
 					fs[1][i] = null;
 					break;
 				}
+			}
 		arrange();
 		int emp = 0;
 		for (int i = 0; i < 10; i++)
