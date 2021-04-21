@@ -194,7 +194,7 @@
     "class": {
       "count": {
         "name": "地下運動の数",
-        "tooltip": "enter -1 for infinite times"
+        "tooltip": "-1を入力して、無限の回数をトリガーします"
       },
       "dis": {
         "name": "射程",
@@ -203,13 +203,12 @@
     }
   },
   "REVIVE": {
-    "abbr_name": "revive",
-    "full_name": "Revive",
-    "tooltip": "Basic Revive only includes first 3 parameter. Later parameters are used for Ranged Revive",
+    "abbr_name": "蘇生",
+    "full_name": "蘇生",
+    "tooltip": "基本的な蘇生法には、最初の3つのパラメーターのみが含まれます。後のパラメータは、遠隔蘇生法に使用されます。",
     "format": [
-      "Revive [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}]",
-      " after (_dispTime(time)) with (health)% of  max health.",
-      "[(type.imu_zkill){ Immune to Zombie Killer ability.}]",
+      "倒された(_dispTime(time))後に体力(health)%で蘇生[(count<0){無制限}(count>=0){(count)}]回。",
+      "[(type.imu_zkill){(_left)無効ゾンビキラー(_right)}]",
       "[(type.revive_others){ This ability will be applicable to other ",
       "[(type.revive_non_zombie){allies}]",
       "[(!type.revive_non_zombie){zombie allies}] ",
@@ -222,16 +221,16 @@
     ],
     "class": {
       "count": {
-        "name": "revive count",
-        "tooltip": "enter -1 for infinite times"
+        "name": "蘇生数",
+        "tooltip": "-1を入力して、無限の回数をトリガーします"
       },
       "time": {
-        "name": "delay",
+        "name": "遅延",
         "tooltip": null
       },
       "health": {
-        "name": "health",
-        "tooltip": "health in percent after revive"
+        "name": "体力",
+        "tooltip": "蘇生後の体力はパーセンテージで測定されます"
       },
       "dis_0": {
         "name": "point 0",
@@ -252,7 +251,7 @@
         ]
       },
       "type.imu_zkill": {
-        "name": "imu. ZKill",
+        "name": "無効ゾンビキラー",
         "tooltip": "immune to Zombie Killer ability"
       },
       "type.revive_non_zombie": {
@@ -326,10 +325,10 @@
     }
   },
   "IMUWARP": {
-    "abbr_name": "imu. Warp",
-    "full_name": "Immune/Resist to Warp",
+    "abbr_name": "無効ワープ",
+    "full_name": "無効/ワープ耐性",
     "tooltip": null,
-    "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Warp[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+    "format": "[(mult==100){無効}]ワープ[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
         "name": "確率",
@@ -338,10 +337,10 @@
     }
   },
   "IMUCURSE": {
-    "abbr_name": "imu. Curse",
-    "full_name": "Immune/Resist to Curse",
+    "abbr_name": "無効呪い",
+    "full_name": "無効/古代の呪い耐性",
     "tooltip": null,
-    "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Curse[(mult<100&mult>0){ (_left)Reduces (mult)% of time(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+    "format": "[(mult==100){無効}]古代の呪い[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
         "name": "確率",
@@ -362,8 +361,8 @@
     }
   },
   "SNIPER": {
-    "abbr_name": "sniper",
-    "full_name": "Sniper Style Knock Back",
+    "abbr_name": "スナイプ",
+    "full_name": "スナイプふっとばす",
     "tooltip": "This ability penetrates Knock Back Immunity",
     "format": "(prob)% chance to deal sniper-styled knock back to target",
     "class": {

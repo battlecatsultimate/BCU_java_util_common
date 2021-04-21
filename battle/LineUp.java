@@ -7,6 +7,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.*;
@@ -19,8 +20,8 @@ import java.util.TreeMap;
 @JsonClass
 public class LineUp extends Data {
 
-	public static boolean eq(Identifier<Unit> id, int com) {
-		return id.pack.equals(Identifier.DEF) && id.id == com;
+	public static boolean eq(Identifier<Unit> id, Identifier<Unit> com) {
+		return id == com;
 	}
 
 	@JsonField(generic = { Identifier.class, Level.class })
@@ -108,7 +109,7 @@ public class LineUp extends Data {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (eq(f.uid, form.uid.id))
+				if (eq(f.uid, form.uid))
 					rem--;
 			}
 		return rem;
@@ -134,7 +135,7 @@ public class LineUp extends Data {
 		for (int i = 0; i < com.length; i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = fs[0][j];
-				int unitID = com[i].uid.id;
+				Identifier<Unit> unitID = com[i].uid;
 				int formID = com[i].fid;
 				if (f == null)
 					continue;
@@ -166,7 +167,7 @@ public class LineUp extends Data {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (!eq(f.uid, c.forms[i].uid.id))
+						if (!eq(f.uid, c.forms[i].uid))
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -177,8 +178,8 @@ public class LineUp extends Data {
 			}
 		}
 		for (int i = 0; i < 5; i++)
-			for (int is = 0; is < com.length; is++)
-				if (fs[1][i] != null && eq(fs[1][i].uid, com[is].uid.id)) {
+			for (Form form : com)
+				if (fs[1][i] != null && eq(fs[1][i].uid, form.uid)) {
 					fs[1][i] = null;
 					break;
 				}
@@ -259,7 +260,7 @@ public class LineUp extends Data {
 			else if (loc[i] == 0) {
 				boolean b = true;
 				for (Form is : c.forms)
-					if (eq(fs[0][i].uid, is.uid.id)) {
+					if (eq(fs[0][i].uid, is.uid)) {
 						b = false;
 						break;
 					}
@@ -290,41 +291,42 @@ public class LineUp extends Data {
 		List<Combo> tcom = new ArrayList<>();
 		inc = new int[C_TOT];
 		loc = new int[5];
-		for (Combo c : UserProfile.getBCData().combos) {
-				boolean b = true;
-				for (int i = 0; i < c.forms.length; i++) {
-					Form fu = c.forms[i];
-					if (fu.uid.id == -1)
-						break;
-					boolean b0 = false;
-					for (int j = 0; j < 5; j++) {
-						Form f = fs[0][j];
-						if (f == null)
+		for (PackData p : UserProfile.getAllPacks())
+			for (Combo c : p.combos) {
+					boolean b = true;
+					for (int i = 0; i < c.forms.length; i++) {
+						Form fu = c.forms[i];
+						if (fu.uid.id == -1)
 							break;
-						if (!eq(f.uid, fu.uid.id) || f.fid < fu.fid)
-							continue;
-						b0 = true;
-						break;
-					}
-					if (b0)
-						continue;
-					b = false;
-					break;
-				}
-				if (b) {
-					tcom.add(c);
-					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
-					for (int i = 0; i < c.forms.length; i++)
+						boolean b0 = false;
 						for (int j = 0; j < 5; j++) {
-							Form fu = c.forms[i];
 							Form f = fs[0][j];
 							if (f == null)
+								break;
+							if (!eq(f.uid, fu.uid) || f.fid < fu.fid)
 								continue;
-							if (eq(f.uid, fu.uid.id) && f.fid >= fu.fid)
-								loc[j]++;
+							b0 = true;
+							break;
 						}
+						if (b0)
+							continue;
+						b = false;
+						break;
+					}
+					if (b) {
+						tcom.add(c);
+						inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
+						for (int i = 0; i < c.forms.length; i++)
+							for (int j = 0; j < 5; j++) {
+								Form fu = c.forms[i];
+								Form f = fs[0][j];
+								if (f == null)
+									continue;
+								if (eq(f.uid, fu.uid) && f.fid >= fu.fid)
+									loc[j]++;
+							}
+					}
 				}
-			}
 		for (int i = 0; i < coms.size(); i++)
 			if (!tcom.contains(coms.get(i))) {
 				coms.remove(i);

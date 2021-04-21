@@ -18,6 +18,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	public Identifier<Soul> death;
 	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> traits = new ArrayList<>();
+	//Despite traits being restructured, type was left here to guarantee that traits can be transferred from the old trait structure to the new trait structure
 
 	@Override
 	public int getAbi() {

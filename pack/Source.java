@@ -361,7 +361,7 @@ public abstract class Source {
 			}
 		}
 
-		public void export(UserPack pack, String password, Consumer<Double> prog) throws Exception {
+		public void export(UserPack pack, String password, String parentPassword, Consumer<Double> prog) throws Exception {
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
 				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
@@ -393,7 +393,16 @@ public abstract class Source {
 			if (tar.exists())
 				Context.delete(tar);
 			Context.check(dst);
-			PackLoader.writePack(dst, src, pack.desc.clone(), password, prog);
+
+			PackData.PackDesc desc = pack.desc.clone();
+
+			if(parentPassword != null) {
+				desc.parentPassword = PackLoader.getMD5(parentPassword.getBytes(StandardCharsets.UTF_8), 16);
+			} else {
+				desc.parentPassword = null;
+			}
+
+			PackLoader.writePack(dst, src, desc, password, prog);
 			Context.renameTo(dst, tar);
 		}
 

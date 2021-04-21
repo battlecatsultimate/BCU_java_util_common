@@ -529,7 +529,7 @@ public abstract class VerFixer extends Source {
 						Workspace w = new Workspace(".temp_" + p.id);
 						p.data.source = w;
 						w.save(p.data);
-						w.export(p.data, p.data.desc.author, (d) -> {
+						w.export(p.data, p.data.desc.author, null, (d) -> {
 						});
 						File src = CommonStatic.ctx.getWorkspaceFile("./.temp_" + p.id);
 						Context.delete(src);
