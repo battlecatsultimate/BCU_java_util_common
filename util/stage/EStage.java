@@ -39,7 +39,7 @@ public class EStage extends BattleObj {
 
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
-			if (inHealth(data) && s.data.allow(b, data.group) && rem[i] == 0 && num[i] != -1) {
+			if (inHealth(data) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] == 0 && num[i] != -1) {
 				if(!s.trail && data.respawn_0 >= data.respawn_1)
 					rem[i] = data.respawn_0;
 				else

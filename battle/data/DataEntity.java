@@ -13,8 +13,8 @@ import common.util.unit.Trait;
 public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;
-	public int abi, type = 0, width;
-	public int loop = -1, shield;
+	public int abi, type, width;
+	public int loop = -1, shield, will;
 	public Identifier<Soul> death;
 	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> traits = new ArrayList<>();
@@ -68,6 +68,11 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	@Override
 	public int getWidth() {
 		return width;
+	}
+
+	@Override
+	public int getWill() {
+		return will;
 	}
 
 }

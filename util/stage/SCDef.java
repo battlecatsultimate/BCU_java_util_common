@@ -146,13 +146,13 @@ public class SCDef implements Copable<SCDef> {
 	public int allow(StageBasis sb, AbEnemy e) {
 		Integer o = smap.get(e.getID());
 		o = o == null ? sdef : o;
-		if (allow(sb, o))
+		if (allow(sb, o, e))
 			return o;
 		return -1;
 	}
 
-	public boolean allow(StageBasis sb, int val) {
-		if (sb.entityCount(1) >= sb.st.max)
+	public boolean allow(StageBasis sb, int val, AbEnemy en) {
+		if (sb.entityCount(1) >= sb.st.max - ((Enemy)en).de.getWill())
 			return false;
 		if (val < 0 || val > 1000 || sub.get(val) == null)
 			return true;

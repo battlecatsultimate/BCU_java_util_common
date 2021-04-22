@@ -15,9 +15,7 @@ import common.util.pack.EffAnim.DefEff;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
-import common.util.unit.EForm;
-import common.util.unit.EneRand;
-import common.util.unit.Form;
+import common.util.unit.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -137,18 +135,19 @@ public class StageBasis extends BattleObj {
 	public int entityCount(int d) {
 		int ans = 0;
 		if (ebase instanceof EEnemy)
-			ans++;
-		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire == d)
-				ans++;
+			ans += ((EEnemy)ebase).data.getWill() + 1;
+		for (Entity ent : le) {
+			if (ent.dire == d)
+				ans += ent.data.getWill() + 1;
+		}
 		return ans;
 	}
 
 	public int entityCount(int d, int g) {
 		int ans = 0;
-		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire == d && le.get(i).group == g)
-				ans++;
+		for (Entity ent : le)
+			if (ent.dire == d && ent.group == g)
+				ans += ent.data.getWill() + 1;
 		return ans;
 	}
 
@@ -278,7 +277,7 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 		if (locks[i][j] || boo) {
-			if (entityCount(-1) >= max_num) {
+			if (entityCount(-1) >= max_num - b.lu.efs[i][j].du.getWill()) {
 				if(boo) {
 					CommonStatic.setSE(SE_SPEND_FAIL);
 				}

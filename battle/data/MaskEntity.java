@@ -71,6 +71,8 @@ public interface MaskEntity extends BattleStatic {
 
 	int getSpeed();
 
+	int getWill();
+
 	/**
 	 * get waiting time
 	 */
