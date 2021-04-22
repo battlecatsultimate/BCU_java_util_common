@@ -1465,7 +1465,7 @@ public abstract class Entity extends AbEntity {
 		return false;
 	}
 
-	public boolean targetTraited(ArrayList<Trait> targets) {
+	public static boolean targetTraited(ArrayList<Trait> targets) {
 		ArrayList<Trait> temp = new ArrayList<>();
 		for (Trait t : UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
 			if (t.id.id != TRAIT_METAL)

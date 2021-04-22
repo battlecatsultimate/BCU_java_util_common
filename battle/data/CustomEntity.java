@@ -131,7 +131,7 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		traits = de.getTraits();
+		traits = new ArrayList<>(de.getTraits());
 		width = de.getWidth();
 		shield = de.getShield();
 		tba = de.getTBA();
