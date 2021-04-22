@@ -17,14 +17,9 @@ import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
 import common.util.unit.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class StageBasis extends BattleObj {
-
-	public static boolean testing = true;
 
 	public final BasisLU b;
 	public final Stage st;
@@ -329,6 +324,7 @@ public class StageBasis extends BattleObj {
 				if (e != null) {
 					e.added(1, e.mark == 1 ? 801 : 700);
 					le.add(e);
+					le.sort(Comparator.comparingInt(o -> o.layer));
 
 					if(st.minSpawn <= 0 || st.maxSpawn <= 0)
 						respawnTime = 1;
