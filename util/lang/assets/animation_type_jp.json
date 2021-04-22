@@ -1,0 +1,68 @@
+{
+  "KBEff": {
+    "SW": "shock wave",
+    "ASS": "sniper",
+    "KB": "knock back"
+  },
+  "UType": {
+    "BURROW_UP": "埋葬終了",
+    "BURROW_MOVE": "地下移動",
+    "IDLE": "アイドル",
+    "HB": "KB",
+    "BURROW_DOWN": "埋葬",
+    "ENTER": "到着",
+    "ATK": "攻撃",
+    "WALK": "徒歩"
+  },
+  "VolcEff": {
+    "DURING": "on",
+    "START": "start",
+    "END": "end"
+  },
+  "ArmorEff": {
+    "BUFF": "buff",
+    "DEBUFF": "debuff"
+  },
+  "SpeedEff": {
+    "UP": "increase",
+    "DOWN": "decrease"
+  },
+  "WaveType": {
+    "DEF": "デフォルト"
+  },
+  "WeakUpEff": {
+    "UP": "increase"
+  },
+  "WarpEff": {
+    "ENTER": "enter",
+    "EXIT": "exit"
+  },
+  "NyType": {
+    "BASE": "base",
+    "ATK": "攻撃",
+    "EXT": "extra"
+  },
+  "BarrierEff": {
+    "DESTR": "destroy",
+    "BREAK": "break",
+    "NONE": "default"
+  },
+  "BGWvType": {
+    "ENEMY": "enemy wave",
+    "UNIT": "unit wave"
+  },
+  "ZombieEff": {
+    "DOWN": "knock down",
+    "REVIVE": "revive"
+  },
+  "SoulType": {
+    "DEF": "デフォルト"
+  },
+  "SniperEff": {
+    "IDLE": "アイドル",
+    "ATK": "攻撃"
+  },
+  "DefEff": {
+    "DEF": "デフォルト"
+  }
+}

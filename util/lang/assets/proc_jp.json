@@ -5,7 +5,7 @@
     "tooltip": null,
     "format": [
       "(prob)%の確率で[(time>0&time!=11){(_dispTime(time))}]",
-      "ふっとばす[(dis>0&dis!=165){(dis)距離後方}(dis<0){距離前方}}]"
+      "ふっとばす[(dis>0&dis!=165){(dis)距離後方}(dis<0){距離前方}]"
     ],
     "class": {
       "prob": {
@@ -159,8 +159,8 @@
     }
   },
   "STRONG": {
-    "abbr_name": "inc. atk",
-    "full_name": "Attack Up",
+    "abbr_name": "攻撃力上昇",
+    "full_name": "攻撃力上昇",
     "tooltip": null,
     "format": "体力(health)％以下で(mult)%攻撃力上昇",
     "class": {
@@ -373,15 +373,15 @@
   "TIME": {
     "abbr_name": "時間凍結",
     "full_name": "時間凍結",
-    "tooltip": "Unlike Stop, this ability freezes everything including waves, money gain, cat and enemy cool down, etc",
-    "format": "(prob)% chance to stop time for (_dispTime(time))",
+    "tooltip": "ストップとは違い、この能力は波動、マネーゲイン、ネコや敵のクールダウンなど全てを凍結させます。",
+    "format": "(prob)%の確率で(_dispTime(time))停止時間",
     "class": {
       "prob": {
         "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "duration",
+        "name": "期限",
         "tooltip": null
       }
     }
@@ -503,7 +503,7 @@
     ],
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "speed": {
@@ -538,11 +538,11 @@
     ],
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "time",
+        "name": "期限",
         "tooltip": "time until background switch back"
       },
       "id": {
@@ -569,11 +569,11 @@
     ],
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "time",
+        "name": "期限",
         "tooltip": null
       },
       "damage": {
@@ -601,7 +601,7 @@
     "format": "(prob)% chance to boss wave",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       }
     }
@@ -628,7 +628,7 @@
     "format": "(prob)% chance to savage blow (_left)Gives (mult)% more damage(_right)",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "mult": {
@@ -644,11 +644,11 @@
     "format": "(prob)% chance to gain invincibility for (_dispTime(time))",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "duration",
+        "name": "期限",
         "tooltip": null
       }
     }
@@ -660,7 +660,7 @@
     "format": "(prob)% chance to inflict toxic (_left)Deals (mult)% of target's max health(_right)",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "mult": {
@@ -676,7 +676,7 @@
     "format": "(prob)% chance to make a surge attack for (_dispTime(time)) (_left)Created within (dis_0) ~ (dis_1) range(_right)",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "dis_0": {
@@ -688,7 +688,7 @@
         "tooltip": null
       },
       "time": {
-        "name": "duration",
+        "name": "期限",
         "tooltip": null
       }
     }
@@ -724,11 +724,11 @@
     "format": "(prob)% chance to armor break for (_dispTime(time)) (_left)Makes target take (_abs(mult))% [(mult<0){less}(mult>=0){more}] damage(_right)",
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "duration",
+        "name": "期限",
         "tooltip": null
       },
       "mult": {
@@ -750,11 +750,11 @@
     ],
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "time": {
-        "name": "duration",
+        "name": "期限",
         "tooltip": null
       },
       "speed": {
@@ -774,7 +774,7 @@
     "format" : "(prob)% chance to create a lv.(lv) mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
     "class" : {
       "prob" : {
-        "name" : "chance",
+        "name" : "確率",
         "tooltip" : null
       },
       "lv" : {
