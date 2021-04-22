@@ -269,7 +269,7 @@
     "format": "[(mult==100){無効}]ふっとばす[(mult<100&mult>0){耐性 (_left)距離を(mult)％短縮します(_right)}(mult<0){脆弱 (_left)距離が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -281,7 +281,7 @@
     "format": "[(mult==100){無効}]止める[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -293,7 +293,7 @@
     "format": "[(mult==100){無効}]遅くする[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -305,7 +305,7 @@
     "format": "[(mult==100){無効}]波動[(mult<100&mult>0){ (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){ (_left)受けるダメージが(_abs(mult))%減少する(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -317,7 +317,7 @@
     "format": "[(mult==100){無効}]攻撃力低下[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -329,7 +329,7 @@
     "format": "[(mult==100){無効}]ワープ[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -341,7 +341,7 @@
     "format": "[(mult==100){無効}]古代の呪い[(mult<100&mult>0){耐性 (_left)期限が(mult)％減少します(_right)}(mult<0){脆弱 (_left)期限が(_abs(mult))％増加します(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": null
       }
     }
@@ -353,7 +353,7 @@
     "format": "[(mult==100){無効}]「オンヒット」と「オンキル」召喚[(mult<100&mult>0){ (_left)召喚された実体の強さを(mult)%減少させる(_right)}(mult<0){ (_left)召喚された実体は(_abs(mult))%強くなる(_right)}]",
     "class": {
       "mult": {
-        "name": "確率",
+        "name": "百分率",
         "tooltip": "「オンヒット」と「オンキル」の召喚にのみ適用されます。"
       }
     }
@@ -529,8 +529,8 @@
     }
   },
   "THEME": {
-    "abbr_name": "theme",
-    "full_name": "Background Switch",
+    "abbr_name": "BG変更",
+    "full_name": "背景変更",
     "tooltip": null,
     "format": [
       "(prob)% chance to change the background to (_bg(id)) for (_dispTime(time))",
@@ -543,21 +543,21 @@
       },
       "time": {
         "name": "期限",
-        "tooltip": "time until background switch back"
+        "tooltip": "背景が切り替わるまでの時間"
       },
       "id": {
         "name": "BG ID",
         "tooltip": null
       },
       "type.kill": {
-        "name": "kill",
-        "tooltip": "Kill all entities in the stage"
+        "name": "殺す",
+        "tooltip": "ステージ上のすべてのエンティティを倒す"
       }
     }
   },
   "POISON": {
-    "abbr_name": "venom",
-    "full_name": "Venom",
+    "abbr_name": "毒",
+    "full_name": "毒",
     "tooltip": null,
     "format": [
       "(prob)% chance to venom target for (_dispTime(time)) ",
@@ -595,10 +595,10 @@
     }
   },
   "BOSS": {
-    "abbr_name": "boss",
-    "full_name": "Boss Shockwave",
+    "abbr_name": "ボス",
+    "full_name": "ボス波KB",
     "tooltip": null,
-    "format": "(prob)% chance to boss wave",
+    "format": "(prob)%の確率でボス波KB",
     "class": {
       "prob": {
         "name": "確率",
@@ -607,41 +607,41 @@
     }
   },
   "CRITI": {
-    "abbr_name": "imu. crit",
-    "full_name": "Immunity to Critical Hit",
+    "abbr_name": "無効クリティカル",
+    "full_name": "無効クリティカル",
     "tooltip": null,
     "format": [
-      "[(type==0){Not Activated.}(type==1){Immune to Critical Hit.}",
-      "(type==2){Disable the Critical Hit for attack received, like wave blocker.}]"
+      "[(type==0){解除された}(type==1){クリティカルの無効}",
+      "(type==2){受けた攻撃のクリティカルヒットを止める}]"
     ],
     "class": {
       "type": {
-        "name": "type",
-        "tooltip": "1 for self immunity, 2 for Critical Hit Blocker / Absorber"
+        "name": "タイプ",
+        "tooltip": "1 - クリティカルの無効, 2 - ストップクリティカル"
       }
     }
   },
   "SATK": {
-    "abbr_name": "Strong Hit",
-    "full_name": "Strong Hit",
+    "abbr_name": "渾身の一撃",
+    "full_name": "渾身の一撃",
     "tooltip": null,
-    "format": "(prob)% chance to savage blow (_left)Gives (mult)% more damage(_right)",
+    "format": "(prob)%の確率で渾身の一撃 (_left)与ダメ(mult)%(_right)",
     "class": {
       "prob": {
         "name": "確率",
         "tooltip": null
       },
       "mult": {
-        "name": "percent",
+        "name": "倍率",
         "tooltip": null
       }
     }
   },
   "IMUATK": {
-    "abbr_name": "Invi.",
-    "full_name": "Invincibility",
+    "abbr_name": "攻撃無効",
+    "full_name": "攻撃無効",
     "tooltip": null,
-    "format": "(prob)% chance to gain invincibility for (_dispTime(time))",
+    "format": "(prob)%の確率で(_dispTime(time))攻撃無効",
     "class": {
       "prob": {
         "name": "確率",
@@ -654,37 +654,37 @@
     }
   },
   "POIATK": {
-    "abbr_name": "toxic",
-    "full_name": "Toxic",
+    "abbr_name": "毒撃",
+    "full_name": "毒撃",
     "tooltip": null,
-    "format": "(prob)% chance to inflict toxic (_left)Deals (mult)% of target's max health(_right)",
+    "format": "(prob)%の確率で毒撃 (_left)最大体力の(mult)%の追加ダメージ(_right)",
     "class": {
       "prob": {
         "name": "確率",
         "tooltip": null
       },
       "mult": {
-        "name": "percent",
+        "name": "百分率",
         "tooltip": null
       }
     }
   },
   "VOLC": {
-    "abbr_name": "surge",
-    "full_name": "Surge",
+    "abbr_name": "烈波",
+    "full_name": "烈波",
     "tooltip": null,
-    "format": "(prob)% chance to make a surge attack for (_dispTime(time)) (_left)Created within (dis_0) ~ (dis_1) range(_right)",
+    "format": "(prob)%の確率で(_dispTime(time))烈波 (_left)射程  (dis_0) ~ (dis_1)(_right)",
     "class": {
       "prob": {
         "name": "確率",
         "tooltip": null
       },
       "dis_0": {
-        "name": "point near",
+        "name": "最小スポーン範囲",
         "tooltip": null
       },
       "dis_1": {
-        "name": "point far",
+        "name": "最大スポーン範囲",
         "tooltip": null
       },
       "time": {
@@ -694,34 +694,34 @@
     }
   },
   "IMUPOIATK": {
-    "abbr_name": "imu. toxic",
-    "full_name": "Immune/Resist to Toxic",
+    "abbr_name": "無効毒撃",
+    "full_name": "無効/毒撃耐性",
     "tooltip": null,
-    "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Toxic[(mult<100&mult>0){ (_left)Reduces (mult)% of damage(_right)}(mult<0){ (_left)Increases taken damage (_abs(mult))% more(_right)}]",
+    "format": "[(mult==100){無効}]毒撃[(mult<100&mult>0){ (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){ (_left)受けるダメージが(_abs(mult))%減少する(_right)}]}]",
     "class": {
       "mult": {
-        "name": "percent",
+        "name": "百分率",
         "tooltip": null
       }
     }
   },
   "IMUVOLC": {
-    "abbr_name": "imu. Surge",
-    "full_name": "Immune/Resist to Surge",
+    "abbr_name": "無効烈波",
+    "full_name": "無効/烈波耐性",
     "tooltip": null,
-    "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Surge Attack[(mult<100&mult>0){ (_left)Reduces (mult)% of damage(_right)}(mult<0){ (_left)Increases taken damage (_abs(mult))% more(_right)}]",
+    "format": "[(mult==100){無効}]烈波[(mult<100&mult>0){ (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){ (_left)受けるダメージが(_abs(mult))%減少する(_right)}]",
     "class": {
       "mult": {
-        "name": "percent",
+        "name": "百分率",
         "tooltip": null
       }
     }
   },
   "ARMOR": {
-    "abbr_name": "armor break",
-    "full_name": "Armor Break",
+    "abbr_name": "アーマーブレイク",
+    "full_name": "アーマーブレイク",
     "tooltip": null,
-    "format": "(prob)% chance to armor break for (_dispTime(time)) (_left)Makes target take (_abs(mult))% [(mult<0){less}(mult>=0){more}] damage(_right)",
+    "format": "(prob)%の確率で(_dispTime(time))[(mult<0){抵抗力がアップする}(mult>=0){ユニットの装甲を破壊する}] (_left)受けるダメージが(_abs(mult))%[(mult<0){減少}(mult>=0){増加}](_abs(mult))%(_right)",
     "class": {
       "prob": {
         "name": "確率",
@@ -732,21 +732,19 @@
         "tooltip": null
       },
       "mult": {
-        "name": "percent",
+        "name": "倍率",
         "tooltip": null
       }
     }
   },
   "SPEED": {
-    "abbr_name": "haste",
-    "full_name": "Haste",
+    "abbr_name": "急いで",
+    "full_name": "急いで",
     "tooltip": null,
     "format": [
-      "(prob)% chance to ",
-      "[(type==0){add}(type==1){increase}(type==2){set}]",
-      " target's speed ",
-      "[(type!=2){by}(type==2){to}] (speed)[(type==1){%}]",
-      " for a duration of (_dispTime(time))"
+      "(prob)%の確率で(_dispTime(time))",
+      "[(type==2){スピードを(speed)にする}(type!=2){で対象のスピードを",
+      "(_abs(speed))[(type==1){%}][(speed>=0){増加させる}(speed<0){下げる}]"
     ],
     "class": {
       "prob": {
@@ -758,32 +756,35 @@
         "tooltip": null
       },
       "speed": {
-        "name": "speed",
+        "name": "速度",
         "tooltip": null
       },
       "type": {
-        "name": "type",
-        "tooltip": "0 for adding speed by a value, 1 for increasing the speed by a percentage, 2 for setting speed to a value"
+        "name": "タイプ",
+        "tooltip": ["0 - エンティティの速度に「速度」を加算/減算します。",
+          "1 - 実体の速度を「速度」%増加/減少させます。",
+          "2 - 実体の速度を「速度」に設定する"
+          ]
       }
     }
   },
   "MINIWAVE" : {
-    "abbr_name" : "mini-wave",
-    "full_name" : "Mini-Wave",
-    "tooltip" : "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
-    "format" : "(prob)% chance to create a lv.(lv) mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
+    "abbr_name" : "小波動",
+    "full_name" : "小波動",
+    "tooltip" : "通常の波動の2倍の速さで動く小型の波動を作成し、ダメージの増量パラメータを調整できる。",
+    "format" : "(prob)%の確率でLv(lv)小波動 (_left)与えるダメージはユーザーの攻撃力の(mult)%に等しい(_right)",
     "class" : {
       "prob" : {
         "name" : "確率",
         "tooltip" : null
       },
       "lv" : {
-        "name" : "level",
+        "name" : "Lv",
         "tooltip" : null
       },
       "multi" : {
-        "name" : "multi",
-        "tooltip" : "Percentage of activator's damage.<br>If multi is 20, it will have 20% of activator's damage. Negative values are allowed"
+        "name" : "倍率",
+        "tooltip" : "倍率が20の場合、ユーザーの攻撃力の20%のダメージを受けます。負の値も可能です。"
       }
     }
   }

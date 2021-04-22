@@ -174,10 +174,10 @@ public class StageBasis extends BattleObj {
 		List<AbEntity> ans = new ArrayList<>();
 		if (dire == 0)
 			return ans;
-		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0
-					&& (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
-				ans.add(le.get(i));
+		for (Entity entity : le)
+			if (entity.dire * dire == -1 && (entity.touchable() & touch) > 0
+					&& (entity.pos - d0) * (entity.pos - d1) <= 0)
+				ans.add(entity);
 		AbEntity b = dire == 1 ? ubase : ebase;
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
 			ans.add(b);
@@ -356,9 +356,9 @@ public class StageBasis extends BattleObj {
 			tempe.forEach(EntCont::update);
 		}
 
-		for (int i = 0; i < le.size(); i++)
-			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).update();
+		for (Entity uni : le)
+			if (s_stop == 0 || (uni.getAbi() & AB_TIMEI) != 0)
+				uni.update();
 
 		if (s_stop == 0) {
 			lw.forEach(ContAb::update);
@@ -383,9 +383,9 @@ public class StageBasis extends BattleObj {
 
 		if (s_stop == 0) {
 			if (ebase.health <= 0) {
-				for (int i = 0; i < le.size(); i++)
-					if (le.get(i).dire == 1)
-						le.get(i).kill();
+				for (Entity entity : le)
+					if (entity.dire == 1)
+						entity.kill();
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
@@ -396,9 +396,9 @@ public class StageBasis extends BattleObj {
 			}
 
 			if (ubase.health <= 0) {
-				for (int i = 0; i < le.size(); i++)
-					if (le.get(i).dire == -1)
-						le.get(i).kill();
+				for (Entity entity : le)
+					if (entity.dire == -1)
+						entity.kill();
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
@@ -409,9 +409,9 @@ public class StageBasis extends BattleObj {
 			}
 		}
 
-		for (int i = 0; i < le.size(); i++)
-			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).postUpdate();
+		for (Entity uni : le)
+			if (s_stop == 0 || (uni.getAbi() & AB_TIMEI) != 0)
+				uni.postUpdate();
 
 		if (shock) {
 			for (Entity entity : le) {
