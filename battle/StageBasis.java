@@ -19,10 +19,7 @@ import common.util.unit.EForm;
 import common.util.unit.EneRand;
 import common.util.unit.Form;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class StageBasis extends BattleObj {
 
@@ -294,6 +291,7 @@ public class StageBasis extends BattleObj {
 			EUnit eu = f.getEntity(this);
 			eu.added(-1, st.len - 700);
 			le.add(eu);
+			le.sort(Comparator.comparingInt(e -> e.layer));
 			mon -= elu.price[i][j];
 			return true;
 		}
@@ -314,8 +312,10 @@ public class StageBasis extends BattleObj {
 	 */
 	protected void update() {
 		tempe.removeIf(e -> {
-			if (e.t == 0)
+			if (e.t == 0) {
 				le.add(e.ent);
+				le.sort(Comparator.comparingInt(en -> en.layer));
+			}
 			return e.t == 0;
 		});
 
@@ -330,6 +330,7 @@ public class StageBasis extends BattleObj {
 				if (e != null) {
 					e.added(1, e.mark == 1 ? 801 : 700);
 					le.add(e);
+					le.sort(Comparator.comparingInt(en -> en.layer));
 
 					if(st.minSpawn <= 0 || st.maxSpawn <= 0)
 						respawnTime = 1;
@@ -371,6 +372,7 @@ public class StageBasis extends BattleObj {
 			ebaseSmoke.forEach(EAnimCont::update);
 			ubaseSmoke.forEach(EAnimCont::update);
 			lw.addAll(tlw);
+			lw.sort(Comparator.comparingInt(e -> e.layer));
 			tlw.clear();
 		}
 		la.forEach(AttackAb::capture);
@@ -426,6 +428,7 @@ public class StageBasis extends BattleObj {
 				}
 			}
 			lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
+			lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_BOSS);
 			shock = false;
 		}
