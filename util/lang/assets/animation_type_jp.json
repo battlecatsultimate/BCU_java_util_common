@@ -1,8 +1,8 @@
 {
   "KBEff": {
-    "SW": "shock wave",
-    "ASS": "sniper",
-    "KB": "knock back"
+    "SW": "衝撃波",
+    "ASS": "スーニャイツパ",
+    "KB": "ふっとばす"
   },
   "UType": {
     "BURROW_UP": "埋葬終了",
@@ -15,45 +15,45 @@
     "WALK": "徒歩"
   },
   "VolcEff": {
-    "DURING": "on",
-    "START": "start",
-    "END": "end"
+    "DURING": "中",
+    "START": "スタート",
+    "END": "終了"
   },
   "ArmorEff": {
-    "BUFF": "buff",
-    "DEBUFF": "debuff"
+    "BUFF": "増加",
+    "DEBUFF": "減少"
   },
   "SpeedEff": {
-    "UP": "increase",
-    "DOWN": "decrease"
+    "UP": "増加",
+    "DOWN": "減少"
   },
   "WaveType": {
     "DEF": "デフォルト"
   },
   "WeakUpEff": {
-    "UP": "increase"
+    "UP": "増加"
   },
   "WarpEff": {
-    "ENTER": "enter",
-    "EXIT": "exit"
+    "ENTER": "入る",
+    "EXIT": "出口"
   },
   "NyType": {
-    "BASE": "base",
+    "BASE": "ベース",
     "ATK": "攻撃",
-    "EXT": "extra"
+    "EXT": "エクストラ"
   },
   "BarrierEff": {
-    "DESTR": "destroy",
-    "BREAK": "break",
-    "NONE": "default"
+    "DESTR": "破壊",
+    "BREAK": "壊す",
+    "NONE": "デフォルト"
   },
   "BGWvType": {
-    "ENEMY": "enemy wave",
-    "UNIT": "unit wave"
+    "ENEMY": "敵",
+    "UNIT": "猫"
   },
   "ZombieEff": {
-    "DOWN": "knock down",
-    "REVIVE": "revive"
+    "DOWN": "死",
+    "REVIVE": "復活"
   },
   "SoulType": {
     "DEF": "デフォルト"

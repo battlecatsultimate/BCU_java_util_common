@@ -17,6 +17,7 @@ import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Cannon extends AtkModelAb {
 
@@ -155,6 +156,7 @@ public class Cannon extends AtkModelAb {
 			Form f = Identifier.parseInt(339, Unit.class).get().forms[0];
 			wall = new EUnit(b, f.du, f.getEAnim(UType.ENTER), 1, null, null);
 			b.le.add(wall);
+			b.le.sort(Comparator.comparingInt(e -> e.layer));
 			wall.added(-1, (int) pos);
 			preTime = b.b.t().getCanonProcTime(id);
 		}

@@ -407,19 +407,16 @@
     "full_name": "召喚",
     "tooltip": null,
     "format": [
-      "(prob)% chance to summon a (mult)% [(!type.fix_buff){(_left)relative to summoner's buff(_right) }](_entity(id)) after (_dispTime(time)), ",
-      "one summoned (dis) range away from ",
-      "[(type.on_kill|type.on_hit){each target}",
-      "(!type.on_hit&!type.on_kill){the summoner}] ",
-      "[(type.on_hit){hit}",
-      "(type.on_kill&!type.on_hit){killed}",
-      "(!type.on_kill&!type.on_hit){on this attack}], ",
-      "[(type.same_health){Summoned entities will have the same health as this entity, }]",
-      "and is[(type.ignore_limit){n't}] restricted by the stage entity limit. ",
-      "Summoned entities will be in [(!type.random_layer){the same layer as this entity}",
-      "(type.random_layer){a random layer}]. ",
-      "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
-      " animation[(type.anim_type==3){ and disable burrow for summoned entities}]."
+      "(prob)%の確率で(_dispTime(time))後に(mult)%の(_entity(id))を召喚[(!type.fix_buff){ (_left)召喚獣の強さ倍率に相対する(_right)}]、",
+      "[(!type.on_hit&!type.on_kill){召喚者から1つの召喚(dis)範囲離れている}",
+      "(type.on_hit){各ターゲットの命中時に召喚された(dis)の範囲が1つ離れる}",
+      "(type.on_kill){対象が倒れるたびに1回召喚(dis)の範囲が離れる}]",
+      "[(type.same_health){ (_left)召喚されたエンティティはこのエンティティが持つヘルスと同じになる(_right)}]",
+      "[(type.ignore_limit){ (_left)ステージのエンティティの制限によって制限されない(_right)}]",
+      "(_left)召喚されたエンティティは[(!type.random_layer){このエンティティと同じレイヤーになる}",
+      "(type.random_layer){ランダムなレイヤーに存在する}](_right) ",
+      "(_left)召喚は[(type.anim_type==1){ワープの}(type.anim_type>=2){埋葬終了の}]",
+      "[(type.anim_type==3){(_left)+埋葬の無効化(_right)}]アニメーションを表示[(type.anim_type!=0){する}(type.anim_type==0){しません}](_right)"
     ],
     "class": {
       "prob": {
@@ -432,74 +429,73 @@
       },
       "dis": {
         "name": "距離",
-        "tooltip": "Distance from this entity by default, distance from the target if on hit or on kill is enabled"
+        "tooltip": "デフォルトでは、召喚されたエンティティはこのエンティティからの距離、オンヒットまたはオンキルが有効な場合はターゲットからの距離です。"
       },
       "mult": {
         "name": "強さ倍率",
-        "tooltip": "Buff of the summoned entity, relative to this entity by default, fixed buff if you enable fix buff"
+        "tooltip": "召喚されたエンティティの強さ倍率、「固定力掛け算」が有効でない場合はこのエンティティの強さ倍率との相対値"
       },
       "type.anim_type": {
         "name": "アニメーション",
         "tooltip": [
-          "summon animation, 0 for no animation, 1 for warp animation,",
-          " 2 for burrow animation, 3 for burrow animation and disable further burrow.",
-          " The summoned entity must have burrow animation in order to use 2 or 3."
+          "召喚アニメーション",
+          "0 - アニメーションなし",
+          "1 - ワープアニメーション",
+          "2 - 埋葬終了アニメーション",
+          "3 - 埋葬終了アニメーション + 埋葬の無効化",
+          "* 召喚アニメーション2、3を使用するためには、召喚されたエンティティが埋葬アニメーションを持っている必要があります。"
         ]
       },
       "type.ignore_limit": {
-        "name": "ignore limit",
-        "tooltip": "ignore the stage entity limit. Be careful with this, don't summon too much. It can break the game"
+        "name": "ユニットリミットを無視する",
+        "tooltip": "は、ステージのエンティティ制限を無視します。召喚しすぎると、ゲームがクラッシュする可能性があるので注意してください。"
       },
       "type.fix_buff": {
-        "name": "fix buff",
-        "tooltip": [
-          "Use fixed buff instead of relative buff. ",
-          "Ex: 200% summoner and 300% buff would mean 600% buff if fix buff is disabled and 300% buff if fix buff is enabled"
-        ]
+        "name": "固定力掛け算",
+        "tooltip": "有効にすると、召喚されたエンティティの強さの倍率は、召喚者の強さの倍率とは関係ありません。"
       },
       "type.same_health": {
-        "name": "same health",
-        "tooltip": "Set the summoned entity to have the same health as this entity."
+        "name": "同じ体力",
+        "tooltip": "召喚されたエンティティの体力を、このエンティティの現在の体力に設定します。"
       },
       "type.random_layer": {
-        "name": "random layer",
-        "tooltip": "By default, summoned entity will have the same layer as this entity. Enable this to make the layer randomized."
+        "name": "レイヤーのランダム化",
+        "tooltip": "デフォルトでは、召喚されたエンティティはこのエンティティと同じレイヤーを持ちます。これを有効にすると、召喚されたエンティティのレイヤーがランダムになります。"
       },
       "type.on_hit": {
         "name": "オンヒット",
         "tooltip": [
-          "Summon if and only if this attack hits targets.",
-          " Summon per target attacked, distance origins are set to the targets' positions.",
-          " Multiple summon possible for ranged attack."
+          "この攻撃がターゲットにヒットした場合のみ召喚する。",
+          "攻撃を受けた対象ごとにユニットを1体召喚し、召喚距離は殺された対象の位置に設定される。",
+          "範囲では複数のユニットを召喚することができる。"
         ]
       },
       "type.on_kill": {
         "name": "オンキル",
         "tooltip": [
-          "Summon if and only if this attack kills targets.",
-          " Summon per target killed, distance origins are set to the targets' positions.",
-          " Multiple summon possible for ranged attack."
+          "この攻撃でターゲットが殺された場合のみ召喚する。",
+          "キルした対象1体につきユニット1体を召喚し、召喚距離はキルした対象の位置に設定される。",
+          "範囲では複数のユニットを召喚することができる。"
         ]
       },
       "time": {
-        "name": "delay",
-        "tooltip": "delay of this summon"
+        "name": "遅延",
+        "tooltip": "召喚にかかる遅延"
       },
       "form": {
-        "name": "Form",
-        "tooltip": "Set which form of the unit you want to summon. Only applicable on Cat Units."
+        "name": "フォーム",
+        "tooltip": "召喚したいユニットの形態を設定します。ネコのユニットにのみ適用されます。"
       }
     }
   },
   "MOVEWAVE": {
-    "abbr_name": "move atk",
-    "full_name": "Moving Attack",
+    "abbr_name": "移動攻撃",
+    "full_name": "移動攻撃",
     "tooltip": null,
     "format": [
-      "(prob)% chance to have moving hit box, ",
-      "originated at a distance of (dis) from this entity ",
-      "with (width) widths, ",
-      " (speed) speed, and (_dispTime(itv)) interval for (_dispTime(time))"
+      "(prob)%の確率で、(_dispTime(time))持続し、",
+      "このエンティティから(dis)範囲に作成され、幅(width)範囲、",
+      "速度(speed)、(_dispTime(itv))毎にダメージを与えたエンティティに再ダメージを与えるムービングヒットボックスを作成する。"
     ],
     "class": {
       "prob": {
@@ -507,24 +503,24 @@
         "tooltip": null
       },
       "speed": {
-        "name": "speed",
-        "tooltip": "in units per frame"
+        "name": "速度",
+        "tooltip": "フレームあたりの距離で"
       },
       "width": {
-        "name": "width",
-        "tooltip": "width of the hitbox, from left to right"
+        "name": "幅",
+        "tooltip": "ヒットボックスの幅、左から右へ"
       },
       "time": {
-        "name": "time",
+        "name": "期限",
         "tooltip": null
       },
       "dis": {
-        "name": "distance",
-        "tooltip": "describes the location of the center of the hitbox when initiated"
+        "name": "射程",
+        "tooltip": "開始時のヒットボックスの中心の位置を示す"
       },
       "itv": {
-        "name": "interval",
-        "tooltip": null
+        "name": "インターバル",
+        "tooltip": "この能力が、以前にダメージを与えた敵に再びダメージを与えるのに必要な時間"
       }
     }
   },
@@ -533,8 +529,8 @@
     "full_name": "背景変更",
     "tooltip": null,
     "format": [
-      "(prob)% chance to change the background to (_bg(id)) for (_dispTime(time))",
-      "[(type.kill){ with killing all entities on the field}]"
+      "(prob)%の確率で(_dispTime(time))がBGを(_bg(id))に変更します",
+      "[(type.kill){(_left)ステージ上のすべてのエンティティを倒す(_right)}]"
     ],
     "class": {
       "prob": {
@@ -560,12 +556,12 @@
     "full_name": "毒",
     "tooltip": null,
     "format": [
-      "(prob)% chance to venom target for (_dispTime(time)) ",
-      "with [(type.damage_type==0){(damage) damage}",
-      "(type.damage_type>0){a damage of (damage)% of target's ",
-      "[(type.damage_type==1){total}(type.damage_type==2){current}(type.damage_type==3){lost}]",
-      " health}] per (_dispTime(itv)). ",
-      "This effect is [(type.unstackable){not }]stackable."
+      "(prob)%の確率で(_dispTime(time))毒 ",
+      "(_left)[(type.damage_type==0){(damage)ダメージを与える}",
+      "(type.damage_type>0){[(type.damage_type==1){最大}(type.damage_type==2){現在}(type.damage_type==3){失われた}]",
+      "体力の(damage)%の追加ダメージ}]",
+      "すべての(_dispTime(itv))(_right)",
+      " (_left)積み上げ[(type.unstackable){られない}(!type.unstackable){可能}](_right)"
     ],
     "class": {
       "prob": {
@@ -577,19 +573,23 @@
         "tooltip": null
       },
       "damage": {
-        "name": "damage",
-        "tooltip": "whether it is percent or actual value depends on the damage type"
+        "name": "攻撃力",
+        "tooltip": "与えるダメージ。「ダメージ種別」が0でない場合は、パーセンテージになります。"
       },
       "itv": {
-        "name": "interval",
+        "name": "間隔",
         "tooltip": null
       },
       "type.damage_type": {
-        "name": "damage type",
-        "tooltip": "0 for fixed damage, 1 for percent of total health, 2 for percent of current health, 3 for percent of lost health."
+        "name": "ダメージ種別",
+        "tooltip": ["0 - 固定ダメージ",
+          "1 - ダメージを受けたエンティティのトータル体力に基づく割合",
+          "2 - ダメージを受けたエンティティの現在の体力に基づくパーセンテージ",
+          "3 - ダメージを受けたエンティティの失われた体力に基づくパーセンテージ"
+        ]
       },
       "type.unstackable": {
-        "name": "unstackable",
+        "name": "スタック不可",
         "tooltip": null
       }
     }
@@ -697,7 +697,7 @@
     "abbr_name": "無効毒撃",
     "full_name": "無効/毒撃耐性",
     "tooltip": null,
-    "format": "[(mult==100){無効}]毒撃[(mult<100&mult>0){ (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){ (_left)受けるダメージが(_abs(mult))%減少する(_right)}]}]",
+    "format": "[(mult==100){無効}]毒撃[(mult<100&mult>0){耐性 (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){脆弱 (_left)受けるダメージが(_abs(mult))%減少する(_right)}]",
     "class": {
       "mult": {
         "name": "百分率",
@@ -709,7 +709,7 @@
     "abbr_name": "無効烈波",
     "full_name": "無効/烈波耐性",
     "tooltip": null,
-    "format": "[(mult==100){無効}]烈波[(mult<100&mult>0){ (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){ (_left)受けるダメージが(_abs(mult))%減少する(_right)}]",
+    "format": "[(mult==100){無効}]烈波[(mult<100&mult>0){耐性 (_left)受けるダメージが(mult)%減少する(_right)}(mult<0){脆弱 (_left)受けるダメージが(_abs(mult))%減少する(_right)}]",
     "class": {
       "mult": {
         "name": "百分率",
@@ -744,7 +744,7 @@
     "format": [
       "(prob)%の確率で(_dispTime(time))",
       "[(type==2){スピードを(speed)にする}(type!=2){で対象のスピードを",
-      "(_abs(speed))[(type==1){%}][(speed>=0){増加させる}(speed<0){下げる}]"
+      "(_abs(speed))[(type==1){%}][(speed>=0){増加させる}(speed<0){下げる}]}]"
     ],
     "class": {
       "prob": {
@@ -772,7 +772,7 @@
     "abbr_name" : "小波動",
     "full_name" : "小波動",
     "tooltip" : "通常の波動の2倍の速さで動く小型の波動を作成し、ダメージの増量パラメータを調整できる。",
-    "format" : "(prob)%の確率でLv(lv)小波動 (_left)与えるダメージはユーザーの攻撃力の(mult)%に等しい(_right)",
+    "format" : "(prob)%の確率でLv(lv)小波動 (_left)与えるダメージはユーザーの攻撃力の(multi)%に等しい(_right)",
     "class" : {
       "prob" : {
         "name" : "確率",

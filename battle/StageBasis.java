@@ -288,6 +288,7 @@ public class StageBasis extends BattleObj {
 			EUnit eu = f.getEntity(this);
 			eu.added(-1, st.len - 700);
 			le.add(eu);
+			le.sort(Comparator.comparingInt(e -> e.layer));
 			mon -= elu.price[i][j];
 			return true;
 		}
@@ -308,8 +309,10 @@ public class StageBasis extends BattleObj {
 	 */
 	protected void update() {
 		tempe.removeIf(e -> {
-			if (e.t == 0)
+			if (e.t == 0) {
 				le.add(e.ent);
+				le.sort(Comparator.comparingInt(en -> en.layer));
+			}
 			return e.t == 0;
 		});
 
@@ -366,6 +369,7 @@ public class StageBasis extends BattleObj {
 			ebaseSmoke.forEach(EAnimCont::update);
 			ubaseSmoke.forEach(EAnimCont::update);
 			lw.addAll(tlw);
+			lw.sort(Comparator.comparingInt(e -> e.layer));
 			tlw.clear();
 		}
 		la.forEach(AttackAb::capture);
@@ -421,6 +425,7 @@ public class StageBasis extends BattleObj {
 				}
 			}
 			lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
+			lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_BOSS);
 			shock = false;
 		}
