@@ -20,6 +20,7 @@ import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.*;
 
 import static java.lang.Character.isDigit;
@@ -177,6 +178,11 @@ public class CommonStatic {
 	@StaticPermitted(StaticPermitted.Type.ENV)
 	public static Context ctx;
 
+	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigInteger max = new BigInteger(String.valueOf(Integer.MAX_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigInteger min = new BigInteger(String.valueOf(Integer.MIN_VALUE));
+
 	public static BCAuxAssets getBCAssets() {
 		return UserProfile.getStatic("BCAuxAssets", BCAuxAssets::new);
 	}
@@ -188,7 +194,8 @@ public class CommonStatic {
 	public static boolean isInteger(String str) {
 		for (int i = 0; i < str.length(); i++) {
 			if (!Character.isDigit(str.charAt(i))) {
-				return false;
+				if(str.charAt(i) != '-' || i != 0)
+					return false;
 			}
 		}
 
@@ -227,8 +234,46 @@ public class CommonStatic {
 		}
 		int[] ans = new int[lstr.size()];
 		for (int i = 0; i < lstr.size(); i++)
-			ans[i] = Integer.parseInt(lstr.get(i));
+			ans[i] = safeParseInt(lstr.get(i));
 		return ans;
+	}
+
+	public static int safeParseInt(String v) {
+		if(isInteger(v)) {
+			BigInteger big = new BigInteger(v);
+
+			if(big.compareTo(max) > 0) {
+				return Integer.MAX_VALUE;
+			} else if(big.compareTo(min) < 0) {
+				return Integer.MIN_VALUE;
+			} else {
+				return Integer.parseInt(v);
+			}
+		} else {
+			throw new IllegalStateException("Value "+v+" isn't a number");
+		}
+	}
+
+	public static String[] getPackContentID(String input) {
+		StringBuilder packID = new StringBuilder();
+		StringBuilder entityID = new StringBuilder();
+
+		boolean packEnd = false;
+
+		for (int i = 0; i < input.length(); i++) {
+			if (!packEnd) {
+				if (Character.toString(input.charAt(i)).matches("[0-9a-z]"))
+					packID.append(input.charAt(i));
+				else {
+					packEnd = true;
+				}
+			} else {
+				if (Character.isDigit(input.charAt(i)))
+					entityID.append(input.charAt(i));
+			}
+		}
+
+		return new String[] { packID.toString(), entityID.toString() };
 	}
 
 	public static String[] getPackEntityID(String input) {

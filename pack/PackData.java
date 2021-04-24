@@ -220,6 +220,7 @@ public abstract class PackData implements IndexContainer {
 		public String time;
 		public int version;
 		public boolean allowAnim = false;
+		public byte[] parentPassword;
 		@JsonField(generic = String.class)
 		public ArrayList<String> dependency;
 
@@ -249,6 +250,7 @@ public abstract class PackData implements IndexContainer {
 			desc.time = time;
 			desc.version = version;
 			desc.allowAnim = allowAnim;
+			desc.parentPassword = parentPassword == null ? null : parentPassword.clone();
 
 			return desc;
 		}
@@ -378,6 +380,12 @@ public abstract class PackData implements IndexContainer {
 			loaded = true;
 			loadMusics();
 			UserProfile.setStatic(UserProfile.CURRENT_PACK, null);
+
+			if(source instanceof Source.ZipSource) {
+				if(((Source.ZipSource) source).zip.desc.parentPassword != null) {
+					desc.parentPassword = ((Source.ZipSource) source).zip.desc.parentPassword.clone();
+				}
+			}
 
 			//Since it succeeded to load all data, update Core version of this workspace pack
 			if(editable) {

@@ -27,10 +27,7 @@ import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
 import common.util.unit.Level;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Entity class for units and enemies
@@ -248,6 +245,7 @@ public abstract class Entity extends AbEntity {
 				int ind = status[P_WARP][2];
 				WarpEff pa = ind == 0 ? WarpEff.ENTER : WarpEff.EXIT;
 				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim, e.dire));
+				e.basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 				CommonStatic.setSE(ind == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
 				status[P_WARP][ind] = ea.len(pa);
 
@@ -406,6 +404,7 @@ public abstract class Entity extends AbEntity {
 			if (e.health <= 0 && e.zx.tempZK && (e.type & TB_ZOMBIE) != 0) {
 				EAnimD<DefEff> eae = effas().A_Z_STRONG.getEAnim(DefEff.DEF);
 				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
+				e.basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 				CommonStatic.setSE(SE_ZKILL);
 			}
 		}
@@ -1184,15 +1183,19 @@ public abstract class Entity extends AbEntity {
 		else
 			basis.lea.add(new EAnimCont(pos, layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
 
+		basis.lea.sort(Comparator.comparingInt(e -> e.layer));
+
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
 			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_CRIT);
 		}
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().SATK.mult > 0) {
 			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_SATK);
 		}
 
@@ -1207,6 +1210,7 @@ public abstract class Entity extends AbEntity {
 			} else {
 				damage += maxH * atk.getProc().POIATK.mult / 100;
 				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
+				basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 				CommonStatic.setSE(SE_POISON);
 			}
 		}
