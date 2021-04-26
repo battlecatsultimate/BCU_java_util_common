@@ -93,10 +93,10 @@ public class MultiLangCont<I, T> extends Lang {
 	}
 
 	private HashMap<I, T> getSub(String loc) {
-		HashMap<I, T> ans = map.get(loc);
-		if (ans == null)
-			map.put(loc, ans = new HashMap<>());
-		return ans;
+		return map.computeIfAbsent(loc, k -> new HashMap<>());
 	}
 
+	public Map<I, T> getMap(String loc) {
+		return map.get(loc);
+	}
 }
