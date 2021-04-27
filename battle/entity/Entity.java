@@ -172,6 +172,8 @@ public abstract class Entity extends AbEntity {
 		@SuppressWarnings("unchecked")
 		public void getEff(int t) {
 			int dire = e.dire;
+			if (t == P_DMGCUT || t == P_DMGCAP)
+				t = INV;
 			if (t == INV) {
 				effs[eftp] = null;
 				eftp = A_EFF_INV;
@@ -1161,11 +1163,35 @@ public abstract class Entity extends AbEntity {
 				return;
 		}
 
+		Proc.DMGCUT dmgcut = data.getProc().DMGCUT;
+		if (dmgcut.traitIgnore || (atk.dire == -1 || atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || receive(-1)) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
+			if (dmg < dmgcut.dmg && dmg > 0)
+				if (basis.r.nextDouble() * 100 < dmgcut.prob) {
+					anim.getEff(P_DMGCUT);
+					if (dmgcut.procs)
+						return;
+					else
+						dmg = 0;
+				}
+		Proc.DMGCAP dmgcap = data.getProc().DMGCAP;
+		if (dmgcap.traitIgnore || (atk.dire == -1 || atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || receive(-1)) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
+			if (dmg > dmgcap.dmg)
+				if (basis.r.nextDouble() * 100 < dmgcap.prob) {
+					anim.getEff(P_DMGCAP);
+					if (dmgcap.nullify)
+						if (dmgcut.procs)
+							return;
+						else
+							dmg = 0;
+					else
+						dmg = dmgcap.dmg;
+				}
+
 		if (barrier > 0) {
 			if (atk.getProc().BREAK.prob > 0) {
 				barrier = 0;
 				anim.getEff(BREAK_ABI);
-			} else if (getDamage(atk, atk.atk) >= barrier) {
+			} else if (dmg >= barrier) {
 				barrier = 0;
 				anim.getEff(BREAK_ATK);
 				return;
@@ -1389,6 +1415,7 @@ public abstract class Entity extends AbEntity {
 		}
 		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))
 			interrupt(INT_HB, KB_DIS[INT_HB]);
+
 		health -= damage;
 		if (health > maxH)
 			health = maxH;

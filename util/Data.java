@@ -56,6 +56,32 @@ public class Data {
 			public int mult;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DMGCUT extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dmg;
+			@Order(2)
+			public boolean traitIgnore;
+			@Order(3)
+			public boolean procs;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DMGCAP extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dmg;
+			@Order(2)
+			public boolean traitIgnore;
+			@Order(3)
+			public boolean nullify;
+			@Order(4)
+			public boolean procs;
+		}
+
 		public static abstract class IntType implements Cloneable {
 
 			@Documented
@@ -578,6 +604,10 @@ public class Data {
 
 		@Order(38)
 		public final IMU IMUSUMMON = new IMU();
+		@Order(39)
+		public final DMGCUT DMGCUT = new DMGCUT();
+		@Order(40)
+		public final DMGCAP DMGCAP = new DMGCAP();
 
 		@Override
 		public Proc clone() {
@@ -911,7 +941,9 @@ public class Data {
 	public static final int P_SPEED = 36;
 	public static final int P_MINIWAVE = 37;
 	public static final int P_IMUSUMMON = 38;
-	public static final int PROC_TOT = 39;// 39
+	public static final int P_DMGCUT = 39;
+	public static final int P_DMGCAP = 40;
+	public static final int PROC_TOT = 41;// 39
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -953,7 +985,9 @@ public class Data {
 			false, //armor
 			false, //haste
 			false, //miniwave
-			true  //imu.summon
+			true,  //imu.summon
+			false, //damage cut
+			false, //damage cap
 	};
 
 	public static final int WT_WAVE = 1;
