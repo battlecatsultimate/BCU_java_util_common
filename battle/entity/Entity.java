@@ -444,6 +444,8 @@ public abstract class Entity extends AbEntity {
 				soul.update(false);
 				dead--;
 			}
+			if (anim.done() && anim.type == UType.ENTER)
+				setAnim(UType.IDLE, true);
 			if (e.data.getResurrection() != null && dead >= 0) {
 				AtkDataModel adm = e.data.getResurrection();
 				if (soul == null || adm.pre == soul.len() - dead)
@@ -1467,6 +1469,8 @@ public abstract class Entity extends AbEntity {
 			return n | TCH_UG | ex;
 		if (kbTime < -1)
 			return TCH_UG | ex;
+		if (anim.anim.type == UType.ENTER)
+			return TCH_ENTER | ex;
 		return (kbTime == 0 ? n : TCH_KB) | ex;
 	}
 
@@ -1483,7 +1487,7 @@ public abstract class Entity extends AbEntity {
 		canBurrow |= atkm.loop < data.getAtkLoop() - 1;
 
 		// do move check if available, move if possible
-		if (kbTime == 0 && !acted && atkm.atkTime == 0 && status[P_REVIVE][1] == 0) {
+		if (kbTime == 0 && !acted && atkm.atkTime == 0 && status[P_REVIVE][1] == 0 && anim.anim.type != UType.ENTER) {
 			checkTouch();
 			if (!touch && nstop) {
 				if (health > 0)
@@ -1507,7 +1511,7 @@ public abstract class Entity extends AbEntity {
 			updateBurrow();
 
 		// update wait and attack state
-		if (kbTime == 0) {
+		if (kbTime == 0 && anim.anim.type != UType.ENTER) {
 			boolean binatk = waitTime + atkm.atkTime == 0;
 			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
