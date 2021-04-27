@@ -60,7 +60,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 			ints[0] = 0;
 		if (ints[1] == 2)
 			for (int[] move : moves)
-				if (move[1] >= ics)
+				if (move[1] >= ics || move[1] < 0)
 					move[1] = 0;
 	}
 
