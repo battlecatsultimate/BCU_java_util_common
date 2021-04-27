@@ -523,7 +523,7 @@
         "abbr_name": "배경 변경",
         "full_name": "배경 변경",
         "tooltip": "전투의 배경을 바꿉니다. 타입에 따라서 전투에 있는 대부분의 개체들을 다 제거할 수 있습니다",
-        "format": "(prob)% 확률로 (_dispTime(time)) 동안 배경 (_bg(id)) (으)로 변경 [(type.kill){(_left)발동 시 필드에 있는 모든 개체 제거(_right)}]",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 배경 (_bg(id)) (_left)으(_right)로 변경 [(type.kill){(_left)발동 시 필드에 있는 모든 개체 제거(_right)}]",
         "class": {
             "prob": {
                 "name": "확률",
