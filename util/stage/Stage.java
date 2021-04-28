@@ -357,6 +357,9 @@ public class Stage extends Data
 		if(trail)
 			return;
 
+		if(getCont() == null || getCont().getCont() == null)
+			return;
+
 		if(getCont().getCont().getSID().equals("000006") || getCont().getCont().getSID().equals("000011"))
 			trail = data.isTrail();
 		else

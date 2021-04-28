@@ -813,8 +813,8 @@
     }
   },
   "DMGCAP" : {
-    "abbr_name" : "被害限度額",
-    "full_name" : "被害限度額",
+    "abbr_name" : "魔法の盾",
+    "full_name" : "魔法の盾",
     "tooltip" : "このアビリティは、一定量以上のすべてのダメージを当該量に軽減する（「ダメージを無効にする」がチェックされている場合は無効にする）。",
     "format" : "(prob)%の確率で(dmg)以上のダメージを[(!nullify){(dmg)に}(nullify){無効化}]する[(traitIgnore){ (_left)種類に関わらず(_right)}][(nullify&procs){ (_left)攻撃の能力を無効にする(_right)}]",
     "class" : {

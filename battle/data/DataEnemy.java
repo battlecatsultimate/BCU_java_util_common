@@ -147,7 +147,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.time = ints[84] * VOLC_ITV;
 
 		abi = a;
-		type = t;
 
 		datks = new DataAtk[getAtkCount()];
 

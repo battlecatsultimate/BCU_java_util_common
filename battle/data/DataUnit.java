@@ -1,13 +1,13 @@
 package common.battle.data;
 
 import common.CommonStatic;
-import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
-import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
+
+import java.util.ArrayList;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
@@ -33,32 +33,26 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		respawn = ints[7] * 2;
 		width = ints[9];
 		int t = 0;
-		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 		if (ints[10] == 1)
-			//Red
-			traits.add(BCTraits.get(TRAIT_RED));
+			t |= TB_RED;
 		isrange = ints[12] == 1;
 		pre = ints[13];
 		front = ints[14];
 		back = ints[15];
 		if (ints[16] == 1)
-			//Floating
-			traits.add(BCTraits.get(TRAIT_FLOAT));
+			t |= TB_FLOAT;
 		if (ints[17] == 1)
-			//Black
-			traits.add(BCTraits.get(TRAIT_BLACK));
+			t |= TB_BLACK;
 		if (ints[18] == 1)
-			//Metal
-			traits.add(BCTraits.get(TRAIT_METAL));
+			t |= TB_METAL;
+		if (ints[19] == 1)
+			t |= TB_WHITE;
 		if (ints[20] == 1)
-			//Angel
-			traits.add(BCTraits.get(TRAIT_ANGEL));
+			t |= TB_ANGEL;
 		if (ints[21] == 1)
-			//Alien
-			traits.add(BCTraits.get(TRAIT_ALIEN));
+			t |= TB_ALIEN;
 		if (ints[22] == 1)
-			//Zombie
-			traits.add(BCTraits.get(TRAIT_ZOMBIE));
+			t |= TB_ZOMBIE;
 		int a = 0;
 		if (ints[23] == 1)
 			a |= AB_GOOD;
@@ -137,11 +131,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			if (ints[77] == 1)
 				a |= AB_EKILL;
 			if (ints[78] == 1)
-				//Relic
-				traits.add(BCTraits.get(TRAIT_RELIC));
-			if (ints[19] == 1)
-				//White
-				traits.add(BCTraits.get(TRAIT_WHITE));
+				t |= TB_RELIC;
 			if (ints[79] == 1)
 				proc.IMUCURSE.mult = 100;
 			if (ints[80] == 1)
@@ -165,7 +155,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		} catch (IndexOutOfBoundsException e) {
 		}
 
-		type = t;
+		traits = new ArrayList<>(Trait.convertType(t));
 		abi = a;
 
 		datks = new DataAtk[getAtkCount()];

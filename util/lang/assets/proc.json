@@ -816,8 +816,8 @@
         }
     },
     "DMGCAP" : {
-        "abbr_name" : "DMG. Cap",
-        "full_name" : "Damage Cap",
+        "abbr_name" : "M.Shield",
+        "full_name" : "Magic Shield",
         "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
         "format" : "(prob)% chance to [(nullify){nullify[(traitIgnore){ all}]}(!nullify){set}] damage higher than (dmg)[(!nullify){ to (dmg)}(nullify&procs){ and also the attack's procs}]",
         "class" : {
