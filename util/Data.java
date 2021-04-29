@@ -1191,6 +1191,7 @@ public class Data {
 	public static final int TCH_SOUL = 16;
 	public static final int TCH_EX = 32;
 	public static final int TCH_ZOMBX = 64;
+	public static final int TCH_ENTER = 128;
 
 	public static final String[] A_PATH = new String[] { "down", "up", "slow", "stop", "shield", "farattack",
 			"wave_invalid", "wave_stop", "waveguard" };
