@@ -146,7 +146,9 @@ public class ProcLang {
 
 		if(CommonStatic.getConfig().lang == 2)
 			f = CommonStatic.ctx.getLangFile("proc_kr.json");
-		else
+		else if(CommonStatic.getConfig().lang == 3) {
+			f = CommonStatic.ctx.getLangFile("proc_jp.json");
+		} else
 			f = CommonStatic.ctx.getLangFile("proc.json");
 
 		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
