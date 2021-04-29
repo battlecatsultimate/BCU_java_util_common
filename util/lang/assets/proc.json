@@ -795,7 +795,7 @@
         "abbr_name" : "Spr. Armor",
         "full_name" : "Super Armor",
         "tooltip" : "This ability reduces all damage that is below certain amount to zero.",
-        "format" : "(prob)% chance to nullify [(traitIgnore){all}] damage lower than (dmg)[(procs){ and also the attack's procs}]",
+        "format" : "(prob)% chance to nullify[(traitIgnore){ all}] damage lower than (dmg)[(procs){ and also the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
