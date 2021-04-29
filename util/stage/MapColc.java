@@ -352,7 +352,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 	}
 
-	protected static class ClipMapColc extends MapColc {
+	public static class ClipMapColc extends MapColc {
 
 		protected ClipMapColc() {
 			add(0, StageMap::new);
@@ -377,6 +377,9 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 	@ContGetter
 	public static MapColc get(String id) {
+		if(id.equals("clipboard"))
+			return Stage.CLIPMC;
+
 		return UserProfile.getRegister(REG_MAPCOLC, MapColc.class).get(id);
 	}
 

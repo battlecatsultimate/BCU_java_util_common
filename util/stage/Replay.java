@@ -225,10 +225,6 @@ public class Replay extends Data {
 		return len;
 	}
 
-	public boolean isAvail() {
-		return Identifier.getOr(st, Stage.class) != null;
-	}
-
 	public void localize(String pack) {
 		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
 		if (rl.pack.equals(ResourceLocation.LOCAL))

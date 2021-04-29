@@ -10,6 +10,7 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
 import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
+import common.util.anim.EAnimU;
 import common.util.pack.NyCastle.NyType;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -151,11 +152,13 @@ public class Cannon extends AtkModelAb {
 		if (preTime == -1 && id == 2) {
 			// wall canon
 			Form f = Identifier.parseInt(339, Unit.class).get().forms[0];
-			wall = new EUnit(b, f.du, f.getEAnim(UType.ENTER), 1, null, null);
+			EAnimU enter = f.getEAnim(UType.ENTER);
+			enter.setTime(0);
+			wall = new EUnit(b, f.du, enter, 1, null, null);
 			b.le.add(wall);
 			b.le.sort(Comparator.comparingInt(e -> e.layer));
-			wall.added(-1, (int) pos);
-			preTime = b.b.t().getCanonProcTime(id);
+			wall.added(-1, (int) (pos + 100)); // guessed distance from enemy compared from BC
+			preTime = b.b.t().getCanonProcTime(id) + enter.len();
 		}
 		if (preTime > 0) {
 			preTime--;
