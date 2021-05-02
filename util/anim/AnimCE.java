@@ -18,12 +18,9 @@ import common.util.Animable;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 @JsonClass.JCGeneric(ResourceLocation.class)
 public class AnimCE extends AnimCI {
@@ -60,6 +57,9 @@ public class AnimCE extends AnimCI {
 	public EditLink link;
 
 	public Stack<History> history = new Stack<>();
+
+	@NotNull
+	public String group = "";
 
 	public AnimCE(ResourceLocation resourceLocation) {
 		super(new SourceAnimLoader(resourceLocation, null));
