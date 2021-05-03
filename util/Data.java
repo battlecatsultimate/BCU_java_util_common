@@ -986,8 +986,8 @@ public class Data {
 			false, //haste
 			false, //miniwave
 			true,  //imu.summon
-			false, //damage cut
-			false, //damage cap
+			true, //damage cut
+			true, //damage cap
 	};
 
 	public static final int WT_WAVE = 1;

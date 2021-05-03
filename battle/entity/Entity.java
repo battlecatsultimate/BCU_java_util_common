@@ -1723,7 +1723,7 @@ public abstract class Entity extends AbEntity {
 	 * get the extra proc time due to fruits, for EEnemy only
 	 */
 	private double getFruit(ArrayList<Trait> trait, int dire) {
-		if (traitType() != dire)
+		if (receive(dire) || receive(-1))
 			return 0;
 		ArrayList<Trait> sharedTraits = new ArrayList<>(trait);
 		sharedTraits.retainAll(traits);

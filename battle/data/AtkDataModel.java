@@ -141,7 +141,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	protected int[] getAtkData() {
-		return new int[] { atk, pre, 1 };
+		return new int[] { atk, pre, 1, dire };
 	}
 
 	protected boolean isLD() {

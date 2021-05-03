@@ -157,6 +157,10 @@ public abstract class CustomEntity extends DataEntity {
 		boolean ans = false;
 		for (AtkDataModel adm : atks)
 			ans |= adm.isLD();
+		if(getRevenge() != null)
+			ans |= getRevenge().isLD();
+		if(getResurrection() != null)
+			ans |= getResurrection().isLD();
 		return ans;
 	}
 
@@ -165,6 +169,10 @@ public abstract class CustomEntity extends DataEntity {
 		boolean ans = false;
 		for (AtkDataModel adm : atks)
 			ans |= adm.isOmni();
+		if(getRevenge() != null)
+			ans |= getRevenge().isOmni();
+		if(getResurrection() != null)
+			ans |= getResurrection().isOmni();
 		return ans;
 	}
 
