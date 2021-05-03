@@ -253,6 +253,28 @@ public class CommonStatic {
 		}
 	}
 
+	public static String[] getPackContentID(String input) {
+		StringBuilder packID = new StringBuilder();
+		StringBuilder entityID = new StringBuilder();
+
+		boolean packEnd = false;
+
+		for (int i = 0; i < input.length(); i++) {
+			if (!packEnd) {
+				if (Character.toString(input.charAt(i)).matches("[0-9a-z]"))
+					packID.append(input.charAt(i));
+				else {
+					packEnd = true;
+				}
+			} else {
+				if (Character.isDigit(input.charAt(i)))
+					entityID.append(input.charAt(i));
+			}
+		}
+
+		return new String[] { packID.toString(), entityID.toString() };
+	}
+
 	public static String[] getPackEntityID(String input) {
 		String[] result = new String[2];
 

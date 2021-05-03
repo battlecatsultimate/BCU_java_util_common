@@ -17,7 +17,7 @@ public abstract class AttackAb extends BattleObj {
 	public final AttackAb origin;
 	public final MaskAtk matk;
 	public final int layer;
-	public final boolean isLongAtk;
+	public final boolean isLongAtk, specialTrait;
 	public int duration;
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
@@ -40,6 +40,7 @@ public abstract class AttackAb extends BattleObj {
 		this.matk = matk;
 		this.layer = layer;
 		this.isLongAtk = isLongAtk;
+		specialTrait = matk != null && matk.getSPtrait();
 	}
 
 	protected AttackAb(AttackAb a, double STA, double END, boolean isLongAtk) {
@@ -58,6 +59,7 @@ public abstract class AttackAb extends BattleObj {
 		this.matk = a.matk;
 		this.layer = a.layer;
 		this.isLongAtk = isLongAtk;
+		specialTrait = a.specialTrait;
 	}
 
 	/**

@@ -293,7 +293,7 @@ public class Stage extends Data
 			ans.bg = bg.clone();
 		if (castle != null)
 			ans.castle = castle.clone();
-		ans.name = name;
+		ans.name = toString();
 		ans.data = data.copy();
 		if (lim != null)
 			ans.lim = lim.clone();

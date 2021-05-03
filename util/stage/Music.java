@@ -7,6 +7,7 @@ import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
 import common.system.files.FileData;
+import common.util.Data;
 
 @JsonClass
 @IndexCont(PackData.class)
@@ -36,7 +37,11 @@ public class Music implements Indexable<PackData, Music> {
 
 	@Override
 	public String toString() {
-		return id.toString();
+		if (id != null) {
+			return Data.trio(id.id) + ".ogg - " + id.pack;
+		} else {
+			return null;
+		}
 	}
 
 }
