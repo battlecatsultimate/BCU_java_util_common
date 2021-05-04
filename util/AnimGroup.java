@@ -8,10 +8,7 @@ import common.util.anim.AnimCE;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AnimGroup {
     public static final AnimGroup workspaceGroup = new AnimGroup();
@@ -53,7 +50,7 @@ public class AnimGroup {
         }
     }
 
-    public final Map<String, ArrayList<AnimCE>> groups = new HashMap<>();
+    public final Map<String, ArrayList<AnimCE>> groups = new TreeMap<>();
 
     public void resetGroup() {
         groups.clear();
