@@ -14,6 +14,7 @@ import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.util.AnimGroup;
 import common.util.Animable;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
@@ -74,6 +75,7 @@ public class AnimCE extends AnimCI {
 
 		if(id.pack.equals(ResourceLocation.LOCAL)) {
 			map().put(id.id, this);
+			AnimGroup.workspaceGroup.renewGroup();
 		}
 	}
 
@@ -114,6 +116,7 @@ public class AnimCE extends AnimCI {
 
 	public void delete() {
 		map().remove(id.id);
+		AnimGroup.workspaceGroup.renewGroup();
 		new SourceAnimSaver(id, this).delete();
 	}
 
@@ -149,6 +152,7 @@ public class AnimCE extends AnimCI {
 	public void localize() {
 		check();
 		map().remove(id.id);
+		AnimGroup.workspaceGroup.renewGroup();
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
 		for (UserPack pack : UserProfile.getUserPacks())
@@ -244,6 +248,7 @@ public class AnimCE extends AnimCI {
 		Workspace.validate(Source.ANIM, id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().put(id.id, this);
+		AnimGroup.workspaceGroup.renewGroup();
 		saver.saveAll();
 		reloImg();
 		unSave("rename (not applicapable for undo)");
