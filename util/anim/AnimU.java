@@ -69,6 +69,11 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 		return anims[2].len + 1;
 	}
 
+	public int[][] getConfs() {
+		partial();
+		return mamodel.confs;
+	}
+
 	@Override
 	public EAnimU getEAnim(UType t) {
 		check();
