@@ -84,7 +84,7 @@ public class EEnemy extends Entity {
 		int width = ((MaskEnemy) data).getLim();
 
 		if (mark == 1)
-			ans = pos - 700 - width * 6; // guessed value compared to BC
+			ans = pos - 700 - width; // guessed value compared to BC
 		else
 			ans = pos - data.getWidth();
 		return Math.max(0, ans);
