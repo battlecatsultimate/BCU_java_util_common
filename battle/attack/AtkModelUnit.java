@@ -49,7 +49,7 @@ public class AtkModelUnit extends AtkModelEntity {
 				lvl[0] = MathUtil.clip(lvl[0], 1, u.max + u.maxp);
 				lvl[0] *= (100.0 - resist)/100;
 				double up = ent.pos + getDire() * proc.dis;
-				EForm ef = new EForm(u.forms[proc.form - 1], lvl);
+				EForm ef = new EForm(u.forms[Math.max(proc.form - 1, 0)], lvl);
 				EUnit eu = ef.invokeEntity(b, lvl[0]);
 				if (conf.same_health)
 					eu.health = e.health;
