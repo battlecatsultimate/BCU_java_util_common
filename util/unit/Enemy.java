@@ -158,6 +158,11 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			if (UserProfile.isOlderPack(pack, "0.5.2.0") && enemy.tba != 0) {
 				enemy.tba += enemy.getPost() + 1;
 			}
+
+			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
+				anim.load();
+				enemy.limit = Math.abs(anim.mamodel.parts[0][6]) * 6;
+			}
 		}
 	}
 
