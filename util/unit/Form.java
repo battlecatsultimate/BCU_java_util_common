@@ -161,6 +161,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					}
 					if (form.getProc().SUMMON.prob > 0) {
 						form.getProc().SUMMON.form = 1;
+						form.getProc().SUMMON.mult = 1;
 					}
 				}
 			}
