@@ -12,6 +12,7 @@ public abstract class ContAb extends BattleObj {
 	public double pos;
 	public boolean activate = true;
 	public int layer;
+	public boolean drawn = false;
 
 	protected ContAb(StageBasis b, double p, int lay) {
 		sb = b;
@@ -22,6 +23,12 @@ public abstract class ContAb extends BattleObj {
 
 	public abstract void draw(FakeGraphics gra, P p, double psiz);
 
-	public abstract void update();
+	public void update() {
+		if(drawn)
+			drawn = false;
+		updatePartial();
+	}
+
+	public abstract void updatePartial();
 
 }

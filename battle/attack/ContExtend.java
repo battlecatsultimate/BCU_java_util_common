@@ -49,7 +49,7 @@ public class ContExtend extends ContAb {
     }
 
     @Override
-    public void update() {
+    public void updatePartial() {
         tempAtk = false;
         t--;
         if (rept > 0)
