@@ -10,6 +10,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	private final Enemy enemy;
 
 	private int earn, star;
+	public int limit;
 
 	public DataEnemy(Enemy e) {
 		enemy = e;
@@ -161,6 +162,11 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if ((type & TB_ALIEN) > 0)
 			return b.t().getAlienMulti();
 		return 1;
+	}
+
+	@Override
+	public int getLim() {
+		return limit * 6;
 	}
 
 }

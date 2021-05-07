@@ -70,7 +70,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		de = new DataEnemy(this);
 		anim = new AnimUD(str, Data.trio(id.id) + "_e", "edi_" + Data.trio(id.id) + ".png", null);
 		anim.getEdi().check();
-
+		((DataEnemy) de).limit = Math.abs(anim.getConfs()[0][2]);
 	}
 
 	public List<Stage> findApp() {
@@ -157,6 +157,11 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 			if (UserProfile.isOlderPack(pack, "0.5.2.0") && enemy.tba != 0) {
 				enemy.tba += enemy.getPost() + 1;
+			}
+
+			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
+				anim.load();
+				enemy.limit = Math.abs(anim.mamodel.parts[0][6]) * 6;
 			}
 		}
 	}
