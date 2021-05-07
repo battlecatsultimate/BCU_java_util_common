@@ -22,4 +22,6 @@ public interface MaskEnemy extends MaskEntity {
 
 	double multi(Basis b);
 
+	int getLim();
+
 }

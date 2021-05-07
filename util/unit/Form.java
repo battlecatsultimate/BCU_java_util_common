@@ -154,15 +154,15 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					form.tba += form.getPost() + 1;
 				}
 
-				if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
-					if (form.type != 0) {
-						form.traits = Trait.convertType(form.type);
-						form.type = 0;
-					}
-					if (form.getProc().SUMMON.prob > 0) {
+				if (UserProfile.isOlderPack(pack, "0.5.4.0") && form.getProc().SUMMON.prob > 0) {
 						form.getProc().SUMMON.form = 1;
 						form.getProc().SUMMON.mult = 1;
-					}
+						form.getProc().SUMMON.type.fix_buff = true;
+				}
+
+				if (UserProfile.isOlderPack(pack, "0.5.4.1") && form.type != 0) {
+					form.traits = Trait.convertType(form.type);
+					form.type = 0;
 				}
 			}
 		}

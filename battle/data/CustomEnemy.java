@@ -20,7 +20,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	public Enemy pack;
 
 	@JsonField
-	public int star, drop;
+	public int star, drop, limit;
 
 	public CustomEnemy() {
 		rep = new AtkDataModel(this);
@@ -78,6 +78,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 			MaskEnemy me = (MaskEnemy) de;
 			star = me.getStar();
 			drop = (int) me.getDrop();
+			limit = me.getLim();
 		}
 	}
 
@@ -89,6 +90,9 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 			return b.t().getAlienMulti();
 		return 1;
 	}
+
+	@Override
+	public int getLim() { return limit; }
 
 	private void zread(int val, InStream is) {
 		val = getVer(is.nextString());

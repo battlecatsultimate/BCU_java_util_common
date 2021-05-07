@@ -86,14 +86,11 @@ public class EEnemy extends Entity {
 
 	@Override
 	protected double getLim() {
-		double ans = 0;
-		// third number of last ma_model line, or if it's 0 (custom unit), use pivot-x of part 0
-		int width = Math.abs(anim.getMaModel().confs[0][2]);
-		if (width == 0)
-			width = Math.abs(anim.getMaModel().parts[0][6]);
+		double ans;
+		int width = ((MaskEnemy) data).getLim();
 
 		if (mark == 1)
-			ans = pos - 700 - width * 6; // guessed value compared to BC
+			ans = pos - 700 - width; // guessed value compared to BC
 		else
 			ans = pos - data.getWidth();
 		return Math.max(0, ans);
