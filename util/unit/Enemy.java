@@ -71,7 +71,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		anim = new AnimUD(str, Data.trio(id.id) + "_e", "edi_" + Data.trio(id.id) + ".png", null);
 		anim.getEdi().check();
 		anim.partial();
-		((DataEnemy) de).limit = Math.abs(anim.mamodel.confs[0][2] * 6);
+		((DataEnemy) de).limit = Math.abs(anim.mamodel.confs[0][2]);
 		anim.unload();
 	}
 
