@@ -214,6 +214,10 @@ public class CommonStatic {
 		return ans;
 	}
 
+	public static String verifyFileName(String str) {
+		return str.replaceAll("[\\\\/:*<>?\"|]", "_");
+	}
+
 	public static int[] parseIntsN(String str) {
 		ArrayList<String> lstr = new ArrayList<>();
 		int t = -1;
