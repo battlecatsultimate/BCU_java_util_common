@@ -360,7 +360,7 @@ public class AnimCE extends AnimCI {
 	}
 
 	@Override
-	protected void partial() {
+	public void partial() {
 		super.partial();
 		standardize();
 	}
