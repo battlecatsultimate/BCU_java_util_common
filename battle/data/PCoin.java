@@ -25,7 +25,6 @@ public class PCoin extends Data {
 		}
 	}
 
-	private final int id;
 	private final DataUnit du;
 
 	public final DataUnit full;
@@ -35,7 +34,7 @@ public class PCoin extends Data {
 	public final int[][] info = new int[5][13];
 
 	private PCoin(String[] strs) {
-		id = CommonStatic.parseIntN(strs[0]);
+		int id = CommonStatic.parseIntN(strs[0]);
 		type = CommonStatic.parseIntN(strs[1]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
 

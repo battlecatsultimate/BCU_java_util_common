@@ -18,7 +18,7 @@ public class EForm extends Data {
 	public EForm(Form form, int... level) {
 		f = form;
 		this.level = new Level(level);
-		PCoin pc = f.getPCoin();
+		PCoin pc = f.du.getPCoin();
 		if (pc != null)
 			du = pc.improve(level);
 		else
@@ -28,7 +28,7 @@ public class EForm extends Data {
 	public EForm(Form form, Level level) {
 		f = form;
 		this.level = level;
-		PCoin pc = f.getPCoin();
+		PCoin pc = f.du.getPCoin();
 		if (pc != null)
 			du = pc.improve(level.getLvs());
 		else
@@ -39,14 +39,14 @@ public class EForm extends Data {
 		double d = f.unit.lv.getMult(level.getLvs()[0]);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
+		return new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
 	}
 
 	public EUnit invokeEntity(StageBasis b, int Lvl) {
 		double d = f.unit.lv.getMult(Lvl);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
+		return new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
 	}
 
 	public int getPrice(int sta) {

@@ -160,7 +160,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	public int[] getPrefLvs() {
 		int[] ans = new int[6];
 		if (forms.length >= 3) {
-			PCoin pc = forms[2].getPCoin();
+			PCoin pc = forms[2].du.getPCoin();
 			if (pc != null)
 				ans = pc.max.clone();
 		}

@@ -105,7 +105,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	}
 
 	public int getDefaultPrice(int sta) {
-		PCoin pc = getPCoin();
+		PCoin pc = du.getPCoin();
 		int price = pc == null ? du.getPrice() : pc.full.getPrice();
 		return (int) (price * (1 + sta * 0.5));
 	}
@@ -122,14 +122,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return new String[0];
 	}
 
-	public PCoin getPCoin() {
-		if (du instanceof DataUnit)
-			return ((DataUnit) du).pcoin;
-		return null;
-	}
-
 	public MaskUnit maxu() {
-		PCoin pc = getPCoin();
+		PCoin pc = du.getPCoin();
 		if (pc != null)
 			return pc.full;
 		return du;
@@ -175,7 +169,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		maxs[0] = unit.max + unit.maxp;
 		PCoin pc = null;
 		if (unit.forms.length >= 3)
-			pc = unit.forms[2].getPCoin();
+			pc = unit.forms[2].du.getPCoin();
 		if (pc != null)
 			for (int i = 0; i < 5; i++)
 				maxs[i + 1] = Math.max(1, pc.info[i][1]);

@@ -17,6 +17,9 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	@JsonField
 	public int price, resp, back, front;
 
+	@JsonField
+	public PCoin pcoin = null;
+
 	public CustomUnit() {
 		rep = new AtkDataModel(this);
 		atks = new AtkDataModel[1];
@@ -66,6 +69,9 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	public int getRespawn() {
 		return resp;
 	}
+
+	@Override
+	public PCoin getPCoin() { return pcoin; }
 
 	@Override
 	public void importData(MaskEntity de) {

@@ -196,6 +196,9 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	}
 
 	@Override
+	public PCoin getPCoin() { return pcoin; }
+
+	@Override
 	protected DataUnit clone() {
 		DataUnit ans = (DataUnit) err(super::clone);
 		ans.proc = proc.clone();
