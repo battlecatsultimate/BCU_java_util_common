@@ -96,6 +96,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 		@Override
 		public void unload() {
+			if(num != null) {
+				num.unload();
+
+				num = null;
+			}
 		}
 
 	}
