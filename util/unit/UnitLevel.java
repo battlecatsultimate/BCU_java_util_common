@@ -66,8 +66,7 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 	public double getMult(int lv) {
 		int dec = lv;
 		double d = 0.8;
-		for (int i = 0; i < lvs.length; i++) {
-			int mul = lvs[i];
+		for (int mul : lvs) {
 			if (dec >= 10) {
 				d += mul * 0.1;
 				dec -= 10;
@@ -81,19 +80,19 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	@Override
 	public String toString() {
-		String ans = "{";
+		StringBuilder ans = new StringBuilder("{");
 		for (int set : lvs) {
 			if (ans.length() > 1)
-				ans += ", ";
-			ans += set;
+				ans.append(", ");
+			ans.append(set);
 		}
-		ans += "}";
-		return ans;
+		ans.append("}");
+		return ans.toString();
 	}
 
 	private void zread(InStream is) {
 		int ver = is.nextInt();
-		int lvs[] = new int[3];
+		int[] lvs = new int[3];
 		if (ver == 1) {
 			int[] vs = is.nextIntsB();
 			lvs[0] = vs[0];
@@ -105,12 +104,14 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 			lvs[1] = vs[2][0];
 			lvs[2] = vs[3][0];
 		}
+
 		int pre = 0, mul = 20;
 		for (int i = 0; i < 3; i++) {
-			for (int j = pre; j < lvs[i] / 10; j++)
-				this.lvs[j] = mul;
+			for (int j = pre; j < lvs[i]; j++)
+				if(j < 20)
+					this.lvs[j] = mul;
 			mul /= 2;
-			pre = lvs[i] / 10;
+			pre = lvs[i];
 		}
 	}
 
