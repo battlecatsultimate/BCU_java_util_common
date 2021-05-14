@@ -105,9 +105,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	}
 
 	public int getDefaultPrice(int sta) {
-		PCoin pc = du.getPCoin();
-		int price = pc == null ? du.getPrice() : pc.full.getPrice();
-		return (int) (price * (1 + sta * 0.5));
+		MaskUnit upc = maxu();
+		return (int) (upc.getPrice() * (1 + sta * 0.5));
 	}
 
 	@Override
@@ -124,8 +123,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	public MaskUnit maxu() {
 		PCoin pc = du.getPCoin();
-		if (pc != null)
+		if (pc != null) {
+			if (pc.full == null)
+				pc.update();
 			return pc.full;
+		}
 		return du;
 	}
 
@@ -162,18 +164,26 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		}
 	}
 
+	public int[] getPrefLvs() {
+		int[] ans = new int[6];
+		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
+		if (pc != null)
+			ans = pc.max.clone();
+		ans[0] = unit.getPrefLv();
+		return ans;
+	}
+
 	public int[] regulateLv(int[] mod, int[] lv) {
 		if (mod != null)
-			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, 6));
+			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, lv.length));
 		int[] maxs = new int[6];
 		maxs[0] = unit.max + unit.maxp;
-		PCoin pc = null;
-		if (unit.forms.length >= 3)
-			pc = unit.forms[2].du.getPCoin();
-		if (pc != null)
-			for (int i = 0; i < 5; i++)
-				maxs[i + 1] = Math.max(1, pc.info[i][1]);
-		for (int i = 0; i < 6; i++) {
+		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
+		if (pc != null) {
+			for (int i = 0; i < pc.info.size(); i++)
+				maxs[i + 1] = Math.max(1, pc.info.get(i)[1]);
+		}
+		for (int i = 0; i < lv.length; i++) {
 			if (lv[i] < 0)
 				lv[i] = 0;
 			if (lv[i] > maxs[i])

@@ -127,6 +127,10 @@ public class StageBasis extends BattleObj {
 		themeType = type;
 	}
 
+	public void changeBG(Identifier<Background> id) {
+		theme = id;
+	}
+
 	public int entityCount(int d) {
 		int ans = 0;
 		if (ebase instanceof EEnemy)
@@ -163,7 +167,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	public double getEBHP() {
-		return 1.0 * ebase.health / ebase.maxH;
+		return 100.0 * ebase.health / ebase.maxH;
 	}
 
 	/**
@@ -461,7 +465,7 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme != null) {
 			bg = Identifier.getOr(theme, Background.class);
-			if (themeType.kill) {
+			if (themeType != null && themeType.kill) {
 				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();
 				la.clear();
@@ -474,7 +478,10 @@ public class StageBasis extends BattleObj {
 		if (s_stop == 0 && themeTime > 0) {
 			themeTime--;
 			if (themeTime == 0)
-				theme = st.bg;
+				if (getEBHP() < st.bgh)
+					theme = st.bg1;
+				else
+					theme = st.bg;
 		}
 	}
 

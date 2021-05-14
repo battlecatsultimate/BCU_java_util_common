@@ -311,7 +311,7 @@ public class Editors {
 				t.type.range_type = 0;
 				t.type.revive_non_zombie = false;
 			} else {
-				t.health = MathUtil.clip(t.health, 1, 100);
+				t.health = Math.max(t.health, 1);
 				t.time = Math.max(t.time, 1);
 				if (!t.type.revive_others) {
 					t.dis_0 = t.dis_1 = 0;

@@ -10,14 +10,14 @@ import common.util.unit.Form;
 import java.util.ArrayList;
 
 @JsonClass
-public class CustomUnit extends CustomEntity implements MaskUnit {
+public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 
 	public Form pack;
 
 	@JsonField
 	public int price, resp, back, front;
 
-	@JsonField
+	@JsonField(gen = JsonField.GenType.GEN)
 	public PCoin pcoin = null;
 
 	public CustomUnit() {
@@ -82,7 +82,21 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 			resp = mu.getRespawn();
 			back = Math.min(mu.getBack(), mu.getFront());
 			front = Math.max(mu.getBack(), mu.getFront());
+			PCoin p = mu.getPCoin();
+			if (p != null) {
+				pcoin = new PCoin(this);
+				pcoin.info.addAll(p.info);
+			}
 		}
+	}
+
+	@Override
+	public CustomUnit clone() {
+		CustomUnit ans = new CustomUnit();
+		ans.importData(this);
+		ans.pack = getPack();
+		ans.getPack().anim = getPack().anim;
+		return ans;
 	}
 
 	private void zread(int val, InStream is) {

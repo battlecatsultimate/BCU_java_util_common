@@ -2,7 +2,6 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
-import common.battle.data.PCoin;
 import common.io.json.FieldOrder;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCGeneric;
@@ -155,17 +154,6 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	public int getPrefLv() {
 		double ans = MathUtil.clip(MainBCU.prefLevel,1, max) + (rarity < 2 && maxp > 0 ? ((MainBCU.prefLevel - 1) / 49.0) * maxp : 0);
 		return MathUtil.clip(Math.max(MainBCU.prefLevel,(int)ans),1,max + maxp);
-	}
-
-	public int[] getPrefLvs() {
-		int[] ans = new int[6];
-		if (forms.length >= 3) {
-			PCoin pc = forms[2].du.getPCoin();
-			if (pc != null)
-				ans = pc.max.clone();
-		}
-		ans[0] = getPrefLv();
-		return ans;
 	}
 
 	@Override

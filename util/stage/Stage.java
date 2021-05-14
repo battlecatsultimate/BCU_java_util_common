@@ -126,11 +126,11 @@ public class Stage extends Data
 	public final Identifier<Stage> id;
 	public String name = "";
 	public boolean non_con, trail;
-	public int len, health, max, mush;
+	public int len, health, max, mush, bgh;
 	public int timeLimit = 0;
 	public int minSpawn = 1, maxSpawn = 1;
 	public Identifier<CastleImg> castle;
-	public Identifier<Background> bg;
+	public Identifier<Background> bg, bg1;
 	public Identifier<Music> mus0, mus1;
 	public long loop0, loop1;
 	public SCDef data;
@@ -291,6 +291,8 @@ public class Stage extends Data
 		ans.max = max;
 		if (bg != null)
 			ans.bg = bg.clone();
+		if (bg1 != null)
+			ans.bg1 = bg1.clone();
 		if (castle != null)
 			ans.castle = castle.clone();
 		ans.name = toString();
@@ -301,6 +303,7 @@ public class Stage extends Data
 			ans.mus0 = mus0.clone();
 		if (mus1 != null)
 			ans.mus1 = mus1.clone();
+		ans.bgh = bgh;
 		ans.mush = mush;
 		return ans;
 	}

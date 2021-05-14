@@ -88,10 +88,10 @@ public class LineUp extends Data {
 	/**
 	 * get level of an Unit, if no date recorded, record default one
 	 */
-	public synchronized Level getLv(Unit u) {
-		if (!map.containsKey(u.id))
-			setLv(u, u.getPrefLvs());
-		return map.get(u.id);
+	public synchronized Level getLv(Form u) {
+		if (!map.containsKey(u.unit.id))
+			setLv(u.unit, u.getPrefLvs());
+		return map.get(u.unit.id);
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class LineUp extends Data {
 				if (fs[i][j] == null)
 					efs[i][j] = null;
 				else
-					efs[i][j] = new EForm(fs[i][j], getLv(fs[i][j].unit));
+					efs[i][j] = new EForm(fs[i][j], getLv(fs[i][j]));
 	}
 
 	private void validate() {

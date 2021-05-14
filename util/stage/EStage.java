@@ -121,7 +121,7 @@ public class EStage extends BattleObj {
 	private boolean inHealth(Line line) {
 		int c0 = !s.trail ? Math.min(line.castle_0, 100) : line.castle_0;
 		int c1 = line.castle_1;
-		double d = !s.trail ? b.getEBHP() * 100 : b.ebase.maxH - b.ebase.health;
+		double d = !s.trail ? b.getEBHP() : b.ebase.maxH - b.ebase.health;
 		return c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
 	}
 

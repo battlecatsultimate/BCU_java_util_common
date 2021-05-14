@@ -18,4 +18,6 @@ public interface MaskUnit extends MaskEntity {
 
 	PCoin getPCoin();
 
+	MaskUnit clone();
+
 }

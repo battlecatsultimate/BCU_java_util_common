@@ -16,6 +16,7 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0, angle = 0;
+	//private P path;
 	public boolean enabled = true, canDo = true;
 	public double pos, height, updown;
 
@@ -104,7 +105,7 @@ public class Sniper extends AtkModelAb {
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);
 
-		// Get distance which bullet will fly
+		// TODO Get distance which bullet will fly
 		// path = new P(-(getPos()-pos+300),height);
 	}
 }

@@ -1020,7 +1020,7 @@ public class Data {
 			{ 0, P_WARP, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ 1, AB_BASE, 0 }, // 12:
+			{ 1, AB_BASE, 0 }, // 12: Base Destroyer
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
@@ -1031,8 +1031,8 @@ public class Data {
 			{ 0, P_IMUSLOW }, // 20: res slow
 			{ 0, P_IMUKB }, // 21: res kb
 			{ 0, P_IMUWAVE }, // 22: res wave
-			{ 1, AB_WAVES, 0 }, // 23:
-			{ 0, P_IMUWARP, 0 }, // 24:
+			{ 1, AB_WAVES, 0 }, // 23: waveblock
+			{ 0, P_IMUWARP, 0 }, // 24: res warp
 			{ 2, PC2_COST }, // 25: reduce cost
 			{ 2, PC2_CD }, // 26: reduce cooldown
 			{ 2, PC2_SPEED }, // 27: inc speed
@@ -1041,15 +1041,15 @@ public class Data {
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK
 			{ 2, PC2_HP }, // 32: inc HP
-			{ 4, TRAIT_RED, 0 }, // 33:
-			{ 4, TRAIT_FLOAT, 0 }, // 34:
+			{ 4, TRAIT_RED, 0 }, // 33: targeting red
+			{ 4, TRAIT_FLOAT, 0 }, // 34: targeting floating
 			{ 4, TRAIT_BLACK, 0 }, // 35: targeting black
-			{ 4, TRAIT_METAL, 0 }, // 36:
-			{ 4, TRAIT_ANGEL }, // 37: targeting angle
+			{ 4, TRAIT_METAL, 0 }, // 36: targeting metal
+			{ 4, TRAIT_ANGEL }, // 37: targeting angel
 			{ 4, TRAIT_ALIEN }, // 38: targeting alien
 			{ 4, TRAIT_ZOMBIE }, // 39: targeting zombie
 			{ 4, TRAIT_RELIC }, // 40: targeting relic
-			{ 4, TRAIT_WHITE, 0 }, // 41:
+			{ 4, TRAIT_WHITE, 0 }, // 41: targeting relic
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
 			{ 3, P_IMUWEAK }, // 44: immune to weak
