@@ -722,6 +722,7 @@ public class Data {
 	public static final int SE_WARP_ENTER = 73;
 	public static final int SE_WARP_EXIT = 74;
 	public static final int SE_BOSS = 45;
+	public static final int SE_CLICK = 10;
 	public static final int SE_SPEND_FAIL = 15;
 	public static final int SE_SPEND_SUC = 19;
 	public static final int SE_SPEND_REF = 27;

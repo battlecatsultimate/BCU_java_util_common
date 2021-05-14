@@ -52,7 +52,7 @@ public class StageBasis extends BattleObj {
 	public double mon;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
-	public int respawnTime;
+	public int respawnTime, unitRespawnTime;
 	public Background bg;
 
 	private final List<AttackAb> la = new ArrayList<>();
@@ -259,6 +259,10 @@ public class StageBasis extends BattleObj {
 		if (ubase.health == 0) {
 			return false;
 		}
+
+		if (unitRespawnTime > 0)
+			return false;
+
 		if (elu.cool[i][j] > 0) {
 			if(boo) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
@@ -294,6 +298,7 @@ public class StageBasis extends BattleObj {
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 			mon -= elu.price[i][j];
+			unitRespawnTime = 1;
 			return true;
 		}
 		return false;
@@ -342,6 +347,9 @@ public class StageBasis extends BattleObj {
 					}
 				}
 			}
+
+			if(unitRespawnTime > 0)
+				unitRespawnTime--;
 
 			if(respawnTime > 0)
 				respawnTime--;
