@@ -215,6 +215,7 @@ public class UserProfile {
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
 		int tot = queue.size();
 		int ind = 0;
+		System.out.println(queue);
 		while (queue.removeIf(profile::add))
 			prog.accept(1.0 * (ind++) / tot);
 		profile.pending = null;
