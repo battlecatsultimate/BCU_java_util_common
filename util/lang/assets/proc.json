@@ -163,7 +163,7 @@
         "abbr_name": "inc. atk",
         "full_name": "Attack Up",
         "tooltip": null,
-        "format": "Attack increased to (mult)% after health dropped below (health)%",
+        "format": "Attack increased by (mult)% after health dropped below (health)%",
         "class": {
             "health": {
                 "name": "health",
@@ -191,7 +191,7 @@
         "abbr_name": "burrow",
         "full_name": "Burrow",
         "tooltip": null,
-        "format": "Burrow [(count<0){infinite}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}] with the distance of (dis)",
+        "format": "Burrow [(count<0){infinite}(count==0){(count) time}(count==1){once}(count==2){twice}(count>2){(count) times}] with the distance of (dis)",
         "class": {
             "count": {
                 "name": "burrow count",

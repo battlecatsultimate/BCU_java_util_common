@@ -22,7 +22,7 @@ public class ELineUp extends BattleObj {
 					continue;
 				}
 				price[i][j] = lu.efs[i][j].getPrice(b.st.getCont().price);
-				maxC[i][j] = sb.b.t().getFinRes(lu.fs[i][j].du.getRespawn());
+				maxC[i][j] = sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn());
 				if (lim == null)
 					continue;
 				int overl = lim.rare >> lu.fs[i][j].unit.rarity;

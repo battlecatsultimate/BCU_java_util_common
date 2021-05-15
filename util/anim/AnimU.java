@@ -110,7 +110,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 		super.unload();
 	}
 
-	protected void partial() {
+	public void partial() {
 		if (!partial) {
 			partial = true;
 			imgcut = loader.getIC();
