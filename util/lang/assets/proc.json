@@ -163,7 +163,7 @@
         "abbr_name": "inc. atk",
         "full_name": "Attack Up",
         "tooltip": null,
-        "format": "Attack increased to (mult)% after health dropped below (health)%",
+        "format": "Attack increased by (mult)% after health dropped below (health)%",
         "class": {
             "health": {
                 "name": "health",
