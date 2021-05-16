@@ -103,7 +103,7 @@ public class PCoin extends Data {
 					modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
 				}
 			}
-			if (maxlv == 0)
+			else
 				for (int j = 0; j < 4; j++)
 					modifs[j] = info.get(i)[3 + j * 2];
 
@@ -169,12 +169,19 @@ public class PCoin extends Data {
 		if (type[0] == PC_AB)
 			ans.abi |= type[1];
 		else {
-			if (type[1] == PC2_SPEED)
-				ans.speed += modifs[0];
-			else if (type[1] == PC2_CD)
-				ans.respawn -= modifs[0];
-			else if (type[1] == PC2_COST)
-				ans.price -= modifs[0];
+			switch (type[1]) {
+				case PC2_SPEED:
+					ans.speed += modifs[0];
+					break;
+				case PC2_CD:
+					ans.respawn -= modifs[0];
+					break;
+				case PC2_COST:
+					ans.price -= modifs[0];
+					break;
+				case PC2_HB:
+					ans.hb += modifs[0];
+			}
 		}
 	}
 
@@ -182,12 +189,19 @@ public class PCoin extends Data {
 		if (type[0] == PC_AB)
 			ans.abi |= type[1];
 		else {
-			if (type[1] == PC2_SPEED)
-				ans.speed += modifs[0];
-			else if (type[1] == PC2_CD)
-				ans.resp -= modifs[0];
-			else if (type[1] == PC2_COST)
-				ans.price -= modifs[0];
+			switch (type[1]) {
+				case PC2_SPEED:
+					ans.speed += modifs[0];
+					break;
+				case PC2_CD:
+					ans.resp -= modifs[0];
+					break;
+				case PC2_COST:
+					ans.price -= modifs[0];
+					break;
+				case PC2_HB:
+					ans.hb += modifs[0];
+			}
 		}
 	}
 

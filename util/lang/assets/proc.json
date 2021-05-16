@@ -191,7 +191,7 @@
         "abbr_name": "burrow",
         "full_name": "Burrow",
         "tooltip": null,
-        "format": "Burrow [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}] through a distance of (dis)",
+        "format": "Burrow [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>2){(count) times}] through a distance of (dis)",
         "class": {
             "count": {
                 "name": "burrow count",
@@ -208,7 +208,7 @@
         "full_name": "Revive",
         "tooltip": "Basic Revive only includes first 3 parameter. Later parameters are used for Ranged Revive",
         "format": [
-            "Revive [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>1){(count) times}]",
+            "Revive [(count<0){infinite times}(count==0){(count) time}(count==1){once}(count==2){twice}(count>2){(count) times}]",
             " after (_dispTime(time)) with (health)% of  max health.",
             "[(type.imu_zkill){ Immune to Zombie Killer ability.}]",
             "[(type.revive_others){ This ability will be applicable to other ",

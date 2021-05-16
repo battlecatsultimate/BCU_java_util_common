@@ -9,6 +9,8 @@ import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 
+import java.util.Arrays;
+
 public class Res extends ImgCore {
 
 	public static P getBase(AbEntity ae, SymCoord coor, boolean dojo) {
@@ -128,6 +130,7 @@ public class Res extends ImgCore {
 		aux.icon[1] = new VImg[PROC_TOT];
 		aux.icon[2] = new VImg[ATK_TOT];
 		aux.icon[3] = new VImg[TRAIT_TOT];
+		aux.icon[4] = new VImg[PC2_TOT];
 		aux.icon[3][TRAIT_RED] = new VImg(parts[77]);
 		aux.icon[3][TRAIT_FLOAT] = new VImg(parts[78]);
 		aux.icon[3][TRAIT_BLACK] = new VImg(parts[79]);
@@ -177,9 +180,17 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUVOLC] = new VImg(parts[243]);
 		aux.icon[1][P_CURSE] = new VImg(parts[289]);
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
-		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png");
+		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png"); // TODO - Add these abilities' icons
 		aux.icon[1][P_DMGCUT] = new VImg(parts[231]);
 		aux.icon[1][P_DMGCAP] = new VImg(parts[231]);
+
+		//These are used for talent edit page icons
+		aux.icon[4][PC2_HP] = new VImg(parts[120]);
+		aux.icon[4][PC2_ATK] = new VImg(parts[118]);
+		aux.icon[4][PC2_SPEED] = new VImg(parts[96]);
+		aux.icon[4][PC2_COST] = new VImg(parts[92]);
+		aux.icon[4][PC2_CD] = new VImg(parts[94]);
+		aux.icon[4][PC2_HB] = new VImg(parts[98]);
 
 		aux.icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		aux.icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");

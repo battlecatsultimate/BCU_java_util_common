@@ -40,7 +40,7 @@ public class CommonStatic {
 		public VImg[][] ico = new VImg[2][];
 		public VImg[][] num = new VImg[9][11];
 		public VImg[][] battle = new VImg[3][];
-		public VImg[][] icon = new VImg[4][];
+		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
 
 		// Background resources
@@ -209,6 +209,10 @@ public class CommonStatic {
 			ans = -1;
 		}
 		return ans;
+	}
+
+	public static String verifyFileName(String str) {
+		return str.replaceAll("[\\\\/:*<>?\"|]", "_");
 	}
 
 	public static int[] parseIntsN(String str) {

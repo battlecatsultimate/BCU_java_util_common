@@ -722,7 +722,6 @@ public class Data {
 	public static final int SE_WARP_ENTER = 73;
 	public static final int SE_WARP_EXIT = 74;
 	public static final int SE_BOSS = 45;
-	public static final int SE_CLICK = 10;
 	public static final int SE_SPEND_FAIL = 15;
 	public static final int SE_SPEND_SUC = 19;
 	public static final int SE_SPEND_REF = 27;
@@ -813,7 +812,7 @@ public class Data {
 	public static final int T_TOT = 11;
 
 	// abi bit filter
-	public static final int AB_GOOD = 1 << 0;
+	public static final int AB_GOOD = 1;
 	public static final int AB_RESIST = 1 << 1;
 	public static final int AB_MASSIVE = 1 << 2;
 	public static final int AB_ONLY = 1 << 3;
@@ -1002,6 +1001,8 @@ public class Data {
 	public static final int PC2_SPEED = 2;
 	public static final int PC2_COST = 3;
 	public static final int PC2_CD = 4;
+	public static final int PC2_HB = 5;
+	public static final int PC2_TOT = 6;
 	// -1 for None
 	// 0 for Proc
 	// 1 for Ability
@@ -1037,7 +1038,7 @@ public class Data {
 			{ 2, PC2_COST }, // 25: reduce cost
 			{ 2, PC2_CD }, // 26: reduce cooldown
 			{ 2, PC2_SPEED }, // 27: inc speed
-			{ -1, 0 }, // 28:
+			{ 2, PC2_HB }, // 28: inc knockbacks
 			{ 3, P_IMUCURSE }, // 29: imu curse
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK

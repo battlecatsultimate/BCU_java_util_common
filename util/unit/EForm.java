@@ -19,9 +19,11 @@ public class EForm extends Data {
 		f = form;
 		this.level = new Level(level);
 		PCoin pc = f.du.getPCoin();
-		if (pc != null)
+		if (pc != null) {
+			if (pc.full == null)
+				pc.update();
 			du = pc.improve(level);
-		else
+		} else
 			du = form.du;
 	}
 
@@ -29,9 +31,11 @@ public class EForm extends Data {
 		f = form;
 		this.level = level;
 		PCoin pc = f.du.getPCoin();
-		if (pc != null)
+		if (pc != null) {
+			if (pc.full == null)
+				pc.update();
 			du = pc.improve(level.getLvs());
-		else
+		} else
 			du = form.du;
 	}
 

@@ -4,6 +4,7 @@ import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 
@@ -85,14 +86,18 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 			PCoin p = mu.getPCoin();
 			if (p != null) {
 				pcoin = new PCoin(this);
-				pcoin.info.addAll(p.info);
+				for (int[] i : p.info) {
+					int[] j = new int[13];
+					System.arraycopy(i, 0, j, 0, 13);
+					pcoin.info.add(j);
+				}
 			}
 		}
 	}
 
 	@Override
 	public CustomUnit clone() {
-		CustomUnit ans = new CustomUnit();
+		CustomUnit ans = (CustomUnit) Data.err(super::clone);
 		ans.importData(this);
 		ans.pack = getPack();
 		ans.getPack().anim = getPack().anim;
