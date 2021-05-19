@@ -19,7 +19,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private EPart fa, para;
 	private int id, img, gsca;
 	private P pos = new P(0, 0), piv = new P(0, 0), sca = new P(0, 0);
-	private int z, angle, opacity, glow, extend, extType; // extType - 0 : Slow, 1 : Curse
+	private int z, angle, opacity, glow, extendX, extendY, extType; // extType - 0 : Slow, 1 : Curse
 	private int hf, vf;
 	protected EAnimI ea;
 
@@ -68,9 +68,9 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 8)
 			gsca = v;
 		else if (m == 9)
-			sca.x = args[8] * v / model.ints[0];
+			sca.x = 1.0 * args[8] * v / model.ints[0];
 		else if (m == 10)
-			sca.y = args[9] * v / model.ints[0];
+			sca.y = 1.0 * args[9] * v / model.ints[0];
 		else if (m == 11)
 			angle = args[10] + v;
 		else if (m == 12)
@@ -80,11 +80,14 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 14)
 			vf = v == 0 ? 1 : -1;
 		else if (m == 50) {
-			extend = v;
+			extendX = v;
 			extType = 0;
 		} else if (m == 51) {
-			extend = v;
+			extendX = v;
 			extType = 1;
+		} else if (m == 52) {
+			extendY = v;
+			extType = 0;
 		} else
 			CommonStatic.ctx.printErr(ErrType.NEW, "unhandled modification " + m);
 
@@ -92,7 +95,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	@Override
 	public int compareTo(EPart o) {
-		return z > o.z ? 1 : (z == o.z ? 0 : -1);
+		return Integer.compare(z, o.z);
 	}
 
 	public int getVal(int m) {
@@ -161,10 +164,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
 		if (extType == 0)
-			drawImg(g, bimg, tpiv, sc, opa(), glow, 1.0 * extend / model.ints[0]);
+			drawImg(g, bimg, tpiv, sc, opa(), glow, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
 		else if (extType == 1)
 			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
-					glow == 1, 1.0 * extend / model.ints[0]);
+					glow == 1, 1.0 * extendX / model.ints[0]);
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);
@@ -213,7 +216,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		angle = args[10];
 		opacity = args[11];
 		glow = args[12];
-		extend = args[13];
+		extendX = args[13];
 		gsca = model.ints[0];
 		hf = vf = 1;
 	}

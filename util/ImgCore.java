@@ -16,7 +16,7 @@ public class ImgCore extends Data {
 	@StaticPermitted
 	public static final String[] VAL = new String[] { "fast", "default", "quality" };
 
-	protected static List<Integer> randSeries = new ArrayList<Integer>();
+	protected static List<Integer> randSeries = new ArrayList<>();
 
 	public static void set(FakeGraphics g) {
 		if (CommonStatic.getConfig().battle)
@@ -26,7 +26,7 @@ public class ImgCore extends Data {
 	}
 
 	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, int glow,
-			double extend) {
+			double extendX, double extendY) {
 		boolean glowSupport = (glow >= 1 && glow <= 3) || glow == -1;
 		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5) {
 			if (glowSupport)
@@ -39,20 +39,79 @@ public class ImgCore extends Data {
 			else
 				g.setComposite(FakeGraphics.DEF, 0, 0);
 		}
-		if (extend == 0)
+		if (extendX == 0 && extendY == 0)
 			drawImage(g, bimg, -piv.x, -piv.y, sc.x, sc.y);
 		else {
 			double x = -piv.x;
-			while (extend > 1) {
-				drawImage(g, bimg, x, -piv.y, sc.x, sc.y);
-				x += sc.x;
-				extend--;
+			double y = -piv.y;
+
+			double oldExtendY = extendY;
+			double oldExtendX = extendX;
+
+			if(extendY == 0) {
+				while (extendX > 1) {
+					drawImage(g, bimg, x, y, sc.x, sc.y);
+					x += sc.x;
+					extendX--;
+				}
+			} else {
+				double extendXBackup = extendX;
+
+				while(extendY > 1) {
+					if(extendX == 0) {
+						drawImage(g, bimg, x, y, sc.x, sc.y);
+					} else {
+						x = -piv.x;
+						extendX = extendXBackup;
+
+						while(extendX > 1) {
+							drawImage(g, bimg, x, y, sc.x, sc.y);
+							x += sc.x;
+							extendX--;
+						}
+
+						y += sc.y;
+						extendY--;
+					}
+				}
 			}
-			int w = (int) (bimg.getWidth() * extend);
+			int w = bimg.getWidth();
 			int h = bimg.getHeight();
 			if (w > 0) {
-				FakeImage par = bimg.getSubimage(0, 0, w, h);
-				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
+				if(extendY == 0) {
+					FakeImage parX = bimg.getSubimage(0, 0, (int) (w * extendX), h);
+
+					drawImage(g, parX, x, y, sc.x * extendX, sc.y);
+				} else {
+					FakeImage parY = bimg.getSubimage(0, 0, w, (int) (h * extendY));
+
+					if(extendX == 0) {
+						drawImage(g, parY, x, y, sc.x, sc.y * extendY);
+					} else {
+						FakeImage parX = bimg.getSubimage(0, 0, (int) (w * extendX), h);
+						FakeImage parXY = bimg.getSubimage(0, 0, parX.getWidth(), parY.getHeight());
+
+						y = -piv.y;
+
+						while(oldExtendY > 1) {
+							drawImage(g, parX, x, y, sc.x * extendX, sc.y);
+
+							y += sc.y;
+							oldExtendY--;
+						}
+
+						x = -piv.x;
+
+						while(oldExtendX > 1) {
+							drawImage(g, parY, x, y, sc.x, sc.y * extendY);
+
+							x += sc.x;
+							oldExtendX--;
+						}
+
+						drawImage(g, parXY, x, y, sc.x * extendX, sc.y * extendY);
+					}
+				}
 			}
 		}
 		g.setComposite(FakeGraphics.DEF, 0, 0);
