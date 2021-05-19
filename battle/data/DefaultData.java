@@ -106,4 +106,12 @@ public abstract class DefaultData extends DataEntity {
 		return pre;
 	}
 
+	public boolean isCommon() {
+		for (int[] atkDatum : rawAtkData()) {
+			if (atkDatum[2] != 1)
+				return false;
+		}
+		return true;
+	}
+
 }

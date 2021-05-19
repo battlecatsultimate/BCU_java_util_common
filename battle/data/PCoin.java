@@ -122,16 +122,17 @@ public class PCoin extends Data {
 						tar.set(2, Math.max(modifs[1], modifs[2]));
 						tar.set(3, modifs[3]);
 					}
-				} else {
+				} else
 					for (int j = 0; j < 4; j++)
 						if (modifs[j] > 0)
 							tar.set(j, tar.get(j) + modifs[j]);
-				}
-				if (type[1] == P_STRONG && modifs[0] != 0)
-					tar.set(0, 100 - tar.get(0));
-				if (type[1] == P_WEAK)
-					tar.set(2, 100 - tar.get(2));
-				if (du instanceof CustomEntity && !((CustomEntity)du).common && !(type[1] == P_STRONG && modifs[0] != 0)) {
+
+				if (du instanceof DataUnit) {
+					if (type[1] == P_STRONG && modifs[0] != 0)
+						tar.set(0, 100 - tar.get(0));
+					if (type[1] == P_WEAK)
+						tar.set(2, 100 - tar.get(2));
+				} else if (!((CustomEntity)du).common && !(type[1] == P_STRONG && modifs[0] != 0)) {
 					for (AtkDataModel atk : ((CustomEntity)ans).atks) {
 						ProcItem atks = atk.proc.getArr(type[1]);
 
@@ -140,13 +141,10 @@ public class PCoin extends Data {
 							atks.set(1, Math.min(modifs[1], modifs[2]));
 							atks.set(2, Math.max(modifs[1], modifs[2]));
 							atks.set(3, modifs[3]);
-						} else {
+						} else
 							for (int j = 0; j < 4; j++)
 								if (modifs[j] > 0)
 									atks.set(j, atks.get(j) + modifs[j]);
-						}
-						if (type[1] == P_WEAK)
-							atks.set(2, 100 - atks.get(2));
 					}
 				}
 			} else if (type[0] == PC_AB || type[0] == PC_BASE) {

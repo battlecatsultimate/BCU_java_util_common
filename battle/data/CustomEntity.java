@@ -143,7 +143,7 @@ public abstract class CustomEntity extends DataEntity {
 		}
 
 		base = de.touchBase();
-		common = false;
+		common = ((DefaultData)de).isCommon();
 		rep = new AtkDataModel(this);
 		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();

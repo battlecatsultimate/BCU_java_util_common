@@ -1172,7 +1172,7 @@ public class Data {
 	public static final int ATK_AREA = 1;
 	public static final int ATK_LD = 2;
 	public static final int ATK_OMNI = 4;
-	public static final int ATK_TOT = 6;
+	public static final int ATK_TOT = 8;
 
 	// base and canon level
 	public static final int BASE_H = 0;
