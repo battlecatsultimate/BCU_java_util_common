@@ -168,7 +168,7 @@ public class Cannon extends AtkModelAb {
 			if (preTime == 0) {
 				Proc proc = Proc.blank();
 				ArrayList<Trait> CTrait = new ArrayList<>();
-				CTrait.add(UserProfile.getBCData().traits.get(UserProfile.getBCData().traits.size() - 1));
+				CTrait.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
 				if (id == 0) {
 					// basic canon
 					proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;

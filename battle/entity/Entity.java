@@ -1159,7 +1159,7 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = data.getProc().IMUATK;
-		if ((atk.dire == -1 || atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || receive(-1)) || ctargetable(atk.trait, false) && imuatk.prob > 0) {
+		if ((atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, false) && imuatk.prob > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, -1)));
 				anim.getEff(P_IMUATK);
@@ -1169,7 +1169,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = data.getProc().DMGCUT;
-		if (dmgcut.traitIgnore || (atk.dire == -1 || atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || receive(-1)) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
+		if (dmgcut.traitIgnore || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
 			if (dmg < dmgcut.dmg && dmg > 0)
 				if (basis.r.nextDouble() * 100 < dmgcut.prob) {
 					anim.getEff(P_DMGCUT);
@@ -1179,7 +1179,7 @@ public abstract class Entity extends AbEntity {
 						dmg = 0;
 				}
 		Proc.DMGCAP dmgcap = data.getProc().DMGCAP;
-		if ((dmgcap.traitIgnore || atk.dire == -1 || atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || receive(-1)) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
+		if (dmgcap.traitIgnore || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
 			if (dmg > dmgcap.dmg)
 				if (basis.r.nextDouble() * 100 < dmgcap.prob) {
 					anim.getEff(P_DMGCAP);
@@ -1238,7 +1238,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		// process proc part
-		if (!atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) && !(ctargetable(atk.trait, false) || (receive(-1) && atk.specialTrait) || (receive(1) && !atk.specialTrait)))
+		if (!(ctargetable(atk.trait, false) || (receive(-1) && atk.specialTrait) || (receive(1) && !atk.specialTrait)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -1501,7 +1501,7 @@ public abstract class Entity extends AbEntity {
 		for (int j = 0; j < t.size(); j++)
 			if (traits.contains(t.get(j)))
 				return true;
-		return false;
+		return t.contains(BCTraits.get(TRAIT_TOT));
 	}
 
 	public static boolean targetTraited(ArrayList<Trait> targets) {

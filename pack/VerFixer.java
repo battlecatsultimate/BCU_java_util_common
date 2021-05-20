@@ -476,7 +476,6 @@ public abstract class VerFixer extends Source {
 				String str = file.getName();
 				if (!str.endsWith(".bcupack"))
 					continue;
-				System.out.println(str);
 				try {
 					VerFixer pack = fix_bcupack(CommonStatic.def.readBytes(file), CommonStatic.def.getReader(file));
 					map.put(pack.id, pack);
