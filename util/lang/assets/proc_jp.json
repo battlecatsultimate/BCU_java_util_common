@@ -4,9 +4,8 @@
     "full_name": "ふっとばす",
     "tooltip": null,
     "format": [
-      "(prob)%の確率で[(dis>0&dis!=165){後方(dis)}(dis<0){前方(dis)}]、",
-      "[(time>0&time!=11){(_dispTime(time))の継続期間}]",
-      "[(dis>0&dis!=165){でふっとばす}(dis<0){で引き寄せる}]"
+      "(prob)%の確率で[(time>0&time!=11){(_dispTime(time))の継続期間}]",
+      "[(dis>0&dis!=165){(dis)後方}(dis<0){(_abs(dis))前方}]でふっとばす"
     ],
     "class": {
       "prob": {
@@ -720,7 +719,7 @@
     "abbr_name": "アーマーブレイク",
     "full_name": "アーマーブレイク",
     "tooltip": null,
-    "format": "(prob)%の確率で(_dispTime(time))の間ダメージを(_abs(mult))%[(mult<0){軽減する}(mult>=0){増加させる}]",
+    "format": "(prob)%の確率で(_dispTime(time))の間受けるダメージを(_abs(mult))%[(mult<0){軽減する}(mult>=0){増加させる}]",
     "class": {
       "prob": {
         "name": "確率",

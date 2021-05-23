@@ -709,6 +709,8 @@ public class Data {
 	}
 
 	public static final int restrict_name = 32;
+	public static final int SE_VICTORY = 8;
+	public static final int SE_DEFEAT = 9;
 	public static final int SE_HIT_0 = 20;
 	public static final int SE_HIT_1 = 21;
 	public static final int SE_DEATH_0 = 23;

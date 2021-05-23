@@ -437,6 +437,15 @@ public abstract class Entity extends AbEntity {
 			return anim.len();
 		}
 
+		private void cont() {
+			if (anim.type == UType.ATK)
+				setAnim(UType.WALK, false);
+			if (anim.type == UType.HB) {
+				e.interrupt(0, 0.0);
+				setAnim(UType.WALK, false);
+			}
+		}
+
 		private void update() {
 			checkEff();
 
@@ -1404,6 +1413,11 @@ public abstract class Entity extends AbEntity {
 		atkm.stopAtk();
 		anim.kill();
 
+	}
+
+	public void cont() {
+		atkm.stopAtk();
+		anim.cont();
 	}
 
 	/**

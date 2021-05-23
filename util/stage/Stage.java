@@ -57,8 +57,10 @@ public class Stage extends Data
 			boolean isTime = data.length > 15;
 			if (isTime)
 				for (int i = 8; i < 15; i++)
-					if (data[i] != -2)
+					if (data[i] != -2) {
 						isTime = false;
+						break;
+					}
 			if (isTime) {
 				time = new int[(data.length - 17) / 3][3];
 				for (int i = 0; i < time.length; i++)
@@ -85,27 +87,26 @@ public class Stage extends Data
 		}
 
 		public String getHTML() {
-			String ans = "<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ";
+			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ");
 			if (drop.length == 0)
-				ans += "none";
+				ans.append("none");
 			else if (drop.length == 1)
-				ans += "{chance: " + drop[0][0] + "%, item ID: " + drop[0][1] + ", number: " + drop[0][2] + "}, once: "
-						+ once;
+				ans.append("{chance: ").append(drop[0][0]).append("%, item ID: ").append(drop[0][1]).append(", number: ").append(drop[0][2]).append("}, once: ").append(once);
 			else {
-				ans += "count: " + drop.length + ", rand mode: " + rand + ", once: " + once + "<br>";
-				ans += "<table><tr><th>chance</th><th>item ID</th><th>number</th></tr>";
+				ans.append("count: ").append(drop.length).append(", rand mode: ").append(rand).append(", once: ").append(once).append("<br>");
+				ans.append("<table><tr><th>chance</th><th>item ID</th><th>number</th></tr>");
 				for (int[] dp : drop)
-					ans += "<tr><td>" + dp[0] + "%</td><td>" + dp[1] + "</td><td>" + dp[2] + "</td><tr>";
-				ans += "</table>";
+					ans.append("<tr><td>").append(dp[0]).append("%</td><td>").append(dp[1]).append("</td><td>").append(dp[2]).append("</td><tr>");
+				ans.append("</table>");
 			}
 			if (time.length > 0) {
-				ans += "<br> time scores: count: " + time.length + "<br>";
-				ans += "<table><tr><th>score</th><th>item ID</th><th>number</th></tr>";
+				ans.append("<br> time scores: count: ").append(time.length).append("<br>");
+				ans.append("<table><tr><th>score</th><th>item ID</th><th>number</th></tr>");
 				for (int[] tm : time)
-					ans += "<tr><td>" + tm[0] + "</td><td>" + tm[1] + "</td><td>" + tm[2] + "</td><tr>";
-				ans += "</table>";
+					ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(tm[1]).append("</td><td>").append(tm[2]).append("</td><tr>");
+				ans.append("</table>");
 			}
-			return ans;
+			return ans.toString();
 		}
 
 	}
@@ -121,6 +122,8 @@ public class Stage extends Data
 
 	@JsonField(block = true)
 	public StageInfo info;
+	@JsonField(block = true)
+	public boolean isBCstage = false;
 
 	@JsonClass.JCIdentifier
 	public final Identifier<Stage> id;
@@ -200,6 +203,7 @@ public class Stage extends Data
 	@SuppressWarnings("deprecation")
 	protected Stage(Identifier<Stage> id, VFile f, int type) {
 		this.id = id;
+		isBCstage = true;
 		StageMap sm = getCont();
 		if (sm.info != null)
 			sm.info.getData(this);

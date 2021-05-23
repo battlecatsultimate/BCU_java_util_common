@@ -16,6 +16,7 @@ import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
 import common.util.unit.*;
+import io.BCMusic;
 
 import java.util.*;
 
@@ -190,7 +191,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_can() {
-		if (can == max_can) {
+		if (can == max_can && ubase.health > 0) {
 			if(canon.id == BASE_WALL && entityCount(-1) >= max_num) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 				return false;
@@ -210,7 +211,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_mon() {
-		if (work_lv < 8 && mon > next_lv) {
+		if (work_lv < 8 && mon > next_lv && ubase.health > 0) {
 			CommonStatic.setSE(SE_SPEND_SUC);
 			mon -= next_lv;
 			work_lv++;
@@ -227,6 +228,28 @@ public class StageBasis extends BattleObj {
 	protected boolean act_sniper() {
 		if (sniper != null) {
 			sniper.enabled = !sniper.enabled;
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean act_continue() {
+		if (!st.non_con && ubase.health <= 0) {
+			ubase.health = ubase.maxH;
+			if (getEBHP() <= st.mush)
+				BCMusic.play(st.mus1, st.loop1);
+			else
+				BCMusic.play(st.mus0, st.loop0);
+			mon = Integer.MAX_VALUE;
+			while (work_lv < 8)
+				act_mon();
+			mon = max_mon;
+			can = max_can;
+			for (Entity e : le)
+				if (e.dire == 1) {
+					e.pos = ebase.pos;
+					e.cont();
+				}
 			return true;
 		}
 		return false;
@@ -358,14 +381,16 @@ public class StageBasis extends BattleObj {
 			if(can == max_can-1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);
 			}
-			can++;
-			max_mon = b.t().getMaxMon(work_lv);
-			mon += b.t().getMonInc(work_lv);
+			if (ubase.health > 0) {
+				can++;
+				max_mon = b.t().getMaxMon(work_lv);
+				mon += b.t().getMonInc(work_lv);
+			}
 
 			est.update();
 
 			canon.update();
-			if (sniper != null)
+			if (sniper != null && ubase.health > 0)
 				sniper.update();
 
 			tempe.forEach(EntCont::update);
