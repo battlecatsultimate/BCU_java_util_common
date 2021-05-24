@@ -181,7 +181,7 @@ public class SCDef implements Copable<SCDef> {
 		for (int i = 0; i < datas.length; i++)
 			ans.datas[i] = datas[i].clone();
 		ans.sdef = sdef;
-		smap.forEach((e, i) -> ans.smap.put(e, i));
+		smap.forEach(ans.smap::put);
 		sub.forEach((i, e) -> ans.sub.set(i, e.copy(i)));
 		return ans;
 	}
