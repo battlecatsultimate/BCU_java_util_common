@@ -24,7 +24,7 @@ import common.util.anim.MaModel;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
-import common.util.pack.Soul.SoulType;
+import common.util.pack.AnimS.SoulType;
 import common.util.unit.Level;
 
 import java.util.*;
@@ -419,7 +419,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			Soul s = Identifier.get(e.data.getDeathAnim());
-			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
+			dead = s == null ? 0 : (soul = (EAnimD<SoulType>) s.getEAnim(SoulType.DEF)).len();
 		}
 
 		private int setAnim(UType t, boolean skip) {

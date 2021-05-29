@@ -289,8 +289,20 @@ public abstract class Source {
 			return list;
 		}
 
+		public static void loadSouls(String id) {
+			if (id == null)
+				id = ResourceLocation.LOCAL;
+			File folder = CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + SOUL + "/");
+			if (!folder.exists() || !folder.isDirectory())
+				return;
+			File[] files = folder.listFiles();
+			for (File f : files) {
+				String path = "./" + id + "/" + SOUL + "/" + f.getName() + "/sprite.png";
+			}
+		}
+
 		public static void saveLocalAnimations() {
-			AnimCE.map().values().forEach(e -> e.save());
+			AnimCE.map().values().forEach(AnimCE::save);
 		}
 
 		public static void saveWorkspace() {
@@ -341,6 +353,14 @@ public abstract class Source {
 
 		private static FileData loadAnimFile(ResourceLocation id, String str) {
 			String path = "./" + id.pack + "/" + ANIM + "/" + id.id + "/" + str;
+			File f = CommonStatic.ctx.getWorkspaceFile(path);
+			if (!f.exists())
+				return null;
+			return new FDFile(f);
+		}
+
+		private static FileData loadSoulFile(ResourceLocation id, String str) {
+			String path = "./" + id.pack + "/" + SOUL + "/" + id.id + "/" + str;
 			File f = CommonStatic.ctx.getWorkspaceFile(path);
 			if (!f.exists())
 				return null;
@@ -549,6 +569,7 @@ public abstract class Source {
 	public static final String CASTLE = "castles";
 	public static final String MUSIC = "musics";
 	public static final String REPLAY = "replays";
+	public static final String SOUL = "souls";
 
 	public final String id;
 

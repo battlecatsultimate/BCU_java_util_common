@@ -18,7 +18,7 @@ import common.util.anim.AnimU.UType;
 import common.util.pack.Background.BGWvType;
 import common.util.pack.EffAnim;
 import common.util.pack.NyCastle.NyType;
-import common.util.pack.Soul.SoulType;
+import common.util.pack.AnimS.SoulType;
 import common.util.pack.WaveAnim.WaveType;
 
 public class AnimTypeLocale {

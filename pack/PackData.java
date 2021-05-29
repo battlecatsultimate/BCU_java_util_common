@@ -17,15 +17,13 @@ import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Source.Workspace;
+import common.system.VImg;
 import common.system.files.FDFile;
 import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import common.util.Data;
 import common.util.Res;
-import common.util.pack.Background;
-import common.util.pack.EffAnim;
-import common.util.pack.NyCastle;
-import common.util.pack.Soul;
+import common.util.pack.*;
 import common.util.stage.CastleList.PackCasList;
 import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
@@ -168,8 +166,11 @@ public abstract class PackData implements IndexContainer {
 		private void loadSoul() {
 			String pre = "./org/battle/soul/";
 			String mid = "/battle_soul_";
-			for (int i = 0; i < 16; i++)
-				souls.add(new Soul(pre + Data.trio(i) + mid + Data.trio(i), i));
+			for (int i = 0; i < 16; i++) {
+				String name = pre + Data.trio(i) + mid + Data.trio(i);
+				AnimS animS = new AnimS(name, new Source.ResourceLocation(Source.ResourceLocation.LOCAL, name));
+				souls.add(new Soul(i, animS));
+			}
 		}
 
 		private void loadUnits(Consumer<Double> bar) {
