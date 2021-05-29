@@ -144,13 +144,16 @@ public class ProcLang {
 	private static void read() throws Exception {
 		InputStream f;
 
-		if(CommonStatic.getConfig().lang == 2)
-			f = CommonStatic.ctx.getLangFile("proc_kr.json");
-		else if(CommonStatic.getConfig().lang == 3) {
-			f = CommonStatic.ctx.getLangFile("proc_jp.json");
-		} else
-			f = CommonStatic.ctx.getLangFile("proc.json");
-
+		switch (CommonStatic.getConfig().lang) {
+			case 2:
+				f = CommonStatic.ctx.getLangFile("proc_kr.json");
+				break;
+			case 3:
+				f = CommonStatic.ctx.getLangFile("proc_jp.json");
+				break;
+			default:
+				f = CommonStatic.ctx.getLangFile("proc.json");
+		}
 		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
 		f.close();
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);

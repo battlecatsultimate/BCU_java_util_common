@@ -5,10 +5,12 @@ import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -28,7 +30,8 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		speed = 8;
 		hp = 10000;
 		hb = 1;
-		type = 1;
+		traits = new ArrayList<>();
+		traits.add(UserProfile.getBCData().traits.get(TRAIT_RED));
 		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
 	}
 
@@ -83,7 +86,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	public double multi(Basis b) {
 		if (star > 0)
 			return b.t().getStarMulti(star);
-		if ((type & TB_ALIEN) > 0)
+		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_ALIEN)))
 			return b.t().getAlienMulti();
 		return 1;
 	}

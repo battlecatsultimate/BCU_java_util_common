@@ -311,7 +311,7 @@ public class Editors {
 				t.type.range_type = 0;
 				t.type.revive_non_zombie = false;
 			} else {
-				t.health = MathUtil.clip(t.health, 1, 100);
+				t.health = Math.max(t.health, 1);
 				t.time = Math.max(t.time, 1);
 				if (!t.type.revive_others) {
 					t.dis_0 = t.dis_1 = 0;
@@ -403,6 +403,27 @@ public class Editors {
 		}));
 
 		map().put("IMUATK", pt);
+
+		map().put("DMGCUT", new EditControl<>(Proc.DMGCUT.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dmg = 0;
+				t.traitIgnore = false;
+				t.procs = false;
+			} else
+				t.dmg = Math.max(t.dmg,0);
+		}));
+
+		map().put("DMGCAP", new EditControl<>(Proc.DMGCAP.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dmg = 0;
+				t.traitIgnore = false;
+				t.nullify = false;
+				t.procs = false;
+			} else
+				t.dmg = Math.max(t.dmg,0);
+		}));
 
 		map().put("POIATK", new EditControl<>(Proc.PM.class, (t) -> {
 			if (t.prob == 0)
