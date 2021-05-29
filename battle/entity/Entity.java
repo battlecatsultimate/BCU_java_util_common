@@ -25,7 +25,6 @@ import common.util.anim.MaModel;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
-import common.util.anim.AnimU.SoulType;
 import common.util.unit.Level;
 
 import java.util.*;
