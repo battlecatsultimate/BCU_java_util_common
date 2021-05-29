@@ -62,7 +62,7 @@ public class ContWaveCanon extends ContWaveAb {
 	}
 
 	@Override
-	public void update() {
+	public void updatePartial() {
 		tempAtk = false;
 		// guessed attack point compared from BC
 		int attack = 2;

@@ -183,4 +183,9 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		return 1;
 	}
 
+	@Override
+	public int getLim() {
+		return limit * 6;
+	}
+
 }

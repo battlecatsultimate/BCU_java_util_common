@@ -178,6 +178,7 @@ public class LineUp extends Data {
 					fs[1][i] = null;
 					break;
 				}
+			}
 		arrange();
 		int emp = 0;
 		for (int i = 0; i < 10; i++)

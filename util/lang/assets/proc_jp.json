@@ -275,7 +275,7 @@
     }
   },
   "IMUSTOP": {
-    "abbr_name": "動きを止める無効",
+    "abbr_name": "止める無効",
     "full_name": "動きを止める無効/耐性",
     "tooltip": null,
     "format": "動きを止める[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
@@ -287,7 +287,7 @@
     }
   },
   "IMUSLOW": {
-    "abbr_name": "動きを遅くする無効",
+    "abbr_name": "遅くする無効",
     "full_name": "動きを遅くする無効/耐性",
     "tooltip": null,
     "format": "動きを遅くする[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
@@ -299,7 +299,7 @@
     }
   },
   "IMUWAVE": {
-    "abbr_name": "波動ダメージ無効",
+    "abbr_name": "波動無効",
     "full_name": "波動ダメージ無効/耐性",
     "tooltip": null,
     "format": "波動ダメージ[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",

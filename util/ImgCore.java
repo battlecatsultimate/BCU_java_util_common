@@ -25,7 +25,8 @@ public class ImgCore extends Data {
 			g.setRenderingHint(i, CommonStatic.getConfig().ints[i]);
 	}
 
-	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, int glow, double extendX, double extendY) {
+	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, int glow,
+			double extendX, double extendY) {
 		boolean glowSupport = (glow >= 1 && glow <= 3) || glow == -1;
 		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5) {
 			if (glowSupport)
@@ -68,7 +69,6 @@ public class ImgCore extends Data {
 							x += sc.x;
 							extendX--;
 						}
-
 					}
 					y += sc.y;
 					extendY--;
