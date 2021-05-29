@@ -92,7 +92,9 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	}
 
 	@Override
-	public int getLim() { return limit; }
+	public int getLim() {
+		return limit;
+	}
 
 	private void zread(int val, InStream is) {
 		val = getVer(is.nextString());
