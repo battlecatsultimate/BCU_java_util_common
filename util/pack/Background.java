@@ -180,7 +180,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	@SuppressWarnings("unused")
 	@OnInjected
 	public void onInjected() {
-		img = ((PackData.UserPack) getCont()).source.readImage(Source.BG, id.id);
+		img = ((PackData.UserPack) getCont()).source.readImage(Source.BasePath.BG.toString(), id.id);
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class AnimCE extends AnimCI {
 
 	public static String getAvailable(String string) {
 		ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, string);
-		Workspace.validate(Source.ANIM, rl);
+		Workspace.validate(Source.BasePath.ANIM, rl);
 		return rl.id;
 	}
 
@@ -63,17 +63,17 @@ public class AnimCE extends AnimCI {
 	public String group = "";
 
 	public AnimCE(ResourceLocation resourceLocation) {
-		super(new SourceAnimLoader(resourceLocation, null));
+		super(new SourceAnimLoader(Source.BasePath.ANIM, resourceLocation, null));
 		id = resourceLocation;
 		history("initial");
 	}
 
 	public AnimCE(ResourceLocation rl, AnimD<?, ?> ori) {
-		super(new SourceAnimLoader(rl, null));
+		super(new SourceAnimLoader(Source.BasePath.ANIM, rl, null));
 		id = rl;
 		copyFrom(ori);
 
-		if(id.pack.equals(ResourceLocation.LOCAL)) {
+		if (id.pack.equals(ResourceLocation.LOCAL)) {
 			map().put(id.id, this);
 			AnimGroup.workspaceGroup.renewGroup();
 		}
@@ -168,7 +168,7 @@ public class AnimCE extends AnimCI {
 				if (list.size() == 0)
 					continue;
 				ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id);
-				Workspace.validate(Source.ANIM, rl);
+				Workspace.validate(Source.BasePath.ANIM, rl);
 				AnimCE tar = new AnimCE(rl, this);
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
@@ -245,7 +245,7 @@ public class AnimCE extends AnimCI {
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete();
 		id.id = str;
-		Workspace.validate(Source.ANIM, id);
+		Workspace.validate(Source.BasePath.ANIM, id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().put(id.id, this);
 		AnimGroup.workspaceGroup.renewGroup();
@@ -441,7 +441,7 @@ public class AnimCE extends AnimCI {
 
 	@Override
 	public boolean equals(Object that) {
-		if(that instanceof AnimCE) {
+		if (that instanceof AnimCE) {
 			return this.id.id.equals(((AnimCE) that).id.id);
 		} else {
 			return false;

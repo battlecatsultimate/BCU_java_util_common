@@ -30,7 +30,8 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {
 		WALK(false), IDLE(false), ATK(true), HB(false), ENTER(true), BURROW_DOWN(true), BURROW_MOVE(false),
-		BURROW_UP(true);
+		BURROW_UP(true), SOUL(true);
+
 		private final boolean rotate;
 
 		private UType(boolean rotate) {
@@ -50,6 +51,8 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 	@StaticPermitted
 	public static final UType[] TYPE7 = { UType.WALK, UType.IDLE, UType.ATK, UType.HB, UType.BURROW_DOWN,
 			UType.BURROW_MOVE, UType.BURROW_UP };
+	@StaticPermitted
+	public static final UType[] SOUL = { UType.SOUL };
 
 	protected boolean partial = false;
 	public final T loader;
@@ -116,7 +119,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 			imgcut = loader.getIC();
 			mamodel = loader.getMM();
 			anims = loader.getMA();
-			types = anims.length == 4 ? TYPE4 : anims.length == 5 ? TYPE5 : TYPE7;
+			types = anims.length == 1 ? SOUL : anims.length == 4 ? TYPE4 : anims.length == 5 ? TYPE5 : TYPE7;
 		}
 	}
 

@@ -77,7 +77,7 @@ public class Replay extends Data {
 			e.printStackTrace();
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to remove folder : "+fold.getName());
 		}
-		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.REPLAY);
+		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.BasePath.REPLAY.toString());
 		if (f.exists())
 			for (File fi : f.listFiles())
 				if (fi.getName().endsWith(".replay"))
@@ -226,19 +226,19 @@ public class Replay extends Data {
 	}
 
 	public void localize(String pack) {
-		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.BasePath.REPLAY) + ".replay");
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
 		rl.pack = pack;
-		Workspace.validate(Source.REPLAY, rl);
-		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		Workspace.validate(Source.BasePath.REPLAY, rl);
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.BasePath.REPLAY) + ".replay");
 		Context.renameTo(src, dst);
 	}
 
 	public void rename(String str) {
 		if (rl == null) {
 			rl = new ResourceLocation(ResourceLocation.LOCAL, str);
-			Workspace.validate(Source.REPLAY, rl);
+			Workspace.validate(Source.BasePath.REPLAY, rl);
 			write();
 			getMap().put(rl.id, this);
 			return;
@@ -246,15 +246,15 @@ public class Replay extends Data {
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
 		rl.id = str;
-		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
-		Workspace.validate(Source.REPLAY, rl);
+		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.BasePath.REPLAY) + ".replay");
+		Workspace.validate(Source.BasePath.REPLAY, rl);
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
 			write();
 			return;
 		}
-		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.BasePath.REPLAY) + ".replay");
 		Context.renameTo(src, dst);
 	}
 
@@ -264,8 +264,8 @@ public class Replay extends Data {
 	}
 
 	public void write() {
-		File tar = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
-		File tmp = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay.temp");
+		File tar = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.BasePath.REPLAY) + ".replay");
+		File tmp = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.BasePath.REPLAY) + ".replay.temp");
 		try {
 			Context.check(tmp);
 			if (tar.exists())

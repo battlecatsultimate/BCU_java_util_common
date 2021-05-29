@@ -35,7 +35,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 
 	@OnInjected
 	public void onInjected() {
-		img = UserProfile.getUserPack(id.pack).source.readImage(Source.CASTLE, id.id);
+		img = UserProfile.getUserPack(id.pack).source.readImage(Source.BasePath.CASTLE.toString(), id.id);
 	}
 
 	@Override

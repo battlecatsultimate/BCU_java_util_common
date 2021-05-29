@@ -617,7 +617,7 @@ public abstract class VerFixer extends Source {
 		ResourceLocation id = al.getName();
 		id.pack = target;
 		if (!target.equals(ResourceLocation.LOCAL))
-			Workspace.validate(Source.ANIM, id);
+			Workspace.validate(Source.BasePath.ANIM, id);
 		AnimCE ce = new AnimCE(al);
 		ce.check();
 		new SourceAnimSaver(id, ce).saveAll();
