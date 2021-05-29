@@ -17,6 +17,7 @@ import common.util.BattleObj;
 import common.util.Data;
 import common.util.Data.Proc.POISON;
 import common.util.Data.Proc.REVIVE;
+import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
@@ -24,7 +25,7 @@ import common.util.anim.MaModel;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
-import common.util.pack.AnimS.SoulType;
+import common.util.anim.AnimU.SoulType;
 import common.util.unit.Level;
 
 import java.util.*;
@@ -65,7 +66,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * soul anim, null means not dead yet
 		 */
-		private EAnimD<SoulType> soul;
+		private EAnimD<UType> soul;
 
 		/**
 		 * responsive effect FSM time
@@ -419,7 +420,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			Soul s = Identifier.get(e.data.getDeathAnim());
-			dead = s == null ? 0 : (soul = (EAnimD<SoulType>) s.getEAnim(SoulType.DEF)).len();
+			dead = s == null ? 0 : (soul = (EAnimD<UType>) s.getEAnim(UType.SOUL)).len();
 		}
 
 		private int setAnim(UType t, boolean skip) {

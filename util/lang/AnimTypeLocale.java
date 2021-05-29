@@ -14,11 +14,11 @@ import com.google.gson.JsonParser;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.util.anim.AnimI;
+import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.pack.Background.BGWvType;
 import common.util.pack.EffAnim;
 import common.util.pack.NyCastle.NyType;
-import common.util.pack.AnimS.SoulType;
 import common.util.pack.WaveAnim.WaveType;
 
 public class AnimTypeLocale {
@@ -29,7 +29,7 @@ public class AnimTypeLocale {
 	static {
 		Collections.addAll(TYPES, BGWvType.values());
 		Collections.addAll(TYPES, NyType.values());
-		Collections.addAll(TYPES, SoulType.values());
+		Collections.addAll(TYPES, UType.SOUL);
 		Collections.addAll(TYPES, UType.values());
 		Collections.addAll(TYPES, WaveType.values());
 		Collections.addAll(TYPES, EffAnim.ArmorEff.values());

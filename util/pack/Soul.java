@@ -8,11 +8,11 @@ import common.util.Animable;
 import common.util.anim.*;
 
 @IndexCont(PackData.class)
-public class Soul extends Animable<AnimS, AnimS.SoulType> implements Indexable<PackData, Soul> {
+public class Soul extends Animable<AnimU<?>, AnimU.UType> implements Indexable<PackData, Soul> {
 
 	private final Identifier<Soul> id;
 
-	public Soul(int id, AnimS animS) {
+	public Soul(int id, AnimU<?> animS) {
 		this.id = new Identifier<>(Identifier.DEF, Soul.class, id);
 		anim = animS;
 	}
@@ -28,7 +28,7 @@ public class Soul extends Animable<AnimS, AnimS.SoulType> implements Indexable<P
 	}
 
 	@Override
-	public EAnimI getEAnim(AnimS.SoulType soulType) {
+	public EAnimI getEAnim(AnimU.UType soulType) {
 		return anim.getEAnim(soulType);
 	}
 }

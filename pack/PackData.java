@@ -23,6 +23,8 @@ import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import common.util.Data;
 import common.util.Res;
+import common.util.anim.AnimCE;
+import common.util.anim.AnimUD;
 import common.util.pack.*;
 import common.util.stage.CastleList.PackCasList;
 import common.util.stage.*;
@@ -167,9 +169,9 @@ public abstract class PackData implements IndexContainer {
 			String pre = "./org/battle/soul/";
 			String mid = "/battle_soul_";
 			for (int i = 0; i < 16; i++) {
-				String name = pre + Data.trio(i) + mid + Data.trio(i);
-				AnimS animS = new AnimS(name, new Source.ResourceLocation(Source.ResourceLocation.LOCAL, name));
-				souls.add(new Soul(i, animS));
+				String name = pre + Data.trio(i) + mid;
+				AnimUD anim = new AnimUD(name, Data.trio(i), null, null);
+				souls.add(new Soul(i, anim));
 			}
 		}
 
