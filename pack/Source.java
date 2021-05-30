@@ -51,6 +51,12 @@ public abstract class Source {
 		VImg getUni();
 	}
 
+	public interface SourceLoader {
+
+		FileData loadFile(BasePath base, ResourceLocation id, String str);
+
+	}
+
 	@JsonClass
 	public static class ResourceLocation {
 
@@ -108,13 +114,70 @@ public abstract class Source {
 	}
 
 	@StaticPermitted
-	public static class SourceAnimLoader implements Source.AnimLoader {
+	public static class SourceSoulLoader implements Source.AnimLoader {
 
-		public interface SourceLoader {
+		public static final String IC = "imgcut.txt";
+		public static final String MM = "mamodel.txt";
+		public static final String MA = "maanim_soul.txt";
+		public static final String SP = "sprite.png";
+		public static final String EDI = "icon_display.png";
 
-			FileData loadFile(BasePath base, ResourceLocation id, String str);
+		private final ResourceLocation id;
+		private final SourceLoader loader;
+		private final BasePath base;
 
+		public SourceSoulLoader(BasePath base, ResourceLocation id, Source.SourceLoader loader) {
+			this.id = id;
+			this.base = base;
+			this.loader = loader == null ? Workspace::loadAnimFile : loader;
 		}
+
+		@Override
+		public VImg getEdi() {
+			FileData edi = loader.loadFile(base, id, EDI);
+			if (edi == null)
+				return null;
+			return new VImg(FakeImage.read(edi));
+		}
+
+		@Override
+		public ImgCut getIC() {
+			return ImgCut.newIns(loader.loadFile(base, id, IC));
+		}
+
+		@Override
+		public MaAnim[] getMA() {
+			return new MaAnim[] { MaAnim.newIns(loader.loadFile(base, id, MA)) };
+		}
+
+		@Override
+		public MaModel getMM() {
+			return MaModel.newIns(loader.loadFile(base, id, MM));
+		}
+
+		@Override
+		public ResourceLocation getName() {
+			return id;
+		}
+
+		@Override
+		public FakeImage getNum() {
+			return FakeImage.read(loader.loadFile(base, id, SP));
+		}
+
+		@Override
+		public int getStatus() {
+			return id.pack.equals("_local") ? 0 : 1;
+		}
+
+		@Override
+		public VImg getUni() {
+			return null;
+		}
+	}
+
+	@StaticPermitted
+	public static class SourceAnimLoader implements Source.AnimLoader {
 
 		public static final String IC = "imgcut.txt";
 		public static final String MM = "mamodel.txt";
@@ -125,10 +188,10 @@ public abstract class Source {
 		public static final String UNI = "icon_deploy.png";
 
 		private final ResourceLocation id;
-		private final SourceLoader loader;
+		private final Source.SourceLoader loader;
 		private final BasePath base;
 
-		public SourceAnimLoader(BasePath base, ResourceLocation id, SourceLoader loader) {
+		public SourceAnimLoader(BasePath base, ResourceLocation id, Source.SourceLoader loader) {
 			this.id = id;
 			this.base = base;
 			this.loader = loader == null ? Workspace::loadAnimFile : loader;
