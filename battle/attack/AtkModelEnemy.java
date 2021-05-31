@@ -23,12 +23,12 @@ public class AtkModelEnemy extends AtkModelEntity {
 		}
 	}
 
-	@Override
-	public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
-		AbEnemy ene = (AbEnemy) Identifier.get(proc.id);
+@Override
+public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
+	AbEnemy ene = (AbEnemy) Identifier.get(proc.id);
 
-		if(ene == null)
-			return;
+	if(ene == null)
+		return;
 		if (resist < 100) {
 			SUMMON.TYPE conf = proc.type;
 			if (conf.same_health && ent.health <= 0)
@@ -48,7 +48,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 				int l0 = 0, l1 = 9;
 				if (!conf.random_layer)
 					l0 = l1 = e.layer;
-				EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, l0, l1);
+				EEnemy ee = ene.getEntity(b, acs, mult, mula, l0, l1, 0);
 				ee.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
 				ee.group = allow;
 				if (ep < ee.data.getWidth())
@@ -60,10 +60,10 @@ public class AtkModelEnemy extends AtkModelEntity {
 				if (conf.same_health)
 					ee.health = e.health;
 				ee.setSummon(conf.anim_type);
-			}
-		} else
-			ent.anim.getEff(INV);
-	}
+		}
+	} else
+		ent.anim.getEff(INV);
+}
 
 	@Override
 	protected int getAttack(int ind, Proc proc) {

@@ -2,6 +2,9 @@ package common.battle.entity;
 
 import common.battle.attack.AttackAb;
 import common.util.BattleObj;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 public abstract class AbEntity extends BattleObj {
 
@@ -28,7 +31,7 @@ public abstract class AbEntity extends BattleObj {
 
 	public abstract void postUpdate();
 
-	public abstract boolean targetable(int type);
+	public abstract boolean ctargetable(ArrayList<Trait> t, boolean targetOnly);
 
 	public abstract int touchable();
 

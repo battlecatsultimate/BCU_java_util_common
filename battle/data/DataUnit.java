@@ -4,7 +4,10 @@ import common.CommonStatic;
 import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
+
+import java.util.ArrayList;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
@@ -152,7 +155,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		} catch (IndexOutOfBoundsException e) {
 		}
 
-		type = t;
+		traits = new ArrayList<>(Trait.convertType(t));
 		abi = a;
 
 		datks = new DataAtk[getAtkCount()];
@@ -193,7 +196,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	}
 
 	@Override
-	protected DataUnit clone() {
+	public PCoin getPCoin() { return pcoin; }
+
+	@Override
+	public DataUnit clone() {
 		DataUnit ans = (DataUnit) err(super::clone);
 		ans.proc = proc.clone();
 		ans.datks = new DataAtk[ans.getAtkCount()];
