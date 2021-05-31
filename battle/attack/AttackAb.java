@@ -4,18 +4,20 @@ import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AttackAb extends BattleObj {
 
-	public final int atk, type, abi;
+	public final int atk, abi;
+	public final ArrayList<Trait> trait;
 	public final AtkModelAb model;
 	public final AttackAb origin;
 	public final MaskAtk matk;
 	public final int layer;
-	public final boolean isLongAtk;
+	public final boolean isLongAtk, specialTrait;
 	public int duration;
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
@@ -24,11 +26,11 @@ public abstract class AttackAb extends BattleObj {
 	protected final List<AbEntity> capt = new ArrayList<>();
 	protected double sta, end;
 
-	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
+	protected AttackAb(AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
-		type = t;
+		trait = tr;
 		atk = ATK;
 		proc = pro;
 		abi = eab;
@@ -38,6 +40,7 @@ public abstract class AttackAb extends BattleObj {
 		this.matk = matk;
 		this.layer = layer;
 		this.isLongAtk = isLongAtk;
+		specialTrait = matk != null && matk.getSPtrait();
 	}
 
 	protected AttackAb(AttackAb a, double STA, double END, boolean isLongAtk) {
@@ -46,7 +49,7 @@ public abstract class AttackAb extends BattleObj {
 		model = a.model;
 		atk = a.atk;
 		abi = a.abi;
-		type = a.type;
+		trait = a.trait;
 		proc = a.proc;
 		touch = a.touch;
 		canon = a.canon;
@@ -56,6 +59,7 @@ public abstract class AttackAb extends BattleObj {
 		this.matk = a.matk;
 		this.layer = a.layer;
 		this.isLongAtk = isLongAtk;
+		specialTrait = a.specialTrait;
 	}
 
 	/**

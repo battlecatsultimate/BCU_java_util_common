@@ -1,0 +1,68 @@
+{
+  "KBEff": {
+    "SW": "衝撃波",
+    "ASS": "スーニャイツパ",
+    "KB": "ふっとばす"
+  },
+  "UType": {
+    "BURROW_UP": "埋葬終了",
+    "BURROW_MOVE": "地下移動",
+    "IDLE": "アイドル",
+    "HB": "KB",
+    "BURROW_DOWN": "埋葬",
+    "ENTER": "到着",
+    "ATK": "攻撃",
+    "WALK": "徒歩"
+  },
+  "VolcEff": {
+    "DURING": "中",
+    "START": "スタート",
+    "END": "終了"
+  },
+  "ArmorEff": {
+    "BUFF": "増加",
+    "DEBUFF": "減少"
+  },
+  "SpeedEff": {
+    "UP": "増加",
+    "DOWN": "減少"
+  },
+  "WaveType": {
+    "DEF": "デフォルト"
+  },
+  "WeakUpEff": {
+    "UP": "増加"
+  },
+  "WarpEff": {
+    "ENTER": "入る",
+    "EXIT": "出口"
+  },
+  "NyType": {
+    "BASE": "ベース",
+    "ATK": "攻撃",
+    "EXT": "エクストラ"
+  },
+  "BarrierEff": {
+    "DESTR": "破壊",
+    "BREAK": "壊す",
+    "NONE": "デフォルト"
+  },
+  "BGWvType": {
+    "ENEMY": "敵",
+    "UNIT": "猫"
+  },
+  "ZombieEff": {
+    "DOWN": "死",
+    "REVIVE": "復活"
+  },
+  "SoulType": {
+    "DEF": "デフォルト"
+  },
+  "SniperEff": {
+    "IDLE": "アイドル",
+    "ATK": "攻撃"
+  },
+  "DefEff": {
+    "DEF": "デフォルト"
+  }
+}

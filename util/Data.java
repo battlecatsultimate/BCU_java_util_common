@@ -56,6 +56,32 @@ public class Data {
 			public int mult;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DMGCUT extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dmg;
+			@Order(2)
+			public boolean traitIgnore;
+			@Order(3)
+			public boolean procs;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DMGCAP extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dmg;
+			@Order(2)
+			public boolean traitIgnore;
+			@Order(3)
+			public boolean nullify;
+			@Order(4)
+			public boolean procs;
+		}
+
 		public static abstract class IntType implements Cloneable {
 
 			@Documented
@@ -578,6 +604,10 @@ public class Data {
 
 		@Order(38)
 		public final IMU IMUSUMMON = new IMU();
+		@Order(39)
+		public final DMGCUT DMGCUT = new DMGCUT();
+		@Order(40)
+		public final DMGCAP DMGCAP = new DMGCAP();
 
 		@Override
 		public Proc clone() {
@@ -679,6 +709,8 @@ public class Data {
 	}
 
 	public static final int restrict_name = 32;
+	public static final int SE_VICTORY = 8;
+	public static final int SE_DEFEAT = 9;
 	public static final int SE_HIT_0 = 20;
 	public static final int SE_HIT_1 = 21;
 	public static final int SE_DEATH_0 = 23;
@@ -782,7 +814,7 @@ public class Data {
 	public static final int T_TOT = 11;
 
 	// abi bit filter
-	public static final int AB_GOOD = 1 << 0;
+	public static final int AB_GOOD = 1;
 	public static final int AB_RESIST = 1 << 1;
 	public static final int AB_MASSIVE = 1 << 2;
 	public static final int AB_ONLY = 1 << 3;
@@ -911,7 +943,9 @@ public class Data {
 	public static final int P_SPEED = 36;
 	public static final int P_MINIWAVE = 37;
 	public static final int P_IMUSUMMON = 38;
-	public static final int PROC_TOT = 39;// 39
+	public static final int P_DMGCUT = 39;
+	public static final int P_DMGCAP = 40;
+	public static final int PROC_TOT = 41;// 39
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -953,7 +987,9 @@ public class Data {
 			false, //armor
 			false, //haste
 			false, //miniwave
-			true  //imu.summon
+			true,  //imu.summon
+			true, //damage cut
+			true, //damage cap
 	};
 
 	public static final int WT_WAVE = 1;
@@ -967,6 +1003,8 @@ public class Data {
 	public static final int PC2_SPEED = 2;
 	public static final int PC2_COST = 3;
 	public static final int PC2_CD = 4;
+	public static final int PC2_HB = 5;
+	public static final int PC2_TOT = 6;
 	// -1 for None
 	// 0 for Proc
 	// 1 for Ability
@@ -986,7 +1024,7 @@ public class Data {
 			{ 0, P_WARP, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ 1, AB_BASE, 0 }, // 12:
+			{ 1, AB_BASE, 0 }, // 12: Base Destroyer
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
@@ -997,25 +1035,25 @@ public class Data {
 			{ 0, P_IMUSLOW }, // 20: res slow
 			{ 0, P_IMUKB }, // 21: res kb
 			{ 0, P_IMUWAVE }, // 22: res wave
-			{ 1, AB_WAVES, 0 }, // 23:
-			{ 0, P_IMUWARP, 0 }, // 24:
+			{ 1, AB_WAVES, 0 }, // 23: waveblock
+			{ 0, P_IMUWARP, 0 }, // 24: res warp
 			{ 2, PC2_COST }, // 25: reduce cost
 			{ 2, PC2_CD }, // 26: reduce cooldown
 			{ 2, PC2_SPEED }, // 27: inc speed
-			{ -1, 0 }, // 28:
+			{ 2, PC2_HB }, // 28: inc knockbacks
 			{ 3, P_IMUCURSE }, // 29: imu curse
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK
 			{ 2, PC2_HP }, // 32: inc HP
-			{ 4, TB_RED, 0 }, // 33:
-			{ 4, TB_FLOAT, 0 }, // 34:
-			{ 4, TB_BLACK, 0 }, // 35: targeting black
-			{ 4, TB_METAL, 0 }, // 36:
-			{ 4, TB_ANGEL }, // 37: targeting angle
-			{ 4, TB_ALIEN }, // 38: targeting alien
-			{ 4, TB_ZOMBIE }, // 39: targeting zombie
-			{ 4, TB_RELIC }, // 40: targeting relic
-			{ 4, TB_WHITE, 0 }, // 41:
+			{ 4, TRAIT_RED, 0 }, // 33: targeting red
+			{ 4, TRAIT_FLOAT, 0 }, // 34: targeting floating
+			{ 4, TRAIT_BLACK, 0 }, // 35: targeting black
+			{ 4, TRAIT_METAL, 0 }, // 36: targeting metal
+			{ 4, TRAIT_ANGEL }, // 37: targeting angel
+			{ 4, TRAIT_ALIEN }, // 38: targeting alien
+			{ 4, TRAIT_ZOMBIE }, // 39: targeting zombie
+			{ 4, TRAIT_RELIC }, // 40: targeting relic
+			{ 4, TRAIT_WHITE, 0 }, // 41: targeting relic
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
 			{ 3, P_IMUWEAK }, // 44: immune to weak
@@ -1136,7 +1174,7 @@ public class Data {
 	public static final int ATK_AREA = 1;
 	public static final int ATK_LD = 2;
 	public static final int ATK_OMNI = 4;
-	public static final int ATK_TOT = 6;
+	public static final int ATK_TOT = 8;
 
 	// base and canon level
 	public static final int BASE_H = 0;

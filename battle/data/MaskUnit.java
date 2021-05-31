@@ -16,4 +16,8 @@ public interface MaskUnit extends MaskEntity {
 
 	int getRespawn();
 
+	PCoin getPCoin();
+
+	MaskUnit clone();
+
 }
