@@ -26,8 +26,6 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
             Trait t = new Trait(data.getNextID(Trait.class));
             t.BCTrait = true;
             t.name = traitNames[i];
-            if (i < TRAIT_EVA)
-                t.icon = MainBCU.builder.toVImg(UtilPC.getIcon(3, i));
             data.traits.add(t);
         }
     }

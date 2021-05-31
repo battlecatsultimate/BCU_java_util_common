@@ -33,7 +33,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		range = ints[5];
 		earn = ints[6];
 		width = ints[8];
-		int t = 0;
 		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 		if (ints[10] == 1)
 			//Red
@@ -181,11 +180,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_ALIEN)))
 			return b.t().getAlienMulti();
 		return 1;
-	}
-
-	@Override
-	public int getLim() {
-		return limit * 6;
 	}
 
 }

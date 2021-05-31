@@ -10,8 +10,6 @@ import common.util.unit.Trait;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import java.util.Comparator;
-
 public class ECastle extends AbEntity {
 
 	private final StageBasis sb;
