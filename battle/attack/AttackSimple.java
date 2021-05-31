@@ -5,7 +5,6 @@ import common.battle.entity.AbEntity;
 import common.battle.entity.Sniper;
 import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.HashSet;

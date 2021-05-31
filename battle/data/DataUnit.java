@@ -4,7 +4,6 @@ import common.CommonStatic;
 import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.Form;
-import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;

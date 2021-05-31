@@ -4,7 +4,6 @@ import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;

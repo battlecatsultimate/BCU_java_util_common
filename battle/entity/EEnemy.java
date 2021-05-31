@@ -7,7 +7,6 @@ import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
 import common.pack.UserProfile;
 import common.util.anim.EAnimU;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 

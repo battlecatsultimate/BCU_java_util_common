@@ -9,7 +9,6 @@ import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
-import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;

@@ -7,7 +7,6 @@ import common.pack.Identifier;
 import common.util.Data;
 import java.util.ArrayList;
 import common.util.pack.Soul;
-import common.util.unit.Trait;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class DataEntity extends Data implements MaskEntity {

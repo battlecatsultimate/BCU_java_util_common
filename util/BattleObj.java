@@ -4,7 +4,6 @@ import common.CommonStatic;
 import common.io.BCUException;
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context.ErrType;
-import common.util.unit.Trait;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;

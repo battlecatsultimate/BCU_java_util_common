@@ -14,7 +14,6 @@ import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
 import common.util.pack.NyCastle.NyType;
 import common.util.unit.Form;
-import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;

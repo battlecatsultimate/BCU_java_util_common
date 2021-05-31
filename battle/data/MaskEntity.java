@@ -8,7 +8,6 @@ import common.util.Data.Proc;
 import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.pack.Soul;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 

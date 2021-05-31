@@ -6,7 +6,6 @@ import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
-import common.util.unit.Trait;
 
 public class DataEnemy extends DefaultData implements MaskEnemy {
 

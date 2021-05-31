@@ -2,7 +2,6 @@ package common.battle.entity;
 
 import common.battle.attack.AttackAb;
 import common.util.BattleObj;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 

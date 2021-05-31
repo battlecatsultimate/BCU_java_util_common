@@ -11,7 +11,6 @@ import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.unit.Level;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 

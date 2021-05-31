@@ -1,7 +1,6 @@
 package common.battle.attack;
 
 import common.battle.entity.Cannon;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 

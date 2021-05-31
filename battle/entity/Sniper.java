@@ -9,7 +9,6 @@ import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.SniperEff;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 

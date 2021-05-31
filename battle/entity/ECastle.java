@@ -5,7 +5,6 @@ import common.battle.BasisLU;
 import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
 import common.util.pack.EffAnim.DefEff;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.Comparator;

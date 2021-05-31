@@ -9,7 +9,6 @@ import common.io.json.JsonField.GenType;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.UserProfile;
 import common.util.Data;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 
