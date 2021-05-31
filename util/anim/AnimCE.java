@@ -251,7 +251,7 @@ public class AnimCE extends AnimCI {
 		AnimGroup.workspaceGroup.renewGroup();
 		saver.saveAll();
 		reloImg();
-		unSave("rename (not applicable for undo)");
+		unSave("rename (not applicapable for undo)");
 	}
 
 	public void resize(double d) {

@@ -57,10 +57,8 @@ public class Stage extends Data
 			boolean isTime = data.length > 15;
 			if (isTime)
 				for (int i = 8; i < 15; i++)
-					if (data[i] != -2) {
+					if (data[i] != -2)
 						isTime = false;
-						break;
-					}
 			if (isTime) {
 				time = new int[(data.length - 17) / 3][3];
 				for (int i = 0; i < time.length; i++)
@@ -87,26 +85,27 @@ public class Stage extends Data
 		}
 
 		public String getHTML() {
-			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ");
+			String ans = "<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ";
 			if (drop.length == 0)
-				ans.append("none");
+				ans += "none";
 			else if (drop.length == 1)
-				ans.append("{chance: ").append(drop[0][0]).append("%, item ID: ").append(drop[0][1]).append(", number: ").append(drop[0][2]).append("}, once: ").append(once);
+				ans += "{chance: " + drop[0][0] + "%, item ID: " + drop[0][1] + ", number: " + drop[0][2] + "}, once: "
+						+ once;
 			else {
-				ans.append("count: ").append(drop.length).append(", rand mode: ").append(rand).append(", once: ").append(once).append("<br>");
-				ans.append("<table><tr><th>chance</th><th>item ID</th><th>number</th></tr>");
+				ans += "count: " + drop.length + ", rand mode: " + rand + ", once: " + once + "<br>";
+				ans += "<table><tr><th>chance</th><th>item ID</th><th>number</th></tr>";
 				for (int[] dp : drop)
-					ans.append("<tr><td>").append(dp[0]).append("%</td><td>").append(dp[1]).append("</td><td>").append(dp[2]).append("</td><tr>");
-				ans.append("</table>");
+					ans += "<tr><td>" + dp[0] + "%</td><td>" + dp[1] + "</td><td>" + dp[2] + "</td><tr>";
+				ans += "</table>";
 			}
 			if (time.length > 0) {
-				ans.append("<br> time scores: count: ").append(time.length).append("<br>");
-				ans.append("<table><tr><th>score</th><th>item ID</th><th>number</th></tr>");
+				ans += "<br> time scores: count: " + time.length + "<br>";
+				ans += "<table><tr><th>score</th><th>item ID</th><th>number</th></tr>";
 				for (int[] tm : time)
-					ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(tm[1]).append("</td><td>").append(tm[2]).append("</td><tr>");
-				ans.append("</table>");
+					ans += "<tr><td>" + tm[0] + "</td><td>" + tm[1] + "</td><td>" + tm[2] + "</td><tr>";
+				ans += "</table>";
 			}
-			return ans.toString();
+			return ans;
 		}
 
 	}
@@ -122,18 +121,16 @@ public class Stage extends Data
 
 	@JsonField(block = true)
 	public StageInfo info;
-	@JsonField(block = true)
-	public boolean isBCstage = false;
 
 	@JsonClass.JCIdentifier
 	public final Identifier<Stage> id;
 	public String name = "";
 	public boolean non_con, trail;
-	public int len, health, max, mush, bgh;
+	public int len, health, max, mush;
 	public int timeLimit = 0;
 	public int minSpawn = 1, maxSpawn = 1;
 	public Identifier<CastleImg> castle;
-	public Identifier<Background> bg, bg1;
+	public Identifier<Background> bg;
 	public Identifier<Music> mus0, mus1;
 	public long loop0, loop1;
 	public SCDef data;
@@ -203,7 +200,6 @@ public class Stage extends Data
 	@SuppressWarnings("deprecation")
 	protected Stage(Identifier<Stage> id, VFile f, int type) {
 		this.id = id;
-		isBCstage = true;
 		StageMap sm = getCont();
 		if (sm.info != null)
 			sm.info.getData(this);
@@ -295,8 +291,6 @@ public class Stage extends Data
 		ans.max = max;
 		if (bg != null)
 			ans.bg = bg.clone();
-		if (bg1 != null)
-			ans.bg1 = bg1.clone();
 		if (castle != null)
 			ans.castle = castle.clone();
 		ans.name = toString();
@@ -307,7 +301,6 @@ public class Stage extends Data
 			ans.mus0 = mus0.clone();
 		if (mus1 != null)
 			ans.mus1 = mus1.clone();
-		ans.bgh = bgh;
 		ans.mush = mush;
 		return ans;
 	}

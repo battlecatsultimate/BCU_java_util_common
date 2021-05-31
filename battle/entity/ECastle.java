@@ -6,13 +6,11 @@ import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
 import common.util.pack.EffAnim.DefEff;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ECastle extends AbEntity {
 
 	private final StageBasis sb;
-	public int hit = 0;
 
 	public ECastle(StageBasis b) {
 		super(b.st.health);
@@ -26,7 +24,6 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void damaged(AttackAb atk) {
-		hit = 2;
 		if(atk.isLongAtk)
 			sb.lea.add(new EAnimCont(pos, atk.layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
 		else
@@ -75,7 +72,9 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) { return true; }
+	public boolean targetable(int type) {
+		return true;
+	}
 
 	@Override
 	public int touchable() {
@@ -84,8 +83,7 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void update() {
-		if (hit > 0)
-			hit--;
+
 	}
 
 }

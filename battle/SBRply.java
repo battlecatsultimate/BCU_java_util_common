@@ -83,8 +83,6 @@ class Mirror extends BattleField {
 			act_change_up();
 		if ((rec & (1 << 25)) > 0)
 			act_change_down();
-		if ((rec & (1 << 26)) > 0)
-			act_continue();
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++) {
 				if ((rec & (1 << (i * 5 + j + 3))) > 0)

@@ -15,7 +15,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	public final CustomEntity ce;
 	public String str = "";
 	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1, dire = 1, alt = 0, move = 0;
-	public boolean range = true, specialTrait = false; //Special trait makes attacks that ignore traits consider traits, and attacks that don't do
+	public boolean range = true;
 
 	@JsonField
 	public Proc proc;
@@ -34,7 +34,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		ld0 = adm.ld0;
 		ld1 = adm.ld1;
 		range = adm.range;
-		specialTrait = adm.specialTrait;
 		dire = adm.dire;
 		count = adm.count;
 		targ = adm.targ;
@@ -106,9 +105,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	@Override
-	public boolean getSPtrait() { return specialTrait; }
-
-	@Override
 	public Proc getProc() {
 		if (ce.rep != this && ce.common)
 			return ce.rep.getProc();
@@ -141,15 +137,15 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	protected int[] getAtkData() {
-		return new int[] { atk, pre, 1, dire };
+		return new int[] { atk, pre, 1 };
 	}
 
 	protected boolean isLD() {
-		return ld0 > 0 || ld1 < 0;
+		return ld0 != 0 || ld1 != 0;
 	}
 
-	public boolean isOmni() {
-		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0);
+	protected boolean isOmni() {
+		return ld0 * ld1 < 0;
 	}
 
 	private void zread(String ver, InStream is) {

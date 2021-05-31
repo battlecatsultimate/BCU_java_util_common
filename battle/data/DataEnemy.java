@@ -1,9 +1,7 @@
 package common.battle.data;
 
 import common.battle.Basis;
-import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
-import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
 
@@ -20,7 +18,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	}
 
 	public void fillData(String[] strs) {
-		//This function serves to gather BC enemy data and give them their stats accordingly, custom units don't really use this
 		int[] ints = new int[strs.length];
 		for (int i = 0; i < strs.length; i++)
 			ints[i] = Integer.parseInt(strs[i]);
@@ -32,30 +29,25 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		range = ints[5];
 		earn = ints[6];
 		width = ints[8];
-		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
+		int t = 0;
 		if (ints[10] == 1)
-			//Red
-			traits.add(BCTraits.get(TRAIT_RED));
+			t |= TB_RED;
 		isrange = ints[11] == 1;
 		pre = ints[12];
 		if (ints[13] == 1)
-			//Floating
-			traits.add(BCTraits.get(TRAIT_FLOAT));
+			t |= TB_FLOAT;
 		if (ints[14] == 1)
-			//Black
-			traits.add(BCTraits.get(TRAIT_BLACK));
+			t |= TB_BLACK;
 		if (ints[15] == 1)
-			//Metal
-			traits.add(BCTraits.get(TRAIT_METAL));
+			t |= TB_METAL;
+		if (ints[16] == 1)
+			t |= TB_WHITE;
 		if (ints[17] == 1)
-			//Angel
-			traits.add(BCTraits.get(TRAIT_ANGEL));
+			t |= TB_ANGEL;
 		if (ints[18] == 1)
-			//Alien
-			traits.add(BCTraits.get(TRAIT_ALIEN));
+			t |= TB_ALIEN;
 		if (ints[19] == 1)
-			//Zombie
-			traits.add(BCTraits.get(TRAIT_ZOMBIE));
+			t |= TB_ZOMBIE;
 		proc.KB.prob = ints[20];
 		proc.STOP.prob = ints[21];
 		proc.STOP.time = ints[22];
@@ -100,11 +92,9 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.REVIVE.time = ints[46];
 		proc.REVIVE.health = ints[47];
 		if (ints[48] == 1)
-			//Witch
-			traits.add(BCTraits.get(TRAIT_WITCH));
+			t |= TB_WITCH;
 		if (ints[49] == 1)
-			//Base
-			traits.add(BCTraits.get(TRAIT_INFH));
+			t |= TB_INFH;
 		loop = ints[50];
 		if (ints[52] == 2)
 			a |= AB_GLASS;
@@ -124,14 +114,9 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.WARP.dis = ints[67] / 4;
 		star = ints[69];
 		if (ints[71] == 1)
-			//EVA
-			traits.add(BCTraits.get(TRAIT_EVA));
+			t |= TB_EVA;
 		if (ints[72] == 1)
-			//Relic
-			traits.add(BCTraits.get(TRAIT_RELIC));
-		if (ints[16] == 1)
-			//White
-			traits.add(BCTraits.get(TRAIT_WHITE));
+			t |= TB_RELIC;
 		proc.CURSE.prob = ints[73];
 		proc.CURSE.time = ints[74];
 		proc.SATK.prob = ints[75];
@@ -146,6 +131,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.time = ints[84] * VOLC_ITV;
 
 		abi = a;
+		type = t;
 
 		datks = new DataAtk[getAtkCount()];
 
@@ -173,7 +159,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	public double multi(Basis b) {
 		if (star > 0)
 			return b.t().getStarMulti(star);
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_ALIEN)))
+		if ((type & TB_ALIEN) > 0)
 			return b.t().getAlienMulti();
 		return 1;
 	}

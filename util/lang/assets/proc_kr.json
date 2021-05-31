@@ -771,57 +771,5 @@
                 "tooltip" : "발동자 데미지의 퍼센트로 작동합니다. 만약 값이 20 이면, 발동자 데미지의 20% 만큼 타겟에게 공격합니다. 음수도 허용됩니다"
             }
         }
-    },
-    "DMGCUT" : {
-        "abbr_name" : "Spr. Armor",
-        "full_name" : "Super Armor",
-        "tooltip" : "This ability reduces all damage that is below certain amount to zero.",
-        "format" : "(prob)% chance to nullify [(traitIgnore){all}] damage lower than (dmg)[(procs){ and also the attack's procs}]",
-        "class" : {
-            "prob" : {
-                "name" : "chance",
-                "tooltip" : null
-            },
-            "dmg" : {
-                "name" : "damage",
-                "tooltip" : "The maximum amount of damage to be negated."
-            },
-            "traitIgnore" : {
-                "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
-            },
-            "procs" : {
-                "name" : "ignore procs",
-                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
-            }
-        }
-    },
-    "DMGCAP" : {
-        "abbr_name" : "M.Shield",
-        "full_name" : "Magic Shield",
-        "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(nullify){nullify[(traitIgnore){ all}]}(!nullify){set}] damage higher than (dmg)[(!nullify){ to (dmg)}(nullify&procs){ and also the attack's procs}]",
-        "class" : {
-            "prob" : {
-                "name" : "chance",
-                "tooltip" : null
-            },
-            "dmg" : {
-                "name" : "damage",
-                "tooltip" : "The minimum amount of damage to be capped."
-            },
-            "traitIgnore" : {
-                "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
-            },
-            "nullify" : {
-                "name" : "nullify damage",
-                "tooltip" : "When this is checked, damage from the attack will be negated instead of set to (dmg)"
-            },
-            "procs" : {
-                "name" : "ignore procs",
-                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
-            }
-        }
     }
 }

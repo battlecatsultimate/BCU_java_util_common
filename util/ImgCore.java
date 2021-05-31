@@ -69,9 +69,10 @@ public class ImgCore extends Data {
 							x += sc.x;
 							extendX--;
 						}
+
+						y += sc.y;
+						extendY--;
 					}
-					y += sc.y;
-					extendY--;
 				}
 			}
 			int w = bimg.getWidth();
@@ -116,7 +117,8 @@ public class ImgCore extends Data {
 		g.setComposite(FakeGraphics.DEF, 0, 0);
 	}
 
-	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, double opa, boolean glow, double extendX, double extendY) {
+	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, double opa, boolean glow,
+			double extend) {
 		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5)
 			if (!glow)
 				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
@@ -126,12 +128,12 @@ public class ImgCore extends Data {
 			g.setComposite(FakeGraphics.BLEND, 256, 1);
 		else
 			g.setComposite(FakeGraphics.DEF, 0, 0);
-		if (extendX == 0)
+		if (extend == 0)
 			drawImage(g, bimg[0], -piv.x, -piv.y, sc.x, sc.y);
 		else {
 			double x = -piv.x;
 			int i = 0;
-			while (extendX > 1) {
+			while (extend > 1) {
 				int data;
 
 				if (i >= randSeries.size()) {
@@ -145,17 +147,17 @@ public class ImgCore extends Data {
 				FakeImage ranImage = bimg[data];
 				drawImage(g, ranImage, x, -piv.y, sc.x, sc.y);
 				x += sc.x;
-				extendX--;
+				extend--;
 				i++;
 			}
 
-			int w = (int) (bimg[0].getWidth() * extendX);
+			int w = (int) (bimg[0].getWidth() * extend);
 			int h = bimg[0].getHeight();
 			if (w > 0) {
 				FakeImage par;
 				par = bimg[0].getSubimage(0, 0, w, h);
 
-				drawImage(g, par, x, -piv.y, sc.x * extendX, sc.y);
+				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
 			}
 		}
 		g.setComposite(FakeGraphics.DEF, 0, 0);

@@ -89,7 +89,8 @@ public class Formatter {
 							return fi0 != fi1;
 						if (i == 4)
 							return fi0 > fi1;
-						return fi0 < fi1;
+						if (i == 5)
+							return fi0 < fi1;
 					}
 			return (Boolean) new RefObj(p0, p1).eval();
 		}
@@ -216,7 +217,7 @@ public class Formatter {
 
 	}
 
-	private abstract static class Comp {
+	private abstract class Comp {
 
 		public final int p0, p1;
 
@@ -226,7 +227,7 @@ public class Formatter {
 		}
 	}
 
-	private abstract static class Cont extends Elem {
+	private abstract class Cont extends Elem {
 
 		public final List<IElem> list = new ArrayList<>();
 
@@ -242,7 +243,7 @@ public class Formatter {
 
 	}
 
-	private abstract static class Elem extends Comp implements IElem {
+	private abstract class Elem extends Comp implements IElem {
 
 		public Elem(int start, int end) {
 			super(start, end);
@@ -267,8 +268,8 @@ public class Formatter {
 
 		private int eval() throws Exception {
 			Stack<Integer> stack = new Stack<>();
+			char opera = '\0';
 			stack.push(nextElem());
-			char prevOp = ' ';
 			while (ind < p1) {
 				char ch = str.charAt(ind++);
 				if (ch == '*')
@@ -278,25 +279,23 @@ public class Formatter {
 				else if (ch == '%')
 					stack.push(stack.pop() % nextElem());
 				else if (ch == '+' || ch == '-') {
-					if (prevOp == '*' || prevOp == '/' || prevOp == '%' && stack.size() >= 2) {
+					if (opera != ' ') {
 						int b = stack.pop();
 						int a = stack.pop();
-						if (ch == '+')
+						if (opera == '+')
 							stack.push(a + b);
 						else
 							stack.push(a - b);
-					} else if (ch == '+')
-						stack.push(stack.pop() + nextElem());
-					else
-						stack.push(stack.pop() - nextElem());
+					}
+					stack.push(nextElem());
+					opera = ch;
 				} else
 					throw new Exception("unknown operator " + ch + " at " + (ind - 1));
-				prevOp = ch;
 			}
-			if (prevOp == '+' || prevOp == '-' && stack.size() >= 2) {
+			if (opera != '\0') {
 				int b = stack.pop();
 				int a = stack.pop();
-				if (prevOp == '+')
+				if (opera == '+')
 					stack.push(a + b);
 				else
 					stack.push(a - b);
@@ -331,7 +330,7 @@ public class Formatter {
 			return neg * (Integer) new RefObj(pre, ind).eval();
 		}
 
-		private int readNumber() {
+		private int readNumber() throws Exception {
 			int ans = 0;
 			while (ind < p1) {
 				char chr = str.charAt(ind);
@@ -345,7 +344,7 @@ public class Formatter {
 
 	}
 
-	private abstract static class RefElem extends Comp {
+	private abstract class RefElem extends Comp {
 
 		public RefElem(int start, int end) {
 			super(start, end);
@@ -369,15 +368,9 @@ public class Formatter {
 					parent = ctx;
 				else
 					parent = obj;
-			int ind = str.charAt(p0) == '_' ? p0 + 1 : p0;
-			String name = str.substring(ind, p1);
-
-			try {
-				Field f = parent.getClass().getField(name);
-				return f.get(parent);
-			} catch (NoSuchFieldException nse) {
-				return new IntExp(ind, p1).eval();
-			}
+			String name = str.substring(str.charAt(p0) == '_' ? p0 + 1 : p0, p1);
+			Field f = parent.getClass().getField(name);
+			return f.get(parent);
 		}
 	}
 
@@ -455,7 +448,7 @@ public class Formatter {
 
 		@Override
 		public void build(StringBuilder sb) throws Exception {
-			sb.append(eval());
+			sb.append("" + eval());
 		}
 
 		private Object eval() throws Exception {

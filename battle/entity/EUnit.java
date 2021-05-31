@@ -5,14 +5,14 @@ import common.battle.attack.AtkModelEnemy;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
-import common.battle.data.*;
-import common.pack.UserProfile;
+import common.battle.data.MaskAtk;
+import common.battle.data.MaskUnit;
+import common.battle.data.Orb;
+import common.battle.data.PCoin;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.unit.Level;
-
-import java.util.ArrayList;
 
 public class EUnit extends Entity {
 
@@ -26,7 +26,7 @@ public class EUnit extends Entity {
 				// Warning : Eunit.e became public now
 				EUnit unit = (EUnit) ((AtkModelUnit) atk.origin.model).e;
 
-				return unit.getOrbAtk(en.traits, atk.matk);
+				return unit.getOrbAtk(en.type, atk.matk);
 			}
 
 			return 0;
@@ -40,7 +40,7 @@ public class EUnit extends Entity {
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level, PCoin pc) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
-		traits = de.getTraits();
+		type = de.getType();
 		// if level is null, update HP to match level
 		if (level == null) {
 			lvl = 1;
@@ -65,7 +65,7 @@ public class EUnit extends Entity {
 	@Override
 	public void update() {
 		super.update();
-		traits = status[P_CURSE][0] == 0 ? data.getTraits() : new ArrayList<>();
+		type = status[P_CURSE][0] == 0 ? data.getType() : 0;
 	}
 
 	@Override
@@ -74,26 +74,24 @@ public class EUnit extends Entity {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk.model instanceof AtkModelEnemy) {
-			int overlap = ctargetable(atk.trait,false) ? 1 : 0;
-			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
-			sharedTraits.retainAll(traits);
+			int overlap = type & atk.type;
 			if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODDEF(sharedTraits);
+				ans *= basis.b.t().getGOODDEF(overlap);
 			if (overlap != 0 && (getAbi() & AB_RESIST) != 0)
-				ans *= basis.b.t().getRESISTDEF(sharedTraits);
+				ans *= basis.b.t().getRESISTDEF(overlap);
 			if (overlap != 0 && (getAbi() & AB_RESISTS) != 0)
-				ans *= basis.b.t().getRESISTSDEF(sharedTraits);
+				ans *= basis.b.t().getRESISTSDEF(overlap);
 		}
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
+		if ((atk.type & TB_WITCH) > 0 && (getAbi() & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKDef();
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
+		if ((atk.type & TB_EVA) > 0 && (getAbi() & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKDef();
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
-		ans = getOrbRes(atk.trait, ans);
+		ans = getOrbRes(atk.type, ans);
 
 		return ans;
 	}
@@ -115,7 +113,7 @@ public class EUnit extends Entity {
 		return super.updateMove(maxl, extmov);
 	}
 
-	private int getOrbAtk(ArrayList<Trait> trait, MaskAtk matk) {
+	private int getOrbAtk(int trait, MaskAtk matk) {
 		Orb orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level.getOrbs() == null) {
@@ -127,9 +125,8 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
-			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_RES || !trait.contains(orbType))
+			if (line[ORB_TYPE] == Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
 				continue;
 
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -138,7 +135,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private int getOrbRes(ArrayList<Trait> trait, int atk) {
+	private int getOrbRes(int trait, int atk) {
 		Orb orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level.getOrbs() == null)
@@ -149,9 +146,8 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
-			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_ATK || !trait.contains(orbType))
+			if (line[ORB_TYPE] == Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0)
 				continue;
 
 			ans = orb.getRes(line[ORB_GRADE], ans);

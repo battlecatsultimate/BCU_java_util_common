@@ -3,8 +3,6 @@ package common.battle.entity;
 import common.battle.attack.AttackAb;
 import common.util.BattleObj;
 
-import java.util.ArrayList;
-
 public abstract class AbEntity extends BattleObj {
 
 	public long health, maxH;
@@ -30,7 +28,7 @@ public abstract class AbEntity extends BattleObj {
 
 	public abstract void postUpdate();
 
-	public abstract boolean ctargetable(ArrayList<Trait> t, boolean targetOnly);
+	public abstract boolean targetable(int type);
 
 	public abstract int touchable();
 

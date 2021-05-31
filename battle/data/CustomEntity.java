@@ -55,6 +55,15 @@ public abstract class CustomEntity extends DataEntity {
 		return all;
 	}
 
+	public Proc[] getAllProcs() {
+		int n = atks.length + 1;
+		Proc[] ans = new Proc[n];
+		ans[0] = rep.proc;
+		for (int i = 0; i < atks.length; i++)
+			ans[i + 1] = atks[i].proc;
+		return ans;
+	}
+
 	@Override
 	public int getAtkCount() {
 		return atks.length;
@@ -130,7 +139,7 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		traits = new ArrayList<>(de.getTraits());
+		type = de.getType();
 		width = de.getWidth();
 		shield = de.getShield();
 		tba = de.getTBA();
@@ -142,7 +151,7 @@ public abstract class CustomEntity extends DataEntity {
 		}
 
 		base = de.touchBase();
-		common = ((DefaultData)de).isCommon();
+		common = false;
 		rep = new AtkDataModel(this);
 		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();
@@ -214,7 +223,6 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
-
 		rep = new AtkDataModel(this, ce.rep);
 
 		List<AtkDataModel> temp = new ArrayList<>();
@@ -239,7 +247,8 @@ public abstract class CustomEntity extends DataEntity {
 		speed = is.nextInt();
 		range = is.nextInt();
 		abi = is.nextInt();
-		traits = Trait.convertType(Data.reorderTrait(is.nextInt()));
+		type = is.nextInt();
+		type = Data.reorderTrait(type);
 		width = is.nextInt();
 		shield = is.nextInt();
 		tba = is.nextInt();
@@ -263,4 +272,5 @@ public abstract class CustomEntity extends DataEntity {
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
 	}
+
 }

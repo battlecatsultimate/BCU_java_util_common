@@ -58,10 +58,6 @@ public class SBCtrl extends BattleField {
 			rec |= 4;
 			keys.remove(-1, 2);
 		}
-		if ((keys.pressed(-1, 3) || action.contains(-4)) && act_continue()) {
-			rec |= 1 << 26;
-			keys.remove(-1, 3);
-		}
 		if (!CommonStatic.getConfig().twoRow && (keys.pressed(-3, 0) || action.contains(-4)) && act_change_up()) {
 			rec |= 1 << 24;
 			keys.remove(-3, 0);

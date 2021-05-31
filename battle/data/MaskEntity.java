@@ -9,8 +9,6 @@ import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.pack.Soul;
 
-import java.util.ArrayList;
-
 public interface MaskEntity extends BattleStatic {
 
 	int allAtk();
@@ -33,8 +31,6 @@ public interface MaskEntity extends BattleStatic {
 	MaskAtk getAtkModel(int ind);
 
 	Identifier<Soul> getDeathAnim();
-
-	ArrayList<Trait> getTraits();
 
 	int getHb();
 
@@ -70,8 +66,6 @@ public interface MaskEntity extends BattleStatic {
 
 	int getSpeed();
 
-	int getWill();
-
 	/**
 	 * get waiting time
 	 */
@@ -80,6 +74,8 @@ public interface MaskEntity extends BattleStatic {
 	default int getTouch() {
 		return Data.TCH_N;
 	}
+
+	int getType();
 
 	int getWidth();
 

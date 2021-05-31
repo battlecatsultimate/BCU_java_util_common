@@ -15,12 +15,15 @@ import common.util.pack.EffAnim.DefEff;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
-import common.util.unit.*;
-import io.BCMusic;
+import common.util.unit.EForm;
+import common.util.unit.EneRand;
+import common.util.unit.Form;
 
 import java.util.*;
 
 public class StageBasis extends BattleObj {
+
+	public static boolean testing = true;
 
 	public final BasisLU b;
 	public final Stage st;
@@ -53,7 +56,7 @@ public class StageBasis extends BattleObj {
 	public double mon;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
-	public int respawnTime, unitRespawnTime;
+	public int respawnTime;
 	public Background bg;
 
 	private final List<AttackAb> la = new ArrayList<>();
@@ -128,26 +131,21 @@ public class StageBasis extends BattleObj {
 		themeType = type;
 	}
 
-	public void changeBG(Identifier<Background> id) {
-		theme = id;
-	}
-
 	public int entityCount(int d) {
 		int ans = 0;
 		if (ebase instanceof EEnemy)
-			ans += ((EEnemy)ebase).data.getWill() + 1;
-		for (Entity ent : le) {
-			if (ent.dire == d)
-				ans += ent.data.getWill() + 1;
-		}
+			ans++;
+		for (int i = 0; i < le.size(); i++)
+			if (le.get(i).dire == d)
+				ans++;
 		return ans;
 	}
 
 	public int entityCount(int d, int g) {
 		int ans = 0;
-		for (Entity ent : le)
-			if (ent.dire == d && ent.group == g)
-				ans += ent.data.getWill() + 1;
+		for (int i = 0; i < le.size(); i++)
+			if (le.get(i).dire == d && le.get(i).group == g)
+				ans++;
 		return ans;
 	}
 
@@ -168,7 +166,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	public double getEBHP() {
-		return 100.0 * ebase.health / ebase.maxH;
+		return 1.0 * ebase.health / ebase.maxH;
 	}
 
 	/**
@@ -179,10 +177,10 @@ public class StageBasis extends BattleObj {
 		List<AbEntity> ans = new ArrayList<>();
 		if (dire == 0)
 			return ans;
-		for (Entity entity : le)
-			if (entity.dire * dire == -1 && (entity.touchable() & touch) > 0
-					&& (entity.pos - d0) * (entity.pos - d1) <= 0)
-				ans.add(entity);
+		for (int i = 0; i < le.size(); i++)
+			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0
+					&& (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
+				ans.add(le.get(i));
 		AbEntity b = dire == 1 ? ubase : ebase;
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
 			ans.add(b);
@@ -191,7 +189,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_can() {
-		if (can == max_can && ubase.health > 0) {
+		if (can == max_can) {
 			if(canon.id == BASE_WALL && entityCount(-1) >= max_num) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 				return false;
@@ -211,7 +209,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_mon() {
-		if (work_lv < 8 && mon > next_lv && ubase.health > 0) {
+		if (work_lv < 8 && mon > next_lv) {
 			CommonStatic.setSE(SE_SPEND_SUC);
 			mon -= next_lv;
 			work_lv++;
@@ -228,28 +226,6 @@ public class StageBasis extends BattleObj {
 	protected boolean act_sniper() {
 		if (sniper != null) {
 			sniper.enabled = !sniper.enabled;
-			return true;
-		}
-		return false;
-	}
-
-	protected boolean act_continue() {
-		if (!st.non_con && ubase.health <= 0) {
-			ubase.health = ubase.maxH;
-			if (getEBHP() <= st.mush)
-				BCMusic.play(st.mus1, st.loop1);
-			else
-				BCMusic.play(st.mus0, st.loop0);
-			mon = Integer.MAX_VALUE;
-			while (work_lv < 8)
-				act_mon();
-			mon = max_mon;
-			can = max_can;
-			for (Entity e : le)
-				if (e.dire == 1) {
-					e.pos = ebase.pos;
-					e.cont();
-				}
 			return true;
 		}
 		return false;
@@ -282,10 +258,6 @@ public class StageBasis extends BattleObj {
 		if (ubase.health == 0) {
 			return false;
 		}
-
-		if (unitRespawnTime > 0)
-			return false;
-
 		if (elu.cool[i][j] > 0) {
 			if(boo) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
@@ -303,7 +275,7 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 		if (locks[i][j] || boo) {
-			if (entityCount(-1) >= max_num - b.lu.efs[i][j].du.getWill()) {
+			if (entityCount(-1) >= max_num) {
 				if(boo) {
 					CommonStatic.setSE(SE_SPEND_FAIL);
 				}
@@ -321,7 +293,6 @@ public class StageBasis extends BattleObj {
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 			mon -= elu.price[i][j];
-			unitRespawnTime = 1;
 			return true;
 		}
 		return false;
@@ -352,7 +323,7 @@ public class StageBasis extends BattleObj {
 			ebase.update();
 
 		if (s_stop == 0) {
-			ubase.update();
+
 			int allow = st.max - entityCount(1);
 			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
 				EEnemy e = est.allow();
@@ -371,9 +342,6 @@ public class StageBasis extends BattleObj {
 				}
 			}
 
-			if(unitRespawnTime > 0)
-				unitRespawnTime--;
-
 			if(respawnTime > 0)
 				respawnTime--;
 
@@ -381,24 +349,22 @@ public class StageBasis extends BattleObj {
 			if(can == max_can-1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);
 			}
-			if (ubase.health > 0) {
-				can++;
-				max_mon = b.t().getMaxMon(work_lv);
-				mon += b.t().getMonInc(work_lv);
-			}
+			can++;
+			max_mon = b.t().getMaxMon(work_lv);
+			mon += b.t().getMonInc(work_lv);
 
 			est.update();
 
 			canon.update();
-			if (sniper != null && ubase.health > 0)
+			if (sniper != null)
 				sniper.update();
 
 			tempe.forEach(EntCont::update);
 		}
 
-		for (Entity uni : le)
-			if (s_stop == 0 || (uni.getAbi() & AB_TIMEI) != 0)
-				uni.update();
+		for (int i = 0; i < le.size(); i++)
+			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update();
 
 		if (s_stop == 0) {
 			lw.forEach(ContAb::update);
@@ -424,9 +390,9 @@ public class StageBasis extends BattleObj {
 
 		if (s_stop == 0) {
 			if (ebase.health <= 0) {
-				for (Entity entity : le)
-					if (entity.dire == 1)
-						entity.kill();
+				for (int i = 0; i < le.size(); i++)
+					if (le.get(i).dire == 1)
+						le.get(i).kill();
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
@@ -437,9 +403,9 @@ public class StageBasis extends BattleObj {
 			}
 
 			if (ubase.health <= 0) {
-				for (Entity entity : le)
-					if (entity.dire == -1)
-						entity.kill();
+				for (int i = 0; i < le.size(); i++)
+					if (le.get(i).dire == -1)
+						le.get(i).kill();
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
@@ -450,9 +416,9 @@ public class StageBasis extends BattleObj {
 			}
 		}
 
-		for (Entity uni : le)
-			if (s_stop == 0 || (uni.getAbi() & AB_TIMEI) != 0)
-				uni.postUpdate();
+		for (int i = 0; i < le.size(); i++)
+			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).postUpdate();
 
 		if (shock) {
 			for (Entity entity : le) {
@@ -498,7 +464,7 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme != null) {
 			bg = Identifier.getOr(theme, Background.class);
-			if (themeType != null && themeType.kill) {
+			if (themeType.kill) {
 				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();
 				la.clear();
@@ -511,10 +477,7 @@ public class StageBasis extends BattleObj {
 		if (s_stop == 0 && themeTime > 0) {
 			themeTime--;
 			if (themeTime == 0)
-				if (getEBHP() < st.bgh)
-					theme = st.bg1;
-				else
-					theme = st.bg;
+				theme = st.bg;
 		}
 	}
 

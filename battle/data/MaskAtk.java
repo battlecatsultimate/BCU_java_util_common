@@ -22,8 +22,6 @@ public interface MaskAtk extends BattleStatic {
 		return 0;
 	}
 
-	boolean getSPtrait();
-
 	Proc getProc();
 
 	int getShortPoint();

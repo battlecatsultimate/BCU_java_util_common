@@ -42,8 +42,6 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	public final MaskEnemy de;
 	@JsonField
 	public String name = "";
-	@JsonField
-	public String desc = "<br><br><br>";
 	public boolean inDic = false;
 
 	@JsonClass.JCConstructor
@@ -164,15 +162,9 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
-				anim.load();
 				anim.partial();
 				enemy.limit = Math.abs(anim.mamodel.parts[0][6]) * 6;
 				anim.unload();
-			}
-
-			if (UserProfile.isOlderPack(pack, "0.5.4.1")) {
-				enemy.traits = Trait.convertType(enemy.type);
-				enemy.type = 0;
 			}
 		}
 	}
@@ -187,12 +179,4 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		return Data.trio(id.id) + " - " + name;
 	}
 
-	public String descriptionGet() {
-		String[] desp = MultiLangCont.getDesc(this);
-		if (desp != null && desp[1].length() > 0)
-			return desp[1];
-		if (desc.length() == 0)
-			return "";
-		return desc;
-	}
 }

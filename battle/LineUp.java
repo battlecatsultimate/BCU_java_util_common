@@ -1,4 +1,3 @@
-
 package common.battle;
 
 import common.CommonStatic;
@@ -7,18 +6,21 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
-import common.pack.PackData;
-import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
 @JsonClass
 public class LineUp extends Data {
+
+	public static boolean eq(Identifier<Unit> id, int com) {
+		return id.pack.equals(Identifier.DEF) && id.id == com;
+	}
 
 	@JsonField(generic = { Identifier.class, Level.class })
 	public final TreeMap<Identifier<Unit>, Level> map = new TreeMap<>();
@@ -88,24 +90,24 @@ public class LineUp extends Data {
 	/**
 	 * get level of an Unit, if no date recorded, record default one
 	 */
-	public synchronized Level getLv(Form u) {
-		if (!map.containsKey(u.unit.id))
-			setLv(u.unit, u.getPrefLvs());
-		return map.get(u.unit.id);
+	public synchronized Level getLv(Unit u) {
+		if (!map.containsKey(u.id))
+			setLv(u, u.getPrefLvs());
+		return map.get(u.id);
 	}
 
 	/**
 	 * return how much space from 1st row a combo will need to put in this lineup
 	 */
 	public int occupance(Combo c) {
-		Form[] com = c.forms;
-		int rem = com.length;
-		for (Form form : com)
+		HashMap<Integer, Form> com = c.units;
+		int rem = com.size();
+		for (int i = 0; i < com.size(); i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = fs[0][j];
 				if (f == null)
 					continue;
-				if (f.unit == form.unit)
+				if (eq(f.uid, com.get(i).uid.id))
 					rem--;
 			}
 		return rem;
@@ -121,20 +123,21 @@ public class LineUp extends Data {
 	/**
 	 * apply a combo
 	 */
-	public void set(Form[] com) {
+	public void set(HashMap<Integer, Form> com) {
 		// if a unit in the lineup is present in the combo
 		boolean[] rep = new boolean[5];
 		// if a unit in the combo is already present in the lineup
-		boolean[] exi = new boolean[com.length];
+		boolean[] exi = new boolean[com.size()];
 		// the number of units required to inject
-		int rem = com.length;
-		for (int i = 0; i < com.length; i++)
+		int rem = com.size();
+		for (int i = 0; i < com.size(); i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = fs[0][j];
-				int formID = com[i].fid;
+				int unitID = com.get(i).uid.id;
+				int formID = com.get(i).fid;
 				if (f == null)
 					continue;
-				if (f.unit == com[i].unit) {
+				if (eq(f.uid, unitID)) {
 					rep[j] = true;
 					exi[i] = true;
 					if (f.fid < formID)
@@ -155,14 +158,14 @@ public class LineUp extends Data {
 			int del = rem - free;
 			while (del > 0) {
 				Combo c = coms.remove(0);
-				for (int i = 0; i < c.forms.length; i++) {
-					if (c.forms[i] == null)
+				for (int i = 0; i < c.units.size(); i++) {
+					if (c.units.get(i).uid.id == -1)
 						break;
 					for (int j = 0; j < 5; j++) {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (f.unit != c.forms[i].unit)
+						if (!eq(f.uid, c.units.get(i).uid.id))
 							continue;
 						loc[j]--;
 						if (loc[j] == 0)
@@ -173,11 +176,17 @@ public class LineUp extends Data {
 			}
 		}
 		for (int i = 0; i < 5; i++)
-			for (Form form : com)
-				if (fs[1][i] != null && fs[1][i].unit == form.unit) {
+			for (int is : com.keySet()) {
+				Form f = com.get(is);
+
+				if (f == null)
+					continue;
+
+				if (fs[1][i] != null && eq(fs[1][i].uid, f.uid.id)) {
 					fs[1][i] = null;
 					break;
 				}
+			}
 		arrange();
 		int emp = 0;
 		for (int i = 0; i < 10; i++)
@@ -195,7 +204,7 @@ public class LineUp extends Data {
 			while (exi[p])
 				p++;
 			setFS(getFS(i), j++);
-			Form c = com[p++];
+			Form c = com.get(p++);
 			setFS(c, i++);
 			r++;
 		}
@@ -254,8 +263,8 @@ public class LineUp extends Data {
 				free++;
 			else if (loc[i] == 0) {
 				boolean b = true;
-				for (Form is : c.forms)
-					if (fs[0][i].unit == is.unit) {
+				for (Form is : c.units.values())
+					if (eq(fs[0][i].uid, is.uid.id)) {
 						b = false;
 						break;
 					}
@@ -286,19 +295,19 @@ public class LineUp extends Data {
 		List<Combo> tcom = new ArrayList<>();
 		inc = new int[C_TOT];
 		loc = new int[5];
-		for (PackData p : UserProfile.getAllPacks())
-			for (Combo c : p.combos) {
+		for (Combo[] cs : CommonStatic.getBCAssets().combos)
+			for (Combo c : cs) {
 				boolean b = true;
-				for (int i = 0; i < c.forms.length; i++) {
-					Form fu = c.forms[i];
-					if (fu == null)
+				for (int i = 0; i < c.units.size(); i++) {
+					Form fu = c.units.get(i);
+					if (fu.uid.id == -1)
 						break;
 					boolean b0 = false;
 					for (int j = 0; j < 5; j++) {
 						Form f = fs[0][j];
 						if (f == null)
 							break;
-						if (f.unit != fu.unit || f.fid < fu.fid)
+						if (!eq(f.uid, fu.uid.id) || f.fid < fu.fid)
 							continue;
 						b0 = true;
 						break;
@@ -311,13 +320,13 @@ public class LineUp extends Data {
 				if (b) {
 					tcom.add(c);
 					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
-					for (int i = 0; i < c.forms.length; i++)
+					for (int i = 0; i < c.units.size(); i++)
 						for (int j = 0; j < 5; j++) {
-							Form fu = c.forms[i];
+							Form fu = c.units.get(i);
 							Form f = fs[0][j];
 							if (f == null)
 								continue;
-							if (f.unit == fu.unit && f.fid >= fu.fid)
+							if (eq(f.uid, fu.uid.id) && f.fid >= fu.fid)
 								loc[j]++;
 						}
 				}
@@ -338,7 +347,7 @@ public class LineUp extends Data {
 				if (fs[i][j] == null)
 					efs[i][j] = null;
 				else
-					efs[i][j] = new EForm(fs[i][j], getLv(fs[i][j]));
+					efs[i][j] = new EForm(fs[i][j], getLv(fs[i][j].unit));
 	}
 
 	private void validate() {

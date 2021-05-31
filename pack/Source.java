@@ -413,10 +413,6 @@ public abstract class Source {
 			return getFile("./" + CASTLE + "/" + Data.trio(id.id) + ".png");
 		}
 
-		public File getTraitIconFile(Identifier<Trait> id) {
-			return getFile("./" + TRAITICON + "/" + Data.trio(id.id) + ".png");
-		}
-
 		@Override
 		public FileData getFileData(String string) {
 			return new FDFile(getFile(string));
@@ -553,7 +549,6 @@ public abstract class Source {
 	public static final String CASTLE = "castles";
 	public static final String MUSIC = "musics";
 	public static final String REPLAY = "replays";
-	public static final String TRAITICON = "traitIcons";
 
 	public final String id;
 

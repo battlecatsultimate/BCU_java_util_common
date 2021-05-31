@@ -5,10 +5,7 @@ import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
-import common.pack.UserProfile;
 import common.util.anim.EAnimU;
-
-import java.util.ArrayList;
 
 public class EEnemy extends Entity {
 
@@ -22,7 +19,7 @@ public class EEnemy extends Entity {
 		mark = m;
 		isBase = mark == -1;
 		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
-		traits = de.getTraits();
+		type = de.getType();
 
 		canBurrow = mark != 1;
 	}
@@ -54,28 +51,26 @@ public class EEnemy extends Entity {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk.model instanceof AtkModelUnit) {
-			int overlap = ctargetable(atk.trait,false) ? 1 : 0;
-			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
-			sharedTraits.retainAll(traits);
+			int overlap = type & atk.type;
 			if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODATK(sharedTraits);
+				ans *= basis.b.t().getGOODATK(overlap);
 			if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)
-				ans *= basis.b.t().getMASSIVEATK(sharedTraits);
+				ans *= basis.b.t().getMASSIVEATK(overlap);
 			if (overlap != 0 && (atk.abi & AB_MASSIVES) != 0)
-				ans *= basis.b.t().getMASSIVESATK(sharedTraits);
+				ans *= basis.b.t().getMASSIVESATK(overlap);
 		}
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (atk.abi & AB_WKILL) > 0)
+		if ((type & TB_WITCH) > 0 && (atk.abi & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKAtk();
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (atk.abi & AB_EKILL) > 0)
+		if ((type & TB_EVA) > 0 && (atk.abi & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKAtk();
 		if (atk.canon == 5)
 			if ((touchable() & TCH_UG) > 0)
 				ans = (int) (maxH * basis.b.t().getCanonMulti(-5) / 1000);
 			else
 				ans = (int) (maxH * basis.b.t().getCanonMulti(5) / 1000);
-		ans = critCalc(data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL)), ans, atk);
+		ans = critCalc((data.getType() & TB_METAL) != 0, ans, atk);
 
 		// Perform Orb
 		ans += EUnit.OrbHandler.getOrbAtk(atk, this);
@@ -99,4 +94,5 @@ public class EEnemy extends Entity {
 	protected int traitType() {
 		return 1;
 	}
+
 }

@@ -242,7 +242,9 @@ public class UserProfile {
 					+ ") is higher than BCU core version (" + AssetLoader.CORE_VER + ")");
 		}
 
-		return new UserPack(new Workspace(folder.getName()), desc, elem);
+		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
+
+		return data;
 	}
 
 	public static UserPack readZipPack(File f) throws Exception {

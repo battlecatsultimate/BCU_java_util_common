@@ -7,12 +7,14 @@ import common.util.anim.AnimI;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MultiLangCont<I, T> extends Lang {
 
@@ -24,7 +26,7 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<Integer, String> RWNAME = new MultiLangCont<>();
 		public final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
-		public final MultiLangCont<Combo, String> COMNAME = new MultiLangCont<>();
+		public final MultiLangCont<Integer, String> COMNAME = new MultiLangCont<>();
 		public final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
 		public final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
@@ -62,19 +64,6 @@ public class MultiLangCont<I, T> extends Lang {
 			return getStatic().FNAME.getCont((Form) o);
 		if (o instanceof Enemy)
 			return getStatic().ENAME.getCont((Enemy) o);
-		if (o instanceof Combo)
-			return getStatic().COMNAME.getCont((Combo) o);
-		return null;
-	}
-
-	public static String[] getDesc(Object o) {
-		if (o == null)
-			return null;
-
-		if (o instanceof Form)
-			return getStatic().FEXP.getCont((Form) o);
-		if (o instanceof Enemy)
-			return getStatic().EEXP.getCont((Enemy) o);
 		return null;
 	}
 
@@ -104,7 +93,10 @@ public class MultiLangCont<I, T> extends Lang {
 	}
 
 	private HashMap<I, T> getSub(String loc) {
-		return map.computeIfAbsent(loc, k -> new HashMap<>());
+		HashMap<I, T> ans = map.get(loc);
+		if (ans == null)
+			map.put(loc, ans = new HashMap<>());
+		return ans;
 	}
 
 }

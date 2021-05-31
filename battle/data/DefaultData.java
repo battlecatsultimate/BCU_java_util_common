@@ -73,23 +73,20 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int[][] rawAtkData() {
-		int[][] data = new int[getAtkCount()][4];
+		int[][] data = new int[getAtkCount()][3];
 		data[0][0] = atk;
 		data[0][1] = pre;
 		data[0][2] = abi0;
-		data[0][3] = 1;
 		if (atk1 == 0)
 			return data;
 		data[1][0] = atk1;
 		data[1][1] = pre1 - pre;
 		data[1][2] = abi1;
-		data[1][3] = 1;
 		if (atk2 == 0)
 			return data;
 		data[2][0] = atk2;
 		data[2][1] = pre2 - pre1;
 		data[2][2] = abi2;
-		data[2][3] = 1;
 		return data;
 	}
 
@@ -104,14 +101,6 @@ public abstract class DefaultData extends DataEntity {
 		if (pre1 > 0)
 			return pre1;
 		return pre;
-	}
-
-	public boolean isCommon() {
-		for (int[] atkDatum : rawAtkData()) {
-			if (atkDatum[2] != 1)
-				return false;
-		}
-		return true;
 	}
 
 }

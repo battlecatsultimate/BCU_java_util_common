@@ -16,6 +16,7 @@ import common.util.anim.ImgCut;
 import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
 import common.util.stage.Music;
+import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class CommonStatic {
 		public VImg[][] ico = new VImg[2][];
 		public VImg[][] num = new VImg[9][11];
 		public VImg[][] battle = new VImg[3][];
-		public VImg[][] icon = new VImg[5][];
+		public VImg[][] icon = new VImg[4][];
 		public VImg[] timer = new VImg[11];
 
 		// Background resources
@@ -63,6 +64,8 @@ public class CommonStatic {
 		// EffAnim
 		public final EffAnimStore effas = new EffAnimStore();
 
+		// Combo
+		public final Combo[][] combos = new Combo[Data.C_TOT][];
 		public final int[][] values = new int[Data.C_TOT][5];
 		public int[][] filter;
 

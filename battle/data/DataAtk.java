@@ -38,9 +38,6 @@ public class DataAtk implements MaskAtk {
 	}
 
 	@Override
-	public boolean getSPtrait() { return false; }
-
-	@Override
 	public int getShortPoint() {
 		return data.lds;
 	}
