@@ -1405,8 +1405,10 @@ public abstract class Entity extends AbEntity {
 
 	/**
 	 * mark it dead, proceed death animation
+	 *
+	 * if atk is true, it means it dies because of self-destruct
 	 */
-	public void kill() {
+	public void kill(boolean atk) {
 		if (kbTime == -1)
 			return;
 		kbTime = -1;
@@ -1463,7 +1465,7 @@ public abstract class Entity extends AbEntity {
 		kb.doInterrupt();
 
 		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
-			kill();
+			kill(true);
 
 		// update animations
 		anim.update();
@@ -1755,7 +1757,7 @@ public abstract class Entity extends AbEntity {
 
 		if (zx.prekill())
 			return;
-		kill();
+		kill(false);
 	}
 
 	/**

@@ -189,7 +189,7 @@ public class Cannon extends AtkModelAb {
 				} else if (id == 2) {
 					// wall canon
 					if (wall != null)
-						wall.kill();
+						wall.kill(true);
 					wall = null;
 				} else if (id == 3) {
 					// freeze canon

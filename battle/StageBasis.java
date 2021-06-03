@@ -426,7 +426,7 @@ public class StageBasis extends BattleObj {
 			if (ebase.health <= 0) {
 				for (Entity entity : le)
 					if (entity.dire == 1)
-						entity.kill();
+						entity.kill(false);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
@@ -439,7 +439,7 @@ public class StageBasis extends BattleObj {
 			if (ubase.health <= 0) {
 				for (Entity entity : le)
 					if (entity.dire == -1)
-						entity.kill();
+						entity.kill(false);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
