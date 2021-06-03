@@ -8,8 +8,12 @@ import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.util.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonClass(read = RType.FILL)
 public class Treasure extends Data {
+	public static final Map<Integer, CannonLevelCurve> curveData = new HashMap<>();
 
 	public final Basis b;
 
@@ -84,6 +88,18 @@ public class Treasure extends Data {
 	public int getCanonAtk() {
 		int base = 50 + tech[LV_CATK] * 50 + trea[T_CATK] * 5;
 		return base * (100 + b.getInc(C_C_ATK)) / 100;
+	}
+
+	public double getCannonMagnification(int id, int type) {
+		if(curveData.containsKey(id)) {
+			CannonLevelCurve levelCurve = curveData.get(id);
+
+			return levelCurve.applyFormula(type, bslv[id]);
+		}
+
+		System.out.println("Warning : Unknown ID : "+ id);
+
+		return 0;
 	}
 
 	/**

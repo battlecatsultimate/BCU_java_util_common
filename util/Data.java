@@ -1149,6 +1149,23 @@ public class Data {
 	public static final int BASE_CURSE = 7;
 	public static final int BASE_TOT = 8;
 
+	// base type
+	public static final int BASE_ATK_MAGNIFICATION = 0;
+	public static final int BASE_SLOW_TIME = 1;
+	public static final int BASE_TIME = 2;
+	public static final int BASE_WALL_MAGNIFICATION = 3;
+	public static final int BASE_WALL_ALIVE_TIME = 4;
+	public static final int BASE_RANGE = 5;
+	//Figure out type 6
+	public static final int BASE_HEALTH_PERCENTAGE = 7;
+	//Figure out type 8
+	public static final int BASE_HOLY_ATK_SURFACE = 9;
+	public static final int BASE_HOLY_ATK_UNDERGROUND = 10;
+	//Figure out type 11
+	public static final int BASE_CURSE_TIME = 12;
+
+
+
 	// touchable ID
 	public static final int TCH_N = 1;
 	public static final int TCH_KB = 2;
