@@ -5,6 +5,7 @@ import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
+import common.util.Data;
 import common.util.anim.EAnimU;
 
 public class EEnemy extends Entity {
@@ -67,9 +68,9 @@ public class EEnemy extends Entity {
 			ans *= basis.b.t().getEKAtk();
 		if (atk.canon == 5)
 			if ((touchable() & TCH_UG) > 0)
-				ans = (int) (maxH * basis.b.t().getCanonMulti(-5) / 1000);
+				ans = (int) (maxH * basis.b.t().getCannonMagnification(BASE_GROUND, Data.BASE_HOLY_ATK_UNDERGROUND));
 			else
-				ans = (int) (maxH * basis.b.t().getCanonMulti(5) / 1000);
+				ans = (int) (maxH * basis.b.t().getCannonMagnification(BASE_GROUND, Data.BASE_HOLY_ATK_SURFACE));
 		ans = critCalc((data.getType() & TB_METAL) != 0, ans, atk);
 
 		// Perform Orb
