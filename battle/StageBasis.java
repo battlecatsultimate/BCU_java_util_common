@@ -392,7 +392,7 @@ public class StageBasis extends BattleObj {
 			if (ebase.health <= 0) {
 				for (int i = 0; i < le.size(); i++)
 					if (le.get(i).dire == 1)
-						le.get(i).kill();
+						le.get(i).kill(false);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
@@ -405,7 +405,7 @@ public class StageBasis extends BattleObj {
 			if (ubase.health <= 0) {
 				for (int i = 0; i < le.size(); i++)
 					if (le.get(i).dire == -1)
-						le.get(i).kill();
+						le.get(i).kill(false);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
