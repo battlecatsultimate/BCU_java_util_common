@@ -8,10 +8,13 @@ public class CannonLevelCurve extends Data  {
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 1;
 
+    public final int max;
+
     private final Map<Integer, int[][]> curveMap;
 
-    public CannonLevelCurve(Map<Integer, int[][]> curveMap) {
+    public CannonLevelCurve(Map<Integer, int[][]> curveMap, int max) {
         this.curveMap = curveMap;
+        this.max = max;
     }
 
     public double applyFormula(int type, int level) {
