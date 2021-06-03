@@ -42,7 +42,7 @@ public class CannonLevelCurve extends Data  {
                     return v / 100.0;
                 case BASE_HOLY_ATK_SURFACE:
                 case BASE_HOLY_ATK_UNDERGROUND:
-                    return v + 100;
+                    return (v + 100) / 100.0;
                 case BASE_RANGE:
                     return v / 4.0;
                 case BASE_HEALTH_PERCENTAGE:
