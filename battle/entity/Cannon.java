@@ -191,7 +191,7 @@ public class Cannon extends AtkModelAb {
 					// freeze canon
 					duration = 1;
 					proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + b.b.getInc(C_STOP)) / 100.0);
-					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION));
+					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
 					int rad = NYRAN[3] / 2;
 					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos + rad, duration));
 				} else if (id == 4) {
@@ -216,7 +216,7 @@ public class Cannon extends AtkModelAb {
 					proc.BREAK.prob = 1;
 					proc.KB.dis = KB_DIS[INT_KB];
 					proc.KB.time = KB_TIME[INT_KB];
-					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION));
+					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
 					int rad = (int) b.b.t().getCannonMagnification(id, Data.BASE_RANGE);
 					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos, duration));
 

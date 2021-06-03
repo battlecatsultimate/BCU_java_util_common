@@ -48,12 +48,10 @@ public class CannonLevelCurve extends Data  {
             }
 
             switch (type) {
-                case BASE_ATK_MAGNIFICATION:
-                case BASE_WALL_MAGNIFICATION:
-                    return v / 100.0;
                 case BASE_RANGE:
                     return v / 4.0;
                 case BASE_HEALTH_PERCENTAGE:
+                    return v / 10.0;
                 case BASE_HOLY_ATK_SURFACE:
                 case BASE_HOLY_ATK_UNDERGROUND:
                     return v / 1000.0;
