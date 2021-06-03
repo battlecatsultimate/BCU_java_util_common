@@ -14,7 +14,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 	protected AtkModelEnemy(EEnemy ent, double d0) {
 		super(ent, d0, 1);
 		String[] arr = { "KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "IMUATK",
-				"POIATK" };
+				"POIATK", "ARMOR", "SPEED", "DMGCUT", "DMGCAP" };
 		cursed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < cursed.length; i++) {
 			cursed[i] = data.getAtkModel(i).getProc().clone();
