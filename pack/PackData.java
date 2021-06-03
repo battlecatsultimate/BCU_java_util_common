@@ -2,6 +2,7 @@ package common.pack;
 
 import com.google.gson.JsonElement;
 import common.CommonStatic;
+import common.battle.Treasure;
 import common.battle.data.DataEnemy;
 import common.battle.data.Orb;
 import common.battle.data.PCoin;
@@ -68,6 +69,7 @@ public abstract class PackData implements IndexContainer {
 			progress.accept("loading auxiliary data");
 			Combo.readFile();
 			PCoin.read();
+			Treasure.readCannonCurveData();
 			progress.accept("loading effects");
 			EffAnim.read();
 			progress.accept("loading backgrounds");

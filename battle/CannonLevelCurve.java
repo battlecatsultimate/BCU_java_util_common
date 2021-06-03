@@ -36,9 +36,16 @@ public class CannonLevelCurve extends Data  {
             int min = curve[MIN_VALUE][index];
             int max = curve[MAX_VALUE][index];
 
-            int minLevel = index * 10 + 1;
+            int minLevel;
+            double v;
 
-            double v = min + (min - max) * (level - minLevel) / 9.0;
+            if(index == 0) {
+                minLevel = 1;
+                v = min + (max - min) * (level - minLevel) / 9.0;
+            } else {
+                minLevel = index * 10;
+                v = min + (max - min) * (level - minLevel) / 10.0;
+            }
 
             switch (type) {
                 case BASE_ATK_MAGNIFICATION:
