@@ -1167,7 +1167,7 @@ public abstract class Entity extends AbEntity {
 
 		tokens.add(atk);
 
-		Proc.PT imuatk = data.getProc().IMUATK;
+		Proc.PT imuatk = getProc().IMUATK;
 		if ((atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, false) && imuatk.prob > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, -1)));
@@ -1177,7 +1177,7 @@ public abstract class Entity extends AbEntity {
 				return;
 		}
 
-		Proc.DMGCUT dmgcut = data.getProc().DMGCUT;
+		Proc.DMGCUT dmgcut = getProc().DMGCUT;
 		if ((dmgcut.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
 			if (dmg < dmgcut.dmg && dmg > 0)
 				if (basis.r.nextDouble() * 100 < dmgcut.prob) {
@@ -1187,7 +1187,7 @@ public abstract class Entity extends AbEntity {
 					else
 						dmg = 0;
 				}
-		Proc.DMGCAP dmgcap = data.getProc().DMGCAP;
+		Proc.DMGCAP dmgcap = getProc().DMGCAP;
 		if ((dmgcap.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
 			if (dmg > dmgcap.dmg)
 				if (basis.r.nextDouble() * 100 < dmgcap.prob) {
