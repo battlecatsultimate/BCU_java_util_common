@@ -62,6 +62,8 @@ public abstract class PackData implements IndexContainer {
 		public void load(Consumer<String> progress, Consumer<Double> bar) {
 			progress.accept("loading basic images");
 			Res.readData();
+			progress.accept("loading cannon data");
+			Treasure.readCannonCurveData();
 			progress.accept("loading enemies");
 			loadEnemies(bar);
 			progress.accept("loading units");
@@ -69,7 +71,6 @@ public abstract class PackData implements IndexContainer {
 			progress.accept("loading auxiliary data");
 			Combo.readFile();
 			PCoin.read();
-			Treasure.readCannonCurveData();
 			progress.accept("loading effects");
 			EffAnim.read();
 			progress.accept("loading backgrounds");

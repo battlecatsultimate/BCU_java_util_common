@@ -531,8 +531,9 @@ public class Treasure extends Data {
 			trea[i] = MT[i];
 		fruit[T_RED] = fruit[T_BLACK] = fruit[T_FLOAT] = fruit[T_ANGEL] = 300;
 		fruit[T_METAL] = fruit[T_ZOMBIE] = fruit[T_ALIEN] = 300;
-		for (int i = 0; i < BASE_TOT; i++)
-			bslv[i] = 20;
+		bslv[0] = 20;
+		for (int i = 1; i < BASE_TOT; i++)
+			bslv[i] = curveData.get(i).max;
 		gods[0] = gods[1] = gods[2] = 100;
 		alien = 600;
 		star = 1500;
