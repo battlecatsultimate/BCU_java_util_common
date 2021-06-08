@@ -45,7 +45,7 @@ public class EUnit extends Entity {
 		// if level is null, update HP to match level
 		if (level == null) {
 			lvl = 1;
-			health = maxH = (int) (health * 0.01 * b.b.t().getCanonMulti(2));
+			health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
 		} else {
 			lvl = level.getLvs()[0];
 		}

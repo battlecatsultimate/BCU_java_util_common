@@ -18,7 +18,7 @@ import java.util.Queue;
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public class Combo extends Data implements IndexContainer.Indexable<IndexContainer, Combo> {
-	
+
 	public static void readFile() {
 		CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
 		PackData.DefPack data = UserProfile.getBCData();

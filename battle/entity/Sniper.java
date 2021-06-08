@@ -109,7 +109,7 @@ public class Sniper extends AtkModelAb {
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);
 
-		// TODO Get distance which bullet will fly
+		//TODO Get distance which bullet will fly
 		// path = new P(-(getPos()-pos+300),height);
 	}
 }

@@ -215,7 +215,6 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
-
 		rep = new AtkDataModel(this, ce.rep);
 
 		List<AtkDataModel> temp = new ArrayList<>();

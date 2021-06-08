@@ -797,30 +797,30 @@
         }
     },
     "DMGCAP" : {
-        "abbr_name" : "M.Shield",
-        "full_name" : "Magic Shield",
-        "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(nullify){nullify[(traitIgnore){ all}]}(!nullify){set}] damage higher than (dmg)[(!nullify){ to (dmg)}(nullify&procs){ and also the attack's procs}]",
-        "class" : {
-            "prob" : {
-                "name" : "chance",
-                "tooltip" : null
+        "abbr_name": "M.Shield",
+        "full_name": "Magic Shield",
+        "tooltip": "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
+        "format": "(prob)% chance to [(nullify){nullify[(traitIgnore){ all}]}(!nullify){set}] damage higher than (dmg)[(!nullify){ to (dmg)}(nullify&procs){ and also the attack's procs}]",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
             },
-            "dmg" : {
-                "name" : "damage",
-                "tooltip" : "The minimum amount of damage to be capped."
+            "dmg": {
+                "name": "damage",
+                "tooltip": "The minimum amount of damage to be capped."
             },
-            "traitIgnore" : {
-                "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+            "traitIgnore": {
+                "name": "ignore traits",
+                "tooltip": "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
             },
-            "nullify" : {
-                "name" : "nullify damage",
-                "tooltip" : "When this is checked, damage from the attack will be negated instead of set to (dmg)"
+            "nullify": {
+                "name": "nullify damage",
+                "tooltip": "When this is checked, damage from the attack will be negated instead of set to (dmg)"
             },
-            "procs" : {
-                "name" : "ignore procs",
-                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
+            "procs": {
+                "name": "ignore procs",
+                "tooltip": "When this is checked, procs from nullified attacks will also be negated."
             }
         }
     }

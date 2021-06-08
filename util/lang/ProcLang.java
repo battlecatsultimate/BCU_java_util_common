@@ -154,6 +154,7 @@ public class ProcLang {
 			default:
 				f = CommonStatic.ctx.getLangFile("proc.json");
 		}
+
 		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
 		f.close();
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);

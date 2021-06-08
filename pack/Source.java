@@ -22,9 +22,9 @@ import common.util.stage.CastleImg;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.Trait;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.io.*;

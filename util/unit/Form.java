@@ -151,9 +151,9 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.5.4.0") && form.getProc().SUMMON.prob > 0) {
-						form.getProc().SUMMON.form = 1;
-						form.getProc().SUMMON.mult = 1;
-						form.getProc().SUMMON.type.fix_buff = true;
+					form.getProc().SUMMON.form = 1;
+					form.getProc().SUMMON.mult = 1;
+					form.getProc().SUMMON.type.fix_buff = true;
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.5.4.1")) {

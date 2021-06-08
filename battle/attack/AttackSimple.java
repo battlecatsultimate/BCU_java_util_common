@@ -87,7 +87,7 @@ public class AttackSimple extends AttackAb {
 			double p0 = model.getPos() + dire * addp;
 			// generate a wave when hits somebody
 
-			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE) , p0, layer, true);
+			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0, layer, true);
 		}
 
 		if(capt.size() > 0 && proc.MINIWAVE.exists()) {
@@ -95,6 +95,7 @@ public class AttackSimple extends AttackAb {
 			int wid = dire == 1 ? W_E_WID : W_U_WID;
 			int addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2;
 			double p0 = model.getPos() + dire * addp;
+
 			new ContWaveDef(new AttackWave(this, p0, wid, WT_MINI), p0, layer, false);
 		}
 

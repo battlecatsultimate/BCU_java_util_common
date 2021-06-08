@@ -1247,7 +1247,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		// process proc part
-		if (!(ctargetable(atk.trait, false) || (receive(-1) && atk.specialTrait) || (receive(1) && !atk.specialTrait)))
+		if (!(ctargetable(atk.trait, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {

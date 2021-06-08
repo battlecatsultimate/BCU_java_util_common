@@ -267,8 +267,8 @@ public class Formatter {
 
 		private int eval() throws Exception {
 			Stack<Integer> stack = new Stack<>();
-			stack.push(nextElem());
 			char prevOp = ' ';
+			stack.push(nextElem());
 			while (ind < p1) {
 				char ch = str.charAt(ind++);
 				if (ch == '*')

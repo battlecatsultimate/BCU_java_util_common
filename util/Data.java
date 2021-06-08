@@ -814,6 +814,7 @@ public class Data {
 	public static final int T_TOT = 11;
 
 	// abi bit filter
+	// TODO - Replace SEALI, TIMEI, MOVEI, POII with Resistance/Immunity to said procs
 	public static final int AB_GOOD = 1;
 	public static final int AB_RESIST = 1 << 1;
 	public static final int AB_MASSIVE = 1 << 2;
@@ -945,7 +946,7 @@ public class Data {
 	public static final int P_IMUSUMMON = 38;
 	public static final int P_DMGCUT = 39;
 	public static final int P_DMGCAP = 40;
-	public static final int PROC_TOT = 41;// 39
+	public static final int PROC_TOT = 41;// 41
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1053,7 +1054,7 @@ public class Data {
 			{ 4, TRAIT_ALIEN }, // 38: targeting alien
 			{ 4, TRAIT_ZOMBIE }, // 39: targeting zombie
 			{ 4, TRAIT_RELIC }, // 40: targeting relic
-			{ 4, TRAIT_WHITE, 0 }, // 41: targeting relic
+			{ 4, TRAIT_WHITE, 0 }, // 41: targeting white
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
 			{ 3, P_IMUWEAK }, // 44: immune to weak
@@ -1186,6 +1187,23 @@ public class Data {
 	public static final int BASE_BARRIER = 6;
 	public static final int BASE_CURSE = 7;
 	public static final int BASE_TOT = 8;
+
+	// base type
+	public static final int BASE_ATK_MAGNIFICATION = 0;
+	public static final int BASE_SLOW_TIME = 1;
+	public static final int BASE_TIME = 2;
+	public static final int BASE_WALL_MAGNIFICATION = 3;
+	public static final int BASE_WALL_ALIVE_TIME = 4;
+	public static final int BASE_RANGE = 5;
+	//Figure out type 6
+	public static final int BASE_HEALTH_PERCENTAGE = 7;
+	//Figure out type 8
+	public static final int BASE_HOLY_ATK_SURFACE = 9;
+	public static final int BASE_HOLY_ATK_UNDERGROUND = 10;
+	//Figure out type 11
+	public static final int BASE_CURSE_TIME = 12;
+
+
 
 	// touchable ID
 	public static final int TCH_N = 1;

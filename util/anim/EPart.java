@@ -1,4 +1,3 @@
-
 package common.util.anim;
 
 import common.CommonStatic;

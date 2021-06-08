@@ -107,4 +107,7 @@ public class MultiLangCont<I, T> extends Lang {
 		return map.computeIfAbsent(loc, k -> new HashMap<>());
 	}
 
+	public Map<I, T> getMap(String loc) {
+		return map.get(loc);
+	}
 }

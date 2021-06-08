@@ -5,9 +5,10 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.util.Data;
-import java.util.ArrayList;
 import common.util.pack.Soul;
 import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class DataEntity extends Data implements MaskEntity {

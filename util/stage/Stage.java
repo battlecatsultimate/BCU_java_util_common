@@ -301,8 +301,7 @@ public class Stage extends Data
 			ans.castle = castle.clone();
 		ans.name = toString();
 		ans.data = data.copy();
-		if (lim != null)
-			ans.lim = lim.clone();
+		ans.lim = lim != null ? lim.clone() : getLim(0);
 		if (mus0 != null)
 			ans.mus0 = mus0.clone();
 		if (mus1 != null)
