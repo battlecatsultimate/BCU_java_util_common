@@ -7,8 +7,6 @@ import common.pack.*;
 import common.system.VImg;
 import common.util.Data;
 import common.pack.IndexContainer.Indexable;
-import main.MainBCU;
-import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
