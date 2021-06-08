@@ -268,7 +268,7 @@
     },
     "IMUKB": {
         "abbr_name": "imu. KB",
-        "full_name": "Immune/Resist to KB",
+        "full_name": "Immune/Resistant to KB",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Knockback[(mult<100&mult>0){ (_left)Decreases distance by (mult)%(_right)}(mult<0){ (_left)Increases distance by (_abs(mult))%(_right)}]",
         "class": {
@@ -280,7 +280,7 @@
     },
     "IMUSTOP": {
         "abbr_name": "imu. Stop",
-        "full_name": "Immune/Resist to Stop",
+        "full_name": "Immune/Resistant to Stop",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Freeze[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
@@ -292,7 +292,7 @@
     },
     "IMUSLOW": {
         "abbr_name": "imu. Slow",
-        "full_name": "Immune/Resist to Slow",
+        "full_name": "Immune/Resistant to Slow",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Slow[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
@@ -304,7 +304,7 @@
     },
     "IMUWAVE": {
         "abbr_name": "imu. Wave",
-        "full_name": "Immune/Resist to Wave",
+        "full_name": "Immune/Resistant to Wave",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Wave[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
         "class": {
@@ -316,7 +316,7 @@
     },
     "IMUWEAK": {
         "abbr_name": "imu. Weak",
-        "full_name": "Immune/Resist to Weak",
+        "full_name": "Immune/Resistant to Weak",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Weaken[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
@@ -328,7 +328,7 @@
     },
     "IMUWARP": {
         "abbr_name": "imu. Warp",
-        "full_name": "Immune/Resist to Warp",
+        "full_name": "Immune/Resistant to Warp",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Warp[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
@@ -340,9 +340,21 @@
     },
     "IMUCURSE": {
         "abbr_name": "imu. Curse",
-        "full_name": "Immune/Resist to Curse",
+        "full_name": "Immune/Resistant to Curse",
         "tooltip": null,
         "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Curse[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUSEAL": {
+        "abbr_name": "imu. Seal",
+        "full_name": "Immune/Resistant to Seal",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -532,6 +544,18 @@
             }
         }
     },
+    "IMUMOVING": {
+        "abbr_name": "imu. Move",
+        "full_name": "Immune/Resistant to Moving Atk",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Moving Attacks[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
     "THEME": {
         "abbr_name": "theme",
         "full_name": "Background Switch",
@@ -594,6 +618,18 @@
             },
             "type.unstackable": {
                 "name": "unstackable",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUPOI": {
+        "abbr_name": "imu. Poison",
+        "full_name": "Immune/Resistant to Poison",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
                 "tooltip": null
             }
         }
@@ -699,9 +735,9 @@
     },
     "IMUPOIATK": {
         "abbr_name": "imu. toxic",
-        "full_name": "Immune/Resist to Toxic",
+        "full_name": "Immune/Resistant to Toxic",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Toxic[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases taken damage by (_abs(mult))%(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Toxic[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases taken damage by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",
@@ -711,9 +747,9 @@
     },
     "IMUVOLC": {
         "abbr_name": "imu. Surge",
-        "full_name": "Immune/Resist to Surge",
+        "full_name": "Immune/Resistant to Surge",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resist}(mult<0){Weak}] to Surge Attack[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases taken damage by (_abs(mult))%(_right)}]",
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Surge Attack[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases taken damage by (_abs(mult))%(_right)}]",
         "class": {
             "mult": {
                 "name": "percent",

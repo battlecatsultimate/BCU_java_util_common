@@ -1153,10 +1153,12 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if ((atk.waveType & WT_MOVE) > 0)
-			if ((getAbi() & AB_MOVEI) > 0) {
+			if (getProc().IMUMOVING.mult > 0)
 				anim.getEff(P_WAVE);
+			if (getProc().IMUMOVING.mult == 100)
 				return;
-			}
+			else
+				dmg = dmg * (100 - getProc().IMUMOVING.mult) / 100;
 
 		if ((atk.waveType & WT_VOLC) > 0) {
 			if (getProc().IMUVOLC.mult > 0) {
@@ -1340,15 +1342,16 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INVWARP);
 
 		if (atk.getProc().SEAL.time > 0)
-			if ((getAbi() & AB_SEALI) == 0) {
-				status[P_SEAL][0] = atk.getProc().SEAL.time;
+			if (getProc().IMUSEAL.mult < 100) {
+				status[P_SEAL][0] = atk.getProc().SEAL.time * (100 - getProc().IMUSEAL.mult) / 100;
 				anim.getEff(P_SEAL);
 			} else
 				anim.getEff(INV);
 
 		if (atk.getProc().POISON.time > 0)
-			if ((getAbi() & AB_POII) == 0 || atk.getProc().POISON.damage < 0) {
+			if (getProc().IMUPOI.mult < 100 || atk.getProc().POISON.damage < 0) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
+				ws.time = ws.time * (100 - getProc().IMUPOI.mult) / 100;
 				if (ws.type.damage_type == 1)
 					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);

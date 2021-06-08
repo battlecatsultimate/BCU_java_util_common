@@ -348,6 +348,18 @@
             }
         }
     },
+    "IMUSEAL": {
+        "abbr_name": "imu. Seal",
+        "full_name": "Immune/Resistant to Seal",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
     "IMUSUMMON": {
         "abbr_name": "imu. Summon",
         "full_name": "Immune/Resist to Summon",
@@ -519,6 +531,18 @@
             }
         }
     },
+    "IMUMOVING": {
+        "abbr_name": "imu. Move",
+        "full_name": "Immune/Resistant to Moving Atk",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Moving Attacks[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
     "THEME": {
         "abbr_name": "배경 변경",
         "full_name": "배경 변경",
@@ -576,6 +600,18 @@
             "type.unstackable": {
                 "name": "중첩 불가능",
                 "tooltip": "해당 특성이 활성화되면 중첩이 불가능해집니다"
+            }
+        }
+    },
+    "IMUPOI": {
+        "abbr_name": "imu. Poison",
+        "full_name": "Immune/Resistant to Poison",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
             }
         }
     },

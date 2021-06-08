@@ -194,8 +194,8 @@ public class Res extends ImgCore {
 		aux.icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
 		aux.icon[0][ABI_IMUSW] = new VImg("./org/page/icons/BossWaveX.png");
 		aux.icon[0][ABI_SNIPERI] = new VImg("./org/page/icons/SnipeX.png");
-		aux.icon[0][ABI_POII] = new VImg("./org/page/icons/PoisonX.png");
-		aux.icon[0][ABI_SEALI] = new VImg("./org/page/icons/SealX.png");
+		aux.icon[1][P_IMUPOI] = new VImg("./org/page/icons/PoisonX.png");
+		aux.icon[1][P_IMUSEAL] = new VImg("./org/page/icons/SealX.png");
 		aux.icon[0][ABI_GHOST] = new VImg("./org/page/icons/Ghost.png");
 		aux.icon[1][P_THEME] = new VImg("./org/page/icons/Theme.png");
 		aux.icon[1][P_TIME] = new VImg("./org/page/icons/Time.png");
@@ -205,7 +205,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SEAL] = new VImg("./org/page/icons/Seal.png");
 		aux.icon[1][P_MOVEWAVE] = new VImg("./org/page/icons/Moving.png");
 		aux.icon[1][P_SUMMON] = new VImg("./org/page/icons/Summon.png");
-		aux.icon[0][ABI_MOVEI] = new VImg("./org/page/icons/MovingX.png");
+		aux.icon[1][P_IMUMOVING] = new VImg("./org/page/icons/MovingX.png");
 		aux.icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		aux.icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		aux.icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");

@@ -493,6 +493,12 @@ public class Editors {
 		map().put("IMUVOLC", imu);
 
 		map().put("IMUSUMMON", imu);
+
+		map().put("IMUSEAL", imu);
+
+		map().put("IMUMOVING", imu);
+
+		map().put("IMUPOI", imu);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {
