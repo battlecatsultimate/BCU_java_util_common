@@ -408,8 +408,8 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
 				t.dmg = 0;
-				t.traitIgnore = false;
-				t.procs = false;
+				t.type.traitIgnore = false;
+				t.type.procs = false;
 			} else
 				t.dmg = Math.max(t.dmg,0);
 		}));
@@ -418,9 +418,9 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
 				t.dmg = 0;
-				t.traitIgnore = false;
-				t.nullify = false;
-				t.procs = false;
+				t.type.traitIgnore = false;
+				t.type.nullify = false;
+				t.type.procs = false;
 			} else
 				t.dmg = Math.max(t.dmg,0);
 		}));

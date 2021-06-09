@@ -823,7 +823,7 @@
     "abbr_name": "超装甲",
     "full_name": "スーパー装甲",
     "tooltip": "このアビリティは、一定量以下のすべてのダメージを0にする。",
-    "format": "(prob)%の確率で(dmg)以下のダメージを無効化する[(traitIgnore){ (_left)属性に関わらず(_right)}][(procs){ (_left)攻撃の能力も無効にする(_right)}]",
+    "format": "(prob)%の確率で(dmg)以下のダメージを無効化する[(type.traitIgnore){ (_left)属性に関わらず(_right)}][(type.procs){ (_left)攻撃の能力も無効にする(_right)}]",
     "class": {
       "prob": {
         "name": "確率",
@@ -833,11 +833,11 @@
         "name": "攻撃力",
         "tooltip": "無効化されるダメージの最小値。"
       },
-      "traitIgnore": {
+      "type.traitIgnore": {
         "name": "属性無視",
         "tooltip": "これがチェックされると、この能力は敵の属性に関係なく発動できる。味方のユニットにのみ適用されます。"
       },
-      "procs": {
+      "type.procs": {
         "name": "能力を無視する",
         "tooltip": "これをチェックすると、無効化された攻撃による能力も無効化されます。"
       }
@@ -847,7 +847,7 @@
     "abbr_name": "魔法の盾",
     "full_name": "魔法の盾",
     "tooltip": "このアビリティは、一定量以上のすべてのダメージを当該量に軽減する（「ダメージを無効にする」がチェックされている場合は無効にする）。",
-    "format": "(prob)%の確率で(dmg)以上のダメージを[(!nullify){(dmg)に}(nullify){無効化}]する[(traitIgnore){ (_left)属性に関わらず(_right)}][(nullify&procs){ (_left)攻撃の能力も無効にする(_right)}]",
+    "format": "(prob)%の確率で(dmg)以上のダメージを[(!type.nullify){(dmg)に}(type.nullify){無効化}]する[(type.traitIgnore){ (_left)属性に関わらず(_right)}][(type.nullify&type.procs){ (_left)攻撃の能力も無効にする(_right)}]",
     "class": {
       "prob": {
         "name": "確率",
@@ -857,15 +857,15 @@
         "name": "攻撃力",
         "tooltip": "無効化されるダメージの最大値です。"
       },
-      "traitIgnore": {
+      "type.traitIgnore": {
         "name": "属性無視",
         "tooltip": "これがチェックされると、この能力は敵の属性に関係なく発動できる。味方のユニットにのみ適用されます。"
       },
-      "nullify": {
+      "type.nullify": {
         "name": "ダメージを無効にする",
         "tooltip": "これがチェックされると、攻撃によるダメージは「攻撃力」に設定されるのではなく、無効化されます。"
       },
-      "procs": {
+      "type.procs": {
         "name": "能力を無視する",
         "tooltip": "これをチェックすると、無効化された攻撃による能力も無効化されます。"
       }

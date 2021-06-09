@@ -1180,22 +1180,22 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if ((dmgcut.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
+		if ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
 			if (dmg < dmgcut.dmg && dmg > 0)
 				if (basis.r.nextDouble() * 100 < dmgcut.prob) {
 					anim.getEff(P_DMGCUT);
-					if (dmgcut.procs)
+					if (dmgcut.type.procs)
 						return;
 					else
 						dmg = 0;
 				}
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if ((dmgcap.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
+		if ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
 			if (dmg > dmgcap.dmg)
 				if (basis.r.nextDouble() * 100 < dmgcap.prob) {
 					anim.getEff(P_DMGCAP);
-					if (dmgcap.nullify)
-						if (dmgcap.procs)
+					if (dmgcap.type.nullify)
+						if (dmgcap.type.procs)
 							return;
 						else
 							dmg = 0;

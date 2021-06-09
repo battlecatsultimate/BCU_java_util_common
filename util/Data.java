@@ -58,28 +58,40 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class DMGCUT extends ProcItem {
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@BitCount(2)
+				@Order(0)
+				public boolean traitIgnore;
+				@Order(1)
+				public boolean procs;
+			}
 			@Order(0)
 			public int prob;
 			@Order(1)
 			public int dmg;
 			@Order(2)
-			public boolean traitIgnore;
-			@Order(3)
-			public boolean procs;
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class DMGCAP extends ProcItem {
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@BitCount(2)
+				@Order(0)
+				public boolean traitIgnore;
+				@Order(1)
+				public boolean nullify;
+				@Order(2)
+				public boolean procs;
+			}
 			@Order(0)
 			public int prob;
 			@Order(1)
 			public int dmg;
 			@Order(2)
-			public boolean traitIgnore;
-			@Order(3)
-			public boolean nullify;
-			@Order(4)
-			public boolean procs;
+			public TYPE type = new TYPE();
 		}
 
 		public static abstract class IntType implements Cloneable {
