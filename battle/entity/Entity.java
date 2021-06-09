@@ -1861,7 +1861,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
 			for (int i = 0; i < le.size(); i++)
-				if (le.get(i).ctargetable(data.getTraits(),true))
+				if (le.get(i).ctargetable(traits,true))
 					touchEnemy = true;
 		}
 	}
