@@ -86,7 +86,15 @@ public interface MaskEntity extends BattleStatic {
 
 	boolean isLD();
 
+	default boolean isLD(int ind) {
+		return isLD();
+	}
+
 	boolean isOmni();
+
+	default boolean isOmni(int ind) {
+		return isOmni();
+	}
 
 	boolean isRange();
 

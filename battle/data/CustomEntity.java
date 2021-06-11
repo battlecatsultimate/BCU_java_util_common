@@ -165,6 +165,15 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
+	public boolean isLD(int ind) {
+		if (ind == atks.length)
+			return rev.isLD();
+		if (ind == atks.length + 1)
+			return res.isLD();
+		return atks[ind].isLD();
+	}
+
+	@Override
 	public boolean isOmni() {
 		boolean ans = false;
 		for (AtkDataModel adm : atks)
@@ -174,6 +183,15 @@ public abstract class CustomEntity extends DataEntity {
 		if(getResurrection() != null)
 			ans |= getResurrection().isOmni();
 		return ans;
+	}
+
+	@Override
+	public boolean isOmni(int ind) {
+		if (ind == atks.length)
+			return rev.isOmni();
+		if (ind == atks.length + 1)
+			return res.isOmni();
+		return atks[ind].isOmni();
 	}
 
 	@Override
