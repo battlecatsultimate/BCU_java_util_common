@@ -25,6 +25,7 @@ public abstract class CustomEntity extends DataEntity {
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
 
+	@JsonField(block = true)
 	private Proc all;
 
 	@Override
@@ -43,16 +44,20 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
-	@Override
-	public Proc getAllProc() {
-		if (all != null)
-			return all;
-		all = rep.getProc().clone();
-		for (AtkDataModel adm : atks) {
+	public void updateAllProc() {
+		all = Proc.blank();
+		for (AtkDataModel adm : atks)
 			for (int i = 0; i < Data.PROC_TOT; i++)
 				if (!all.getArr(i).exists())
 					all.getArr(i).set(adm.proc.getArr(i));
-		}
+	}
+
+	@Override
+	public Proc getAllProc() {
+		if (common)
+			return getProc();
+		if (all == null)
+			updateAllProc();
 		return all;
 	}
 
