@@ -31,7 +31,7 @@ public class ContWaveDef extends ContWaveAb {
 	}
 
 	@Override
-	public void updatePartial() {
+	public void update() {
 		tempAtk = false;
 		boolean isMini = atk.waveType == WT_MINI;
 		// guessed attack point compared from BC
