@@ -545,10 +545,10 @@ public abstract class Entity extends AbEntity {
 						;
 					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
 					e.basis.getAttack(e.aam.getAttack(tempAtk));
-					loop--;
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
+						loop--;
 						e.waitTime = Math.max(e.data.getTBA() - 1, 0);
 					}
 				}
