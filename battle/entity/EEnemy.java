@@ -38,7 +38,7 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(boolean atk) {
 		super.kill(atk);
-		if (!basis.st.trail) {
+		if (!basis.st.trail && !atk) {
 			double mul = basis.b.t().getDropMulti();
 			if (tempearn)
 				mul *= 2;
