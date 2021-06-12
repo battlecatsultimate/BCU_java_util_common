@@ -494,12 +494,6 @@ public abstract class Entity extends AbEntity {
 		 */
 		private int preTime;
 
-		/**
-		 * Tells whether it attacked once or not
-		 * Being used for deciding if suicide entity must die or not
-		 */
-		public boolean attacked = false;
-
 		private AtkManager(Entity ent) {
 			e = ent;
 			int[][] raw = e.data.rawAtkData();
@@ -510,9 +504,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void setUp() {
-			attacked = false;
 			atkTime = e.data.getAnimLen();
-			loop--;
 			preID = 0;
 			preTime = pres[0] - 1;
 			e.anim.setAnim(UType.ATK, true);
@@ -521,10 +513,6 @@ public abstract class Entity extends AbEntity {
 		private void stopAtk() {
 			if (atkTime > 0)
 				atkTime = preTime = 0;
-
-			if(!attacked) {
-				loop++;
-			}
 		}
 
 		/**
@@ -539,10 +527,10 @@ public abstract class Entity extends AbEntity {
 						;
 					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
 					e.basis.getAttack(e.aam.getAttack(tempAtk));
-					attacked = true;
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
+						loop--;
 						e.waitTime = Math.max(e.data.getTBA() - 1, 0);
 					}
 				}
@@ -1424,7 +1412,7 @@ public abstract class Entity extends AbEntity {
 
 		kb.doInterrupt();
 
-		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0 && atkm.attacked)
+		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
 			kill(true);
 
 		// update animations
