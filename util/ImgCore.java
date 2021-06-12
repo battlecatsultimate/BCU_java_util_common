@@ -69,26 +69,26 @@ public class ImgCore extends Data {
 							x += sc.x;
 							extendX--;
 						}
-
-						y += sc.y;
-						extendY--;
 					}
+
+					y += sc.y;
+					extendY--;
 				}
 			}
 			int w = bimg.getWidth();
 			int h = bimg.getHeight();
 			if (w > 0) {
 				if(extendY == 0) {
-					FakeImage parX = bimg.getSubimage(0, 0, (int) (w * extendX), h);
+					FakeImage parX = bimg.getSubimage(0, 0, (int) (Math.max(1, w * extendX)), h);
 
 					drawImage(g, parX, x, y, sc.x * extendX, sc.y);
 				} else {
-					FakeImage parY = bimg.getSubimage(0, 0, w, (int) (h * extendY));
+					FakeImage parY = bimg.getSubimage(0, 0, w, (int) (Math.max(1, h * extendY)));
 
 					if(extendX == 0) {
 						drawImage(g, parY, x, y, sc.x, sc.y * extendY);
 					} else {
-						FakeImage parX = bimg.getSubimage(0, 0, (int) (w * extendX), h);
+						FakeImage parX = bimg.getSubimage(0, 0, (int) (Math.max(1, w * extendX)), h);
 						FakeImage parXY = bimg.getSubimage(0, 0, parX.getWidth(), parY.getHeight());
 
 						y = -piv.y;
