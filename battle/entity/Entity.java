@@ -523,7 +523,6 @@ public abstract class Entity extends AbEntity {
 
 		private void setUp() {
 			atkTime = e.data.getAnimLen();
-			loop--;
 			preID = 0;
 			preTime = pres[0] - 1;
 			e.anim.setAnim(UType.ATK, true);
@@ -546,6 +545,7 @@ public abstract class Entity extends AbEntity {
 						;
 					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
 					e.basis.getAttack(e.aam.getAttack(tempAtk));
+					loop--;
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
@@ -1409,7 +1409,8 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * mark it dead, proceed death animation
 	 *
-	 * if atk is true, it means it dies because of self-destruct
+	 * @param atk if this is true, it means it dies because of self-destruct,
+	 * and entity will not drop money because of this
 	 */
 	public void kill(boolean atk) {
 		if (kbTime == -1)
@@ -1417,9 +1418,11 @@ public abstract class Entity extends AbEntity {
 		kbTime = -1;
 		atkm.stopAtk();
 		anim.kill();
-
 	}
 
+	/**
+	 * This function stops enemy attack when a continue is used
+	 */
 	public void cont() {
 		atkm.stopAtk();
 		anim.cont();
@@ -1486,6 +1489,10 @@ public abstract class Entity extends AbEntity {
 		acted = false;
 	}
 
+	/**
+	 * Sets the animation that will be used for the summon
+	 * @param conf The type of animation used
+	 */
 	public void setSummon(int conf) {
 		// conf 1
 		if (conf == 1) {
@@ -1504,8 +1511,9 @@ public abstract class Entity extends AbEntity {
 
 	/**
 	 * can be targeted by units that have traits in common with the entity they're attacking
+	 * @param t The attack's trait list
+	 * @param targetOnly Used if this function is called as part of a "Target Only" call
 	 */
-
 	@Override
 	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) {
 		if (targetOnly && isBase) return true;
@@ -1523,6 +1531,11 @@ public abstract class Entity extends AbEntity {
 		return t.contains(BCTraits.get(TRAIT_TOT));
 	}
 
+	/**
+	 * Check if the unit can be considered an anti-traited
+	 * @param targets The list of traits the unit targets
+	 * @return true if the unit is anti-traited
+	 */
 	public static boolean targetTraited(ArrayList<Trait> targets) {
 		ArrayList<Trait> temp = new ArrayList<>();
 		for (Trait t : UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE))

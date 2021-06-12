@@ -124,7 +124,8 @@ public class UpdateCheck {
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
-	public static final String URL_RES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
+	public static final String URL_LIB = "https://github.com/battlecatsultimate/bcu-assets/raw/master/BCU_lib/";
+	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
 
@@ -212,7 +213,7 @@ public class UpdateCheck {
 			if (!exi[i]) {
 				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
 				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
-				String url = URL_RES + "music/" + Data.trio(i) + ".ogg";
+				String url = URL_MUSIC + Data.trio(i) + ".ogg";
 				String alt = ALT_RES + "music/" + Data.trio(i) + ".ogg";
 				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url, alt));
 			}
@@ -229,7 +230,7 @@ public class UpdateCheck {
 				for (File f : lib.listFiles())
 					str.remove(f.getName());
 			for (String s : str) {
-				String url = URL_RES + "jar/BCU_lib/" + s;
+				String url = URL_LIB + s;
 				String alt = ALT_RES + "jar/BCU_lib/" + s;
 				libs.add(new Downloader(new File("./BCU_lib/" + s), new File("./BCU_lib/.jar.temp"),
 						"downloading BCU library " + s, false, url, alt));

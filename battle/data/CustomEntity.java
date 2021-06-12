@@ -25,6 +25,10 @@ public abstract class CustomEntity extends DataEntity {
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
 
+	/**
+	 * This field is used to filter all the procs of units if common is false,
+	 * Has no effect in battle or anything else
+	 */
 	@JsonField(block = true)
 	private Proc all;
 
@@ -44,6 +48,9 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
+	/**
+	 * Updates the procs in all and initializes if it is null
+	 */
 	public void updateAllProc() {
 		all = Proc.blank();
 		for (AtkDataModel adm : atks)
@@ -52,6 +59,9 @@ public abstract class CustomEntity extends DataEntity {
 					all.getArr(i).set(adm.proc.getArr(i));
 	}
 
+	/**
+	 * Gets all procs for units without common proc
+	 */
 	@Override
 	public Proc getAllProc() {
 		if (common)
@@ -169,6 +179,11 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
+	/**
+	 * Returns if a specific attack is LD,
+	 * used to handle LD units that have an attack that isn't LD properly
+	 * @param ind The attack to get.
+	 */
 	@Override
 	public boolean isLD(int ind) {
 		if (ind == atks.length)
@@ -190,6 +205,11 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
+	/**
+	 * Returns if a specific attack is Omni,
+	 * used to handle Omni units that have an attack that lacks omni properly
+	 * @param ind The attack to get.
+	 */
 	@Override
 	public boolean isOmni(int ind) {
 		if (ind == atks.length)
