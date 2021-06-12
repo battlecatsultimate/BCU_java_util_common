@@ -165,6 +165,7 @@ public abstract class Source {
 
 		@Override
 		public FakeImage getNum() {
+			System.out.println(id);
 			return FakeImage.read(loader.loadFile(id, SP));
 		}
 

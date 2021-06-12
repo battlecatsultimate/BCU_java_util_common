@@ -494,6 +494,12 @@ public abstract class Entity extends AbEntity {
 		 */
 		private int preTime;
 
+		/**
+		 * Tells whether it attacked once or not
+		 * Being used for deciding if suicide entity must die or not
+		 */
+		public boolean attacked = false;
+
 		private AtkManager(Entity ent) {
 			e = ent;
 			int[][] raw = e.data.rawAtkData();
@@ -504,6 +510,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void setUp() {
+			attacked = false;
 			atkTime = e.data.getAnimLen();
 			loop--;
 			preID = 0;
@@ -514,6 +521,10 @@ public abstract class Entity extends AbEntity {
 		private void stopAtk() {
 			if (atkTime > 0)
 				atkTime = preTime = 0;
+
+			if(!attacked) {
+				loop++;
+			}
 		}
 
 		/**
@@ -528,6 +539,7 @@ public abstract class Entity extends AbEntity {
 						;
 					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
 					e.basis.getAttack(e.aam.getAttack(tempAtk));
+					attacked = true;
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
@@ -1369,7 +1381,6 @@ public abstract class Entity extends AbEntity {
 		kbTime = -1;
 		atkm.stopAtk();
 		anim.kill();
-
 	}
 
 	/**
@@ -1413,7 +1424,7 @@ public abstract class Entity extends AbEntity {
 
 		kb.doInterrupt();
 
-		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
+		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0 && atkm.attacked)
 			kill(true);
 
 		// update animations
@@ -1518,6 +1529,9 @@ public abstract class Entity extends AbEntity {
 			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
+			if(data.isOmni()) {
+				System.out.println(!acted+" | "+binatk+" | "+!(isBase && health <= 0));
+			}
 			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
 
