@@ -42,6 +42,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	public final MaskEnemy de;
 	@JsonField
 	public String name = "";
+	@JsonField
+	public String desc = "<br><br><br>";
 	public boolean inDic = false;
 
 	@JsonClass.JCConstructor
@@ -162,9 +164,26 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
+				anim.load();
 				anim.partial();
 				enemy.limit = Math.abs(anim.mamodel.parts[0][6]) * 6;
 				anim.unload();
+			}
+
+			if (UserProfile.isOlderPack(pack, "0.5.4.1")) {
+				enemy.traits = Trait.convertType(enemy.type);
+				enemy.type = 0;
+			}
+
+			if (UserProfile.isOlderPack(pack, "0.5.4.2")) {
+				Proc proc = enemy.getProc();
+				if ((enemy.abi & (1 << 18)) != 0) //Seal Immunity
+					proc.IMUSEAL.mult = 100;
+				if ((enemy.abi & (1 << 7)) != 0) //Moving atk Immunity
+					proc.IMUMOVING.mult = 100;
+				if ((enemy.abi & (1 << 12)) != 0) //Poison Immunity
+					proc.IMUPOI.mult = 100;
+				enemy.abi = Data.reorderAbi(enemy.abi);
 			}
 		}
 	}
@@ -179,4 +198,12 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		return Data.trio(id.id) + " - " + name;
 	}
 
+	public String descriptionGet() {
+		String[] desp = MultiLangCont.getDesc(this);
+		if (desp != null && desp[1].length() > 0)
+			return desp[1];
+		if (desc.length() == 0)
+			return "";
+		return desc;
+	}
 }

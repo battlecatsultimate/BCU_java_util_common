@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public abstract class CustomEntity extends DataEntity {
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
 
+	@JsonField(block = true)
 	private Proc all;
 
 	@Override
@@ -42,26 +44,21 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
-	@Override
-	public Proc getAllProc() {
-		if (all != null)
-			return all;
-		all = rep.getProc().clone();
-		for (AtkDataModel adm : atks) {
+	public void updateAllProc() {
+		all = Proc.blank();
+		for (AtkDataModel adm : atks)
 			for (int i = 0; i < Data.PROC_TOT; i++)
 				if (!all.getArr(i).exists())
 					all.getArr(i).set(adm.proc.getArr(i));
-		}
-		return all;
 	}
 
-	public Proc[] getAllProcs() {
-		int n = atks.length + 1;
-		Proc[] ans = new Proc[n];
-		ans[0] = rep.proc;
-		for (int i = 0; i < atks.length; i++)
-			ans[i + 1] = atks[i].proc;
-		return ans;
+	@Override
+	public Proc getAllProc() {
+		if (common)
+			return getProc();
+		if (all == null)
+			updateAllProc();
+		return all;
 	}
 
 	@Override
@@ -139,7 +136,7 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		type = de.getType();
+		traits = new ArrayList<>(de.getTraits());
 		width = de.getWidth();
 		shield = de.getShield();
 		tba = de.getTBA();
@@ -151,7 +148,7 @@ public abstract class CustomEntity extends DataEntity {
 		}
 
 		base = de.touchBase();
-		common = false;
+		common = ((DefaultData)de).isCommon();
 		rep = new AtkDataModel(this);
 		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();
@@ -173,6 +170,15 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
+	public boolean isLD(int ind) {
+		if (ind == atks.length)
+			return rev.isLD();
+		if (ind == atks.length + 1)
+			return res.isLD();
+		return atks[ind].isLD();
+	}
+
+	@Override
 	public boolean isOmni() {
 		boolean ans = false;
 		for (AtkDataModel adm : atks)
@@ -182,6 +188,15 @@ public abstract class CustomEntity extends DataEntity {
 		if(getResurrection() != null)
 			ans |= getResurrection().isOmni();
 		return ans;
+	}
+
+	@Override
+	public boolean isOmni(int ind) {
+		if (ind == atks.length)
+			return rev.isOmni();
+		if (ind == atks.length + 1)
+			return res.isOmni();
+		return atks[ind].isOmni();
 	}
 
 	@Override
@@ -247,8 +262,7 @@ public abstract class CustomEntity extends DataEntity {
 		speed = is.nextInt();
 		range = is.nextInt();
 		abi = is.nextInt();
-		type = is.nextInt();
-		type = Data.reorderTrait(type);
+		traits = Trait.convertType(Data.reorderTrait(is.nextInt()));
 		width = is.nextInt();
 		shield = is.nextInt();
 		tba = is.nextInt();
@@ -272,5 +286,4 @@ public abstract class CustomEntity extends DataEntity {
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
 	}
-
 }

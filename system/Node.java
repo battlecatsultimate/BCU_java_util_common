@@ -1,5 +1,6 @@
 package common.system;
 
+import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
@@ -33,6 +34,21 @@ public class Node<T> {
 			if (ans != null)
 				ans.add(temp);
 			if (v == n)
+				ret = temp;
+			ans = temp;
+		}
+		return ret;
+	}
+
+	public static Node<Enemy> getList(List<Enemy> list, Enemy enemy) {
+		Node<Enemy> ans = null, ret = null;
+		for (Enemy e : list) {
+			if (ans != null && ans.val == e)
+				continue;
+			Node<Enemy> temp = new Node<>(e);
+			if (ans != null)
+				ans.add(temp);
+			if (e == enemy)
 				ret = temp;
 			ans = temp;
 		}

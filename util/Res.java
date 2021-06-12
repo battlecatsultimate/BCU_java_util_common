@@ -128,6 +128,7 @@ public class Res extends ImgCore {
 		aux.icon[1] = new VImg[PROC_TOT];
 		aux.icon[2] = new VImg[ATK_TOT];
 		aux.icon[3] = new VImg[TRAIT_TOT];
+		aux.icon[4] = new VImg[PC2_TOT];
 		aux.icon[3][TRAIT_RED] = new VImg(parts[77]);
 		aux.icon[3][TRAIT_FLOAT] = new VImg(parts[78]);
 		aux.icon[3][TRAIT_BLACK] = new VImg(parts[79]);
@@ -177,14 +178,24 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUVOLC] = new VImg(parts[243]);
 		aux.icon[1][P_CURSE] = new VImg(parts[289]);
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
-		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png");
+		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png"); // TODO - Add these abilities' icons
+		aux.icon[1][P_DMGCUT] = new VImg(parts[231]);
+		aux.icon[1][P_DMGCAP] = new VImg(parts[231]);
+
+		//These are used for talent edit page icons
+		aux.icon[4][PC2_HP] = new VImg(parts[120]);
+		aux.icon[4][PC2_ATK] = new VImg(parts[118]);
+		aux.icon[4][PC2_SPEED] = new VImg(parts[96]);
+		aux.icon[4][PC2_COST] = new VImg(parts[92]);
+		aux.icon[4][PC2_CD] = new VImg(parts[94]);
+		aux.icon[4][PC2_HB] = new VImg(parts[98]);
 
 		aux.icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		aux.icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
 		aux.icon[0][ABI_IMUSW] = new VImg("./org/page/icons/BossWaveX.png");
 		aux.icon[0][ABI_SNIPERI] = new VImg("./org/page/icons/SnipeX.png");
-		aux.icon[0][ABI_POII] = new VImg("./org/page/icons/PoisonX.png");
-		aux.icon[0][ABI_SEALI] = new VImg("./org/page/icons/SealX.png");
+		aux.icon[1][P_IMUPOI] = new VImg("./org/page/icons/PoisonX.png");
+		aux.icon[1][P_IMUSEAL] = new VImg("./org/page/icons/SealX.png");
 		aux.icon[0][ABI_GHOST] = new VImg("./org/page/icons/Ghost.png");
 		aux.icon[1][P_THEME] = new VImg("./org/page/icons/Theme.png");
 		aux.icon[1][P_TIME] = new VImg("./org/page/icons/Time.png");
@@ -194,7 +205,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SEAL] = new VImg("./org/page/icons/Seal.png");
 		aux.icon[1][P_MOVEWAVE] = new VImg("./org/page/icons/Moving.png");
 		aux.icon[1][P_SUMMON] = new VImg("./org/page/icons/Summon.png");
-		aux.icon[0][ABI_MOVEI] = new VImg("./org/page/icons/MovingX.png");
+		aux.icon[1][P_IMUMOVING] = new VImg("./org/page/icons/MovingX.png");
 		aux.icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		aux.icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		aux.icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");

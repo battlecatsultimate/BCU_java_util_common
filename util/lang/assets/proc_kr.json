@@ -348,6 +348,18 @@
             }
         }
     },
+    "IMUSEAL": {
+        "abbr_name": "imu. Seal",
+        "full_name": "Immune/Resistant to Seal",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
     "IMUSUMMON": {
         "abbr_name": "imu. Summon",
         "full_name": "Immune/Resist to Summon",
@@ -519,6 +531,18 @@
             }
         }
     },
+    "IMUMOVING": {
+        "abbr_name": "imu. Move",
+        "full_name": "Immune/Resistant to Moving Atk",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Moving Attacks[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
     "THEME": {
         "abbr_name": "배경 변경",
         "full_name": "배경 변경",
@@ -576,6 +600,18 @@
             "type.unstackable": {
                 "name": "중첩 불가능",
                 "tooltip": "해당 특성이 활성화되면 중첩이 불가능해집니다"
+            }
+        }
+    },
+    "IMUPOI": {
+        "abbr_name": "imu. Poison",
+        "full_name": "Immune/Resistant to Poison",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
             }
         }
     },
@@ -769,6 +805,58 @@
             "multi" : {
                 "name" : "데미지",
                 "tooltip" : "발동자 데미지의 퍼센트로 작동합니다. 만약 값이 20 이면, 발동자 데미지의 20% 만큼 타겟에게 공격합니다. 음수도 허용됩니다"
+            }
+        }
+    },
+    "DMGCUT" : {
+        "abbr_name" : "Spr. Armor",
+        "full_name" : "Super Armor",
+        "tooltip" : "This ability reduces all damage that is below certain amount to zero.",
+        "format" : "(prob)% chance to nullify[(type.traitIgnore){ all}] damage lower than (dmg)[(type.procs){ and also the attack's procs}]",
+        "class" : {
+            "prob" : {
+                "name" : "chance",
+                "tooltip" : null
+            },
+            "dmg" : {
+                "name" : "damage",
+                "tooltip" : "The maximum amount of damage to be negated."
+            },
+            "type.traitIgnore" : {
+                "name" : "ignore traits",
+                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+            },
+            "type.procs" : {
+                "name" : "ignore procs",
+                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
+            }
+        }
+    },
+    "DMGCAP" : {
+        "abbr_name" : "M.Shield",
+        "full_name" : "Magic Shield",
+        "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than (dmg)[(!type.nullify){ to (dmg)}(type.nullify&type.procs){ and also the attack's procs}]",
+        "class" : {
+            "prob" : {
+                "name" : "chance",
+                "tooltip" : null
+            },
+            "dmg" : {
+                "name" : "damage",
+                "tooltip" : "The minimum amount of damage to be capped."
+            },
+            "type.traitIgnore" : {
+                "name" : "ignore traits",
+                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+            },
+            "type.nullify" : {
+                "name" : "nullify damage",
+                "tooltip" : "When this is checked, damage from the attack will be negated instead of set to the amount"
+            },
+            "type.procs" : {
+                "name" : "ignore procs",
+                "tooltip" : "When this is checked, procs from nullified attacks will also be negated. Only works if 'nullify damage' is checked"
             }
         }
     }

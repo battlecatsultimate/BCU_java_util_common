@@ -14,7 +14,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 	protected AtkModelEnemy(EEnemy ent, double d0) {
 		super(ent, d0, 1);
 		String[] arr = { "KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "IMUATK",
-				"POIATK" };
+				"POIATK", "ARMOR", "SPEED", "DMGCUT", "DMGCAP" };
 		cursed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < cursed.length; i++) {
 			cursed[i] = data.getAtkModel(i).getProc().clone();
@@ -29,37 +29,37 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 
 	if(ene == null)
 		return;
-	if (resist < 100) {
-		SUMMON.TYPE conf = proc.type;
-		if (conf.same_health && ent.health <= 0)
-			return;
-		int time = proc.time;
-		int allow = b.st.data.allow(b, ene);
-		if (allow >= 0 || conf.ignore_limit) {
-			double ep = ent.pos + getDire() * proc.dis;
-			double mula = proc.mult * 0.01;
-			double mult = proc.mult * 0.01;
-			if (!conf.fix_buff) {
-				mult *= ((EEnemy) e).mult;
-				mula *= ((EEnemy) e).mula;
-			}
-			mula *= (100.0 - resist) / 100;
-			mult *= (100.0 - resist) / 100;
-			int l0 = 0, l1 = 9;
-			if (!conf.random_layer)
-				l0 = l1 = e.layer;
-			EEnemy ee = ene.getEntity(b, acs, mult, mula,  l0, l1, 0);
-			ee.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
-			ee.group = allow;
-			if (ep < ee.data.getWidth())
-				ep = ee.data.getWidth();
-			if (ep > b.st.len - 800)
-				ep = b.st.len - 800;
-			ee.added(1, (int) ep);
-			b.tempe.add(new EntCont(ee, time));
-			if (conf.same_health)
-				ee.health = e.health;
-			ee.setSummon(conf.anim_type);
+		if (resist < 100) {
+			SUMMON.TYPE conf = proc.type;
+			if (conf.same_health && ent.health <= 0)
+				return;
+			int time = proc.time;
+			int allow = b.st.data.allow(b, ene);
+			if (allow >= 0 || conf.ignore_limit) {
+				double ep = ent.pos + getDire() * proc.dis;
+				double mula = proc.mult * 0.01;
+				double mult = proc.mult * 0.01;
+				if (!conf.fix_buff) {
+					mult *= ((EEnemy) e).mult;
+					mula *= ((EEnemy) e).mula;
+				}
+				mula *= (100.0 - resist) / 100;
+				mult *= (100.0 - resist) / 100;
+				int l0 = 0, l1 = 9;
+				if (!conf.random_layer)
+					l0 = l1 = e.layer;
+				EEnemy ee = ene.getEntity(b, acs, mult, mula, l0, l1, 0);
+				ee.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
+				ee.group = allow;
+				if (ep < ee.data.getWidth())
+					ep = ee.data.getWidth();
+				if (ep > b.st.len - 800)
+					ep = b.st.len - 800;
+				ee.added(1, (int) ep);
+				b.tempe.add(new EntCont(ee, time));
+				if (conf.same_health)
+					ee.health = e.health;
+				ee.setSummon(conf.anim_type);
 		}
 	} else
 		ent.anim.getEff(INV);
