@@ -81,8 +81,84 @@ public abstract class AttackAb extends BattleObj {
 		for (AbEntity ae : capt) {
 			if (ae instanceof Entity) {
 				Entity e = (Entity) ae;
-				if (e.getProc().CRITI.type == 2)
-					proc.CRIT.clear();
+				Proc imus = e.getProc();
+				if (proc.KB.dis > 0 && imus.IMUKB.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUKB.block == 100)
+						proc.KB.clear();
+					else if (imus.IMUKB.block < 100)
+						proc.KB.dis *= (100 - imus.IMUKB.block) / 100.0;
+				}
+				if (proc.SLOW.time > 0 && imus.IMUSLOW.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUSLOW.block == 100)
+						proc.SLOW.clear();
+					else if (imus.IMUSLOW.block < 100)
+						proc.SLOW.time *= (100 - imus.IMUSLOW.block) / 100.0;
+				}
+				if (proc.STOP.time > 0 && imus.IMUSTOP.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUSTOP.block == 100)
+						proc.STOP.clear();
+					else if (imus.IMUSTOP.block < 100)
+						proc.STOP.time *= (100 - imus.IMUSTOP.block) / 100.0;
+				}
+				if (proc.WEAK.time > 0 && imus.IMUWEAK.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUWEAK.block == 100)
+						proc.WEAK.clear();
+					else if (imus.IMUWEAK.block < 100)
+						proc.WEAK.time *= (100 - imus.IMUWEAK.block) / 100.0;
+				}
+				if (proc.WARP.time > 0 && imus.IMUWARP.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUWARP.block == 100)
+						proc.WARP.clear();
+					else if (imus.IMUWARP.block < 100)
+						proc.WARP.time *= (100 - imus.IMUWARP.block) / 100.0;
+				}
+				if (proc.CURSE.time > 0 && imus.IMUCURSE.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUCURSE.block == 100)
+						proc.CURSE.clear();
+					else if (imus.IMUCURSE.block < 100)
+						proc.CURSE.time *= (100 - imus.IMUCURSE.block) / 100.0;
+				}
+				if (proc.POIATK.mult > 0 && imus.IMUPOIATK.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUPOIATK.block == 100)
+						proc.POIATK.clear();
+					else if (imus.IMUPOIATK.block < 100)
+						proc.POIATK.mult *= (100 - imus.IMUPOIATK.block) / 100.0;
+				}
+				if (proc.SUMMON.mult > 0 && imus.IMUSUMMON.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUSUMMON.block == 100)
+						proc.SUMMON.clear();
+					else if (imus.IMUSUMMON.block < 100)
+						proc.SUMMON.mult *= (100 - imus.IMUSUMMON.block) / 100.0;
+				}
+				if (proc.CRIT.mult > 0 && imus.CRITI.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.CRITI.block == 100)
+						proc.CRIT.clear();
+					else if (imus.CRITI.block < 100)
+						proc.CRIT.mult *= (100 - imus.CRITI.block) / 100.0;
+				}
+				if (proc.POISON.damage > 0 && imus.IMUPOI.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUPOI.block == 100)
+						proc.POISON.clear();
+					else if (imus.IMUPOI.block < 100)
+						proc.POISON.damage *= (100 - imus.IMUPOI.block) / 100.0;
+				}
+				if (proc.SEAL.time > 0 && imus.IMUSEAL.block > 0) {
+					e.anim.getEff(STPWAVE);
+					if (imus.IMUSEAL.block == 100)
+						proc.SEAL.clear();
+					else if (imus.IMUSEAL.block < 100)
+						proc.SEAL.time *= (100 - imus.IMUSEAL.block) / 100.0;
+				}
 			}
 		}
 	}

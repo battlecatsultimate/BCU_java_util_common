@@ -270,11 +270,18 @@
         "abbr_name": "imu. KB",
         "full_name": "Immune/Resistant to KB",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Knockback[(mult<100&mult>0){ (_left)Decreases distance by (mult)%(_right)}(mult<0){ (_left)Increases distance by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Knockback",
+            "[(mult<100&mult>0){ (_left)Decreases distance by (mult)%(_right)}(mult<0){ (_left)Increases distance by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Knockback [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases distance by (block)%(_right)}(block<0){ (_left)Increases distance by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce distance amongst all units. Set to 100 to completely block KB"
             }
         }
     },
@@ -282,11 +289,18 @@
         "abbr_name": "imu. Stop",
         "full_name": "Immune/Resistant to Stop",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Freeze[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Freeze",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Freeze [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block freeze"
             }
         }
     },
@@ -294,11 +308,18 @@
         "abbr_name": "imu. Slow",
         "full_name": "Immune/Resistant to Slow",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Slow[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Slow",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Slow [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block slow"
             }
         }
     },
@@ -318,11 +339,18 @@
         "abbr_name": "imu. Weak",
         "full_name": "Immune/Resistant to Weak",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Weaken[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Weaken",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Weaken [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block weaken"
             }
         }
     },
@@ -330,11 +358,18 @@
         "abbr_name": "imu. Warp",
         "full_name": "Immune/Resistant to Warp",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Warp[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Warp",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Warp [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block warp"
             }
         }
     },
@@ -342,11 +377,18 @@
         "abbr_name": "imu. Curse",
         "full_name": "Immune/Resistant to Curse",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Curse[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Curse",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Curse [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block curse"
             }
         }
     },
@@ -354,11 +396,18 @@
         "abbr_name": "imu. Seal",
         "full_name": "Immune/Resistant to Seal",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Seal [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block seal"
             }
         }
     },
@@ -366,11 +415,18 @@
         "abbr_name": "imu. Summon",
         "full_name": "Immune/Resistant to Summon",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon[(mult<100&mult>0){ (_left)Reduces (mult)% of the summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon",
+            "[(mult<100&mult>0){ (_left)Reduces (mult)% of the summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Summon [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Reduces (block)% of the summoned entity's strength(_right)}(block<0){ (_left)Summoned entities will be (_abs(block))% stronger(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": "Only applies to On Hit and On Kill summon."
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce all summoned entities' strength. Set to 100 to completely block summon"
             }
         }
     },
@@ -626,11 +682,18 @@
         "abbr_name": "imu. Poison",
         "full_name": "Immune/Resistant to Poison",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Poison [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage over time. Set to 100 to completely block poison"
             }
         }
     },
@@ -650,14 +713,18 @@
         "abbr_name": "imu. crit",
         "full_name": "Immunity to Critical Hit",
         "tooltip": null,
-        "format": [
-            "[(type==0){Not Activated.}(type==1){Immune to Critical Hits}",
-            "(type==2){Disable the Critical Hit for attack received, like wave blocker}]"
-        ],
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Critical Hits",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Critical Hit [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
         "class": {
-            "type": {
-                "name": "type",
+            "mult": {
+                "name": "percent",
                 "tooltip": "1 for self immunity, 2 for Critical Hit Blocker / Absorber"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce critical damage. Set to 100 to completely block crits"
             }
         }
     },
@@ -737,11 +804,18 @@
         "abbr_name": "imu. toxic",
         "full_name": "Immune/Resistant to Toxic",
         "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Toxic[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases taken damage by (_abs(mult))%(_right)}]",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Toxic",
+            "[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Toxic [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases damage taken by (block)%(_right)}(block<0){ (_left)Increases damage taken by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
                 "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block toxic"
             }
         }
     },

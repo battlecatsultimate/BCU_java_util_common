@@ -171,7 +171,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	}
 
 	@Override
-	public int getLim() { return limit * 6; }
+	public int getLim() { return limit; }
 
 	@Override
 	public double multi(Basis b) {

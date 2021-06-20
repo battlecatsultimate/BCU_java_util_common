@@ -231,7 +231,12 @@ public class Editors {
 				t.time = Math.max(t.time, 1);
 		});
 
-		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> t.mult = Math.min(t.mult, 100));
+		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
+			t.mult = Math.min(t.mult, 100);
+			t.block = Math.min(t.block, 100);
+		});
+
+		EditControl<Proc.WAVEI> wavei = new EditControl<>(Proc.WAVEI.class, (t) -> t.mult = Math.min(t.mult, 100));
 
 		map().put("KB", new EditControl<>(Proc.PTD.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -395,7 +400,7 @@ public class Editors {
 
 		map().put("BOSS", prob);
 
-		map().put("CRITI", new EditControl<>(Proc.CRITI.class, (t) -> t.type = MathUtil.clip(0, t.type, 2)));
+		map().put("CRITI", imu);
 
 		map().put("SATK", new EditControl<>(Proc.PM.class, (t) -> {
 			if (t.prob == 0)
@@ -480,7 +485,7 @@ public class Editors {
 
 		map().put("IMUSLOW", imu);
 
-		map().put("IMUWAVE", imu);
+		map().put("IMUWAVE", wavei);
 
 		map().put("IMUWEAK", imu);
 
@@ -490,13 +495,13 @@ public class Editors {
 
 		map().put("IMUPOIATK", imu);
 
-		map().put("IMUVOLC", imu);
+		map().put("IMUVOLC", wavei);
 
 		map().put("IMUSUMMON", imu);
 
 		map().put("IMUSEAL", imu);
 
-		map().put("IMUMOVING", imu);
+		map().put("IMUMOVING", wavei);
 
 		map().put("IMUPOI", imu);
 	}

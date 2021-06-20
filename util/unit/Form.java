@@ -156,12 +156,9 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					form.getProc().SUMMON.type.fix_buff = true;
 				}
 
-				if (UserProfile.isOlderPack(pack, "0.5.4.1")) {
+				if (UserProfile.isOlderPack(pack, "0.5.4.2")) {
 					form.traits = Trait.convertType(form.type);
 					form.type = 0;
-				}
-
-				if (UserProfile.isOlderPack(pack, "0.5.4.2")) {
 					Proc proc = form.getProc();
 					if ((form.abi & (1 << 18)) != 0) //Seal Immunity
 						proc.IMUSEAL.mult = 100;

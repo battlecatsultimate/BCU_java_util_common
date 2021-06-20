@@ -376,6 +376,8 @@ public class Formatter {
 				Field f = parent.getClass().getField(name);
 				return f.get(parent);
 			} catch (NoSuchFieldException nse) {
+				if (CommonStatic.parseIntsN(name).length == 0)
+					throw new Exception("Unrecognized field: " + name);
 				return new IntExp(ind, p1).eval();
 			}
 		}

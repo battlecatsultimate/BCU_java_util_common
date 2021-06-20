@@ -45,15 +45,11 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class CRITI extends ProcItem {
-			@Order(0)
-			public int type;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
 		public static class IMU extends ProcItem {
 			@Order(0)
 			public int mult;
+			@Order(1)
+			public int block;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -494,6 +490,12 @@ public class Data {
 			public int multi;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD) //Used for procs that lack the block reformat
+		public static class WAVEI extends ProcItem {
+			@Order(0)
+			public int mult;
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class WEAK extends ProcItem {
 			@Order(0)
@@ -592,9 +594,9 @@ public class Data {
 		@Order(27)
 		public final IMU IMUSLOW = new IMU();
 		@Order(28)
-		public final IMU IMUWAVE = new IMU();
+		public final WAVEI IMUWAVE = new WAVEI();
 		@Order(29)
-		public final IMU IMUVOLC = new IMU();
+		public final WAVEI IMUVOLC = new WAVEI();
 		@Order(30)
 		public final IMU IMUWEAK = new IMU();
 		@Order(31)
@@ -610,9 +612,9 @@ public class Data {
 		@Order(36)
 		public final IMU IMUPOIATK = new IMU();
 		@Order(37)
-		public final IMU IMUMOVING = new IMU();
+		public final WAVEI IMUMOVING = new WAVEI();
 		@Order(38)
-		public final CRITI CRITI = new CRITI();
+		public final IMU CRITI = new IMU();
 		@Order(39)
 		public final PT IMUATK = new PT();
 		@Order(40)
@@ -960,7 +962,6 @@ public class Data {
 	public static final int PROC_TOT = 44;// 44
 	public static final int PROC_WIDTH = 6;
 
-	// TODO Real
 	public static final boolean[] procSharable = {
 			false, //kb
 			false, //freeze
@@ -1031,7 +1032,7 @@ public class Data {
 			{ -1, 0 }, // 0:
 			{ 0, P_WEAK }, // 1: weak, reversed health or relic-weak
 			{ 0, P_STOP }, // 2: stop
-			{ 0, P_SLOW }, // 3: slow or relic-slow
+			{ 0, P_SLOW }, // 3: slow
 			{ 1, AB_ONLY, 0 }, // 4:
 			{ 1, AB_GOOD, 0 }, // 5:
 			{ 1, AB_RESIST, 0 }, // 6:
@@ -1389,7 +1390,7 @@ public class Data {
 			if (i == 7 || i == 12 || i == 18)
 				abiAdd++;
 			int i1 = i + abiAdd;
-			if (i1 == 7 || i1 == 12 || i1 == 18)
+			if (i1 == 12 || i1 == 18)
 				continue;
 			if (((ab >> i1) & 1) > 0)
 				newAbi |= 1 << i;

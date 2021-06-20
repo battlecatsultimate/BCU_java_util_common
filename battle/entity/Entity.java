@@ -512,12 +512,6 @@ public abstract class Entity extends AbEntity {
 		 */
 		private int preTime;
 
-		/**
-		 * Tells whether it attacked once or not
-		 * Being used for deciding if suicide entity must die or not
-		 */
-		public boolean attacked = false;
-
 		private AtkManager(Entity ent) {
 			e = ent;
 			int[][] raw = e.data.rawAtkData();
@@ -528,9 +522,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void setUp() {
-			attacked = false;
 			atkTime = e.data.getAnimLen();
-			loop--;
 			preID = 0;
 			preTime = pres[0] - 1;
 			e.anim.setAnim(UType.ATK, true);
@@ -539,9 +531,6 @@ public abstract class Entity extends AbEntity {
 		private void stopAtk() {
 			if (atkTime > 0)
 				atkTime = preTime = 0;
-
-			if (!attacked && loop >= 0)
-				loop++;
 		}
 
 		/**
@@ -559,7 +548,7 @@ public abstract class Entity extends AbEntity {
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
-						attacked = true;
+						loop--;
 						e.waitTime = Math.max(e.data.getTBA() - 1, 0);
 					}
 				}
@@ -1637,8 +1626,11 @@ public abstract class Entity extends AbEntity {
 		if (satk > 0)
 			ans *= (100 + satk) * 0.01;
 		int crit = atk.getProc().CRIT.mult;
-		if (getProc().CRITI.type == 1)
+		int criti = getProc().CRITI.mult;
+		if (criti == 100)
 			crit = 0;
+		else if (criti > 0)
+			crit *= (100 - getProc().CRITI.mult) / 100.0;
 		if (isMetal)
 			if (crit > 0)
 				ans *= 0.01 * crit;

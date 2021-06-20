@@ -266,11 +266,15 @@
     "abbr_name": "ふっとばす無効",
     "full_name": "ふっとばす無効/耐性",
     "tooltip": null,
-    "format": "ふっとばす[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(mult)%脆弱性}]",
+    "format": "ふっとばす[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(mult)%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100でふっとばすを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -278,11 +282,15 @@
     "abbr_name": "止める無効",
     "full_name": "動きを止める無効/耐性",
     "tooltip": null,
-    "format": "動きを止める[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "動きを止める[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で止めるを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -290,11 +298,15 @@
     "abbr_name": "遅くする無効",
     "full_name": "動きを遅くする無効/耐性",
     "tooltip": null,
-    "format": "動きを遅くする[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "動きを遅くする[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で遅くするを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -314,11 +326,15 @@
     "abbr_name": "攻撃力ダウン無効",
     "full_name": "攻撃力ダウン無効/耐性",
     "tooltip": null,
-    "format": "攻撃力ダウン[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "攻撃力ダウン[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で攻撃力ダウンを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -326,11 +342,15 @@
     "abbr_name": "ワープ無効",
     "full_name": "ワープ無効/耐性",
     "tooltip": null,
-    "format": "ワープ[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "ワープ[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100でワープを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -338,11 +358,15 @@
     "abbr_name": "呪い無効",
     "full_name": "呪い無効/耐性",
     "tooltip": null,
-    "format": "[(!_isEnemy){古代の}]呪い[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "[(!_isEnemy){古代の}]呪い[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で呪いを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -350,11 +374,15 @@
     "abbr_name": "封印無効",
     "full_name": "封印無効/耐性",
     "tooltip": null,
-    "format": "封印の呪い[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "封印の呪い[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で封印を完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -362,11 +390,17 @@
     "abbr_name": "召喚無効",
     "full_name": "召喚無効/耐性",
     "tooltip": null,
-    "format": "[(mult==100){無効}]「オンヒット」と「オンキル」召喚[(mult<100&mult>0){ (_left)召喚された実体の強さを(mult)%減少させる(_right)}(mult<0){ (_left)召喚された実体は(_abs(mult))%強くなる(_right)}]",
+    "format": ["「オンヒット」と「オンキル」召喚[(mult==100){無効}(mult<100&mult>0){耐性 (_left)召喚された実体の強さを(mult)%減少させる(_right)}",
+            "(mult<0){脆弱性 (_left)召喚された実体は(_abs(mult))%強くなる(_right)}][(mult!=0&block!=0){と}][(block==100){ストッパー}",
+            "(block<100&block>0){アブソーバー (_left)召喚された実体の強さを(block)%減少させる(_right)}(mult<0){強化 (_left)召喚された実体は(_abs(block))%強くなる(_right)}]"],
     "class": {
       "mult": {
         "name": "割合",
         "tooltip": "「オンヒット」と「オンキル」の召喚にのみ適用されます。"
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で「オンヒット」と「オンキル」召喚を完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -633,13 +667,17 @@
     "full_name": "クリティカル無効",
     "tooltip": null,
     "format": [
-      "[(type==0){発動しない。}(type==1){クリティカル無効。}",
-      "(type==2){クリティカルストッパー。}]"
+      "クリティカル[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}]",
+      "[(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]"
     ],
     "class": {
-      "type": {
+      "mult": {
         "name": "種類",
-        "tooltip": "1で自己への無効能力、2でクリティカルストッパー"
+        "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100でクリティカルを完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -719,11 +757,15 @@
     "abbr_name": "毒無効",
     "full_name": "毒・火傷無効/耐性",
     "tooltip": null,
-    "format": "毒・火傷[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "毒・火傷[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "軽減割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で毒・火傷を完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
@@ -731,11 +773,15 @@
     "abbr_name": "毒撃無効",
     "full_name": "毒撃無効/耐性",
     "tooltip": null,
-    "format": "毒撃[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]",
+    "format": "毒撃[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}][(block!=0&mult!=0){と}][(block==100){ストッパー}(block<100&block>0){(block)%アブソーバー}(block<0){(block)%強化}]",
     "class": {
       "mult": {
         "name": "軽減割合",
         "tooltip": null
+      },
+      "block": {
+        "name": "ストッパー",
+        "tooltip": "100で毒撃を完全にブロックします。100以下の正の数値では効果が減少します。"
       }
     }
   },
