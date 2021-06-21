@@ -1676,7 +1676,7 @@ public abstract class Entity extends AbEntity {
 		if (maxl >= 0)
 			max = Math.min(max, maxl);
 
-		double mov = status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
+		double mov = status[P_SLOW][0] > 0 ? 0.25 : data.getSpeed() * 0.5;
 
 		if (status[P_SPEED][0] > 0 && status[P_SLOW][0] <= 0) {
 			if (status[P_SPEED][2] == 0) {
