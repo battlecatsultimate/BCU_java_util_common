@@ -50,7 +50,7 @@ public class EForm extends Data {
 	}
 
 	public int getPrice(int sta) {
-		return (int) (du.getPrice() * (1 + sta * 0.5));
+		return (int) (du.getPrice() * (1 + sta * 0.5)) * 100;
 	}
 
 }

@@ -468,7 +468,7 @@ public class Treasure extends Data {
 	protected int getLvCost(int lv) {
 		int t = tech[LV_WORK];
 		int base = t < 8 ? 30 + 10 * t : 20 * t - 40;
-		return lv == 8 ? -1 : base * lv;
+		return lv == 8 ? -1 : base * lv * 100;
 	}
 
 	/**
@@ -478,15 +478,15 @@ public class Treasure extends Data {
 		int base = Math.max(25, 50 * tech[LV_WALT]);
 		base = base * (1 + lv);
 		base += trea[T_WALT] * 10;
-		return base * (100 + b.getInc(C_M_MAX)) / 100;
+		return base * (100 + b.getInc(C_M_MAX));
 	}
 
 	/**
 	 * get money increase rate
 	 */
-	protected double getMonInc(int lv) {
+	protected int getMonInc(int lv) {
 		double output = (0.15 + 0.1 * tech[LV_WORK]) * (1 + (lv - 1) * 0.1) + trea[T_WORK] * 0.01;
-		return Math.floor(output * 100) / 100;
+		return (int) Math.round(output * 100);
 	}
 
 	/**

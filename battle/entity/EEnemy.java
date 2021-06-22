@@ -42,7 +42,7 @@ public class EEnemy extends Entity {
 			double mul = basis.b.t().getDropMulti();
 			if (tempearn)
 				mul *= 2;
-			basis.mon += mul * ((MaskEnemy) data).getDrop();
+			basis.money += mul * ((MaskEnemy) data).getDrop();
 		}
 	}
 
