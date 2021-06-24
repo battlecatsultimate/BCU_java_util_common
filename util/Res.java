@@ -207,7 +207,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SUMMON] = new VImg("./org/page/icons/Summon.png");
 		aux.icon[1][P_IMUMOVING] = new VImg("./org/page/icons/MovingX.png");
 		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreak.png"); // Needs Icon
-		aux.icon[1][P_SPEED] = new VImg("./org/page/icons/Speed.png"); // Needs Icon
+		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/Speed.png"); // Needs Icon
 		aux.icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		aux.icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		aux.icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
