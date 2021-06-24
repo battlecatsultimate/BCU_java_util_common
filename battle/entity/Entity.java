@@ -1259,7 +1259,7 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 		}
 		if (atk.getProc().CURSE.time > 0) {
-			int val = atk.getProc().CURSE.time;
+			int val = (int) (atk.getProc().CURSE.time * time);
 			int rst = getProc().IMUCURSE.mult;
 			val = val * (100 - rst) / 100;
 			status[P_CURSE][0] = Math.max(status[P_CURSE][0], val);
