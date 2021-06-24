@@ -25,7 +25,7 @@
     },
     "STOP": {
         "abbr_name": "stop",
-        "full_name": "Stop",
+        "full_name": "Freeze",
         "tooltip": null,
         "format": "(prob)% chance to freeze for (_dispTime(time))",
         "class": {
@@ -93,7 +93,7 @@
     },
     "WEAK": {
         "abbr_name": "weak",
-        "full_name": "Weak",
+        "full_name": "Weaken",
         "tooltip": null,
         "format": "(prob)% chance to [(mult>100){strengthen}(mult<=100){weaken}] target's attack to [(mult>100){(mult)}(mult<=100){(mult)}]% for (_dispTime(time))",
         "class": {
@@ -161,7 +161,7 @@
     },
     "STRONG": {
         "abbr_name": "inc. atk",
-        "full_name": "Attack Up",
+        "full_name": "Berserker",
         "tooltip": null,
         "format": "Attack increased by (mult)% after health drops below (health)%",
         "class": {
@@ -287,7 +287,7 @@
     },
     "IMUSTOP": {
         "abbr_name": "imu. Stop",
-        "full_name": "Immune/Resistant to Stop",
+        "full_name": "Immune/Resistant to Freeze",
         "tooltip": null,
         "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Freeze",
             "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
@@ -337,12 +337,13 @@
     },
     "IMUWEAK": {
         "abbr_name": "imu. Weak",
-        "full_name": "Immune/Resistant to Weak",
+        "full_name": "Immune/Resistant to Weaken",
         "tooltip": null,
         "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Weaken",
             "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Weaken [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
-            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects attack [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"],
         "class": {
             "mult": {
                 "name": "percent",
@@ -351,6 +352,10 @@
             "block": {
                 "name": "Blocker",
                 "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block weaken"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to attack debuffs, -1 = Only resistant to attack buffs"
             }
         }
     },
@@ -644,11 +649,12 @@
         "full_name": "Venom",
         "tooltip": null,
         "format": [
-            "(prob)% chance to venom target for (_dispTime(time)) ",
-            "with [(type.damage_type==0){(damage) damage}",
+            "(prob)% chance to [(type.damage_type==0){burn}(type.damage_type==1){poison}",
+            "(type.damage_type==2){bleed}(type.damage_type==3){corrode}] target for (_dispTime(time)), ",
+            "dealing [(type.damage_type==0){(damage) damage}",
             "(type.damage_type>0){a damage of (damage)% of target's ",
             "[(type.damage_type==1){total}(type.damage_type==2){current}(type.damage_type==3){lost}]",
-            " health}] per (_dispTime(itv)). ",
+            " health}] every (_dispTime(itv)). ",
             "This effect is [(type.unstackable){not }]stackable."
         ],
         "class": {
@@ -670,7 +676,7 @@
             },
             "type.damage_type": {
                 "name": "damage type",
-                "tooltip": "0 for fixed damage, 1 for percent of total health, 2 for percent of current health, 3 for percent of lost health."
+                "tooltip": "0 for fixed damage (burn), 1 for a % of total health (poison), 2 for a % of current health, 3 for a % of lost health (corrode)."
             },
             "type.unstackable": {
                 "name": "unstackable",
@@ -679,13 +685,14 @@
         }
     },
     "IMUPOI": {
-        "abbr_name": "imu. Poison",
-        "full_name": "Immune/Resistant to Poison",
+        "abbr_name": "imu. Venom",
+        "full_name": "Immune/Resistant to Venom",
         "tooltip": null,
-        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison",
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Venom",
             "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Poison [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
-            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects [(smartImu>0){harmful}(smartImu<0){healing}] venom}]"],
         "class": {
             "mult": {
                 "name": "percent",
@@ -694,6 +701,10 @@
             "block": {
                 "name": "Blocker",
                 "tooltip": "Set from 1 to 99 to reduce damage over time. Set to 100 to completely block poison"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist all venom, 1 = Only resistant to harmful venom, -1 = Only resistant to healing venom"
             }
         }
     },
@@ -720,7 +731,7 @@
         "class": {
             "mult": {
                 "name": "percent",
-                "tooltip": "1 for self immunity, 2 for Critical Hit Blocker / Absorber"
+                "tooltip": null
             },
             "block": {
                 "name": "Blocker",
@@ -878,6 +889,54 @@
             "type": {
                 "name": "type",
                 "tooltip": "0 for adding speed by a value, 1 for increasing the speed by a percentage, 2 for setting speed to a value"
+            }
+        }
+    },
+    "IMUARMOR": {
+        "abbr_name": "Imu. ABreak",
+        "full_name": "Immune/Resistant to Armor Break",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Armor Break",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Armor Break [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects armor [(smartImu>0){buffs}(smartImu<0){debuffs}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block armor break"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to armor debuffs, -1 = Only resistant to armor buffs"
+            }
+        }
+    },
+    "IMUSPEED": {
+        "abbr_name": "Imu.Haste",
+        "full_name": "Immune/Resistant to Haste",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Haste",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Haste [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects speed [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block Haste"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to speed debuffs, -1 = Only resistant to speed buffs"
             }
         }
     },

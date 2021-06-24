@@ -1264,12 +1264,6 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if (!isBase && atk.getProc().ARMOR.time > 0) {
-			status[P_ARMOR][0] = atk.getProc().ARMOR.time;
-			status[P_ARMOR][1] = atk.getProc().ARMOR.mult;
-			anim.getEff(P_ARMOR);
-		}
-
 		double f = getFruit(atk.trait, 1);
 		double time = 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
@@ -1297,7 +1291,7 @@ public abstract class Entity extends AbEntity {
 		}
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
-			int rst = getProc().IMUWEAK.mult;
+			int rst = (atk.getProc().WEAK.mult - 100) * getProc().IMUWEAK.smartImu <= 0 ? getProc().IMUWEAK.mult : 0;
 			val = val * (100 - rst) / 100;
 			if (rst < 100) {
 				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
@@ -1306,7 +1300,7 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 		}
 		if (atk.getProc().CURSE.time > 0) {
-			int val = atk.getProc().CURSE.time;
+			int val = (int) (atk.getProc().CURSE.time * time);
 			int rst = getProc().IMUCURSE.mult;
 			val = val * (100 - rst) / 100;
 			status[P_CURSE][0] = Math.max(status[P_CURSE][0], val);
@@ -1341,30 +1335,56 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INVWARP);
 
-		if (atk.getProc().SEAL.time > 0)
-			if (getProc().IMUSEAL.mult < 100) {
-				status[P_SEAL][0] = atk.getProc().SEAL.time * (100 - getProc().IMUSEAL.mult) / 100;
+		if (atk.getProc().SEAL.time > 0) {
+			int res = getProc().IMUSEAL.mult;
+			if (res < 100) {
+				int val = (int) (atk.getProc().SEAL.time * time);
+				status[P_SEAL][0] = val * (100 - res) / 100;
 				anim.getEff(P_SEAL);
 			} else
 				anim.getEff(INV);
+		}
 
-		if (atk.getProc().POISON.time > 0)
-			if (getProc().IMUPOI.mult < 100 || atk.getProc().POISON.damage < 0) {
+		if (atk.getProc().POISON.time > 0) {
+			int res = getProc().IMUPOI.smartImu * atk.getProc().POISON.damage >= 0 ? getProc().IMUPOI.mult : 0;
+			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
-				ws.time = ws.time * (100 - getProc().IMUPOI.mult) / 100;
+				ws.time = ws.time * (100 - res) / 100;
 				if (ws.type.damage_type == 1)
 					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
 				anim.getEff(INV);
+		}
+
+		if (!isBase && atk.getProc().ARMOR.time > 0) {
+			int res = getProc().IMUARMOR.smartImu * atk.getProc().ARMOR.mult >= 0 ? getProc().IMUARMOR.mult : 0;
+			if (res < 100) {
+				int val = (int) (atk.getProc().ARMOR.time * time);
+				status[P_ARMOR][0] = val * (100 - res) / 100;
+				status[P_ARMOR][1] = atk.getProc().ARMOR.mult;
+				anim.getEff(P_ARMOR);
+			} else
+				anim.getEff(INV);
+		}
 
 		if (atk.getProc().SPEED.time > 0) {
-			status[P_SPEED][0] = atk.getProc().SPEED.time;
-			status[P_SPEED][1] = atk.getProc().SPEED.speed;
-			status[P_SPEED][2] = atk.getProc().SPEED.type;
-
-			anim.getEff(P_SPEED);
+			int res = getProc().IMUSPEED.mult;
+			if (atk.getProc().SPEED.type == 0) {
+				int ar = getProc().IMUSPEED.smartImu;
+				if ((ar == 1 && atk.getProc().SPEED.speed >= data.getSpeed()) || (ar == -1 && atk.getProc().SPEED.speed <= data.getSpeed()))
+					res = 0;
+			} else if (getProc().IMUSPEED.smartImu * atk.getProc().SPEED.speed > 0)
+				res = 0;
+			if (res < 100) {
+				int val = (int) (atk.getProc().SPEED.time * time);
+				status[P_SPEED][0] = val * (100 - res) / 100;
+				status[P_SPEED][1] = atk.getProc().SPEED.speed;
+				status[P_SPEED][2] = atk.getProc().SPEED.type;
+				anim.getEff(P_SPEED);
+			} else
+				anim.getEff(INV);
 		}
 	}
 

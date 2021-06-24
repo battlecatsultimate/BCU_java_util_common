@@ -236,6 +236,15 @@ public class Editors {
 			t.block = Math.min(t.block, 100);
 		});
 
+		EditControl<Proc.IMUAD> imuad = new EditControl<>(Proc.IMUAD.class, (t) -> {
+			t.mult = Math.min(t.mult, 100);
+			t.block = Math.min(t.block, 100);
+			if (t.mult != 0 || t.block != 0)
+				t.smartImu = MathUtil.clip(t.smartImu, -1, 1);
+			else
+				t.smartImu = 0;
+		});
+
 		EditControl<Proc.WAVEI> wavei = new EditControl<>(Proc.WAVEI.class, (t) -> t.mult = Math.min(t.mult, 100));
 
 		map().put("KB", new EditControl<>(Proc.PTD.class, (t) -> {
@@ -487,7 +496,7 @@ public class Editors {
 
 		map().put("IMUWAVE", wavei);
 
-		map().put("IMUWEAK", imu);
+		map().put("IMUWEAK", imuad);
 
 		map().put("IMUWARP", imu);
 
@@ -503,7 +512,11 @@ public class Editors {
 
 		map().put("IMUMOVING", wavei);
 
-		map().put("IMUPOI", imu);
+		map().put("IMUPOI", imuad);
+
+		map().put("IMUARMOR", imuad);
+
+		map().put("IMUSPEED", imuad);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

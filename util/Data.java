@@ -53,6 +53,16 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class IMUAD extends ProcItem {
+			@Order(0)
+			public int mult;
+			@Order(1)
+			public int block;
+			@Order(2)
+			public int smartImu;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class DMGCUT extends ProcItem {
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
@@ -598,7 +608,7 @@ public class Data {
 		@Order(29)
 		public final WAVEI IMUVOLC = new WAVEI();
 		@Order(30)
-		public final IMU IMUWEAK = new IMU();
+		public final IMUAD IMUWEAK = new IMUAD();
 		@Order(31)
 		public final IMU IMUWARP = new IMU();
 		@Order(32)
@@ -608,22 +618,26 @@ public class Data {
 		@Order(34)
 		public final IMU IMUSUMMON = new IMU();
 		@Order(35)
-		public final IMU IMUPOI = new IMU();
+		public final IMUAD IMUPOI = new IMUAD();
 		@Order(36)
 		public final IMU IMUPOIATK = new IMU();
 		@Order(37)
 		public final WAVEI IMUMOVING = new WAVEI();
 		@Order(38)
-		public final IMU CRITI = new IMU();
+		public final IMUAD IMUARMOR = new IMUAD();
 		@Order(39)
-		public final PT IMUATK = new PT();
+		public final IMUAD IMUSPEED = new IMUAD();
 		@Order(40)
-		public final DMGCUT DMGCUT = new DMGCUT();
+		public final IMU CRITI = new IMU();
 		@Order(41)
-		public final DMGCAP DMGCAP = new DMGCAP();
+		public final PT IMUATK = new PT();
 		@Order(42)
-		public final BURROW BURROW = new BURROW();
+		public final DMGCUT DMGCUT = new DMGCUT();
 		@Order(43)
+		public final DMGCAP DMGCAP = new DMGCAP();
+		@Order(44)
+		public final BURROW BURROW = new BURROW();
+		@Order(45)
 		public final REVIVE REVIVE = new REVIVE();
 
 		@Override
@@ -943,14 +957,13 @@ public class Data {
 	public static final int P_IMUPOI = 35;
 	public static final int P_IMUPOIATK = 36;
 	public static final int P_IMUMOVING = 37;
-	/**
-	 * body proc: 1: type: protect itself only (0) or effect the attack also (1)
-	 */
-	public static final int P_CRITI = 38;
-	public static final int P_IMUATK = 39;
-	public static final int P_DMGCUT = 40;
-	public static final int P_DMGCAP = 41;
-	public static final int P_BURROW = 42;
+	public static final int P_IMUARMOR = 38;
+	public static final int P_IMUSPEED = 39;
+	public static final int P_CRITI = 40;
+	public static final int P_IMUATK = 41;
+	public static final int P_DMGCUT = 42;
+	public static final int P_DMGCAP = 43;
+	public static final int P_BURROW = 44;
 	/**
 	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
 	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
@@ -958,8 +971,8 @@ public class Data {
 	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
 	 * others
 	 */
-	public static final int P_REVIVE = 43;
-	public static final int PROC_TOT = 44;// 44
+	public static final int P_REVIVE = 45;
+	public static final int PROC_TOT = 46;// 46
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1001,7 +1014,9 @@ public class Data {
 			true,  //imu.BCU poison
 			true,  //imu.poison
 			true,  //imu.moving atk
-			true,  //imu. cirtical
+			true,  //imu.armor break
+			true,  //imu.haste
+			true,  //imu. critical
 			true,  //invincibility
 			true,  //damage cut
 			true,  //damage cap
@@ -1183,8 +1198,9 @@ public class Data {
 	public static final int A_ATK_SMOKE = 55;
 	public static final int A_WHITE_SMOKE = 56;
 	public static final int A_HEAL = 57;
+	public static final int A_E_HEAL = 58;
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 58;
+	public static final int A_TOT = 59;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;
