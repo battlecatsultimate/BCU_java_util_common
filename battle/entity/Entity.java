@@ -291,7 +291,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (t == HEAL) {
-				EffAnim<DefEff> eff = effas().A_HEAL;
+				EffAnim<DefEff> eff = dire == -1 ? effas().A_HEAL : effas().A_E_HEAL;
 
 				effs[A_HEAL] = eff.getEAnim(DefEff.DEF);
 			}
