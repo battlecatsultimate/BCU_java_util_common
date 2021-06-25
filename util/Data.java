@@ -56,7 +56,7 @@ public class Data {
 			public int mult;
 		}
 
-		public static abstract class IntType implements Cloneable {
+		public static abstract class IntType implements Cloneable, BattleStatic {
 
 			@Documented
 			@Retention(value = RetentionPolicy.RUNTIME)
@@ -163,7 +163,7 @@ public class Data {
 			public int prob;
 		}
 
-		public static abstract class ProcItem implements Cloneable {
+		public static abstract class ProcItem implements Cloneable, BattleStatic {
 			public ProcItem clear() {
 				try {
 					Field[] fs = getDeclaredFields();
