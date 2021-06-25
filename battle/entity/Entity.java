@@ -5,6 +5,7 @@ import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackCanon;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
@@ -1224,7 +1225,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		double f = getFruit(atk.type, 1);
-		double time = 1 + f * 0.2 / 3;
+		double time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
 		if (atk.type < 0 || atk.canon != -2)
 			dist = time = 1;
