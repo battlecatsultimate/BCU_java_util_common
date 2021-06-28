@@ -1305,8 +1305,6 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().POISON.time > 0)
 			if ((getAbi() & AB_POII) == 0 || atk.getProc().POISON.damage < 0) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
-				if (ws.type.damage_type == 1)
-					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
