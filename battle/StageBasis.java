@@ -189,6 +189,9 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_can() {
+		if(ubase.health <= 0 || ebase.health <= 0)
+			return false;
+
 		if (can == max_can) {
 			if(canon.id == BASE_WALL && entityCount(-1) >= max_num) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
