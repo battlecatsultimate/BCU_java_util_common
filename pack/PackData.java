@@ -368,7 +368,7 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return desc.name == null ? desc.id : desc.name;
+			return desc.name == null || desc.name.isEmpty() ? desc.id : desc.name;
 		}
 
 		public void unregister() {
