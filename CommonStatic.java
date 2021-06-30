@@ -47,10 +47,9 @@ public class CommonStatic {
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
 
-		// Available data for atk/res orb, will be used for GUI
-		// Map<Trait, Grades>
-		public final Map<Integer, List<Integer>> ATKORB = new TreeMap<>();
-		public final Map<Integer, List<Integer>> RESORB = new TreeMap<>();
+		// Available data for orb, will be used for GUI
+		// Map<Type, Map<Trait, Grades>>
+		public final Map<Integer, Map<Integer, List<Integer>>> ORB = new TreeMap<>();
 		public final Map<Integer, Integer> DATA = new HashMap<>();
 
 		public FakeImage[] TYPES;
