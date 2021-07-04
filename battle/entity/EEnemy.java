@@ -54,9 +54,9 @@ public class EEnemy extends Entity {
 		if (atk.model instanceof AtkModelUnit) {
 			int overlap = type & atk.type;
 			if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODATK(overlap);
+				ans *= EUnit.OrbHandler.getOrbGood(atk, overlap, basis.b.t());
 			if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)
-				ans *= basis.b.t().getMASSIVEATK(overlap);
+				ans *= EUnit.OrbHandler.getOrbMassive(atk, overlap, basis.b.t());
 			if (overlap != 0 && (atk.abi & AB_MASSIVES) != 0)
 				ans *= basis.b.t().getMASSIVESATK(overlap);
 		}

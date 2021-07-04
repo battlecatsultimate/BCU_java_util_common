@@ -1,6 +1,7 @@
 package common.battle.entity;
 
 import common.battle.StageBasis;
+import common.battle.Treasure;
 import common.battle.attack.AtkModelEnemy;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
@@ -30,6 +31,22 @@ public class EUnit extends Entity {
 			}
 
 			return 0;
+		}
+
+		protected static double getOrbMassive(AttackAb atk, int type, Treasure t) {
+			if(atk.origin.model instanceof AtkModelUnit) {
+				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(type);
+			}
+
+			return t.getMASSIVEATK(type);
+		}
+
+		protected static double getOrbGood(AttackAb atk, int type, Treasure t) {
+			if(atk.origin.model instanceof AtkModelUnit) {
+				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(type);
+			}
+
+			return t.getGOODATK(type);
 		}
 	}
 
@@ -75,10 +92,12 @@ public class EUnit extends Entity {
 		}
 		if (atk.model instanceof AtkModelEnemy) {
 			int overlap = type & atk.type;
-			if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODDEF(overlap);
+			if (overlap != 0 && (getAbi() & AB_GOOD) != 0) {
+				ans *= basis.b.t().getGOODDEF(overlap, (MaskUnit) data, level);
+				System.out.println(basis.b.t().getGOODDEF(overlap, (MaskUnit) data, level));
+			}
 			if (overlap != 0 && (getAbi() & AB_RESIST) != 0)
-				ans *= basis.b.t().getRESISTDEF(overlap);
+				ans *= basis.b.t().getRESISTDEF(overlap, (MaskUnit) data, level);
 			if (overlap != 0 && (getAbi() & AB_RESISTS) != 0)
 				ans *= basis.b.t().getRESISTSDEF(overlap);
 		}
@@ -147,12 +166,22 @@ public class EUnit extends Entity {
 			if (line.length == 0)
 				continue;
 
-			if (line[ORB_TYPE] == Data.ORB_ATK || (line[ORB_TRAIT] & trait) == 0)
+			if (line[ORB_TYPE] != Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
 				continue;
 
 			ans = orb.getRes(line[ORB_GRADE], ans);
 		}
 
 		return ans;
+	}
+
+	private double getOrbMassive(int type) {
+		//TODO: Finish orb formula
+		return 1.0;
+	}
+
+	private double getOrbGood(int type) {
+		//TODO: Finish orb formula
+		return 1.0;
 	}
 }

@@ -182,6 +182,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<DefEff> A_WHITE_SMOKE;
 		@Order(61)
 		public EffAnim<DefEff> A_HEAL;
+		@Order(62)
+		public EffAnim<DefEff> A_E_HEAL;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -413,9 +415,10 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vseal = new VImg(stfs[3] + "skill003.png");
 		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
 		effas.A_SEAL = new EffAnim<>(stfs[3] + ski + "curse", vseal, icfs[3], DefEff.values());
-		VImg vpois = new VImg(stfs[3] + "skill003.png");
-		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[3] << 8 | is[1]));
-		effas.A_POI0 = new EffAnim<>(stfs[3] + ski + "curse", vpois, icfs[3], DefEff.values());
+		String burn = stfs[3] + "burn/burn";
+		ImgCut icburn = ImgCut.newIns(burn+".imgcut");
+		VImg vpois = new VImg(burn + ".png");
+		effas.A_POI0 = new EffAnim<>(burn, vpois, icburn, DefEff.values());
 		effas.A_POI0.name = "poison_DF";
 		vpois = new VImg(stfs[3] + "poison.png");
 		effas.A_POI1 = new EffAnim<>(stfs[3] + ski + "curse", vpois, icfs[3], DefEff.values());
@@ -479,6 +482,11 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vheal = new VImg(heal + ".png");
 		ImgCut icheal = ImgCut.newIns(heal+".imgcut");
 		effas.A_HEAL = new EffAnim<>(heal, vheal, icheal, DefEff.values());
+
+		heal = stfs[3] + "heal_e/heal_e";
+		vheal = new VImg(heal + ".png");
+		icheal = ImgCut.newIns(heal+".imgcut");
+		effas.A_E_HEAL = new EffAnim<>(heal, vheal, icheal, DefEff.values());
 	}
 
 	private final VImg vimg;

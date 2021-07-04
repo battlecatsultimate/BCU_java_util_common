@@ -47,10 +47,9 @@ public class CommonStatic {
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
 
-		// Available data for atk/res orb, will be used for GUI
-		// Map<Trait, Grades>
-		public final Map<Integer, List<Integer>> ATKORB = new TreeMap<>();
-		public final Map<Integer, List<Integer>> RESORB = new TreeMap<>();
+		// Available data for orb, will be used for GUI
+		// Map<Type, Map<Trait, Grades>>
+		public final Map<Integer, Map<Integer, List<Integer>>> ORB = new TreeMap<>();
 		public final Map<Integer, Integer> DATA = new HashMap<>();
 
 		public FakeImage[] TYPES;
@@ -166,11 +165,11 @@ public class CommonStatic {
 	public static class Lang {
 
 		@StaticPermitted
-		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
+		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es", "it" };
 
 		@StaticPermitted
 		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
-				{ 0, 3, 1, 2 }, { 0, 3, 1, 2 }, { 0, 3, 1, 2 } };
+				{ 0, 3, 1, 2 }, { 5, 0, 3, 1 }, { 6, 0, 3, 1 }, { 0, 3, 1, 2 }, { 8, 0, 3, 1 }, { 9, 0, 3, 1 } };
 
 	}
 

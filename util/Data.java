@@ -56,7 +56,7 @@ public class Data {
 			public int mult;
 		}
 
-		public static abstract class IntType implements Cloneable {
+		public static abstract class IntType implements Cloneable, BattleStatic {
 
 			@Documented
 			@Retention(value = RetentionPolicy.RUNTIME)
@@ -163,7 +163,7 @@ public class Data {
 			public int prob;
 		}
 
-		public static abstract class ProcItem implements Cloneable {
+		public static abstract class ProcItem implements Cloneable, BattleStatic {
 			public ProcItem clear() {
 				try {
 					Field[] fs = getDeclaredFields();
@@ -1128,8 +1128,9 @@ public class Data {
 	public static final int A_ATK_SMOKE = 55;
 	public static final int A_WHITE_SMOKE = 56;
 	public static final int A_HEAL = 57;
+	public static final int A_E_HEAL = 58;
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 58;
+	public static final int A_TOT = 59;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;
@@ -1215,10 +1216,17 @@ public class Data {
 
 	public static final int ORB_ATK = 0;
 	public static final int ORB_RES = 1;
+	public static final int ORB_STRONG = 2;
+	public static final int ORB_MASSIVE = 3;
+	public static final int ORB_RESISTANT = 4;
 	public static final int ORB_TYPE = 0, ORB_TRAIT = 1, ORB_GRADE = 2;
 
 	public static final int[] ORB_ATK_MULTI = { 100, 200, 300, 400, 500 }; // Atk orb multiplication
 	public static final int[] ORB_RES_MULTI = { 4, 8, 12, 16, 20 }; // Resist orb multiplication
+	public static final int[] ORB_STR_DEF_MULTI = {2, 4, 6, 8, 10};
+	public static final double[] ORB_STR_ATK_MULTI = {0.06, 0.12, 0.18, 0.24, 0.3};
+	public static final double[] ORB_MASSIVE_MULTI = {0.1, 0.2, 0.3, 0.4, 0.5};
+	public static final int[] ORB_RESISTANT_MULTI = {5, 10, 15, 20, 25};
 
 	public static final int MUSIC_DELAY = 2344; //Music change delay with milliseconds accuracy
 
