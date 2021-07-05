@@ -47,10 +47,9 @@ public class StageBasis extends BattleObj {
 	public int changeFrame = -1;
 	public int changeDivision = -1;
 
-	public int work_lv, max_mon, can, max_can, next_lv, max_num;
+	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num;
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
-	public double mon;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
 	public int respawnTime, unitRespawnTime;
@@ -88,11 +87,11 @@ public class StageBasis extends BattleObj {
 		}
 		int max = est.lim != null ? est.lim.num : 50;
 		max_num = max <= 0 ? 50 : max;
-		max_can = bas.t().CanonTime(sttime);
+		maxCannon = bas.t().CanonTime(sttime);
 
 		work_lv = 1 + bas.getInc(C_M_LV);
-		mon = bas.getInc(C_M_INI);
-		can = max_can * bas.getInc(C_C_INI) / 100;
+		money = bas.getInc(C_M_INI);
+		cannon = maxCannon * bas.getInc(C_C_INI) / 100;
 		canon = new Cannon(this, nyc[0]);
 		conf = ints;
 
@@ -109,7 +108,7 @@ public class StageBasis extends BattleObj {
 			sniper = new Sniper(this);
 		else
 			sniper = null;
-		next_lv = bas.t().getLvCost(work_lv);
+		upgradeCost = bas.t().getLvCost(work_lv);
 
 		boolean oneLine = true;
 		for(Form f : b.lu.fs[1]) {
@@ -120,6 +119,27 @@ public class StageBasis extends BattleObj {
 		}
 
 		isOneLineup = oneLine;
+	}
+
+	/**
+	 * returns visual money.
+	 */
+	public int getMoney() {
+		return (int) Math.floor(money / 100.0);
+	}
+
+	/**
+	 * returns visual max money
+	 */
+	public int getMaxMoney() {
+		return maxMoney / 100;
+	}
+
+	/**
+	 * returns visual next level.
+	 */
+	public int getUpgradeCost() {
+		return upgradeCost / 100;
 	}
 
 	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
@@ -191,7 +211,10 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_can() {
-		if (can == max_can && ubase.health > 0) {
+		if(ubase.health <= 0 || ebase.health <= 0)
+			return false;
+
+		if (cannon == maxCannon) {
 			if(canon.id == BASE_WALL && entityCount(-1) >= max_num) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 				return false;
@@ -199,7 +222,7 @@ public class StageBasis extends BattleObj {
 
 			CommonStatic.setSE(SE_SPEND_SUC);
 			canon.activate();
-			can = 0;
+			cannon = 0;
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
@@ -211,14 +234,14 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_mon() {
-		if (work_lv < 8 && mon > next_lv && ubase.health > 0) {
+		if (work_lv < 8 && money > upgradeCost) {
 			CommonStatic.setSE(SE_SPEND_SUC);
-			mon -= next_lv;
+			money -= upgradeCost;
 			work_lv++;
-			next_lv = b.t().getLvCost(work_lv);
-			max_mon = b.t().getMaxMon(work_lv);
+			upgradeCost = b.t().getLvCost(work_lv);
+			maxMoney = b.t().getMaxMon(work_lv);
 			if (work_lv == 8)
-				next_lv = -1;
+				upgradeCost = -1;
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
@@ -240,11 +263,11 @@ public class StageBasis extends BattleObj {
 				BCMusic.play(st.mus1, st.loop1);
 			else
 				BCMusic.play(st.mus0, st.loop0);
-			mon = Integer.MAX_VALUE;
+			money = Integer.MAX_VALUE;
 			while (work_lv < 8)
 				act_mon();
-			mon = max_mon;
-			can = max_can;
+			money = maxMoney;
+			cannon = maxCannon;
 			for (Entity e : le)
 				if (e.dire == 1) {
 					e.pos = ebase.pos;
@@ -296,7 +319,7 @@ public class StageBasis extends BattleObj {
 		if (elu.price[i][j] == -1) {
 			return false;
 		}
-		if (elu.price[i][j] > mon) {
+		if (elu.price[i][j] > money) {
 			if(boo) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 			}
@@ -320,7 +343,7 @@ public class StageBasis extends BattleObj {
 			eu.added(-1, st.len - 700);
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
-			mon -= elu.price[i][j];
+			money -= elu.price[i][j];
 			unitRespawnTime = 1;
 			return true;
 		}
@@ -378,13 +401,13 @@ public class StageBasis extends BattleObj {
 				respawnTime--;
 
 			elu.update();
-			if(can == max_can-1) {
+			if(cannon == maxCannon -1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);
 			}
 			if (ubase.health > 0) {
-				can++;
-				max_mon = b.t().getMaxMon(work_lv);
-				mon += b.t().getMonInc(work_lv);
+				cannon++;
+				maxMoney = b.t().getMaxMon(work_lv);
+				money += b.t().getMonInc(work_lv);
 			}
 
 			est.update();
@@ -479,8 +502,8 @@ public class StageBasis extends BattleObj {
 			s_stop--;
 		s_stop = Math.max(s_stop, temp_s_stop);
 		temp_s_stop = 0;
-		can = Math.min(max_can, Math.max(0, can));
-		mon = Math.min(max_mon, Math.max(0, mon));
+		cannon = Math.min(maxCannon, Math.max(0, cannon));
+		money = Math.min(maxMoney, Math.max(0, money));
 
 		if(changeFrame != -1) {
 			changeFrame--;

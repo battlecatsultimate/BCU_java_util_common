@@ -5,6 +5,7 @@ import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackCanon;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
@@ -1265,7 +1266,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		double f = getFruit(atk.trait, 1);
-		double time = 1 + f * 0.2 / 3;
+		double time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
 		if (atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || atk.canon != -2)
 			dist = time = 1;
@@ -1350,8 +1351,6 @@ public abstract class Entity extends AbEntity {
 			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
-				if (ws.type.damage_type == 1)
-					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else

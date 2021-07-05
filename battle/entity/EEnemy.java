@@ -45,7 +45,7 @@ public class EEnemy extends Entity {
 			double mul = basis.b.t().getDropMulti();
 			if (tempearn)
 				mul *= 2;
-			basis.mon += mul * ((MaskEnemy) data).getDrop();
+			basis.money += mul * ((MaskEnemy) data).getDrop();
 		}
 	}
 
@@ -55,14 +55,13 @@ public class EEnemy extends Entity {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk.model instanceof AtkModelUnit) {
-			int overlap = ctargetable(atk.trait,false) ? 1 : 0;
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
-			if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODATK(sharedTraits);
-			if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)
-				ans *= basis.b.t().getMASSIVEATK(sharedTraits);
-			if (overlap != 0 && (atk.abi & AB_MASSIVES) != 0)
+			if ((atk.abi & AB_GOOD) != 0)
+				ans *= EUnit.OrbHandler.getOrbGood(atk, sharedTraits, basis.b.t());
+			if ((atk.abi & AB_MASSIVE) != 0)
+				ans *= EUnit.OrbHandler.getOrbMassive(atk, sharedTraits, basis.b.t());
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0)
 				ans *= basis.b.t().getMASSIVESATK(sharedTraits);
 		}
 		if (isBase && (atk.abi & AB_BASE) > 0)
@@ -73,9 +72,9 @@ public class EEnemy extends Entity {
 			ans *= basis.b.t().getEKAtk();
 		if (atk.canon == 5)
 			if ((touchable() & TCH_UG) > 0)
-				ans = (int) (maxH * basis.b.t().getCanonMulti(-5) / 1000);
+				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND) / 1000);
 			else
-				ans = (int) (maxH * basis.b.t().getCanonMulti(5) / 1000);
+				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_SURFACE) / 1000);
 		ans = critCalc(data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL)), ans, atk);
 
 		// Perform Orb

@@ -53,8 +53,8 @@ public class EForm extends Data {
 		return new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
 	}
 
-	public int getPrice(int sta) {
-		return (int) (du.getPrice() * (1 + sta * 0.5));
+	public double getPrice(int sta) {
+		return du.getPrice() * (1 + sta * 0.5);
 	}
 
 }

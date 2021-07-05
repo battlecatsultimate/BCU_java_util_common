@@ -2,6 +2,7 @@ package common.battle;
 
 import com.google.common.primitives.Ints;
 import common.CommonStatic;
+import common.battle.data.Orb;
 import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
@@ -12,6 +13,7 @@ import common.pack.FixIndexList.FixIndexMap;
 import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.unit.Level;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 @JsonClass(read = RType.FILL)
 public class Treasure extends Data {
 	public static void readCannonCurveData() {
@@ -219,87 +222,6 @@ public class Treasure extends Data {
 	}
 
 	/**
-	 * get special canon data 1
-	 */
-	public double getCanonMulti(int type) {
-		if (type == 2)
-			if (bslv[2] > 10)
-				return 298 + 3.2 * (bslv[2] - 10);
-			else
-				return 100 + 19.8 * bslv[2];
-		else if (type == 3)
-			if (bslv[3] > 10)
-				return 39 + 0.9 * (bslv[3] - 10);
-			else
-				return 30 + 0.9 * bslv[3];
-		else if (type == 4)
-			if (bslv[4] > 20)
-				return 350 + 10 * (bslv[4] - 20);
-			else if (bslv[4] > 10)
-				return 200 + 15 * (bslv[4] - 10);
-			else
-				return 110 + 9 * bslv[4];
-		else if (type == 5) // holy blast surface attack
-			if (bslv[5] > 20)
-				return 100 + 5 * (bslv[5] - 20);
-			else if (bslv[5] > 10)
-				return 25 + 7.5 * (bslv[5] - 10);
-			else
-				return 5 + 2 * bslv[5];
-		else if (type == -5) // holy blast burrow attack
-			if (bslv[5] > 20)
-				return 300 + 10 * (bslv[5] - 20);
-			else if (bslv[5] > 10)
-				return 150 + 15 * (bslv[5] - 10);
-			else
-				return 100 + 5 * bslv[5];
-		else if (type == 6)
-			if (bslv[6] > 10)
-				return 50 + 5 * (bslv[6] - 10);
-			else
-				return 30 + 2 * bslv[6];
-		return 0;
-	}
-
-	/**
-	 * get special canon data 2, usually proc time
-	 */
-	public int getCanonProcTime(int type) {
-		if (type == 1)
-			if (bslv[1] > 10)
-				return 50 + 5 * (bslv[1] - 10);
-			else
-				return 30 + 2 * bslv[1];
-		else if (type == 2)
-			if (bslv[2] > 10)
-				return 90 + 9 * (bslv[2] - 10) / 2;
-			else
-				return 60 + 3 * bslv[2];
-		else if (type == 3)
-			if (bslv[3] > 10)
-				return 30 + 3 * (bslv[3] - 10);
-			else
-				return 15 + 3 * bslv[3] / 2;
-		else if (type == 5) // holy blast
-			if (bslv[5] > 10)
-				return 45 + 3 * (bslv[5] - 10) / 2;
-			else
-				return 30 + 3 * bslv[5] / 2;
-		else if (type == 6)
-			if (bslv[6] > 10)
-				return 250 + 15 * (bslv[6] - 10);
-			else
-				return 200 + 5 * bslv[6];
-		else if (type == 7)
-			if (bslv[7] > 10)
-				return 60 + 6 * (bslv[7] - 10);
-			else
-				return 33 + 3 * bslv[7];
-
-		return 0;
-	}
-
-	/**
 	 * get cat health multiplication
 	 */
 	public double getDefMulti() {
@@ -371,30 +293,26 @@ public class Treasure extends Data {
 	}
 
 	/**
-	 * get attack multiplication from strong against ability
-	 * @param traits - The traits
-	 */
-	public double getGOODATK(ArrayList<Trait> traits) {
-		double ini = 1.5 * (1 + 0.2 / 3 * getFruit(traits));
-		double com = 1 + b.getInc(C_GOOD) * 0.01;
-		return ini * com;
-	}
-
-	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public double getGOODDEF(ArrayList<Trait> traits) {
-		double ini = 0.5 - 0.1 / 3 * getFruit(traits);
-		double com = 1 - b.getInc(C_GOOD) * 0.01;
-		return ini * com;
-	}
+	public double getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orbs, Level level) {
+		double ini = traits.isEmpty() ? 1 : 0.5 - 0.1 / 3 * getFruit(traits);
 
-	/**
-	 * get attack multiplication from massive damage ability
-	 */
-	public double getMASSIVEATK(ArrayList<Trait> traits) {
-		double ini = 3 + 1.0 / 3 * getFruit(traits);
-		double com = 1 + b.getInc(C_MASSIVE) * 0.01;
+		if(orbs != null && level.getOrbs() != null) {
+			int[][] levels = level.getOrbs();
+
+			for(int i = 0; i < levels.length; i++)
+				if (levels[i][ORB_TYPE] == ORB_STRONG) {
+					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType))
+						ini *= 1 - ORB_STR_DEF_MULTI[levels[i][ORB_GRADE]] / 100.0;
+				}
+		}
+
+		if (ini == 1)
+			return ini;
+
+		double com = 1 - b.getInc(C_GOOD) * 0.01;
 		return ini * com;
 	}
 
@@ -408,8 +326,23 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public double getRESISTDEF(ArrayList<Trait> traits) {
-		double ini = 0.25 - 0.05 / 3 * getFruit(traits);
+	public double getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orbs, Level level) {
+		double ini = traits.isEmpty() ? 1 : 0.25 - 0.05 / 3 * getFruit(traits);
+
+		if(orbs != null && level.getOrbs() != null) {
+			int[][] levels = level.getOrbs();
+
+			for(int i = 0; i < levels.length; i++)
+				if (levels[i][ORB_TYPE] == ORB_RESISTANT) {
+					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType))
+						ini *= 1 - ORB_RESISTANT_MULTI[levels[i][ORB_GRADE]] / 100.0;
+				}
+		}
+
+		if (ini == 1)
+			return ini;
+
 		double com = 1 - b.getInc(C_RESIST) * 0.01;
 		return ini * com;
 	}
@@ -472,7 +405,7 @@ public class Treasure extends Data {
 	protected int getLvCost(int lv) {
 		int t = tech[LV_WORK];
 		int base = t < 8 ? 30 + 10 * t : 20 * t - 40;
-		return lv == 8 ? -1 : base * lv;
+		return lv == 8 ? -1 : base * lv * 100;
 	}
 
 	/**
@@ -482,15 +415,15 @@ public class Treasure extends Data {
 		int base = Math.max(25, 50 * tech[LV_WALT]);
 		base = base * (1 + lv);
 		base += trea[T_WALT] * 10;
-		return base * (100 + b.getInc(C_M_MAX)) / 100;
+		return base * (100 + b.getInc(C_M_MAX));
 	}
 
 	/**
 	 * get money increase rate
 	 */
-	protected double getMonInc(int lv) {
+	protected int getMonInc(int lv) {
 		double output = (0.15 + 0.1 * tech[LV_WORK]) * (1 + (lv - 1) * 0.1) + trea[T_WORK] * 0.01;
-		return Math.floor(output * 100) / 100;
+		return (int) Math.round(output * 100);
 	}
 
 	/**
@@ -529,10 +462,8 @@ public class Treasure extends Data {
 	}
 
 	private void zread$000000() {
-		for (int i = 0; i < LV_TOT; i++)
-			tech[i] = MLV[i];
-		for (int i = 0; i < T_TOT; i++)
-			trea[i] = MT[i];
+		System.arraycopy(MLV, 0, tech, 0, LV_TOT);
+		System.arraycopy(MT, 0, trea, 0, T_TOT);
 		fruit[T_RED] = fruit[T_BLACK] = fruit[T_FLOAT] = fruit[T_ANGEL] = 300;
 		fruit[T_METAL] = fruit[T_ZOMBIE] = fruit[T_ALIEN] = 300;
 		bslv[0] = 20;
@@ -570,24 +501,20 @@ public class Treasure extends Data {
 	private void zread$000305(InStream is) {
 		zread$000203(is);
 		int[] temp = is.nextIntsB();
-		for (int i = 0; i < temp.length; i++)
-			bslv[i] = temp[i];
+		System.arraycopy(temp, 0, bslv, 0, temp.length);
 	}
 
 	private void zread$000400(InStream is) {
 		int[] lv = is.nextIntsB();
 		int[] tr = is.nextIntsB();
-		for (int i = 0; i < Math.min(LV_TOT, lv.length); i++)
-			tech[i] = lv[i];
-		for (int i = 0; i < Math.min(T_TOT, tr.length); i++)
-			trea[i] = tr[i];
+		System.arraycopy(lv, 0, tech, 0, Math.min(LV_TOT, lv.length));
+		System.arraycopy(tr, 0, trea, 0, Math.min(T_TOT, tr.length));
 		alien = is.nextInt();
 		star = is.nextInt();
 		fruit = is.nextIntsB();
 		gods = is.nextIntsB();
 		int[] bs = is.nextIntsB();
-		for (int i = 0; i < bs.length; i++)
-			bslv[i] = bs[i];
+		System.arraycopy(bs, 0, bslv, 0, bs.length);
 	}
 
 }

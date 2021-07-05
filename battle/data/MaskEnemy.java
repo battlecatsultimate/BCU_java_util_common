@@ -9,7 +9,7 @@ import java.util.TreeSet;
 
 public interface MaskEnemy extends MaskEntity {
 
-	double getDrop();
+	int getDrop();
 
 	@Override
 	Enemy getPack();

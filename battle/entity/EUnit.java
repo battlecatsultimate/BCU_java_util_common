@@ -1,6 +1,7 @@
 package common.battle.entity;
 
 import common.battle.StageBasis;
+import common.battle.Treasure;
 import common.battle.attack.AtkModelEnemy;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
@@ -15,6 +16,7 @@ import common.util.unit.Trait;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class EUnit extends Entity {
 
 	public static class OrbHandler extends BattleObj {
@@ -31,6 +33,22 @@ public class EUnit extends Entity {
 			}
 
 			return 0;
+		}
+
+		protected static double getOrbMassive(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
+			if(atk.origin.model instanceof AtkModelUnit) {
+				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(atk.trait, traits, t);
+			}
+
+			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbMassive(atk.trait, traits, t);
+		}
+
+		protected static double getOrbGood(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
+			if(atk.origin.model instanceof AtkModelUnit) {
+				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(atk.trait, traits, t);
+			}
+
+			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbGood(atk.trait, traits, t);
 		}
 	}
 
@@ -75,14 +93,13 @@ public class EUnit extends Entity {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk.model instanceof AtkModelEnemy) {
-			int overlap = ctargetable(atk.trait,false) ? 1 : 0;
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
-			if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODDEF(sharedTraits);
-			if (overlap != 0 && (getAbi() & AB_RESIST) != 0)
-				ans *= basis.b.t().getRESISTDEF(sharedTraits);
-			if (overlap != 0 && (getAbi() & AB_RESISTS) != 0)
+			if ((getAbi() & AB_GOOD) != 0)
+				ans *= basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+			if ((getAbi() & AB_RESIST) != 0)
+				ans *= basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans *= basis.b.t().getRESISTSDEF(sharedTraits);
 		}
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
@@ -152,12 +169,65 @@ public class EUnit extends Entity {
 				continue;
 			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_ATK || !trait.contains(orbType))
+			if (line[ORB_TYPE] != Data.ORB_RES || !trait.contains(orbType))
 				continue;
 
 			ans = orb.getRes(line[ORB_GRADE], ans);
 		}
 
 		return ans;
+	}
+
+	private double getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+		double ini = 1;
+
+		if (!traits.isEmpty())
+			ini = 3 + 1.0 / 3 * t.getFruit(traits);
+
+		Orb orbs = ((MaskUnit)data).getOrb();
+
+		if(orbs != null && level.getOrbs() != null) {
+			int[][] levels = level.getOrbs();
+
+			for(int i = 0; i < levels.length; i++)
+				if (levels[i][ORB_TYPE] == ORB_MASSIVE) {
+					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType))
+						ini *= 1 + ORB_MASSIVE_MULTI[levels[i][ORB_GRADE]] / 100.0;
+				}
+		}
+
+		if (ini == 1)
+			return ini;
+
+		double com = 1 + t.b.getInc(C_MASSIVE) * 0.01;
+		return ini * com;
+	}
+
+	private double getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+		double ini = 1;
+
+		if (!traits.isEmpty())
+			ini = 1.5 * (1 + 0.2 / 3 * t.getFruit(traits));
+
+		Orb orbs = ((MaskUnit)data).getOrb();
+
+		if(orbs != null && level.getOrbs() != null) {
+			int[][] levels = level.getOrbs();
+
+			for (int i = 0; i < levels.length; i++)
+				if (levels[i][ORB_TYPE] == ORB_STRONG) {
+					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType)) {
+						ini *= 1 + ORB_STR_ATK_MULTI[levels[i][ORB_GRADE]] / 100.0;
+					}
+				}
+		}
+
+		if (ini == 1)
+			return ini;
+
+		double com = 1 + t.b.getInc(C_GOOD) * 0.01;
+		return ini * com;
 	}
 }

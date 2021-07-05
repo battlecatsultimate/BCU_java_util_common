@@ -48,8 +48,8 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	}
 
 	@Override
-	public double getDrop() {
-		return drop;
+	public int getDrop() {
+		return drop * 100;
 	}
 
 	@Override

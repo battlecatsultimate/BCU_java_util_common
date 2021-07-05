@@ -21,7 +21,7 @@ public class ELineUp extends BattleObj {
 					price[i][j] = -1;
 					continue;
 				}
-				price[i][j] = lu.efs[i][j].getPrice(b.st.getCont().price);
+				price[i][j] = (int) (lu.efs[i][j].getPrice(b.st.getCont().price) * 100);
 				maxC[i][j] = sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn());
 				if (lim == null)
 					continue;
