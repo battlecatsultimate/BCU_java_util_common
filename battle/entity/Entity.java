@@ -1325,7 +1325,7 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public int getAbi() {
 		if (status[P_SEAL][0] > 0)
-			return (data.getAbi() ^ altAbi) & (AB_ONLY | AB_METALIC | AB_GLASS);
+			return (data.getAbi() ^ altAbi) & (AB_METALIC | AB_GLASS);
 		return data.getAbi() ^ altAbi;
 	}
 
