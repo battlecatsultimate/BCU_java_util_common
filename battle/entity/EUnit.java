@@ -82,7 +82,7 @@ public class EUnit extends Entity {
 	@Override
 	public void update() {
 		super.update();
-		type = status[P_CURSE][0] == 0 ? data.getType() : 0;
+		type = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getType() : 0;
 	}
 
 	@Override
