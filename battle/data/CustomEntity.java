@@ -53,10 +53,14 @@ public abstract class CustomEntity extends DataEntity {
 	 */
 	public void updateAllProc() {
 		all = Proc.blank();
-		for (AtkDataModel adm : atks)
-			for (int i = 0; i < Data.PROC_TOT; i++)
-				if (!all.getArr(i).exists())
-					all.getArr(i).set(adm.proc.getArr(i));
+		for (int i = 0; i < Data.PROC_TOT; i++) {
+			if (Data.procSharable[i]) {
+				all.getArr(i).set(getProc().getArr(i));
+			} else
+				for (AtkDataModel adm : atks)
+					if (!all.getArr(i).exists())
+						all.getArr(i).set(adm.proc.getArr(i));
+		}
 	}
 
 	/**

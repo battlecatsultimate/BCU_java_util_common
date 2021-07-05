@@ -170,7 +170,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				anim.unload();
 			}
 
-			if (UserProfile.isOlderPack(pack, "0.5.4.2")) {
+			if (UserProfile.isOlderPack(pack, "0.5.5.0")) {
 				enemy.traits = Trait.convertType(enemy.type);
 				enemy.type = 0;
 				Proc proc = enemy.getProc();

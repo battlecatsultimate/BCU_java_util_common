@@ -84,7 +84,7 @@ public class EUnit extends Entity {
 	@Override
 	public void update() {
 		super.update();
-		traits = status[P_CURSE][0] == 0 ? data.getTraits() : new ArrayList<>();
+		traits = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getTraits() : new ArrayList<>();
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class EUnit extends Entity {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
-		if (atk.model instanceof AtkModelEnemy) {
+		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
 			if ((getAbi() & AB_GOOD) != 0)
@@ -193,7 +193,7 @@ public class EUnit extends Entity {
 				if (levels[i][ORB_TYPE] == ORB_MASSIVE) {
 					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
 					if (eTraits.contains(orbType))
-						ini *= 1 + ORB_MASSIVE_MULTI[levels[i][ORB_GRADE]] / 100.0;
+						ini += ORB_MASSIVE_MULTI[levels[i][ORB_GRADE]];
 				}
 		}
 
@@ -219,7 +219,7 @@ public class EUnit extends Entity {
 				if (levels[i][ORB_TYPE] == ORB_STRONG) {
 					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
 					if (eTraits.contains(orbType)) {
-						ini *= 1 + ORB_STR_ATK_MULTI[levels[i][ORB_GRADE]] / 100.0;
+						ini += ORB_STR_ATK_MULTI[levels[i][ORB_GRADE]];
 					}
 				}
 		}

@@ -54,7 +54,7 @@ public class EEnemy extends Entity {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
-		if (atk.model instanceof AtkModelUnit) {
+		if (atk.model instanceof AtkModelUnit && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
 			if ((atk.abi & AB_GOOD) != 0)

@@ -1337,7 +1337,7 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INVWARP);
 
 		if (atk.getProc().SEAL.time > 0) {
-			int res = getProc().IMUSEAL.mult;
+			int res = data.getProc().IMUSEAL.mult;
 			if (res < 100) {
 				int val = (int) (atk.getProc().SEAL.time * time);
 				status[P_SEAL][0] = val * (100 - res) / 100;

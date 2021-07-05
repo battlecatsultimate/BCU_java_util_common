@@ -241,7 +241,7 @@ public class StageBasis extends BattleObj {
 			upgradeCost = b.t().getLvCost(work_lv);
 			maxMoney = b.t().getMaxMon(work_lv);
 			if (work_lv == 8)
-				upgradeCost = -1;
+				upgradeCost = -100;
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
