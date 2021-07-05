@@ -14,10 +14,7 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.unit.Level;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 @JsonClass(read = RType.FILL)
@@ -298,6 +295,26 @@ public class Treasure extends Data {
 		return ini * com;
 	}
 
+	public double getGoodAtkWithOrb(int type, MaskUnit data, Level l) {
+		Orb orb = data.getOrb();
+
+		double ini = 1.5 * (1 + 0.2 / 3 * getFruit(type));
+
+		if(orb != null && l.getOrbs() != null) {
+			int[][] orbs = l.getOrbs();
+
+			for(int i = 0; i < orbs.length; i++) {
+				if(orbs[i][ORB_TYPE] == ORB_STRONG && (type & orbs[i][ORB_TRAIT]) != 0) {
+					ini += ORB_STR_ATK_MULTI[orbs[i][ORB_GRADE]];
+				}
+			}
+		}
+
+		double com = 1 + b.getInc(C_GOOD) * 0.01;
+
+		return ini * com;
+	}
+
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
@@ -327,6 +344,26 @@ public class Treasure extends Data {
 	public double getMASSIVEATK(int type) {
 		double ini = 3 + 1.0 / 3 * getFruit(type);
 		double com = 1 + b.getInc(C_MASSIVE) * 0.01;
+		return ini * com;
+	}
+
+	public double getMassiveAtkWithOrb(int type, MaskUnit data, Level l) {
+		Orb orb = data.getOrb();
+
+		double ini = 3 + 1.0 / 3 * getFruit(type);
+
+		if(orb != null && l.getOrbs() != null) {
+			int[][] orbs = l.getOrbs();
+
+			for(int i = 0; i < orbs.length; i++) {
+				if(orbs[i][ORB_TYPE] == ORB_MASSIVE && (type & orbs[i][ORB_TRAIT]) != 0) {
+					ini += ORB_MASSIVE_MULTI[orbs[i][ORB_GRADE]];
+				}
+			}
+		}
+
+		double com = 1 + b.getInc(C_MASSIVE) * 0.01;
+
 		return ini * com;
 	}
 

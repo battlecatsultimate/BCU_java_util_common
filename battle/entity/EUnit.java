@@ -176,12 +176,10 @@ public class EUnit extends Entity {
 	}
 
 	private double getOrbMassive(int type) {
-		//TODO: Finish orb formula
-		return 1.0;
+		return basis.b.t().getMassiveAtkWithOrb(type, (MaskUnit) data, level);
 	}
 
 	private double getOrbGood(int type) {
-		//TODO: Finish orb formula
-		return 1.0;
+		return basis.b.t().getGoodAtkWithOrb(type, (MaskUnit) data, level);
 	}
 }
