@@ -6,22 +6,20 @@ import common.util.stage.Limit;
 
 public class ELineUp extends BattleObj {
 
-	private final StageBasis b;
 	public final int[][] price, cool, maxC;
 
 	protected ELineUp(LineUp lu, StageBasis sb) {
-		b = sb;
 		price = new int[2][5];
 		cool = new int[2][5];
 		maxC = new int[2][5];
-		Limit lim = b.est.lim;
+		Limit lim = sb.est.lim;
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++) {
 				if (lu.fs[i][j] == null) {
 					price[i][j] = -1;
 					continue;
 				}
-				price[i][j] = (int) (lu.efs[i][j].getPrice(b.st.getCont().price) * 100);
+				price[i][j] = (int) (lu.efs[i][j].getPrice(sb.st.getCont().price) * 100);
 				maxC[i][j] = sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn());
 				if (lim == null)
 					continue;
