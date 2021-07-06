@@ -143,7 +143,7 @@ public class StageBasis extends BattleObj {
 	 * returns visual next level.
 	 */
 	public int getUpgradeCost() {
-		return upgradeCost / 100;
+		return upgradeCost == -1 ? -1 : upgradeCost / 100;
 	}
 
 	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
