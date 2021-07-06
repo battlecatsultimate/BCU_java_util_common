@@ -386,6 +386,9 @@ public class Treasure extends Data {
 			int[][] orbs = level.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
+				if (orbs[i].length == 0)
+					continue;
+
 				if(orbs[i][ORB_TYPE] == ORB_RESISTANT && (orbs[i][ORB_TRAIT] & type) != 0) {
 					ini *= 1 - ORB_RESISTANT_MULTI[orbs[i][ORB_GRADE]] / 100.0;
 				}
