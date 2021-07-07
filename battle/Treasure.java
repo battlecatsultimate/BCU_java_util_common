@@ -295,18 +295,22 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public double getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orbs, Level level) {
+	public double getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
 		double ini = traits.isEmpty() ? 1 : 0.5 - 0.1 / 3 * getFruit(traits);
 
-		if(orbs != null && level.getOrbs() != null) {
-			int[][] levels = level.getOrbs();
+		if(orb != null && level.getOrbs() != null) {
+			int[][] orbs = level.getOrbs();
 
-			for(int i = 0; i < levels.length; i++)
-				if (levels[i][ORB_TYPE] == ORB_STRONG) {
-					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
+			for(int i = 0; i < orbs.length; i++) {
+				if (orbs[i].length < ORB_TOT)
+					continue;
+
+				if (orbs[i][ORB_TYPE] == ORB_STRONG) {
+					Trait orbType = Trait.convertType(orbs[i][ORB_TRAIT]).get(0);
 					if (eTraits.contains(orbType))
-						ini *= 1 - ORB_STR_DEF_MULTI[levels[i][ORB_GRADE]] / 100.0;
+						ini *= 1 - ORB_STR_DEF_MULTI[orbs[i][ORB_GRADE]] / 100.0;
 				}
+			}
 		}
 
 		if (ini == 1)
@@ -326,18 +330,22 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public double getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orbs, Level level) {
+	public double getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
 		double ini = traits.isEmpty() ? 1 : 0.25 - 0.05 / 3 * getFruit(traits);
 
-		if(orbs != null && level.getOrbs() != null) {
-			int[][] levels = level.getOrbs();
+		if(orb != null && level.getOrbs() != null) {
+			int[][] orbs = level.getOrbs();
 
-			for(int i = 0; i < levels.length; i++)
-				if (levels[i][ORB_TYPE] == ORB_RESISTANT) {
-					Trait orbType = Trait.convertType(levels[i][ORB_TRAIT]).get(0);
+			for(int i = 0; i < orbs.length; i++) {
+				if (orbs[i].length < ORB_TOT)
+					continue;
+
+				if (orbs[i][ORB_TYPE] == ORB_RESISTANT) {
+					Trait orbType = Trait.convertType(orbs[i][ORB_TRAIT]).get(0);
 					if (eTraits.contains(orbType))
-						ini *= 1 - ORB_RESISTANT_MULTI[levels[i][ORB_GRADE]] / 100.0;
+						ini *= 1 - ORB_RESISTANT_MULTI[orbs[i][ORB_GRADE]] / 100.0;
 				}
+			}
 		}
 
 		if (ini == 1)
