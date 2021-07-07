@@ -30,9 +30,9 @@ public class ELineUp extends BattleObj {
 					price[i][j] = -1;
 				if (lim.line == 1 && i == 1)
 					price[i][j] = -1;
-				if (lim.min > 0 && price[i][j] < lim.min)
+				if (lim.min > 0 && price[i][j] < lim.min * 100)
 					price[i][j] = -1;
-				if (lim.max > 0 && price[i][j] > lim.max)
+				if (lim.max > 0 && price[i][j] > lim.max * 100)
 					price[i][j] = -1;
 				if (lim.group != null && !lim.group.allow(lu.fs[i][j].unit))
 					price[i][j] = -1;

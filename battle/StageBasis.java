@@ -94,7 +94,7 @@ public class StageBasis extends BattleObj {
 		max_can = bas.t().CanonTime(sttime);
 
 		work_lv = 1 + bas.getInc(C_M_LV);
-		money = bas.getInc(C_M_INI);
+		money = bas.getInc(C_M_INI) * 100;
 		can = max_can * bas.getInc(C_C_INI) / 100;
 		canon = new Cannon(this, nyc[0]);
 		conf = ints;
@@ -143,7 +143,7 @@ public class StageBasis extends BattleObj {
 	 * returns visual next level.
 	 */
 	public int getUpgradeCost() {
-		return upgradeCost / 100;
+		return upgradeCost == -1 ? -1 : upgradeCost / 100;
 	}
 
 	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
