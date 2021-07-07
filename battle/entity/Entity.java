@@ -1153,19 +1153,22 @@ public abstract class Entity extends AbEntity {
 				dmg = dmg * (100 - getProc().IMUWAVE.mult) / 100;
 		}
 
-		if ((atk.waveType & WT_MOVE) > 0)
+		if ((atk.waveType & WT_MOVE) > 0) {
 			if (getProc().IMUMOVING.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUMOVING.mult == 100)
 				return;
 			else
 				dmg = dmg * (100 - getProc().IMUMOVING.mult) / 100;
+		}
 
 		if ((atk.waveType & WT_VOLC) > 0) {
-			if (getProc().IMUVOLC.mult > 0) {
+			if (getProc().IMUVOLC.mult > 0)
 				anim.getEff(P_WAVE);
+			if (getProc().IMUVOLC.mult == 100)
 				return;
-			}
+			else
+				dmg = dmg * (100 - getProc().IMUVOLC.mult) / 100;
 		}
 
 		tokens.add(atk);
