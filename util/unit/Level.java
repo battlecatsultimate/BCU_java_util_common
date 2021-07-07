@@ -80,7 +80,7 @@ public class Level implements BattleStatic {
 
 	public void setOrbs(int[][] orb) {
 		if (orb == null) {
-			orbs = orb;
+			orbs = null;
 			return;
 		}
 
