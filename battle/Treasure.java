@@ -304,6 +304,9 @@ public class Treasure extends Data {
 			int[][] orbs = l.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
+				if(orbs[i].length < ORB_TOT)
+					continue;
+
 				if(orbs[i][ORB_TYPE] == ORB_STRONG && (type & orbs[i][ORB_TRAIT]) != 0) {
 					ini += ORB_STR_ATK_MULTI[orbs[i][ORB_GRADE]];
 				}
@@ -319,16 +322,19 @@ public class Treasure extends Data {
 	 * get damage reduce multiplication from strong against ability
 	 */
 	public double getGOODDEF(int type, MaskUnit data, Level level) {
-		Orb orbs = data.getOrb();
+		Orb orb = data.getOrb();
 
 		double ini = 0.5 - 0.1 / 3 * getFruit(type);
 
-		if(orbs != null && level.getOrbs() != null) {
-			int[][] levels = level.getOrbs();
+		if(orb != null && level.getOrbs() != null) {
+			int[][] orbs = level.getOrbs();
 
-			for(int i = 0; i < levels.length; i++) {
-				if(levels[i][ORB_TYPE] == ORB_STRONG && (type & levels[i][ORB_TRAIT]) != 0) {
-					ini *= 1 - ORB_STR_DEF_MULTI[levels[i][ORB_GRADE]] / 100.0;
+			for(int i = 0; i < orbs.length; i++) {
+				if(orbs[i].length < ORB_TOT)
+					continue;
+
+				if(orbs[i][ORB_TYPE] == ORB_STRONG && (type & orbs[i][ORB_TRAIT]) != 0) {
+					ini *= 1 - ORB_STR_DEF_MULTI[orbs[i][ORB_GRADE]] / 100.0;
 				}
 			}
 		}
@@ -356,6 +362,9 @@ public class Treasure extends Data {
 			int[][] orbs = l.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
+				if(orbs[i].length < ORB_TOT)
+					continue;
+
 				if(orbs[i][ORB_TYPE] == ORB_MASSIVE && (type & orbs[i][ORB_TRAIT]) != 0) {
 					ini += ORB_MASSIVE_MULTI[orbs[i][ORB_GRADE]];
 				}
@@ -386,7 +395,7 @@ public class Treasure extends Data {
 			int[][] orbs = level.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
-				if(orbs.length < ORB_TOT)
+				if(orbs[i].length < ORB_TOT)
 					continue;
 
 				if(orbs[i][ORB_TYPE] == ORB_RESISTANT && (orbs[i][ORB_TRAIT] & type) != 0) {
