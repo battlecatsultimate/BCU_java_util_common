@@ -141,8 +141,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	}
 
 	@Override
-	public double getDrop() {
-		return earn;
+	public int getDrop() {
+		return earn * 100;
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 
 	@Override
 	public int getLim() {
-		return limit * 6;
+		return limit;
 	}
 
 }

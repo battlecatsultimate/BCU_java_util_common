@@ -5,6 +5,7 @@ import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelEntity;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackCanon;
 import common.battle.attack.AttackSimple;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
@@ -291,7 +292,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (t == HEAL) {
-				EffAnim<DefEff> eff = effas().A_HEAL;
+				EffAnim<DefEff> eff = dire == -1 ? effas().A_HEAL : effas().A_E_HEAL;
 
 				effs[A_HEAL] = eff.getEAnim(DefEff.DEF);
 			}
@@ -505,7 +506,6 @@ public abstract class Entity extends AbEntity {
 
 		private void setUp() {
 			atkTime = e.data.getAnimLen();
-			loop--;
 			preID = 0;
 			preTime = pres[0] - 1;
 			e.anim.setAnim(UType.ATK, true);
@@ -531,6 +531,7 @@ public abstract class Entity extends AbEntity {
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
+						loop--;
 						e.waitTime = Math.max(e.data.getTBA() - 1, 0);
 					}
 				}
@@ -1224,7 +1225,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		double f = getFruit(atk.type, 1);
-		double time = 1 + f * 0.2 / 3;
+		double time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
 		if (atk.type < 0 || atk.canon != -2)
 			dist = time = 1;
@@ -1259,7 +1260,7 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 		}
 		if (atk.getProc().CURSE.time > 0) {
-			int val = atk.getProc().CURSE.time;
+			int val = (int) (atk.getProc().CURSE.time * time);
 			int rst = getProc().IMUCURSE.mult;
 			val = val * (100 - rst) / 100;
 			status[P_CURSE][0] = Math.max(status[P_CURSE][0], val);
@@ -1304,8 +1305,6 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().POISON.time > 0)
 			if ((getAbi() & AB_POII) == 0 || atk.getProc().POISON.damage < 0) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
-				if (ws.type.damage_type == 1)
-					ws.damage = getDamage(atk, ws.damage);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
@@ -1369,7 +1368,6 @@ public abstract class Entity extends AbEntity {
 		kbTime = -1;
 		atkm.stopAtk();
 		anim.kill();
-
 	}
 
 	/**
@@ -1518,6 +1516,9 @@ public abstract class Entity extends AbEntity {
 			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
+			if(data.isOmni()) {
+				System.out.println(!acted+" | "+binatk+" | "+!(isBase && health <= 0));
+			}
 			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
 

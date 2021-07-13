@@ -38,11 +38,11 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(boolean atk) {
 		super.kill(atk);
-		if (!basis.st.trail) {
+		if (!basis.st.trail && !atk) {
 			double mul = basis.b.t().getDropMulti();
 			if (tempearn)
 				mul *= 2;
-			basis.mon += mul * ((MaskEnemy) data).getDrop();
+			basis.money += mul * ((MaskEnemy) data).getDrop();
 		}
 	}
 
@@ -54,9 +54,9 @@ public class EEnemy extends Entity {
 		if (atk.model instanceof AtkModelUnit) {
 			int overlap = type & atk.type;
 			if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODATK(overlap);
+				ans *= EUnit.OrbHandler.getOrbGood(atk, overlap, basis.b.t());
 			if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)
-				ans *= basis.b.t().getMASSIVEATK(overlap);
+				ans *= EUnit.OrbHandler.getOrbMassive(atk, overlap, basis.b.t());
 			if (overlap != 0 && (atk.abi & AB_MASSIVES) != 0)
 				ans *= basis.b.t().getMASSIVESATK(overlap);
 		}

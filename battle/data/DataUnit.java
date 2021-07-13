@@ -149,7 +149,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				proc.IMUVOLC.mult = 100;
 			proc.CURSE.prob = ints[92];
 			proc.CURSE.time = ints[93];
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException ignored) {
+
 		}
 
 		type = t;

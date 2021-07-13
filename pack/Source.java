@@ -258,8 +258,13 @@ public abstract class Source {
 			this.anim = animCI;
 		}
 
-		public void delete() {
-			anim.unload();
+		/**
+		 * Delete animation
+		 * @param unload If this variable is true, it means that this method is called for completely deleting process
+		 */
+		public void delete(boolean unload) {
+			if(unload)
+				anim.unload();
 
 			CommonStatic.ctx.noticeErr(
 					() -> Context.delete(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/animations/" + id.id)),

@@ -45,8 +45,8 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	}
 
 	@Override
-	public double getDrop() {
-		return drop;
+	public int getDrop() {
+		return drop * 100;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		if (de instanceof MaskEnemy) {
 			MaskEnemy me = (MaskEnemy) de;
 			star = me.getStar();
-			drop = (int) me.getDrop();
+			drop = me.getDrop() / 100;
 			limit = me.getLim();
 		}
 	}

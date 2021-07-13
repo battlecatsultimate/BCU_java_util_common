@@ -13,14 +13,19 @@ import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.IOType;
 import common.pack.Context;
 import common.pack.Context.ErrType;
+import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.pack.VerFixer;
 import common.pack.VerFixer.VerFixerException;
 import common.system.Copable;
+import common.util.unit.Form;
+import common.util.unit.Level;
+import common.util.unit.Unit;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonClass
@@ -38,6 +43,68 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public static List<BasisSet> list() {
 		def();
 		return listRaw();
+	}
+
+	/**
+	 * Synchronize lineup's orb data with stat change
+	 * @param u Current unit, must be custom unit or it won't do anything
+	 */
+	public static void synchronizeOrb(Unit u) {
+		//No need to change BC unit's orb status
+		if (u == null || u.id.pack.equals(Identifier.DEF))
+			return;
+
+		for(BasisSet set : list()) {
+			for(BasisLU lu : set.lb) {
+				for(Identifier<Unit> id : lu.lu.map.keySet()) {
+					if(id.equals(u.id)) {
+						Level l = lu.lu.map.get(id);
+
+						if(l.getOrbs() != null) {
+							int[][] orb = l.getOrbs();
+
+							ArrayList<int[]> filteredOrb = new ArrayList<>();
+
+							boolean str = false;
+							boolean mas = false;
+							boolean res = false;
+
+							for(Form f : u.forms) {
+								str |= (f.du.getAbi() & AB_GOOD) != 0;
+								mas |= (f.du.getAbi() & AB_MASSIVE) != 0;
+								res |= (f.du.getAbi() & AB_RESIST) != 0;
+							}
+
+							for(int[] o : orb) {
+								if(conditionalOrb(o[ORB_TYPE])) {
+									if(o[ORB_TYPE] == ORB_STRONG && str) {
+										filteredOrb.add(o);
+									} else if(o[ORB_TYPE] == ORB_MASSIVE && mas) {
+										filteredOrb.add(o);
+									} else if(o[ORB_TYPE] == ORB_RESISTANT && res) {
+										filteredOrb.add(o);
+									}
+								} else {
+									filteredOrb.add(o);
+								}
+							}
+
+							if(filteredOrb.size() == 0) {
+								l.setOrbs(null);
+							} else {
+								int[][] newOrb = new int[filteredOrb.size()][];
+
+								for(int i = 0; i < newOrb.length; i++) {
+									newOrb[i] = filteredOrb.get(i);
+								}
+
+								l.setOrbs(newOrb);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public static void read() {
@@ -94,6 +161,10 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 			CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to save basis data");
 		}
 
+	}
+
+	private static boolean conditionalOrb(int type) {
+		return type == ORB_STRONG || type == ORB_MASSIVE || type == ORB_RESISTANT;
 	}
 
 	private static List<BasisSet> listRaw() {

@@ -117,7 +117,7 @@ public class AnimCE extends AnimCI {
 	public void delete() {
 		map().remove(id.id);
 		AnimGroup.workspaceGroup.renewGroup();
-		new SourceAnimSaver(id, this).delete();
+		new SourceAnimSaver(id, this).delete(true);
 	}
 
 	public String getUndo() {
@@ -154,7 +154,7 @@ public class AnimCE extends AnimCI {
 		map().remove(id.id);
 		AnimGroup.workspaceGroup.renewGroup();
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
-		saver.delete();
+		saver.delete(true);
 		for (UserPack pack : UserProfile.getUserPacks())
 			if (pack.editable) {
 				List<Animable<AnimU<?>, UType>> list = new ArrayList<>();
@@ -243,7 +243,7 @@ public class AnimCE extends AnimCI {
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().remove(id.id);
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
-		saver.delete();
+		saver.delete(false);
 		id.id = str;
 		Workspace.validate(Source.BasePath.ANIM, id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
