@@ -30,7 +30,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 
 	public static final String NONC = "NONC_";
 
-	private static final Class<?>[] EXCLUDE = { Number.class, String.class, Boolean.class, BattleStatic.class, Trait.class, Proc.ProcItem.class, Proc.IntType.class};
+	private static final Class<?>[] EXCLUDE = { Number.class, String.class, Boolean.class, BattleStatic.class, Trait.class, Enum.class};
 
 	private static final Set<Class<?>> OLD = new HashSet<>();
 	private static final Set<Class<?>> UNCHECKED = new HashSet<>();

@@ -72,9 +72,9 @@ public class EEnemy extends Entity {
 			ans *= basis.b.t().getEKAtk();
 		if (atk.canon == 5)
 			if ((touchable() & TCH_UG) > 0)
-				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND) / 1000);
+				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND));
 			else
-				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_SURFACE) / 1000);
+				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_SURFACE));
 		ans = critCalc(data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL)), ans, atk);
 
 		// Perform Orb
