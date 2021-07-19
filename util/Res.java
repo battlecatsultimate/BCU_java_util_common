@@ -77,7 +77,7 @@ public class Res extends ImgCore {
 		uni.setCut(aux.unicut);
 		aux.slot[0] = uni;
 
-		aux.ico[0] = new VImg[6];
+		aux.ico[0] = new VImg[7];
 		aux.ico[1] = new VImg[4];
 		aux.ico[0][0] = new VImg("./org/page/foreground.png");
 		aux.ico[0][1] = new VImg("./org/page/starFG.png");
@@ -85,6 +85,7 @@ public class Res extends ImgCore {
 		aux.ico[0][3] = new VImg("./org/page/TFBG.png");
 		aux.ico[0][4] = new VImg("./org/page/glow.png");
 		aux.ico[0][5] = new VImg("./org/page/EFFG.png");
+		aux.ico[0][6] = new VImg("./org/page/glow2.png");
 		aux.ico[1][0] = new VImg("./org/page/uni_f.png");
 		aux.ico[1][1] = new VImg("./org/page/uni_c.png");
 		aux.ico[1][2] = new VImg("./org/page/uni_s.png");
