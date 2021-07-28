@@ -1025,7 +1025,7 @@
             "dmg" : {
                 "name" : "regen",
                 "tooltip" : "Percentage of the base HP it regenerates upon HB"
-            },
+            }
         }
     }
 }
