@@ -1011,5 +1011,21 @@
                 "tooltip" : "When this is checked, procs from nullified attacks will also be negated. Only works if 'nullify damage' is checked"
             }
         }
+    },
+    "DSHIELD" : {
+        "abbr_name" : "D.Shield",
+        "full_name" : "Devil Shield",
+        "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
+        "format" : "Demonic Shield (_left)Shield has (health) HP, regenerates with (regen)% of it's original HP when unit gets hitbacked(_right)",
+        "class" : {
+            "prob" : {
+                "name" : "health",
+                "tooltip" : null
+            },
+            "dmg" : {
+                "name" : "regen",
+                "tooltip" : "Percentage of the base HP it regenerates upon HB"
+            },
+        }
     }
 }

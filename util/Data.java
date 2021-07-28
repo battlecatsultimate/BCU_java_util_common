@@ -391,6 +391,14 @@ public class Data {
 			public TYPE type = new TYPE();
 		}
 
+		@JsonClass(noTag = NoTag.LOAD) // Devil Shield
+		public static class DSHIELD extends ProcItem {
+			@Order(0)
+			public int health;
+			@Order(1)
+			public int regen;
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class SPEED extends ProcItem {
 			@Order(0)
@@ -639,6 +647,8 @@ public class Data {
 		public final BURROW BURROW = new BURROW();
 		@Order(45)
 		public final REVIVE REVIVE = new REVIVE();
+		@Order(46)
+		public final DSHIELD DSHIELD = new DSHIELD();
 
 		@Override
 		public Proc clone() {
