@@ -782,11 +782,12 @@ public class Data {
 	public static final int TB_ANGEL = 16;
 	public static final int TB_ALIEN = 32;
 	public static final int TB_ZOMBIE = 64;
-	public static final int TB_RELIC = 128;
-	public static final int TB_WHITE = 256;
-	public static final int TB_EVA = 512;
-	public static final int TB_WITCH = 1024;
-	public static final int TB_INFH = 2048;
+	public static final int TB_DEVIL = 128;
+	public static final int TB_RELIC = 256;
+	public static final int TB_WHITE = 512;
+	public static final int TB_EVA = 1024;
+	public static final int TB_WITCH = 2048;
+	public static final int TB_INFH = 4096;
 
 	// trait index
 	public static final int TRAIT_RED = 0;
@@ -796,12 +797,13 @@ public class Data {
 	public static final int TRAIT_ANGEL = 4;
 	public static final int TRAIT_ALIEN = 5;
 	public static final int TRAIT_ZOMBIE = 6;
-	public static final int TRAIT_RELIC = 7;
-	public static final int TRAIT_WHITE = 8;
-	public static final int TRAIT_EVA = 9;
-	public static final int TRAIT_WITCH = 10;
-	public static final int TRAIT_INFH = 11;
-	public static final int TRAIT_TOT = 12;
+	public static final int TRAIT_DEVIL = 7;
+	public static final int TRAIT_RELIC = 8;
+	public static final int TRAIT_WHITE = 9;
+	public static final int TRAIT_EVA = 10;
+	public static final int TRAIT_WITCH = 11;
+	public static final int TRAIT_INFH = 12;
+	public static final int TRAIT_TOT = 13;
 
 	// treasure
 	public static final int T_RED = 0;
