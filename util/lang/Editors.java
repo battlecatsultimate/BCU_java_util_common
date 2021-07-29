@@ -472,6 +472,17 @@ public class Editors {
 		map().put("IMUVOLC", imu);
 
 		map().put("IMUSUMMON", imu);
+
+		map().put("DEMONSHIELD", new EditControl<>(Proc.DSHIELD.class, (t) -> {
+			t.hp = Math.max(0, t.hp);
+
+			if(t.hp == 0)
+				t.regen = 0;
+			else
+				t.regen = Math.max(0, t.regen);
+		}));
+
+		map().put("SHIELDBREAK", prob);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {
