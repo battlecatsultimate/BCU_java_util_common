@@ -984,7 +984,8 @@ public class Data {
 	 * others
 	 */
 	public static final int P_REVIVE = 45;
-	public static final int PROC_TOT = 46;// 46
+	public static final int P_DSHIELD = 46;
+	public static final int PROC_TOT = 47;// 46
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {

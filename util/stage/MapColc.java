@@ -94,6 +94,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				sm.retyp = Integer.parseInt(strs[7]);
 				sm.pllim = Integer.parseInt(strs[8]);
 				sm.name += strs[10];
+				sm.starMask = Integer.parseInt(strs[12]);
 			}
 		}
 

@@ -78,6 +78,8 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	@JsonField
 	public int[] stars = new int[] { 100 };
 
+	public int starMask = 0;
+
 	@JCConstructor
 	public StageMap() {
 		this.id = null;
