@@ -1035,6 +1035,7 @@ public class Data {
 			true,  //damage cap
 			true,  //burrow
 			true,  //revive
+			true,  //demon barrier
 	};
 
 	public static final int WT_WAVE = 1;
