@@ -155,6 +155,10 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		if(getCont() instanceof PackData.UserPack) {
 			PackData.UserPack pack = (PackData.UserPack) getCont();
 
+			if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
+				enemy.type = Data.reorderTrait(enemy.type);
+			}
+
 			if (UserProfile.isOlderPack(pack, "0.5.2.0") && enemy.tba != 0) {
 				enemy.tba += enemy.getPost() + 1;
 			}
@@ -167,7 +171,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.5.5.1")) {
-				enemy.traits = Trait.convertType(Data.reorderTrait(enemy.type));
+				enemy.traits = Trait.convertType(enemy.type);
 				Proc proc = enemy.getProc();
 				if ((enemy.abi & (1 << 18)) != 0) //Seal Immunity
 					proc.IMUSEAL.mult = 100;

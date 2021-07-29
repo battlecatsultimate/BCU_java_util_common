@@ -142,6 +142,10 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			if(u.getCont() instanceof PackData.UserPack) {
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
 
+				if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
+					form.type = Data.reorderTrait(form.type);
+				}
+
 				if (UserProfile.isOlderPack(pack, "0.5.2.0") && form.tba != 0) {
 					form.tba += form.getPost() + 1;
 				}
