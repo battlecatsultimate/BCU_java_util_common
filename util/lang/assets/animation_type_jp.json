@@ -64,5 +64,12 @@
   },
   "DefEff": {
     "DEF": "デフォルト"
+  },
+  "ShieldEff": {
+    "FULL": "フル",
+    "HALF": "半分",
+    "BROKEN": "ブロークン",
+    "BREAKER": "ブレーカー",
+    "REGENERATION": "再生"
   }
 }

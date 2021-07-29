@@ -1012,19 +1012,54 @@
             }
         }
     },
-    "DSHIELD" : {
+    "BARRIER" : {
+        "abbr_name" : "barrier",
+        "full_name" : "Barrier",
+        "tooltip" : "Blocks all damage lower than the barrier's HP. Will break if an attack deals more damage than it's HP",
+        "format" : ["Barrier (_left)Barrier has (health) HP",
+            "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
+            "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
+            ],
+        "class" : {
+            "health" : {
+                "name" : "Health",
+                "tooltip" : "Health of the barrier"
+            },
+            "regentime" : {
+                "name" : "Regeneration Time",
+                "tooltip" : "The entity's barrier will regenerate after a period of time passes. Set to 0 to deactivate this ability."
+            },
+            "timeout" : {
+                "name" : "Timeout",
+                "tooltip" : "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
+            }
+        }
+    },
+    "DEMONSHIELD" : {
         "abbr_name" : "D.Shield",
         "full_name" : "Devil Shield",
         "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
-        "format" : "Demonic Shield (_left)Shield has (health) HP, regenerates with (regen)% of it's original HP when unit gets hitbacked(_right)",
+        "format" : "Demonic Shield (_left)Shield has (hp) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
         "class" : {
-            "prob" : {
+            "hp" : {
                 "name" : "health",
-                "tooltip" : null
+                "tooltip" : "Health of the shield"
             },
-            "dmg" : {
+            "regen" : {
                 "name" : "regen",
                 "tooltip" : "Percentage of the base HP it regenerates upon HB"
+            }
+        }
+    },
+    "SHIELDBREAK" : {
+        "abbr_name": "shield breaker",
+        "full_name": "Shield Breaker",
+        "tooltip": "Directly breaks demon shield. Be aware that this doesn't prevent shield from regenerating when hitbacked.",
+        "format": "(prob)% chance to break demon shield",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
             }
         }
     }

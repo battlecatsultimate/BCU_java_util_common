@@ -152,7 +152,6 @@ public abstract class CustomEntity extends DataEntity {
 		loop = de.getAtkLoop();
 		traits = new ArrayList<>(de.getTraits());
 		width = de.getWidth();
-		shield = de.getShield();
 		tba = de.getTBA();
 		touch = de.getTouch();
 		death = de.getDeathAnim();
@@ -288,7 +287,7 @@ public abstract class CustomEntity extends DataEntity {
 		abi = is.nextInt();
 		traits = Trait.convertType(Data.reorderTrait(is.nextInt()));
 		width = is.nextInt();
-		shield = is.nextInt();
+		int sh = is.nextInt();
 		tba = is.nextInt();
 		base = is.nextInt();
 		touch = is.nextInt();
@@ -309,5 +308,7 @@ public abstract class CustomEntity extends DataEntity {
 			rev = new AtkDataModel(this, is);
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
+
+		getProc().BARRIER.health = sh;
 	}
 }

@@ -57,11 +57,6 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	}
 
 	@Override
-	public int getShield() {
-		return shield;
-	}
-
-	@Override
 	public int getSpeed() {
 		return speed;
 	}

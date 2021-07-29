@@ -391,10 +391,20 @@ public class Data {
 			public TYPE type = new TYPE();
 		}
 
+		@JsonClass(noTag = NoTag.LOAD) // Starred Barrier
+		public static class BARRIER extends ProcItem {
+			@Order(0)
+			public int health;
+			@Order(1)
+			public int regentime;
+			@Order(2)
+			public int timeout;
+		}
+
 		@JsonClass(noTag = NoTag.LOAD) // Devil Shield
 		public static class DSHIELD extends ProcItem {
 			@Order(0)
-			public int health;
+			public int hp;
 			@Order(1)
 			public int regen;
 		}
@@ -572,83 +582,87 @@ public class Data {
 		@Order(7)
 		public final PROB BREAK = new PROB();
 		@Order(8)
-		public final PTD WARP = new PTD();
+		public final PROB SHIELDBREAK = new PROB();
 		@Order(9)
-		public final PT CURSE = new PT();
+		public final PTD WARP = new PTD();
 		@Order(10)
-		public final PT SEAL = new PT();
+		public final PT CURSE = new PT();
 		@Order(11)
-		public final SUMMON SUMMON = new SUMMON();
+		public final PT SEAL = new PT();
 		@Order(12)
-		public final MOVEWAVE MOVEWAVE = new MOVEWAVE();
+		public final SUMMON SUMMON = new SUMMON();
 		@Order(13)
-		public final VOLC VOLC = new VOLC();
+		public final MOVEWAVE MOVEWAVE = new MOVEWAVE();
 		@Order(14)
-		public final PT TIME = new PT();
+		public final VOLC VOLC = new VOLC();
 		@Order(15)
-		public final PROB SNIPER = new PROB();
+		public final PT TIME = new PT();
 		@Order(16)
-		public final THEME THEME = new THEME();
+		public final PROB SNIPER = new PROB();
 		@Order(17)
-		public final PROB BOSS = new PROB();
+		public final THEME THEME = new THEME();
 		@Order(18)
-		public final POISON POISON = new POISON();
+		public final PROB BOSS = new PROB();
 		@Order(19)
-		public final PM SATK = new PM();
+		public final POISON POISON = new POISON();
 		@Order(20)
-		public final PM POIATK = new PM();
+		public final PM SATK = new PM();
 		@Order(21)
-		public final ARMOR ARMOR = new ARMOR();
+		public final PM POIATK = new PM();
 		@Order(22)
-		public final SPEED SPEED = new SPEED();
+		public final ARMOR ARMOR = new ARMOR();
 		@Order(23)
-		public final STRONG STRONG = new STRONG();
+		public final SPEED SPEED = new SPEED();
 		@Order(24)
-		public final PROB LETHAL = new PROB();
+		public final STRONG STRONG = new STRONG();
 		@Order(25)
-		public final IMU IMUKB = new IMU();
+		public final PROB LETHAL = new PROB();
 		@Order(26)
-		public final IMU IMUSTOP = new IMU();
+		public final IMU IMUKB = new IMU();
 		@Order(27)
-		public final IMU IMUSLOW = new IMU();
+		public final IMU IMUSTOP = new IMU();
 		@Order(28)
-		public final WAVEI IMUWAVE = new WAVEI();
+		public final IMU IMUSLOW = new IMU();
 		@Order(29)
-		public final WAVEI IMUVOLC = new WAVEI();
+		public final WAVEI IMUWAVE = new WAVEI();
 		@Order(30)
-		public final IMUAD IMUWEAK = new IMUAD();
+		public final WAVEI IMUVOLC = new WAVEI();
 		@Order(31)
-		public final IMU IMUWARP = new IMU();
+		public final IMUAD IMUWEAK = new IMUAD();
 		@Order(32)
-		public final IMU IMUCURSE = new IMU();
+		public final IMU IMUWARP = new IMU();
 		@Order(33)
-		public final IMU IMUSEAL = new IMU();
+		public final IMU IMUCURSE = new IMU();
 		@Order(34)
-		public final IMU IMUSUMMON = new IMU();
+		public final IMU IMUSEAL = new IMU();
 		@Order(35)
-		public final IMUAD IMUPOI = new IMUAD();
+		public final IMU IMUSUMMON = new IMU();
 		@Order(36)
-		public final IMU IMUPOIATK = new IMU();
+		public final IMUAD IMUPOI = new IMUAD();
 		@Order(37)
-		public final WAVEI IMUMOVING = new WAVEI();
+		public final IMU IMUPOIATK = new IMU();
 		@Order(38)
-		public final IMUAD IMUARMOR = new IMUAD();
+		public final WAVEI IMUMOVING = new WAVEI();
 		@Order(39)
-		public final IMUAD IMUSPEED = new IMUAD();
+		public final IMUAD IMUARMOR = new IMUAD();
 		@Order(40)
-		public final IMU CRITI = new IMU();
+		public final IMUAD IMUSPEED = new IMUAD();
 		@Order(41)
-		public final PT IMUATK = new PT();
+		public final IMU CRITI = new IMU();
 		@Order(42)
-		public final DMGCUT DMGCUT = new DMGCUT();
+		public final PT IMUATK = new PT();
 		@Order(43)
-		public final DMGCAP DMGCAP = new DMGCAP();
+		public final DMGCUT DMGCUT = new DMGCUT();
 		@Order(44)
-		public final BURROW BURROW = new BURROW();
+		public final DMGCAP DMGCAP = new DMGCAP();
 		@Order(45)
-		public final REVIVE REVIVE = new REVIVE();
+		public final BURROW BURROW = new BURROW();
 		@Order(46)
-		public final DSHIELD DSHIELD = new DSHIELD();
+		public final REVIVE REVIVE = new REVIVE();
+		@Order(47)
+		public final BARRIER BARRIER = new BARRIER();
+		@Order(48)
+		public final DSHIELD DEMONSHIELD = new DSHIELD();
 
 		@Override
 		public Proc clone() {
@@ -775,6 +789,10 @@ public class Data {
 	public static final int SE_POISON = 110;
 	public static final int SE_VOLC_START = 111;
 	public static final int SE_VOLC_LOOP = 112;
+	public static final int SE_SHIELD_HIT = 136;
+	public static final int SE_SHIELD_BROKEN = 137;
+	public static final int SE_SHIELD_REGEN = 138;
+	public static final int SE_SHIELD_BREAKER = 139;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -792,12 +810,12 @@ public class Data {
 	public static final int TB_ANGEL = 16;
 	public static final int TB_ALIEN = 32;
 	public static final int TB_ZOMBIE = 64;
-	public static final int TB_DEVIL = 128;
-	public static final int TB_RELIC = 256;
-	public static final int TB_WHITE = 512;
-	public static final int TB_EVA = 1024;
-	public static final int TB_WITCH = 2048;
-	public static final int TB_INFH = 4096;
+	public static final int TB_RELIC = 128;
+	public static final int TB_WHITE = 256;
+	public static final int TB_EVA = 512;
+	public static final int TB_WITCH = 1024;
+	public static final int TB_INFH = 2048;
+	public static final int TB_DEMON = 4096;
 
 	// trait index
 	public static final int TRAIT_RED = 0;
@@ -807,7 +825,7 @@ public class Data {
 	public static final int TRAIT_ANGEL = 4;
 	public static final int TRAIT_ALIEN = 5;
 	public static final int TRAIT_ZOMBIE = 6;
-	public static final int TRAIT_DEVIL = 7;
+	public static final int TRAIT_DEMON = 7;
 	public static final int TRAIT_RELIC = 8;
 	public static final int TRAIT_WHITE = 9;
 	public static final int TRAIT_EVA = 10;
@@ -912,70 +930,71 @@ public class Data {
 	public static final int P_MINIWAVE = 5;
 	public static final int P_WEAK = 6;
 	public static final int P_BREAK = 7;
-	public static final int P_WARP = 8;
-	public static final int P_CURSE = 9;
-	public static final int P_SEAL = 10;
+	public static final int P_SHIELDBREAK = 8;
+	public static final int P_WARP = 9;
+	public static final int P_CURSE = 10;
+	public static final int P_SEAL = 11;
 	/**
 	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time
 	 *
 	 * +0: direct, +1: warp, +2:burrow, +4:disregard limit, +8: fix buff, +16: same
 	 * health, +32: diff layer, +64 on hit, +128 on kill
 	 */
-	public static final int P_SUMMON = 11;
+	public static final int P_SUMMON = 12;
 	/**
 	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv
 	 */
-	public static final int P_MOVEWAVE = 12;
-	public static final int P_VOLC = 13;
-	public static final int P_TIME = 14;
-	public static final int P_SNIPER = 15;
+	public static final int P_MOVEWAVE = 13;
+	public static final int P_VOLC = 14;
+	public static final int P_TIME = 15;
+	public static final int P_SNIPER = 16;
 	/**
 	 * 0:prob, 1:time (-1 means infinite), 2:ID, 3: type 0 : Change only BG 1 : Kill
 	 * all and change BG
 	 */
-	public static final int P_THEME = 16;
-	public static final int P_BOSS = 17;
+	public static final int P_THEME = 17;
+	public static final int P_BOSS = 18;
 	/**
 	 * 0:prob, 1:time, 2:dmg, 3:itv, 4: conf +0: normal, +1: of total, +2: of
 	 * current, +3: of lost, +4: unstackable
 	 */
-	public static final int P_POISON = 18;
-	public static final int P_SATK = 19;
+	public static final int P_POISON = 19;
+	public static final int P_SATK = 20;
 	/**
 	 * official poison
 	 */
-	public static final int P_POIATK = 20;
+	public static final int P_POIATK = 21;
 	/**
 	 * Make target receive n% damage more/less 0: chance, 1: duration, 2: debuff
 	 */
-	public static final int P_ARMOR = 21;
+	public static final int P_ARMOR = 22;
 	/**
 	 * Make target move faster/slower 0: chance, 1: duration, 2: speed, 3: type type
 	 * 0: Current speed * (100 + n)% type 1: Current speed + n type 2: Fixed speed
 	 */
-	public static final int P_SPEED = 22;
-	public static final int P_STRONG = 23;
-	public static final int P_LETHAL = 24;
-	public static final int P_IMUKB = 25;
-	public static final int P_IMUSTOP = 26;
-	public static final int P_IMUSLOW = 27;
-	public static final int P_IMUWAVE = 28;
-	public static final int P_IMUVOLC = 29;
-	public static final int P_IMUWEAK = 30;
-	public static final int P_IMUWARP = 31;
-	public static final int P_IMUCURSE = 32;
-	public static final int P_IMUSEAL = 33;
-	public static final int P_IMUSUMMON = 34;
-	public static final int P_IMUPOI = 35;
-	public static final int P_IMUPOIATK = 36;
-	public static final int P_IMUMOVING = 37;
-	public static final int P_IMUARMOR = 38;
-	public static final int P_IMUSPEED = 39;
-	public static final int P_CRITI = 40;
-	public static final int P_IMUATK = 41;
-	public static final int P_DMGCUT = 42;
-	public static final int P_DMGCAP = 43;
-	public static final int P_BURROW = 44;
+	public static final int P_SPEED = 23;
+	public static final int P_STRONG = 24;
+	public static final int P_LETHAL = 25;
+	public static final int P_IMUKB = 26;
+	public static final int P_IMUSTOP = 27;
+	public static final int P_IMUSLOW = 28;
+	public static final int P_IMUWAVE = 29;
+	public static final int P_IMUVOLC = 30;
+	public static final int P_IMUWEAK = 31;
+	public static final int P_IMUWARP = 32;
+	public static final int P_IMUCURSE = 33;
+	public static final int P_IMUSEAL = 34;
+	public static final int P_IMUSUMMON = 35;
+	public static final int P_IMUPOI = 36;
+	public static final int P_IMUPOIATK = 37;
+	public static final int P_IMUMOVING = 38;
+	public static final int P_IMUARMOR = 39;
+	public static final int P_IMUSPEED = 40;
+	public static final int P_CRITI = 41;
+	public static final int P_IMUATK = 42;
+	public static final int P_DMGCUT = 43;
+	public static final int P_DMGCAP = 44;
+	public static final int P_BURROW = 45;
 	/**
 	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
 	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
@@ -983,9 +1002,10 @@ public class Data {
 	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
 	 * others
 	 */
-	public static final int P_REVIVE = 45;
-	public static final int P_DSHIELD = 46;
-	public static final int PROC_TOT = 47;// 46
+	public static final int P_REVIVE = 46;
+	public static final int P_BARRIER = 47;
+	public static final int P_DEMONSHIELD = 48;
+	public static final int PROC_TOT = 49;// 46
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -997,6 +1017,7 @@ public class Data {
 			false, //miniwave
 			false, //weaken
 			false, //barrier breaker
+			false, //shield breaker
 			false, //warp
 			false, //curse
 			false, //seal
@@ -1035,6 +1056,7 @@ public class Data {
 			true,  //damage cap
 			true,  //burrow
 			true,  //revive
+			true,  //barrier
 			true,  //demon barrier
 	};
 
@@ -1095,10 +1117,10 @@ public class Data {
 			{ 4, TRAIT_FLOAT, 0 }, // 34: targeting floating
 			{ 4, TRAIT_BLACK, 0 }, // 35: targeting black
 			{ 4, TRAIT_METAL, 0 }, // 36: targeting metal
-			{ 4, TRAIT_ANGEL }, // 37: targeting angel
-			{ 4, TRAIT_ALIEN }, // 38: targeting alien
-			{ 4, TRAIT_ZOMBIE }, // 39: targeting zombie
-			{ 4, TRAIT_RELIC }, // 40: targeting relic
+			{ 4, TRAIT_ANGEL, 0 }, // 37: targeting angel
+			{ 4, TRAIT_ALIEN, 0 }, // 38: targeting alien
+			{ 4, TRAIT_ZOMBIE, 0 }, // 39: targeting zombie
+			{ 4, TRAIT_RELIC, 0 }, // 40: targeting relic
 			{ 4, TRAIT_WHITE, 0 }, // 41: targeting white
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
@@ -1115,6 +1137,7 @@ public class Data {
 			{ 0, P_IMUVOLC }, // 54: resist to surge ?
 			{ 3, P_IMUVOLC }, // 55: immune to surge
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
+			{ 4, TRAIT_DEMON, 0 } // 57: Targetting Devil
 			};
 
 	// foot icon index used in battle
@@ -1125,6 +1148,10 @@ public class Data {
 	public static final int BREAK_ATK = -5;
 	public static final int BREAK_NON = -6;
 	public static final int HEAL = -7;
+	public static final int SHIELD_HIT = -8;
+	public static final int SHIELD_BROKEN = -9;
+	public static final int SHIELD_REGEN = -10;
+	public static final int SHIELD_BREAKER = -11;
 
 	// Combo index
 	public static final int C_ATK = 0;
@@ -1213,8 +1240,10 @@ public class Data {
 	public static final int A_WHITE_SMOKE = 56;
 	public static final int A_HEAL = 57;
 	public static final int A_E_HEAL = 58;
+	public static final int A_DEMON_SHIELD = 59;
+	public static final int A_E_DEMON_SHIELD = 60;
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 59;
+	public static final int A_TOT = 61;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;

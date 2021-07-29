@@ -975,5 +975,56 @@
         "tooltip": "これをチェックすると、無効化された攻撃による能力も無効化されます。"
       }
     }
+  },
+  "BARRIER" : {
+    "abbr_name" : "バリア",
+    "full_name" : "バリア",
+    "tooltip" : "バリアのHP以下のダメージを全て遮断します。HP以上のダメージを与える攻撃を受けると壊れます。",
+    "format" : ["バリア(_left)HP:(health)",
+      "[(regentime>0){, 壊されても(_dispTime(regentime))後には再生されます}]",
+      "[(timeout>0){, (_dispTime(timeout))後にバリアが切れる}](_right)"
+    ],
+    "class" : {
+      "health" : {
+        "name" : "HP",
+        "tooltip" : "バリアのHP"
+      },
+      "regentime" : {
+        "name" : "再生時期",
+        "tooltip" : "時間が経つとバリアが再生されます。 0に設定すると、この能力は無効になります。"
+      },
+      "timeout" : {
+        "name" : "タイムアウト",
+        "tooltip" : "時間が経つとバリアがブレイクされます。 0に設定すると、この能力は無効になります。"
+      }
+    }
+  },
+  "DSHIELD" : {
+    "abbr_name" : "シールド",
+    "full_name" : "悪魔シールド",
+    "tooltip" : "一定量のダメージを遮断します。バリアとは異なり、ダメージを無効化するのではなく、吸収します。",
+    "format" : "悪魔シールド(_left)HP:(hp),KB再生HP:(regen)%(_right)",
+    "class" : {
+      "hp" : {
+        "name" : "HP",
+        "tooltip" : "シールドのHP"
+      },
+      "regen" : {
+        "name" : "再生",
+        "tooltip" : "HB時に回復する基本HPの割合"
+      }
+    }
+  },
+  "SHIELDBREAK" : {
+    "abbr_name": "シールドブレイク",
+    "full_name": "悪魔シールドブレイカー",
+    "tooltip": "悪魔のシールドを直接破壊する。ヒットバックしたときのシールドの再生を防ぐことはできないので注意が必要。",
+    "format": "(prob)%の確率で悪魔シールドを破壊する",
+    "class": {
+      "prob": {
+        "name": "確率",
+        "tooltip": null
+      }
+    }
   }
 }

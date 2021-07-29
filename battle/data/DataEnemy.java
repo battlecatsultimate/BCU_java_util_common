@@ -119,7 +119,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		abi0 = ints[59];
 		abi1 = ints[60];
 		abi2 = ints[61];
-		shield = ints[64];
+		proc.BARRIER.health = ints[64];
 		proc.WARP.prob = ints[65];
 		proc.WARP.time = ints[66];
 		proc.WARP.dis = ints[67] / 4;
@@ -145,6 +145,11 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.dis_0 = ints[82] / 4;
 		proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
 		proc.VOLC.time = ints[84] * VOLC_ITV;
+		proc.DEMONSHIELD.hp = ints[87];
+		proc.DEMONSHIELD.regen = ints[88];
+
+		if(ints[93] == 1)
+			traits.add(BCTraits.get(TRAIT_DEMON));
 
 		abi = a;
 

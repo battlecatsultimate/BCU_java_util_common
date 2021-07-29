@@ -67,8 +67,6 @@ public interface MaskEntity extends BattleStatic {
 		return null;
 	}
 
-	int getShield();
-
 	int getSpeed();
 
 	int getWill();

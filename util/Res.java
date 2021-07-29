@@ -138,6 +138,7 @@ public class Res extends ImgCore {
 		aux.icon[3][TRAIT_ALIEN] = new VImg(parts[82]);
 		aux.icon[3][TRAIT_ZOMBIE] = new VImg(parts[83]);
 		aux.icon[3][TRAIT_RELIC] = new VImg(parts[84]);
+		aux.icon[3][TRAIT_DEMON] = new VImg(parts[85]);
 		aux.icon[0][ABI_EKILL] = new VImg(parts[110]);
 		aux.icon[2][ATK_OMNI] = new VImg(parts[112]);
 		aux.icon[1][P_IMUCURSE] = new VImg(parts[116]);
@@ -179,6 +180,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUVOLC] = new VImg(parts[243]);
 		aux.icon[1][P_CURSE] = new VImg(parts[289]);
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
+		aux.icon[1][P_SHIELDBREAK] = new VImg(parts[296]);
 		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png"); // TODO - Add icons for Imu.Summon, DMGCUT, DMGCAP, Imu.Armor Break, and Imu.Haste
 		aux.icon[1][P_DMGCUT] = new VImg(parts[231]);
 		aux.icon[1][P_DMGCAP] = new VImg(parts[231]);

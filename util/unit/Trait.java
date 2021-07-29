@@ -94,6 +94,8 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
             traits.add(data.traits.get(TRAIT_ALIEN));
         if ((type & TB_ZOMBIE) != 0)
             traits.add(data.traits.get(TRAIT_ZOMBIE));
+        if ((type & TB_DEMON) != 0)
+            traits.add(data.traits.get(TRAIT_DEMON));
         if ((type & TB_RELIC) != 0)
             traits.add(data.traits.get(TRAIT_RELIC));
         if ((type & TB_WHITE) != 0)

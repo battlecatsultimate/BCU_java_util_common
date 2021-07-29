@@ -142,10 +142,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			if(u.getCont() instanceof PackData.UserPack) {
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
 
-				if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
-					form.type = Data.reorderTrait(form.type);
-				}
-
 				if (UserProfile.isOlderPack(pack, "0.5.2.0") && form.tba != 0) {
 					form.tba += form.getPost() + 1;
 				}
@@ -156,9 +152,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					form.getProc().SUMMON.type.fix_buff = true;
 				}
 
-				if (UserProfile.isOlderPack(pack, "0.5.5.0")) {
-					form.traits = Trait.convertType(form.type);
-					form.type = 0;
+				if (UserProfile.isOlderPack(pack, "0.5.5.1")) {
+					form.traits = Trait.convertType(Data.reorderTrait(form.type));
 					Proc proc = form.getProc();
 					if ((form.abi & (1 << 18)) != 0) //Seal Immunity
 						proc.IMUSEAL.mult = 100;
@@ -168,6 +163,9 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						proc.IMUPOI.mult = 100;
 					form.abi = Data.reorderAbi(form.abi);
 				}
+
+				if (UserProfile.isOlderPack(pack, "0.5.5.2"))
+					form.getProc().BARRIER.health = form.shield;
 			}
 		}
 	}

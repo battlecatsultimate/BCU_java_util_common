@@ -518,13 +518,26 @@ public class Editors {
 
 		map().put("IMUSPEED", imuad);
 
-		map().put("DSHIELD", new EditControl<>(Proc.DSHIELD.class, (t) -> {
+		map().put("BARRIER", new EditControl<>(Proc.BARRIER.class, (t) -> {
 			t.health = Math.max(0, t.health);
-			if (t.health > 0)
+			if (t.health > 0) {
+				t.regentime = Math.max(0, t.regentime);
+				t.timeout = Math.max(0, t.timeout);
+			} else {
+				t.regentime = 0;
+				t.timeout = 0;
+			}
+		}));
+
+		map().put("DEMONSHIELD", new EditControl<>(Proc.DSHIELD.class, (t) -> {
+			t.hp = Math.max(0, t.hp);
+			if (t.hp > 0)
 				t.regen = Math.max(t.regen, 1);
 			 else
 				t.regen = 0;
 		}));
+
+		map().put("SHIELDBREAK", prob);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {
