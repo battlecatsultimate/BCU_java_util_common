@@ -1247,12 +1247,12 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(SHIELD_BREAKER);
 
 				shieldContinue = true;
-			} else if(atk.atk >= currentShield) {
+			} else if(getDamage(atk, atk.atk) >= currentShield) {
 				currentShield = 0;
 
 				anim.getEff(SHIELD_BROKEN);
 			} else {
-				currentShield -= atk.atk;
+				currentShield -= getDamage(atk, atk.atk);
 
 				anim.getEff(SHIELD_HIT);
 			}
