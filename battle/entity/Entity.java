@@ -147,7 +147,7 @@ public abstract class Entity extends AbEntity {
 
 				double offset = 0.0;
 
-				if(i == A_B || i == A_E_B)
+				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD)
 					offset = -25.0 * siz;
 
 				if (eae == null)
@@ -294,7 +294,53 @@ public abstract class Entity extends AbEntity {
 			if (t == HEAL) {
 				EffAnim<DefEff> eff = dire == -1 ? effas().A_HEAL : effas().A_E_HEAL;
 
-				effs[A_HEAL] = eff.getEAnim(DefEff.DEF);
+				effs[dire == -1 ? A_HEAL : A_E_HEAL] = eff.getEAnim(DefEff.DEF);
+			}
+
+			if (t == SHIELD_HIT) {
+				int id = dire == -1 ? A_DEMON_SHIELD : A_E_DEMON_SHIELD;
+
+				EffAnim<ShieldEff> eff = dire == -1 ? effas().A_DEMON_SHIELD : effas().A_E_DEMON_SHIELD;
+
+				boolean half = e.currentShield * 1.0 / e.getProc().DEMONSHIELD.hp < 0.5;
+
+				effs[id] = eff.getEAnim(half ? ShieldEff.HALF : ShieldEff.FULL);
+				status[P_DEMONSHIELD][0] = effs[id].len();
+
+				CommonStatic.setSE(SE_SHIELD_HIT);
+			}
+
+			if (t == SHIELD_BROKEN) {
+				int id = dire == -1 ? A_DEMON_SHIELD : A_E_DEMON_SHIELD;
+
+				EffAnim<ShieldEff> eff = dire == -1 ? effas().A_DEMON_SHIELD : effas().A_E_DEMON_SHIELD;
+
+				effs[id] = eff.getEAnim(ShieldEff.BROKEN);
+				status[P_DEMONSHIELD][0] = effs[id].len();
+
+				CommonStatic.setSE(SE_SHIELD_BROKEN);
+			}
+
+			if (t == SHIELD_REGEN) {
+				int id = dire == -1 ? A_DEMON_SHIELD : A_E_DEMON_SHIELD;
+
+				EffAnim<ShieldEff> eff = dire == -1 ? effas().A_DEMON_SHIELD : effas().A_E_DEMON_SHIELD;
+
+				effs[id] = eff.getEAnim(ShieldEff.REGENERATION);
+				status[P_DEMONSHIELD][0] = effs[id].len();
+
+				CommonStatic.setSE(SE_SHIELD_REGEN);
+			}
+
+			if (t == SHIELD_BREAKER) {
+				int id = dire == -1 ? A_DEMON_SHIELD : A_E_DEMON_SHIELD;
+
+				EffAnim<ShieldEff> eff = dire == -1 ? effas().A_DEMON_SHIELD : effas().A_E_DEMON_SHIELD;
+
+				effs[id] = eff.getEAnim(ShieldEff.BREAKER);
+				status[P_DEMONSHIELD][0] = effs[id].len();
+
+				CommonStatic.setSE(SE_SHIELD_BREAKER);
 			}
 		}
 
@@ -639,6 +685,12 @@ public abstract class Entity extends AbEntity {
 				kbDuration = 0;
 				initPos = 0;
 				time = 1;
+
+				if(kbType == INT_HB && e.health > 0 && e.getProc().DEMONSHIELD.hp > 0) {
+					e.currentShield = (int) (e.getProc().DEMONSHIELD.hp * e.getProc().DEMONSHIELD.regen * e.shieldMagnification / 100.0);
+
+					e.anim.getEff(SHIELD_REGEN);
+				}
 
 				if (e.health <= 0)
 					e.preKill();
@@ -1076,6 +1128,16 @@ public abstract class Entity extends AbEntity {
 	 */
 	protected boolean moved = false;
 
+	/**
+	 * Entity's shield hp
+	 */
+	private int currentShield;
+
+	/**
+	 * Used for regenerating shield considering enemy's magnification
+	 */
+	double shieldMagnification = 1.0;
+
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double atkMagnif, double hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
 		basis = b;
@@ -1090,6 +1152,8 @@ public abstract class Entity extends AbEntity {
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
+		currentShield = (int) (de.getProc().DEMONSHIELD.hp * hpMagnif);
+		shieldMagnification = hpMagnif;
 	}
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double lvMagnif, double tAtk, double tHP, PCoin pc, Level lv) {
@@ -1109,6 +1173,7 @@ public abstract class Entity extends AbEntity {
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
+		currentShield = de.getProc().DEMONSHIELD.hp;
 	}
 
 	public void altAbi(int alt) {
@@ -1157,18 +1222,46 @@ public abstract class Entity extends AbEntity {
 				return;
 		}
 
+		boolean barrierContinue = false;
+		boolean shieldContinue = false;
+
 		if (barrier > 0) {
 			if (atk.getProc().BREAK.prob > 0) {
 				barrier = 0;
 				anim.getEff(BREAK_ABI);
+				barrierContinue = true;
 			} else if (getDamage(atk, atk.atk) >= barrier) {
 				barrier = 0;
 				anim.getEff(BREAK_ATK);
-				return;
 			} else {
 				anim.getEff(BREAK_NON);
-				return;
 			}
+		} else {
+			barrierContinue = true;
+		}
+
+		if(currentShield > 0) {
+			if(atk.getProc().SHIELDBREAK.prob > 0) {
+				currentShield = 0;
+
+				anim.getEff(SHIELD_BREAKER);
+
+				shieldContinue = true;
+			} else if(atk.atk >= currentShield) {
+				currentShield = 0;
+
+				anim.getEff(SHIELD_BROKEN);
+			} else {
+				currentShield -= atk.atk;
+
+				anim.getEff(SHIELD_HIT);
+			}
+		} else {
+			shieldContinue = true;
+		}
+
+		if(!barrierContinue || !shieldContinue) {
+			return;
 		}
 
 		CommonStatic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));

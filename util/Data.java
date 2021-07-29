@@ -466,6 +466,14 @@ public class Data {
 			public int mult;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DSHIELD extends ProcItem {
+			@Order(0)
+			public int hp;
+			@Order(1)
+			public int regen;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -578,6 +586,12 @@ public class Data {
 
 		@Order(38)
 		public final IMU IMUSUMMON = new IMU();
+
+		@Order(39)
+		public final DSHIELD DEMONSHIELD = new DSHIELD();
+
+		@Order(40)
+		public final PROB SHIELDBREAK = new PROB();
 
 		@Override
 		public Proc clone() {
@@ -702,6 +716,10 @@ public class Data {
 	public static final int SE_POISON = 110;
 	public static final int SE_VOLC_START = 111;
 	public static final int SE_VOLC_LOOP = 112;
+	public static final int SE_SHIELD_HIT = 136;
+	public static final int SE_SHIELD_BROKEN = 137;
+	public static final int SE_SHIELD_REGEN = 138;
+	public static final int SE_SHIELD_BREAKER = 139;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -724,6 +742,7 @@ public class Data {
 	public static final int TB_EVA = 512;
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
+	public static final int TB_DEMON = 4096;
 
 	// trait index
 	public static final int TRAIT_RED = 0;
@@ -738,7 +757,8 @@ public class Data {
 	public static final int TRAIT_EVA = 9;
 	public static final int TRAIT_WITCH = 10;
 	public static final int TRAIT_INFH = 11;
-	public static final int TRAIT_TOT = 12;
+	public static final int TRAIT_DEMON = 12;
+	public static final int TRAIT_TOT = 13;
 
 	// treasure
 	public static final int T_RED = 0;
@@ -911,7 +931,9 @@ public class Data {
 	public static final int P_SPEED = 36;
 	public static final int P_MINIWAVE = 37;
 	public static final int P_IMUSUMMON = 38;
-	public static final int PROC_TOT = 39;// 39
+	public static final int P_DEMONSHIELD = 39;
+	public static final int P_SHIELDBREAK = 40;
+	public static final int PROC_TOT = 41;// 41
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -953,7 +975,9 @@ public class Data {
 			false, //armor
 			false, //haste
 			false, //miniwave
-			true  //imu.summon
+			true,  //imu.summon
+			true,  //demon shield
+			false  //shield breaker
 	};
 
 	public static final int WT_WAVE = 1;
@@ -1011,10 +1035,10 @@ public class Data {
 			{ 4, TB_FLOAT, 0 }, // 34:
 			{ 4, TB_BLACK, 0 }, // 35: targeting black
 			{ 4, TB_METAL, 0 }, // 36:
-			{ 4, TB_ANGEL }, // 37: targeting angle
-			{ 4, TB_ALIEN }, // 38: targeting alien
-			{ 4, TB_ZOMBIE }, // 39: targeting zombie
-			{ 4, TB_RELIC }, // 40: targeting relic
+			{ 4, TB_ANGEL, 0 }, // 37: targeting angle
+			{ 4, TB_ALIEN, 0 }, // 38: targeting alien
+			{ 4, TB_ZOMBIE, 0 }, // 39: targeting zombie
+			{ 4, TB_RELIC, 0 }, // 40: targeting relic
 			{ 4, TB_WHITE, 0 }, // 41:
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
@@ -1031,6 +1055,7 @@ public class Data {
 			{ 0, P_IMUVOLC }, // 54: resist to surge ?
 			{ 3, P_IMUVOLC }, // 55: immune to surge
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
+			{ 4, TB_DEMON, 0} // 57 : targeting demon
 			};
 
 	// foot icon index used in battle
@@ -1041,6 +1066,10 @@ public class Data {
 	public static final int BREAK_ATK = -5;
 	public static final int BREAK_NON = -6;
 	public static final int HEAL = -7;
+	public static final int SHIELD_HIT = -8;
+	public static final int SHIELD_BROKEN = -9;
+	public static final int SHIELD_REGEN = -10;
+	public static final int SHIELD_BREAKER = -11;
 
 	// Combo index
 	public static final int C_ATK = 0;
@@ -1129,8 +1158,10 @@ public class Data {
 	public static final int A_WHITE_SMOKE = 56;
 	public static final int A_HEAL = 57;
 	public static final int A_E_HEAL = 58;
+	public static final int A_DEMON_SHIELD = 59;
+	public static final int A_E_DEMON_SHIELD = 60;
 	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 59;
+	public static final int A_TOT = 61;
 
 	// atk type index used in filter page
 	public static final int ATK_SINGLE = 0;

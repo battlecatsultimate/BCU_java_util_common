@@ -787,5 +787,21 @@
         "tooltip" : "倍率が20の場合、ユーザーの攻撃力の20%のダメージを受けます。負の値も可能です。"
       }
     }
+  },
+  "DEMONSHIELD" : {
+    "abbr_name" : "D.Shield",
+    "full_name" : "Demon Shield",
+    "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
+    "format" : "Demon Shield (_left)Shield has (hp) HP, regenerates with (regen)% of it's original HP when unit gets hitbacked(_right)",
+    "class" : {
+      "hp" : {
+        "name" : "health",
+        "tooltip" : "Health of shield"
+      },
+      "regen" : {
+        "name" : "regeneration",
+        "tooltip" : "Percentage of shield hp which will be regenerated when hitbacked"
+      }
+    }
   }
 }

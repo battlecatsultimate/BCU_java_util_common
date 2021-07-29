@@ -790,5 +790,21 @@
                 "tooltip" : "Percentage of activator's damage.<br>If multi is 20, it will have 20% of activator's damage. Negative values are allowed"
             }
         }
+    },
+    "DEMONSHIELD" : {
+        "abbr_name" : "D.Shield",
+        "full_name" : "Demon Shield",
+        "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
+        "format" : "Demon Shield (_left)Shield has (hp) HP, regenerates with (regen)% of it's original HP when unit gets hitbacked(_right)",
+        "class" : {
+            "hp" : {
+                "name" : "health",
+                "tooltip" : "Health of shield"
+            },
+            "regen" : {
+                "name" : "regeneration",
+                "tooltip" : "Percentage of shield hp which will be regenerated when hitbacked"
+            }
+        }
     }
 }

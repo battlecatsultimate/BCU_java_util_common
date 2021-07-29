@@ -5,6 +5,8 @@ import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
 
+import java.util.Arrays;
+
 public class DataEnemy extends DefaultData implements MaskEnemy {
 
 	private final Enemy enemy;
@@ -129,6 +131,11 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.dis_0 = ints[82] / 4;
 		proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
 		proc.VOLC.time = ints[84] * VOLC_ITV;
+		proc.DEMONSHIELD.hp = ints[87];
+		proc.DEMONSHIELD.regen = ints[88];
+
+		if(ints[93] == 1)
+			t |= TB_DEMON;
 
 		abi = a;
 		type = t;

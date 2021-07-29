@@ -44,6 +44,21 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 	}
 
+	public enum ShieldEff implements EffType<ShieldEff> {
+		FULL("00"), HALF("01"), BROKEN("_destruction"), BREAKER("_breaker"), REGENERATION("_revive");
+
+		private final String path;
+
+		ShieldEff(String str) {
+			this.path = str;
+		}
+
+		@Override
+		public String path() {
+			return path;
+		}
+	}
+
 	public enum DefEff implements EffType<DefEff> {
 		DEF("");
 
@@ -184,6 +199,10 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<DefEff> A_HEAL;
 		@Order(62)
 		public EffAnim<DefEff> A_E_HEAL;
+		@Order(63)
+		public EffAnim<ShieldEff> A_DEMON_SHIELD;
+		@Order(64)
+		public EffAnim<ShieldEff> A_E_DEMON_SHIELD;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -389,6 +408,12 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		vmw = new VImg("./org/battle/s13/skill013.png");
 		icmw = ImgCut.newIns("./org/battle/s13/skill013.imgcut");
 		effas.A_E_MINIWAVE = new EffAnim<>("./org/battle/s13/skill_smallwave_attack_e", vmw, icmw, DefEff.values());
+		VImg vsh = new VImg("./org/battle/s14/skill014.png");
+		ImgCut icsh = ImgCut.newIns("./org/battle/s14/skill014.imgcut");
+		effas.A_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
+		effas.A_DEMON_SHIELD.rev = true;
+		effas.A_E_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
+
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {

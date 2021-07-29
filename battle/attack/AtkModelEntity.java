@@ -234,7 +234,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 	protected void setProc(int ind, Proc proc) {
 		String[] par = { "CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
-				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "MINIWAVE" };
+				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "MINIWAVE", "SHIELDBREAK" };
 
 		for (String s0 : par)
 			if (getProc(ind).get(s0).perform(b.r))
