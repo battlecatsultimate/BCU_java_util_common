@@ -32,15 +32,18 @@ public class Formatter {
 		public boolean isEnemy;
 		@JsonField
 		public boolean useSecond;
+		@JsonField
+		public double magnification = 1.0;
 
 		public DecimalFormat df = new DecimalFormat("#.##");
 
 		public Context() {
 		}
 
-		public Context(boolean ene, boolean sec) {
+		public Context(boolean ene, boolean sec, double magnif) {
 			isEnemy = ene;
 			useSecond = sec;
+			magnification = magnif;
 		}
 
 		public String abs(int v) {
@@ -65,6 +68,9 @@ public class Formatter {
 			return df.format(time / 30.0);
 		}
 
+		public String shield(int hp) {
+			return "" + (int) (hp * magnification);
+		}
 	}
 
 	private class BoolElem extends Comp {
