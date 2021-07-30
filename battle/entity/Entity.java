@@ -1582,16 +1582,13 @@ public abstract class Entity extends AbEntity {
 		// do move check if available, move if possible
 		if (kbTime == 0 && !acted && atkm.atkTime == 0 && status[P_REVIVE][1] == 0 && anim.anim.type != UType.ENTER) {
 			checkTouch();
+
 			if (!touch && nstop) {
 				if (health > 0)
 					anim.setAnim(UType.WALK, true);
 				updateMove(-1, 0);
 			}
 		}
-
-		// if this entity is in kb state, do kbmove()
-		if (kbTime > 0)
-			kb.updateKB();
 
 		// update revive status, mark acted
 		zx.updateRevive();
@@ -1609,9 +1606,6 @@ public abstract class Entity extends AbEntity {
 			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
-			if(data.isOmni()) {
-				System.out.println(!acted+" | "+binatk+" | "+!(isBase && health <= 0));
-			}
 			if (!acted && binatk && !(isBase && health <= 0))
 				atkm.setUp();
 
@@ -1883,5 +1877,12 @@ public abstract class Entity extends AbEntity {
 				if (le.get(i).targetable(type))
 					touchEnemy = true;
 		}
+	}
+
+	@Override
+	public void preUpdate() {
+		// if this entity is in kb state, do kbmove()
+		if (kbTime > 0)
+			kb.updateKB();
 	}
 }

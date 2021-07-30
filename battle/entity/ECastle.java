@@ -86,4 +86,9 @@ public class ECastle extends AbEntity {
 
 	}
 
+	@Override
+	public void preUpdate() {
+
+	}
+
 }

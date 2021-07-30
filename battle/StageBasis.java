@@ -388,6 +388,10 @@ public class StageBasis extends BattleObj {
 
 		for (int i = 0; i < le.size(); i++)
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).preUpdate();
+
+		for (int i = 0; i < le.size(); i++)
+			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
 
 		if (s_stop == 0) {
