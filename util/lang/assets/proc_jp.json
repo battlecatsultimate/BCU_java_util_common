@@ -462,7 +462,7 @@
     "full_name": "召喚",
     "tooltip": null,
     "format": [
-      "(prob)%の確率で(_dispTime(time))後に(mult)%の(_entity(id))を召喚[(!type.fix_buff){ (_left)召喚獣の強さ倍率に相対する(_right)}]、",
+      "(prob)%の確率で(_dispTime(time))後に[(!type.fix_buff){(_summonMagnification(mult))}(type.fix_buff){(mult)}]%の(_entity(id))を召喚、",
       "[(!type.on_hit&!type.on_kill){召喚者から1つの召喚(dis)範囲離れている}",
       "(type.on_hit){各ターゲットの命中時に召喚された(dis)の範囲が1つ離れる}",
       "(type.on_kill){対象が倒れるたびに1回召喚(dis)の範囲が離れる}]",
@@ -1003,7 +1003,7 @@
     "abbr_name" : "シールド",
     "full_name" : "悪魔シールド",
     "tooltip" : "一定量のダメージを遮断します。バリアとは異なり、ダメージを無効化するのではなく、吸収します。",
-    "format" : "悪魔シールド(_left)HP:(hp),KB再生HP:(regen)%(_right)",
+    "format" : "悪魔シールド(_left)HP:(_shield(hp)),KB再生HP:(regen)%(_right)",
     "class" : {
       "hp" : {
         "name" : "HP",

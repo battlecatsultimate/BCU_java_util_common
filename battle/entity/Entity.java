@@ -852,37 +852,43 @@ public abstract class Entity extends AbEntity {
 
 	}
 
-	private class Barrier {
-		Proc.BARRIER b = getProc().BARRIER;
-		int hp, regen, timeout;
+	private static class Barrier extends BattleObj {
+		private final Entity e;
 
-		private Barrier() {
-			hp = b.health;
-			regen = b.regentime;
-			timeout = b.timeout;
-		}
+		private Barrier (Entity ent) { e = ent; }
 
 		private void update() {
-			if (hp > 0) {
-				if (timeout > 0) {
-					timeout--;
-					if (timeout == 0)
-						breakBarrier();
+			if (e.status[P_BARRIER][0] > 0) {
+				if (e.status[P_BARRIER][2] > 0) {
+					e.status[P_BARRIER][2]--;
+					if (e.status[P_BARRIER][2] == 0)
+						breakBarrier(false);
 				}
-			} else if (regen > 0) {
-				regen--;
-				if (regen == 0) {
-					hp = b.health;
-					timeout = b.timeout;
-					anim.getEff(BREAK_NON);
+			} else if (e.status[P_BARRIER][1] > 0) {
+				e.status[P_BARRIER][1]--;
+				if (e.status[P_BARRIER][1] == 0) {
+					e.status[P_BARRIER][0] = e.getProc().BARRIER.health;
+					int timeout = e.getProc().BARRIER.timeout;
+					if (timeout > 0)
+						e.status[P_BARRIER][2] = timeout + effas().A_B.len(BarrierEff.NONE);
+					e.anim.getEff(BREAK_NON);
 				}
 			}
 		}
 
-		private void breakBarrier() {
-			hp = 0;
-			regen = b.regentime;
-			anim.getEff(BREAK_ATK);
+		private void breakBarrier(boolean abi) {
+			e.status[P_BARRIER][0] = 0;
+
+			int regen = e.getProc().BARRIER.regentime;
+			if (regen > 0) {
+				int len = abi ? effas().A_B.len(BarrierEff.BREAK) : effas().A_B.len(BarrierEff.DESTR);
+				e.status[P_BARRIER][1] = regen + len;
+			}
+
+			if (abi)
+				e.anim.getEff(BREAK_ABI);
+			else
+				e.anim.getEff(BREAK_ATK);
 		}
 	}
 
@@ -1134,11 +1140,6 @@ public abstract class Entity extends AbEntity {
 	private boolean acted;
 
 	/**
-	 * entity's barrier processor
-	 */
-	private final Barrier barrier;
-
-	/**
 	 * remaining burrow distance
 	 */
 	private double bdist;
@@ -1184,6 +1185,11 @@ public abstract class Entity extends AbEntity {
 	protected boolean moved = false;
 
 	/**
+	 * entity's barrier processor
+	 */
+	private final Barrier barrier = new Barrier(this);
+
+	/**
 	 * Entity's shield hp
 	 */
 	private int currentShield;
@@ -1200,7 +1206,10 @@ public abstract class Entity extends AbEntity {
 		aam = AtkModelEntity.getEnemyAtk(this, atkMagnif);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
-		barrier = new Barrier();
+		status[P_BARRIER][0] = getProc().BARRIER.health;
+		status[P_BARRIER][1] = getProc().BARRIER.regentime;
+		status[P_BARRIER][2] = getProc().BARRIER.timeout;
+
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
 		sealed.BURROW.set(data.getProc().BURROW);
@@ -1221,14 +1230,18 @@ public abstract class Entity extends AbEntity {
 		aam = AtkModelEntity.getUnitAtk(this, tAtk, lvMagnif, pc, lv);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
-		barrier = new Barrier();
+		status[P_BARRIER][0] = getProc().BARRIER.health;
+		status[P_BARRIER][1] = getProc().BARRIER.regentime;
+		status[P_BARRIER][2] = getProc().BARRIER.timeout;
+
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
-		currentShield = de.getProc().DEMONSHIELD.hp;
+		currentShield = (int) (de.getProc().DEMONSHIELD.hp * lvMagnif);
+		shieldMagnification = lvMagnif;
 	}
 
 	public void altAbi(int alt) {
@@ -1306,17 +1319,15 @@ public abstract class Entity extends AbEntity {
 						dmg = dmgcap.dmg;
 				}
 
-		boolean barrierContinue = barrier.hp == 0;
+		boolean barrierContinue = status[P_BARRIER][0] == 0;
 		boolean shieldContinue = currentShield == 0;
 
-		if (barrier.hp > 0) {
+		if (status[P_BARRIER][0] > 0) {
 			if (atk.getProc().BREAK.prob > 0) {
-				barrier.breakBarrier();
-				anim.getEff(BREAK_ABI);
+				barrier.breakBarrier(true);
 				barrierContinue = true;
-			} else if (dmg >= barrier.hp) {
-				barrier.breakBarrier();
-				anim.getEff(BREAK_ATK);
+			} else if (dmg >= status[P_BARRIER][0]) {
+				barrier.breakBarrier(false);
 			} else {
 				anim.getEff(BREAK_NON);
 			}
@@ -1709,6 +1720,13 @@ public abstract class Entity extends AbEntity {
 		return (kbTime == 0 ? n : TCH_KB) | ex;
 	}
 
+	@Override
+	public void preUpdate() {
+		// if this entity is in kb state, do kbmove()
+		if (kbTime > 0)
+			kb.updateKB();
+	}
+
 	/**
 	 * update the entity. order of update: <br>
 	 *  move -> KB -> revive -> burrow -> wait -> attack
@@ -1717,6 +1735,7 @@ public abstract class Entity extends AbEntity {
 	public void update() {
 		// update proc effects
 		updateProc();
+		barrier.update();
 
 		boolean nstop = status[P_STOP][0] == 0;
 		canBurrow |= atkm.loop < data.getAtkLoop() - 1;
@@ -1730,10 +1749,6 @@ public abstract class Entity extends AbEntity {
 				updateMove(-1, 0);
 			}
 		}
-
-		// if this entity is in kb state, do kbmove()
-		if (kbTime > 0)
-			kb.updateKB();
 
 		// update revive status, mark acted
 		zx.updateRevive();
@@ -1996,7 +2011,6 @@ public abstract class Entity extends AbEntity {
 			status[P_SPEED][0]--;
 		// update tokens
 		weaks.update();
-		barrier.update();
 		pois.update();
 	}
 

@@ -84,6 +84,11 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
+	public void preUpdate() {
+
+	}
+
+	@Override
 	public void update() {
 		if (hit > 0)
 			hit--;

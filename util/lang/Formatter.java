@@ -29,18 +29,18 @@ public class Formatter {
 		public final String crright = "}";
 
 		@JsonField
-		public boolean isEnemy;
+		public final boolean isEnemy;
 		@JsonField
-		public boolean useSecond;
+		public final boolean useSecond;
+        @JsonField
+        public final double[] magnification;
 
 		public DecimalFormat df = new DecimalFormat("#.##");
 
-		public Context() {
-		}
-
-		public Context(boolean ene, boolean sec) {
+		public Context(boolean ene, boolean sec, double[] magnif) {
 			isEnemy = ene;
 			useSecond = sec;
+			magnification = magnif;
 		}
 
 		public String abs(int v) {
@@ -63,6 +63,18 @@ public class Formatter {
 
 		public String toSecond(int time) {
 			return df.format(time / 30.0);
+		}
+
+		public String summonMagnification(int buff) {
+			if (!isEnemy)
+				return "Level " + (int) (magnification[1] + buff);
+			else if (magnification[0] == magnification[1])
+				return (int) (buff * magnification[0]) + "%";
+			return "{" + (int) (buff * magnification[0]) + "%, " + (int) (buff * magnification[1]) + "%}";
+		}
+
+		public String shield(int hp) {
+			return "" + (int) (hp * magnification[0]);
 		}
 
 	}

@@ -35,6 +35,8 @@ public abstract class AbEntity extends BattleObj {
 
 	public abstract int touchable();
 
+	public abstract void preUpdate();
+
 	public abstract void update();
 
 }

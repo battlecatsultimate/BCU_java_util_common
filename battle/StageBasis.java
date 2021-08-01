@@ -417,6 +417,10 @@ public class StageBasis extends BattleObj {
 			tempe.forEach(EntCont::update);
 		}
 
+		for (Entity ent : le)
+			if (s_stop == 0 || (ent.getAbi() & AB_TIMEI) != 0)
+				ent.preUpdate();
+
 		for (Entity uni : le)
 			if (s_stop == 0 || (uni.getAbi() & AB_TIMEI) != 0)
 				uni.update();

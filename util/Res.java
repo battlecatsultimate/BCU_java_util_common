@@ -181,6 +181,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_CURSE] = new VImg(parts[289]);
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
 		aux.icon[1][P_SHIELDBREAK] = new VImg(parts[296]);
+		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
 		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png"); // TODO - Add icons for Imu.Summon, DMGCUT, DMGCAP, Imu.Armor Break, and Imu.Haste
 		aux.icon[1][P_DMGCUT] = new VImg(parts[231]);
 		aux.icon[1][P_DMGCAP] = new VImg(parts[231]);
