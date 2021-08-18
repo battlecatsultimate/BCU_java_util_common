@@ -1664,7 +1664,7 @@ public abstract class Entity extends AbEntity {
 		if (moved)
 			canBurrow = true;
 		moved = true;
-		double max = (basis.getBase(dire).pos - pos) * dire - data.touchBase();
+		double max = (basis.getBase(dire).pos - pos) * dire;
 
 		//Must subtract 1600 from length because of gap between battle field and bases
 		if(data.touchBase() >= basis.st.len - 1600)
@@ -1692,6 +1692,7 @@ public abstract class Entity extends AbEntity {
 		mov += extmov;
 
 		pos += Math.min(mov, max) * dire;
+
 		return max > mov;
 	}
 
