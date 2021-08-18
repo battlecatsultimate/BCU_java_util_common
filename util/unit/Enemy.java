@@ -130,6 +130,9 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	@Override
 	public VImg getIcon() {
+		if(anim == null)
+			return null;
+
 		return anim.getEdi();
 	}
 
