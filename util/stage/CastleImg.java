@@ -27,38 +27,47 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 
 	public static void getBossSpawns() {
 		Queue<String> legendData = VFile.readLine("./org/data/enemyCastleDataLegend.csv");
-		for (int i = 0; i < legendData.size(); i++) {
-			String[] str = legendData.poll().split(",");
-			int y = Integer.parseInt(str[0]);
-			int z = Integer.parseInt(str[2]);
-			CastleImg castle = CastleList.getList("000000").get(i);
+		int index = 0;
+		String str;
+		while ((str = legendData.poll()) != null) {
+			String[] data = str.split(",");
+			int y = Integer.parseInt(data[0]);
+			int z = Integer.parseInt(data[2]);
+			if (y == -999) break;
+			CastleImg castle = CastleList.getList("000000").get(index++);
 			if (castle != null)
 				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
+		index = 0;
 		Queue<String> empireData = VFile.readLine("./org/data/enemyCastleData0.csv");
-		for (int i = 0; i < empireData.size(); i++) {
-			String[] str = empireData.poll().split(",");
-			int y = Integer.parseInt(str[0]);
-			int z = Integer.parseInt(str[2]);
-			CastleImg castle = CastleList.getList("000001").get(i);
+		while ((str = empireData.poll()) != null) {
+			String[] data = str.split(",");
+			int y = Integer.parseInt(data[0]);
+			int z = Integer.parseInt(data[2]);
+			if (y == -999) break;
+			CastleImg castle = CastleList.getList("000001").get(index++);
 			if (castle != null)
 				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
+		index = 0;
 		Queue<String> futureData = VFile.readLine("./org/data/enemyCastleData1.csv");
-		for (int i = 0; i < futureData.size(); i++) {
-			String[] str = futureData.poll().split(",");
-			int y = Integer.parseInt(str[0]);
-			int z = Integer.parseInt(str[2]);
-			CastleImg castle = CastleList.getList("000002").get(i);
+		while ((str = futureData.poll()) != null) {
+			String[] data = str.split(",");
+			int y = Integer.parseInt(data[0]);
+			int z = Integer.parseInt(data[2]);
+			if (y == -999) break;
+			CastleImg castle = CastleList.getList("000002").get(index++);
 			if (castle != null)
 				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
+		index = 0;
 		Queue<String> cosmoData = VFile.readLine("./org/data/enemyCastleData1.csv");
-		for (int i = 0; i < cosmoData.size(); i++) {
-			String[] str = cosmoData.poll().split(",");
-			int y = Integer.parseInt(str[0]);
-			int z = Integer.parseInt(str[2]);
-			CastleImg castle = CastleList.getList("000003").get(i);
+		while ((str = cosmoData.poll()) != null) {
+			String[] data = str.split(",");
+			int y = Integer.parseInt(data[0]);
+			int z = Integer.parseInt(data[2]);
+			if (y == -999) break;
+			CastleImg castle = CastleList.getList("000003").get(index++);
 			if (castle != null)
 				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
