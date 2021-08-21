@@ -49,6 +49,7 @@ public class StageBasis extends BattleObj {
 	public boolean goingUp = true;
 	public int changeFrame = -1;
 	public int changeDivision = -1;
+	public final double boss_spawn;
 
 	public int work_lv, maxMoney, can, max_can, upgradeCost, max_num;
 	public int frontLineup = 0;
@@ -123,6 +124,8 @@ public class StageBasis extends BattleObj {
 		}
 
 		isOneLineup = oneLine;
+
+		boss_spawn = st.castle.get().boss_spawn;
 	}
 
 	/**
@@ -352,7 +355,7 @@ public class StageBasis extends BattleObj {
 			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
-					e.added(1, e.mark == 1 ? 801 : 700);
+					e.added(1, e.mark == 1 ? boss_spawn : 700.0);
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.layer));
 
