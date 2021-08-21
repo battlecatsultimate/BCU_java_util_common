@@ -6,6 +6,7 @@ import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
+import common.pack.PackData;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
@@ -25,7 +26,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 	public double boss_spawn = 0;
 	public VImg img;
 
-	public static void getBossSpawns() {
+	public static void loadBossSpawns() {
 		Queue<String> legendData = VFile.readLine("./org/data/enemyCastleDataLegend.csv");
 		int index = 0;
 		String str;
@@ -88,7 +89,12 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 
 	@OnInjected
 	public void onInjected() {
-		img = UserProfile.getUserPack(id.pack).source.readImage(Source.CASTLE, id.id);
+		PackData.UserPack pack = UserProfile.getUserPack(id.pack);
+		img = pack.source.readImage(Source.CASTLE, id.id);
+
+		if (UserProfile.isOlderPack(pack, "0.5.6.0")) {
+			boss_spawn = 828.5;
+		}
 	}
 
 	@Override
