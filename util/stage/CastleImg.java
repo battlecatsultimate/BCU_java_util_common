@@ -42,7 +42,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			int z = Integer.parseInt(str[2]);
 			CastleImg castle = CastleList.getList("000001").get(i);
 			if (castle != null)
-				castle.boss_spawn = (int) (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
 		Queue<String> futureData = VFile.readLine("./org/data/enemyCastleData1.csv");
 		for (int i = 0; i < futureData.size(); i++) {
@@ -51,7 +51,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			int z = Integer.parseInt(str[2]);
 			CastleImg castle = CastleList.getList("000002").get(i);
 			if (castle != null)
-				castle.boss_spawn = (int) (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
 		Queue<String> cosmoData = VFile.readLine("./org/data/enemyCastleData1.csv");
 		for (int i = 0; i < cosmoData.size(); i++) {
@@ -60,7 +60,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			int z = Integer.parseInt(str[2]);
 			CastleImg castle = CastleList.getList("000003").get(i);
 			if (castle != null)
-				castle.boss_spawn = (int) (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
 		}
 	}
 
