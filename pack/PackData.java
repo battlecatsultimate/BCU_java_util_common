@@ -85,6 +85,7 @@ public abstract class PackData implements IndexContainer {
 			RandStage.read();
 			loadCharaGroup();
 			loadLimit();
+			CastleImg.loadBossSpawns();
 			progress.accept("loading orbs");
 			Orb.read();
 			progress.accept("loading musics");

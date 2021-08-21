@@ -18,7 +18,7 @@ public abstract class AbEntity extends BattleObj {
 		health = maxH = h;
 	}
 
-	public void added(int d, int p) {
+	public void added(int d, double p) {
 		pos = p;
 		dire = d;
 	}
