@@ -218,7 +218,7 @@ public abstract class Entity extends AbEntity {
 			}
 			if (t == P_POISON) {
 				int mask = status[P_POISON][0];
-				EffAnim<?>[] arr = { effas().A_POI0, effas().A_POI1, effas().A_POI2, effas().A_POI3, effas().A_POI4,
+				EffAnim<?>[] arr = { effas().A_POI0, e.dire == -1 ? effas().A_POI1 : effas().A_POI1_E, effas().A_POI2, effas().A_POI3, effas().A_POI4,
 						effas().A_POI5, effas().A_POI6, effas().A_POI7 };
 				for (int i = 0; i < A_POIS.length; i++)
 					if ((mask & (1 << i)) > 0) {
