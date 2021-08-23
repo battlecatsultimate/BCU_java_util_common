@@ -69,6 +69,16 @@ public abstract class Entity extends AbEntity {
 		private EAnimD<SoulType> soul;
 
 		/**
+		 * smoke animation for each entity
+		 */
+		public EAnimD<DefEff> smoke;
+
+		/**
+		 * Layer for smoke animation
+		 */
+		public int smokeLayer;
+
+		/**
 		 * responsive effect FSM time
 		 */
 		private int efft;
@@ -497,6 +507,10 @@ public abstract class Entity extends AbEntity {
 				AtkDataModel adm = e.data.getResurrection();
 				if (soul == null || adm.pre == soul.len() - dead)
 					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+			}
+			if(smoke != null && smoke.done()) {
+				smoke = null;
+				smokeLayer = -1;
 			}
 		}
 
@@ -1279,9 +1293,11 @@ public abstract class Entity extends AbEntity {
 
 		//75.0 is guessed value compared from BC
 		if(atk.isLongAtk)
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
+			anim.smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
+			anim.smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
+
+		anim.smokeLayer = atk.layer;
 
 		basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 
