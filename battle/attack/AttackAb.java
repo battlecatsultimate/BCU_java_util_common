@@ -14,6 +14,7 @@ public abstract class AttackAb extends BattleObj {
 	public final AtkModelAb model;
 	public final AttackAb origin;
 	public final MaskAtk matk;
+	public final Entity attacker;
 	public final int layer;
 	public final boolean isLongAtk;
 	public int duration;
@@ -24,7 +25,8 @@ public abstract class AttackAb extends BattleObj {
 	protected final List<AbEntity> capt = new ArrayList<>();
 	protected double sta, end;
 
-	protected AttackAb(AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
+	protected AttackAb(Entity attacker, AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
+		this.attacker = attacker;
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
@@ -40,7 +42,8 @@ public abstract class AttackAb extends BattleObj {
 		this.isLongAtk = isLongAtk;
 	}
 
-	protected AttackAb(AttackAb a, double STA, double END, boolean isLongAtk) {
+	protected AttackAb(Entity attacker, AttackAb a, double STA, double END, boolean isLongAtk) {
+		this.attacker = attacker;
 		dire = a.dire;
 		origin = a.origin;
 		model = a.model;

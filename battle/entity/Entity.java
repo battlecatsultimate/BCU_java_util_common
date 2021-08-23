@@ -664,10 +664,14 @@ public abstract class Entity extends AbEntity {
 
 		private void kbmove(double mov) {
 			if (mov < 0)
-				e.updateMove(-mov, -mov);
+				e.updateMove(-mov, -mov, kbType == INT_WARP);
 			else {
-				double lim = e.getLim();
-				e.pos -= Math.min(mov, lim) * e.dire;
+				if(kbType == INT_WARP) {
+					e.pos -= mov * e.dire;
+				} else {
+					double lim = e.getLim();
+					e.pos -= Math.min(mov, lim) * e.dire;
+				}
 			}
 		}
 
@@ -1586,7 +1590,7 @@ public abstract class Entity extends AbEntity {
 			if (!touch && nstop) {
 				if (health > 0)
 					anim.setAnim(UType.WALK, true);
-				updateMove(-1, 0);
+				updateMove(-1, 0, false);
 			}
 		}
 
@@ -1658,16 +1662,19 @@ public abstract class Entity extends AbEntity {
 	 * move forward <br>
 	 * maxl: max distance to move <br>
 	 * extmov: distance try to add to this movement return false when movement reach
+	 * ignore: Allow entity go through base
 	 * endpoint
 	 */
-	protected boolean updateMove(double maxl, double extmov) {
+	protected boolean updateMove(double maxl, double extmov, boolean ignore) {
 		if (moved)
 			canBurrow = true;
 		moved = true;
 		double max = (basis.getBase(dire).pos - pos) * dire;
 
-		if (maxl >= 0)
+		if (maxl >= 0 && !ignore)
 			max = Math.min(max, maxl);
+		else if(ignore)
+			max = maxl;
 
 		double mov = status[P_SLOW][0] > 0 ? 0.5 : data.getSpeed() * 0.5;
 
@@ -1807,7 +1814,7 @@ public abstract class Entity extends AbEntity {
 		if (!acted && kbTime == -3) {
 			// move underground
 			double oripos = pos;
-			boolean b = updateMove(bdist, 0);
+			boolean b = updateMove(bdist, 0, false);
 			bdist -= (pos - oripos) * dire;
 			if (!b) {
 				bdist = 0;
@@ -1861,6 +1868,8 @@ public abstract class Entity extends AbEntity {
 			blds = (bpos - pos) * dire > data.touchBase();
 			if (blds)
 				le.remove(basis.getBase(dire));
+			if (pos <= bpos && !le.contains(basis.getBase(dire)))
+				le.add(basis.getBase(dire));
 			blds &= le.size() == 0;
 		} else {
 			blds = le.size() == 0;
