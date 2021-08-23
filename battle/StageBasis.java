@@ -428,8 +428,8 @@ public class StageBasis extends BattleObj {
 						le.get(i).kill(false);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
-					int y = (int) (-256 * r.nextDouble());
+					int x = (int) (ebase.pos + 50 - 500 * r.nextDouble());
+					int y = (int) (-288 * r.nextDouble());
 
 					ebaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
@@ -441,8 +441,8 @@ public class StageBasis extends BattleObj {
 						le.get(i).kill(false);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
-					int y = (int) (-256 * r.nextDouble());
+					int x = (int) (ubase.pos - 50 + 500 * r.nextDouble());
+					int y = (int) (-288 * r.nextDouble());
 
 					ubaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
