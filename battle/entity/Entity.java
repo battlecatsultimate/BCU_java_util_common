@@ -3,10 +3,7 @@ package common.battle.entity;
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
-import common.battle.attack.AtkModelEntity;
-import common.battle.attack.AttackAb;
-import common.battle.attack.AttackCanon;
-import common.battle.attack.AttackSimple;
+import common.battle.attack.*;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
@@ -77,6 +74,11 @@ public abstract class Entity extends AbEntity {
 		 * Layer for smoke animation
 		 */
 		public int smokeLayer;
+
+		/**
+		 * x-pos of smoke animation
+		 */
+		public int smokeX;
 
 		/**
 		 * responsive effect FSM time
@@ -508,9 +510,14 @@ public abstract class Entity extends AbEntity {
 				if (soul == null || adm.pre == soul.len() - dead)
 					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 			}
-			if(smoke != null && smoke.done()) {
-				smoke = null;
-				smokeLayer = -1;
+			if(smoke != null) {
+				if(smoke.done()) {
+					smoke = null;
+					smokeLayer = -1;
+					smokeX = -1;
+				} else {
+					smoke.update(false);
+				}
 			}
 		}
 
@@ -1292,14 +1299,13 @@ public abstract class Entity extends AbEntity {
 			anim.getEff(HEAL);
 
 		//75.0 is guessed value compared from BC
-		if(atk.isLongAtk)
+		if(atk.isLongAtk || atk instanceof AttackVolcano)
 			anim.smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
 			anim.smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
 
-		anim.smokeLayer = atk.layer;
-
-		basis.lea.sort(Comparator.comparingInt(e -> e.layer));
+		anim.smokeLayer = (int) (layer + 3 - basis.r.nextDouble() * -6);
+		anim.smokeX = (int) (pos + 25 - basis.r.nextDouble() * -50);
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
@@ -1881,7 +1887,9 @@ public abstract class Entity extends AbEntity {
 			blds = (bpos - pos) * dire > data.touchBase();
 			if (blds)
 				le.remove(basis.getBase(dire));
-			if (pos <= bpos && !le.contains(basis.getBase(dire)))
+			if (dire == -1 && pos <= bpos && !le.contains(basis.getBase(dire)))
+				le.add(basis.getBase(dire));
+			else if(dire == 1 && pos >= bpos && !le.contains(basis.getBase(dire)))
 				le.add(basis.getBase(dire));
 			blds &= le.size() == 0;
 		} else {

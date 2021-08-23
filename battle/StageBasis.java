@@ -351,6 +351,7 @@ public class StageBasis extends BattleObj {
 			ebase.update();
 
 		if (s_stop == 0) {
+			ubase.update();
 
 			int allow = st.max - entityCount(1);
 			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
