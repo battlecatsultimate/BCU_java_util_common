@@ -22,6 +22,8 @@ import common.util.unit.UnitLevel;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Character.isDigit;
 
@@ -215,6 +217,29 @@ public class CommonStatic {
 
 	public static String verifyFileName(String str) {
 		return str.replaceAll("[\\\\/:*<>?\"|]", "_");
+	}
+
+	public static double parseDoubleN(String str) {
+		double ans;
+		try {
+			ans = parseDoublesN(str)[0];
+		} catch (Exception e) {
+			ans = -1.0;
+		}
+		return ans;
+	}
+
+	public static double[] parseDoublesN(String str) {
+		ArrayList<String> lstr = new ArrayList<>();
+		Matcher matcher = Pattern.compile("-?\\d+((\\.|,)\\d+)?").matcher(str);
+
+		while (matcher.find())
+			lstr.add(matcher.group());
+
+		double[] result = new double[lstr.size()];
+		for (int i = 0; i < lstr.size(); i++)
+			result[i] = Double.parseDouble(lstr.get(i)); // TODO: safeParseDouble
+		return result;
 	}
 
 	public static int[] parseIntsN(String str) {
