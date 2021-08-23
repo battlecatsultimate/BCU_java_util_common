@@ -12,6 +12,7 @@ import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
+import common.util.stage.CastleImg;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
@@ -125,7 +126,7 @@ public class StageBasis extends BattleObj {
 
 		isOneLineup = oneLine;
 
-		boss_spawn = st.castle.get().boss_spawn;
+		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
 	}
 
 	/**
