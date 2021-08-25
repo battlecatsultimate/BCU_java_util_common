@@ -1684,7 +1684,6 @@ public abstract class Entity extends AbEntity {
 	 * move forward <br>
 	 * maxl: max distance to move <br>
 	 * extmov: distance try to add to this movement return false when movement reach
-	 * ignore: Allow entity go through base
 	 * endpoint
 	 */
 	protected boolean updateMove(double maxl, double extmov) {
@@ -1833,9 +1832,9 @@ public abstract class Entity extends AbEntity {
 		if (!acted && kbTime == -3) {
 			// move underground
 			double oripos = pos;
-			boolean b = updateMove(bdist, 0);
+			updateMove(0, 0);
 			bdist -= (pos - oripos) * dire;
-			if (!b) {
+			if (bdist < 0) {
 				bdist = 0;
 				kbTime = -4;
 				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP, true) - 2;
