@@ -231,7 +231,7 @@ public class CommonStatic {
 
 	public static double[] parseDoublesN(String str) {
 		ArrayList<String> lstr = new ArrayList<>();
-		Matcher matcher = Pattern.compile("-?(((\\.|,)\\d+)+|\\d+((\\.|,)\\d*)?)").matcher(str);
+		Matcher matcher = Pattern.compile("-?(((\\.|,)\\d+)|\\d+((\\.|,)\\d*)?)").matcher(str);
 
 		while (matcher.find())
 			lstr.add(matcher.group());
