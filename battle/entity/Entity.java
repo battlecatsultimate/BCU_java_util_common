@@ -1834,7 +1834,7 @@ public abstract class Entity extends AbEntity {
 			double oripos = pos;
 			updateMove(0, 0);
 			bdist -= (pos - oripos) * dire;
-			if (bdist < 0) {
+			if (bdist < 0 || (basis.getBase(dire).pos - pos) * dire - data.touchBase() <= 0) {
 				bdist = 0;
 				kbTime = -4;
 				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP, true) - 2;
