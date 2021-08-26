@@ -810,8 +810,8 @@
     "SHIELDBREAK" : {
         "abbr_name" : "shield piercing",
         "full_name" : "Shield Piercing",
-        "tooltip" : "Directly breaks demon shield. Be aware that this doesn't prevent shield from regenerated when hitbacked.",
-        "format" : "(prob)% chance to break demon shield",
+        "tooltip" : "Directly breaks aku shield. Be aware that this doesn't prevent shield from regenerated when hitbacked.",
+        "format" : "(prob)% chance to break aku shield",
         "class" : {
             "prob" : {
                 "name" : "chance",
