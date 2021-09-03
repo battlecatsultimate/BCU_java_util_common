@@ -1043,6 +1043,8 @@ public class Data {
 			false, //critical
 			false, //wave
 			false, //miniwave
+			false, //move wave
+			false, //volcano
 			false, //weaken
 			false, //barrier breaker
 			false, //shield breaker
@@ -1050,8 +1052,6 @@ public class Data {
 			false, //curse
 			false, //seal
 			false, //summon
-			false, //move wave
-			false, //volcano
 			false, //time
 			false, //sniper
 			false, //theme
