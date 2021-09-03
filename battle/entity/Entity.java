@@ -489,14 +489,8 @@ public abstract class Entity extends AbEntity {
 			Soul s = Identifier.get(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
 
-			if (e.getProc().VOLC.exists()) {
-				//VOLC volc = proc.VOLC;
-				int addp = volc.dis_0 + (int) (model.b.r.nextDouble() * (volc.dis_1 - volc.dis_0));
-				double p0 = model.getPos() + e.dire * addp;
-				double sta = p0 + (e.dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
-				double end = p0 - (e.dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
-
-				new ContVolcano(new AttackVolcano(e, new AttackSimple(e, e.aam, e.getAtk(), ), sta, end), p0, layer, volc.time);
+			if (e.getProc().DEATHSURGE.exists()) {
+				//idk
 			}
 		}
 
