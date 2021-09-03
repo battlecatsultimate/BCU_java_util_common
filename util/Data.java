@@ -936,7 +936,7 @@ public class Data {
 	public static final int P_DEMONSHIELD = 39;
 	public static final int P_SHIELDBREAK = 40;
 	public static final int P_DEATHSURGE = 41;
-	public static final int PROC_TOT = 42;// 41
+	public static final int PROC_TOT = 42;// 42
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -980,7 +980,8 @@ public class Data {
 			false, //miniwave
 			true,  //imu.summon
 			true,  //demon shield
-			false  //shield breaker
+			false,  //shield breaker
+			true  //death surge
 	};
 
 	public static final int WT_WAVE = 1;
