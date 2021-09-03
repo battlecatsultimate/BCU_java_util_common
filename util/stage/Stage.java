@@ -359,6 +359,15 @@ public class Stage extends Data
 		return map + " - " + id();
 	}
 
+	public boolean isAkuStage() {
+		if(data.datas.length == 0)
+			return false;
+
+		Line line = data.datas[data.datas.length - 1];
+
+		return line.enemy.id == 574 && line.enemy.pack.equals(Identifier.DEF) && line.castle_0 == 0;
+	}
+
 	protected void validate() {
 		if(trail)
 			return;
@@ -378,5 +387,4 @@ public class Stage extends Data
 				return false;
 		return true;
 	}
-
 }

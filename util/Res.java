@@ -182,9 +182,16 @@ public class Res extends ImgCore {
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
 		aux.icon[1][P_SHIELDBREAK] = new VImg(parts[296]);
 		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
-		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png"); // TODO - Add icons for Imu.Summon, DMGCUT, DMGCAP, Imu.Armor Break, and Imu.Haste
+		aux.icon[1][P_DEATHSURGE] = new VImg("./org/page/icons/DeathSurge.png");
+
+		//TODO Icons to add on
+		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png");
 		aux.icon[1][P_DMGCUT] = new VImg(parts[231]);
 		aux.icon[1][P_DMGCAP] = new VImg(parts[231]);
+		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
+		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/Speed.png");
+		aux.icon[1][P_BARRIER] = new VImg(parts[264]);
+		aux.icon[1][P_COUNTER] = new VImg(parts[229]);
 
 		//These are used for talent edit page icons
 		aux.icon[4][PC2_HP] = new VImg(parts[120]);
@@ -210,8 +217,6 @@ public class Res extends ImgCore {
 		aux.icon[1][P_MOVEWAVE] = new VImg("./org/page/icons/Moving.png");
 		aux.icon[1][P_SUMMON] = new VImg("./org/page/icons/Summon.png");
 		aux.icon[1][P_IMUMOVING] = new VImg("./org/page/icons/MovingX.png");
-		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreak.png"); // Needs Icon
-		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/Speed.png"); // Needs Icon
 		aux.icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		aux.icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		aux.icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");

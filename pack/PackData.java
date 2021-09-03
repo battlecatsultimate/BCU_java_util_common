@@ -23,10 +23,7 @@ import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import common.util.Data;
 import common.util.Res;
-import common.util.pack.Background;
-import common.util.pack.EffAnim;
-import common.util.pack.NyCastle;
-import common.util.pack.Soul;
+import common.util.pack.*;
 import common.util.stage.CastleList.PackCasList;
 import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
@@ -177,6 +174,8 @@ public abstract class PackData implements IndexContainer {
 			String mid = "/battle_soul_";
 			for (int i = 0; i < 16; i++)
 				souls.add(new Soul(pre + Data.trio(i) + mid + Data.trio(i), i));
+			demonSouls.add(new DemonSoul(pre+"demonsoul/battle_demonsoul_00", 0, false, "demon_soul_0_e"));
+			demonSouls.add(new DemonSoul(pre+"demonsoul/battle_demonsoul_00", 0, true, "demon_soul_0"));
 		}
 
 		private void loadUnits(Consumer<Double> bar) {
@@ -419,14 +418,16 @@ public abstract class PackData implements IndexContainer {
 	@Order(5)
 	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	@Order(6)
-	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
+	public final FixIndexMap<DemonSoul> demonSouls = new FixIndexMap<>(DemonSoul.class);
 	@Order(7)
-	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);
+	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
 	@Order(8)
-	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
+	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);
 	@Order(9)
-	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
+	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
 	@Order(10)
+	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
+	@Order(11)
 	public final FixIndexMap<Combo> combos = new FixIndexMap<>(Combo.class);
 
 	@Override

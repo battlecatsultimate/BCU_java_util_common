@@ -1087,6 +1087,7 @@ public class Data {
 			true,  //revive
 			true,  //barrier
 			true,  //demon barrier
+			true,  //death surge
 	};
 
 	public static final int WT_WAVE = 1;
@@ -1166,7 +1167,8 @@ public class Data {
 			{ 0, P_IMUVOLC }, // 54: resist to surge ?
 			{ 3, P_IMUVOLC }, // 55: immune to surge
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
-			{ 4, TRAIT_DEMON, 0 } // 57: Targetting Devil
+			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Devil
+			{ 0, P_SHIELDBREAK } //58 : shield piercing
 			};
 
 	// foot icon index used in battle

@@ -20,6 +20,7 @@ import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
 import common.util.anim.MaModel;
+import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
@@ -70,7 +71,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * soul anim, null means not dead yet
 		 */
-		private EAnimD<SoulType> soul;
+		private EAnimD<?> soul;
 
 		/**
 		 * smoke animation for each entity
@@ -491,14 +492,14 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 
-			Soul s = Identifier.get(e.data.getDeathAnim());
 			if (e.getProc().DEATHSURGE.exists() && e.getProc().DEATHSURGE.perform(e.basis.r)) {
 				deathSurge = true;
-				// Get Aku Soul codes and stuff here
-			} /* else {
+				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(DemonSoul.DemonSoulType.DEF);
+				dead = soul.len();
+			} else {
+				Soul s = Identifier.get(e.data.getDeathAnim());
 				dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
-			}*/
-			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len(); //Remove when Demon Soul is added
+			}
 		}
 
 		private int setAnim(UType t, boolean skip) {
@@ -535,7 +536,7 @@ public abstract class Entity extends AbEntity {
 			if (anim.done() && anim.type == UType.ENTER)
 				setAnim(UType.IDLE, true);
 			if (dead >= 0) {
-				if (deathSurge && soul.len() - dead == 21)
+				if (deathSurge && soul.len() - dead == 21) // 21 is guessed delay compared to BC
 					e.aam.getDeathSurge();
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
