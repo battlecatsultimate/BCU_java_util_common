@@ -1061,5 +1061,29 @@
         "tooltip": "Toggle this on and the unit will counter regardless of how far away the target is."
       }
     }
+  },
+  "DEATHSURGE": {
+    "abbr_name": "D.烈波",
+    "full_name": "死烈波",
+    "tooltip": null,
+    "format": "(prob)%の確率で(dis_0)~(dis_1)の距離に(_dispTime(time))の間烈波殺された後を生成する",
+    "class": {
+      "prob": {
+        "name": "確率",
+        "tooltip": null
+      },
+      "dis_0": {
+        "name": "最小距離",
+        "tooltip": null
+      },
+      "dis_1": {
+        "name": "最大距離",
+        "tooltip": null
+      },
+      "time": {
+        "name": "発生期間",
+        "tooltip": null
+      }
+    }
   }
 }

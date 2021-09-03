@@ -524,7 +524,8 @@ public abstract class Entity extends AbEntity {
 			if (anim.done() && anim.type == UType.ENTER)
 				setAnim(UType.IDLE, true);
 			if (dead >= 0) {
-				e.aam.getDeathSurge();
+				if (soul.len() - dead == 21)
+					e.aam.getDeathSurge();
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
 					if (soul == null || adm.pre == soul.len() - dead)
