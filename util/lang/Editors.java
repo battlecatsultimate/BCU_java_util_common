@@ -483,6 +483,16 @@ public class Editors {
 		}));
 
 		map().put("SHIELDBREAK", prob);
+
+		map().put("DEATHSURGE", new EditControl<>(Proc.VOLC.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dis_0 = t.dis_1 = 0;
+				t.time = 0;
+			} else {
+				t.time = Math.max(1, t.time / Data.VOLC_ITV) * Data.VOLC_ITV;
+			}
+		}));
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

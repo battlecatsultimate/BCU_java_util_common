@@ -592,6 +592,8 @@ public class Data {
 
 		@Order(40)
 		public final PROB SHIELDBREAK = new PROB();
+		@Order(41)
+		public final VOLC DEATHSURGE = new VOLC();
 
 		@Override
 		public Proc clone() {
@@ -933,7 +935,8 @@ public class Data {
 	public static final int P_IMUSUMMON = 38;
 	public static final int P_DEMONSHIELD = 39;
 	public static final int P_SHIELDBREAK = 40;
-	public static final int PROC_TOT = 41;// 41
+	public static final int P_DEATHSURGE = 41;
+	public static final int PROC_TOT = 42;// 41
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {

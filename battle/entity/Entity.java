@@ -19,6 +19,7 @@ import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
 import common.util.anim.MaModel;
+import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
@@ -468,6 +469,8 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
+		private boolean deathSurge = false;
+
 		/**
 		 * set kill anim
 		 */
@@ -477,8 +480,13 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 
-			Soul s = Identifier.get(e.data.getDeathAnim());
-			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
+			if (e.getProc().DEATHSURGE.exists() && e.getProc().DEATHSURGE.perform(e.basis.r)) {
+				deathSurge = true;
+				// Something something DemonSoul goes here
+			} else {
+				Soul s = Identifier.get(e.data.getDeathAnim());
+				dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
+			}
 		}
 
 		private int setAnim(UType t, boolean skip) {
@@ -505,10 +513,14 @@ public abstract class Entity extends AbEntity {
 			}
 			if (anim.done() && anim.type == UType.ENTER)
 				setAnim(UType.IDLE, true);
-			if (e.data.getResurrection() != null && dead >= 0) {
-				AtkDataModel adm = e.data.getResurrection();
-				if (soul == null || adm.pre == soul.len() - dead)
-					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+			if (dead >= 0) {
+				if (deathSurge && soul.len() - dead == 21) //21 is guessed delay compared to BC
+					e.aam.getDeathSurge();
+				if (e.data.getResurrection() != null) {
+					AtkDataModel adm = e.data.getResurrection();
+					if (soul == null || adm.pre == soul.len() - dead)
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+				}
 			}
 			if(smoke != null) {
 				if(smoke.done()) {
