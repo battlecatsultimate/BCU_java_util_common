@@ -478,6 +478,11 @@ public abstract class Entity extends AbEntity {
 		}
 
 		/**
+		 * 	Temporary value used for demon surge proc
+		 */
+		private boolean deathSurge = false;
+
+		/**
 		 * set kill anim
 		 */
 		private void kill() {
@@ -487,7 +492,13 @@ public abstract class Entity extends AbEntity {
 			}
 
 			Soul s = Identifier.get(e.data.getDeathAnim());
-			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
+			if (e.getProc().DEATHSURGE.exists() && e.getProc().DEATHSURGE.perform(e.basis.r)) {
+				deathSurge = true;
+				// Get Aku Soul codes and stuff here
+			} /* else {
+				dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
+			}*/
+			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len(); //Remove when Demon Soul is added
 		}
 
 		private int setAnim(UType t, boolean skip) {
@@ -524,7 +535,7 @@ public abstract class Entity extends AbEntity {
 			if (anim.done() && anim.type == UType.ENTER)
 				setAnim(UType.IDLE, true);
 			if (dead >= 0) {
-				if (soul.len() - dead == 21)
+				if (deathSurge && soul.len() - dead == 21)
 					e.aam.getDeathSurge();
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
