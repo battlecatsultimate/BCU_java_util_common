@@ -1,8 +1,10 @@
 package common.util.stage;
 
+import common.CommonStatic;
 import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.BattleObj;
 import common.util.stage.SCDef.Line;
 import common.util.unit.AbEnemy;
@@ -90,7 +92,16 @@ public class EStage extends BattleObj {
 				multi = Integer.MAX_VALUE;
 
 			double mulatk = data.mult_atk * mul * 0.01;
-			AbEnemy e = Identifier.getOr(data.enemy, AbEnemy.class);
+
+			Identifier<AbEnemy> enemy;
+
+			if(sb.st.isAkuStage() && CommonStatic.getConfig().levelLimit == 0) {
+				enemy = UserProfile.getBCData().enemies.get(575).id;
+			} else {
+				enemy = data.enemy;
+			}
+
+			AbEnemy e = Identifier.getOr(enemy, AbEnemy.class);
 			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, -1);
 		}
 		return null;

@@ -65,6 +65,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					continue;
 				if (fi.getName().equals("D"))
 					continue;
+				if (fi.getName().equals("DM"))
+					continue;
 				List<VFile> list = new ArrayList<>(fi.list());
 				VFile map = list.get(0);
 				List<VFile> stage = new ArrayList<>();
@@ -130,6 +132,11 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			add(11, id -> new StageMap(id, abbr + "2_2_Invasion.csv", 2)).name = "CotC 3 Invasion";
 			add(12, id -> new StageMap(id, abbr + "1_1_Z.csv", 2)).name = "ItF 2 Zombie";
 			add(13, id -> new StageMap(id, abbr + "1_2_Z.csv", 2)).name = "ItF 3 Zombie";
+
+			String akuOutbreak = "./org/stage/DM/";
+
+			add(14, id -> new StageMap(id, akuOutbreak+"MSDDM/MapStageDataDM_000.csv", 0));
+
 			VFile stz = VFile.get("./org/stage/CH/stageZ/");
 			for (VFile vf : stz.list()) {
 				String str = vf.getName();
@@ -193,7 +200,20 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				}
 				maps.get(9).add(id0, id -> new Stage(id, vf, 2));
 			}
-			maps.get(9).stars = new int[] { 100, 200, 400 };
+			maps.get(9).stars = new int[] { 100, 150, 400 };
+
+			VFile sta = VFile.get(akuOutbreak+"StageDM/");
+			for(VFile vf : sta.list()) {
+				String str = vf.getName();
+				int id0;
+				try {
+					id0 = Integer.parseInt(str.substring(11, 13));
+
+					maps.get(14).add(id0, id -> new Stage(id, vf, 0));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		private DefMapColc(String st, int ID, List<VFile> stage, VFile map) {

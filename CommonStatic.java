@@ -92,6 +92,14 @@ public class CommonStatic {
 		public int[] ints = new int[] { 1, 1, 1, 2 };
 		public boolean ref = true, battle = false, icon = false;
 		public boolean twoRow = true;
+		/**
+		 * Use this variable to unlock plus level for aku outbreak
+		 */
+		public boolean plus = false;
+		/**
+		 * Use this variable to adjust level limit for aku outbreak
+		 */
+		public int levelLimit = 0;
 		// Lang
 		public int lang;
 	}
