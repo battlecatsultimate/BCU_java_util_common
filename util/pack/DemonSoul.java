@@ -15,11 +15,15 @@ public class DemonSoul extends AnimD<DemonSoul, DemonSoul.DemonSoulType> impleme
 
     private final Identifier<DemonSoul> id;
     private final VImg img;
+    private final boolean rev;
+    private final String name;
 
-    public DemonSoul(String st, int i) {
+    public DemonSoul(String st, int i, boolean rev, String name) {
         super(st);
         img = new VImg(str + ".png");
         id = Identifier.parseInt(i, DemonSoul.class);
+        this.rev = rev;
+        this.name = name;
     }
 
     @Override
@@ -40,10 +44,12 @@ public class DemonSoul extends AnimD<DemonSoul, DemonSoul.DemonSoulType> impleme
         anims = new MaAnim[] { MaAnim.newIns(str + ".maanim") };
         types = DemonSoulType.values();
         parts = imgcut.cut(img.getImg());
+        if(rev)
+            revert();
     }
 
     @Override
     public String toString() {
-        return "demon-soul_" + id.id;
+        return name;
     }
 }

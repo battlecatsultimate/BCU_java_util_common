@@ -8,6 +8,7 @@ import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -64,7 +65,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * soul anim, null means not dead yet
 		 */
-		private EAnimD<SoulType> soul;
+		private EAnimD<?> soul;
 
 		/**
 		 * smoke animation for each entity
@@ -482,7 +483,8 @@ public abstract class Entity extends AbEntity {
 
 			if (e.getProc().DEATHSURGE.exists() && e.getProc().DEATHSURGE.perform(e.basis.r)) {
 				deathSurge = true;
-				// Something something DemonSoul goes here
+				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(DemonSoul.DemonSoulType.DEF);
+				dead = soul.len();
 			} else {
 				Soul s = Identifier.get(e.data.getDeathAnim());
 				dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
