@@ -155,6 +155,19 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind));
 	}
 
+	public void getDeathSurge() {
+		final Proc p = e.getProc();
+		if (!(p.DEATHSURGE.exists() && p.DEATHSURGE.perform(b.r)))
+			return;
+		AttackSimple as = new AttackSimple(e, this, e.getAtk(), e.traits, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
+		int addp = p.DEATHSURGE.dis_0 + (int) (b.r.nextDouble() * (p.DEATHSURGE.dis_1 - p.DEATHSURGE.dis_0));
+		double p0 = getPos() + getDire() * addp;
+		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
+		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
+
+		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, p.DEATHSURGE.time);
+	}
+
 	@Override
 	public int getDire() {
 		return e.dire;

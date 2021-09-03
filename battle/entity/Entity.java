@@ -488,10 +488,6 @@ public abstract class Entity extends AbEntity {
 
 			Soul s = Identifier.get(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
-
-			if (e.getProc().DEATHSURGE.exists()) {
-				//idk
-			}
 		}
 
 		private int setAnim(UType t, boolean skip) {
@@ -527,10 +523,13 @@ public abstract class Entity extends AbEntity {
 			}
 			if (anim.done() && anim.type == UType.ENTER)
 				setAnim(UType.IDLE, true);
-			if (e.data.getResurrection() != null && dead >= 0) {
-				AtkDataModel adm = e.data.getResurrection();
-				if (soul == null || adm.pre == soul.len() - dead)
-					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+			if (dead >= 0) {
+				e.aam.getDeathSurge();
+				if (e.data.getResurrection() != null) {
+					AtkDataModel adm = e.data.getResurrection();
+					if (soul == null || adm.pre == soul.len() - dead)
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+				}
 			}
 			if(smoke != null) {
 				if(smoke.done()) {
