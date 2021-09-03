@@ -133,6 +133,10 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.time = ints[84] * VOLC_ITV;
 		proc.DEMONSHIELD.hp = ints[87];
 		proc.DEMONSHIELD.regen = ints[88];
+		proc.DEATHSURGE.prob = ints[89];
+		proc.DEATHSURGE.dis_0 = ints[90] / 4;
+		proc.DEATHSURGE.dis_1 = ints[91] / 4 + proc.DEATHSURGE.dis_0;
+		proc.DEATHSURGE.time = ints[92] * VOLC_ITV;
 
 		if(ints[93] == 1)
 			t |= TB_DEMON;
