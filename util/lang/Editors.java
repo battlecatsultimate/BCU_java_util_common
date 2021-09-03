@@ -416,6 +416,19 @@ public class Editors {
 				t.mult = 0;
 		}));
 
+		map().put("COUNTER", new EditControl<>(Proc.COUNTER.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob,0,100);
+			if (t.prob > 0) {
+				t.procType = MathUtil.clip(t.procType,0,3);
+			} else {
+				t.damage = 0;
+				t.procType = 0;
+				t.type.useOwnDamage = false;
+				t.type.counterWave = 0;
+				t.type.outRange = false;
+			}
+		}));
+
 		map().put("IMUATK", pt);
 
 		map().put("DMGCUT", new EditControl<>(Proc.DMGCUT.class, (t) -> {
@@ -538,6 +551,16 @@ public class Editors {
 		}));
 
 		map().put("SHIELDBREAK", prob);
+
+		map().put("DEATHSURGE", new EditControl<>(Proc.VOLC.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dis_0 = t.dis_1 = 0;
+				t.time = 0;
+			} else {
+				t.time = Math.max(1, t.time / Data.VOLC_ITV) * Data.VOLC_ITV;
+			}
+		}));
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

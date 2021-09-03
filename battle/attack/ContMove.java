@@ -24,7 +24,7 @@ public class ContMove extends ContAb {
 		ran = conf[0];
 		rep = conf[4];
 		rept = rep > 0 ? rep : -1;
-		atk = new AttackWave(as, 0, 0, WT_MOVE);
+		atk = new AttackWave(as.attacker, as, 0, 0, WT_MOVE);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ContMove extends ContAb {
 				atk.incl.clear();
 				rept = rep;
 			}
-			sb.getAttack(new AttackWave(atk, pos, ran));
+			sb.getAttack(new AttackWave(atk.attacker, atk, pos, ran));
 			tempAtk = true;
 		}
 	}

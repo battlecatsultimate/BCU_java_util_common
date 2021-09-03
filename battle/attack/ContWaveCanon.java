@@ -97,7 +97,7 @@ public class ContWaveCanon extends ContWaveAb {
 	@Override
 	protected void nextWave() {
 		double np = pos - 405;
-		new ContWaveCanon(new AttackWave(atk, np, NYRAN[canid]), np, canid, maxt - t, waves);
+		new ContWaveCanon(new AttackWave(atk.attacker, atk, np, NYRAN[canid]), np, canid, maxt - t, waves);
 	}
 
 }

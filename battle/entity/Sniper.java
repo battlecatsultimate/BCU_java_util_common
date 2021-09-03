@@ -85,7 +85,7 @@ public class Sniper extends AtkModelAb {
 				proc.SNIPER.prob = 1;
 				ArrayList<Trait> CTrait = new ArrayList<>();
 				CTrait.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
-				AttackAb a = new AttackSimple(this, atk, CTrait, 0, proc, 0, getPos(), false, null, -1, true, 1);
+				AttackAb a = new AttackSimple(null, this, atk, CTrait, 0, proc, 0, getPos(), false, null, -1, true, 1);
 				a.canon = -1;
 				b.getAttack(a);
 			}

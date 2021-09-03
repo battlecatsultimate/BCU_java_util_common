@@ -116,8 +116,6 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	@Override
 	public EAnimU getEAnim(UType t) {
-		if (anim == null)
-			return null;
 		return anim.getEAnim(t);
 	}
 
@@ -170,7 +168,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				anim.unload();
 			}
 
-			if (UserProfile.isOlderPack(pack, "0.5.5.1")) {
+			if (UserProfile.isOlderPack(pack, "0.5.6.3")) {
+				enemy.getProc().BARRIER.health = enemy.shield;
 				enemy.traits = Trait.convertType(enemy.type);
 				Proc proc = enemy.getProc();
 				if ((enemy.abi & (1 << 18)) != 0) //Seal Immunity
@@ -182,8 +181,6 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				enemy.abi = Data.reorderAbi(enemy.abi);
 			}
 
-			if (UserProfile.isOlderPack(pack, "0.5.5.2"))
-				enemy.getProc().BARRIER.health = enemy.shield;
 		}
 	}
 

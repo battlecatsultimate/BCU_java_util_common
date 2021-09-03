@@ -3,10 +3,7 @@ package common.battle.entity;
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
-import common.battle.attack.AtkModelEntity;
-import common.battle.attack.AttackAb;
-import common.battle.attack.AttackCanon;
-import common.battle.attack.AttackSimple;
+import common.battle.attack.*;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
@@ -74,6 +71,21 @@ public abstract class Entity extends AbEntity {
 		 * soul anim, null means not dead yet
 		 */
 		private EAnimD<SoulType> soul;
+
+		/**
+		 * smoke animation for each entity
+		 */
+		public EAnimD<DefEff> smoke;
+
+		/**
+		 * Layer for smoke animation
+		 */
+		public int smokeLayer;
+
+		/**
+		 * x-pos of smoke animation
+		 */
+		public int smokeX;
 
 		/**
 		 * responsive effect FSM time
@@ -227,7 +239,7 @@ public abstract class Entity extends AbEntity {
 			}
 			if (t == P_POISON) {
 				int mask = status[P_POISON][0];
-				EffAnim<?>[] arr = { effas().A_POI0, effas().A_POI1, effas().A_POI2, effas().A_POI3, effas().A_POI4,
+				EffAnim<?>[] arr = { effas().A_POI0, e.dire == -1 ? effas().A_POI1 : effas().A_POI1_E, effas().A_POI2, effas().A_POI3, effas().A_POI4,
 						effas().A_POI5, effas().A_POI6, effas().A_POI7 };
 				for (int i = 0; i < A_POIS.length; i++)
 					if ((mask & (1 << i)) > 0) {
@@ -476,6 +488,16 @@ public abstract class Entity extends AbEntity {
 
 			Soul s = Identifier.get(e.data.getDeathAnim());
 			dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
+
+			if (e.getProc().VOLC.exists()) {
+				//VOLC volc = proc.VOLC;
+				int addp = volc.dis_0 + (int) (model.b.r.nextDouble() * (volc.dis_1 - volc.dis_0));
+				double p0 = model.getPos() + e.dire * addp;
+				double sta = p0 + (e.dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
+				double end = p0 - (e.dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
+
+				new ContVolcano(new AttackVolcano(e, new AttackSimple(e, e.aam, e.getAtk(), ), sta, end), p0, layer, volc.time);
+			}
 		}
 
 		private int setAnim(UType t, boolean skip) {
@@ -515,6 +537,15 @@ public abstract class Entity extends AbEntity {
 				AtkDataModel adm = e.data.getResurrection();
 				if (soul == null || adm.pre == soul.len() - dead)
 					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+			}
+			if(smoke != null) {
+				if(smoke.done()) {
+					smoke = null;
+					smokeLayer = -1;
+					smokeX = -1;
+				} else {
+					smoke.update(false);
+				}
 			}
 		}
 
@@ -684,8 +715,12 @@ public abstract class Entity extends AbEntity {
 			if (mov < 0)
 				e.updateMove(-mov, -mov);
 			else {
-				double lim = e.getLim();
-				e.pos -= Math.min(mov, lim) * e.dire;
+				if(kbType == INT_WARP) {
+					e.pos -= mov * e.dire;
+				} else {
+					double lim = e.getLim();
+					e.pos -= Math.min(mov, lim) * e.dire;
+				}
 			}
 		}
 
@@ -1365,12 +1400,13 @@ public abstract class Entity extends AbEntity {
 			anim.getEff(HEAL);
 
 		//75.0 is guessed value compared from BC
-		if(atk.isLongAtk)
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
+		if(atk.isLongAtk || atk instanceof AttackVolcano)
+			anim.smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
+			anim.smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
 
-		basis.lea.sort(Comparator.comparingInt(e -> e.layer));
+		anim.smokeLayer = (int) (layer + 3 - basis.r.nextDouble() * -6);
+		anim.smokeX = (int) (pos + 25 - basis.r.nextDouble() * -50);
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
@@ -1385,6 +1421,59 @@ public abstract class Entity extends AbEntity {
 			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_SATK);
 		}
+
+		final int FDmg = dmg;
+		atk.notifyEntity(e -> {
+			Proc.COUNTER counter = getProc().COUNTER;
+			if (counter.prob > 0 && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
+				double[] ds = aam.touchRange();
+				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
+				if ((counter.type.outRange || (atk.attacker.pos - ds[0]) * (atk.attacker.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0) && basis.r.nextDouble() * 100 < counter.prob) {
+					int reflectAtk = FDmg;
+					Proc reflectProc = Proc.blank();
+					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "WAVE",
+							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "SHIELDBREAK", "MINIWAVE"};
+
+					if (counter.procType == 1 || counter.procType == 3)
+						for (String s0 : par)
+							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE") && isWave)
+								reflectProc.get(s0).set(e.data.getAllProc().get(s0));
+							else
+								reflectProc.get(s0).set(atk.getProc().get(s0));
+
+					if (data.getCounter() != null) {
+						if (counter.type.useOwnDamage)
+							reflectAtk = data.getCounter().atk;
+						else
+							reflectAtk = reflectAtk * counter.damage / 100;
+
+						if (counter.procType >= 2) {
+							Proc p = data.getCounter().getProc();
+							for (String s0 : par)
+								if (p.get(s0).perform(basis.r))
+									reflectProc.get(s0).set(p.get(s0));
+						}
+					} else {
+						if (counter.type.useOwnDamage)
+							reflectAtk = counter.damage;
+						reflectAtk = reflectAtk * counter.damage / 100;
+							 if (counter.procType >= 2) {
+								Proc p = data.getAllProc();
+								for (String s0 : par)
+									if (p.get(s0).perform(e.basis.r))
+										reflectProc.get(s0).set(p.get(s0));
+							}
+					}
+					if (e.status[P_WEAK][0] > 0)
+						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
+					if (e.status[P_STRONG][0] != 0)
+						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
+
+					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
+					as.counterEntity(e);
+				}
+			}
+		});
 
 		// process proc part
 		if (!(ctargetable(atk.trait, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
@@ -1827,14 +1916,6 @@ public abstract class Entity extends AbEntity {
 		if (moved)
 			canBurrow = true;
 		moved = true;
-		double max = (basis.getBase(dire).pos - pos) * dire - data.touchBase();
-
-		//Must subtract 1600 from length because of gap between battle field and bases
-		if(data.touchBase() >= basis.st.len - 1600)
-			max = 0;
-
-		if (maxl >= 0)
-			max = Math.min(max, maxl);
 
 		double mov = status[P_SLOW][0] > 0 ? 0.25 : data.getSpeed() * 0.5;
 
@@ -1854,8 +1935,12 @@ public abstract class Entity extends AbEntity {
 
 		mov += extmov;
 
-		pos += Math.min(mov, max) * dire;
-		return max > mov;
+		if(maxl > 0)
+			mov = Math.min(mov, maxl);
+
+		pos += mov * dire;
+
+		return maxl > mov;
 	}
 
 	private boolean cantGoMore() {
@@ -1973,9 +2058,9 @@ public abstract class Entity extends AbEntity {
 		if (!acted && kbTime == -3) {
 			// move underground
 			double oripos = pos;
-			boolean b = updateMove(bdist, 0);
+			updateMove(0, 0);
 			bdist -= (pos - oripos) * dire;
-			if (!b) {
+			if (bdist < 0 || (basis.getBase(dire).pos - pos) * dire - data.touchBase() <= 0) {
 				bdist = 0;
 				kbTime = -4;
 				status[P_BURROW][2] = anim.setAnim(UType.BURROW_UP, true) - 2;
@@ -2027,6 +2112,10 @@ public abstract class Entity extends AbEntity {
 			blds = (bpos - pos) * dire > data.touchBase();
 			if (blds)
 				le.remove(basis.getBase(dire));
+			if (dire == -1 && pos <= bpos && !le.contains(basis.getBase(dire)))
+				le.add(basis.getBase(dire));
+			else if(dire == 1 && pos >= bpos && !le.contains(basis.getBase(dire)))
+				le.add(basis.getBase(dire));
 			blds &= le.size() == 0;
 		} else {
 			blds = le.size() == 0;

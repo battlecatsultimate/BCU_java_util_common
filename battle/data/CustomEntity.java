@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class CustomEntity extends DataEntity {
 
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rep, rev, res;
+	public AtkDataModel rep, rev, res, cntr;
 
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
@@ -132,6 +132,9 @@ public abstract class CustomEntity extends DataEntity {
 	public AtkDataModel getRevenge() {
 		return rev;
 	}
+
+	@Override
+	public AtkDataModel getCounter() { return cntr; }
 
 	@Override
 	public int getTBA() {

@@ -12,6 +12,7 @@ import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
+import common.util.stage.CastleImg;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
@@ -121,7 +122,7 @@ public class StageBasis extends BattleObj {
 
 		isOneLineup = oneLine;
 
-		boss_spawn = st.castle.get().boss_spawn / 4.0;
+		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
 	}
 
 	/**
@@ -457,8 +458,8 @@ public class StageBasis extends BattleObj {
 						entity.kill(false);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
-					int y = (int) (-256 * r.nextDouble());
+					int x = (int) (ebase.pos + 50 - 500 * r.nextDouble());
+					int y = (int) (-288 * r.nextDouble());
 
 					ebaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
@@ -470,8 +471,8 @@ public class StageBasis extends BattleObj {
 						entity.kill(false);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
-					int y = (int) (-256 * r.nextDouble());
+					int x = (int) (ubase.pos - 50 + 500 * r.nextDouble());
+					int y = (int) (-288 * r.nextDouble());
 
 					ubaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}

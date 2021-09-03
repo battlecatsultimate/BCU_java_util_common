@@ -148,60 +148,62 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		@Order(36)
 		public EffAnim<DefEff> A_POI1;
 		@Order(37)
-		public EffAnim<DefEff> A_POI2;
+		public EffAnim<DefEff> A_POI1_E;
 		@Order(38)
-		public EffAnim<DefEff> A_POI3;
+		public EffAnim<DefEff> A_POI2;
 		@Order(39)
-		public EffAnim<DefEff> A_POI4;
+		public EffAnim<DefEff> A_POI3;
 		@Order(40)
-		public EffAnim<DefEff> A_POI5;
+		public EffAnim<DefEff> A_POI4;
 		@Order(41)
-		public EffAnim<DefEff> A_POI6;
+		public EffAnim<DefEff> A_POI5;
 		@Order(42)
-		public EffAnim<DefEff> A_POI7;
+		public EffAnim<DefEff> A_POI6;
 		@Order(43)
-		public EffAnim<DefEff> A_SATK;
+		public EffAnim<DefEff> A_POI7;
 		@Order(44)
-		public EffAnim<DefEff> A_IMUATK;
+		public EffAnim<DefEff> A_SATK;
 		@Order(45)
-		public EffAnim<DefEff> A_POISON;
+		public EffAnim<DefEff> A_IMUATK;
 		@Order(46)
-		public EffAnim<VolcEff> A_VOLC;
+		public EffAnim<DefEff> A_POISON;
 		@Order(47)
-		public EffAnim<VolcEff> A_E_VOLC;
+		public EffAnim<VolcEff> A_VOLC;
 		@Order(48)
-		public EffAnim<DefEff> A_E_CURSE;
+		public EffAnim<VolcEff> A_E_VOLC;
 		@Order(49)
-		public EffAnim<DefEff> A_WAVE;
+		public EffAnim<DefEff> A_E_CURSE;
 		@Order(50)
-		public EffAnim<DefEff> A_E_WAVE;
+		public EffAnim<DefEff> A_WAVE;
 		@Order(51)
-		public EffAnim<ArmorEff> A_ARMOR;
+		public EffAnim<DefEff> A_E_WAVE;
 		@Order(52)
-		public EffAnim<ArmorEff> A_E_ARMOR;
+		public EffAnim<ArmorEff> A_ARMOR;
 		@Order(53)
-		public EffAnim<SpeedEff> A_SPEED;
+		public EffAnim<ArmorEff> A_E_ARMOR;
 		@Order(54)
-		public EffAnim<SpeedEff> A_E_SPEED;
+		public EffAnim<SpeedEff> A_SPEED;
 		@Order(55)
-		public EffAnim<WeakUpEff> A_WEAK_UP;
+		public EffAnim<SpeedEff> A_E_SPEED;
 		@Order(56)
-		public EffAnim<WeakUpEff> A_E_WEAK_UP;
+		public EffAnim<WeakUpEff> A_WEAK_UP;
 		@Order(57)
-		public EffAnim<DefEff> A_MINIWAVE;
+		public EffAnim<WeakUpEff> A_E_WEAK_UP;
 		@Order(58)
-		public EffAnim<DefEff> A_E_MINIWAVE;
+		public EffAnim<DefEff> A_MINIWAVE;
 		@Order(59)
-		public EffAnim<DefEff> A_ATK_SMOKE;
+		public EffAnim<DefEff> A_E_MINIWAVE;
 		@Order(60)
-		public EffAnim<DefEff> A_WHITE_SMOKE;
+		public EffAnim<DefEff> A_ATK_SMOKE;
 		@Order(61)
-		public EffAnim<DefEff> A_HEAL;
+		public EffAnim<DefEff> A_WHITE_SMOKE;
 		@Order(62)
-		public EffAnim<DefEff> A_E_HEAL;
+		public EffAnim<DefEff> A_HEAL;
 		@Order(63)
-		public EffAnim<ShieldEff> A_DEMON_SHIELD;
+		public EffAnim<DefEff> A_E_HEAL;
 		@Order(64)
+		public EffAnim<ShieldEff> A_DEMON_SHIELD;
+		@Order(65)
 		public EffAnim<ShieldEff> A_E_DEMON_SHIELD;
 
 		public EffAnim<?>[] values() {
@@ -444,9 +446,15 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vpois = new VImg(burn + ".png");
 		effas.A_POI0 = new EffAnim<>(burn, vpois, icburn, DefEff.values());
 		effas.A_POI0.name = "poison_DF";
+		String poison = stfs[3] + "poison/poison";
+		ImgCut icpoi = ImgCut.newIns(poison+".imgcut");
 		vpois = new VImg(stfs[3] + "poison.png");
-		effas.A_POI1 = new EffAnim<>(stfs[3] + ski + "curse", vpois, icfs[3], DefEff.values());
+		effas.A_POI1 = new EffAnim<>(poison, vpois, icpoi, DefEff.values());
 		effas.A_POI1.name = "poison_DT0";
+		poison = stfs[3] + "poison/poison_e";
+		icpoi = ImgCut.newIns(poison+".imgcut");
+		effas.A_POI1_E = new EffAnim<>(poison, vpois, icpoi, DefEff.values());
+		effas.A_POI1_E.name = "poison_DT0_e";
 		String strpb = stfs[3] + "poisbub/poisbub";
 		vpois = new VImg(strpb + ".png");
 		ImgCut icpois = ImgCut.newIns(strpb + ".imgcut");

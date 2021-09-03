@@ -8,6 +8,7 @@ import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class AttackAb extends BattleObj {
 
@@ -16,9 +17,11 @@ public abstract class AttackAb extends BattleObj {
 	public final AtkModelAb model;
 	public final AttackAb origin;
 	public final MaskAtk matk;
+	public final Entity attacker;
 	public final int layer;
 	public final boolean isLongAtk, SPtr;
 	public int duration;
+	public boolean isCounter = false;
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
 
@@ -26,7 +29,8 @@ public abstract class AttackAb extends BattleObj {
 	protected final List<AbEntity> capt = new ArrayList<>();
 	protected double sta, end;
 
-	protected AttackAb(AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
+	protected AttackAb(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, double p0, double p1, MaskAtk matk, int layer, boolean isLongAtk, int time) {
+		this.attacker = attacker;
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
@@ -43,7 +47,8 @@ public abstract class AttackAb extends BattleObj {
 		SPtr = matk != null && matk.getSPtrait();
 	}
 
-	protected AttackAb(AttackAb a, double STA, double END, boolean isLongAtk) {
+	protected AttackAb(Entity attacker, AttackAb a, double STA, double END, boolean isLongAtk) {
+		this.attacker = attacker;
 		dire = a.dire;
 		origin = a.origin;
 		model = a.model;
@@ -189,6 +194,12 @@ public abstract class AttackAb extends BattleObj {
 						proc.ARMOR.time *= (100 - imus.IMUSPEED.block) / 100.0;
 				}
 			}
+		}
+	}
+
+	public void notifyEntity(Consumer<Entity> notifier) {
+		if (!isCounter && attacker != null) {
+			notifier.accept(attacker);
 		}
 	}
 

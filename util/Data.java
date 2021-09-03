@@ -66,7 +66,6 @@ public class Data {
 		public static class DMGCUT extends ProcItem {
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
-				@BitCount(2)
 				@Order(0)
 				public boolean traitIgnore;
 				@Order(1)
@@ -84,7 +83,6 @@ public class Data {
 		public static class DMGCAP extends ProcItem {
 			@JsonClass(noTag = NoTag.LOAD)
 			public static class TYPE extends IntType {
-				@BitCount(2)
 				@Order(0)
 				public boolean traitIgnore;
 				@Order(1)
@@ -489,6 +487,30 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class COUNTER extends ProcItem {
+
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@BitCount(2)
+				@Order(0)
+				public int counterWave;
+				@Order(1)
+				public boolean useOwnDamage;
+				@Order(2)
+				public boolean outRange;
+			}
+
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int damage;
+			@Order(2)
+			public int procType;
+			@Order(3)
+			public TYPE type = new TYPE();
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class VOLC extends ProcItem {
 			@Order(0)
 			public int prob;
@@ -578,23 +600,23 @@ public class Data {
 		@Order(5)
 		public final MINIWAVE MINIWAVE = new MINIWAVE();
 		@Order(6)
-		public final WEAK WEAK = new WEAK();
-		@Order(7)
-		public final PROB BREAK = new PROB();
-		@Order(8)
-		public final PROB SHIELDBREAK = new PROB();
-		@Order(9)
-		public final PTD WARP = new PTD();
-		@Order(10)
-		public final PT CURSE = new PT();
-		@Order(11)
-		public final PT SEAL = new PT();
-		@Order(12)
-		public final SUMMON SUMMON = new SUMMON();
-		@Order(13)
 		public final MOVEWAVE MOVEWAVE = new MOVEWAVE();
-		@Order(14)
+		@Order(7)
 		public final VOLC VOLC = new VOLC();
+		@Order(8)
+		public final WEAK WEAK = new WEAK();
+		@Order(9)
+		public final PROB BREAK = new PROB();
+		@Order(10)
+		public final PROB SHIELDBREAK = new PROB();
+		@Order(11)
+		public final PTD WARP = new PTD();
+		@Order(12)
+		public final PT CURSE = new PT();
+		@Order(13)
+		public final PT SEAL = new PT();
+		@Order(14)
+		public final SUMMON SUMMON = new SUMMON();
 		@Order(15)
 		public final PT TIME = new PT();
 		@Order(16)
@@ -650,19 +672,23 @@ public class Data {
 		@Order(41)
 		public final IMU CRITI = new IMU();
 		@Order(42)
-		public final PT IMUATK = new PT();
+		public final COUNTER COUNTER = new COUNTER();
 		@Order(43)
-		public final DMGCUT DMGCUT = new DMGCUT();
+		public final PT IMUATK = new PT();
 		@Order(44)
-		public final DMGCAP DMGCAP = new DMGCAP();
+		public final DMGCUT DMGCUT = new DMGCUT();
 		@Order(45)
-		public final BURROW BURROW = new BURROW();
+		public final DMGCAP DMGCAP = new DMGCAP();
 		@Order(46)
-		public final REVIVE REVIVE = new REVIVE();
+		public final BURROW BURROW = new BURROW();
 		@Order(47)
-		public final BARRIER BARRIER = new BARRIER();
+		public final REVIVE REVIVE = new REVIVE();
 		@Order(48)
+		public final BARRIER BARRIER = new BARRIER();
+		@Order(49)
 		public final DSHIELD DEMONSHIELD = new DSHIELD();
+		@Order(50)
+        public final VOLC DEATHSURGE = new VOLC();
 
 		@Override
 		public Proc clone() {
@@ -928,24 +954,24 @@ public class Data {
 	public static final int P_CRIT = 3;
 	public static final int P_WAVE = 4;
 	public static final int P_MINIWAVE = 5;
-	public static final int P_WEAK = 6;
-	public static final int P_BREAK = 7;
-	public static final int P_SHIELDBREAK = 8;
-	public static final int P_WARP = 9;
-	public static final int P_CURSE = 10;
-	public static final int P_SEAL = 11;
+	public static final int P_MOVEWAVE = 6;
+	public static final int P_VOLC = 7;
+	public static final int P_WEAK = 8;
+	public static final int P_BREAK = 9;
+	public static final int P_SHIELDBREAK = 10;
+	public static final int P_WARP = 11;
+	public static final int P_CURSE = 12;
+	public static final int P_SEAL = 13;
 	/**
 	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time
 	 *
 	 * +0: direct, +1: warp, +2:burrow, +4:disregard limit, +8: fix buff, +16: same
 	 * health, +32: diff layer, +64 on hit, +128 on kill
 	 */
-	public static final int P_SUMMON = 12;
+	public static final int P_SUMMON = 14;
 	/**
 	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv
 	 */
-	public static final int P_MOVEWAVE = 13;
-	public static final int P_VOLC = 14;
 	public static final int P_TIME = 15;
 	public static final int P_SNIPER = 16;
 	/**
@@ -991,10 +1017,11 @@ public class Data {
 	public static final int P_IMUARMOR = 39;
 	public static final int P_IMUSPEED = 40;
 	public static final int P_CRITI = 41;
-	public static final int P_IMUATK = 42;
-	public static final int P_DMGCUT = 43;
-	public static final int P_DMGCAP = 44;
-	public static final int P_BURROW = 45;
+	public static final int P_COUNTER = 42;
+	public static final int P_IMUATK = 43;
+	public static final int P_DMGCUT = 44;
+	public static final int P_DMGCAP = 45;
+	public static final int P_BURROW = 46;
 	/**
 	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
 	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
@@ -1002,10 +1029,11 @@ public class Data {
 	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
 	 * others
 	 */
-	public static final int P_REVIVE = 46;
-	public static final int P_BARRIER = 47;
-	public static final int P_DEMONSHIELD = 48;
-	public static final int PROC_TOT = 49;// 46
+	public static final int P_REVIVE = 47;
+	public static final int P_BARRIER = 48;
+	public static final int P_DEMONSHIELD = 49;
+	public static final int P_DEATHSURGE = 50;
+	public static final int PROC_TOT = 51;// 51
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1054,6 +1082,7 @@ public class Data {
 			true,  //invincibility
 			true,  //damage cut
 			true,  //damage cap
+			true,  //counter
 			true,  //burrow
 			true,  //revive
 			true,  //barrier

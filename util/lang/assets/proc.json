@@ -1062,5 +1062,40 @@
                 "tooltip": null
             }
         }
+    },
+    "COUNTER" : {
+        "abbr_name": "Counter",
+        "full_name": "Counter Attack",
+        "tooltip": "Deal damage back when attacked.",
+        "format": ["(prob)% chance to counter enemy attacks, dealing (damage)[(!type.useOwnDamage){% of the damage received from an attack}] back.",
+                    "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks.}] This counterattack will ",
+                    "[(procType<2|procType==3){[(procType==0){not }]have}(procType==2){replace}] the original attack's procs[(procType==2){ with this unit's procs}(procType==3){ and this entity's procs}].",
+                    " This unit can [(!type.outRange){only counter enemies in his attack range}(type.outRange){counter any enemy regardless of their position}]."],
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "damage": {
+                "name": "Damage%",
+                "tooltip": "The percentage of damage to reflect when getting hit."
+            },
+            "procType": {
+                "name": "Proc Type",
+                "tooltip": "The parameter here affects how attack procs are handled. 0 = Removes all procs. 1 = Reflects all procs back to the attacker. 2 = Replaces all the attack's procs with this unit's procs. 3 = Uses both this entity and the attacker's procs. Useless if there's a hit registered as counter"
+            },
+            "type.counterWave": {
+                "name": "Counter Waves",
+                "tooltip": "Toggle response when hit with a Wave or Surge. 0 = Do Nothing. 1 = Counter. 2 = Reflect."
+            },
+            "type.useOwnDamage": {
+                "name": "Use Own Damage",
+                "tooltip": "Use this unit's damage for counters instead of received damage."
+            },
+            "type.outRange": {
+                "name": "Ignore Distance",
+                "tooltip": "Toggle this on and the unit will counter regardless of how far away the target is."
+            }
+        }
     }
 }

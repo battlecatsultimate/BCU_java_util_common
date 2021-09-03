@@ -178,7 +178,7 @@ public class Cannon extends AtkModelAb {
 					double p = b.ubase.pos - wid / 2 + 100;
 					int atk = b.b.t().getCanonAtk();
 					AttackCanon eatk = new AttackCanon(this, atk, CTrait, 0, proc, 0, 0, 1);
-					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
+					new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
 				} else if (id == 1) {
 					// slow canon
 					proc.SLOW.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_SLOW_TIME) * (100 + b.b.getInc(C_SLOW)) / 100);
@@ -214,7 +214,7 @@ public class Cannon extends AtkModelAb {
 					double p = b.ubase.pos - wid / 2 + 100;
 					CTrait.set(CTrait.size() - 1,UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
 					AttackCanon eatk = new AttackCanon(this, 0, CTrait, AB_ONLY | AB_ZKILL, proc, 0, 0, 1);
-					new ContWaveCanon(new AttackWave(eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
+					new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
 				} else if (id == 6) {
 					// barrier canon
 					// guessed hit box time
