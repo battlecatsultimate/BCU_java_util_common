@@ -1858,7 +1858,7 @@ public abstract class Entity extends AbEntity {
 			// burrow up
 			acted = true;
 			status[P_BURROW][2]--;
-			if (status[P_BURROW][2] == 0)
+			if (status[P_BURROW][2] <= 0)
 				kbTime = 0;
 		}
 
