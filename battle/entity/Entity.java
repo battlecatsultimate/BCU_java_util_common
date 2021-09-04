@@ -1572,11 +1572,15 @@ public abstract class Entity extends AbEntity {
 			status[P_WARP][2] = 1;
 		}
 		// conf 2
-		if (conf == 2 && data.getPack().anim.anims.length >= 7)
+		if (conf == 2 && data.getPack().anim.anims.length >= 7) {
 			kbTime = -3;
+			bdist = -1;
+		}
+
 		if (conf == 3 && data.getPack().anim.anims.length >= 7) {
 			kbTime = -3;
 			status[P_BURROW] = new int[PROC_WIDTH];
+			bdist = -1;
 		}
 	}
 
