@@ -156,19 +156,38 @@ public abstract class Entity extends AbEntity {
 			if (effs[eftp] != null) {
 				effs[eftp].draw(g, p, siz * 0.75);
 			}
+
 			for(int i = 0; i < effs.length; i++) {
-				EAnimD<?> eae = effs[i];
-
-				double offset = 0.0;
-
 				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD)
-					offset = -25.0 * siz;
+					continue;
+
+				EAnimD<?> eae = effs[i];
 
 				if (eae == null)
 					continue;
+
+				double offset = 0.0;
+
 				g.setTransform(at);
 				eae.draw(g, new P(x, p.y+offset), siz * 0.75);
 				x -= EWID * e.dire * siz;
+			}
+
+			x = p.x;
+
+			for(int i = 0; i < effs.length; i++) {
+				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD) {
+					EAnimD<?> eae = effs[i];
+
+					if(eae == null)
+						continue;
+
+					double offset = -25.0 * siz;
+
+					g.setTransform(at);
+
+					eae.draw(g, new P(x, p.y + offset), siz * 0.75);
+				}
 			}
 
 			g.delete(at);
@@ -1291,10 +1310,14 @@ public abstract class Entity extends AbEntity {
 				currentShield = 0;
 
 				anim.getEff(SHIELD_BROKEN);
+
+				cancelAllProc();
 			} else {
 				currentShield -= getDamage(atk, atk.atk);
 
 				anim.getEff(SHIELD_HIT);
+
+				cancelAllProc();
 			}
 		} else {
 			shieldContinue = true;
@@ -1929,5 +1952,17 @@ public abstract class Entity extends AbEntity {
 		// if this entity is in kb state, do kbmove()
 		if (kbTime > 0)
 			kb.updateKB();
+	}
+
+	/**
+	 * Remove existing proc to this entity
+	 */
+	public void cancelAllProc() {
+		weaks.list.clear();
+		pois.list.clear();
+
+		for(int i = 0; i < REMOVABLE_PROC.length; i++) {
+			status[REMOVABLE_PROC[i]][0] = 1;
+		}
 	}
 }
