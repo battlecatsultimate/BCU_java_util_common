@@ -8,8 +8,18 @@ import java.util.ArrayList;
 
 public abstract class AbEntity extends BattleObj {
 
+	/**
+	 * health = Unit's current health.
+	 * maxH = Unit's maximum HP. Used to limit healing and any effects that require % of Entity's HP.
+	 */
 	public long health, maxH;
+	/**
+	 * Direction/Faction of entity. -1 is Cat unit, 1 is Enemy Unit
+	 */
 	public int dire;
+	/**
+	 * Current Position of this Entity
+	 */
 	public double pos;
 
 	protected AbEntity(int h) {

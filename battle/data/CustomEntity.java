@@ -27,7 +27,7 @@ public abstract class CustomEntity extends DataEntity {
 
 	/**
 	 * This field is used to filter all the procs of units if common is false,
-	 * Has no effect in battle or anything else
+	 * Also used for counter
 	 */
 	@JsonField(block = true)
 	private Proc all;

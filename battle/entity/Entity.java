@@ -162,19 +162,38 @@ public abstract class Entity extends AbEntity {
 			if (effs[eftp] != null) {
 				effs[eftp].draw(g, p, siz * 0.75);
 			}
+
 			for(int i = 0; i < effs.length; i++) {
-				EAnimD<?> eae = effs[i];
-
-				double offset = 0.0;
-
 				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD)
-					offset = -25.0 * siz;
+					continue;
+
+				EAnimD<?> eae = effs[i];
 
 				if (eae == null)
 					continue;
+
+				double offset = 0.0;
+
 				g.setTransform(at);
 				eae.draw(g, new P(x, p.y+offset), siz * 0.75);
 				x -= EWID * e.dire * siz;
+			}
+
+			x = p.x;
+
+			for(int i = 0; i < effs.length; i++) {
+				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD) {
+					EAnimD<?> eae = effs[i];
+
+					if(eae == null)
+						continue;
+
+					double offset = -25.0 * siz;
+
+					g.setTransform(at);
+
+					eae.draw(g, new P(x, p.y + offset), siz * 0.75);
+				}
 			}
 
 			g.delete(at);
@@ -1370,8 +1389,10 @@ public abstract class Entity extends AbEntity {
 				barrierContinue = true;
 			} else if (dmg >= status[P_BARRIER][0]) {
 				barrier.breakBarrier(false);
+				cancelAllProc();
 			} else {
 				anim.getEff(BREAK_NON);
+				cancelAllProc();
 			}
 		}
 
@@ -1386,10 +1407,14 @@ public abstract class Entity extends AbEntity {
 				currentShield = 0;
 
 				anim.getEff(SHIELD_BROKEN);
+
+				cancelAllProc();
 			} else {
 				currentShield -= dmg;
 
 				anim.getEff(SHIELD_HIT);
+
+				cancelAllProc();
 			}
 		}
 
@@ -1828,6 +1853,18 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
+	 * Remove existing proc to this entity
+	 */
+	private void cancelAllProc() {
+		weaks.list.clear();
+		pois.list.clear();
+
+		for(int i = 0; i < REMOVABLE_PROC.length; i++) {
+			status[REMOVABLE_PROC[i]][0] = 1;
+		}
+	}
+
+	/**
 	 * update the entity. order of update: <br>
 	 *  move -> KB -> revive -> burrow -> wait -> attack
 	 */
@@ -1954,6 +1991,10 @@ public abstract class Entity extends AbEntity {
 		return maxl > mov;
 	}
 
+	/**
+	 * Check if the unit can still move
+	 * @return True if the unit is in a position it can no longer move any further
+	 */
 	private boolean cantGoMore() {
 		if (status[P_SPEED][0] == 0)
 			return false;
