@@ -155,16 +155,20 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return new AttackSimple(e, this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD() || data.isOmni());
 	}
 
+	/**
+	 * Invoke death surge attack whenever it procced
+	 */
     public void getDeathSurge() {
         Proc p = Proc.blank();
         int atk = getAttack(0, p);
+        Data.Proc.VOLC ds = e.getProc().DEATHSURGE;
         AttackSimple as = new AttackSimple(e, this, atk, e.type, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
-        int addp = p.DEATHSURGE.dis_0 + (int) (b.r.nextDouble() * (p.DEATHSURGE.dis_1 - p.DEATHSURGE.dis_0));
+        int addp = ds.dis_0 + (int) (b.r.nextDouble() * (ds.dis_1 - ds.dis_0));
         double p0 = getPos() + getDire() * addp;
         double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
         double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-        new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, p.DEATHSURGE.time);
+        new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time);
     }
 
 	@Override
