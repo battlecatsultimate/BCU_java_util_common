@@ -39,10 +39,9 @@ public class AttackSimple extends AttackAb {
 		double pos = model.getPos();
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
 		if(attacker != null && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
-			int toBaseHit = attacker.data instanceof CustomEntity ? (int)(Math.max(sta, end) - attacker.pos) : attacker.data.touchBase();
-			if(attacker.dire == -1 && dire == -1 &&  attacker.pos <= model.b.getBase(attacker.dire).pos + toBaseHit)
+			if(attacker.dire == -1 && dire == -1 && sta <= model.b.getBase(attacker.dire).pos)
 				le.add(model.b.getBase(attacker.dire));
-			else if (attacker.dire == 1 && dire == 1 && attacker.pos >= model.b.getBase(attacker.dire).pos - toBaseHit)
+			else if (attacker.dire == 1 && dire == 1 && sta >= model.b.getBase(attacker.dire).pos)
 				le.add(model.b.getBase(attacker.dire));
 		}
 		le.removeIf(attacked::contains);
