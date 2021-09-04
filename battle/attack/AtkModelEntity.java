@@ -156,7 +156,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	public void getDeathSurge() {
-		Proc p = e.getProc();
+		Proc p = Proc.blank();
 		int atk = getAttack(0, p);
 		AttackSimple as = new AttackSimple(e, this, atk, e.traits, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
 		int addp = p.DEATHSURGE.dis_0 + (int) (b.r.nextDouble() * (p.DEATHSURGE.dis_1 - p.DEATHSURGE.dis_0));

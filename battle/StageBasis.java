@@ -373,10 +373,13 @@ public class StageBasis extends BattleObj {
 			return e.t == 0;
 		});
 
-		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0)
+		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
+			ebase.preUpdate();
 			ebase.update();
+		}
 
 		if (s_stop == 0) {
+			ubase.preUpdate();
 			ubase.update();
 			int allow = st.max - entityCount(1);
 			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
