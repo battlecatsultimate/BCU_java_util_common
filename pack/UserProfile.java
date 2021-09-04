@@ -52,12 +52,20 @@ public class UserProfile {
 		if (pack != null && !pack.equals(Identifier.DEF)) {
 			UserPack userpack = profile().packmap.get(pack);
 			list.add(userpack);
-			for (String dep : userpack.desc.dependency)
-				list.add(getPack(dep));
+			for (String dep : userpack.desc.dependency) {
+				PackData p = getPack(dep);
+
+				if(p != null)
+					list.add(p);
+			}
 		}
 		List ans = new ArrayList<>();
-		for (PackData data : list)
+		for (PackData data : list) {
+			if(data == null)
+				continue;
+
 			data.getList(cls, (r, l) -> ans.addAll(l.getList()), null);
+		}
 		return ans;
 	}
 

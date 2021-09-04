@@ -485,6 +485,7 @@ public abstract class Entity extends AbEntity {
 				deathSurge = true;
 				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(DemonSoul.DemonSoulType.DEF);
 				dead = soul.len();
+				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
 				Soul s = Identifier.get(e.data.getDeathAnim());
 				dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
