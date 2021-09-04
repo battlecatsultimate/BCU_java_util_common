@@ -24,6 +24,7 @@ public abstract class CustomEntity extends DataEntity {
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
 
+	@JsonField(block = true)
 	private Proc all;
 
 	@Override
