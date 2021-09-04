@@ -155,6 +155,9 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind));
 	}
 
+	/**
+	 * Generate death surge when this entity is killed and the surge procs
+	 */
 	public void getDeathSurge() {
 		Proc p = Proc.blank();
 		int atk = getAttack(0, p);
