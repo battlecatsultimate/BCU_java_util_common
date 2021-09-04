@@ -496,6 +496,7 @@ public abstract class Entity extends AbEntity {
 				deathSurge = true;
 				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(DemonSoul.DemonSoulType.DEF);
 				dead = soul.len();
+				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
 				Soul s = Identifier.get(e.data.getDeathAnim());
 				dead = s == null ? 0 : (soul = s.getEAnim(SoulType.DEF)).len();
@@ -1752,11 +1753,15 @@ public abstract class Entity extends AbEntity {
 			status[P_WARP][2] = 1;
 		}
 		// conf 2
-		if (conf == 2 && data.getPack().anim.anims.length >= 7)
+		if (conf == 2 && data.getPack().anim.anims.length >= 7) {
 			kbTime = -3;
+			bdist = -1;
+		}
+
 		if (conf == 3 && data.getPack().anim.anims.length >= 7) {
 			kbTime = -3;
 			status[P_BURROW] = new int[PROC_WIDTH];
+			bdist = -1;
 		}
 	}
 
@@ -2076,7 +2081,7 @@ public abstract class Entity extends AbEntity {
 			// burrow up
 			acted = true;
 			status[P_BURROW][2]--;
-			if (status[P_BURROW][2] == 0)
+			if (status[P_BURROW][2] <= 0)
 				kbTime = 0;
 		}
 
