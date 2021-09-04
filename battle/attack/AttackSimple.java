@@ -37,9 +37,9 @@ public class AttackSimple extends AttackAb {
 		double pos = model.getPos();
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
 		if(attacker != null) {
-			if(attacker.dire == -1 && attacker.pos <= model.b.getBase(attacker.dire).pos + attacker.data.touchBase() && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+			if(attacker.dire == -1 && dire == -1 && attacker.pos <= model.b.getBase(attacker.dire).pos + attacker.data.touchBase() && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
 				le.add(model.b.getBase(attacker.dire));
-			} else if (attacker.dire == 1 && attacker.pos >= model.b.getBase(attacker.dire).pos - attacker.data.touchBase() && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+			} else if (attacker.dire == 1 && dire == 1 && attacker.pos >= model.b.getBase(attacker.dire).pos - attacker.data.touchBase() && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
 				le.add(model.b.getBase(attacker.dire));
 			}
 		}
