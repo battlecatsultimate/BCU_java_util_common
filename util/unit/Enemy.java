@@ -168,7 +168,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				anim.unload();
 			}
 
-			if (UserProfile.isOlderPack(pack, "0.5.6.3")) {
+			if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
 				enemy.getProc().BARRIER.health = enemy.shield;
 				enemy.traits = Trait.convertType(enemy.type);
 				Proc proc = enemy.getProc();
