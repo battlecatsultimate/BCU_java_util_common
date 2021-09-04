@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
@@ -37,12 +38,12 @@ public class AttackSimple extends AttackAb {
 	public void capture() {
 		double pos = model.getPos();
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
-		if(attacker != null) {
-			if(attacker.dire == -1 && dire == -1 &&  attacker.pos <= model.b.getBase(attacker.dire).pos + attacker.data.touchBase() && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+		if(attacker != null && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+			int toBaseHit = attacker.data instanceof CustomEntity ? (int)(Math.max(sta, end) - attacker.pos) : attacker.data.touchBase();
+			if(attacker.dire == -1 && dire == -1 &&  attacker.pos <= model.b.getBase(attacker.dire).pos + toBaseHit)
 				le.add(model.b.getBase(attacker.dire));
-			} else if (attacker.dire == 1 && dire == -1 && attacker.pos >= model.b.getBase(attacker.dire).pos - attacker.data.touchBase() && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+			else if (attacker.dire == 1 && dire == 1 && attacker.pos >= model.b.getBase(attacker.dire).pos - toBaseHit)
 				le.add(model.b.getBase(attacker.dire));
-			}
 		}
 		le.removeIf(attacked::contains);
 		capt.clear();
