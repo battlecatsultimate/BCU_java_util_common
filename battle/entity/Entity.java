@@ -758,6 +758,11 @@ public abstract class Entity extends AbEntity {
 		private void updateKB() {
 			e.kbTime--;
 			if (e.kbTime == 0) {
+				if(e.isBase) {
+					e.anim.setAnim(UType.HB, false);
+					return;
+				}
+
 				e.anim.back = null;
 				e.anim.setAnim(UType.WALK, true);
 
@@ -1675,6 +1680,9 @@ public abstract class Entity extends AbEntity {
 	 * receive an interrupt
 	 */
 	public void interrupt(int t, double d) {
+		if(isBase && health <= 0)
+			return;
+
 		kb.interrupt(t, d);
 	}
 
@@ -1721,6 +1729,7 @@ public abstract class Entity extends AbEntity {
 			interrupt(INT_HB, KB_DIS[INT_HB]);
 
 		health -= damage;
+
 		if (health > maxH)
 			health = maxH;
 		damage = 0;
@@ -1744,6 +1753,9 @@ public abstract class Entity extends AbEntity {
 		for (int i = 0; i < tokens.size(); i++)
 			tokens.get(i).model.invokeLater(tokens.get(i), this);
 		tokens.clear();
+
+		if(isBase && health <= 0)
+			kbTime = 1;
 
 		kb.doInterrupt();
 
