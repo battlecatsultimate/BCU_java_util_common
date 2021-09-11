@@ -1258,7 +1258,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * Entity's shield hp
 	 */
-	private int currentShield;
+	public int currentShield;
 
 	/**
 	 * Used for regenerating shield considering enemy's magnification
@@ -1388,7 +1388,7 @@ public abstract class Entity extends AbEntity {
 		boolean barrierContinue = status[P_BARRIER][0] == 0;
 		boolean shieldContinue = currentShield == 0;
 
-		if (status[P_BARRIER][0] > 0) {
+		if (!barrierContinue) {
 			if (atk.getProc().BREAK.prob > 0) {
 				barrier.breakBarrier(true);
 				barrierContinue = true;
@@ -1401,7 +1401,7 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if(currentShield > 0) {
+		if(!shieldContinue) {
 			if(atk.getProc().SHIELDBREAK.prob > 0) {
 				currentShield = 0;
 
@@ -1763,7 +1763,6 @@ public abstract class Entity extends AbEntity {
 			kill(true);
 
 		// update animations
-		anim.update();
 		zx.postUpdate();
 
 		if (health > 0)
@@ -1928,6 +1927,8 @@ public abstract class Entity extends AbEntity {
 		// update attack status when in attack state
 		if (atkm.atkTime > 0 && nstop)
 			atkm.updateAttack();
+
+		anim.update();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
