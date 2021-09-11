@@ -117,7 +117,7 @@ public class EUnit extends Entity {
 
 	@Override
 	protected double getLim() {
-		return basis.st.len - pos - ((MaskUnit) data).getLim();
+		return Math.max(0, basis.st.len - pos - ((MaskUnit) data).getLim());
 	}
 
 	@Override
