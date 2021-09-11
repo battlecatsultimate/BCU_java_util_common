@@ -986,7 +986,7 @@ public class Data {
 	};
 
 	public static final int[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_ARMOR, P_SPEED
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED
 	};
 
 	public static final int WT_WAVE = 1;

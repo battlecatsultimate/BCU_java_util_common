@@ -1583,8 +1583,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
 			kill(true);
 
-		// update animations
-		anim.update();
+		// update ZKill
 		zx.postUpdate();
 
 		if (health > 0)
@@ -1699,6 +1698,9 @@ public abstract class Entity extends AbEntity {
 		// update attack status when in attack state
 		if (atkm.atkTime > 0 && nstop)
 			atkm.updateAttack();
+
+		//update animation
+		anim.update();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
