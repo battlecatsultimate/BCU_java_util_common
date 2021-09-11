@@ -1974,7 +1974,8 @@ public abstract class Entity extends AbEntity {
 		pois.list.clear();
 
 		for(int i = 0; i < REMOVABLE_PROC.length; i++) {
-			status[REMOVABLE_PROC[i]][0] = 1;
+			if (status[REMOVABLE_PROC[i]][0] > 0)
+				status[REMOVABLE_PROC[i]][0] = 1;
 		}
 	}
 }
