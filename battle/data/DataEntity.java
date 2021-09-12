@@ -14,12 +14,13 @@ import java.util.ArrayList;
 public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;
-	public int abi, type, width;
+	public int abi, type, width, limit;
 	public int loop = -1, shield, will;
 	public Identifier<Soul> death;
 	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> traits = new ArrayList<>();
 	//Despite traits being restructured, type was left here to guarantee that traits can be transferred from the old trait structure to the new trait structure
+	//type and shield should be safely removable in 0-5-1-1
 
 	@Override
 	public int getAbi() {
@@ -69,6 +70,11 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	@Override
 	public int getWill() {
 		return will;
+	}
+
+	@Override
+	public int getLim() {
+		return limit;
 	}
 
 }

@@ -86,7 +86,7 @@ public class EEnemy extends Entity {
 	@Override
 	protected double getLim() {
 		double ans;
-		int width = ((MaskEnemy) data).getLim();
+		int width = data.getLim();
 
 		if (mark == 1)
 			ans = pos - 700 - width; // guessed value compared to BC

@@ -714,6 +714,7 @@ public abstract class Entity extends AbEntity {
 			kbDuration = e.kbTime;
 			time = 1;
 			e.anim.kbAnim();
+			e.anim.update();
 		}
 
 		private double easeOut(double time, double start, double end, double duration, double dire) {

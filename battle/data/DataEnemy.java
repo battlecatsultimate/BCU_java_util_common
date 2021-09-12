@@ -13,7 +13,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	private final Enemy enemy;
 
 	private int earn, star;
-	public int limit;
 
 	public DataEnemy(Enemy e) {
 		enemy = e;
@@ -178,9 +177,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	public int getStar() {
 		return star;
 	}
-
-	@Override
-	public int getLim() { return limit; }
 
 	@Override
 	public double multi(Basis b) {
