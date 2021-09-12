@@ -5,14 +5,12 @@ import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
 
-import java.util.Arrays;
-
 public class DataEnemy extends DefaultData implements MaskEnemy {
 
 	private final Enemy enemy;
 
 	private int earn, star;
-	public int limit;
+	public double limit;
 
 	public DataEnemy(Enemy e) {
 		enemy = e;
@@ -176,7 +174,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	}
 
 	@Override
-	public int getLim() {
+	public double getLimit() {
 		return limit;
 	}
 

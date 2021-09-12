@@ -82,12 +82,12 @@ public class EEnemy extends Entity {
 	@Override
 	protected double getLim() {
 		double ans;
-		double width = ((MaskEnemy) data).getLim() + basis.boss_spawn;
+		double minPos = ((MaskEnemy) data).getLimit();
 
 		if (mark == 1)
-			ans = pos - width; // guessed value compared to BC
+			ans = pos - (minPos + basis.boss_spawn); // guessed value compared to BC
 		else
-			ans = pos - data.getWidth();
+			ans = pos - minPos;
 		return Math.max(0, ans);
 	}
 
