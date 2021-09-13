@@ -19,6 +19,7 @@ import common.util.Data;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
+import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
 
 @JCGeneric(Form.FormJson.class)
@@ -93,9 +94,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
-		anim.partial();
-		((DataUnit) du).limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * anim.mamodel.confs[1][2] - 1));
-		anim.unload();
+		MaModel model = anim.loader.getMM();
+		((DataUnit) du).limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
 	}
 
 	@Override
