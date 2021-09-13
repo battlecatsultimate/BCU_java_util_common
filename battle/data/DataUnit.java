@@ -197,7 +197,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	}
 
 	@Override
-	public int getLim() {
+	public int getLimit() {
 		return limit;
 	}
 

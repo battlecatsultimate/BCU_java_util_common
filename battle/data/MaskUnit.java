@@ -16,5 +16,5 @@ public interface MaskUnit extends MaskEntity {
 
 	int getRespawn();
 
-	int getLim();
+	int getLimit();
 }

@@ -66,7 +66,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	}
 
 	@Override
-	public int getLim() {
+	public int getLimit() {
 		return limit;
 	}
 
