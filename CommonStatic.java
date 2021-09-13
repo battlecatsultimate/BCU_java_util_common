@@ -420,7 +420,7 @@ public class CommonStatic {
 	public static double dataEnemyMinPos(MaModel model) {
 		int y = model.confs[0][2];
 		double z = (double) model.parts[0][8] / model.ints[0];
-		return 2.5 * Math.floor(y * 1.0 * z);
+		return 2.5 * Math.floor(y * z);
 	}
 
 	/**
@@ -429,6 +429,6 @@ public class CommonStatic {
 	public static double customEnemyMinPos(MaModel model) {
 		int y = -model.parts[0][6];
 		double z = (double) model.parts[0][8] / model.ints[0];
-		return 2.5 * Math.floor(y * 1.0 * z);
+		return 2.5 * Math.floor(y * z);
 	}
 }
