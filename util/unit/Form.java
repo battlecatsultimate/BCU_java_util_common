@@ -175,7 +175,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				if (UserProfile.isOlderPack(pack, "0.6.0.1")) {
 					anim.load();
 					anim.partial();
-					form.limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * anim.mamodel.confs[1][2] - 1));
+					form.limit = Math.abs(anim.mamodel.parts[0][6]) * 3.0 * Math.abs(anim.mamodel.parts[0][8]) / 1000.0;
 					anim.unload();
 				}
 			}

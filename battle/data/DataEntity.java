@@ -14,8 +14,9 @@ import java.util.ArrayList;
 public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;
-	public int abi, type, width, limit;
+	public int abi, type, width;
 	public int loop = -1, shield, will;
+	public double limit;
 	public Identifier<Soul> death;
 	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> traits = new ArrayList<>();
@@ -73,7 +74,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	}
 
 	@Override
-	public int getLim() {
+	public double getLimit() {
 		return limit;
 	}
 

@@ -78,7 +78,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 			MaskEnemy me = (MaskEnemy) de;
 			star = me.getStar();
 			drop = me.getDrop() / 100;
-			limit = me.getLim();
+			limit = me.getLimit();
 		}
 	}
 
