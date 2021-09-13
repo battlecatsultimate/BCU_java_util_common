@@ -438,4 +438,11 @@ public class CommonStatic {
 	public static int dataFormMinPos(MaModel model) {
 		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
 	}
+
+	/**
+	 * Gets the boss spawn point for a castle.
+	 */
+	public static double bossSpawnPoint(int y, int z) {
+		return (int) (3200 + y * z / 10.0 + Math.round(0.25 * Math.round(3.6 * z))) / 4.0;
+	}
 }
