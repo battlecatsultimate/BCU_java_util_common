@@ -431,4 +431,11 @@ public class CommonStatic {
 		double z = (double) model.parts[0][8] / model.ints[0];
 		return 2.5 * Math.floor(y * z);
 	}
+
+	/**
+	 * Gets the minimum position value for a data cat unit.
+	 */
+	public static int dataFormMinPos(MaModel model) {
+		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+	}
 }

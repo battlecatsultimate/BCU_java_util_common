@@ -95,7 +95,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
 		MaModel model = anim.loader.getMM();
-		((DataUnit) du).limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}
 
 	@Override
