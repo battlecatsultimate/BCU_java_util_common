@@ -87,7 +87,7 @@ public class EEnemy extends Entity {
 		if (mark == 1)
 			ans = pos - (minPos + basis.boss_spawn); // guessed value compared to BC
 		else
-			ans = pos - minPos;
+			ans = pos - minPos; // TODO: figure out if this is the correct behavior
 		return Math.max(0, ans);
 	}
 
