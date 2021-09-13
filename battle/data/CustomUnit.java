@@ -79,6 +79,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 			resp = mu.getRespawn();
 			back = Math.min(mu.getBack(), mu.getFront());
 			front = Math.max(mu.getBack(), mu.getFront());
+			limit = mu.getLimit();
 		}
 	}
 
