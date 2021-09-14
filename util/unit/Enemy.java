@@ -20,6 +20,7 @@ import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
+import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.PackMapColc;
@@ -70,9 +71,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		de = new DataEnemy(this);
 		anim = new AnimUD(str, Data.trio(id.id) + "_e", "edi_" + Data.trio(id.id) + ".png", null);
 		anim.getEdi().check();
-		anim.partial();
-		((DataEnemy) de).limit = (int) (Math.abs(anim.mamodel.confs[0][2]) * Math.abs(anim.mamodel.parts[0][8]) * 3.0 / anim.mamodel.ints[0]);
-		anim.unload();
+		MaModel model = anim.loader.getMM();
+		((DataEnemy) de).limit = CommonStatic.dataEnemyMinPos(model);
 	}
 
 	public List<Stage> findApp() {
@@ -165,9 +165,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
-				anim.partial();
-				enemy.limit = (int) (Math.abs(anim.mamodel.parts[0][6]) * 3.0 * Math.abs(anim.mamodel.parts[0][8]) / 1000.0);
-				anim.unload();
+				MaModel model = anim.loader.getMM();
+				enemy.limit = CommonStatic.dataEnemyMinPos(model);
 			}
 		}
 	}

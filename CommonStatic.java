@@ -13,6 +13,7 @@ import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.anim.ImgCut;
+import common.util.anim.MaModel;
 import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
 import common.util.stage.Music;
@@ -30,7 +31,7 @@ import static java.lang.Character.isDigit;
 @SuppressWarnings("DeprecatedIsStillUsed")
 public class CommonStatic {
 
-	public interface BattleConst {
+    public interface BattleConst {
 
 		double ratio = 768.0 / 2400.0;// r = p/u
 
@@ -413,4 +414,35 @@ public class CommonStatic {
 		return res.toString();
 	}
 
+	/**
+	 * Gets the minimum position value for a data enemy.
+	 */
+	public static double dataEnemyMinPos(MaModel model) {
+		int y = model.confs[0][2];
+		double z = (double) model.parts[0][8] / model.ints[0];
+		return 2.5 * Math.floor(y * z);
+	}
+
+	/**
+	 * Gets the minimum position value for a custom enemy.
+	 */
+	public static double customEnemyMinPos(MaModel model) {
+		int y = -model.parts[0][6];
+		double z = (double) model.parts[0][8] / model.ints[0];
+		return 2.5 * Math.floor(y * z);
+	}
+
+	/**
+	 * Gets the minimum position value for a data cat unit.
+	 */
+	public static int dataFormMinPos(MaModel model) {
+		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+	}
+
+	/**
+	 * Gets the boss spawn point for a castle.
+	 */
+	public static double bossSpawnPoint(int y, int z) {
+		return (int) (3200 + y * z / 10.0 + Math.round(0.25 * Math.round(3.6 * z))) / 4.0;
+	}
 }

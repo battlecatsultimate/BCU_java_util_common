@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
@@ -37,7 +38,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			if (y == -999) break;
 			CastleImg castle = CastleList.getList("000000").get(index++);
 			if (castle != null)
-				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = CommonStatic.bossSpawnPoint(y, z);
 		}
 		index = 0;
 		Queue<String> empireData = VFile.readLine("./org/data/enemyCastleData0.csv");
@@ -48,7 +49,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			if (y == -999) break;
 			CastleImg castle = CastleList.getList("000001").get(index++);
 			if (castle != null)
-				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = CommonStatic.bossSpawnPoint(y, z);
 		}
 		index = 0;
 		Queue<String> futureData = VFile.readLine("./org/data/enemyCastleData1.csv");
@@ -59,7 +60,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			if (y == -999) break;
 			CastleImg castle = CastleList.getList("000002").get(index++);
 			if (castle != null)
-				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = CommonStatic.bossSpawnPoint(y, z);
 		}
 		index = 0;
 		Queue<String> cosmoData = VFile.readLine("./org/data/enemyCastleData1.csv");
@@ -70,7 +71,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			if (y == -999) break;
 			CastleImg castle = CastleList.getList("000003").get(index++);
 			if (castle != null)
-				castle.boss_spawn = (3314 + Math.floor(z * y / 10.0)) / 4;
+				castle.boss_spawn = CommonStatic.bossSpawnPoint(y, z);
 		}
 	}
 

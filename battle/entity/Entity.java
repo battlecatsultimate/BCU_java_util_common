@@ -694,6 +694,7 @@ public abstract class Entity extends AbEntity {
 			kbDuration = e.kbTime;
 			time = 1;
 			e.anim.kbAnim();
+			e.anim.update();
 		}
 
 		private double easeOut(double time, double start, double end, double duration, double dire) {
@@ -1583,8 +1584,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
 			kill(true);
 
-		// update animations
-		anim.update();
+		// update ZKill
 		zx.postUpdate();
 
 		if (health > 0)
@@ -1699,6 +1699,9 @@ public abstract class Entity extends AbEntity {
 		// update attack status when in attack state
 		if (atkm.atkTime > 0 && nstop)
 			atkm.updateAttack();
+
+		//update animation
+		anim.update();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
@@ -1974,7 +1977,8 @@ public abstract class Entity extends AbEntity {
 		pois.list.clear();
 
 		for(int i = 0; i < REMOVABLE_PROC.length; i++) {
-			status[REMOVABLE_PROC[i]][0] = 1;
+			if (status[REMOVABLE_PROC[i]][0] > 0)
+				status[REMOVABLE_PROC[i]][0] = 1;
 		}
 	}
 }

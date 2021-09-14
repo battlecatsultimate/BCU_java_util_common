@@ -9,7 +9,7 @@ import common.util.unit.Unit;
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	private final Form form;
-	public int price, respawn;
+	public int price, respawn, limit;
 	private final int front;
 	private final int back;
 
@@ -194,6 +194,11 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	@Override
 	public int getRespawn() {
 		return respawn;
+	}
+
+	@Override
+	public int getLimit() {
+		return limit;
 	}
 
 	@Override

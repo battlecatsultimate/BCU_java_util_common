@@ -18,7 +18,9 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	public Enemy pack;
 
 	@JsonField
-	public int star, drop, limit;
+	public int star, drop;
+	@JsonField
+	public double limit;
 
 	public CustomEnemy() {
 		rep = new AtkDataModel(this);
@@ -75,7 +77,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 			MaskEnemy me = (MaskEnemy) de;
 			star = me.getStar();
 			drop = me.getDrop() / 100;
-			limit = me.getLim();
+			limit = me.getLimit();
 		}
 	}
 
@@ -89,7 +91,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	}
 
 	@Override
-	public int getLim() {
+	public double getLimit() {
 		return limit;
 	}
 

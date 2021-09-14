@@ -13,7 +13,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	public Form pack;
 
 	@JsonField
-	public int price, resp, back, front;
+	public int price, resp, back, front, limit;
 
 	public CustomUnit() {
 		rep = new AtkDataModel(this);
@@ -66,6 +66,11 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	}
 
 	@Override
+	public int getLimit() {
+		return limit;
+	}
+
+	@Override
 	public void importData(MaskEntity de) {
 		super.importData(de);
 		if (de instanceof MaskUnit) {
@@ -74,6 +79,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 			resp = mu.getRespawn();
 			back = Math.min(mu.getBack(), mu.getFront());
 			front = Math.max(mu.getBack(), mu.getFront());
+			limit = mu.getLimit();
 		}
 	}
 
