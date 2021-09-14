@@ -63,7 +63,8 @@ public class Cannon extends AtkModelAb {
 		double rat = BattleConst.ratio;
 		int h = (int) (640 * rat * siz);
 		g.setColor(FakeGraphics.MAGENTA);
-		double d0 = pos, ra = id == BASE_BARRIER ? b.b.t().getCannonMagnification(id, Data.BASE_RANGE) : NYRAN[id];
+		double ra = id == BASE_BARRIER ? b.b.t().getCannonMagnification(id, Data.BASE_RANGE) : NYRAN[id];
+		double d0 = id == BASE_BARRIER ? getBreakerSpawnPoint(pos, ra) : pos;
 		if (id == BASE_STOP || id == BASE_WATER)
 			d0 -= ra / 2;
 		if (id == BASE_BARRIER)
@@ -217,8 +218,10 @@ public class Cannon extends AtkModelAb {
 					proc.KB.dis = KB_DIS[INT_KB];
 					proc.KB.time = KB_TIME[INT_KB];
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
-					int rad = (int) b.b.t().getCannonMagnification(id, Data.BASE_RANGE);
-					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, pos - rad, pos, duration));
+					double rad = b.b.t().getCannonMagnification(id, Data.BASE_RANGE);
+					double newPos = getBreakerSpawnPoint(pos, rad);
+					System.out.println(rad);
+					b.getAttack(new AttackCanon(this, atk, -1, 0, proc, newPos - rad, newPos-1, duration));
 
 					atka = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK);
 					exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
@@ -236,4 +239,7 @@ public class Cannon extends AtkModelAb {
 
 	}
 
+	private double getBreakerSpawnPoint(double pos, double range) {
+		return pos + Math.ceil(range * 4 / 5) / 4.0;
+	}
 }

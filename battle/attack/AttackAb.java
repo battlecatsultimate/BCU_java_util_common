@@ -18,6 +18,7 @@ public abstract class AttackAb extends BattleObj {
 	public final int layer;
 	public final boolean isLongAtk;
 	public int duration;
+	public boolean excludeLastEdge = false;
 
 	public int touch = TCH_N, dire, canon = -2, waveType = 0;
 

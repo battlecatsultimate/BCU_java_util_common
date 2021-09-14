@@ -1024,7 +1024,7 @@ public abstract class Entity extends AbEntity {
 					return em.kbTime == -1;
 				return true;
 			});
-			List<AbEntity> lm = e.basis.inRange(TCH_ZOMBX, -e.dire, 0, e.basis.st.len);
+			List<AbEntity> lm = e.basis.inRange(TCH_ZOMBX, -e.dire, 0, e.basis.st.len, false);
 			for (int i = 0; i < lm.size(); i++) {
 				if (lm.get(i) == e)
 					continue;
@@ -1933,7 +1933,7 @@ public abstract class Entity extends AbEntity {
 	public void checkTouch() {
 		touch = true;
 		double[] ds = aam.touchRange();
-		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1]);
+		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1], false);
 		boolean blds;
 		if (data.isLD() || data.isOmni()) {
 			double bpos = basis.getBase(dire).pos;

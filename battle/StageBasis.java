@@ -197,14 +197,18 @@ public class StageBasis extends BattleObj {
 	/**
 	 * list of entities in the range of d0~d1 that can be touched by entity with
 	 * this direction and touch mode
+	 *
+	 * excludeLastEdge : If range is d0 ~ d1, normally it's true if d0 <= x <= d1 where x is entity's position<br>If this is true, then it will become d0 <= x < d1
 	 */
-	public List<AbEntity> inRange(int touch, int dire, double d0, double d1) {
+	public List<AbEntity> inRange(int touch, int dire, double d0, double d1, boolean excludeLastEdge) {
+		double start = Math.min(d0, d1);
+		double end = Math.max(d0, d1);
 		List<AbEntity> ans = new ArrayList<>();
 		if (dire == 0)
 			return ans;
 		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0
-					&& (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
+			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0 &&
+				le.get(i).pos >= start && (excludeLastEdge ? le.get(i).pos < end : le.get(i).pos <= end))
 				ans.add(le.get(i));
 		AbEntity b = dire == 1 ? ubase : ebase;
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
