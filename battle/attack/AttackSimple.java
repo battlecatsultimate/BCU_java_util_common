@@ -37,7 +37,7 @@ public class AttackSimple extends AttackAb {
 	@Override
 	public void capture() {
 		double pos = model.getPos();
-		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
+		List<AbEntity> le = model.b.inRange(touch, dire, sta, end, excludeLastEdge);
 		if(attacker != null && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
 			if(attacker.dire == -1 && dire == -1 && sta <= model.b.getBase(attacker.dire).pos)
 				le.add(model.b.getBase(attacker.dire));

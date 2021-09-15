@@ -158,6 +158,7 @@ public abstract class CustomEntity extends DataEntity {
 		tba = de.getTBA();
 		touch = de.getTouch();
 		death = de.getDeathAnim();
+		limit = de.getLimit();
 		if (de instanceof CustomEntity) {
 			importData$1((CustomEntity) de);
 			return;
