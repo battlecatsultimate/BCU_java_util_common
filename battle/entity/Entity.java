@@ -744,6 +744,11 @@ public abstract class Entity extends AbEntity {
 					return;
 				}
 
+				if ((e.getAbi() & AB_GLASS) > 0 && e.atkm.atkTime == 0 && e.atkm.loop == 0) {
+					e.kill(true);
+					return;
+				}
+
 				e.anim.back = null;
 				e.anim.setAnim(UType.WALK, true);
 
