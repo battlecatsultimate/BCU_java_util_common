@@ -44,7 +44,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 		@JCGetter
 		public Form get() {
-			return uid.get().forms[fid];
+			try {
+				return uid.get().forms[fid];
+			} catch (Exception e) {
+				return null;
+			}
 		}
 	}
 
