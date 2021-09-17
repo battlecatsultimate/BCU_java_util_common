@@ -2,6 +2,7 @@ package common.io.assets;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.io.Backup;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.PackLoader.ZipDesc.FileDesc;
@@ -65,6 +66,16 @@ public class Admin {
 		}
 
 		@Override
+		public File getBackupFile(String string) {
+			return new File("./backups/"+string);
+		}
+
+		@Override
+		public String getAuthor() {
+			return "";
+		}
+
+		@Override
 		public void initProfile() {
 			AssetLoader.load((d) -> {
 			});
@@ -94,6 +105,11 @@ public class Admin {
 		@Override
 		public void loadProg(String str) {
 			System.out.println(str);
+		}
+
+		@Override
+		public boolean restore(Backup b, Consumer<Double> prog) {
+			return false;
 		}
 
 	}

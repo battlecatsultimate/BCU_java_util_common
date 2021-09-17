@@ -26,6 +26,7 @@ import common.system.files.FileData;
 import common.system.files.VFileRoot;
 import common.util.Data;
 
+import javax.annotation.Nullable;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -217,7 +218,7 @@ public class PackLoader {
 			}
 		}
 
-		private void save(FileSaver saver, Consumer<Double> prog) throws Exception {
+		private void save(FileSaver saver, @Nullable Consumer<Double> prog) throws Exception {
 			int x = 0;
 			for (FileDesc fd : files) {
 				FileInputStream fis = new FileInputStream(fd.file);
@@ -233,7 +234,8 @@ public class PackLoader {
 					saver.save(cipher, data, rem == 0);
 				}
 				fis.close();
-				prog.accept(1.0 * (x++) / files.length);
+				if(prog != null)
+					prog.accept(1.0 * (x++) / files.length);
 			}
 		}
 	}
@@ -395,6 +397,33 @@ public class PackLoader {
 			fos.close();
 		}
 
+		private FileSaver(File dst, List<File> files, PackData.PackDesc pd, String password, @Nullable Consumer<Double> prog)
+				throws Exception {
+			files.removeIf(f -> f == null || !f.exists());
+
+			if(files.size() == 0)
+				throw new IllegalStateException("File size is 0 : "+files);
+
+			if(!checkParents(files))
+				throw new IllegalStateException("Files' parents aren't synced : "+files);
+
+			List<FileDesc> fs = new ArrayList<>();
+			for (File fi : files)
+				addFiles(fs, fi, "./");
+			ZipDesc desc = new ZipDesc(pd, fs.toArray(new FileDesc[0]));
+			byte[] bytedesc = JsonEncoder.encode(desc).toString().getBytes(StandardCharsets.UTF_8);
+			fos = new FileOutputStream(dst);
+			fos.write(HEAD_DATA);
+			key = getMD5(password.getBytes(StandardCharsets.UTF_8), PASSWORD);
+			fos.write(key);
+			byte[] len = new byte[4];
+			DataIO.fromInt(len, 0, bytedesc.length);
+			fos.write(len);
+			save(encrypt(key), bytedesc, true);
+			desc.save(this, prog);
+			fos.close();
+		}
+
 		private void addFiles(List<FileDesc> fs, File f, String path) {
 			for (String str : EXCLUDE)
 				if (f.getName().equals(str))
@@ -413,6 +442,21 @@ public class PackLoader {
 			fos.write(bs);
 		}
 
+		private boolean checkParents(List<File> files) {
+			File parent = files.get(0).getParentFile();
+
+			for(int i = 1; i < files.size(); i++) {
+				File p = files.get(i).getParentFile();
+
+				if(parent != null && p != null) {
+					if(!parent.getName().equals(p.getName()))
+						return false;
+				} else if(parent != null || p != null)
+					return false;
+			}
+
+			return true;
+		}
 	}
 
 	private static final int HEADER = 16, PASSWORD = 16, CHUNK = 1 << 16;
@@ -502,6 +546,10 @@ public class PackLoader {
 	public static void writePack(File dst, File folder, PackData.PackDesc pd, String password, Consumer<Double> prog)
 			throws Exception {
 		new FileSaver(dst, folder, pd, password, prog);
+	}
+
+	public static void writePackWithSpecificFiles(File dst, List<File> files, PackData.PackDesc pd, String password, Consumer<Double> prog) throws Exception {
+		new FileSaver(dst, files, pd, password, prog);
 	}
 
 	private static int regulate(int size) {
