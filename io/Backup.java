@@ -5,7 +5,7 @@ import common.io.assets.AssetLoader;
 import common.pack.Context;
 import common.pack.PackData;
 import org.jetbrains.annotations.NotNull;
-import page.support.DateComparator;
+import common.system.DateComparator;
 
 import javax.annotation.Nullable;
 import java.io.File;
