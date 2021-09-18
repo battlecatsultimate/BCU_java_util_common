@@ -1,10 +1,12 @@
 package common.pack;
 
+import common.io.Backup;
 import common.io.PackLoader.ZipDesc.FileDesc;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 
 public interface Context {
 
@@ -69,6 +71,10 @@ public interface Context {
 
 	void initProfile();
 
+	File getBackupFile(String string);
+
+	String getAuthor();
+
 	default boolean noticeErr(Context.RunExc r, ErrType t, String str) {
 		try {
 			r.run();
@@ -116,4 +122,6 @@ public interface Context {
 	void printErr(ErrType t, String str);
 
 	void loadProg(String str);
+
+	boolean restore(Backup b, Consumer<Double> prog);
 }

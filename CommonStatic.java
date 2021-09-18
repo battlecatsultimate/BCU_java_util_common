@@ -100,6 +100,18 @@ public class CommonStatic {
 		public int levelLimit = 0;
 		// Lang
 		public int lang;
+		/**
+		 * Restoration target backup file, null means none
+		 */
+		public String backupFile;
+		/**
+		 * Used for partial restoration
+		 */
+		public String backupPath;
+		/**
+		 * Maximum number of backups, 0 means infinite
+		 */
+		public int maxBackup = 5;
 	}
 
 	public interface EditLink {

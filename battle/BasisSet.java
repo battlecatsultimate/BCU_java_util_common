@@ -1,5 +1,6 @@
 package common.battle;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -42,6 +43,18 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public static List<BasisSet> list() {
 		def();
 		return listRaw();
+	}
+
+	public static BasisSet[] getBackupSet(JsonElement element) {
+		JsonArray arr = element.getAsJsonObject().getAsJsonArray("list");
+
+		BasisSet[] sets = new BasisSet[arr.size()];
+
+		for(int i = 0; i < arr.size(); i++) {
+			sets[i] = JsonDecoder.decode(arr.get(i), BasisSet.class);
+		}
+
+		return sets;
 	}
 
 	/**
