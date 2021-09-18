@@ -373,11 +373,15 @@ public abstract class Source {
 				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
 					if(!anims.contains(anim)) {
 						anims.add(anim);
-						anim.id.pack = pack.getSID();
-						anim.id.id = "_mapped_"+anim.id.id;
+					} else {
+						anim.id.pack = ResourceLocation.LOCAL;
+						anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
 					}
 
-					new SourceAnimSaver(new ResourceLocation(pack.getSID(), anim.id.id), anim).saveAll();
+					new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+
+					anim.id.pack = pack.getSID();
+					anim.id.id = "_mapped_"+anim.id.id;
 				}
 				if (anim.id.pack.startsWith(".temp_"))
 					anim.id.pack = anim.id.pack.substring(6);
@@ -388,11 +392,15 @@ public abstract class Source {
 					if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
 						if(!anims.contains(anim)) {
 							anims.add(anim);
-							anim.id.pack = pack.getSID();
-							anim.id.id = "_mapped_"+anim.id.id;
+						} else {
+							anim.id.pack = ResourceLocation.LOCAL;
+							anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
 						}
 
-						new SourceAnimSaver(new ResourceLocation(pack.getSID(), anim.id.id), anim).saveAll();
+						new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+
+						anim.id.pack = pack.getSID();
+						anim.id.id = "_mapped_"+anim.id.id;
 					}
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
