@@ -366,10 +366,18 @@ public abstract class Source {
 		}
 
 		public void export(UserPack pack, String password, String parentPassword, Consumer<Double> prog) throws Exception {
+			ArrayList<AnimCE> anims = new ArrayList<>();
+
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
 				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
-					new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+					if(!anims.contains(anim)) {
+						anims.add(anim);
+						anim.id.pack = pack.getSID();
+						anim.id.id = "_mapped_"+anim.id.id;
+					}
+
+					new SourceAnimSaver(new ResourceLocation(pack.getSID(), anim.id.id), anim).saveAll();
 				}
 				if (anim.id.pack.startsWith(".temp_"))
 					anim.id.pack = anim.id.pack.substring(6);
@@ -378,7 +386,13 @@ public abstract class Source {
 				for (Form f : u.forms) {
 					AnimCE anim = (AnimCE) f.anim;
 					if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
-						new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+						if(!anims.contains(anim)) {
+							anims.add(anim);
+							anim.id.pack = pack.getSID();
+							anim.id.id = "_mapped_"+anim.id.id;
+						}
+
+						new SourceAnimSaver(new ResourceLocation(pack.getSID(), anim.id.id), anim).saveAll();
 					}
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
@@ -408,6 +422,11 @@ public abstract class Source {
 
 			PackLoader.writePack(dst, src, desc, password, prog);
 			Context.renameTo(dst, tar);
+
+			for(AnimCE anim : anims) {
+				anim.id.pack = ResourceLocation.LOCAL;
+				anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
+			}
 		}
 
 		public File getBGFile(Identifier<Background> id) {
