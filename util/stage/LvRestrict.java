@@ -132,10 +132,16 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 	}
 
 	public boolean used() {
-		for (StageMap sm : ((UserPack) getCont()).mc.maps)
-			for (Stage st : sm.list)
-				if (st.lim != null && st.lim.lvr == this)
-					return true;
+		PackData p = getCont();
+
+		if(p instanceof UserPack) {
+			for (StageMap sm : ((UserPack) p).mc.maps)
+				for (Stage st : sm.list)
+					if (st.lim != null && st.lim.lvr == this)
+						return true;
+		} else
+			return p instanceof PackData.DefPack;
+
 		return false;
 	}
 
