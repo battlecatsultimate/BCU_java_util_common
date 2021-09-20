@@ -1464,14 +1464,19 @@ public abstract class Entity extends AbEntity {
 			Proc.COUNTER counter = getProc().COUNTER;
 			if (counter.prob > 0 && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
 				double[] ds = aam.touchRange();
+				if (counter.minRange != 0 || counter.maxRange != 0) {
+					ds[0] = counter.minRange;
+					ds[1] = counter.maxRange;
+				}
+
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
-				if ((counter.type.outRange || (atk.attacker.pos - ds[0]) * (atk.attacker.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0) && basis.r.nextDouble() * 100 < counter.prob) {
+				if ((counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0) && basis.r.nextDouble() * 100 < counter.prob) {
 					int reflectAtk = FDmg;
 					Proc reflectProc = Proc.blank();
 					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "WAVE",
 							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "SHIELDBREAK", "MINIWAVE"};
 
-					if (counter.procType == 1 || counter.procType == 3)
+					if (counter.type.procType == 1 || counter.type.procType == 3)
 						for (String s0 : par)
 							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE") && isWave)
 								reflectProc.get(s0).set(e.data.getAllProc().get(s0));
@@ -1484,7 +1489,7 @@ public abstract class Entity extends AbEntity {
 						else
 							reflectAtk = reflectAtk * counter.damage / 100;
 
-						if (counter.procType >= 2) {
+						if (counter.type.procType >= 2) {
 							Proc p = data.getCounter().getProc();
 							for (String s0 : par)
 								if (p.get(s0).perform(basis.r))
@@ -1494,7 +1499,7 @@ public abstract class Entity extends AbEntity {
 						if (counter.type.useOwnDamage)
 							reflectAtk = counter.damage;
 						reflectAtk = reflectAtk * counter.damage / 100;
-							 if (counter.procType >= 2) {
+							 if (counter.type.procType >= 2) {
 								Proc p = data.getAllProc();
 								for (String s0 : par)
 									if (p.get(s0).perform(e.basis.r))
@@ -1507,6 +1512,8 @@ public abstract class Entity extends AbEntity {
 						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
 
 					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
+					if (counter.type.areaAttack)
+						as.capture();
 					as.counterEntity(e);
 				}
 			}

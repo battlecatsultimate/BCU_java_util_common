@@ -492,10 +492,15 @@ public class Data {
 				@BitCount(2)
 				@Order(0)
 				public int counterWave;
+				@BitCount(2)
+				@Order(1)
+				public int procType;
 				@Order(1)
 				public boolean useOwnDamage;
 				@Order(2)
 				public boolean outRange;
+				@Order(3)
+				public boolean areaAttack;
 			}
 
 			@Order(0)
@@ -503,8 +508,10 @@ public class Data {
 			@Order(1)
 			public int damage;
 			@Order(2)
-			public int procType;
+			public int minRange;
 			@Order(3)
+			public int maxRange;
+			@Order(4)
 			public TYPE type = new TYPE();
 		}
 

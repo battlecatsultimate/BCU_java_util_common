@@ -419,13 +419,20 @@ public class Editors {
 		map().put("COUNTER", new EditControl<>(Proc.COUNTER.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob,0,100);
 			if (t.prob > 0) {
-				t.procType = MathUtil.clip(t.procType,0,3);
+				t.type.procType = MathUtil.clip(t.type.procType,0,3);
+				t.type.counterWave = MathUtil.clip(t.type.counterWave, 0, 2);
+				int min = t.minRange;
+				t.minRange = Math.min(min, t.maxRange);
+				t.maxRange = Math.max(min, t.maxRange);
 			} else {
 				t.damage = 0;
-				t.procType = 0;
-				t.type.useOwnDamage = false;
+				t.minRange = 0;
+				t.maxRange = 0;
+				t.type.procType = 0;
 				t.type.counterWave = 0;
+				t.type.useOwnDamage = false;
 				t.type.outRange = false;
+				t.type.areaAttack = false;
 			}
 		}));
 

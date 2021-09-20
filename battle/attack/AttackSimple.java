@@ -78,7 +78,8 @@ public class AttackSimple extends AttackAb {
 	 */
 	public void counterEntity(Entity ce) {
 		isCounter = true;
-		capt.add(ce);
+		if (!capt.contains(ce))
+			capt.add(ce);
 		excuse();
 	}
 

@@ -1069,8 +1069,9 @@
         "tooltip": "Deal damage back when attacked.",
         "format": ["(prob)% chance to counter enemy attacks, dealing (damage)[(!type.useOwnDamage){% of the damage received from an attack}] back.",
                     "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks.}] This counterattack will ",
-                    "[(procType<2|procType==3){[(procType==0){not }]have}(procType==2){replace}] the original attack's procs[(procType==2){ with this unit's procs}(procType==3){ and this entity's procs}].",
-                    " This unit can [(!type.outRange){only counter enemies in his attack range}(type.outRange){counter any enemy regardless of their position}]."],
+                    "[(type.procType<2|type.procType==3){[(type.procType==0){not }]have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. ",
+                    "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
+                    "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
         "class": {
             "prob": {
                 "name": "chance",
@@ -1080,7 +1081,15 @@
                 "name": "Damage%",
                 "tooltip": "The percentage of damage to reflect when getting hit."
             },
-            "procType": {
+            "minRange": {
+                "name": "Blindspot",
+                "tooltip": "The counter won't hit anything standing below this number. Leave this and Max Range in 0 to use the unit's normal range."
+            },
+            "maxRange": {
+                "name": "Max Range",
+                "tooltip": "The counter won't hit anything standing below this number. Leave this and Blindspot in 0 to use the unit's normal range."
+            },
+            "type.procType": {
                 "name": "Proc Type",
                 "tooltip": "The parameter here affects how attack procs are handled. 0 = Removes all procs. 1 = Reflects all procs back to the attacker. 2 = Replaces all the attack's procs with this unit's procs. 3 = Uses both this entity and the attacker's procs. Useless if there's a hit registered as counter"
             },
@@ -1094,7 +1103,11 @@
             },
             "type.outRange": {
                 "name": "Ignore Distance",
-                "tooltip": "Toggle this on and the unit will counter regardless of how far away the target is."
+                "tooltip": "Toggle this on and the unit will counter regardless of how far away the attacker is."
+            },
+            "type.areaAttack": {
+                "name": "Area Attack",
+                "tooltip": "Toggle this on and the counter will target all units in the counter's range. If left off, only the attacker will receive damage."
             }
         }
     },
