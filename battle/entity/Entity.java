@@ -1009,8 +1009,6 @@ public abstract class Entity extends AbEntity {
 			e.status[P_REVIVE][1] = deadAnim;
 			int maxR = maxRevHealth();
 			e.health = e.maxH * maxR / 100;
-			if (maxR > 100)
-				e.maxH = (long)Math.min(e.maxH * maxR / 100.0, Integer.MAX_VALUE);
 			if (c == 1)
 				e.status[P_REVIVE][0]--;
 			else if (c == 2)
