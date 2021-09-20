@@ -411,7 +411,9 @@ public abstract class Entity extends AbEntity {
 				effs[A_IMUATK] = null;
 			}
 			if (status[P_POISON][0] == 0) {
-				effs[A_POI0] = null;
+				for(int i = 0; i < A_POIS.length; i++) {
+					effs[A_POIS[i]] = null;
+				}
 			}
 			if (status[P_SEAL][0] == 0) {
 				effs[A_SEAL] = null;
