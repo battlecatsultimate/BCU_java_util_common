@@ -11,7 +11,7 @@ import common.util.unit.Form;
 import java.util.ArrayList;
 
 @JsonClass
-public class CustomUnit extends CustomEntity implements MaskUnit {
+public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 
 	public Form pack;
 
