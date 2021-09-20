@@ -2,7 +2,6 @@ package common.battle;
 
 import com.google.common.primitives.Ints;
 import common.CommonStatic;
-import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
 import common.io.InStream;
 import common.io.OutStream;
@@ -10,9 +9,12 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.FixIndexList.FixIndexMap;
+import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.unit.Level;
+import common.util.unit.Trait;
 
 import java.util.*;
 
@@ -267,77 +269,49 @@ public class Treasure extends Data {
 	/**
 	 * get maximum fruit of certain trait bitmask
 	 */
-	public double getFruit(int type) {
+	public double getFruit(ArrayList<Trait> types) {
 		double ans = 0;
-		if ((type & TB_RED) != 0)
+		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
+		if (types.contains(BCTraits.get(Data.TRAIT_RED)))
 			ans = Math.max(ans, fruit[T_RED]);
-		if ((type & TB_BLACK) != 0)
-			ans = Math.max(ans, fruit[T_BLACK]);
-		if ((type & TB_ANGEL) != 0)
-			ans = Math.max(ans, fruit[T_ANGEL]);
-		if ((type & TB_FLOAT) != 0)
+		if (types.contains(BCTraits.get(Data.TRAIT_FLOAT)))
 			ans = Math.max(ans, fruit[T_FLOAT]);
-		if ((type & TB_ALIEN) != 0)
-			ans = Math.max(ans, fruit[T_ALIEN]);
-		if ((type & TB_METAL) != 0)
+		if (types.contains(BCTraits.get(Data.TRAIT_BLACK)))
+			ans = Math.max(ans, fruit[T_BLACK]);
+		if (types.contains(BCTraits.get(Data.TRAIT_METAL)))
 			ans = Math.max(ans, fruit[T_METAL]);
-		if ((type & TB_ZOMBIE) != 0)
+		if (types.contains(BCTraits.get(Data.TRAIT_ANGEL)))
+			ans = Math.max(ans, fruit[T_ANGEL]);
+		if (types.contains(BCTraits.get(Data.TRAIT_ALIEN)))
+			ans = Math.max(ans, fruit[T_ALIEN]);
+		if (types.contains(BCTraits.get(Data.TRAIT_ZOMBIE)))
 			ans = Math.max(ans, fruit[T_ZOMBIE]);
 		return ans * 0.01;
 	}
 
 	/**
-	 * get attack multiplication from strong against ability
-	 */
-	public double getGOODATK(int type) {
-		double ini = 1.5 * (1 + 0.2 / 3 * getFruit(type));
-		double com = 1 + b.getInc(C_GOOD) * 0.01;
-		return ini * com;
-	}
-
-	public double getGoodAtkWithOrb(int type, MaskUnit data, Level l) {
-		Orb orb = data.getOrb();
-
-		double ini = 1.5 * (1 + 0.2 / 3 * getFruit(type));
-
-		if(orb != null && l.getOrbs() != null) {
-			int[][] orbs = l.getOrbs();
-
-			for(int i = 0; i < orbs.length; i++) {
-				if(orbs[i].length < ORB_TOT)
-					continue;
-
-				if(orbs[i][ORB_TYPE] == ORB_STRONG && (type & orbs[i][ORB_TRAIT]) != 0) {
-					ini += ORB_STR_ATK_MULTI[orbs[i][ORB_GRADE]];
-				}
-			}
-		}
-
-		double com = 1 + b.getInc(C_GOOD) * 0.01;
-
-		return ini * com;
-	}
-
-	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public double getGOODDEF(int type, MaskUnit data, Level level) {
-		Orb orb = data.getOrb();
-
-		double ini = 0.5 - 0.1 / 3 * getFruit(type);
+	public double getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
+		double ini = traits.isEmpty() ? 1 : 0.5 - 0.1 / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
 			int[][] orbs = level.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
-				if(orbs[i].length < ORB_TOT)
+				if (orbs[i].length < ORB_TOT)
 					continue;
 
-				if(orbs[i][ORB_TYPE] == ORB_STRONG && (type & orbs[i][ORB_TRAIT]) != 0) {
-					ini *= 1 - ORB_STR_DEF_MULTI[orbs[i][ORB_GRADE]] / 100.0;
+				if (orbs[i][ORB_TYPE] == ORB_STRONG) {
+					Trait orbType = Trait.convertType(orbs[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType))
+						ini *= 1 - ORB_STR_DEF_MULTI[orbs[i][ORB_GRADE]] / 100.0;
 				}
 			}
 		}
+
+		if (ini == 1)
+			return ini;
 
 		double com = 1 - b.getInc(C_GOOD) * 0.01;
 
@@ -345,64 +319,35 @@ public class Treasure extends Data {
 	}
 
 	/**
-	 * get attack multiplication from massive damage ability
-	 */
-	public double getMASSIVEATK(int type) {
-		double ini = 3 + 1.0 / 3 * getFruit(type);
-		double com = 1 + b.getInc(C_MASSIVE) * 0.01;
-		return ini * com;
-	}
-
-	public double getMassiveAtkWithOrb(int type, MaskUnit data, Level l) {
-		Orb orb = data.getOrb();
-
-		double ini = 3 + 1.0 / 3 * getFruit(type);
-
-		if(orb != null && l.getOrbs() != null) {
-			int[][] orbs = l.getOrbs();
-
-			for(int i = 0; i < orbs.length; i++) {
-				if(orbs[i].length < ORB_TOT)
-					continue;
-
-				if(orbs[i][ORB_TYPE] == ORB_MASSIVE && (type & orbs[i][ORB_TRAIT]) != 0) {
-					ini += ORB_MASSIVE_MULTI[orbs[i][ORB_GRADE]];
-				}
-			}
-		}
-
-		double com = 1 + b.getInc(C_MASSIVE) * 0.01;
-
-		return ini * com;
-	}
-
-	/**
 	 * get attack multiplication from super massive damage ability
 	 */
-	public double getMASSIVESATK(int type) {
-		return 5 + 1.0 / 3 * getFruit(type);
+	public double getMASSIVESATK(ArrayList<Trait> traits) {
+		return 5 + 1.0 / 3 * getFruit(traits);
 	}
 
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public double getRESISTDEF(int type, MaskUnit data, Level level) {
-		double ini = 0.25 - 0.05 / 3 * getFruit(type);
-
-		Orb orb = data.getOrb();
+	public double getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
+		double ini = traits.isEmpty() ? 1 : 0.25 - 0.05 / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
 			int[][] orbs = level.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
-				if(orbs[i].length < ORB_TOT)
+				if (orbs[i].length < ORB_TOT)
 					continue;
 
-				if(orbs[i][ORB_TYPE] == ORB_RESISTANT && (orbs[i][ORB_TRAIT] & type) != 0) {
-					ini *= 1 - ORB_RESISTANT_MULTI[orbs[i][ORB_GRADE]] / 100.0;
+				if (orbs[i][ORB_TYPE] == ORB_RESISTANT) {
+					Trait orbType = Trait.convertType(orbs[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType))
+						ini *= 1 - ORB_RESISTANT_MULTI[orbs[i][ORB_GRADE]] / 100.0;
 				}
 			}
 		}
+
+		if (ini == 1)
+			return ini;
 
 		double com = 1 - b.getInc(C_RESIST) * 0.01;
 		return ini * com;
@@ -411,8 +356,8 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from super resistant ability
 	 */
-	public double getRESISTSDEF(int type) {
-		return 1.0 / 6 - 1.0 / 126 * getFruit(type);
+	public double getRESISTSDEF(ArrayList<Trait> traits) {
+		return 1.0 / 6 - 1.0 / 126 * getFruit(traits);
 	}
 
 	/**

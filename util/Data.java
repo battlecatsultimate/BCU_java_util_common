@@ -54,6 +54,54 @@ public class Data {
 		public static class IMU extends ProcItem {
 			@Order(0)
 			public int mult;
+			@Order(1)
+			public int block;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class IMUAD extends ProcItem {
+			@Order(0)
+			public int mult;
+			@Order(1)
+			public int block;
+			@Order(2)
+			public int smartImu;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DMGCUT extends ProcItem {
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@Order(0)
+				public boolean traitIgnore;
+				@Order(1)
+				public boolean procs;
+			}
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dmg;
+			@Order(2)
+			public TYPE type = new TYPE();
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DMGCAP extends ProcItem {
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@Order(0)
+				public boolean traitIgnore;
+				@Order(1)
+				public boolean nullify;
+				@Order(2)
+				public boolean procs;
+			}
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dmg;
+			@Order(2)
+			public TYPE type = new TYPE();
 		}
 
 		public static abstract class IntType implements Cloneable, BattleStatic {
@@ -347,6 +395,16 @@ public class Data {
 			public TYPE type = new TYPE();
 		}
 
+		@JsonClass(noTag = NoTag.LOAD) // Starred Barrier
+		public static class BARRIER extends ProcItem {
+			@Order(0)
+			public int health;
+			@Order(1)
+			public int regentime;
+			@Order(2)
+			public int timeout;
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class SPEED extends ProcItem {
 			@Order(0)
@@ -427,6 +485,30 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class COUNTER extends ProcItem {
+
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@BitCount(2)
+				@Order(0)
+				public int counterWave;
+				@Order(1)
+				public boolean useOwnDamage;
+				@Order(2)
+				public boolean outRange;
+			}
+
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int damage;
+			@Order(2)
+			public int procType;
+			@Order(3)
+			public TYPE type = new TYPE();
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class VOLC extends ProcItem {
 			@Order(0)
 			public int prob;
@@ -454,6 +536,12 @@ public class Data {
 			public int lv;
 			@Order(2)
 			public int multi;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD) //Used for procs that lack the block reformat
+		public static class WAVEI extends ProcItem {
+			@Order(0)
+			public int mult;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -516,84 +604,97 @@ public class Data {
 		@Order(4)
 		public final WAVE WAVE = new WAVE();
 		@Order(5)
-		public final WEAK WEAK = new WEAK();
-		@Order(6)
-		public final PROB BREAK = new PROB();
-		@Order(7)
-		public final PTD WARP = new PTD();
-		@Order(8)
-		public final PT CURSE = new PT();
-		@Order(9)
-		public final STRONG STRONG = new STRONG();
-		@Order(10)
-		public final PROB LETHAL = new PROB();
-		@Order(11)
-		public final BURROW BURROW = new BURROW();
-		@Order(12)
-		public final REVIVE REVIVE = new REVIVE();
-		@Order(13)
-		public final IMU IMUKB = new IMU();
-		@Order(14)
-		public final IMU IMUSTOP = new IMU();
-		@Order(15)
-		public final IMU IMUSLOW = new IMU();
-		@Order(16)
-		public final IMU IMUWAVE = new IMU();
-		@Order(17)
-		public final IMU IMUWEAK = new IMU();
-		@Order(18)
-		public final IMU IMUWARP = new IMU();
-		@Order(19)
-		public final IMU IMUCURSE = new IMU();
-		@Order(20)
-		public final PROB SNIPER = new PROB();
-		@Order(21)
-		public final PT TIME = new PT();
-		@Order(22)
-		public final PT SEAL = new PT();
-		@Order(23)
-		public final SUMMON SUMMON = new SUMMON();
-		@Order(24)
-		public final MOVEWAVE MOVEWAVE = new MOVEWAVE();
-		@Order(25)
-		public final THEME THEME = new THEME();
-		@Order(26)
-		public final POISON POISON = new POISON();
-		@Order(27)
-		public final PROB BOSS = new PROB();
-		@Order(28)
-		public final CRITI CRITI = new CRITI();
-		@Order(29)
-		public final PM SATK = new PM();
-		@Order(30)
-		public final PT IMUATK = new PT();
-		@Order(31)
-		public final PM POIATK = new PM();
-		@Order(32)
-		public final VOLC VOLC = new VOLC();
-		@Order(33)
-		public final IMU IMUPOIATK = new IMU();
-		@Order(34)
-		public final IMU IMUVOLC = new IMU();
-		@Order(35)
-		public final ARMOR ARMOR = new ARMOR();
-
-		@Order(36)
-		public final SPEED SPEED = new SPEED();
-
-		@Order(37)
 		public final MINIWAVE MINIWAVE = new MINIWAVE();
-
-		@Order(38)
-		public final IMU IMUSUMMON = new IMU();
-
-		@Order(39)
-		public final DSHIELD DEMONSHIELD = new DSHIELD();
-
-		@Order(40)
+		@Order(6)
+		public final MOVEWAVE MOVEWAVE = new MOVEWAVE();
+		@Order(7)
+		public final VOLC VOLC = new VOLC();
+		@Order(8)
+		public final WEAK WEAK = new WEAK();
+		@Order(9)
+		public final PROB BREAK = new PROB();
+		@Order(10)
 		public final PROB SHIELDBREAK = new PROB();
+		@Order(11)
+		public final PTD WARP = new PTD();
+		@Order(12)
+		public final PT CURSE = new PT();
+		@Order(13)
+		public final PT SEAL = new PT();
+		@Order(14)
+		public final SUMMON SUMMON = new SUMMON();
+		@Order(15)
+		public final PT TIME = new PT();
+		@Order(16)
+		public final PROB SNIPER = new PROB();
+		@Order(17)
+		public final THEME THEME = new THEME();
+		@Order(18)
+		public final PROB BOSS = new PROB();
+		@Order(19)
+		public final POISON POISON = new POISON();
+		@Order(20)
+		public final PM SATK = new PM();
+		@Order(21)
+		public final PM POIATK = new PM();
+		@Order(22)
+		public final ARMOR ARMOR = new ARMOR();
+		@Order(23)
+		public final SPEED SPEED = new SPEED();
+		@Order(24)
+		public final STRONG STRONG = new STRONG();
+		@Order(25)
+		public final PROB LETHAL = new PROB();
+		@Order(26)
+		public final IMU IMUKB = new IMU();
+		@Order(27)
+		public final IMU IMUSTOP = new IMU();
+		@Order(28)
+		public final IMU IMUSLOW = new IMU();
+		@Order(29)
+		public final WAVEI IMUWAVE = new WAVEI();
+		@Order(30)
+		public final WAVEI IMUVOLC = new WAVEI();
+		@Order(31)
+		public final IMUAD IMUWEAK = new IMUAD();
+		@Order(32)
+		public final IMU IMUWARP = new IMU();
+		@Order(33)
+		public final IMU IMUCURSE = new IMU();
+		@Order(34)
+		public final IMU IMUSEAL = new IMU();
+		@Order(35)
+		public final IMU IMUSUMMON = new IMU();
+		@Order(36)
+		public final IMUAD IMUPOI = new IMUAD();
+		@Order(37)
+		public final IMU IMUPOIATK = new IMU();
+		@Order(38)
+		public final WAVEI IMUMOVING = new WAVEI();
+		@Order(39)
+		public final IMUAD IMUARMOR = new IMUAD();
+		@Order(40)
+		public final IMUAD IMUSPEED = new IMUAD();
 		@Order(41)
-		public final VOLC DEATHSURGE = new VOLC();
+		public final IMU CRITI = new IMU();
+		@Order(42)
+		public final COUNTER COUNTER = new COUNTER();
+		@Order(43)
+		public final PT IMUATK = new PT();
+		@Order(44)
+		public final DMGCUT DMGCUT = new DMGCUT();
+		@Order(45)
+		public final DMGCAP DMGCAP = new DMGCAP();
+		@Order(46)
+		public final BURROW BURROW = new BURROW();
+		@Order(47)
+		public final REVIVE REVIVE = new REVIVE();
+		@Order(48)
+		public final BARRIER BARRIER = new BARRIER();
+		@Order(49)
+		public final DSHIELD DEMONSHIELD = new DSHIELD();
+		@Order(50)
+        public final VOLC DEATHSURGE = new VOLC();
 
 		@Override
 		public Proc clone() {
@@ -695,6 +796,8 @@ public class Data {
 	}
 
 	public static final int restrict_name = 32;
+	public static final int SE_VICTORY = 8;
+	public static final int SE_DEFEAT = 9;
 	public static final int SE_HIT_0 = 20;
 	public static final int SE_HIT_1 = 21;
 	public static final int SE_DEATH_0 = 23;
@@ -755,12 +858,12 @@ public class Data {
 	public static final int TRAIT_ANGEL = 4;
 	public static final int TRAIT_ALIEN = 5;
 	public static final int TRAIT_ZOMBIE = 6;
-	public static final int TRAIT_RELIC = 7;
-	public static final int TRAIT_WHITE = 8;
-	public static final int TRAIT_EVA = 9;
-	public static final int TRAIT_WITCH = 10;
-	public static final int TRAIT_INFH = 11;
-	public static final int TRAIT_DEMON = 12;
+	public static final int TRAIT_DEMON = 7;
+	public static final int TRAIT_RELIC = 8;
+	public static final int TRAIT_WHITE = 9;
+	public static final int TRAIT_EVA = 10;
+	public static final int TRAIT_WITCH = 11;
+	public static final int TRAIT_INFH = 12;
 	public static final int TRAIT_TOT = 13;
 
 	// treasure
@@ -812,21 +915,18 @@ public class Data {
 	public static final int AB_EARN = 1 << 4;
 	public static final int AB_BASE = 1 << 5;
 	public static final int AB_METALIC = 1 << 6;
-	public static final int AB_MOVEI = 1 << 7;
-	public static final int AB_WAVES = 1 << 8;
-	public static final int AB_SNIPERI = 1 << 9;
-	public static final int AB_TIMEI = 1 << 10;
-	public static final int AB_GHOST = 1 << 11;
-	public static final int AB_POII = 1 << 12;
-	public static final int AB_ZKILL = 1 << 13;
-	public static final int AB_WKILL = 1 << 14;
-	public static final int AB_GLASS = 1 << 15;
-	public static final int AB_THEMEI = 1 << 16;
-	public static final int AB_EKILL = 1 << 17;
-	public static final int AB_SEALI = 1 << 18;
-	public static final int AB_IMUSW = 1 << 19;
-	public static final int AB_RESISTS = 1 << 20;
-	public static final int AB_MASSIVES = 1 << 21;
+	public static final int AB_WAVES = 1 << 7;
+	public static final int AB_SNIPERI = 1 << 8;
+	public static final int AB_TIMEI = 1 << 9;
+	public static final int AB_GHOST = 1 << 10;
+	public static final int AB_ZKILL = 1 << 11;
+	public static final int AB_WKILL = 1 << 12;
+	public static final int AB_GLASS = 1 << 13;
+	public static final int AB_THEMEI = 1 << 14;
+	public static final int AB_EKILL = 1 << 15;
+	public static final int AB_IMUSW = 1 << 16;
+	public static final int AB_RESISTS = 1 << 17;
+	public static final int AB_MASSIVES = 1 << 18;
 
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
@@ -840,22 +940,19 @@ public class Data {
 	public static final int ABI_EARN = 4;
 	public static final int ABI_BASE = 5;
 	public static final int ABI_METALIC = 6;
-	public static final int ABI_MOVEI = 7;
-	public static final int ABI_WAVES = 8;
-	public static final int ABI_SNIPERI = 9;
-	public static final int ABI_TIMEI = 10;
-	public static final int ABI_GHOST = 11;
-	public static final int ABI_POII = 12;
-	public static final int ABI_ZKILL = 13;
-	public static final int ABI_WKILL = 14;
-	public static final int ABI_GLASS = 15;
-	public static final int ABI_THEMEI = 16;
-	public static final int ABI_EKILL = 17;
-	public static final int ABI_SEALI = 18;
-	public static final int ABI_IMUSW = 19;
-	public static final int ABI_RESISTS = 20;
-	public static final int ABI_MASSIVES = 21;
-	public static final int ABI_TOT = 30;// 20 currently
+	public static final int ABI_WAVES = 7;
+	public static final int ABI_SNIPERI = 8;
+	public static final int ABI_TIMEI = 9;
+	public static final int ABI_GHOST = 10;
+	public static final int ABI_ZKILL = 11;
+	public static final int ABI_WKILL = 12;
+	public static final int ABI_GLASS = 13;
+	public static final int ABI_THEMEI = 14;
+	public static final int ABI_EKILL = 15;
+	public static final int ABI_IMUSW = 16;
+	public static final int ABI_RESISTS = 17;
+	public static final int ABI_MASSIVES = 18;
+	public static final int ABI_TOT = 22;// 20 currently
 
 	// proc index
 	public static final int P_KB = 0;
@@ -863,13 +960,75 @@ public class Data {
 	public static final int P_SLOW = 2;
 	public static final int P_CRIT = 3;
 	public static final int P_WAVE = 4;
-	public static final int P_WEAK = 5;
-	public static final int P_BREAK = 6;
-	public static final int P_WARP = 7;
-	public static final int P_CURSE = 8;
-	public static final int P_STRONG = 9;
-	public static final int P_LETHAL = 10;
-	public static final int P_BURROW = 11;
+	public static final int P_MINIWAVE = 5;
+	public static final int P_MOVEWAVE = 6;
+	public static final int P_VOLC = 7;
+	public static final int P_WEAK = 8;
+	public static final int P_BREAK = 9;
+	public static final int P_SHIELDBREAK = 10;
+	public static final int P_WARP = 11;
+	public static final int P_CURSE = 12;
+	public static final int P_SEAL = 13;
+	/**
+	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time
+	 *
+	 * +0: direct, +1: warp, +2:burrow, +4:disregard limit, +8: fix buff, +16: same
+	 * health, +32: diff layer, +64 on hit, +128 on kill
+	 */
+	public static final int P_SUMMON = 14;
+	/**
+	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv
+	 */
+	public static final int P_TIME = 15;
+	public static final int P_SNIPER = 16;
+	/**
+	 * 0:prob, 1:time (-1 means infinite), 2:ID, 3: type 0 : Change only BG 1 : Kill
+	 * all and change BG
+	 */
+	public static final int P_THEME = 17;
+	public static final int P_BOSS = 18;
+	/**
+	 * 0:prob, 1:time, 2:dmg, 3:itv, 4: conf +0: normal, +1: of total, +2: of
+	 * current, +3: of lost, +4: unstackable
+	 */
+	public static final int P_POISON = 19;
+	public static final int P_SATK = 20;
+	/**
+	 * official poison
+	 */
+	public static final int P_POIATK = 21;
+	/**
+	 * Make target receive n% damage more/less 0: chance, 1: duration, 2: debuff
+	 */
+	public static final int P_ARMOR = 22;
+	/**
+	 * Make target move faster/slower 0: chance, 1: duration, 2: speed, 3: type type
+	 * 0: Current speed * (100 + n)% type 1: Current speed + n type 2: Fixed speed
+	 */
+	public static final int P_SPEED = 23;
+	public static final int P_STRONG = 24;
+	public static final int P_LETHAL = 25;
+	public static final int P_IMUKB = 26;
+	public static final int P_IMUSTOP = 27;
+	public static final int P_IMUSLOW = 28;
+	public static final int P_IMUWAVE = 29;
+	public static final int P_IMUVOLC = 30;
+	public static final int P_IMUWEAK = 31;
+	public static final int P_IMUWARP = 32;
+	public static final int P_IMUCURSE = 33;
+	public static final int P_IMUSEAL = 34;
+	public static final int P_IMUSUMMON = 35;
+	public static final int P_IMUPOI = 36;
+	public static final int P_IMUPOIATK = 37;
+	public static final int P_IMUMOVING = 38;
+	public static final int P_IMUARMOR = 39;
+	public static final int P_IMUSPEED = 40;
+	public static final int P_CRITI = 41;
+	public static final int P_COUNTER = 42;
+	public static final int P_IMUATK = 43;
+	public static final int P_DMGCUT = 44;
+	public static final int P_DMGCAP = 45;
+	public static final int P_BURROW = 46;
 	/**
 	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
 	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
@@ -877,67 +1036,11 @@ public class Data {
 	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
 	 * others
 	 */
-	public static final int P_REVIVE = 12;
-	public static final int P_IMUKB = 13;
-	public static final int P_IMUSTOP = 14;
-	public static final int P_IMUSLOW = 15;
-	public static final int P_IMUWAVE = 16;
-	public static final int P_IMUWEAK = 17;
-	public static final int P_IMUWARP = 18;
-	public static final int P_IMUCURSE = 19;
-	public static final int P_SNIPER = 20;
-	public static final int P_TIME = 21;
-	public static final int P_SEAL = 22;
-	/**
-	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time
-	 *
-	 * +0: direct, +1: warp, +2:burrow, +4:disregard limit, +8: fix buff, +16: same
-	 * health, +32: diff layer, +64 on hit, +128 on kill
-	 */
-	public static final int P_SUMMON = 23;
-	/**
-	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv
-	 */
-	public static final int P_MOVEWAVE = 24;
-	/**
-	 * 0:prob, 1:time (-1 means infinite), 2:ID, 3: type 0 : Change only BG 1 : Kill
-	 * all and change BG
-	 */
-	public static final int P_THEME = 25;
-	/**
-	 * 0:prob, 1:time, 2:dmg, 3:itv, 4: conf +0: normal, +1: of total, +2: of
-	 * current, +3: of lost, +4: unstackable
-	 */
-	public static final int P_POISON = 26;
-	public static final int P_BOSS = 27;
-	/**
-	 * body proc: 1: type: protect itself only (0) or effect the attack also (1)
-	 */
-	public static final int P_CRITI = 28;
-	public static final int P_SATK = 29;
-	public static final int P_IMUATK = 30;
-	/**
-	 * official poison
-	 */
-	public static final int P_POIATK = 31;
-	public static final int P_VOLC = 32;
-	public static final int P_IMUPOIATK = 33;
-	public static final int P_IMUVOLC = 34;
-	/**
-	 * Make target receive n% damage more/less 0: chance, 1: duration, 2: debuff
-	 */
-	public static final int P_ARMOR = 35;
-	/**
-	 * Make target move faster/slower 0: chance, 1: duration, 2: speed, 3: type type
-	 * 0: Current speed * (100 + n)% type 1: Current speed + n type 2: Fixed speed
-	 */
-	public static final int P_SPEED = 36;
-	public static final int P_MINIWAVE = 37;
-	public static final int P_IMUSUMMON = 38;
-	public static final int P_DEMONSHIELD = 39;
-	public static final int P_SHIELDBREAK = 40;
-	public static final int P_DEATHSURGE = 41;
-	public static final int PROC_TOT = 42;// 42
+	public static final int P_REVIVE = 47;
+	public static final int P_BARRIER = 48;
+	public static final int P_DEMONSHIELD = 49;
+	public static final int P_DEATHSURGE = 50;
+	public static final int PROC_TOT = 51;// 51
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -946,43 +1049,52 @@ public class Data {
 			false, //slow
 			false, //critical
 			false, //wave
+			false, //miniwave
+			false, //move wave
+			false, //volcano
 			false, //weaken
 			false, //barrier breaker
+			false, //shield breaker
 			false, //warp
 			false, //curse
+			false, //seal
+			false, //summon
+			false, //time
+			false, //sniper
+			false, //theme
+			false, //boss wave
+			false, //venom
+			false, //savage blow
+			false, //poison
+			false, //armor
+			false, //haste
 			true,  //strengthen
 			true,  //survive
-			true,  //burrow
-			true,  //revive
 			true,  //imu.kb
 			true,  //imu.freeze
 			true,  //imu.slow
 			true,  //imu.wave
+			true,  //imu.volcano
 			true,  //imu.weaken
 			true,  //imu.warp
 			true,  //imu.curse
-			false, //sniper
-			false, //time
-			false, //seal
-			false, //summon
-			false, //move wave
-			false, //theme
-			false, //venom
-			false, //boss wave
-			true,  //imu. cirtical
-			false, //savage blow
-			true,  //invincibility
-			false, //poison
-			false, //volcano
-			true,  //imu.poison
-			true,  //imu.volcano
-			false, //armor
-			false, //haste
-			false, //miniwave
+			true,  //imu.seal
 			true,  //imu.summon
-			true,  //demon shield
-			false,  //shield breaker
-			true  //death surge
+			true,  //imu.BCU poison
+			true,  //imu.poison
+			true,  //imu.moving atk
+			true,  //imu.armor break
+			true,  //imu.haste
+			true,  //imu. critical
+			true,  //invincibility
+			true,  //damage cut
+			true,  //damage cap
+			true,  //counter
+			true,  //burrow
+			true,  //revive
+			true,  //barrier
+			true,  //demon barrier
+			true,  //death surge
 	};
 
 	public static final int[] REMOVABLE_PROC = {
@@ -1000,6 +1112,8 @@ public class Data {
 	public static final int PC2_SPEED = 2;
 	public static final int PC2_COST = 3;
 	public static final int PC2_CD = 4;
+	public static final int PC2_HB = 5;
+	public static final int PC2_TOT = 6;
 	// -1 for None
 	// 0 for Proc
 	// 1 for Ability
@@ -1010,7 +1124,7 @@ public class Data {
 			{ -1, 0 }, // 0:
 			{ 0, P_WEAK }, // 1: weak, reversed health or relic-weak
 			{ 0, P_STOP }, // 2: stop
-			{ 0, P_SLOW }, // 3: slow or relic-slow
+			{ 0, P_SLOW }, // 3: slow
 			{ 1, AB_ONLY, 0 }, // 4:
 			{ 1, AB_GOOD, 0 }, // 5:
 			{ 1, AB_RESIST, 0 }, // 6:
@@ -1019,7 +1133,7 @@ public class Data {
 			{ 0, P_WARP, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ 1, AB_BASE, 0 }, // 12:
+			{ 1, AB_BASE, 0 }, // 12: Base Destroyer
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
@@ -1030,25 +1144,25 @@ public class Data {
 			{ 0, P_IMUSLOW }, // 20: res slow
 			{ 0, P_IMUKB }, // 21: res kb
 			{ 0, P_IMUWAVE }, // 22: res wave
-			{ 1, AB_WAVES, 0 }, // 23:
-			{ 0, P_IMUWARP, 0 }, // 24:
+			{ 1, AB_WAVES, 0 }, // 23: waveblock
+			{ 0, P_IMUWARP, 0 }, // 24: res warp
 			{ 2, PC2_COST }, // 25: reduce cost
 			{ 2, PC2_CD }, // 26: reduce cooldown
 			{ 2, PC2_SPEED }, // 27: inc speed
-			{ -1, 0 }, // 28:
+			{ 2, PC2_HB }, // 28: inc knockbacks
 			{ 3, P_IMUCURSE }, // 29: imu curse
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK
 			{ 2, PC2_HP }, // 32: inc HP
-			{ 4, TB_RED, 0 }, // 33:
-			{ 4, TB_FLOAT, 0 }, // 34:
-			{ 4, TB_BLACK, 0 }, // 35: targeting black
-			{ 4, TB_METAL, 0 }, // 36:
-			{ 4, TB_ANGEL, 0 }, // 37: targeting angle
-			{ 4, TB_ALIEN, 0 }, // 38: targeting alien
-			{ 4, TB_ZOMBIE, 0 }, // 39: targeting zombie
-			{ 4, TB_RELIC, 0 }, // 40: targeting relic
-			{ 4, TB_WHITE, 0 }, // 41:
+			{ 4, TRAIT_RED, 0 }, // 33: targeting red
+			{ 4, TRAIT_FLOAT, 0 }, // 34: targeting floating
+			{ 4, TRAIT_BLACK, 0 }, // 35: targeting black
+			{ 4, TRAIT_METAL, 0 }, // 36: targeting metal
+			{ 4, TRAIT_ANGEL, 0 }, // 37: targeting angel
+			{ 4, TRAIT_ALIEN, 0 }, // 38: targeting alien
+			{ 4, TRAIT_ZOMBIE, 0 }, // 39: targeting zombie
+			{ 4, TRAIT_RELIC, 0 }, // 40: targeting relic
+			{ 4, TRAIT_WHITE, 0 }, // 41: targeting white
 			{ -1, 0 }, // 42:
 			{ -1, 0 }, // 43:
 			{ 3, P_IMUWEAK }, // 44: immune to weak
@@ -1064,8 +1178,8 @@ public class Data {
 			{ 0, P_IMUVOLC }, // 54: resist to surge ?
 			{ 3, P_IMUVOLC }, // 55: immune to surge
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
-			{ 4, TB_DEMON, 0}, // 57 : targeting demon
-			{ 0, P_SHIELDBREAK} //58 : shield piercing
+			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Devil
+			{ 0, P_SHIELDBREAK } //58 : shield piercing
 			};
 
 	// foot icon index used in battle
@@ -1178,7 +1292,7 @@ public class Data {
 	public static final int ATK_AREA = 1;
 	public static final int ATK_LD = 2;
 	public static final int ATK_OMNI = 4;
-	public static final int ATK_TOT = 6;
+	public static final int ATK_TOT = 8;
 
 	// base and canon level
 	public static final int BASE_H = 0;
@@ -1377,5 +1491,19 @@ public class Data {
 		}
 
 		return newTrait;
+	}
+
+	public static int reorderAbi(int ab) {
+		int newAbi = 0, abiAdd = 0;
+		for (int i = 0; i + abiAdd < ABI_TOT ; i++) {
+			if (i == 7 || i == 12 || i == 18)
+				abiAdd++;
+			int i1 = i + abiAdd;
+			if (i1 == 12 || i1 == 18)
+				continue;
+			if (((ab >> i1) & 1) > 0)
+				newAbi |= 1 << i;
+		}
+		return newAbi;
 	}
 }

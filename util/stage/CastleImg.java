@@ -75,6 +75,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 		}
 	}
 
+
 	public CastleImg() {
 	}
 

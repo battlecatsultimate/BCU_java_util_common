@@ -6,15 +6,17 @@ import common.battle.attack.AtkModelEnemy;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
-import common.battle.data.MaskAtk;
-import common.battle.data.MaskUnit;
-import common.battle.data.Orb;
-import common.battle.data.PCoin;
+import common.battle.data.*;
+import common.pack.UserProfile;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.unit.Level;
+import common.util.unit.Trait;
 
+import java.util.ArrayList;
+
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class EUnit extends Entity {
 
 	public static class OrbHandler extends BattleObj {
@@ -27,26 +29,26 @@ public class EUnit extends Entity {
 				// Warning : Eunit.e became public now
 				EUnit unit = (EUnit) ((AtkModelUnit) atk.origin.model).e;
 
-				return unit.getOrbAtk(en.type, atk.matk);
+				return unit.getOrbAtk(en.traits, atk.matk);
 			}
 
 			return 0;
 		}
 
-		protected static double getOrbMassive(AttackAb atk, int type, Treasure t) {
+		protected static double getOrbMassive(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
 			if(atk.origin.model instanceof AtkModelUnit) {
-				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(type);
+				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(atk.trait, traits, t);
 			}
 
-			return t.getMASSIVEATK(type);
+			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbMassive(atk.trait, traits, t);
 		}
 
-		protected static double getOrbGood(AttackAb atk, int type, Treasure t) {
+		protected static double getOrbGood(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
 			if(atk.origin.model instanceof AtkModelUnit) {
-				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(type);
+				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(atk.trait, traits, t);
 			}
 
-			return t.getGOODATK(type);
+			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbGood(atk.trait, traits, t);
 		}
 	}
 
@@ -57,7 +59,7 @@ public class EUnit extends Entity {
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level, PCoin pc) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
-		type = de.getType();
+		traits = de.getTraits();
 		// if level is null, update HP to match level
 		if (level == null) {
 			lvl = 1;
@@ -82,7 +84,7 @@ public class EUnit extends Entity {
 	@Override
 	public void update() {
 		super.update();
-		type = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getType() : 0;
+		traits = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getTraits() : new ArrayList<>();
 	}
 
 	@Override
@@ -90,27 +92,26 @@ public class EUnit extends Entity {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
-		if (atk.model instanceof AtkModelEnemy) {
-			int overlap = type & atk.type;
-			if (overlap != 0 && (getAbi() & AB_GOOD) != 0) {
-				ans *= basis.b.t().getGOODDEF(overlap, (MaskUnit) data, level);
-				System.out.println(basis.b.t().getGOODDEF(overlap, (MaskUnit) data, level));
-			}
-			if (overlap != 0 && (getAbi() & AB_RESIST) != 0)
-				ans *= basis.b.t().getRESISTDEF(overlap, (MaskUnit) data, level);
-			if (overlap != 0 && (getAbi() & AB_RESISTS) != 0)
-				ans *= basis.b.t().getRESISTSDEF(overlap);
+		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
+			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
+			sharedTraits.retainAll(traits);
+			if ((getAbi() & AB_GOOD) != 0)
+				ans *= basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+			if ((getAbi() & AB_RESIST) != 0)
+				ans *= basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
+				ans *= basis.b.t().getRESISTSDEF(sharedTraits);
 		}
-		if ((atk.type & TB_WITCH) > 0 && (getAbi() & AB_WKILL) > 0)
+		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKDef();
-		if ((atk.type & TB_EVA) > 0 && (getAbi() & AB_EKILL) > 0)
+		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKDef();
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
-		ans = getOrbRes(atk.type, ans);
+		ans = getOrbRes(atk.trait, ans);
 
 		return ans;
 	}
@@ -132,7 +133,7 @@ public class EUnit extends Entity {
 		return super.updateMove(maxl, extmov);
 	}
 
-	private int getOrbAtk(int trait, MaskAtk matk) {
+	private int getOrbAtk(ArrayList<Trait> trait, MaskAtk matk) {
 		Orb orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level.getOrbs() == null) {
@@ -144,8 +145,9 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
+			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
+			if (line[ORB_TYPE] == Data.ORB_RES || !trait.contains(orbType))
 				continue;
 
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -154,7 +156,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private int getOrbRes(int trait, int atk) {
+	private int getOrbRes(ArrayList<Trait> trait, int atk) {
 		Orb orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level.getOrbs() == null)
@@ -165,8 +167,9 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
+			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] != Data.ORB_RES || (line[ORB_TRAIT] & trait) == 0)
+			if (line[ORB_TYPE] != Data.ORB_RES || !trait.contains(orbType))
 				continue;
 
 			ans = orb.getRes(line[ORB_GRADE], ans);
@@ -175,11 +178,64 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private double getOrbMassive(int type) {
-		return basis.b.t().getMassiveAtkWithOrb(type, (MaskUnit) data, level);
+	private double getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+		double ini = 1;
+
+		if (!traits.isEmpty())
+			ini = 3 + 1.0 / 3 * t.getFruit(traits);
+
+		Orb orbs = ((MaskUnit)data).getOrb();
+
+		if(orbs != null && level.getOrbs() != null) {
+			int[][] levelOrbs = level.getOrbs();
+
+			for(int i = 0; i < levelOrbs.length; i++) {
+				if (levelOrbs[i].length < ORB_TOT)
+					continue;
+
+				if (levelOrbs[i][ORB_TYPE] == ORB_MASSIVE) {
+					Trait orbType = Trait.convertType(levelOrbs[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType))
+						ini += ORB_MASSIVE_MULTI[levelOrbs[i][ORB_GRADE]];
+				}
+			}
+		}
+
+		if (ini == 1)
+			return ini;
+
+		double com = 1 + t.b.getInc(C_MASSIVE) * 0.01;
+		return ini * com;
 	}
 
-	private double getOrbGood(int type) {
-		return basis.b.t().getGoodAtkWithOrb(type, (MaskUnit) data, level);
+	private double getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+		double ini = 1;
+
+		if (!traits.isEmpty())
+			ini = 1.5 * (1 + 0.2 / 3 * t.getFruit(traits));
+
+		Orb orbs = ((MaskUnit)data).getOrb();
+
+		if(orbs != null && level.getOrbs() != null) {
+			int[][] levelOrbs = level.getOrbs();
+
+			for (int i = 0; i < levelOrbs.length; i++) {
+				if (levelOrbs[i].length < ORB_TOT)
+						continue;
+
+				if (levelOrbs[i][ORB_TYPE] == ORB_STRONG) {
+					Trait orbType = Trait.convertType(levelOrbs[i][ORB_TRAIT]).get(0);
+					if (eTraits.contains(orbType)) {
+						ini += ORB_STR_ATK_MULTI[levelOrbs[i][ORB_GRADE]];
+					}
+				}
+			}
+		}
+
+		if (ini == 1)
+			return ini;
+
+		double com = 1 + t.b.getInc(C_GOOD) * 0.01;
+		return ini * com;
 	}
 }

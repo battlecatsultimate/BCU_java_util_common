@@ -7,12 +7,15 @@ import common.battle.attack.AttackAb;
 import common.battle.attack.AttackVolcano;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.DefEff;
+import common.util.unit.Trait;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ECastle extends AbEntity {
 
 	private final StageBasis sb;
+	public int hit = 0;
 
 	public EAnimD<DefEff> smoke;
 	public int smokeLayer = -1;
@@ -30,6 +33,7 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void damaged(AttackAb atk) {
+		hit = 2;
 		if(atk.isLongAtk || atk instanceof AttackVolcano)
 			smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
@@ -79,9 +83,7 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean targetable(int type) {
-		return true;
-	}
+	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) { return true; }
 
 	@Override
 	public int touchable() {
@@ -99,6 +101,9 @@ public class ECastle extends AbEntity {
 				smoke.update(false);
 			}
 		}
+
+		if (hit > 0)
+			hit--;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public strictfp interface InStream {
 		return Data.err(() -> new ISStream(f));
 	}
 
-	public default byte[] nextBytesB() {
+	default byte[] nextBytesB() {
 		int len = nextByte();
 		byte[] ints = new byte[len];
 		for (int i = 0; i < len; i++)
@@ -21,7 +21,7 @@ public strictfp interface InStream {
 		return ints;
 	}
 
-	public default byte[] nextBytesI() {
+	default byte[] nextBytesI() {
 		int len = nextInt();
 		byte[] ints = new byte[len];
 		for (int i = 0; i < len; i++)
@@ -29,7 +29,7 @@ public strictfp interface InStream {
 		return ints;
 	}
 
-	public default double[] nextDoubles() {
+	default double[] nextDoubles() {
 		int len = nextByte();
 		double[] ints = new double[len];
 		for (int i = 0; i < len; i++)
@@ -37,7 +37,7 @@ public strictfp interface InStream {
 		return ints;
 	}
 
-	public default int[] nextIntsB() {
+	default int[] nextIntsB() {
 		int len = nextByte();
 		int[] ints = new int[len];
 		for (int i = 0; i < len; i++)
@@ -45,7 +45,7 @@ public strictfp interface InStream {
 		return ints;
 	}
 
-	public default int[][] nextIntsBB() {
+	default int[][] nextIntsBB() {
 		int len = nextByte();
 		int[][] ints = new int[len][];
 		for (int i = 0; i < len; i++)
@@ -53,7 +53,7 @@ public strictfp interface InStream {
 		return ints;
 	}
 
-	public default String nextString() {
+	default String nextString() {
 		byte[] bts = nextBytesB();
 		return new String(bts, StandardCharsets.UTF_8);
 	}

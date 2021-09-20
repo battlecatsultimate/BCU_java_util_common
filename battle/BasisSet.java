@@ -26,19 +26,18 @@ import common.util.unit.Unit;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @JsonClass
 public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static BasisSet current() {
-		return UserProfile.getStatic("BasisSet_current", () -> def());
+		return UserProfile.getStatic("BasisSet_current", BasisSet::def);
 	}
 
 	public static BasisSet def() {
 		listRaw();
-		return UserProfile.getStatic("BasisSet_default", () -> new BasisSet());
+		return UserProfile.getStatic("BasisSet_default", BasisSet::new);
 	}
 
 	public static List<BasisSet> list() {

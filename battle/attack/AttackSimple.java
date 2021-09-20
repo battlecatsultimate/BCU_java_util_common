@@ -1,11 +1,13 @@
 package common.battle.attack;
 
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 import common.battle.entity.Sniper;
 import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,14 +22,14 @@ public class AttackSimple extends AttackAb {
 	private final Set<AbEntity> attacked = new HashSet<>();
 	private final boolean range;
 
-	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, int t, int eab, Proc pro, double p0, double p1, boolean isr,
+	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, double p0, double p1, boolean isr,
 						MaskAtk matk, int layer, boolean isLongAtk, int duration) {
-		super(attacker, ent, ATK, t, eab, pro, p0, p1, matk, layer, isLongAtk, duration);
+		super(attacker, ent, ATK, tr, eab, pro, p0, p1, matk, layer, isLongAtk, duration);
 		range = isr;
 	}
 
-	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, int t, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk) {
-		this(attacker, ent, ATK, t, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
+	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk) {
+		this(attacker, ent, ATK, tr, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}
@@ -36,12 +38,11 @@ public class AttackSimple extends AttackAb {
 	public void capture() {
 		double pos = model.getPos();
 		List<AbEntity> le = model.b.inRange(touch, dire, sta, end, excludeLastEdge);
-		if(attacker != null) {
-			if(attacker.dire == -1 && sta <= model.b.getBase(attacker.dire).pos && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+		if(attacker != null && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+			if(attacker.dire == -1 && dire == -1 && sta <= model.b.getBase(attacker.dire).pos)
 				le.add(model.b.getBase(attacker.dire));
-			} else if (attacker.dire == 1 && sta >= model.b.getBase(attacker.dire).pos && isLongAtk && !le.contains(model.b.getBase(attacker.dire))) {
+			else if (attacker.dire == 1 && dire == 1 && sta >= model.b.getBase(attacker.dire).pos)
 				le.add(model.b.getBase(attacker.dire));
-			}
 		}
 		le.removeIf(attacked::contains);
 		capt.clear();
@@ -51,7 +52,7 @@ public class AttackSimple extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.targetable(type))
+				if (e.ctargetable(trait, false))
 					capt.add(e);
 		if (!range) {
 			if (capt.size() == 0)
@@ -70,6 +71,15 @@ public class AttackSimple extends AttackAb {
 			int r = (int) (model.b.r.nextDouble() * ents.size());
 			capt.add(ents.get(r));
 		}
+	}
+
+	/**
+	 * Method to manually add an unit to an attack for counters.
+	 */
+	public void counterEntity(Entity ce) {
+		isCounter = true;
+		capt.add(ce);
+		excuse();
 	}
 
 	@Override

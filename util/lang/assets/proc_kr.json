@@ -321,6 +321,14 @@
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "약화되는 시간을 퍼센트로 감소시킵니다"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block weaken"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to attack debuffs, -1 = Only resistant to attack buffs"
             }
         }
     },
@@ -345,6 +353,18 @@
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "저주되는 시간을 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUSEAL": {
+        "abbr_name": "imu. Seal",
+        "full_name": "Immune/Resistant to Seal",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
             }
         }
     },
@@ -519,6 +539,18 @@
             }
         }
     },
+    "IMUMOVING": {
+        "abbr_name": "imu. Move",
+        "full_name": "Immune/Resistant to Moving Atk",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Moving Attacks[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
     "THEME": {
         "abbr_name": "배경 변경",
         "full_name": "배경 변경",
@@ -576,6 +608,26 @@
             "type.unstackable": {
                 "name": "중첩 불가능",
                 "tooltip": "해당 특성이 활성화되면 중첩이 불가능해집니다"
+            }
+        }
+    },
+    "IMUPOI": {
+        "abbr_name": "imu. Venom",
+        "full_name": "Immune/Resistant to Venom",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Poison[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block venom"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to harming venom, -1 = Only resistant to healing venom"
             }
         }
     },
@@ -751,7 +803,6 @@
             }
         }
     },
-
     "MINIWAVE" : {
         "abbr_name" : "소파동",
         "full_name" : "소파동",
@@ -772,31 +823,154 @@
             }
         }
     },
-    "DEMONSHIELD" : {
-        "abbr_name" : "악마 쉴드",
-        "full_name" : "악마 쉴드",
-        "tooltip" : "일정 양의 데미지를 막아줍니다. 베리어처럼 체력보다 낮은 데미지를 무시하지 않으며 축적됩니다. 축적된 데미지가 체력을 넘기면 부숴집니다",
-        "format" : "악마 쉴드 (_left)(_shield(hp)) 체력을 가지고 있고 히트백 시 원래 쉴드 체력의 (regen)% 만큼 회복(_right)",
-        "class" : {
-            "hp" : {
-                "name" : "체력",
-                "tooltip" : "쉴드의 체력입니다"
+    "IMUARMOR": {
+        "abbr_name": "Imu. ABreak",
+        "full_name": "Immune/Resistant to Armor Break",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Armor Break",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Armor Break [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects armor [(smartImu>0){buffs}(smartImu<0){debuffs}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
             },
-            "regen" : {
-                "name" : "회복",
-                "tooltip" : "히트백시 원래 쉴드 체력의 몇 퍼센트로 회복될지 정합니다"
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block armor break"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to armor debuffs, -1 = Only resistant to armor buffs"
+            }
+        }
+    },
+    "IMUSPEED": {
+        "abbr_name": "Imu.Haste",
+        "full_name": "Immune/Resistant to Haste",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Haste",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Haste [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects speed [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block Haste"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to speed debuffs, -1 = Only resistant to speed buffs"
+            }
+        }
+    },
+    "DMGCUT" : {
+        "abbr_name" : "Spr. Armor",
+        "full_name" : "Super Armor",
+        "tooltip" : "This ability reduces all damage that is below certain amount to zero.",
+        "format" : "(prob)% chance to nullify[(type.traitIgnore){ all}] damage lower than (dmg)[(type.procs){ and also the attack's procs}]",
+        "class" : {
+            "prob" : {
+                "name" : "chance",
+                "tooltip" : null
+            },
+            "dmg" : {
+                "name" : "damage",
+                "tooltip" : "The maximum amount of damage to be negated."
+            },
+            "type.traitIgnore" : {
+                "name" : "ignore traits",
+                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+            },
+            "type.procs" : {
+                "name" : "ignore procs",
+                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
+            }
+        }
+    },
+    "DMGCAP" : {
+        "abbr_name" : "M.Shield",
+        "full_name" : "Magic Shield",
+        "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than (dmg)[(!type.nullify){ to (dmg)}(type.nullify&type.procs){ and also the attack's procs}]",
+        "class" : {
+            "prob" : {
+                "name" : "chance",
+                "tooltip" : null
+            },
+            "dmg" : {
+                "name" : "damage",
+                "tooltip" : "The minimum amount of damage to be capped."
+            },
+            "type.traitIgnore" : {
+                "name" : "ignore traits",
+                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+            },
+            "type.nullify" : {
+                "name" : "nullify damage",
+                "tooltip" : "When this is checked, damage from the attack will be negated instead of set to the amount"
+            },
+            "type.procs" : {
+                "name" : "ignore procs",
+                "tooltip" : "When this is checked, procs from nullified attacks will also be negated. Only works if 'nullify damage' is checked"
+            }
+        }
+    },
+    "BARRIER" : {
+        "abbr_name" : "barrier",
+        "full_name" : "Barrier",
+        "tooltip" : "Blocks all damage lower than the barrier's HP. Will break if an attack deals more damage than it's HP",
+        "format" : ["Barrier (_left)Barrier has (health) HP",
+            "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
+            "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
+        ],
+        "class" : {
+            "health" : {
+                "name" : "Health",
+                "tooltip" : "Health of the barrier"
+            },
+            "regentime" : {
+                "name" : "Regeneration Time",
+                "tooltip" : "The entity's barrier will regenerate after a period of time passes. Set to 0 to deactivate this ability."
+            },
+            "timeout" : {
+                "name" : "Timeout",
+                "tooltip" : "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
+            }
+        }
+    },
+    "DEMONSHIELD" : {
+        "abbr_name": "악마 쉴드",
+        "full_name": "악마 쉴드",
+        "tooltip": "일정 양의 데미지를 막아줍니다. 베리어처럼 체력보다 낮은 데미지를 무시하지 않으며 축적됩니다. 축적된 데미지가 체력을 넘기면 부숴집니다",
+        "format": "악마 쉴드 (_left)(_shield(hp)) 체력을 가지고 있고 히트백 시 원래 쉴드 체력의 (regen)% 만큼 회복(_right)",
+        "class": {
+            "hp": {
+                "name": "체력",
+                "tooltip": "쉴드의 체력입니다"
+            },
+            "regen": {
+                "name": "회복",
+                "tooltip": "히트백시 원래 쉴드 체력의 몇 퍼센트로 회복될지 정합니다"
             }
         }
     },
     "SHIELDBREAK" : {
-        "abbr_name" : "쉴드",
-        "full_name" : "쉴드를 브레이커",
-        "tooltip" : "쉴드를 즉시 파괴합니다. 이 능력은 히트백시 쉴드가 다시 회복되는 것을 막을 수 없으니 유의해 주세요",
-        "format" : "(prob)% 확률로 악마 쉴드를 부순다",
-        "class" : {
-            "prob" : {
-                "name" : "확률",
-                "tooltip" : "타겟에게 해당 능력을 발동시킬 확률입니다"
+        "abbr_name": "쉴드",
+        "full_name": "쉴드를 부순다",
+        "tooltip": "쉴드를 즉시 파괴합니다. 이 능력은 히트백시 쉴드가 다시 회복되는 것을 막을 수 없으니 유의해 주세요",
+        "format": "(prob)% 확률로 악마 쉴드를 부순다",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
             }
         }
     },

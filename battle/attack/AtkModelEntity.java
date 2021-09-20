@@ -152,24 +152,24 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
-		return new AttackSimple(e, this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD() || data.isOmni());
+		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind));
 	}
 
 	/**
-	 * Invoke death surge attack whenever it procced
+	 * Generate death surge when this entity is killed and the surge procs
 	 */
-    public void getDeathSurge() {
-        Proc p = Proc.blank();
-        int atk = getAttack(0, p);
-        Data.Proc.VOLC ds = e.getProc().DEATHSURGE;
-        AttackSimple as = new AttackSimple(e, this, atk, e.type, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
-        int addp = ds.dis_0 + (int) (b.r.nextDouble() * (ds.dis_1 - ds.dis_0));
-        double p0 = getPos() + getDire() * addp;
-        double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
-        double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
+	public void getDeathSurge() {
+		Proc p = Proc.blank();
+		int atk = getAttack(0, p);
+		AttackSimple as = new AttackSimple(e, this, atk, e.traits, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
+		Proc.VOLC ds = e.getProc().DEATHSURGE;
+		int addp = ds.dis_0 + (int) (b.r.nextDouble() * (ds.dis_1 - ds.dis_0));
+		double p0 = getPos() + getDire() * addp;
+		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
+		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-        new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time);
-    }
+		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time);
+	}
 
 	@Override
 	public int getDire() {
@@ -188,7 +188,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		int dire = e.dire;
 		double d0, d1;
 		d0 = d1 = e.pos;
-		if (!data.isLD() && !data.isOmni()) {
+		if (!data.isLD(ind) && !data.isOmni(ind)) {
 			d0 += data.getRange() * dire;
 			d1 -= data.getWidth() * dire;
 		} else {

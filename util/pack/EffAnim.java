@@ -415,7 +415,6 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		effas.A_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
 		effas.A_DEMON_SHIELD.rev = true;
 		effas.A_E_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
-
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {

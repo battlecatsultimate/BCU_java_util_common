@@ -250,18 +250,14 @@ public class UserProfile {
 					+ ") is higher than BCU core version (" + AssetLoader.CORE_VER + ")");
 		}
 
-		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
-
-		return data;
+		return new UserPack(new Workspace(folder.getName()), desc, elem);
 	}
 
-	public static UserPack readBackupPack(String content, String id) throws Exception {
+	public static UserPack readBackupPack(String content, String id) {
 		JsonElement elem = JsonParser.parseString(content);
 		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
 
-		UserPack data = new UserPack(new Workspace(id), desc, elem);
-
-		return data;
+		return new UserPack(new Workspace(id), desc, elem);
 	}
 
 	public static UserPack readZipPack(File f) throws Exception {

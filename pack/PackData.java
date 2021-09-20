@@ -59,6 +59,7 @@ public abstract class PackData implements IndexContainer {
 		public void load(Consumer<String> progress, Consumer<Double> bar) {
 			progress.accept("loading basic images");
 			Res.readData();
+			Trait.addBCTraits();
 			progress.accept("loading cannon data");
 			Treasure.readCannonCurveData();
 			progress.accept("loading enemies");
@@ -87,6 +88,7 @@ public abstract class PackData implements IndexContainer {
 			progress.accept("loading musics");
 			loadMusic();
 			progress.accept("process data");
+			this.traits.reset();
 			this.enemies.reset();
 			this.randEnemies.reset();
 			this.units.reset();
@@ -95,6 +97,7 @@ public abstract class PackData implements IndexContainer {
 			this.lvrs.reset();
 			this.bgs.reset();
 			this.musics.reset();
+			this.combos.reset();
 			for (CastleList cl : CastleList.map().values())
 				cl.reset();
 			for (MapColc mc : MapColc.values()) {
@@ -192,7 +195,7 @@ public abstract class PackData implements IndexContainer {
 					lv[i] = Integer.parseInt(strs[i]);
 				UnitLevel ul = new UnitLevel(lv);
 				if (!l.contains(ul)) {
-					ul.id = new Identifier<UnitLevel>(Identifier.DEF, UnitLevel.class, l.size());
+					ul.id = new Identifier<>(Identifier.DEF, UnitLevel.class, l.size());
 					l.add(ul);
 				}
 				int ind = l.indexOf(ul);
@@ -403,29 +406,35 @@ public abstract class PackData implements IndexContainer {
 	}
 
 	@Order(0)
-	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
+	public final FixIndexMap<Trait> traits = new FixIndexMap<>(Trait.class);
 	@Order(1)
-	public final FixIndexMap<EneRand> randEnemies = new FixIndexMap<>(EneRand.class);
+	public final FixIndexMap<Enemy> enemies = new FixIndexMap<>(Enemy.class);
 	@Order(2)
-	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
+	public final FixIndexMap<EneRand> randEnemies = new FixIndexMap<>(EneRand.class);
 	@Order(3)
-	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
+	public final FixIndexMap<UnitLevel> unitLevels = new FixIndexMap<>(UnitLevel.class);
 	@Order(4)
-	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
+	public final FixIndexMap<Unit> units = new FixIndexMap<>(Unit.class);
 	@Order(5)
-	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
+	public final FixIndexMap<Soul> souls = new FixIndexMap<>(Soul.class);
 	@Order(6)
-	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);
-	@Order(7)
-	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
-	@Order(8)
-	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
-	@Order(9)
 	public final FixIndexMap<DemonSoul> demonSouls = new FixIndexMap<>(DemonSoul.class);
+	@Order(7)
+	public final FixIndexMap<Background> bgs = new FixIndexMap<>(Background.class);
+	@Order(8)
+	public final FixIndexMap<CharaGroup> groups = new FixIndexMap<>(CharaGroup.class);
+	@Order(9)
+	public final FixIndexMap<LvRestrict> lvrs = new FixIndexMap<>(LvRestrict.class);
+	@Order(10)
+	public final FixIndexMap<Music> musics = new FixIndexMap<>(Music.class);
+	@Order(11)
+	public final FixIndexMap<Combo> combos = new FixIndexMap<>(Combo.class);
 
 	@Override
 	@SuppressWarnings({ "rawtypes" })
 	public <R> R getList(Class cls, Reductor<R, FixIndexMap> func, R def) {
+		if (cls == Trait.class)
+			def = func.reduce(def, traits);
 		if (cls == Unit.class)
 			def = func.reduce(def, units);
 		if (cls == UnitLevel.class)
@@ -444,6 +453,8 @@ public abstract class PackData implements IndexContainer {
 			def = func.reduce(def, groups);
 		if (cls == LvRestrict.class)
 			def = func.reduce(def, lvrs);
+		if (cls == Combo.class)
+			def = func.reduce(def, combos);
 		return def;
 	}
 

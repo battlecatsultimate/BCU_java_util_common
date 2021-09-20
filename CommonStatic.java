@@ -31,7 +31,7 @@ import static java.lang.Character.isDigit;
 @SuppressWarnings("DeprecatedIsStillUsed")
 public class CommonStatic {
 
-    public interface BattleConst {
+	public interface BattleConst {
 
 		double ratio = 768.0 / 2400.0;// r = p/u
 
@@ -188,11 +188,11 @@ public class CommonStatic {
 	public static class Lang {
 
 		@StaticPermitted
-		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es", "it" };
+		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
 
 		@StaticPermitted
 		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
-				{ 0, 3, 1, 2 }, { 5, 0, 3, 1 }, { 6, 0, 3, 1 }, { 0, 3, 1, 2 }, { 8, 0, 3, 1 }, { 9, 0, 3, 1 } };
+				{ 4, 3, 1, 2 }, { 0, 3, 1, 2 }, { 0, 3, 1, 2 } };
 
 	}
 
@@ -449,6 +449,13 @@ public class CommonStatic {
 	 */
 	public static int dataFormMinPos(MaModel model) {
 		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+	}
+
+	/**
+	 * Gets the minimum position value for a custom cat unit.
+	 */
+	public static int customFormMinPos(MaModel model) {
+		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.parts[0][6] - 1));
 	}
 
 	/**

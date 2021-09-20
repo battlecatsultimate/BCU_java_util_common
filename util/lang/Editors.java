@@ -231,7 +231,21 @@ public class Editors {
 				t.time = Math.max(t.time, 1);
 		});
 
-		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> t.mult = Math.min(t.mult, 100));
+		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
+			t.mult = Math.min(t.mult, 100);
+			t.block = Math.min(t.block, 100);
+		});
+
+		EditControl<Proc.IMUAD> imuad = new EditControl<>(Proc.IMUAD.class, (t) -> {
+			t.mult = Math.min(t.mult, 100);
+			t.block = Math.min(t.block, 100);
+			if (t.mult != 0 || t.block != 0)
+				t.smartImu = MathUtil.clip(t.smartImu, -1, 1);
+			else
+				t.smartImu = 0;
+		});
+
+		EditControl<Proc.WAVEI> wavei = new EditControl<>(Proc.WAVEI.class, (t) -> t.mult = Math.min(t.mult, 100));
 
 		map().put("KB", new EditControl<>(Proc.PTD.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -356,7 +370,7 @@ public class Editors {
 				} catch(ClassCastException r) {
 					t.form = 1;
 					t.mult = Math.max(1, t.mult);
-				};
+				}
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
 			}
 		}));
@@ -395,14 +409,48 @@ public class Editors {
 
 		map().put("BOSS", prob);
 
-		map().put("CRITI", new EditControl<>(Proc.CRITI.class, (t) -> t.type = MathUtil.clip(0, t.type, 2)));
+		map().put("CRITI", imu);
 
 		map().put("SATK", new EditControl<>(Proc.PM.class, (t) -> {
 			if (t.prob == 0)
 				t.mult = 0;
 		}));
 
+		map().put("COUNTER", new EditControl<>(Proc.COUNTER.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob,0,100);
+			if (t.prob > 0) {
+				t.procType = MathUtil.clip(t.procType,0,3);
+			} else {
+				t.damage = 0;
+				t.procType = 0;
+				t.type.useOwnDamage = false;
+				t.type.counterWave = 0;
+				t.type.outRange = false;
+			}
+		}));
+
 		map().put("IMUATK", pt);
+
+		map().put("DMGCUT", new EditControl<>(Proc.DMGCUT.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dmg = 0;
+				t.type.traitIgnore = false;
+				t.type.procs = false;
+			} else
+				t.dmg = Math.max(t.dmg,0);
+		}));
+
+		map().put("DMGCAP", new EditControl<>(Proc.DMGCAP.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dmg = 0;
+				t.type.traitIgnore = false;
+				t.type.nullify = false;
+				t.type.procs = false;
+			} else
+				t.dmg = Math.max(t.dmg,0);
+		}));
 
 		map().put("POIATK", new EditControl<>(Proc.PM.class, (t) -> {
 			if (t.prob == 0)
@@ -459,9 +507,9 @@ public class Editors {
 
 		map().put("IMUSLOW", imu);
 
-		map().put("IMUWAVE", imu);
+		map().put("IMUWAVE", wavei);
 
-		map().put("IMUWEAK", imu);
+		map().put("IMUWEAK", imuad);
 
 		map().put("IMUWARP", imu);
 
@@ -469,9 +517,30 @@ public class Editors {
 
 		map().put("IMUPOIATK", imu);
 
-		map().put("IMUVOLC", imu);
+		map().put("IMUVOLC", wavei);
 
 		map().put("IMUSUMMON", imu);
+
+		map().put("IMUSEAL", imu);
+
+		map().put("IMUMOVING", wavei);
+
+		map().put("IMUPOI", imuad);
+
+		map().put("IMUARMOR", imuad);
+
+		map().put("IMUSPEED", imuad);
+
+		map().put("BARRIER", new EditControl<>(Proc.BARRIER.class, (t) -> {
+			t.health = Math.max(0, t.health);
+			if (t.health > 0) {
+				t.regentime = Math.max(0, t.regentime);
+				t.timeout = Math.max(0, t.timeout);
+			} else {
+				t.regentime = 0;
+				t.timeout = 0;
+			}
+		}));
 
 		map().put("DEMONSHIELD", new EditControl<>(Proc.DSHIELD.class, (t) -> {
 			t.hp = Math.max(0, t.hp);

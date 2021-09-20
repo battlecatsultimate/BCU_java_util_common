@@ -4,16 +4,21 @@ import common.battle.StageBasis;
 import common.battle.attack.AtkModelAb;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackSimple;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.SniperEff;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 public class Sniper extends AtkModelAb {
 
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0, angle = 0;
+	//private P path;
 	public boolean enabled = true, canDo = true;
 	public double pos, height, updown;
 
@@ -78,7 +83,9 @@ public class Sniper extends AtkModelAb {
 				int atk = b.b.t().getBaseHealth() / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;
-				AttackAb a = new AttackSimple(null, this, atk, -1, 0, proc, 0, getPos(), false, null, -1, true, 1);
+				ArrayList<Trait> CTrait = new ArrayList<>();
+				CTrait.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
+				AttackAb a = new AttackSimple(null, this, atk, CTrait, 0, proc, 0, getPos(), false, null, -1, true, 1);
 				a.canon = -1;
 				b.getAttack(a);
 			}
@@ -102,7 +109,7 @@ public class Sniper extends AtkModelAb {
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);
 
-		// Get distance which bullet will fly
+		//TODO Get distance which bullet will fly
 		// path = new P(-(getPos()-pos+300),height);
 	}
 }

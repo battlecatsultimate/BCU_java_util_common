@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public abstract class CustomEntity extends DataEntity {
 
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rep, rev, res;
+	public AtkDataModel rep, rev, res, cntr;
 
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
@@ -24,6 +25,10 @@ public abstract class CustomEntity extends DataEntity {
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
 
+	/**
+	 * This field is used to filter all the procs of units if common is false,
+	 * Also used for counter
+	 */
 	@JsonField(block = true)
 	private Proc all;
 
@@ -43,26 +48,31 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
-	@Override
-	public Proc getAllProc() {
-		if (all != null)
-			return all;
-		all = rep.getProc().clone();
-		for (AtkDataModel adm : atks) {
-			for (int i = 0; i < Data.PROC_TOT; i++)
-				if (!all.getArr(i).exists())
-					all.getArr(i).set(adm.proc.getArr(i));
+	/**
+	 * Updates the procs in all and initializes if it is null
+	 */
+	public void updateAllProc() {
+		all = Proc.blank();
+		for (int i = 0; i < Data.PROC_TOT; i++) {
+			if (Data.procSharable[i]) {
+				all.getArr(i).set(getProc().getArr(i));
+			} else
+				for (AtkDataModel adm : atks)
+					if (!all.getArr(i).exists())
+						all.getArr(i).set(adm.proc.getArr(i));
 		}
-		return all;
 	}
 
-	public Proc[] getAllProcs() {
-		int n = atks.length + 1;
-		Proc[] ans = new Proc[n];
-		ans[0] = rep.proc;
-		for (int i = 0; i < atks.length; i++)
-			ans[i + 1] = atks[i].proc;
-		return ans;
+	/**
+	 * Gets all procs for units without common proc
+	 */
+	@Override
+	public Proc getAllProc() {
+		if (common)
+			return getProc();
+		if (all == null)
+			updateAllProc();
+		return all;
 	}
 
 	@Override
@@ -124,6 +134,9 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
+	public AtkDataModel getCounter() { return cntr; }
+
+	@Override
 	public int getTBA() {
 		return tba;
 	}
@@ -140,9 +153,8 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		type = de.getType();
+		traits = new ArrayList<>(de.getTraits());
 		width = de.getWidth();
-		shield = de.getShield();
 		tba = de.getTBA();
 		touch = de.getTouch();
 		death = de.getDeathAnim();
@@ -152,7 +164,7 @@ public abstract class CustomEntity extends DataEntity {
 		}
 
 		base = de.touchBase();
-		common = false;
+		common = ((DefaultData)de).isCommon();
 		rep = new AtkDataModel(this);
 		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();
@@ -173,6 +185,20 @@ public abstract class CustomEntity extends DataEntity {
 		return ans;
 	}
 
+	/**
+	 * Returns if a specific attack is LD,
+	 * used to handle LD units that have an attack that isn't LD properly
+	 * @param ind The attack to get.
+	 */
+	@Override
+	public boolean isLD(int ind) {
+		if (ind == atks.length)
+			return rev.isLD();
+		if (ind == atks.length + 1)
+			return res.isLD();
+		return atks[ind].isLD();
+	}
+
 	@Override
 	public boolean isOmni() {
 		boolean ans = false;
@@ -183,6 +209,20 @@ public abstract class CustomEntity extends DataEntity {
 		if(getResurrection() != null)
 			ans |= getResurrection().isOmni();
 		return ans;
+	}
+
+	/**
+	 * Returns if a specific attack is Omni,
+	 * used to handle Omni units that have an attack that lacks omni properly
+	 * @param ind The attack to get.
+	 */
+	@Override
+	public boolean isOmni(int ind) {
+		if (ind == atks.length)
+			return rev.isOmni();
+		if (ind == atks.length + 1)
+			return res.isOmni();
+		return atks[ind].isOmni();
 	}
 
 	@Override
@@ -248,10 +288,9 @@ public abstract class CustomEntity extends DataEntity {
 		speed = is.nextInt();
 		range = is.nextInt();
 		abi = is.nextInt();
-		type = is.nextInt();
-		type = Data.reorderTrait(type);
+		traits = Trait.convertType(Data.reorderTrait(is.nextInt()));
 		width = is.nextInt();
-		shield = is.nextInt();
+		int sh = is.nextInt();
 		tba = is.nextInt();
 		base = is.nextInt();
 		touch = is.nextInt();
@@ -272,6 +311,7 @@ public abstract class CustomEntity extends DataEntity {
 			rev = new AtkDataModel(this, is);
 		if ((adi & 2) > 0)
 			res = new AtkDataModel(this, is);
-	}
 
+		getProc().BARRIER.health = sh;
+	}
 }
