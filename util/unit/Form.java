@@ -164,6 +164,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
+					MaModel model = anim.loader.getMM();
+					form.limit = CommonStatic.customFormMinPos(model);
 					form.getProc().BARRIER.health = form.shield;
 					form.traits = Trait.convertType(form.type);
 					Proc proc = form.getProc();
@@ -174,11 +176,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					if ((form.abi & (1 << 12)) != 0) //Poison Immunity
 						proc.IMUPOI.mult = 100;
 					form.abi = Data.reorderAbi(form.abi);
-				}
-
-				if (UserProfile.isOlderPack(pack, "0.6.0.1")) {
-					MaModel model = anim.loader.getMM();
-					form.limit = CommonStatic.customFormMinPos(model);
 				}
 			}
 		}

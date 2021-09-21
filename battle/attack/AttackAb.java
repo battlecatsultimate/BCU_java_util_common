@@ -87,9 +87,10 @@ public abstract class AttackAb extends BattleObj {
 			if (ae instanceof Entity) {
 				Entity e = (Entity) ae;
 				Proc imus = e.getProc();
+				boolean blocked = false;
 				if (proc.KB.dis > 0) {
 					if (imus.IMUKB.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUKB.block == 100)
 						proc.KB.clear();
 					else
@@ -97,7 +98,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.SLOW.time > 0) {
 					if (imus.IMUSLOW.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUSLOW.block == 100)
 						proc.SLOW.clear();
 					else
@@ -105,7 +106,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.STOP.time > 0) {
 					if (imus.IMUSTOP.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUSTOP.block == 100)
 						proc.STOP.clear();
 					else
@@ -113,7 +114,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.WEAK.time > 0 && (proc.WEAK.mult - 100) * imus.IMUWEAK.smartImu <= 0) {
 					if (imus.IMUWEAK.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUWEAK.block == 100)
 						proc.WEAK.clear();
 					else
@@ -121,7 +122,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.WARP.time > 0) {
 					if (imus.IMUWARP.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUWARP.block == 100)
 						proc.WARP.clear();
 					else
@@ -129,7 +130,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.CURSE.time > 0) {
 					if (imus.IMUCURSE.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUCURSE.block == 100)
 						proc.CURSE.clear();
 					else
@@ -137,7 +138,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.POIATK.mult > 0 && proc.POISON.damage * imus.IMUPOI.smartImu >= 0) {
 					if (imus.IMUPOIATK.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUPOIATK.block == 100)
 						proc.POIATK.clear();
 					else
@@ -145,7 +146,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.SUMMON.mult > 0) {
 					if (imus.IMUSUMMON.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUSUMMON.block == 100)
 						proc.SUMMON.clear();
 					else
@@ -153,7 +154,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.CRIT.mult > 0) {
 					if (imus.CRITI.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.CRITI.block == 100)
 						proc.CRIT.clear();
 					else
@@ -161,7 +162,7 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.POISON.damage != 0 && proc.POISON.damage * imus.IMUPOI.smartImu >= 0) {
 					if (imus.IMUPOI.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUPOI.block == 100)
 						proc.POISON.clear();
 					else
@@ -169,30 +170,31 @@ public abstract class AttackAb extends BattleObj {
 				}
 				if (proc.SEAL.time > 0) {
 					if (imus.IMUSEAL.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUSEAL.block == 100)
 						proc.SEAL.clear();
 					else
 						proc.SEAL.time *= (100 - imus.IMUSEAL.block) / 100.0;
 				}
-
 				if (proc.ARMOR.time > 0 && proc.ARMOR.mult * imus.IMUARMOR.smartImu >= 0) {
 					if (imus.IMUARMOR.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUARMOR.block == 100)
 						proc.ARMOR.clear();
 					else
 						proc.ARMOR.time *= (100 - imus.IMUARMOR.block) / 100.0;
 				}
-
 				if (proc.SPEED.time > 0 && proc.ARMOR.mult * imus.IMUARMOR.smartImu <= 0) {
 					if (imus.IMUSPEED.block > 0)
-						e.anim.getEff(STPWAVE);
+						blocked = true;
 					if (imus.IMUSPEED.block == 100)
 						proc.ARMOR.clear();
 					else
 						proc.ARMOR.time *= (100 - imus.IMUSPEED.block) / 100.0;
 				}
+
+				if (blocked)
+					e.anim.getEff(STPWAVE);
 			}
 		}
 	}
