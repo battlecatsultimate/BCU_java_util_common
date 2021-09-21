@@ -5,11 +5,11 @@ import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.*;
 import common.system.VImg;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.pack.IndexContainer.Indexable;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 @IndexContainer.IndexCont(PackData.class)
@@ -66,16 +66,6 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         return id + " - " + name;
     }
 
-    public ImageIcon obtainIcon() {
-        try {
-            BufferedImage IconTwo = VImgToIcon(icon);
-            return new ImageIcon(IconTwo);
-        } catch (NullPointerException npe) {
-            icon = null;
-            return null;
-        }
-    }
-
     // Convert Bitmask Type format to new format
     public static ArrayList<Trait> convertType(int type) {
         ArrayList<Trait> traits = new ArrayList<>();
@@ -113,8 +103,6 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     public void onInjected() {
         icon = UserProfile.getUserPack(id.pack).source.readImage(Source.TRAITICON, id.id);
     }
-
-    private BufferedImage VImgToIcon(VImg vi) { return (BufferedImage)vi.getImg().bimg(); }
 
     @JsonClass.JCGetter
     public static Trait getter(Identifier<?> id) { return (Trait) Identifier.get(id); }
