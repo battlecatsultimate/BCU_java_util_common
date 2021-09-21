@@ -326,6 +326,20 @@ public class Treasure extends Data {
 	}
 
 	/**
+	 * get attack multiplication from massive damage ability
+	 */
+	public double getMASSIVEATK(ArrayList<Trait> traits) {
+		return 3 + 1.0 / 3 * getFruit(traits);
+	}
+
+	/**
+	 * get attack multiplication from massive damage ability
+	 */
+	public double getGOODATK(ArrayList<Trait> traits) {
+		return 1.5 + 0.3 / 3 * getFruit(traits);
+	}
+
+	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
 	public double getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
