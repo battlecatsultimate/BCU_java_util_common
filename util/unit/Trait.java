@@ -5,8 +5,6 @@ import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.*;
 import common.system.VImg;
-import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.pack.IndexContainer.Indexable;
 
