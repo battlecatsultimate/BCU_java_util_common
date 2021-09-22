@@ -152,8 +152,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	}
 
 	public int getPrefLv() {
-		double ans = MathUtil.clip(MainBCU.prefLevel,1, max) + (rarity < 2 && maxp > 0 ? ((MainBCU.prefLevel - 1) / 49.0) * maxp : 0);
-		return MathUtil.clip(Math.max(MainBCU.prefLevel,(int)ans),1,max + maxp);
+		return max + (rarity < 2 ? maxp : 0);
 	}
 
 	@Override
