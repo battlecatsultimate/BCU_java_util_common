@@ -120,6 +120,11 @@ public class CommonStatic {
 		 * Maximum number of backups, 0 means infinite
 		 */
 		public int maxBackup = 5;
+
+		/**
+		 * Preferred level for units
+		 */
+		public int prefLevel = 50;
 	}
 
 	public interface EditLink {
