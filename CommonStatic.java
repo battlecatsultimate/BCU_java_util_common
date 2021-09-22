@@ -46,6 +46,10 @@ public class CommonStatic {
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		/**
+		 * Use this if trait.icon is null
+		 */
+		public VImg dummyTrait; //TODO Implement dummy trait icon
 
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
