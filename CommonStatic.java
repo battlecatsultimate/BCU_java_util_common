@@ -6,6 +6,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Context;
+import common.pack.Identifier;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
@@ -187,6 +188,7 @@ public class CommonStatic {
 
 		void setSE(int ind);
 
+		void setBGM(Identifier<Music> mus, long loop);
 	}
 
 	public static class Lang {
@@ -414,6 +416,15 @@ public class CommonStatic {
 	 */
 	public static void setSE(int ind) {
 		def.setSE(ind);
+	}
+
+	/**
+	 * play background music
+	 * @param music Music
+	 * @param loop looping time
+	 */
+	public static void setBGM(Identifier<Music> music, long loop) {
+		def.setBGM(music, loop);
 	}
 
 	public static String toArrayFormat(int... data) {
