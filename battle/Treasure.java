@@ -329,14 +329,18 @@ public class Treasure extends Data {
 	 * get attack multiplication from massive damage ability
 	 */
 	public double getMASSIVEATK(ArrayList<Trait> traits) {
-		return 3 + 1.0 / 3 * getFruit(traits);
+		double ini = 3 + 1.0 / 3 * getFruit(traits);
+		double combo = (1 - (b.getInc(C_MASSIVE) * 0.01));
+		return ini * combo;
 	}
 
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
 	public double getGOODATK(ArrayList<Trait> traits) {
-		return 1.5 + 0.3 / 3 * getFruit(traits);
+		double ini = 1.5 + 0.3 / 3 * getFruit(traits);
+		double combo = 1 - (b.getInc(C_GOOD) * 0.01);
+		return ini * combo;
 	}
 
 	/**
