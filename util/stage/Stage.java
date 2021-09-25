@@ -365,6 +365,9 @@ public class Stage extends Data
 
 		Line line = data.datas[data.datas.length - 1];
 
+		if(line.enemy == null)
+			return false;
+
 		return line.enemy.id == 574 && line.enemy.pack.equals(Identifier.DEF) && line.castle_0 == 0;
 	}
 
