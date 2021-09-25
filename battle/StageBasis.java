@@ -17,7 +17,6 @@ import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
 import common.util.unit.*;
-import io.BCMusic;
 
 import java.util.*;
 
@@ -266,9 +265,9 @@ public class StageBasis extends BattleObj {
 		if (!st.non_con && ubase.health <= 0) {
 			ubase.health = ubase.maxH;
 			if (getEBHP() <= st.mush)
-				BCMusic.play(st.mus1, st.loop1);
+				CommonStatic.setBGM(st.mus1, st.loop1);
 			else
-				BCMusic.play(st.mus0, st.loop0);
+				CommonStatic.setBGM(st.mus0, st.loop0);
 			money = Integer.MAX_VALUE;
 			while (work_lv < 8)
 				act_mon();

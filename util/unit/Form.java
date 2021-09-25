@@ -183,7 +183,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	public int[] getPrefLvs() {
 		int[] ans = new int[6];
-		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
+		final PCoin pc = du instanceof CustomUnit ? du.getPCoin() : unit.forms.length >= 3 ? unit.forms[2].du.getPCoin() : null;
 		if (pc != null)
 			ans = pc.max.clone();
 		ans[0] = unit.getPrefLv();

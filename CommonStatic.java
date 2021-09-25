@@ -6,6 +6,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Context;
+import common.pack.Identifier;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
@@ -46,6 +47,10 @@ public class CommonStatic {
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		/**
+		 * Use this if trait.icon is null
+		 */
+		public VImg dummyTrait; //TODO Implement dummy trait icon
 
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
@@ -115,6 +120,11 @@ public class CommonStatic {
 		 * Maximum number of backups, 0 means infinite
 		 */
 		public int maxBackup = 5;
+
+		/**
+		 * Preferred level for units
+		 */
+		public int prefLevel = 50;
 	}
 
 	public interface EditLink {
@@ -183,6 +193,7 @@ public class CommonStatic {
 
 		void setSE(int ind);
 
+		void setBGM(Identifier<Music> mus, long loop);
 	}
 
 	public static class Lang {
@@ -410,6 +421,15 @@ public class CommonStatic {
 	 */
 	public static void setSE(int ind) {
 		def.setSE(ind);
+	}
+
+	/**
+	 * play background music
+	 * @param music Music
+	 * @param loop looping time
+	 */
+	public static void setBGM(Identifier<Music> music, long loop) {
+		def.setBGM(music, loop);
 	}
 
 	public static String toArrayFormat(int... data) {

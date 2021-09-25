@@ -1028,50 +1028,50 @@
     }
   },
   "COUNTER" : {
-    "abbr_name": "Counter",
-    "full_name": "Counter Attack",
-    "tooltip": "Deal damage back when attacked.",
-    "format": ["(prob)% chance to counter enemy attacks, dealing (damage)[(!type.useOwnDamage){% of the damage received from an attack}] back.",
+    "abbr_name": "反撃",
+    "full_name": "反撃",
+    "tooltip": "攻撃されたとき、このキャラを攻撃した敵を攻撃する。",
+    "format": ["(prob)%の確率で反撃し、(damage)%[(!type.useOwnDamage){攻撃で受けたダメージの}(type.useOwnDamage){このキャラクターの攻撃力の}]を返す。",
       "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks.}] This counterattack will ",
       "[(type.procType<2|type.procType==3){[(type.procType==0){not }]have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. ",
       "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
       "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
     "class": {
       "prob": {
-        "name": "chance",
+        "name": "確率",
         "tooltip": null
       },
       "damage": {
-        "name": "Damage%",
-        "tooltip": "The percentage of damage to reflect when getting hit."
+        "name": "倍率",
+        "tooltip": "被弾時に反射するダメージの割合。"
       },
       "minRange": {
-        "name": "Blindspot",
-        "tooltip": "The counter won't hit anything standing below this number. Leave this and Max Range in 0 to use the unit's normal range."
+        "name": "遠方空点",
+        "tooltip": "この数字より下に立っているものには反撃が当たらない。キャラクターの射程を使用する場合は、このフィールドと遠方リーチを0のままにします。"
       },
       "maxRange": {
-        "name": "Max Range",
-        "tooltip": "The counter won't hit anything standing below this number. Leave this and Blindspot in 0 to use the unit's normal range."
+        "name": "遠方リーチ",
+        "tooltip": "反撃は、この数字より下に立っているものに当たります。キャラクターの射程を使用する場合は、このフィールドと遠方空点を0のままにします。"
       },
       "type.procType": {
-        "name": "Proc Type",
-        "tooltip": "The parameter here affects how attack procs are handled. 0 = Removes all procs. 1 = Reflects all procs back to the attacker. 2 = Replaces all the attack's procs with this unit's procs. 3 = Uses both this entity and the attacker's procs. Useless if there's a hit registered as counter"
+        "name": "アビリティ",
+        "tooltip": "このパラメータは、どのアビリティが反映されるかを扱います。0 = すべてのアビリティを削除します。1 = すべてのアビリティを反映させます。2 = 攻撃側のすべてのアビリティを、このキャラクターのアビリティで置き換える。3 = このキャラクターと攻撃側のアビリティの両方を使用します。"
       },
       "type.counterWave": {
-        "name": "Counter Waves",
-        "tooltip": "Toggle response when hit with a Wave or Surge. 0 = Do Nothing. 1 = Counter. 2 = Reflect."
+        "name": "反撃波動",
+        "tooltip": "波動や烈波が当たったときの反応をトグルします。0 = 何もしない。1 = 反撃する。2 = 反射する。"
       },
       "type.useOwnDamage": {
-        "name": "Use Own Damage",
-        "tooltip": "Use this unit's damage for counters instead of received damage."
+        "name": "独自の攻撃力を使う",
+        "tooltip": "このキャラクターの攻撃力を、受けたダメージの代わりにカウンターに使う."
       },
       "type.outRange": {
-        "name": "Ignore Distance",
-        "tooltip": "Toggle this on and the unit will counter regardless of how far away the attacker is."
+        "name": "無視する距離",
+        "tooltip": "これをオンにすると、攻撃者との距離に関わらず、ユニットは反撃します。."
       },
       "type.areaAttack": {
-        "name": "Area Attack",
-        "tooltip": "Toggle this on and the counter will target all units in the counter's range. If left off, only the attacker will receive damage."
+        "name": "範囲",
+        "tooltip": "これをオンにすると、カウンターは反撃の範囲内にいるすべてのユニットを対象とします。オフにすると、攻撃側のみがダメージを受けます。"
       }
     }
   },

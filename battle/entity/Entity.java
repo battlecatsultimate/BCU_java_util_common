@@ -1465,8 +1465,8 @@ public abstract class Entity extends AbEntity {
 			if (counter.prob > 0 && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
 				double[] ds = aam.touchRange();
 				if (counter.minRange != 0 || counter.maxRange != 0) {
-					ds[0] = counter.minRange;
-					ds[1] = counter.maxRange;
+					ds[0] = pos + counter.minRange;
+					ds[1] = pos + counter.maxRange;
 				}
 
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
