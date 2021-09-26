@@ -17,6 +17,7 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaModel;
 import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
+import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.Music;
 import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
@@ -84,6 +85,9 @@ public class CommonStatic {
 
 		// def unit level
 		public UnitLevel defLv;
+
+		// bg effect
+		public final ArrayList<BackgroundEffect> bgEffects = new ArrayList<>();
 
 	}
 

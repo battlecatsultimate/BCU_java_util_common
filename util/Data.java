@@ -1394,6 +1394,9 @@ public class Data {
 
 	public static final int LINEUP_CHANGE_TIME = 6; //in frame
 
+	public static final int BG_EFFECT_STAR_TIME = 35; //guessed
+	public static final int BG_EFFECT_STAR_Y_RANGE = 150;
+
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
 	public static EffAnimStore effas() {

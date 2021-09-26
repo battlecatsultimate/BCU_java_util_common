@@ -58,7 +58,11 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				new Background(new VImg(vf), ints);
+				Background bg = new Background(new VImg(vf), ints);
+
+				if(bg.id.id == 2) {
+					bg.effect = 0;
+				}
 			}
 	}
 
@@ -68,6 +72,8 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public VImg img;
 	@JsonField
 	public int[][] cs = new int[4][3];
+	@JsonField
+	public int effect = -1;
 
 	public int ic;
 	@JsonField

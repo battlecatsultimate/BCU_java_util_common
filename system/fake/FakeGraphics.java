@@ -35,6 +35,8 @@ public interface FakeGraphics {
 
 	void setColor(int c);
 
+	void setColor(int r, int g, int b);
+
 	void setComposite(int mode, int p0, int p1);
 
 	void setRenderingHint(int key, int object);

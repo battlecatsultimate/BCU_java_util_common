@@ -24,6 +24,7 @@ import common.system.files.VFileRoot;
 import common.util.Data;
 import common.util.Res;
 import common.util.pack.*;
+import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleList.PackCasList;
 import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
@@ -73,6 +74,7 @@ public abstract class PackData implements IndexContainer {
 			EffAnim.read();
 			progress.accept("loading backgrounds");
 			Background.read();
+			BackgroundEffect.read();
 			progress.accept("loading cat castles");
 			NyCastle.read();
 			progress.accept("loading souls");

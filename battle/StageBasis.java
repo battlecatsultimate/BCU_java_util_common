@@ -12,6 +12,7 @@ import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
+import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
@@ -20,6 +21,7 @@ import common.util.unit.*;
 
 import java.util.*;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class StageBasis extends BattleObj {
 
 	public final BasisLU b;
@@ -55,12 +57,18 @@ public class StageBasis extends BattleObj {
 	public int time, s_stop, temp_s_stop;
 	public int respawnTime, unitRespawnTime;
 	public Background bg;
+	public BackgroundEffect bgEffect;
 
+	/**
+	 * Real width/height/groundHeight of battle
+	 */
+	public final int w, h;
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
 	private int themeTime;
 	private Identifier<Background> theme = null;
 	private THEME.TYPE themeType;
+	private boolean bgEffectInitialized = false;
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
 		b = bas;
@@ -71,6 +79,9 @@ public class StageBasis extends BattleObj {
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
 		bg = Identifier.getOr(st.bg, Background.class);
+		if(bg.effect != -1) {
+			bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
+		}
 		EEnemy ee = est.base(this);
 		if (ee != null)
 			ebase = ee;
@@ -122,6 +133,9 @@ public class StageBasis extends BattleObj {
 		isOneLineup = oneLine;
 
 		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
+
+		w = st.len;
+		h = 510 * 3;
 	}
 
 	/**
@@ -368,6 +382,11 @@ public class StageBasis extends BattleObj {
 	 * entities
 	 */
 	protected void update() {
+		if(bgEffect != null && !bgEffectInitialized) {
+			bgEffect.initialize(this);
+			bgEffectInitialized = true;
+		}
+
 		tempe.removeIf(e -> {
 			if (e.t == 0) {
 				le.add(e.ent);
@@ -382,6 +401,9 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0) {
+			if(bgEffect != null)
+				bgEffect.update(this);
+
 			ubase.preUpdate();
 			ubase.update();
 
