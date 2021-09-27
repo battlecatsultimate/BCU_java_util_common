@@ -168,7 +168,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
 				MaModel model = anim.loader.getMM();
-				enemy.limit = CommonStatic.dataEnemyMinPos(model);
+				enemy.limit = CommonStatic.customEnemyMinPos(model);
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
