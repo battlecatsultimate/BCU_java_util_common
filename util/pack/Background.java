@@ -18,6 +18,7 @@ import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.VFile;
 import common.util.anim.*;
+import common.util.pack.bgeffect.BackgroundEffect;
 
 import java.util.Queue;
 
@@ -79,6 +80,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	@JsonField
 	public boolean top;
 
+	public BackgroundEffect[] efs = null;
 	public FakeImage[] parts = null;
 
 	@JsonClass.JCConstructor
