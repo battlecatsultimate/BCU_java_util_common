@@ -80,7 +80,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
 
                 P.delete(positions.get(capture.get(i)));
 
-                positions.set(capture.get(i), P.newP(sb.r.nextDouble() * sb.st.len, sb.r.nextDouble() * rangeH));
+                positions.set(capture.get(i), P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), sb.r.nextDouble() * rangeH));
                 colors.set(capture.get(i), (byte) (sb.r.nextDouble() * (starColors.length - 1)));
                 times.set(capture.get(i), Data.BG_EFFECT_STAR_TIME);
             }
