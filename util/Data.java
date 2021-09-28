@@ -1394,8 +1394,11 @@ public class Data {
 
 	public static final int LINEUP_CHANGE_TIME = 6; //in frame
 
-	public static final int BG_EFFECT_STAR_TIME = 35; //guessed
+	//Below are completely guessed
+	public static final int BG_EFFECT_STAR_TIME = 35;
 	public static final int BG_EFFECT_STAR_Y_RANGE = 150;
+	public static final int BG_EFFECT_SPLASH_MIN_HEIGHT = 90;
+	public static final int BG_EFFECT_SPLASH_RANGE = 60;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 

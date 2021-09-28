@@ -13,7 +13,6 @@ import java.util.List;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class StarBackgroundEffect extends BackgroundEffect {
     private static final int BGHeight = 510;
-    private static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
 
     private static final int[][] starColors = {
             {233, 248, 255},
@@ -38,14 +37,15 @@ public class StarBackgroundEffect extends BackgroundEffect {
     }
 
     @Override
-    public void preDraw(FakeGraphics g, P rect, double siz) {
+    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
         //FIXME draw effect properly
         FakeTransform at = g.getTransform();
+
+        g.setComposite(FakeGraphics.BLEND, 255, 1);
 
         for(int i = 0; i < number; i++) {
             int[] c = starColors[colors.get(i)];
 
-            g.setComposite(FakeGraphics.BLEND, 255, 1);
             g.colRect(convertP(positions.get(i).x, siz) + (int) rect.x, (int) (positions.get(i).y * siz - rect.y), (int) Math.max(1, siz * 4 * 0.8), (int) Math.max(1, siz * 4 * 0.8), c[0], c[1], c[2], opacities.get(i));
         }
 
@@ -56,7 +56,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
     }
 
     @Override
-    public void postDraw(FakeGraphics g, P rect, double siz) {
+    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
 
     }
 

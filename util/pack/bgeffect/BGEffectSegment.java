@@ -92,12 +92,12 @@ public class BGEffectSegment extends BackgroundEffect {
     }
 
     @Override
-    public void preDraw(FakeGraphics g, P rect, double siz) {
+    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
 
     }
 
     @Override
-    public void postDraw(FakeGraphics g, P rect, double siz) {
+    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
 
     }
 

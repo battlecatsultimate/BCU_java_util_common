@@ -60,8 +60,14 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 				}
 				Background bg = new Background(new VImg(vf), ints);
 
-				if(bg.id.id == 2) {
-					bg.effect = 0;
+				switch (bg.id.id) {
+					case 2:
+						bg.effect = 0;
+						break;
+					case 33:
+					case 58:
+						bg.effect = 1;
+						break;
 				}
 			}
 	}
