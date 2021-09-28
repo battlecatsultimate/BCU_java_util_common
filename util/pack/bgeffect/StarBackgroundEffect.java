@@ -46,7 +46,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
             int[] c = starColors[colors.get(i)];
 
             g.setComposite(FakeGraphics.BLEND, 255, 1);
-            g.colRect(convertP(positions.get(i).x, siz) + (int) rect.x, (int) (positions.get(i).y * siz - rect.y), (int) Math.max(1, siz * 6 * 0.8), (int) Math.max(1, siz * 6 * 0.8), c[0], c[1], c[2], opacities.get(i));
+            g.colRect(convertP(positions.get(i).x, siz) + (int) rect.x, (int) (positions.get(i).y * siz - rect.y), (int) Math.max(1, siz * 4 * 0.8), (int) Math.max(1, siz * 4 * 0.8), c[0], c[1], c[2], opacities.get(i));
         }
 
         g.setComposite(FakeGraphics.DEF, 255, 0);
