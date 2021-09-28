@@ -68,6 +68,9 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 					case 58:
 						bg.effect = 1;
 						break;
+					case 15:
+						bg.effect = 2;
+						break;
 				}
 			}
 	}

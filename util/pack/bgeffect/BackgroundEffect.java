@@ -22,16 +22,18 @@ public abstract class BackgroundEffect {
 
         VFile rainFile = VFile.get("./org/battle/a/000_a.png");
 
-        if(rainFile != null) {
-            FakeImage rainImage = rainFile.getData().getImg();
-            ImgCut rainCut = ImgCut.newIns("./org/battle/a/000_a.imgcut");
+        FakeImage rainImage = rainFile.getData().getImg();
+        ImgCut rainCut = ImgCut.newIns("./org/battle/a/000_a.imgcut");
 
-            FakeImage[] images = rainCut.cut(rainImage);
+        FakeImage[] images = rainCut.cut(rainImage);
 
-            asset.bgEffects.add(new RainBGEffect(images[29], images[28]));
-        } else {
-            throw new IllegalStateException("Can't find 000_a.png");
-        }
+        asset.bgEffects.add(new RainBGEffect(images[29], images[28]));
+
+        VFile bubbleFile = VFile.get("./org/img/bgEffect/bubble02.png");
+
+        FakeImage bubbleImage = bubbleFile.getData().getImg();
+
+        asset.bgEffects.add(new BubbleBGEffect(bubbleImage));
     }
 
     /**

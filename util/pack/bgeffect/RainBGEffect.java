@@ -59,7 +59,7 @@ public class RainBGEffect extends BackgroundEffect {
 
         for(int i = 0; i < rainPosition.size(); i++) {
             //30 and 50 shifting is to draw image at center
-            g.translate(convertP(rainPosition.get(i).x, siz) + (int) rect.x - 30 * siz * 0.8, (int) (rainPosition.get(i).y * siz - rect.y + midH - 50 * siz * 0.8));
+            g.translate(convertP(rainPosition.get(i).x, siz) + (int) rect.x - 30 * siz * 0.8, (int) (rainPosition.get(i).y * siz - rect.y + midH * siz - 50 * siz * 0.8));
             g.rotate(Math.PI / 3);
 
             g.drawImage(rain, 0, 0, rw * siz * 0.8, rh * siz * 0.8);
@@ -93,12 +93,12 @@ public class RainBGEffect extends BackgroundEffect {
         splashNumber += splashNumber / 6 - (int) (sb.r.nextDouble() * splashNumber / 3);
 
         for(int i = 0; i < rainNumber; i++) {
-            rainPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), sb.r.nextDouble() * 1510));
+            rainPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), sb.r.nextDouble() * 1530));
         }
 
         for(int i = 0; i < splashNumber; i++) {
-            //Y : 1510 - 100 - random(0 ~ 80)
-            splashPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), 1510 - Data.BG_EFFECT_SPLASH_MIN_HEIGHT - sb.r.nextDouble() * Data.BG_EFFECT_SPLASH_RANGE));
+            //Y : 1530 - 100 - random(0 ~ 80)
+            splashPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), 1530 - Data.BG_EFFECT_SPLASH_MIN_HEIGHT - sb.r.nextDouble() * Data.BG_EFFECT_SPLASH_RANGE));
         }
     }
 

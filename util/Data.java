@@ -1399,6 +1399,9 @@ public class Data {
 	public static final int BG_EFFECT_STAR_Y_RANGE = 150;
 	public static final int BG_EFFECT_SPLASH_MIN_HEIGHT = 90;
 	public static final int BG_EFFECT_SPLASH_RANGE = 60;
+	public static final int BG_EFFECT_BUBBLE_TIME = 780;
+	public static final int BG_EFFECT_BUBBLE_FACTOR = 32;
+	public static final int BG_EFFECT_BUBBLE_STABILIZER = 7;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
