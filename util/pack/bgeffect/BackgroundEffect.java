@@ -34,6 +34,18 @@ public abstract class BackgroundEffect {
         FakeImage bubbleImage = bubbleFile.getData().getImg();
 
         asset.bgEffects.add(new BubbleBGEffect(bubbleImage));
+
+        VFile secondBubbleFile = VFile.get("./org/img/bgEffect/bubble03_bg040.png");
+
+        FakeImage secondBubbleImage = secondBubbleFile.getData().getImg();
+
+        asset.bgEffects.add(new BubbleBGEffect(secondBubbleImage));
+
+        VFile snowFile = VFile.get("./org/img/bgEffect/img021.png");
+
+        FakeImage snowImage = snowFile.getData().getImg();
+
+        asset.bgEffects.add(new SnowBGEffect(snowImage));
     }
 
     /**
@@ -78,6 +90,10 @@ public abstract class BackgroundEffect {
      * @return Converted pixel
      */
     protected int convertP(double p, double siz) {
-        return (int) ((p * CommonStatic.BattleConst.ratio) * siz);
+        return (int) (p * CommonStatic.BattleConst.ratio * siz);
+    }
+
+    protected int revertP(double px) {
+        return (int) (px / CommonStatic.BattleConst.ratio);
     }
 }

@@ -74,6 +74,10 @@ public class BubbleBGEffect extends BackgroundEffect {
 
     @Override
     public void initialize(StageBasis sb) {
+        for(int i = 0; i < bubblePosition.size(); i++) {
+            P.delete(bubblePosition.get(i));
+        }
+
         bubblePosition.clear();
         differentiator.clear();
 

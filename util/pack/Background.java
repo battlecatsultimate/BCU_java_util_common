@@ -17,6 +17,7 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.VFile;
+import common.util.Data;
 import common.util.anim.*;
 
 import java.util.Queue;
@@ -62,14 +63,26 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 				switch (bg.id.id) {
 					case 2:
-						bg.effect = 0;
+					case 14:
+					case 26:
+					case 34:
+						bg.effect = Data.BG_EFFECT_STAR;
 						break;
 					case 33:
 					case 58:
-						bg.effect = 1;
+						bg.effect = Data.BG_EFFECT_RAIN;
 						break;
+					case 13:
 					case 15:
-						bg.effect = 2;
+					case 72:
+						bg.effect = Data.BG_EFFECT_BUBBLE;
+						break;
+					case 40:
+						bg.effect = Data.BG_EFFECT_BUBBLE2;
+						break;
+					case 3:
+					case 27:
+						bg.effect = Data.BG_EFFECT_SNOW;
 						break;
 				}
 			}

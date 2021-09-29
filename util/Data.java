@@ -1394,14 +1394,21 @@ public class Data {
 
 	public static final int LINEUP_CHANGE_TIME = 6; //in frame
 
+	public static final int BG_EFFECT_STAR = 0;
+	public static final int BG_EFFECT_RAIN = 1;
+	public static final int BG_EFFECT_BUBBLE = 2;
+	public static final int BG_EFFECT_BUBBLE2 = 3;
+	public static final int BG_EFFECT_SNOW = 4;
+
 	//Below are completely guessed
 	public static final int BG_EFFECT_STAR_TIME = 35;
-	public static final int BG_EFFECT_STAR_Y_RANGE = 150;
+	public static final int BG_EFFECT_STAR_Y_RANGE = 140;
 	public static final int BG_EFFECT_SPLASH_MIN_HEIGHT = 90;
 	public static final int BG_EFFECT_SPLASH_RANGE = 60;
 	public static final int BG_EFFECT_BUBBLE_TIME = 780;
 	public static final int BG_EFFECT_BUBBLE_FACTOR = 32;
 	public static final int BG_EFFECT_BUBBLE_STABILIZER = 7;
+	public static final int BG_EFFECT_SNOW_SPEED = 8;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 

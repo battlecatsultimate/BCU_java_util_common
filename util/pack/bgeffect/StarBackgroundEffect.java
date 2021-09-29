@@ -73,7 +73,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
         }
 
         if(capture.size() > 0) {
-            int rangeH = sb.h - BGHeight + Data.BG_EFFECT_STAR_Y_RANGE;
+            int rangeH = sb.h - BGHeight + (sb.bg.id.id != 34 ? Data.BG_EFFECT_STAR_Y_RANGE : 0);
 
             for(int i = 0; i < capture.size(); i++) {
                 opacities.set(capture.get(i), 0);
@@ -98,7 +98,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
         colors.clear();
         capture.clear();
 
-        int rangeH = sb.h - BGHeight + Data.BG_EFFECT_STAR_Y_RANGE;
+        int rangeH = sb.h - BGHeight + (sb.bg.id.id != 34 ? Data.BG_EFFECT_STAR_Y_RANGE : 0);
 
         number = sb.st.len / 100;
 
