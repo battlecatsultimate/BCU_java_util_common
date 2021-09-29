@@ -46,6 +46,8 @@ public abstract class BackgroundEffect {
         FakeImage snowImage = snowFile.getData().getImg();
 
         asset.bgEffects.add(new SnowBGEffect(snowImage));
+
+        asset.bgEffects.add(new SnowStarBGEffect());
     }
 
     /**

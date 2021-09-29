@@ -1399,6 +1399,7 @@ public class Data {
 	public static final int BG_EFFECT_BUBBLE = 2;
 	public static final int BG_EFFECT_BUBBLE2 = 3;
 	public static final int BG_EFFECT_SNOW = 4;
+	public static final int BG_EFFECT_SNOWSTAR = 5;
 
 	//Below are completely guessed
 	public static final int BG_EFFECT_STAR_TIME = 35;

@@ -82,8 +82,10 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 						bg.effect = Data.BG_EFFECT_BUBBLE2;
 						break;
 					case 3:
-					case 27:
 						bg.effect = Data.BG_EFFECT_SNOW;
+						break;
+					case 27:
+						bg.effect = Data.BG_EFFECT_SNOWSTAR;
 						break;
 				}
 			}
