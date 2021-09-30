@@ -1401,6 +1401,7 @@ public class Data {
 	public static final int BG_EFFECT_SNOW = 4;
 	public static final int BG_EFFECT_SNOWSTAR = 5;
 	public static final int BG_EFFECT_BLIZZARD = 6;
+	public static final int BG_EFFECT_SHINING = 7;
 
 	//Below are completely guessed
 	public static final int BG_EFFECT_STAR_TIME = 35;
@@ -1415,6 +1416,7 @@ public class Data {
 	public static final int BG_EFFECT_BLIZZARD_SPEED = 40;
 	public static final double BG_EFFECT_FALLING_SNOW_SPEED = 3;
 	public static final double BG_EFFECT_FALLING_SNOW_SIZE = 2.0;
+	public static final int BG_EFFECT_SHINING_TIME = 8;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
