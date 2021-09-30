@@ -35,7 +35,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
 
     @Override
     public void check() {
-
+        blizzard.bimg();
     }
 
     @Override

@@ -39,7 +39,7 @@ public abstract class BackgroundEffect {
 
         FakeImage secondBubbleImage = secondBubbleFile.getData().getImg();
 
-        asset.bgEffects.add(new BubbleBGEffect(secondBubbleImage));
+        asset.bgEffects.add(new FallingSnowBGEffect(secondBubbleImage));
 
         VFile snowFile = VFile.get("./org/img/bgEffect/img021.png");
 
