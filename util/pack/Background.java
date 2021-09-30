@@ -176,6 +176,8 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public BackgroundEffect[] efs = null;
 	public FakeImage[] parts = null;
 
+	private boolean loaded = false;
+
 	@JsonClass.JCConstructor
 	public Background() {
 		ic = 1;
@@ -268,9 +270,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 	@Override
 	public void load() {
+		if(loaded)
+			return;
+
 		img.mark(Marker.BG);
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		parts = aux.iclist.get(ic).cut(img.getImg());
+		loaded = true;
 	}
 
 	@Override

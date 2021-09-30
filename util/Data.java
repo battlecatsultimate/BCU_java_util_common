@@ -1402,6 +1402,7 @@ public class Data {
 	public static final int BG_EFFECT_SNOWSTAR = 5;
 	public static final int BG_EFFECT_BLIZZARD = 6;
 	public static final int BG_EFFECT_SHINING = 7;
+	public static final int BG_EFFECT_BALLOON = 8;
 
 	//Below are completely guessed
 	public static final int BG_EFFECT_STAR_TIME = 35;
