@@ -29,6 +29,8 @@ public interface FakeGraphics {
 
 	void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f);
 
+	void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f);
+
 	void rotate(double d);
 
 	void scale(int hf, int vf);

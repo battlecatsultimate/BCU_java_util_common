@@ -87,6 +87,69 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 					case 27:
 						bg.effect = Data.BG_EFFECT_SNOWSTAR;
 						break;
+					case 46:
+					case 47:
+						bg.effect = Data.BG_EFFECT_BLIZZARD;
+						break;
+				}
+
+				switch (bg.id.id) {
+					case 13:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{0, 226, 255},
+								{255, 255, 255}
+						};
+						break;
+					case 15:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{0, 73, 173},
+								{66, 187, 255}
+						};
+						break;
+					case 19:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{160, 33, 32},
+								{240, 169, 54}
+						};
+						break;
+					case 46:
+					case 47:
+						bg.overlayAlpha = 67;
+						bg.overlay =  new int[][] {
+								{255, 255, 255},
+								{255, 255, 255}
+						};
+						break;
+					case 71:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{145, 45, 5},
+								{235, 160, 60}
+						};
+						break;
+					case 72:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{0, 35, 125},
+								{0, 0, 0}
+						};
+						break;
+					case 73:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{15, 30, 120},
+								{15, 30, 120}
+						};
+						break;
+					case 156:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{255, 255, 255},
+								{255, 255, 255}
+						};
 				}
 			}
 	}
@@ -99,6 +162,10 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public int[][] cs = new int[4][3];
 	@JsonField
 	public int effect = -1;
+	@JsonField
+	public int overlayAlpha;
+	@JsonField
+	public int[][] overlay;
 
 	public int ic;
 	@JsonField

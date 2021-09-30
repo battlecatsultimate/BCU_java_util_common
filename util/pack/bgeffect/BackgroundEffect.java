@@ -48,6 +48,8 @@ public abstract class BackgroundEffect {
         asset.bgEffects.add(new SnowBGEffect(snowImage));
 
         asset.bgEffects.add(new SnowStarBGEffect());
+
+        asset.bgEffects.add(new BlizzardBGEffect(secondBubbleImage));
     }
 
     /**

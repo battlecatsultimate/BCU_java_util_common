@@ -19,7 +19,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
     private final List<P> snowPosition = new ArrayList<>();
     private final List<P> initPos = new ArrayList<>();
-    private final List<Integer> speed = new ArrayList<>();
+    private final List<Byte> speed = new ArrayList<>();
     private final List<Double> slope = new ArrayList<>();
 
     private final List<Integer> capture = new ArrayList<>();
@@ -62,7 +62,7 @@ public class SnowBGEffect extends BackgroundEffect{
             } else {
                 snowPosition.get(i).y += speed.get(i);
                 //slope(y - initY) + initX = x
-                snowPosition.get(i).x = revertP(slope.get(i) * (snowPosition.get(i).y - initPos.get(i).y) + initPos.get(i).x);
+                snowPosition.get(i).x = revertP(slope.get(i) * (snowPosition.get(i).y - initPos.get(i).y)) + initPos.get(i).x;
             }
         }
 
@@ -80,7 +80,7 @@ public class SnowBGEffect extends BackgroundEffect{
                 double angle = Math.toRadians(sb.r.nextDouble() * 75);
 
                 //-0.5angle + 1 is stabilizer
-                speed.set(capture.get(i), (int) ((Data.BG_EFFECT_SNOW_SPEED - sb.r.nextDouble() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+                speed.set(capture.get(i), (byte) ((Data.BG_EFFECT_SNOW_SPEED - sb.r.nextDouble() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
                 slope.set(capture.get(i), Math.tan(-angle));
             }
         }
@@ -106,7 +106,7 @@ public class SnowBGEffect extends BackgroundEffect{
             double angle = Math.toRadians(sb.r.nextDouble() * 75);
 
             //-0.5angle + 1 is stabilizer
-            speed.add((int) ((Data.BG_EFFECT_SNOW_SPEED - sb.r.nextDouble() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+            speed.add((byte) ((Data.BG_EFFECT_SNOW_SPEED - sb.r.nextDouble() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
             slope.add(Math.tan(-angle));
         }
     }
