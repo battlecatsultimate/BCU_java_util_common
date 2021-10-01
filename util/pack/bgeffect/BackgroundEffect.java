@@ -52,6 +52,8 @@ public abstract class BackgroundEffect {
         asset.bgEffects.add(new BlizzardBGEffect(secondBubbleImage));
 
         asset.bgEffects.add(new ShiningBGEffect());
+
+        asset.bgEffects.add(new BalloonBGEffect());
     }
 
     /**

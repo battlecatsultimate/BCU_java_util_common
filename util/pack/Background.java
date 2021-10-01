@@ -93,6 +93,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 						break;
 					case 55:
 						bg.effect = Data.BG_EFFECT_SHINING;
+						break;
+					case 81:
+					case 101:
+					case 123:
+					case 146:
+						bg.effect = Data.BG_EFFECT_BALLOON;
+						break;
 				}
 
 				switch (bg.id.id) {

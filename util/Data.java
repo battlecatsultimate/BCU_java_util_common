@@ -1415,9 +1415,12 @@ public class Data {
 	public static final int BG_EFFECT_SNOW_SPEED = 8;
 	public static final double[] BG_EFFECT_BLIZZARD_SIZE = {1.0, 1.5, 2.0};
 	public static final int BG_EFFECT_BLIZZARD_SPEED = 40;
-	public static final double BG_EFFECT_FALLING_SNOW_SPEED = 3;
+	public static final int BG_EFFECT_FALLING_SNOW_SPEED = 3;
 	public static final double BG_EFFECT_FALLING_SNOW_SIZE = 2.0;
 	public static final int BG_EFFECT_SHINING_TIME = 8;
+	public static final int BG_EFFECT_BALLOON_SPEED = 1;
+	public static final int BG_EFFECT_BALLOON_FACTOR = 32;
+	public static final int BG_EFFECT_BALLOON_STABILIZER = 25;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
