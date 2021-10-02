@@ -231,9 +231,10 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 	public void draw(FakeGraphics g, P rect, final int pos, final int h, final double siz, final int groundHeight) {
 		check();
-		final int off = (int) (pos - shift * siz);
 		int fw = (int) (parts[BG].getWidth() * siz);
 		int fh = (int) (parts[BG].getHeight() * siz);
+
+		final int off = (int) (pos + 200 * siz - fw);
 
 		g.gradRect(0, h, (int) rect.x, groundHeight, 0, h, cs[2], 0, h + groundHeight, cs[3]);
 
