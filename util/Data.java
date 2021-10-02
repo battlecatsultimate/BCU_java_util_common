@@ -1403,6 +1403,7 @@ public class Data {
 	public static final int BG_EFFECT_BLIZZARD = 6;
 	public static final int BG_EFFECT_SHINING = 7;
 	public static final int BG_EFFECT_BALLOON = 8;
+	public static final int BG_EFFECT_ROCK = 9;
 
 	//Below are completely guessed
 	public static final int BG_EFFECT_STAR_TIME = 35;
@@ -1421,6 +1422,9 @@ public class Data {
 	public static final int BG_EFFECT_BALLOON_SPEED = 1;
 	public static final int BG_EFFECT_BALLOON_FACTOR = 32;
 	public static final int BG_EFFECT_BALLOON_STABILIZER = 25;
+	public static final double[] BG_EFFECT_ROCK_SIZE = {1.0, 2.25};
+	public static final int[] BG_EFFECT_ROCK_SPEED = {1, 3};
+	public static final int BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET = 190;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 

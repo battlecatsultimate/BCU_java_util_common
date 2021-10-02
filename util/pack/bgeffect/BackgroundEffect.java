@@ -54,6 +54,8 @@ public abstract class BackgroundEffect {
         asset.bgEffects.add(new ShiningBGEffect());
 
         asset.bgEffects.add(new BalloonBGEffect());
+
+        asset.bgEffects.add(new RockBGEffect());
     }
 
     /**
