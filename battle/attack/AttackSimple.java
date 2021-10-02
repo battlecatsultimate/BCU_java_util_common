@@ -1,6 +1,5 @@
 package common.battle.attack;
 
-import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
@@ -52,7 +51,7 @@ public class AttackSimple extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.ctargetable(trait, false))
+				if (e.ctargetable(trait, attacker, true))
 					capt.add(e);
 		if (!range) {
 			if (capt.size() == 0)

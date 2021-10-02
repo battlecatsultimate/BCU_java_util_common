@@ -83,7 +83,7 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) { return true; }
+	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) { return true; }
 
 	@Override
 	public int touchable() {
