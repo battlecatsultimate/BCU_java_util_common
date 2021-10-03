@@ -14,8 +14,11 @@ import java.util.ArrayList;
 public abstract class DataEntity extends Data implements MaskEntity {
 
 	public int hp, hb, speed, range;
-	public int abi, type, width;
-	public int loop = -1, shield, will;
+	public int abi, width;
+	public int loop = -1, will;
+	@JsonField(block = true)
+	public int type, shield;
+
 	public Identifier<Soul> death;
 	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> traits = new ArrayList<>();
@@ -70,6 +73,16 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	@Override
 	public int getWill() {
 		return will;
+	}
+
+	@JsonField(tag = "type", io = JsonField.IOType.R)
+	public void genType(int t) {
+		type = t;
+	}
+
+	@JsonField(tag = "shield", io = JsonField.IOType.R)
+	public void genShield(int s) {
+		shield = s;
 	}
 
 }

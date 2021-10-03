@@ -39,6 +39,10 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     public boolean targetType;
     // Target type will be used to toggle whether Anti-Traited, Anti-Non Metal, or Anti-All units will target this trait or not
 
+    @JsonField(generic = Form.class, alias = Form.FormJson.class)
+    public final ArrayList<Form> others = new ArrayList<>();
+    // This is used to make custom traits targeted by units whose stats can't be modified otherwise, such as BC units or units from Parented Packs
+
 
     @JsonClass.JCConstructor
     public Trait() {
@@ -50,6 +54,7 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         targetType = t.targetType;
         id = t.id;
         icon = t.icon;
+        others.addAll(t.others);
     }
 
     public Trait(Identifier<Trait> id) {

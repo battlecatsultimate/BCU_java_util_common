@@ -6,6 +6,7 @@ import common.battle.StageBasis;
 import common.battle.attack.*;
 import common.battle.data.AtkDataModel;
 import common.battle.data.MaskEntity;
+import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
 import common.pack.Identifier;
 import common.pack.UserProfile;
@@ -1352,7 +1353,7 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = getProc().IMUATK;
-		if ((atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, false) && imuatk.prob > 0) {
+		if ((atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false) && imuatk.prob > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, -1)));
 				anim.getEff(P_IMUATK);
@@ -1362,7 +1363,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcut.prob > 0)
+		if ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcut.prob > 0)
 			if (dmg < dmgcut.dmg && dmg > 0)
 				if (basis.r.nextDouble() * 100 < dmgcut.prob) {
 					anim.getEff(P_DMGCUT);
@@ -1372,7 +1373,7 @@ public abstract class Entity extends AbEntity {
 						dmg = 0;
 				}
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, false) && dmgcap.prob > 0)
+		if ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcap.prob > 0)
 			if (dmg > dmgcap.dmg)
 				if (basis.r.nextDouble() * 100 < dmgcap.prob) {
 					anim.getEff(P_DMGCAP);
@@ -1520,7 +1521,7 @@ public abstract class Entity extends AbEntity {
 		});
 
 		// process proc part
-		if (!(ctargetable(atk.trait, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
+		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -1810,11 +1811,29 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * can be targeted by units that have traits in common with the entity they're attacking
 	 * @param t The attack's trait list
+	 * @param attacker The Entity attacking.
 	 * @param targetOnly Used if this function is called as part of a "Target Only" call
 	 */
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, boolean targetOnly) {
+	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) {
 		if (targetOnly && isBase) return true;
+		if (attacker != null) {
+			if (attacker.dire == -1 && attacker.traits.size() > 0) {
+				for (int i = 0; i < traits.size(); i++) {
+					if (traits.get(i).BCTrait)
+						continue;
+					if (traits.get(i).others.contains(((MaskUnit) attacker.data).getPack()))
+						return true;
+				}
+			} else if (dire == -1 && traits.size() > 0) {
+				for (int i = 0; i < attacker.traits.size(); i++) {
+					if (attacker.traits.get(i).BCTrait)
+						continue;
+					if (attacker.traits.get(i).others.contains(((MaskUnit) data).getPack()))
+						return true;
+				}
+			}
+		}
 		if (targetTraited(t))
 			for (int i = 0; i < traits.size(); i++)
 				if (traits.get(i).targetType)
@@ -2199,7 +2218,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
 			for (int i = 0; i < le.size(); i++)
-				if (le.get(i).ctargetable(traits,true))
+				if (le.get(i).ctargetable(traits, this, true))
 					touchEnemy = true;
 		}
 	}
