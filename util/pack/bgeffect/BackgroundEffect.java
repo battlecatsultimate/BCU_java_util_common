@@ -13,7 +13,7 @@ import common.util.anim.ImgCut;
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public abstract class BackgroundEffect {
-    protected static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
+    public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
