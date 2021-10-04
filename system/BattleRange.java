@@ -1,6 +1,7 @@
 package common.system;
 
 import common.battle.StageBasis;
+import common.util.anim.EAnimD;
 import common.util.pack.bgeffect.BackgroundEffect;
 
 import javax.annotation.Nullable;
@@ -35,8 +36,11 @@ public class BattleRange<T extends Number> {
             (isZAxis(minSnap) && isYAxis(maxSnap))
         ) {
             throw new IllegalStateException("Snap direction must be either top/bottom or left/right or front/back! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
-        } else if(minSnap == SNAP.INTERVAL && minSnap != maxSnap) {
-            throw new IllegalStateException("Both snap must be INTERVAL! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
+        } else if(
+            (minSnap == SNAP.INTERVAL && maxSnap != null && minSnap != maxSnap) ||
+            (maxSnap == SNAP.INTERVAL && minSnap != null && maxSnap != minSnap)
+        ) {
+            throw new IllegalStateException("Both snap must be same INTERVAL if both are specified! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
         } else if((minSnap == SNAP.FRONT && maxSnap == SNAP.BACK) || (minSnap == SNAP.BACK && maxSnap == SNAP.FRONT)) {
             throw new IllegalStateException("Unhandled z-order snap situation! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
         }
@@ -75,6 +79,10 @@ public class BattleRange<T extends Number> {
                 ma = max.intValue();
         }
 
+        if(mi == ma) {
+            return mi;
+        }
+
         return (int) (mi + sb.r.nextDouble() * (ma - mi));
     }
 
@@ -111,13 +119,41 @@ public class BattleRange<T extends Number> {
                 ma = max.doubleValue();
         }
 
+        if(mi == ma) {
+            return mi;
+        }
+
         return mi + sb.r.nextDouble() * (ma - mi);
     }
 
-    private int getPureRangeI(StageBasis sb) {
+    public int getPureRangeI(StageBasis sb) {
         int mi = min.intValue();
 
         int ma = max.intValue();
+
+        return (int) (mi + sb.r.nextDouble() * (ma - mi));
+    }
+
+    public int getAnimFrame(EAnimD<?> anim, StageBasis sb) {
+        int mi;
+
+        if (minSnap == SNAP.INTERVAL) {
+            mi = min.intValue() + anim.len();
+        } else {
+            mi = min.intValue();
+        }
+
+        int ma;
+
+        if(maxSnap == SNAP.INTERVAL) {
+            ma = max.intValue() + anim.len();
+        } else {
+            ma = max.intValue();
+        }
+
+        if(mi == ma) {
+            return mi;
+        }
 
         return (int) (mi + sb.r.nextDouble() * (ma - mi));
     }
