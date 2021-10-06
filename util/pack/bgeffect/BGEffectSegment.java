@@ -8,6 +8,7 @@ import common.system.BattleRange;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 public class BGEffectSegment extends BackgroundEffect {
@@ -15,23 +16,24 @@ public class BGEffectSegment extends BackgroundEffect {
     /**
      * Number of values which will be used in mamodel
      */
-    public int[] model;
+    public final int[] model;
     /**
      * Number of components which have to be generated
      */
-    public int count;
+    public final BattleRange<Integer> count;
     /**
      * Position where component will be drawn. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public BattleRange<Integer> x;
-    public BattleRange<Integer> y;
+    public final BattleRange<Integer> x;
+    public final BattleRange<Integer> y;
     /**
      * The Z-Order where the component will be drawn.
      */
-    public BattleRange<Integer> zOrder;
+    public final BattleRange<Integer> zOrder;
     /**
      * The Size of the component to draw. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
+    public BattleRange<Double> scale;
     public BattleRange<Double> scaleX;
     public BattleRange<Double> scaleY;
     /**
@@ -41,120 +43,271 @@ public class BGEffectSegment extends BackgroundEffect {
     /**
      * Frame this component will start to appear.
      */
-    public int startFrame, frame;
+    public final BattleRange<Integer> startFrame;
 
-    public BattleRange<Integer> wait;
+    public final BattleRange<Integer> frame;
 
-    public BattleRange<Integer> lifeTime;
+    public final BattleRange<Integer> wait;
 
     /**
      * The speed this component will rotate. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
     public BattleRange<Double> angleVelocity;
     /**
+     * Component's velocity.
+     */
+    public final BattleRange<Integer> velocity;
+    /**
      * The speed this component will move. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public BattleRange<Integer> velocityX;
-    public BattleRange<Integer> velocityY;
+    public final BattleRange<Integer> velocityX;
+    public final BattleRange<Integer> velocityY;
     /**
      * If the component goes beyond these values' direction, it will be destroyed.
      */
-    public int destroyTop, destroyBottom, destroyLeft, destroyRight;
+    public BattleRange<Integer> destroyTop, destroyBottom, destroyLeft, destroyRight;
     /**
      * The size this component when made. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Double> startScale;
+    public final BattleRange<Double> startScale;
     /**
      * Initial X position. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Integer> startX;
+    public final BattleRange<Integer> startX;
     /**
      * Initial Y position. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Integer> startY;
+    public final BattleRange<Integer> startY;
     /**
      * Initial X velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Integer> startVelocityX;
+    public final BattleRange<Integer> startVelocityX;
     /**
      * Initial Y velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Integer> startVelocityY;
+    public final BattleRange<Integer> startVelocityY;
     /**
      * Initial velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Integer> startVelocity;
+    public final BattleRange<Integer> startVelocity;
     /**
      * The component will be destroyed if it stays on the field longer than this time.
      */
-    public int lifetime;
-    /**
-     * Component's velocity.
-     */
-    public int velocity;
+    public final BattleRange<Integer> lifeTime;
     /**
      * ???
      */
-    BattleRange<Double> moveAngle;
+    public final BattleRange<Double> moveAngle;
     /**
      * Component's opacity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    BattleRange<Integer> opacity;
-    /**
-     * Frame this component's animation will start at.
-     */
-    public int animStartFrame;
+    public final BattleRange<Integer> opacity;
 
     public BGEffectSegment(JsonObject elem) {
         if(elem.has("model")) {
-            JsonArray modelArray = elem.getAsJsonArray("model");
+            JsonObject modelObject = elem.getAsJsonObject("model");
 
-            model = new int[modelArray.size()];
+            if(modelObject.has("values")) {
+                JsonArray modelArray = modelObject.getAsJsonArray("values");
 
-            for(int i = 0; i < modelArray.size(); i++) {
-                model[i] = modelArray.get(i).getAsInt();
+                model = new int[modelArray.size()];
+
+                for(int i = 0; i < modelArray.size(); i++) {
+                    model[i] = modelArray.get(i).getAsInt();
+                }
+            } else if(modelObject.has("value")) {
+                model = new int[] {modelObject.get("value").getAsInt()};
+            } else {
+                System.out.println("W/BGEffectSegment | model has weird data type : \"model\" : "+modelObject);
+                model = null;
             }
+        } else {
+            model = null;
         }
 
         if(elem.has("count")) {
-            JsonObject countObject = elem.getAsJsonObject("count");
-
-            count = countObject.get("value").getAsInt();
+            count = readRangedJsonObjectI(elem, "count");
         } else {
-            count = 1;
+            count = new BattleRange<>(1, null, 1, null);
         }
 
         if(elem.has("x")) {
             x = readRangedJsonObjectI(elem, "x");
+        } else {
+            x = new BattleRange<>(0, null, 0, null);
         }
 
         if(elem.has("y")) {
             y = readRangedJsonObjectI(elem, "y");
+        } else {
+            y = new BattleRange<>(0, null, 0, null);
+        }
+
+        if(elem.has("startX")) {
+            startX = readRangedJsonObjectI(elem, "startX");
+        } else {
+            startX = null;
+        }
+
+        if(elem.has("startY")) {
+            startY = readRangedJsonObjectI(elem, "startY");
+        } else {
+            startY = null;
         }
 
         if(elem.has("z")) {
             zOrder = readRangedJsonObjectI(elem, "z");
+        } else {
+            zOrder = new BattleRange<>(0, BattleRange.SNAP.BACK, 0, BattleRange.SNAP.BACK);
+        }
+
+        if(elem.has("angle")) {
+            angle = readRangedJsonObjectD(elem, "angle", Math::toRadians);
+        } else {
+            angle = null;
+        }
+
+        if(elem.has("scale")) {
+            scale = readRangedJsonObjectD(elem, "scale");
+        } else {
+            scale = null;
+        }
+
+        if(elem.has("scaleX")) {
+            scaleX = readRangedJsonObjectD(elem, "scaleX");
+        } else {
+            scaleX = null;
+        }
+
+        if(elem.has("scaleY")) {
+            scaleY = readRangedJsonObjectD(elem, "scaleY");
+        } else {
+            scaleY = null;
+        }
+
+        if(elem.has("startFrame")) {
+            startFrame = readRangedJsonObjectI(elem, "startFrame");
+        } else {
+            startFrame = null;
         }
 
         if(elem.has("frame")) {
-            JsonObject frameObject = elem.getAsJsonObject("frame");
-
-            if(frameObject.has("value")) {
-                frame = frameObject.get("value").getAsInt();
-            } else {
-                throw new IllegalStateException("Unhandled frame data found : "+frameObject);
-            }
+            frame = readRangedJsonObjectI(elem, "frame");
+        } else {
+            frame = null;
         }
 
         if(elem.has("wait")) {
             wait = readRangedJsonObjectI(elem, "wait");
+        } else {
+            wait = null;
         }
 
         if(elem.has("lifeTime")) {
             lifeTime = readRangedJsonObjectI(elem, "lifeTime");
+        } else {
+            lifeTime = null;
         }
 
+        if(elem.has("startScale")) {
+            startScale = readRangedJsonObjectD(elem, "startScale");
 
+            if(elem.getAsJsonObject("startScale").has("randGroup")) {
+                System.out.println("W/BGEffectSegment | Random group found in start scale -> startScale : "+elem.getAsJsonObject("startScale").get("randGroup").getAsString());
+            }
+        } else {
+            startScale = null;
+        }
+
+        if(elem.has("v")) {
+            velocity = readRangedJsonObjectI(elem, "v");
+        } else {
+            velocity = null;
+        }
+
+        if(elem.has("vx")) {
+            velocityX = readRangedJsonObjectI(elem, "vx");
+        } else {
+            velocityX = null;
+        }
+
+        if(elem.has("vy")) {
+            velocityY = readRangedJsonObjectI(elem, "vy");
+        } else {
+            velocityY = null;
+        }
+
+        if(elem.has("startV")) {
+            startVelocity = readRangedJsonObjectI(elem, "startV");
+        } else {
+            startVelocity = null;
+        }
+
+        if(elem.has("startVx")) {
+            startVelocityX = readRangedJsonObjectI(elem, "startVx");
+
+            if(elem.getAsJsonObject("startVx").has("randGroup")) {
+                System.out.println("W/BGEffectSegment | Random group found in start velocity x -> startVx : "+elem.getAsJsonObject("startVx").get("randGroup").getAsString());
+            }
+        } else {
+            startVelocityX = null;
+        }
+
+        if(elem.has("startVy")) {
+            startVelocityY = readRangedJsonObjectI(elem, "startVy");
+
+            if(elem.getAsJsonObject("startVy").has("randGroup")) {
+                System.out.println("W/BGEffectSegment | Random group found in start velocity y -> startVy : "+elem.getAsJsonObject("startVy").get("randGroup").getAsString());
+            }
+        } else {
+            startVelocityY = null;
+        }
+
+        if(elem.has("moveAngle")) {
+            moveAngle = readRangedJsonObjectD(elem, "moveAngle", Math::toRadians);
+
+            if(velocity == null) {
+                System.out.println("W/BGEffectSegment | Non-defined velocity data found while moveAngle is defined -> vx == null : "+(velocityX == null)+" | vy == null : "+(velocityY == null));
+            }
+        } else {
+            moveAngle = null;
+        }
+
+        if(elem.has("opacity")) {
+            opacity = readRangedJsonObjectI(elem, "opacity");
+        } else {
+            opacity = null;
+        }
+
+        if(elem.has("destroyLeft")) {
+            destroyLeft = readRangedJsonObjectI(elem, "destroyLeft");
+        } else {
+            destroyLeft = null;
+        }
+
+        if(elem.has("destroyTop")) {
+            destroyTop = readRangedJsonObjectI(elem, "destroyTop");
+        } else {
+            destroyTop = null;
+        }
+
+        if(elem.has("destroyRight")) {
+            destroyRight = readRangedJsonObjectI(elem, "destroyRight");
+        } else {
+            destroyRight = null;
+        }
+
+        if(elem.has("destroyBottom")) {
+            destroyBottom = readRangedJsonObjectI(elem, "destroyBottom");
+        } else {
+            destroyBottom = null;
+        }
+
+        if(elem.has("angularV")) {
+            angleVelocity = readRangedJsonObjectD(elem, "angularV", Math::toRadians);
+        } else {
+            angleVelocity = null;
+        }
     }
 
     @Override
@@ -198,122 +351,172 @@ public class BGEffectSegment extends BackgroundEffect {
                 return BattleRange.SNAP.BACK;
             case "animeInterval":
                 return BattleRange.SNAP.INTERVAL;
+            case "secondToFrame":
+                return BattleRange.SNAP.SECOND;
+            case "percentToFloat":
+                return BattleRange.SNAP.PERCENT;
             default:
                 throw new IllegalStateException("Unknown base type found : "+base);
         }
     }
 
+    @Nonnull
     private BattleRange<Integer> readRangedJsonObjectI(JsonObject obj, String mainKeyword) {
-        if(obj.has(mainKeyword)) {
-            JsonObject xObject = obj.getAsJsonObject(mainKeyword);
+        JsonObject xObject = obj.getAsJsonObject(mainKeyword);
 
-            int min;
-            BattleRange.SNAP minSnap;
-            int max;
-            BattleRange.SNAP maxSnap;
+        int min;
+        BattleRange.SNAP minSnap;
+        int max;
+        BattleRange.SNAP maxSnap;
 
-            if(xObject.has("min") && xObject.has("max")) {
-                if (xObject.has("min")) {
-                    JsonObject xMinObject = xObject.getAsJsonObject("min");
+        if(xObject.has("min") && xObject.has("max")) {
+            if (xObject.has("min")) {
+                JsonObject xMinObject = xObject.getAsJsonObject("min");
 
-                    min = xMinObject.get("value").getAsInt();
+                min = xMinObject.get("value").getAsInt();
 
-                    if (xMinObject.has("base")) {
-                        minSnap = getSnap(xMinObject.get("base").getAsString());
-                    } else {
-                        minSnap = null;
-                    }
+                if (xMinObject.has("base")) {
+                    minSnap = getSnap(xMinObject.get("base").getAsString());
                 } else {
-                    min = 0;
                     minSnap = null;
                 }
-
-                if (xObject.has("max")) {
-                    JsonObject xMaxObject = xObject.getAsJsonObject("max");
-
-                    max = xMaxObject.get("value").getAsInt();
-
-                    if (xMaxObject.has("base")) {
-                        maxSnap = getSnap(xMaxObject.get("base").getAsString());
-                    } else {
-                        maxSnap = null;
-                    }
-                } else {
-                    max = 0;
-                    maxSnap = null;
-                }
-            } else if(xObject.has("value")) {
-                min = max = xObject.get("value").getAsInt();
-
-                if(xObject.has("base")) {
-                    minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
-                } else {
-                    minSnap = maxSnap = null;
-                }
             } else {
-                throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
+                min = 0;
+                minSnap = null;
             }
 
-            return new BattleRange<>(min, minSnap, max, maxSnap);
+            if (xObject.has("max")) {
+                JsonObject xMaxObject = xObject.getAsJsonObject("max");
+
+                max = xMaxObject.get("value").getAsInt();
+
+                if (xMaxObject.has("base")) {
+                    maxSnap = getSnap(xMaxObject.get("base").getAsString());
+                } else {
+                    maxSnap = null;
+                }
+            } else {
+                max = 0;
+                maxSnap = null;
+            }
+        } else if(xObject.has("value")) {
+            min = max = xObject.get("value").getAsInt();
+
+            if(xObject.has("base")) {
+                minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
+            } else {
+                minSnap = maxSnap = null;
+            }
+        } else {
+            throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return null;
+        return new BattleRange<>(min, minSnap, max, maxSnap);
+    }
+
+    private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword) {
+        JsonObject xObject = obj.getAsJsonObject(mainKeyword);
+
+        double min;
+        BattleRange.SNAP minSnap;
+        double max;
+        BattleRange.SNAP maxSnap;
+
+        if(xObject.has("min") && xObject.has("max")) {
+            if (xObject.has("min")) {
+                JsonObject xMinObject = xObject.getAsJsonObject("min");
+
+                min = xMinObject.get("value").getAsDouble();
+
+                if (xMinObject.has("base")) {
+                    minSnap = getSnap(xMinObject.get("base").getAsString());
+                } else {
+                    minSnap = null;
+                }
+            } else {
+                min = 0;
+                minSnap = null;
+            }
+
+            if (xObject.has("max")) {
+                JsonObject xMaxObject = xObject.getAsJsonObject("max");
+
+                max = xMaxObject.get("value").getAsDouble();
+
+                if (xMaxObject.has("base")) {
+                    maxSnap = getSnap(xMaxObject.get("base").getAsString());
+                } else {
+                    maxSnap = null;
+                }
+            } else {
+                max = 0;
+                maxSnap = null;
+            }
+        } else if(xObject.has("value")) {
+            min = max = xObject.get("value").getAsDouble();
+
+            if(xObject.has("base")) {
+                minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
+            } else {
+                minSnap = maxSnap = null;
+            }
+        } else {
+            throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
+        }
+
+        return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 
     private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword, Function<Integer, Double> func) {
-        if(obj.has(mainKeyword)) {
-            JsonObject xObject = obj.getAsJsonObject(mainKeyword);
+        JsonObject xObject = obj.getAsJsonObject(mainKeyword);
 
-            double min;
-            BattleRange.SNAP minSnap;
-            double max;
-            BattleRange.SNAP maxSnap;
+        double min;
+        BattleRange.SNAP minSnap;
+        double max;
+        BattleRange.SNAP maxSnap;
 
-            if(xObject.has("min") && xObject.has("max")) {
-                if (xObject.has("min")) {
-                    JsonObject xMinObject = xObject.getAsJsonObject("min");
+        if(xObject.has("min") && xObject.has("max")) {
+            if (xObject.has("min")) {
+                JsonObject xMinObject = xObject.getAsJsonObject("min");
 
-                    min = func.apply(xMinObject.get("value").getAsInt());
+                min = func.apply(xMinObject.get("value").getAsInt());
 
-                    if (xMinObject.has("base")) {
-                        minSnap = getSnap(xMinObject.get("base").getAsString());
-                    } else {
-                        minSnap = null;
-                    }
+                if (xMinObject.has("base")) {
+                    minSnap = getSnap(xMinObject.get("base").getAsString());
                 } else {
-                    min = 0;
                     minSnap = null;
                 }
-
-                if (xObject.has("max")) {
-                    JsonObject xMaxObject = xObject.getAsJsonObject("max");
-
-                    max = func.apply(xMaxObject.get("value").getAsInt());
-
-                    if (xMaxObject.has("base")) {
-                        maxSnap = getSnap(xMaxObject.get("base").getAsString());
-                    } else {
-                        maxSnap = null;
-                    }
-                } else {
-                    max = 0;
-                    maxSnap = null;
-                }
-            } else if(xObject.has("value")) {
-                min = max = func.apply(xObject.get("value").getAsInt());
-
-                if(xObject.has("base")) {
-                    minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
-                } else {
-                    minSnap = maxSnap = null;
-                }
             } else {
-                throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
+                min = 0;
+                minSnap = null;
             }
 
-            return new BattleRange<>(min, minSnap, max, maxSnap);
+            if (xObject.has("max")) {
+                JsonObject xMaxObject = xObject.getAsJsonObject("max");
+
+                max = func.apply(xMaxObject.get("value").getAsInt());
+
+                if (xMaxObject.has("base")) {
+                    maxSnap = getSnap(xMaxObject.get("base").getAsString());
+                } else {
+                    maxSnap = null;
+                }
+            } else {
+                max = 0;
+                maxSnap = null;
+            }
+        } else if(xObject.has("value")) {
+            min = max = func.apply(xObject.get("value").getAsInt());
+
+            if(xObject.has("base")) {
+                minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
+            } else {
+                minSnap = maxSnap = null;
+            }
+        } else {
+            throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return null;
+        return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 }

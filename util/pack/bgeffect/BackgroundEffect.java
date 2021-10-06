@@ -3,6 +3,7 @@ package common.util.pack.bgeffect;
 import common.CommonStatic;
 import common.battle.StageBasis;
 import common.io.json.JsonClass;
+import common.pack.Context;
 import common.pack.Identifier;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -14,6 +15,8 @@ import common.util.anim.ImgCut;
 @JsonClass
 public abstract class BackgroundEffect {
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
+
+    private static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164};
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
@@ -56,6 +59,12 @@ public abstract class BackgroundEffect {
         asset.bgEffects.add(new BalloonBGEffect());
 
         asset.bgEffects.add(new RockBGEffect());
+
+        CommonStatic.ctx.noticeErr(() -> {
+            for(int i = 0; i < jsonList.length; i++) {
+                asset.bgEffects.add(new JsonBGEffect("bg"+BackgroundEffect.jsonList[i]+".json"));
+            }
+        }, Context.ErrType.FATAL, "Failed to read bg effect data");
     }
 
     /**

@@ -14,7 +14,9 @@ public class BattleRange<T extends Number> {
         BOTTOM,
         INTERVAL,
         FRONT,
-        BACK
+        BACK,
+        SECOND,
+        PERCENT
     }
 
     private final T min;
@@ -28,19 +30,14 @@ public class BattleRange<T extends Number> {
         this.maxSnap = maxSnap;
 
         if(
-            (isXAxis(minSnap) && isYAxis(maxSnap)) ||
-            (isXAxis(minSnap) && isZAxis(maxSnap)) ||
-            (isYAxis(minSnap) && isXAxis(maxSnap)) ||
-            (isYAxis(minSnap) && isZAxis(maxSnap)) ||
-            (isZAxis(minSnap) && isXAxis(maxSnap)) ||
-            (isZAxis(minSnap) && isYAxis(maxSnap))
+            !(isXAxis(minSnap) && isXAxis(maxSnap)) &&
+            !(isYAxis(minSnap) && isYAxis(maxSnap)) &&
+            !(isZAxis(minSnap) && isZAxis(maxSnap)) &&
+            !(isSecond(minSnap) && isSecond(maxSnap)) &&
+            !(isPercentage(minSnap) && isPercentage(maxSnap)) &&
+            !(isInterval(minSnap) && isInterval(maxSnap))
         ) {
-            throw new IllegalStateException("Snap direction must be either top/bottom or left/right or front/back! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
-        } else if(
-            (minSnap == SNAP.INTERVAL && maxSnap != null && minSnap != maxSnap) ||
-            (maxSnap == SNAP.INTERVAL && minSnap != null && maxSnap != minSnap)
-        ) {
-            throw new IllegalStateException("Both snap must be same INTERVAL if both are specified! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
+            throw new IllegalStateException("Snap direction must be either top/bottom or left/right or front/back or second or percentage! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
         } else if((minSnap == SNAP.FRONT && maxSnap == SNAP.BACK) || (minSnap == SNAP.BACK && maxSnap == SNAP.FRONT)) {
             throw new IllegalStateException("Unhandled z-order snap situation! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
         }
@@ -59,6 +56,9 @@ public class BattleRange<T extends Number> {
             case TOP:
                 mi = 1530 + min.intValue();
                 break;
+            case SECOND:
+                mi = (int) (min.intValue() / 30.0);
+                break;
             default:
                 mi = min.intValue();
         }
@@ -74,6 +74,9 @@ public class BattleRange<T extends Number> {
                 break;
             case TOP:
                 ma = 1530 + max.intValue();
+                break;
+            case SECOND:
+                ma = (int) (max.intValue() / 30.0);
                 break;
             default:
                 ma = max.intValue();
@@ -99,6 +102,9 @@ public class BattleRange<T extends Number> {
             case TOP:
                 mi = 1530 + min.doubleValue();
                 break;
+            case SECOND:
+                mi = min.doubleValue() / 30.0;
+                break;
             default:
                 mi = min.doubleValue();
         }
@@ -114,6 +120,9 @@ public class BattleRange<T extends Number> {
                 break;
             case TOP:
                 ma = 1530 + max.doubleValue();
+                break;
+            case SECOND:
+                ma = max.doubleValue() / 30.0;
                 break;
             default:
                 ma = max.doubleValue();
@@ -163,14 +172,26 @@ public class BattleRange<T extends Number> {
     }
 
     private boolean isXAxis(SNAP snap) {
-        return snap == SNAP.LEFT || snap == SNAP.RIGHT;
+        return snap == null || snap == SNAP.LEFT || snap == SNAP.RIGHT;
     }
 
     private boolean isYAxis(SNAP snap) {
-        return snap == SNAP.TOP || snap == SNAP.BOTTOM;
+        return snap == null || snap == SNAP.TOP || snap == SNAP.BOTTOM;
     }
 
     private boolean isZAxis(SNAP snap) {
-        return snap == SNAP.FRONT || snap == SNAP.BACK;
+        return snap == null || snap == SNAP.FRONT || snap == SNAP.BACK;
+    }
+
+    private boolean isPercentage(SNAP snap) {
+        return snap == null || snap == SNAP.PERCENT;
+    }
+
+    private boolean isSecond(SNAP snap) {
+        return snap == null || snap == SNAP.SECOND;
+    }
+
+    private boolean isInterval(SNAP snap) {
+        return snap == null || snap == SNAP.INTERVAL;
     }
 }
