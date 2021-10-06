@@ -1,5 +1,6 @@
 package common.system;
 
+import common.CommonStatic;
 import common.battle.StageBasis;
 import common.util.anim.EAnimD;
 import common.util.pack.bgeffect.BackgroundEffect;
@@ -7,6 +8,8 @@ import common.util.pack.bgeffect.BackgroundEffect;
 import javax.annotation.Nullable;
 
 public class BattleRange<T extends Number> {
+    private static final double battleHeightOffset = 1020.0 / CommonStatic.BattleConst.ratio;
+
     public enum SNAP {
         LEFT,
         RIGHT,
@@ -46,40 +49,48 @@ public class BattleRange<T extends Number> {
     public int getRangeI(StageBasis sb) {
         int mi;
 
-        switch (minSnap) {
-            case LEFT:
-                mi = -BackgroundEffect.battleOffset + min.intValue();
-                break;
-            case RIGHT:
-                mi = sb.st.len + BackgroundEffect.battleOffset + min.intValue();
-                break;
-            case TOP:
-                mi = 1530 + min.intValue();
-                break;
-            case SECOND:
-                mi = (int) (min.intValue() / 30.0);
-                break;
-            default:
-                mi = min.intValue();
+        if(minSnap != null) {
+            switch (minSnap) {
+                case LEFT:
+                    mi = -BackgroundEffect.battleOffset + min.intValue();
+                    break;
+                case RIGHT:
+                    mi = sb.st.len + BackgroundEffect.battleOffset + min.intValue();
+                    break;
+                case BOTTOM:
+                    mi = (int) (battleHeightOffset + min.intValue());
+                    break;
+                case SECOND:
+                    mi = (int) (min.intValue() / 30.0);
+                    break;
+                default:
+                    mi = min.intValue();
+            }
+        } else {
+            mi = min.intValue();
         }
 
         int ma;
 
-        switch (maxSnap) {
-            case LEFT:
-                ma = -BackgroundEffect.battleOffset + max.intValue();
-                break;
-            case RIGHT:
-                ma = sb.st.len + BackgroundEffect.battleOffset + max.intValue();
-                break;
-            case TOP:
-                ma = 1530 + max.intValue();
-                break;
-            case SECOND:
-                ma = (int) (max.intValue() / 30.0);
-                break;
-            default:
-                ma = max.intValue();
+        if(maxSnap != null) {
+            switch (maxSnap) {
+                case LEFT:
+                    ma = -BackgroundEffect.battleOffset + max.intValue();
+                    break;
+                case RIGHT:
+                    ma = sb.st.len + BackgroundEffect.battleOffset + max.intValue();
+                    break;
+                case BOTTOM:
+                    ma = (int) (battleHeightOffset + max.intValue());
+                    break;
+                case SECOND:
+                    ma = (int) (max.intValue() / 30.0);
+                    break;
+                default:
+                    ma = max.intValue();
+            }
+        } else {
+            ma = max.intValue();
         }
 
         if(mi == ma) {
@@ -92,40 +103,126 @@ public class BattleRange<T extends Number> {
     public double getRangeD(StageBasis sb) {
         double mi;
 
-        switch (minSnap) {
-            case LEFT:
-                mi = -BackgroundEffect.battleOffset + min.doubleValue();
-                break;
-            case RIGHT:
-                mi = sb.st.len + BackgroundEffect.battleOffset + min.doubleValue();
-                break;
-            case TOP:
-                mi = 1530 + min.doubleValue();
-                break;
-            case SECOND:
-                mi = min.doubleValue() / 30.0;
-                break;
-            default:
-                mi = min.doubleValue();
+        if(minSnap != null) {
+            switch (minSnap) {
+                case LEFT:
+                    mi = -BackgroundEffect.battleOffset + min.doubleValue();
+                    break;
+                case RIGHT:
+                    mi = sb.st.len + BackgroundEffect.battleOffset + min.doubleValue();
+                    break;
+                case BOTTOM:
+                    mi = battleHeightOffset + min.doubleValue();
+                    break;
+                case SECOND:
+                    mi = min.doubleValue() / 30.0;
+                    break;
+                case PERCENT:
+                    mi = min.doubleValue() / 100.0;
+                    break;
+                default:
+                    mi = min.doubleValue();
+            }
+        } else {
+            mi = min.doubleValue();
         }
 
         double ma;
 
-        switch (maxSnap) {
-            case LEFT:
-                ma = -BackgroundEffect.battleOffset + max.doubleValue();
-                break;
-            case RIGHT:
-                ma = sb.st.len + BackgroundEffect.battleOffset + max.doubleValue();
-                break;
-            case TOP:
-                ma = 1530 + max.doubleValue();
-                break;
-            case SECOND:
-                ma = max.doubleValue() / 30.0;
-                break;
-            default:
+        if(maxSnap != null) {
+            switch (maxSnap) {
+                case LEFT:
+                    ma = -BackgroundEffect.battleOffset + max.doubleValue();
+                    break;
+                case RIGHT:
+                    ma = sb.st.len + BackgroundEffect.battleOffset + max.doubleValue();
+                    break;
+                case BOTTOM:
+                    ma = battleHeightOffset + max.doubleValue();
+                    break;
+                case SECOND:
+                    ma = max.doubleValue() / 30.0;
+                    break;
+                case PERCENT:
+                    ma = max.doubleValue() / 100.0;
+                    break;
+                default:
+                    ma = max.doubleValue();
+            }
+        } else {
+            ma = max.doubleValue();
+        }
+
+        if(mi == ma) {
+            return mi;
+        }
+
+        return mi + sb.r.nextDouble() * (ma - mi);
+    }
+
+    public double getRangeX(StageBasis sb) {
+        double mi;
+
+        if(minSnap != null) {
+            if(minSnap == SNAP.LEFT) {
+                mi = min.doubleValue();
+            } else if(minSnap == SNAP.RIGHT) {
+                mi = sb.st.len + BackgroundEffect.battleOffset + min.doubleValue();
+            } else {
+                mi = BackgroundEffect.battleOffset + min.doubleValue();
+            }
+        } else {
+            mi = BackgroundEffect.battleOffset + min.doubleValue();
+        }
+
+        double ma;
+
+        if(maxSnap != null) {
+            if(maxSnap == SNAP.LEFT) {
                 ma = max.doubleValue();
+            } else if(maxSnap == SNAP.RIGHT) {
+                ma = max.doubleValue() + sb.st.len + BackgroundEffect.battleOffset;
+            } else {
+                ma = BackgroundEffect.battleOffset + max.doubleValue();
+            }
+        } else {
+            ma = BackgroundEffect.battleOffset + max.doubleValue();
+        }
+
+        if(mi == ma) {
+            return mi;
+        }
+
+        return mi + sb.r.nextDouble() * (ma - mi);
+    }
+
+    public double getRangeY(StageBasis sb) {
+        double mi;
+
+        if(minSnap != null) {
+            if(minSnap == SNAP.TOP) {
+                mi = min.doubleValue();
+            } else if(minSnap == SNAP.BOTTOM) {
+                mi = min.doubleValue() + revertP(1530);
+            } else {
+                mi = min.doubleValue();
+            }
+        } else {
+            mi = battleHeightOffset + min.doubleValue();
+        }
+
+        double ma;
+
+        if(maxSnap != null) {
+            if(maxSnap == SNAP.TOP) {
+                ma = max.doubleValue();
+            } else if(maxSnap == SNAP.BOTTOM) {
+                ma = max.doubleValue() + revertP(1530);
+            } else {
+                ma = max.doubleValue();
+            }
+        } else {
+            ma = battleHeightOffset + max.doubleValue();
         }
 
         if(mi == ma) {
@@ -167,7 +264,7 @@ public class BattleRange<T extends Number> {
         return (int) (mi + sb.r.nextDouble() * (ma - mi));
     }
 
-    private boolean isFront() {
+    public boolean isFront() {
         return minSnap == maxSnap && maxSnap == SNAP.FRONT;
     }
 
@@ -193,5 +290,9 @@ public class BattleRange<T extends Number> {
 
     private boolean isInterval(SNAP snap) {
         return snap == null || snap == SNAP.INTERVAL;
+    }
+
+    private int revertP(double px) {
+        return (int) (px / CommonStatic.BattleConst.ratio);
     }
 }

@@ -1,7 +1,6 @@
 package common.util.pack.bgeffect;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.battle.StageBasis;
 import common.system.BattleRange;
@@ -12,11 +11,26 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 public class BGEffectSegment extends BackgroundEffect {
+    public enum BGFile {
+        IMAGE,
+        IMGCUT,
+        MODEL,
+        ANIME
+    }
+
+    public String name = "";
+    public final String json;
 
     /**
-     * Number of values which will be used in mamodel
+     * Animation file
      */
     public final int[] model;
+
+    /**
+     * Animation file, but with specified file name
+     */
+    public final String[] files;
+
     /**
      * Number of components which have to be generated
      */
@@ -56,12 +70,12 @@ public class BGEffectSegment extends BackgroundEffect {
     /**
      * Component's velocity.
      */
-    public final BattleRange<Integer> velocity;
+    public final BattleRange<Double> velocity;
     /**
      * The speed this component will move. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Integer> velocityX;
-    public final BattleRange<Integer> velocityY;
+    public final BattleRange<Double> velocityX;
+    public final BattleRange<Double> velocityY;
     /**
      * If the component goes beyond these values' direction, it will be destroyed.
      */
@@ -81,15 +95,15 @@ public class BGEffectSegment extends BackgroundEffect {
     /**
      * Initial X velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Integer> startVelocityX;
+    public final BattleRange<Double> startVelocityX;
     /**
      * Initial Y velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Integer> startVelocityY;
+    public final BattleRange<Double> startVelocityY;
     /**
      * Initial velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Integer> startVelocity;
+    public final BattleRange<Double> startVelocity;
     /**
      * The component will be destroyed if it stays on the field longer than this time.
      */
@@ -103,7 +117,13 @@ public class BGEffectSegment extends BackgroundEffect {
      */
     public final BattleRange<Integer> opacity;
 
-    public BGEffectSegment(JsonObject elem) {
+    public BGEffectSegment(JsonObject elem, String json) {
+        this.json = json;
+
+        if(elem.has("name")) {
+            name = elem.get("name").getAsString();
+        }
+
         if(elem.has("model")) {
             JsonObject modelObject = elem.getAsJsonObject("model");
 
@@ -118,11 +138,47 @@ public class BGEffectSegment extends BackgroundEffect {
             } else if(modelObject.has("value")) {
                 model = new int[] {modelObject.get("value").getAsInt()};
             } else {
-                System.out.println("W/BGEffectSegment | model has weird data type : \"model\" : "+modelObject);
+                System.out.println("W/BGEffectSegment | "+ json +"/ model has weird data type : \"model\" : "+modelObject);
                 model = null;
             }
         } else {
             model = null;
+        }
+
+        if(elem.has("file")) {
+            JsonObject fileObject = elem.getAsJsonObject("file");
+
+            files = new String[BGFile.values().length];
+
+            if(fileObject.has("image")) {
+                files[BGFile.IMAGE.ordinal()] = "./org/img/bgEffect/"+fileObject.get("image").getAsString();
+            }
+
+            if(fileObject.has("imgcut")) {
+                files[BGFile.IMGCUT.ordinal()] = "./org/battle/bg/"+fileObject.get("imgcut").getAsString();
+            }
+
+            if(fileObject.has("model")) {
+                files[BGFile.MODEL.ordinal()] = "./org/battle/bg/"+fileObject.get("model").getAsString();
+            }
+
+            if(fileObject.has("anime")) {
+                files[BGFile.ANIME.ordinal()] = "./org/battle/bg/"+fileObject.get("anime").getAsString();
+            }
+
+            for (String file : files) {
+                if (file == null) {
+                    throw new IllegalStateException("File name isn't fully specified! : " + fileObject);
+                }
+            }
+        } else {
+            files = null;
+        }
+
+        if(files == null && model == null) {
+            throw new IllegalStateException("Unhandled file/model data found, both are null");
+        } else if(files != null && model != null) {
+            throw new IllegalStateException("Unhandled file/model data found, both aren't null");
         }
 
         if(elem.has("count")) {
@@ -213,51 +269,51 @@ public class BGEffectSegment extends BackgroundEffect {
             startScale = readRangedJsonObjectD(elem, "startScale");
 
             if(elem.getAsJsonObject("startScale").has("randGroup")) {
-                System.out.println("W/BGEffectSegment | Random group found in start scale -> startScale : "+elem.getAsJsonObject("startScale").get("randGroup").getAsString());
+                System.out.println("W/BGEffectSegment | "+json+" / Random group found in start scale -> startScale : "+elem.getAsJsonObject("startScale").get("randGroup").getAsString());
             }
         } else {
             startScale = null;
         }
 
         if(elem.has("v")) {
-            velocity = readRangedJsonObjectI(elem, "v");
+            velocity = readRangedJsonObjectD(elem, "v");
         } else {
             velocity = null;
         }
 
         if(elem.has("vx")) {
-            velocityX = readRangedJsonObjectI(elem, "vx");
+            velocityX = readRangedJsonObjectD(elem, "vx");
         } else {
             velocityX = null;
         }
 
         if(elem.has("vy")) {
-            velocityY = readRangedJsonObjectI(elem, "vy");
+            velocityY = readRangedJsonObjectD(elem, "vy");
         } else {
             velocityY = null;
         }
 
         if(elem.has("startV")) {
-            startVelocity = readRangedJsonObjectI(elem, "startV");
+            startVelocity = readRangedJsonObjectD(elem, "startV");
         } else {
             startVelocity = null;
         }
 
         if(elem.has("startVx")) {
-            startVelocityX = readRangedJsonObjectI(elem, "startVx");
+            startVelocityX = readRangedJsonObjectD(elem, "startVx");
 
             if(elem.getAsJsonObject("startVx").has("randGroup")) {
-                System.out.println("W/BGEffectSegment | Random group found in start velocity x -> startVx : "+elem.getAsJsonObject("startVx").get("randGroup").getAsString());
+                System.out.println("W/BGEffectSegment | "+json+" / Random group found in start velocity x -> startVx : "+elem.getAsJsonObject("startVx").get("randGroup").getAsString());
             }
         } else {
             startVelocityX = null;
         }
 
         if(elem.has("startVy")) {
-            startVelocityY = readRangedJsonObjectI(elem, "startVy");
+            startVelocityY = readRangedJsonObjectD(elem, "startVy");
 
             if(elem.getAsJsonObject("startVy").has("randGroup")) {
-                System.out.println("W/BGEffectSegment | Random group found in start velocity y -> startVy : "+elem.getAsJsonObject("startVy").get("randGroup").getAsString());
+                System.out.println("W/BGEffectSegment | "+json+" / Random group found in start velocity y -> startVy : "+elem.getAsJsonObject("startVy").get("randGroup").getAsString());
             }
         } else {
             startVelocityY = null;
@@ -267,7 +323,7 @@ public class BGEffectSegment extends BackgroundEffect {
             moveAngle = readRangedJsonObjectD(elem, "moveAngle", Math::toRadians);
 
             if(velocity == null) {
-                System.out.println("W/BGEffectSegment | Non-defined velocity data found while moveAngle is defined -> vx == null : "+(velocityX == null)+" | vy == null : "+(velocityY == null));
+                System.out.println("W/BGEffectSegment | "+json+" / Non-defined velocity data found while moveAngle is defined -> vx == null : "+(velocityX == null)+" | vy == null : "+(velocityY == null));
             }
         } else {
             moveAngle = null;

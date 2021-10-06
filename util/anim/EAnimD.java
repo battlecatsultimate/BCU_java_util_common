@@ -3,6 +3,7 @@ package common.util.anim;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
 	public T type;
@@ -40,6 +41,27 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 		for (EPart e : order) {
 			P p = P.newP(siz, siz);
 			e.drawPart(g, p);
+			P.delete(p);
+		}
+	}
+
+	/**
+	 * Draw parts with specific opacity and size
+	 * @param g Graphic
+	 * @param ori Position
+	 * @param siz Size
+	 * @param opacity Opacity, range is 0 ~ 255
+	 */
+	public void drawBGEffect(FakeGraphics g, P ori, double siz, int opacity, double sizX, double sizY) {
+		if(f == -1) {
+			f = 0;
+			setup();
+		}
+		set(g);
+		g.translate(ori.x, ori.y);
+		for (int i = 0; i < order.length; i++) {
+			P p = P.newP(siz * sizX, siz * sizY);
+			order[i].drawPartWithOpacity(g, p, opacity);
 			P.delete(p);
 		}
 	}

@@ -1480,6 +1480,14 @@ public class Data {
 		return ver / 1000000 % 100 + "-" + ver / 10000 % 100 + "-" + ver / 100 % 100 + "-" + ver % 100;
 	}
 
+	public static String duo(int i) {
+		if(i < 10) {
+			return "0"+ i;
+		} else {
+			return "" + i;
+		}
+	}
+
 	public static String trio(int i) {
 		i %= 1000;
 		String str = "";

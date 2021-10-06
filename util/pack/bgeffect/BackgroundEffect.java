@@ -5,6 +5,7 @@ import common.battle.StageBasis;
 import common.io.json.JsonClass;
 import common.pack.Context;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -61,8 +62,14 @@ public abstract class BackgroundEffect {
         asset.bgEffects.add(new RockBGEffect());
 
         CommonStatic.ctx.noticeErr(() -> {
+            int currentSize = asset.bgEffects.size();
+
             for(int i = 0; i < jsonList.length; i++) {
-                asset.bgEffects.add(new JsonBGEffect("bg"+BackgroundEffect.jsonList[i]+".json"));
+                asset.bgEffects.add(new JsonBGEffect(BackgroundEffect.jsonList[i]));
+
+                UserProfile.getBCData().bgs.get(BackgroundEffect.jsonList[i]).effect = currentSize;
+
+                currentSize++;
             }
         }, Context.ErrType.FATAL, "Failed to read bg effect data");
     }
