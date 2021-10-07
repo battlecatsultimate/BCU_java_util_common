@@ -224,19 +224,19 @@ public class BGEffectSegment extends BackgroundEffect {
         }
 
         if(elem.has("scale")) {
-            scale = readRangedJsonObjectD(elem, "scale", d -> d / 2.0);
+            scale = readRangedJsonObjectD(elem, "scale");
         } else {
             scale = null;
         }
 
         if(elem.has("scaleX")) {
-            scaleX = readRangedJsonObjectD(elem, "scaleX", d -> d / 2.0);
+            scaleX = readRangedJsonObjectD(elem, "scaleX");
         } else {
             scaleX = null;
         }
 
         if(elem.has("scaleY")) {
-            scaleY = readRangedJsonObjectD(elem, "scaleY", d -> d / 2.0);
+            scaleY = readRangedJsonObjectD(elem, "scaleY");
         } else {
             scaleY = null;
         }
