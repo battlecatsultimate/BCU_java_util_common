@@ -70,6 +70,14 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 		}
 	}
 
+	public double getBaseSizeX() {
+		return mamodel.parts[0][8] * 1.0 / mamodel.ints[0];
+	}
+
+	public double getBaseSizeY() {
+		return mamodel.parts[0][9] * 1.0 / mamodel.ints[0];
+	}
+
 	public void removeBasePivot() {
 		mamodel.parts[0][6] = 0;
 		mamodel.parts[0][7] = 0;

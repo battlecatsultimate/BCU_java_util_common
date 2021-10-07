@@ -220,6 +220,9 @@ public class BGEffectHandler {
                 sy *= segment.scaleY.getRangeD(sb);
             }
 
+            sx /= animation.get(i).getBaseSizeX();
+            sy /= animation.get(i).getBaseSizeY();
+
             size[i] = P.newP(sx, sy);
 
             if(segment.opacity != null) {
@@ -300,10 +303,6 @@ public class BGEffectHandler {
                 animation.get(i).setTime(segment.frame.getRangeI(sb));
             }
         }
-
-        if(lifeTime == null && destroyLeft == null && destroyTop == null && destroyRight == null) {
-            System.out.println("W/BGEffectHandler | There is no way that bg effect gets destroyed! : "+segment.json+" -> "+segment.name);
-        }
     }
 
     public void update(StageBasis sb) {
@@ -317,6 +316,8 @@ public class BGEffectHandler {
                     EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
 
+                    animation.set(i, anim);
+
                     if(segment.frame != null) {
                         int time = segment.frame.getAnimFrame(anim, sb);
 
@@ -326,8 +327,6 @@ public class BGEffectHandler {
                     } else {
                         reInitialize(i, sb, 0);
                     }
-
-                    animation.set(i, anim);
                 }
             } else {
                 if(checkDestroy(i)) {
@@ -364,6 +363,8 @@ public class BGEffectHandler {
                     EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
 
+                    animation.set(ind, anim);
+
                     if(segment.frame != null) {
                         int time = segment.frame.getAnimFrame(anim, sb);
 
@@ -373,8 +374,6 @@ public class BGEffectHandler {
                     } else {
                         reInitialize(ind, sb, 0);
                     }
-
-                    animation.set(ind, anim);
                 }
             }
         }
@@ -444,8 +443,8 @@ public class BGEffectHandler {
         position[ind].x = segment.x.getRangeX(sb);
         position[ind].y = segment.y.getRangeY(sb);
 
-        size[ind].x = 1.0;
-        size[ind].y = 1.0;
+        size[ind].x = 1.0 / animation.get(ind).getBaseSizeX();
+        size[ind].y = 1.0 / animation.get(ind).getBaseSizeY();
 
         if(segment.scale != null) {
             double s = segment.scale.getRangeD(sb);
