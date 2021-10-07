@@ -1,5 +1,6 @@
 package common.util.anim;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
@@ -59,11 +60,19 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 		}
 		set(g);
 		g.translate(ori.x, ori.y);
+		if(CommonStatic.getConfig().ref) {
+			g.colRect(0, 0, 2, 2, 0, 255, 0, 255);
+		}
 		for (int i = 0; i < order.length; i++) {
 			P p = P.newP(siz * sizX, siz * sizY);
 			order[i].drawPartWithOpacity(g, p, opacity);
 			P.delete(p);
 		}
+	}
+
+	public void removeBasePivot() {
+		mamodel.parts[0][6] = 0;
+		mamodel.parts[0][7] = 0;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import common.util.anim.ImgCut;
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public abstract class BackgroundEffect {
+    public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
 
     private static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164};
@@ -108,6 +109,10 @@ public abstract class BackgroundEffect {
      * @param sb Stage data
      */
     public abstract void initialize(StageBasis sb);
+
+    public void release() {
+
+    }
 
     /**
      * Convert battle unit to pixel unit

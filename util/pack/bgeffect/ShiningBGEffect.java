@@ -72,7 +72,7 @@ public class ShiningBGEffect extends BackgroundEffect {
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
                 shinePosition.get(capture.get(i)).x = sb.r.nextDouble() * (sb.st.len + battleOffset);
-                shinePosition.get(capture.get(i)).y = 1530 - 510 * sb.r.nextDouble();
+                shinePosition.get(capture.get(i)).y = BGHeight * 3 - BGHeight * sb.r.nextDouble();
                 time.set(capture.get(i), (byte) Data.BG_EFFECT_SHINING_TIME);
             }
         }
@@ -90,7 +90,7 @@ public class ShiningBGEffect extends BackgroundEffect {
         int number = sb.st.len / 1600;
 
         for(int i = 0; i < number; i++) {
-            shinePosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), 1530 - 510 * sb.r.nextDouble()));
+            shinePosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), BGHeight * 3 - BGHeight * sb.r.nextDouble()));
             time.add((byte) (Data.BG_EFFECT_SHINING_TIME * sb.r.nextDouble()));
         }
     }

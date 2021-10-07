@@ -73,7 +73,7 @@ public class BalloonBGEffect extends BackgroundEffect {
                 int bw = isBig ? bigBalloon.getWidth() : balloon.getWidth();
 
                 balloonPosition.get(capture.get(i)).x = sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * revertP(bw)) - revertP(bw);
-                balloonPosition.get(capture.get(i)).y = 1530;
+                balloonPosition.get(capture.get(i)).y = BGHeight * 3;
                 isBigBalloon.set(capture.get(i), isBig);
             }
         }
@@ -111,7 +111,7 @@ public class BalloonBGEffect extends BackgroundEffect {
 
             int bw = isBig ? bigBalloon.getWidth() : balloon.getWidth();
 
-            balloonPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * revertP(bw)) - revertP(bw), sb.r.nextDouble() * 1530));
+            balloonPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * revertP(bw)) - revertP(bw), sb.r.nextDouble() * BGHeight * 3));
             isBigBalloon.add(isBig);
             speed.add((byte) Data.BG_EFFECT_BALLOON_SPEED);
         }

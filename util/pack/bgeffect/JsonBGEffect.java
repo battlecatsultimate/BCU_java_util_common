@@ -20,7 +20,6 @@ import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class JsonBGEffect extends BackgroundEffect {
-    private final List<BGEffectSegment> segments = new ArrayList<>();
     private final List<BGEffectHandler> handlers = new ArrayList<>();
 
     public JsonBGEffect(int bgID) throws IOException {
@@ -45,7 +44,6 @@ public class JsonBGEffect extends BackgroundEffect {
 
             for(int i = 0; i < arr.size(); i++) {
                 BGEffectSegment segment = new BGEffectSegment(arr.get(i).getAsJsonObject(), jsonName);
-                segments.add(segment);
                 handlers.add(new BGEffectHandler(segment, bgID));
             }
         }
@@ -61,14 +59,14 @@ public class JsonBGEffect extends BackgroundEffect {
     @Override
     public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
         for(int i = 0; i < handlers.size(); i++) {
-            handlers.get(i).preDraw(g, rect, siz, midH);
+            handlers.get(i).preDraw(g, rect, siz);
         }
     }
 
     @Override
     public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
         for(int i = 0; i < handlers.size(); i++) {
-            handlers.get(i).postDraw(g, rect, siz, midH);
+            handlers.get(i).postDraw(g, rect, siz);
         }
     }
 
@@ -83,6 +81,13 @@ public class JsonBGEffect extends BackgroundEffect {
     public void initialize(StageBasis sb) {
         for(int i = 0; i < handlers.size(); i++) {
             handlers.get(i).initialize(sb);
+        }
+    }
+
+    @Override
+    public void release() {
+        for(int i = 0; i < handlers.size(); i++) {
+            handlers.get(i).release();
         }
     }
 }

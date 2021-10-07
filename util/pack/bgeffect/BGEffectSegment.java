@@ -188,25 +188,25 @@ public class BGEffectSegment extends BackgroundEffect {
         }
 
         if(elem.has("x")) {
-            x = readRangedJsonObjectI(elem, "x");
+            x = readRangedJsonObjectI(elem, "x", i -> i*4);
         } else {
             x = new BattleRange<>(0, null, 0, null);
         }
 
         if(elem.has("y")) {
-            y = readRangedJsonObjectI(elem, "y");
+            y = readRangedJsonObjectI(elem, "y", i -> i*4);
         } else {
             y = new BattleRange<>(0, null, 0, null);
         }
 
         if(elem.has("startX")) {
-            startX = readRangedJsonObjectI(elem, "startX");
+            startX = readRangedJsonObjectI(elem, "startX", i -> i*4);
         } else {
             startX = null;
         }
 
         if(elem.has("startY")) {
-            startY = readRangedJsonObjectI(elem, "startY");
+            startY = readRangedJsonObjectI(elem, "startY", i -> i*4);
         } else {
             startY = null;
         }
@@ -276,31 +276,31 @@ public class BGEffectSegment extends BackgroundEffect {
         }
 
         if(elem.has("v")) {
-            velocity = readRangedJsonObjectD(elem, "v");
+            velocity = readRangedJsonObjectD(elem, "v", d -> d * 4.0);
         } else {
             velocity = null;
         }
 
         if(elem.has("vx")) {
-            velocityX = readRangedJsonObjectD(elem, "vx");
+            velocityX = readRangedJsonObjectD(elem, "vx", d -> d * 4.0);
         } else {
             velocityX = null;
         }
 
         if(elem.has("vy")) {
-            velocityY = readRangedJsonObjectD(elem, "vy");
+            velocityY = readRangedJsonObjectD(elem, "vy", d -> d * 4.0);
         } else {
             velocityY = null;
         }
 
         if(elem.has("startV")) {
-            startVelocity = readRangedJsonObjectD(elem, "startV");
+            startVelocity = readRangedJsonObjectD(elem, "startV", d -> d * 4.0);
         } else {
             startVelocity = null;
         }
 
         if(elem.has("startVx")) {
-            startVelocityX = readRangedJsonObjectD(elem, "startVx");
+            startVelocityX = readRangedJsonObjectD(elem, "startVx", d -> d * 4.0);
 
             if(elem.getAsJsonObject("startVx").has("randGroup")) {
                 System.out.println("W/BGEffectSegment | "+json+" / Random group found in start velocity x -> startVx : "+elem.getAsJsonObject("startVx").get("randGroup").getAsString());
@@ -310,7 +310,7 @@ public class BGEffectSegment extends BackgroundEffect {
         }
 
         if(elem.has("startVy")) {
-            startVelocityY = readRangedJsonObjectD(elem, "startVy");
+            startVelocityY = readRangedJsonObjectD(elem, "startVy", d -> d * 4.0);
 
             if(elem.getAsJsonObject("startVy").has("randGroup")) {
                 System.out.println("W/BGEffectSegment | "+json+" / Random group found in start velocity y -> startVy : "+elem.getAsJsonObject("startVy").get("randGroup").getAsString());
@@ -329,8 +329,8 @@ public class BGEffectSegment extends BackgroundEffect {
             moveAngle = null;
         }
 
-        if(elem.has("opacity")) {
-            opacity = readRangedJsonObjectI(elem, "opacity");
+        if(elem.has("alpha")) {
+            opacity = readRangedJsonObjectI(elem, "alpha");
         } else {
             opacity = null;
         }
@@ -457,6 +457,60 @@ public class BGEffectSegment extends BackgroundEffect {
             }
         } else if(xObject.has("value")) {
             min = max = xObject.get("value").getAsInt();
+
+            if(xObject.has("base")) {
+                minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
+            } else {
+                minSnap = maxSnap = null;
+            }
+        } else {
+            throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
+        }
+
+        return new BattleRange<>(min, minSnap, max, maxSnap);
+    }
+
+    @Nonnull
+    private BattleRange<Integer> readRangedJsonObjectI(JsonObject obj, String mainKeyword, Function<Integer, Integer> func) {
+        JsonObject xObject = obj.getAsJsonObject(mainKeyword);
+
+        int min;
+        BattleRange.SNAP minSnap;
+        int max;
+        BattleRange.SNAP maxSnap;
+
+        if(xObject.has("min") && xObject.has("max")) {
+            if (xObject.has("min")) {
+                JsonObject xMinObject = xObject.getAsJsonObject("min");
+
+                min = func.apply(xMinObject.get("value").getAsInt());
+
+                if (xMinObject.has("base")) {
+                    minSnap = getSnap(xMinObject.get("base").getAsString());
+                } else {
+                    minSnap = null;
+                }
+            } else {
+                min = 0;
+                minSnap = null;
+            }
+
+            if (xObject.has("max")) {
+                JsonObject xMaxObject = xObject.getAsJsonObject("max");
+
+                max = func.apply(xMaxObject.get("value").getAsInt());
+
+                if (xMaxObject.has("base")) {
+                    maxSnap = getSnap(xMaxObject.get("base").getAsString());
+                } else {
+                    maxSnap = null;
+                }
+            } else {
+                max = 0;
+                maxSnap = null;
+            }
+        } else if(xObject.has("value")) {
+            min = max = func.apply(xObject.get("value").getAsInt());
 
             if(xObject.has("base")) {
                 minSnap = maxSnap = getSnap(xObject.get("base").getAsString());

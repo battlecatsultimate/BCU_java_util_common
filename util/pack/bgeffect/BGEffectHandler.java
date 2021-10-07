@@ -1,8 +1,8 @@
 package common.util.pack.bgeffect;
 
-import common.CommonStatic;
 import common.battle.StageBasis;
 import common.pack.UserProfile;
+import common.system.BattleRange;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
@@ -161,7 +161,20 @@ public class BGEffectHandler {
             wait = null;
 
         for(int i = 0; i < count; i++) {
-            animation.add(anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF));
+            EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
+            anim.removeBasePivot();
+
+            int time = 0;
+
+            if(segment.startFrame != null) {
+                time = segment.startFrame.getAnimFrame(anim, sb);
+            } else if(segment.frame != null) {
+                time = segment.frame.getAnimFrame(anim, sb);
+            }
+
+            anim.setTime(time);
+
+            animation.add(anim);
 
             double x;
             double y;
@@ -189,6 +202,11 @@ public class BGEffectHandler {
 
             if(segment.startScale != null) {
                 double s = segment.startScale.getRangeD(sb);
+
+                sx *= s;
+                sy *= s;
+            } else if(segment.scale != null) {
+                double s = segment.scale.getRangeD(sb);
 
                 sx *= s;
                 sy *= s;
@@ -251,6 +269,11 @@ public class BGEffectHandler {
 
             if(segment.lifeTime != null) {
                 lifeTime[i] = segment.lifeTime.getAnimFrame(animation.get(i), sb);
+
+                if(lifeTime[i] == 0)
+                    lifeTime[i] = -1;
+                else
+                    lifeTime[i] = Math.max(1, lifeTime[i] - time);
             }
 
             if(segment.destroyLeft != null) {
@@ -291,7 +314,20 @@ public class BGEffectHandler {
                 wait[i]--;
 
                 if(wait[i] == 0) {
-                    reInitialize(i, sb);
+                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
+                    anim.removeBasePivot();
+
+                    if(segment.frame != null) {
+                        int time = segment.frame.getAnimFrame(anim, sb);
+
+                        anim.setTime(time);
+
+                        reInitialize(i, sb, time);
+                    } else {
+                        reInitialize(i, sb, 0);
+                    }
+
+                    animation.set(i, anim);
                 }
             } else {
                 if(checkDestroy(i)) {
@@ -322,29 +358,37 @@ public class BGEffectHandler {
             for(int i = 0; i < capture.size(); i++) {
                 int ind = capture.get(i);
 
-                animation.set(ind, anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF));
-
-                if(segment.frame != null) {
-                    animation.get(i).setTime(segment.frame.getRangeI(sb));
-                }
-
                 if(segment.wait != null) {
                     wait[ind] = segment.wait.getPureRangeI(sb);
                 } else {
-                    reInitialize(ind, sb);
+                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
+                    anim.removeBasePivot();
+
+                    if(segment.frame != null) {
+                        int time = segment.frame.getAnimFrame(anim, sb);
+
+                        anim.setTime(time);
+
+                        reInitialize(ind, sb, time);
+                    } else {
+                        reInitialize(ind, sb, 0);
+                    }
+
+                    animation.set(ind, anim);
                 }
             }
         }
     }
 
-    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void preDraw(FakeGraphics g, P rect, double siz) {
         FakeTransform at = g.getTransform();
 
         for(int i = 0; i < count; i++) {
             if(!zOrder[i]) {
-                g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y + midH * siz);
+                EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
+                g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
                 g.rotate(angle[i]);
-                animation.get(i).drawBGEffect(g, origin, siz, opacity[i], size[i].x, size[i].y);
+                anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
             }
 
             g.setTransform(at);
@@ -353,14 +397,15 @@ public class BGEffectHandler {
         g.delete(at);
     }
 
-    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void postDraw(FakeGraphics g, P rect, double siz) {
         FakeTransform at = g.getTransform();
 
         for(int i = 0; i < count; i++) {
             if(zOrder[i]) {
-                g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y + midH * siz);
+                EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
+                g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
                 g.rotate(angle[i]);
-                animation.get(i).drawBGEffect(g, origin, siz, opacity[i], size[i].x, size[i].y);
+                anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
             }
 
             g.setTransform(at);
@@ -370,7 +415,7 @@ public class BGEffectHandler {
     }
 
     private boolean checkDestroy(int index) {
-        if(lifeTime != null && lifeTime[index] <= 0)
+        if(lifeTime != null && lifeTime[index] == 0)
             return true;
 
         if(destroyLeft != null && position[index].x < destroyLeft[index])
@@ -392,10 +437,10 @@ public class BGEffectHandler {
      * @return Converted pixel
      */
     private int convertP(double p, double siz) {
-        return (int) (p * CommonStatic.BattleConst.ratio * siz);
+        return (int) (p * BattleRange.battleRatio * siz);
     }
 
-    private void reInitialize(int ind, StageBasis sb) {
+    private void reInitialize(int ind, StageBasis sb, int time) {
         position[ind].x = segment.x.getRangeX(sb);
         position[ind].y = segment.y.getRangeY(sb);
 
@@ -455,6 +500,11 @@ public class BGEffectHandler {
 
         if(segment.lifeTime != null) {
             lifeTime[ind] = segment.lifeTime.getAnimFrame(animation.get(ind), sb);
+
+            if(lifeTime[ind] == 0)
+                lifeTime[ind] = -1;
+            else
+                lifeTime[ind] = Math.max(1, lifeTime[ind] - time);
         }
 
         if(segment.destroyLeft != null) {
@@ -476,5 +526,11 @@ public class BGEffectHandler {
         if(segment.angleVelocity != null) {
             angleVelocity[ind] = segment.angleVelocity.getRangeD(sb);
         }
+    }
+
+    public void release() {
+        animation.clear();
+
+        count = 0;
     }
 }

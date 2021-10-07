@@ -1,6 +1,5 @@
 package common.util.pack.bgeffect;
 
-import common.CommonStatic;
 import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -12,8 +11,6 @@ import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class StarBackgroundEffect extends BackgroundEffect {
-    private static final int BGHeight = 510;
-
     private static final int[][] starColors = {
             {233, 248, 255},
             {199, 249, 218},
@@ -38,7 +35,6 @@ public class StarBackgroundEffect extends BackgroundEffect {
 
     @Override
     public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
-        //FIXME draw effect properly
         FakeTransform at = g.getTransform();
 
         g.setComposite(FakeGraphics.BLEND, 255, 1);
@@ -73,7 +69,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
         }
 
         if(capture.size() > 0) {
-            int rangeH = sb.h - BGHeight + (sb.bg.id.id != 34 ? Data.BG_EFFECT_STAR_Y_RANGE : 0);
+            int rangeH = BGHeight * 2 + (sb.bg.id.id != 34 ? Data.BG_EFFECT_STAR_Y_RANGE : 0);
 
             for(int i = 0; i < capture.size(); i++) {
                 opacities.set(capture.get(i), 0);
@@ -98,7 +94,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
         colors.clear();
         capture.clear();
 
-        int rangeH = sb.h - BGHeight + (sb.bg.id.id != 34 ? Data.BG_EFFECT_STAR_Y_RANGE : 0);
+        int rangeH = BGHeight * 2 + (sb.bg.id.id != 34 ? Data.BG_EFFECT_STAR_Y_RANGE : 0);
 
         number = sb.st.len / 100;
 

@@ -64,7 +64,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
         capture.clear();
 
         for(int i = 0; i < blizzardPosition.size(); i++) {
-            if(blizzardPosition.get(i).x >= sb.st.len + battleOffset || blizzardPosition.get(i).y >= 1530 + bh * Data.BG_EFFECT_BLIZZARD_SIZE[size.get(i)]) {
+            if(blizzardPosition.get(i).x >= sb.st.len + battleOffset || blizzardPosition.get(i).y >= BGHeight * 3 + bh * Data.BG_EFFECT_BLIZZARD_SIZE[size.get(i)]) {
                 capture.add(i);
             } else {
                 blizzardPosition.get(i).y += speed.get(i);
@@ -76,7 +76,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
             for(int i = 0; i < capture.size(); i++) {
                 byte sizeIndex = (byte) Math.min(Data.BG_EFFECT_BLIZZARD_SIZE.length - 1, sb.r.nextDouble() * (Data.BG_EFFECT_BLIZZARD_SIZE.length));
 
-                double x = sb.r.nextDouble() * (sb.st.len + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(1530)) - revertP(1530);
+                double x = sb.r.nextDouble() * (sb.st.len + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(BGHeight * 3)) - revertP(BGHeight * 3);
                 double y = -bh * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex];
 
                 blizzardPosition.get(capture.get(i)).x = x;
@@ -114,8 +114,8 @@ public class BlizzardBGEffect extends BackgroundEffect {
         for(int i = 0; i < number; i++) {
             byte sizeIndex = (byte) Math.min(Data.BG_EFFECT_BLIZZARD_SIZE.length - 1, sb.r.nextDouble() * (Data.BG_EFFECT_BLIZZARD_SIZE.length));
 
-            double x = sb.r.nextDouble() * (sb.st.len + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(1530)) - revertP(1530);
-            double y = sb.r.nextDouble() * (1530 + bh * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex]);
+            double x = sb.r.nextDouble() * (sb.st.len + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(BGHeight * 3)) - revertP(BGHeight * 3);
+            double y = sb.r.nextDouble() * (BGHeight * 3 + bh * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex]);
 
             blizzardPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));

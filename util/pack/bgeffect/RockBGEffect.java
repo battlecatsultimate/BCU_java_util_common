@@ -116,7 +116,7 @@ public class RockBGEffect extends BackgroundEffect {
                 int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
                 rockPosition.get(capture.get(i)).x = sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * rw) - rw;
-                rockPosition.get(capture.get(i)).y = l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : 1530;
+                rockPosition.get(capture.get(i)).y = l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3;
                 isRock.set(capture.get(i), isR);
                 angle.set(capture.get(i), sb.r.nextDouble() * Math.PI);
                 layer.set(capture.get(i), l);
@@ -170,7 +170,7 @@ public class RockBGEffect extends BackgroundEffect {
 
             int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
-            rockPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * rw) - rw, (l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : 1530) * sb.r.nextDouble()));
+            rockPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * rw) - rw, (l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3) * sb.r.nextDouble()));
             speed.add(Data.BG_EFFECT_ROCK_SPEED[l] - sb.r.nextDouble() * 0.5);
             isRock.add(isR);
             angle.add(sb.r.nextDouble() * Math.PI);
