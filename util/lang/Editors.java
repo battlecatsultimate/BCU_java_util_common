@@ -412,6 +412,7 @@ public class Editors {
 		map().put("CRITI", imu);
 
 		map().put("SATK", new EditControl<>(Proc.PM.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0)
 				t.mult = 0;
 		}));
@@ -460,6 +461,7 @@ public class Editors {
 		}));
 
 		map().put("POIATK", new EditControl<>(Proc.PM.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0)
 				t.mult = 0;
 		}));
