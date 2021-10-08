@@ -174,7 +174,7 @@ strictfp class InStreamDef extends DataIO implements InStream {
 		int n = nextInt();
 		if (n > size()) {
 			new Exception("error in getting subStream").printStackTrace();
-			CommonStatic.def.exit(false);
+			CommonStatic.def.save(false, true);
 		}
 		InStreamDef is = new InStreamDef(bs, index, index + n);
 		index += n;

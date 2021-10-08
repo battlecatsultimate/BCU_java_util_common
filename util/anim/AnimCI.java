@@ -123,7 +123,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 				getUni().check();
 		} catch (Exception e) {
 			e.printStackTrace();
-			CommonStatic.def.exit(false);
+			CommonStatic.def.save(false, true);
 		}
 		validate();
 	}

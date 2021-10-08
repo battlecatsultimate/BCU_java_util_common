@@ -176,7 +176,7 @@ public class CommonStatic {
 		/**
 		 * exit
 		 */
-		void exit(boolean save);
+		void save(boolean save, boolean exit);
 
 		long getMusicLength(Music f);
 

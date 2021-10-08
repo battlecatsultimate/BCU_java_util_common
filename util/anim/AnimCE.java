@@ -144,7 +144,7 @@ public class AnimCE extends AnimCI {
 			history("initial");
 		} catch (Exception e) {
 			e.printStackTrace();
-			CommonStatic.def.exit(false);
+			CommonStatic.def.save(false, true);
 		}
 		validate();
 	}
