@@ -1394,8 +1394,37 @@ public class Data {
 
 	public static final int LINEUP_CHANGE_TIME = 6; //in frame
 
-	public static final int BG_EFFECT_STAR_TIME = 35; //guessed
-	public static final int BG_EFFECT_STAR_Y_RANGE = 150;
+	public static final int BG_EFFECT_STAR = 0;
+	public static final int BG_EFFECT_RAIN = 1;
+	public static final int BG_EFFECT_BUBBLE = 2;
+	public static final int BG_EFFECT_FALLING_SNOW = 3;
+	public static final int BG_EFFECT_SNOW = 4;
+	public static final int BG_EFFECT_SNOWSTAR = 5;
+	public static final int BG_EFFECT_BLIZZARD = 6;
+	public static final int BG_EFFECT_SHINING = 7;
+	public static final int BG_EFFECT_BALLOON = 8;
+	public static final int BG_EFFECT_ROCK = 9;
+
+	//Below are completely guessed
+	public static final int BG_EFFECT_STAR_TIME = 35;
+	public static final int BG_EFFECT_STAR_Y_RANGE = 140;
+	public static final int BG_EFFECT_SPLASH_MIN_HEIGHT = 90;
+	public static final int BG_EFFECT_SPLASH_RANGE = 60;
+	public static final int BG_EFFECT_BUBBLE_TIME = 780;
+	public static final int BG_EFFECT_BUBBLE_FACTOR = 32;
+	public static final int BG_EFFECT_BUBBLE_STABILIZER = 7;
+	public static final int BG_EFFECT_SNOW_SPEED = 8;
+	public static final double[] BG_EFFECT_BLIZZARD_SIZE = {1.0, 1.5, 2.0};
+	public static final int BG_EFFECT_BLIZZARD_SPEED = 40;
+	public static final int BG_EFFECT_FALLING_SNOW_SPEED = 3;
+	public static final double BG_EFFECT_FALLING_SNOW_SIZE = 2.0;
+	public static final int BG_EFFECT_SHINING_TIME = 8;
+	public static final int BG_EFFECT_BALLOON_SPEED = 1;
+	public static final int BG_EFFECT_BALLOON_FACTOR = 32;
+	public static final int BG_EFFECT_BALLOON_STABILIZER = 25;
+	public static final double[] BG_EFFECT_ROCK_SIZE = {1.0, 2.25};
+	public static final int[] BG_EFFECT_ROCK_SPEED = {1, 3};
+	public static final int BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET = 190;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
@@ -1449,6 +1478,14 @@ public class Data {
 
 	public static String revVer(int ver) {
 		return ver / 1000000 % 100 + "-" + ver / 10000 % 100 + "-" + ver / 100 % 100 + "-" + ver % 100;
+	}
+
+	public static String duo(int i) {
+		if(i < 10) {
+			return "0"+ i;
+		} else {
+			return "" + i;
+		}
 	}
 
 	public static String trio(int i) {

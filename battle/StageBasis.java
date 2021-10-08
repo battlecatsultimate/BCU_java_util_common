@@ -60,9 +60,9 @@ public class StageBasis extends BattleObj {
 	public BackgroundEffect bgEffect;
 
 	/**
-	 * Real width/height/groundHeight of battle
+	 * Real groundHeight of battle
 	 */
-	public final int w, h;
+	public double midH = -1, battleHeight = -1;
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
 	private int themeTime;
@@ -133,9 +133,6 @@ public class StageBasis extends BattleObj {
 		isOneLineup = oneLine;
 
 		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
-
-		w = st.len;
-		h = 510 * 3;
 	}
 
 	/**
@@ -229,6 +226,17 @@ public class StageBasis extends BattleObj {
 			ans.add(b);
 
 		return ans;
+	}
+
+	public void registerBattleDimension(double midH, double battleHeight) {
+		this.midH = midH;
+		this.battleHeight = battleHeight;
+	}
+
+	public void release() {
+		if(bg != null && bg.effect != -1) {
+			CommonStatic.getBCAssets().bgEffects.get(bg.effect).release();
+		}
 	}
 
 	protected boolean act_can() {
@@ -382,7 +390,7 @@ public class StageBasis extends BattleObj {
 	 * entities
 	 */
 	protected void update() {
-		if(bgEffect != null && !bgEffectInitialized) {
+		if(midH != -1 && bgEffect != null && !bgEffectInitialized) {
 			bgEffect.initialize(this);
 			bgEffectInitialized = true;
 		}

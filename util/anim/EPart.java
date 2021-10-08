@@ -174,6 +174,35 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		g.delete(at);
 	}
 
+	/**
+	 * Draw part with specified opacity (Os). If part already has its own opacity (Oo), then formula is Oo * Op
+	 * @param g Graphic
+	 * @param base Base
+	 * @param opacity Opacity, range is 0 ~ 255
+	 */
+	protected void drawPartWithOpacity(FakeGraphics g, P base, int opacity) {
+		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
+			return;
+		FakeTransform at = g.getTransform();
+		transform(g, base);
+		FakeImage bimg = a.parts(img);
+		int w = bimg.getWidth();
+		int h = bimg.getHeight();
+		P p0 = getSize();
+		P tpiv = P.newP(piv).times(p0).times(base);
+		P sc = P.newP(w, h).times(p0).times(base);
+		P.delete(p0);
+		if (extType == 0)
+			drawImg(g, bimg, tpiv, sc, opa() * opacity / 255.0, glow, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+		else if (extType == 1)
+			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
+					glow == 1, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+		P.delete(tpiv);
+		P.delete(sc);
+		g.setTransform(at);
+		g.delete(at);
+	}
+
 	protected void drawScale(FakeGraphics g, P base) {
 		FakeImage bimg = a.parts(img);
 		if (bimg == null)

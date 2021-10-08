@@ -1,8 +1,10 @@
 package common.util.anim;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
 	public T type;
@@ -42,6 +44,43 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 			e.drawPart(g, p);
 			P.delete(p);
 		}
+	}
+
+	/**
+	 * Draw parts with specific opacity and size
+	 * @param g Graphic
+	 * @param ori Position
+	 * @param siz Size
+	 * @param opacity Opacity, range is 0 ~ 255
+	 */
+	public void drawBGEffect(FakeGraphics g, P ori, double siz, int opacity, double sizX, double sizY) {
+		if(f == -1) {
+			f = 0;
+			setup();
+		}
+		set(g);
+		g.translate(ori.x, ori.y);
+		if(CommonStatic.getConfig().ref) {
+			g.colRect(0, 0, 2, 2, 0, 255, 0, 255);
+		}
+		for (int i = 0; i < order.length; i++) {
+			P p = P.newP(siz * sizX, siz * sizY);
+			order[i].drawPartWithOpacity(g, p, opacity);
+			P.delete(p);
+		}
+	}
+
+	public double getBaseSizeX() {
+		return mamodel.parts[0][8] * 1.0 / mamodel.ints[0];
+	}
+
+	public double getBaseSizeY() {
+		return mamodel.parts[0][9] * 1.0 / mamodel.ints[0];
+	}
+
+	public void removeBasePivot() {
+		mamodel.parts[0][6] = 0;
+		mamodel.parts[0][7] = 0;
 	}
 
 	@Override
