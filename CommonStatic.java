@@ -129,6 +129,11 @@ public class CommonStatic {
 		 * Preferred level for units
 		 */
 		public int prefLevel = 50;
+
+		/**
+		 * Decide whehter draw bg effect or not
+		 */
+		public boolean drawBGEffect = true;
 	}
 
 	public interface EditLink {
