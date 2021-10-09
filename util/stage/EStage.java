@@ -106,7 +106,7 @@ public class EStage extends BattleObj {
 			}
 
 			AbEnemy e = Identifier.getOr(enemy, AbEnemy.class);
-			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, -1);
+			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, data.boss == 1 ? -2 : -1);
 		}
 		return null;
 	}

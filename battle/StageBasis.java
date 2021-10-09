@@ -79,15 +79,19 @@ public class StageBasis extends BattleObj {
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
 		bg = Identifier.getOr(st.bg, Background.class);
-		if(bg.effect != -1) {
+		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
+		if (bg.effect != -1) {
 			bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
 		}
 		EEnemy ee = est.base(this);
-		if (ee != null)
+		if (ee != null) {
 			ebase = ee;
-		else
+			shock = ee.mark == -2;
+			ebase.added(1, shock ? boss_spawn : 700);
+		} else {
 			ebase = new ECastle(this);
-		ebase.added(1, 800);
+			ebase.added(1, 700);
+		}
 		ubase = new ECastle(this, bas);
 		ubase.added(-1, st.len - 800);
 		int sttime = 3;
@@ -131,8 +135,6 @@ public class StageBasis extends BattleObj {
 		}
 
 		isOneLineup = oneLine;
-
-		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
 	}
 
 	/**
