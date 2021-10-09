@@ -484,7 +484,7 @@ public class StageBasis extends BattleObj {
 		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();
 
-			if (!lethal && ebase.health <= 0 && est.hasBoss()) {
+			if (!lethal && ebase instanceof ECastle && ebase.health <= 0 && est.hasBoss()) {
 				lethal = true;
 				ebase.health = 1;
 			}
