@@ -25,7 +25,7 @@ public class EEnemy extends Entity {
 		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
 		traits = de.getTraits();
 
-		canBurrow = mark >= 0;
+		canBurrow = mark != 1;
 	}
 
 	@Override
