@@ -99,7 +99,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return (int) (mi + sb.r.nextDouble() * (ma - mi));
+        return (int) (mi + Math.random() * (ma - mi));
     }
 
     public double getRangeD(StageBasis sb) {
@@ -159,7 +159,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + sb.r.nextDouble() * (ma - mi);
+        return mi + Math.random() * (ma - mi);
     }
 
     public double getRangeX(StageBasis sb) {
@@ -195,7 +195,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + sb.r.nextDouble() * (ma - mi);
+        return mi + Math.random() * (ma - mi);
     }
 
     public double getRangeY(StageBasis sb) {
@@ -231,18 +231,18 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + sb.r.nextDouble() * (ma - mi);
+        return mi + Math.random() * (ma - mi);
     }
 
-    public int getPureRangeI(StageBasis sb) {
+    public int getPureRangeI() {
         int mi = min.intValue();
 
         int ma = max.intValue();
 
-        return (int) (mi + sb.r.nextDouble() * (ma - mi));
+        return (int) (mi + Math.random() * (ma - mi));
     }
 
-    public int getAnimFrame(EAnimD<?> anim, StageBasis sb) {
+    public int getAnimFrame(EAnimD<?> anim) {
         int mi;
 
         if (minSnap == SNAP.INTERVAL) {
@@ -263,7 +263,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return (int) (mi + sb.r.nextDouble() * (ma - mi));
+        return (int) (mi + Math.random() * (ma - mi));
     }
 
     public boolean isFront() {

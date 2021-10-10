@@ -167,9 +167,9 @@ public class BGEffectHandler {
             int time = 0;
 
             if(segment.startFrame != null) {
-                time = segment.startFrame.getAnimFrame(anim, sb);
+                time = segment.startFrame.getAnimFrame(anim);
             } else if(segment.frame != null) {
-                time = segment.frame.getAnimFrame(anim, sb);
+                time = segment.frame.getAnimFrame(anim);
             }
 
             anim.setTime(time);
@@ -271,7 +271,7 @@ public class BGEffectHandler {
             }
 
             if(segment.lifeTime != null) {
-                lifeTime[i] = segment.lifeTime.getAnimFrame(animation.get(i), sb);
+                lifeTime[i] = segment.lifeTime.getAnimFrame(animation.get(i));
 
                 if(lifeTime[i] == 0)
                     lifeTime[i] = -1;
@@ -319,7 +319,7 @@ public class BGEffectHandler {
                     animation.set(i, anim);
 
                     if(segment.frame != null) {
-                        int time = segment.frame.getAnimFrame(anim, sb);
+                        int time = segment.frame.getAnimFrame(anim);
 
                         anim.setTime(time);
 
@@ -358,7 +358,7 @@ public class BGEffectHandler {
                 int ind = capture.get(i);
 
                 if(segment.wait != null) {
-                    wait[ind] = segment.wait.getPureRangeI(sb);
+                    wait[ind] = segment.wait.getPureRangeI();
                 } else {
                     EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, Math.random() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
@@ -366,7 +366,7 @@ public class BGEffectHandler {
                     animation.set(ind, anim);
 
                     if(segment.frame != null) {
-                        int time = segment.frame.getAnimFrame(anim, sb);
+                        int time = segment.frame.getAnimFrame(anim);
 
                         anim.setTime(time);
 
@@ -498,7 +498,7 @@ public class BGEffectHandler {
         }
 
         if(segment.lifeTime != null) {
-            lifeTime[ind] = segment.lifeTime.getAnimFrame(animation.get(ind), sb);
+            lifeTime[ind] = segment.lifeTime.getAnimFrame(animation.get(ind));
 
             if(lifeTime[ind] == 0)
                 lifeTime[ind] = -1;
