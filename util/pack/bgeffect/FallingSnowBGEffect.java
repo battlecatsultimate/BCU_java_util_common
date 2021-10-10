@@ -60,11 +60,11 @@ public class FallingSnowBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                double siz = Data.BG_EFFECT_FALLING_SNOW_SIZE - sb.r.nextDouble() * 1.5;
+                double siz = Data.BG_EFFECT_FALLING_SNOW_SIZE - Math.random() * 1.5;
 
-                snowPosition.get(capture.get(i)).x = sb.r.nextDouble() * (sb.st.len + battleOffset + sw * siz) - sw * siz;
+                snowPosition.get(capture.get(i)).x = Math.random() * (sb.st.len + battleOffset + sw * siz) - sw * siz;
                 snowPosition.get(capture.get(i)).y = -sh * siz;
-                speed.set(capture.get(i), Data.BG_EFFECT_FALLING_SNOW_SPEED - sb.r.nextDouble() * 1.5);
+                speed.set(capture.get(i), Data.BG_EFFECT_FALLING_SNOW_SPEED - Math.random() * 1.5);
                 size.set(capture.get(i), siz);
             }
         }
@@ -83,9 +83,9 @@ public class FallingSnowBGEffect extends BackgroundEffect {
         int number = sb.st.len / 50;
 
         for(int i = 0; i < number; i++) {
-            snowPosition.add(P.newP((sb.st.len + battleOffset + sw) * sb.r.nextDouble() - sw, (BGHeight * 3 + sh) * sb.r.nextDouble()));
-            speed.add(Data.BG_EFFECT_FALLING_SNOW_SPEED - sb.r.nextDouble() * 1.5);
-            size.add(Data.BG_EFFECT_FALLING_SNOW_SIZE - sb.r.nextDouble() * 1.5);
+            snowPosition.add(P.newP((sb.st.len + battleOffset + sw) * Math.random() - sw, (BGHeight * 3 + sh) * Math.random()));
+            speed.add(Data.BG_EFFECT_FALLING_SNOW_SPEED - Math.random() * 1.5);
+            size.add(Data.BG_EFFECT_FALLING_SNOW_SIZE - Math.random() * 1.5);
         }
     }
 }

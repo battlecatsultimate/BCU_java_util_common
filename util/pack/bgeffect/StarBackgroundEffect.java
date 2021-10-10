@@ -76,8 +76,8 @@ public class StarBackgroundEffect extends BackgroundEffect {
 
                 P.delete(positions.get(capture.get(i)));
 
-                positions.set(capture.get(i), P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), sb.r.nextDouble() * rangeH));
-                colors.set(capture.get(i), (byte) (sb.r.nextDouble() * (starColors.length - 1)));
+                positions.set(capture.get(i), P.newP(Math.random() * (sb.st.len + battleOffset), Math.random() * rangeH));
+                colors.set(capture.get(i), (byte) (Math.random() * (starColors.length - 1)));
                 times.set(capture.get(i), Data.BG_EFFECT_STAR_TIME);
             }
         }
@@ -99,11 +99,11 @@ public class StarBackgroundEffect extends BackgroundEffect {
         number = sb.st.len / 100;
 
         for(int i = 0; i < number; i++) {
-            int time = (int) (sb.r.nextDouble() * Data.BG_EFFECT_STAR_TIME);
+            int time = (int) (Math.random() * Data.BG_EFFECT_STAR_TIME);
 
             opacities.add((int) (255 * Math.sin(Math.PI  * time / 20)));
-            positions.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), sb.r.nextDouble() * rangeH));
-            colors.add((byte) (sb.r.nextDouble() * (starColors.length - 1)));
+            positions.add(P.newP(Math.random() * (sb.st.len + battleOffset), Math.random() * rangeH));
+            colors.add((byte) (Math.random() * (starColors.length - 1)));
             times.add(time);
         }
     }

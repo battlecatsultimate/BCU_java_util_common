@@ -89,16 +89,16 @@ public class RainBGEffect extends BackgroundEffect {
         int rainNumber = sb.st.len / 100;
         int splashNumber = 2 * sb.st.len / 300;
 
-        rainNumber += rainNumber / 6 - (int) (sb.r.nextDouble() * rainNumber / 3);
-        splashNumber += splashNumber / 6 - (int) (sb.r.nextDouble() * splashNumber / 3);
+        rainNumber += rainNumber / 6 - (int) (Math.random() * rainNumber / 3);
+        splashNumber += splashNumber / 6 - (int) (Math.random() * splashNumber / 3);
 
         for(int i = 0; i < rainNumber; i++) {
-            rainPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), sb.r.nextDouble() * BGHeight * 3));
+            rainPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), Math.random() * BGHeight * 3));
         }
 
         for(int i = 0; i < splashNumber; i++) {
             //Y : BGHeight * 3 - 100 - random(0 ~ 80)
-            splashPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), BGHeight * 3 - Data.BG_EFFECT_SPLASH_MIN_HEIGHT - sb.r.nextDouble() * Data.BG_EFFECT_SPLASH_RANGE));
+            splashPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), BGHeight * 3 - Data.BG_EFFECT_SPLASH_MIN_HEIGHT - Math.random() * Data.BG_EFFECT_SPLASH_RANGE));
         }
     }
 

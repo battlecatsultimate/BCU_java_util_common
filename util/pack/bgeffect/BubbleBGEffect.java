@@ -66,8 +66,8 @@ public class BubbleBGEffect extends BackgroundEffect {
             for(int i = 0; i < capture.size(); i++) {
                 P.delete(bubblePosition.get(capture.get(i)));
 
-                bubblePosition.set(capture.get(i), P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), BGHeight * 3));
-                differentiator.set(capture.get(i), (byte) (3 - sb.r.nextDouble() * 6));
+                bubblePosition.set(capture.get(i), P.newP(Math.random() * (sb.st.len + battleOffset), BGHeight * 3));
+                differentiator.set(capture.get(i), (byte) (3 - Math.random() * 6));
             }
         }
     }
@@ -81,11 +81,11 @@ public class BubbleBGEffect extends BackgroundEffect {
         bubblePosition.clear();
         differentiator.clear();
 
-        int number = sb.st.len / 200 - (int) (sb.r.nextDouble() * sb.st.len / 1000);
+        int number = sb.st.len / 200 - (int) (Math.random() * sb.st.len / 1000);
 
         for(int i = 0; i < number; i++) {
-            bubblePosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset), (BGHeight * 3.0 + bh) * sb.r.nextDouble()));
-            differentiator.add((byte) (3 - sb.r.nextDouble() * 6));
+            bubblePosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), (BGHeight * 3.0 + bh) * Math.random()));
+            differentiator.add((byte) (3 - Math.random() * 6));
         }
     }
 }

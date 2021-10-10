@@ -68,7 +68,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                double x = sb.r.nextDouble() * (sb.st.len + sw + battleOffset);
+                double x = Math.random() * (sb.st.len + sw + battleOffset);
                 double y = -sh;
 
                 snowPosition.get(capture.get(i)).x = x;
@@ -77,10 +77,10 @@ public class SnowBGEffect extends BackgroundEffect{
                 initPos.get(capture.get(i)).y = y;
 
                 //0 ~ 75
-                double angle = Math.toRadians(sb.r.nextDouble() * 75);
+                double angle = Math.toRadians(Math.random() * 75);
 
                 //-0.5angle + 1 is stabilizer
-                speed.set(capture.get(i), (byte) ((Data.BG_EFFECT_SNOW_SPEED - sb.r.nextDouble() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+                speed.set(capture.get(i), (byte) ((Data.BG_EFFECT_SNOW_SPEED - Math.random() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
                 slope.set(capture.get(i), Math.tan(-angle));
             }
         }
@@ -97,16 +97,16 @@ public class SnowBGEffect extends BackgroundEffect{
         int number = sb.st.len / 200;
 
         for(int i = 0; i < number; i++) {
-            double x = sb.r.nextDouble() * (sb.st.len + sw + battleOffset);
-            double y = (1510 + sh) * sb.r.nextDouble();
+            double x = Math.random() * (sb.st.len + sw + battleOffset);
+            double y = (1510 + sh) * Math.random();
             snowPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));
 
             //0~75
-            double angle = Math.toRadians(sb.r.nextDouble() * 75);
+            double angle = Math.toRadians(Math.random() * 75);
 
             //-0.5angle + 1 is stabilizer
-            speed.add((byte) ((Data.BG_EFFECT_SNOW_SPEED - sb.r.nextDouble() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+            speed.add((byte) ((Data.BG_EFFECT_SNOW_SPEED - Math.random() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
             slope.add(Math.tan(-angle));
         }
     }

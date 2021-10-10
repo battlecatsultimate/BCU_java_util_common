@@ -109,19 +109,19 @@ public class RockBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                byte l = (byte) (sb.r.nextDouble() >= 1/4.0 ? 0 : 1);
-                boolean isR = l != 1 && sb.r.nextDouble() >= 0.9;
-                double siz = (Data.BG_EFFECT_ROCK_SIZE[l] - sb.r.nextDouble() * (1 - 0.5 * l)) * (isR ? 0.8 : 1.0);
+                byte l = (byte) (Math.random() >= 1/4.0 ? 0 : 1);
+                boolean isR = l != 1 && Math.random() >= 0.9;
+                double siz = (Data.BG_EFFECT_ROCK_SIZE[l] - Math.random() * (1 - 0.5 * l)) * (isR ? 0.8 : 1.0);
 
                 int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
-                rockPosition.get(capture.get(i)).x = sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * rw) - rw;
+                rockPosition.get(capture.get(i)).x = Math.random() * (sb.st.len + battleOffset + 2 * rw) - rw;
                 rockPosition.get(capture.get(i)).y = l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3;
                 isRock.set(capture.get(i), isR);
-                angle.set(capture.get(i), sb.r.nextDouble() * Math.PI);
+                angle.set(capture.get(i), Math.random() * Math.PI);
                 layer.set(capture.get(i), l);
                 size.set(capture.get(i), siz);
-                speed.set(capture.get(i), Data.BG_EFFECT_ROCK_SPEED[l] - sb.r.nextDouble() * 0.5);
+                speed.set(capture.get(i), Data.BG_EFFECT_ROCK_SPEED[l] - Math.random() * 0.5);
                 opacity.set(capture.get(i), l == 0 ? 0 : 255);
             }
         }
@@ -164,16 +164,16 @@ public class RockBGEffect extends BackgroundEffect {
         int number = sb.st.len / 100;
 
         for(int i = 0; i < number; i++) {
-            byte l = (byte) (sb.r.nextDouble() >= 1/4.0 ? 0 : 1);
-            boolean isR = l != 1 && sb.r.nextDouble() >= 0.9;
-            double siz = (Data.BG_EFFECT_ROCK_SIZE[l] - sb.r.nextDouble() * (1 - 0.5 * l)) * (isR ? 0.8 : 1.0);
+            byte l = (byte) (Math.random() >= 1/4.0 ? 0 : 1);
+            boolean isR = l != 1 && Math.random() >= 0.9;
+            double siz = (Data.BG_EFFECT_ROCK_SIZE[l] - Math.random() * (1 - 0.5 * l)) * (isR ? 0.8 : 1.0);
 
             int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
-            rockPosition.add(P.newP(sb.r.nextDouble() * (sb.st.len + battleOffset + 2 * rw) - rw, (l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3) * sb.r.nextDouble()));
-            speed.add(Data.BG_EFFECT_ROCK_SPEED[l] - sb.r.nextDouble() * 0.5);
+            rockPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset + 2 * rw) - rw, (l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3) * Math.random()));
+            speed.add(Data.BG_EFFECT_ROCK_SPEED[l] - Math.random() * 0.5);
             isRock.add(isR);
-            angle.add(sb.r.nextDouble() * Math.PI);
+            angle.add(Math.random() * Math.PI);
             layer.add(l);
             size.add(siz);
             opacity.add(255);

@@ -161,7 +161,7 @@ public class BGEffectHandler {
             wait = null;
 
         for(int i = 0; i < count; i++) {
-            EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
+            EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, Math.random() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
             anim.removeBasePivot();
 
             int time = 0;
@@ -313,7 +313,7 @@ public class BGEffectHandler {
                 wait[i]--;
 
                 if(wait[i] == 0) {
-                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
+                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, Math.random() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
 
                     animation.set(i, anim);
@@ -360,7 +360,7 @@ public class BGEffectHandler {
                 if(segment.wait != null) {
                     wait[ind] = segment.wait.getPureRangeI(sb);
                 } else {
-                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, sb.r.nextDouble() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
+                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, Math.random() * anims.length)].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
 
                     animation.set(ind, anim);
