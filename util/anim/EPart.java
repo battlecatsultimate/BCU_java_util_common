@@ -280,7 +280,14 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		} else {
 			if (model.confs.length > 0) {
 				int[] data = model.confs[0];
-				P p0 = getSize();
+				P p0;
+
+				if(model.ref[0] != -1) {
+					p0 = P.newP(model.parts[model.ref[0]][8] * 1.0 / model.ints[0], model.parts[model.ref[0]][9] * 1.0 / model.ints[0]);
+				} else {
+					p0 = P.newP(model.parts[0][8] * 1.0 / model.ints[0], model.parts[0][9] * 1.0 / model.ints[0]);
+				}
+
 				P shi = P.newP(data[2], data[3]).times(p0);
 				P.delete(p0);
 				P p3 = shi.times(sizer);

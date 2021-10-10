@@ -34,6 +34,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 	public int[] ints = new int[3];
 	public int[][] confs, parts;
 	public String[] strs0, strs1;
+	public int[] ref;
 
 	public Map<int[], Integer> status = new HashMap<>();
 
@@ -68,6 +69,7 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 		m = Integer.parseInt(qs.poll().trim());
 		confs = new int[m][6];
 		strs1 = new String[m];
+		ref = new int[m];
 		for (int i = 0; i < m; i++) {
 			ss = qs.poll().trim().split(",");
 			for (int j = 0; j < 6; j++)
@@ -76,6 +78,15 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 				strs1[i] = restrict(ss[6]);
 			else
 				strs1[i] = "";
+
+			for(int j = 0; j < strs0.length; j++) {
+				if (strs1[i].equals(strs0[j])) {
+					ref[i] = j;
+					break;
+				} else {
+					ref[i] = -1;
+				}
+			}
 		}
 	}
 
