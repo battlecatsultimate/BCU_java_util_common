@@ -162,6 +162,9 @@ public class SCDef implements Copable<SCDef> {
 
 	public boolean contains(Enemy e) {
 		for (Line dat : datas) {
+			if(dat.enemy == null)
+				continue;
+
 			if(dat.enemy.cls == EneRand.class) {
 				EneRand rand = (EneRand) Identifier.get(dat.enemy);
 
