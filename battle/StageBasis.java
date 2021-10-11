@@ -469,12 +469,12 @@ public class StageBasis extends BattleObj {
 				le.get(i).update();
 
 		if (s_stop == 0) {
+			lw.addAll(tlw);
+			lw.sort(Comparator.comparingInt(e -> e.layer));
 			lw.forEach(ContAb::update);
 			lea.forEach(EAnimCont::update);
 			ebaseSmoke.forEach(EAnimCont::update);
 			ubaseSmoke.forEach(EAnimCont::update);
-			lw.addAll(tlw);
-			lw.sort(Comparator.comparingInt(e -> e.layer));
 			tlw.clear();
 		}
 		la.forEach(AttackAb::capture);

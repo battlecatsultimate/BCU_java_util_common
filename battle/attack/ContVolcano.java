@@ -22,6 +22,8 @@ public class ContVolcano extends ContAb {
 		this.v = v;
 		aliveTime = alive;
 		CommonStatic.setSE(SE_VOLC_START);
+
+		update();
 	}
 
 	@Override
@@ -34,20 +36,20 @@ public class ContVolcano extends ContAb {
 
 	@Override
 	public void update() {
-		if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != VolcEff.DURING) {
+		if (t >= VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != VolcEff.DURING) {
 			anim.changeAnim(VolcEff.DURING, false);
 			CommonStatic.setSE(SE_VOLC_LOOP);
 		} else if (t > VOLC_PRE + aliveTime && anim.type != VolcEff.END)
 			anim.changeAnim(VolcEff.END, false);
 
-		if (t > VOLC_PRE && t < VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
+		if (t >= VOLC_PRE && t < VOLC_PRE + aliveTime && (t - VOLC_PRE) % VOLC_SE == 0) {
 			CommonStatic.setSE(SE_VOLC_LOOP);
 		}
 
 		if (t >= aliveTime + VOLC_POST + VOLC_PRE) {
 			activate = false;
 		} else {
-			if (t > VOLC_PRE && t <= VOLC_PRE + aliveTime)
+			if (t >= VOLC_PRE && t < VOLC_PRE + aliveTime)
 				sb.getAttack(v);
 			anim.update(false);
 			t++;
