@@ -79,12 +79,16 @@ public class MaModel extends Data implements Cloneable, BattleStatic {
 			else
 				strs1[i] = "";
 
-			for(int j = 0; j < strs0.length; j++) {
-				if (strs1[i].equals(strs0[j])) {
-					ref[i] = j;
-					break;
-				} else {
-					ref[i] = -1;
+			if(strs1[i].isEmpty()) {
+				ref[i] = -1;
+			} else {
+				for (int j = 0; j < strs0.length; j++) {
+					if (strs1[i].equals(strs0[j])) {
+						ref[i] = j;
+						break;
+					} else {
+						ref[i] = -1;
+					}
 				}
 			}
 		}
