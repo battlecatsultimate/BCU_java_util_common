@@ -163,6 +163,20 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 								{255, 255, 255},
 								{255, 255, 255}
 						};
+						break;
+					case 167:
+						bg.overlayAlpha = 76;
+						bg.overlay = new int[][] {
+								{175, 104, 104},
+								{137, 104, 88}
+						};
+						break;
+					case 168:
+						bg.overlayAlpha = 76;
+						bg.overlay = new int[][] {
+								{49, 73, 97},
+								{68, 75, 77}
+						};
 				}
 			}
 	}
