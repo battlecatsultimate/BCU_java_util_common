@@ -98,6 +98,7 @@ public class Res extends ImgCore {
 		FakeImage[] parts = ic029.cut(img029.getImg());
 		aux.slot[1] = new VImg(parts[9]);
 		aux.slot[2] = new VImg(parts[10]);
+		aux.dummyTrait = new VImg("./org/page/Trait.png");
 		readAbiIcon();
 		readBattle();
 	}
@@ -184,14 +185,13 @@ public class Res extends ImgCore {
 		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
 		aux.icon[1][P_DEATHSURGE] = new VImg("./org/page/icons/DeathSurge.png");
 
-		//TODO Icons to add on
 		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png");
-		aux.icon[1][P_DMGCUT] = new VImg(parts[231]);
-		aux.icon[1][P_DMGCAP] = new VImg(parts[231]);
+		aux.icon[1][P_DMGCUT] = new VImg("./org/page/icons/DmgCut.png");
+		aux.icon[1][P_DMGCAP] = new VImg("./org/page/icons/DmgCap.png");
 		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
 		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/Speed.png");
-		aux.icon[1][P_BARRIER] = new VImg(parts[264]);
-		aux.icon[1][P_COUNTER] = new VImg(parts[229]);
+		aux.icon[1][P_BARRIER] = new VImg("./org/page/icons/Barrier.png");
+		aux.icon[1][P_COUNTER] = new VImg("./org/page/icons/Counter.png");
 
 		//These are used for talent edit page icons
 		aux.icon[4][PC2_HP] = new VImg(parts[120]);

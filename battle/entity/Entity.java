@@ -165,7 +165,10 @@ public abstract class Entity extends AbEntity {
 			}
 
 			for(int i = 0; i < effs.length; i++) {
-				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD)
+				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD ||
+						i == A_COUNTER || i == A_E_COUNTER || i == A_DMGCUT || i == A_E_DMGCUT ||
+						i == A_DMGCAP || i == A_E_DMGCAP
+				)
 					continue;
 
 				EAnimD<?> eae = effs[i];
@@ -183,7 +186,10 @@ public abstract class Entity extends AbEntity {
 			x = p.x;
 
 			for(int i = 0; i < effs.length; i++) {
-				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD) {
+				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD ||
+						i == A_COUNTER || i == A_E_COUNTER || i == A_DMGCUT || i == A_E_DMGCUT ||
+						i == A_DMGCAP || i == A_E_DMGCAP
+				) {
 					EAnimD<?> eae = effs[i];
 
 					if(eae == null)
@@ -206,8 +212,6 @@ public abstract class Entity extends AbEntity {
 		@SuppressWarnings("unchecked")
 		public void getEff(int t) {
 			int dire = e.dire;
-			if (t == P_DMGCUT || t == P_DMGCAP)
-				t = INV;
 			if (t == INV) {
 				effs[eftp] = null;
 				eftp = A_EFF_INV;
@@ -270,7 +274,7 @@ public abstract class Entity extends AbEntity {
 
 			}
 			if (t == P_SEAL) {
-				effs[A_SEAL] = effas().A_SEAL.getEAnim(DefEff.DEF);
+				effs[A_SEAL] = (dire == -1 ? effas().A_SEAL : effas().A_E_SEAL).getEAnim(DefEff.DEF);
 			}
 			if (t == P_STRONG) {
 				int id = dire == -1 ? A_UP : A_E_UP;
@@ -384,6 +388,38 @@ public abstract class Entity extends AbEntity {
 
 				CommonStatic.setSE(SE_SHIELD_BREAKER);
 			}
+
+			if(t == P_COUNTER) {
+				int id = dire == -1 ? A_COUNTER : A_E_COUNTER;
+
+				EffAnim<DefEff> eff = dire == -1 ? effas().A_COUNTER : effas().A_E_COUNTER;
+
+				effs[id] = eff.getEAnim(DefEff.DEF);
+			}
+
+			if(t == P_DMGCUT) {
+				int id = dire == -1 ? A_DMGCUT : A_E_DMGCUT;
+
+				EffAnim<DefEff> eff = dire == -1 ? effas().A_DMGCUT : effas().A_E_DMGCUT;
+
+				effs[id] = eff.getEAnim(DefEff.DEF);
+			}
+
+			if(t == DMGCAP_FAIL) {
+				int id = dire == -1 ? A_DMGCAP : A_E_DMGCAP;
+
+				EffAnim<DmgCap> eff = dire == -1 ? effas().A_DMGCAP : effas().A_E_DMGCAP;
+
+				effs[id] = eff.getEAnim(DmgCap.FAIL);
+			}
+
+			if(t == DMGCAP_SUCCESS) {
+				int id = dire == -1 ? A_DMGCAP : A_E_DMGCAP;
+
+				EffAnim<DmgCap> eff = dire == -1 ? effas().A_DMGCAP : effas().A_E_DMGCAP;
+
+				effs[id] = eff.getEAnim(DmgCap.SUCCESS);
+			}
 		}
 
 		/**
@@ -425,7 +461,7 @@ public abstract class Entity extends AbEntity {
 				}
 			}
 			if (status[P_SEAL][0] == 0) {
-				effs[A_SEAL] = null;
+				effs[dire == -1 ? A_SEAL : A_E_SEAL] = null;
 			}
 			if (status[P_LETHAL][1] == 0) {
 				int id = dire == -1 ? A_SHIELD : A_E_SHIELD;
@@ -460,6 +496,30 @@ public abstract class Entity extends AbEntity {
 			if(effs[A_HEAL] != null) {
 				if(effs[A_HEAL].done())
 					effs[A_HEAL] = null;
+			}
+
+			if(effs[A_COUNTER] != null && effs[A_COUNTER].done()) {
+				effs[A_COUNTER] = null;
+			}
+
+			if(effs[A_E_COUNTER] != null && effs[A_E_COUNTER].done()) {
+				effs[A_E_COUNTER] = null;
+			}
+
+			if(effs[A_DMGCUT] != null && effs[A_DMGCUT].done()) {
+				effs[A_E_DMGCUT] = null;
+			}
+
+			if(effs[A_E_DMGCUT] != null && effs[A_E_DMGCUT].done()) {
+				effs[A_E_DMGCUT] = null;
+			}
+
+			if(effs[A_DMGCAP] != null && effs[A_DMGCAP].done()) {
+				effs[A_DMGCAP] = null;
+			}
+
+			if(effs[A_E_DMGCAP] != null && effs[A_E_DMGCAP].done()) {
+				effs[A_E_DMGCAP] = null;
 			}
 
 			efft--;
@@ -1364,27 +1424,25 @@ public abstract class Entity extends AbEntity {
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
 		if ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcut.prob > 0)
-			if (dmg < dmgcut.dmg && dmg > 0)
-				if (basis.r.nextDouble() * 100 < dmgcut.prob) {
-					anim.getEff(P_DMGCUT);
-					if (dmgcut.type.procs)
+			if (dmgcut.prob > 0 && dmg < dmgcut.dmg && dmg > 0) {
+				anim.getEff(P_DMGCUT);
+				if (dmgcut.type.procs)
+					return;
+				else
+					dmg = 0;
+			}
+		Proc.DMGCAP dmgcap = getProc().DMGCAP;
+		if ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcap.prob > 0)
+			if (dmgcap.prob > 0 && dmg > dmgcap.dmg) {
+				anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
+				if (dmgcap.type.nullify)
+					if (dmgcap.type.procs)
 						return;
 					else
 						dmg = 0;
-				}
-		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcap.prob > 0)
-			if (dmg > dmgcap.dmg)
-				if (basis.r.nextDouble() * 100 < dmgcap.prob) {
-					anim.getEff(P_DMGCAP);
-					if (dmgcap.type.nullify)
-						if (dmgcap.type.procs)
-							return;
-						else
-							dmg = 0;
-					else
-						dmg = dmgcap.dmg;
-				}
+				else
+					dmg = dmgcap.dmg;
+			}
 
 		boolean barrierContinue = status[P_BARRIER][0] == 0;
 		boolean shieldContinue = currentShield == 0;
@@ -1464,6 +1522,7 @@ public abstract class Entity extends AbEntity {
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
 			if (counter.prob > 0 && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
+				anim.getEff(Data.P_COUNTER);
 				double[] ds = aam.touchRange();
 				if (counter.minRange != 0 || counter.maxRange != 0) {
 					ds[0] = pos + counter.minRange;
@@ -1471,7 +1530,7 @@ public abstract class Entity extends AbEntity {
 				}
 
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
-				if ((counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0) && basis.r.nextDouble() * 100 < counter.prob) {
+				if ((counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0)) {
 					int reflectAtk = FDmg;
 					Proc reflectProc = Proc.blank();
 					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "WAVE",
