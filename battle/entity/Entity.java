@@ -1521,7 +1521,6 @@ public abstract class Entity extends AbEntity {
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
 			if (counter.prob > 0 && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
-				anim.getEff(Data.P_COUNTER);
 				double[] ds = aam.touchRange();
 				if (counter.minRange != 0 || counter.maxRange != 0) {
 					ds[0] = pos + counter.minRange;
@@ -1530,6 +1529,7 @@ public abstract class Entity extends AbEntity {
 
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
 				if ((counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0)) {
+                    anim.getEff(Data.P_COUNTER);
 					int reflectAtk = FDmg;
 					Proc reflectProc = Proc.blank();
 					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "WAVE",
