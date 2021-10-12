@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.CommonStatic;
 import common.io.json.JsonClass;
+import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Context.ErrType;
 import common.pack.Identifier;
@@ -265,5 +266,12 @@ public class PCoin extends Data {
 		}
 
 		return 1.0;
+	}
+	
+	@OnInjected
+	public void onInjected() {
+		max = new int[1 + info.size()];
+		for (int i = 0; i < info.size(); i++)
+			max[i + 1] = info.get(i)[1];
 	}
 }
