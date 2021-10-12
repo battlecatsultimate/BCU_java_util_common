@@ -19,7 +19,6 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	public PCoin pcoin = null;
 
 	public DataUnit(Form f, Unit u, String[] data) {
-		//This function serves to gather BC enemy data and give them their stats accordingly, custom units don't really use this
 		form = f;
 		int[] ints = new int[data.length];
 		for (int i = 0; i < data.length; i++)
@@ -210,6 +209,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	@Override
 	public DataUnit clone() {
 		DataUnit ans = (DataUnit) err(super::clone);
+		ans.traits = new ArrayList<>(this.traits);
 		ans.proc = proc.clone();
 		ans.datks = new DataAtk[ans.getAtkCount()];
 		for (int i = 0; i < ans.getAtkCount(); i++) {
