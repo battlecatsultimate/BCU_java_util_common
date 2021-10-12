@@ -101,7 +101,7 @@ public class BGEffectHandler {
             }
         }
 
-        count = segment.count.getRangeI(sb);
+        count = segment.count.getRangeI(sb.st.len);
 
         animation.clear();
 
@@ -180,44 +180,44 @@ public class BGEffectHandler {
             double y;
 
             if(segment.startX != null) {
-                x = segment.startX.getRangeX(sb);
+                x = segment.startX.getRangeX(sb.st.len);
             } else {
-                x = segment.x.getRangeX(sb);
+                x = segment.x.getRangeX(sb.st.len);
             }
 
             if(segment.startY != null) {
-                y = segment.startY.getRangeY(sb);
+                y = segment.startY.getRangeY(sb.battleHeight, sb.midH);
             } else {
-                y = segment.y.getRangeY(sb);
+                y = segment.y.getRangeY(sb.battleHeight, sb.midH);
             }
 
             position[i] = P.newP(x, y);
 
             if(segment.angle != null) {
-                angle[i] = segment.angle.getRangeD(sb);
+                angle[i] = segment.angle.getRangeD(sb.st.len);
             }
 
             double sx = 1.0;
             double sy = 1.0;
 
             if(segment.startScale != null) {
-                double s = segment.startScale.getRangeD(sb);
+                double s = segment.startScale.getRangeD(sb.st.len);
 
                 sx *= s;
                 sy *= s;
             } else if(segment.scale != null) {
-                double s = segment.scale.getRangeD(sb);
+                double s = segment.scale.getRangeD(sb.st.len);
 
                 sx *= s;
                 sy *= s;
             }
 
             if(segment.scaleX != null) {
-                sx *= segment.scaleX.getRangeD(sb);
+                sx *= segment.scaleX.getRangeD(sb.st.len);
             }
 
             if(segment.scaleY != null) {
-                sy *= segment.scaleY.getRangeD(sb);
+                sy *= segment.scaleY.getRangeD(sb.st.len);
             }
 
             sx /= animation.get(i).getBaseSizeX();
@@ -226,7 +226,7 @@ public class BGEffectHandler {
             size[i] = P.newP(sx, sy);
 
             if(segment.opacity != null) {
-                opacity[i] = (int) (segment.opacity.getRangeD(sb));
+                opacity[i] = (int) (segment.opacity.getRangeD(sb.st.len));
             } else {
                 opacity[i] = 255;
             }
@@ -238,17 +238,17 @@ public class BGEffectHandler {
                 double vy;
 
                 if(segment.startVelocityX != null) {
-                    vx = segment.startVelocityX.getRangeD(sb);
+                    vx = segment.startVelocityX.getRangeD(sb.st.len);
                 } else if(segment.velocityX != null) {
-                    vx = segment.velocityX.getRangeD(sb);
+                    vx = segment.velocityX.getRangeD(sb.st.len);
                 } else {
                     vx = 0;
                 }
 
                 if(segment.startVelocityY != null) {
-                    vy = segment.startVelocityY.getRangeD(sb);
+                    vy = segment.startVelocityY.getRangeD(sb.st.len);
                 } else if(segment.velocityY != null) {
-                    vy = segment.velocityY.getRangeD(sb);
+                    vy = segment.velocityY.getRangeD(sb.st.len);
                 } else {
                     vy = 0;
                 }
@@ -256,15 +256,15 @@ public class BGEffectHandler {
                 velocity[i] = P.newP(vx, vy);
             } else if(v != null && moveAngle != null) {
                 if(segment.moveAngle != null) {
-                    moveAngle[i] = segment.moveAngle.getRangeD(sb);
+                    moveAngle[i] = segment.moveAngle.getRangeD(sb.st.len);
                 } else {
                     moveAngle[i] = 0;
                 }
 
                 if(segment.startVelocity != null) {
-                    v[i] = segment.startVelocity.getRangeI(sb);
+                    v[i] = segment.startVelocity.getRangeI(sb.st.len);
                 } else if(segment.velocity != null) {
-                    v[i] = segment.velocity.getRangeI(sb);
+                    v[i] = segment.velocity.getRangeI(sb.st.len);
                 } else {
                     v[i] = 0;
                 }
@@ -280,27 +280,27 @@ public class BGEffectHandler {
             }
 
             if(segment.destroyLeft != null) {
-                destroyLeft[i] = (int) segment.destroyLeft.getRangeX(sb);
+                destroyLeft[i] = (int) segment.destroyLeft.getRangeX(sb.st.len);
             }
 
             if(segment.destroyTop != null) {
-                destroyTop[i] = (int) segment.destroyTop.getRangeY(sb);
+                destroyTop[i] = (int) segment.destroyTop.getRangeY(sb.battleHeight, sb.midH);
             }
 
             if(segment.destroyRight != null) {
-                destroyRight[i] = (int) segment.destroyRight.getRangeX(sb);
+                destroyRight[i] = (int) segment.destroyRight.getRangeX(sb.st.len);
             }
 
             if(segment.destroyBottom != null) {
-                destroyBottom[i] = (int) segment.destroyBottom.getRangeY(sb);
+                destroyBottom[i] = (int) segment.destroyBottom.getRangeY(sb.battleHeight, sb.midH);
             }
 
             if(segment.angleVelocity != null) {
-                angleVelocity[i] = segment.angleVelocity.getRangeD(sb);
+                angleVelocity[i] = segment.angleVelocity.getRangeD(sb.st.len);
             }
 
             if(segment.frame != null) {
-                animation.get(i).setTime(segment.frame.getRangeI(sb));
+                animation.get(i).setTime(segment.frame.getRangeI(sb.st.len));
             }
         }
     }
@@ -440,58 +440,58 @@ public class BGEffectHandler {
     }
 
     private void reInitialize(int ind, StageBasis sb, int time) {
-        position[ind].x = segment.x.getRangeX(sb);
-        position[ind].y = segment.y.getRangeY(sb);
+        position[ind].x = segment.x.getRangeX(sb.st.len);
+        position[ind].y = segment.y.getRangeY(sb.battleHeight, sb.midH);
 
         size[ind].x = 1.0 / animation.get(ind).getBaseSizeX();
         size[ind].y = 1.0 / animation.get(ind).getBaseSizeY();
 
         if(segment.scale != null) {
-            double s = segment.scale.getRangeD(sb);
+            double s = segment.scale.getRangeD(sb.st.len);
 
             size[ind].x *= s;
             size[ind].y *= s;
         }
 
         if(segment.scaleX != null) {
-            size[ind].x *= segment.scaleX.getRangeD(sb);
+            size[ind].x *= segment.scaleX.getRangeD(sb.st.len);
         }
 
         if(segment.scaleY != null) {
-            size[ind].y *= segment.scaleY.getRangeD(sb);
+            size[ind].y *= segment.scaleY.getRangeD(sb.st.len);
         }
 
         if(segment.opacity != null) {
-            opacity[ind] = (int) (segment.opacity.getRangeD(sb));
+            opacity[ind] = (int) (segment.opacity.getRangeD(sb.st.len));
         }
 
         zOrder[ind] = segment.zOrder.isFront();
 
         if(velocity != null) {
             if(segment.startVelocityX != null && segment.velocityX == null) {
-                velocity[ind].x = segment.startVelocityX.getRangeD(sb);
+                velocity[ind].x = segment.startVelocityX.getRangeD(sb.st.len);
             } else if(segment.velocityX != null) {
-                velocity[ind].x = segment.velocityX.getRangeD(sb);
+                velocity[ind].x = segment.velocityX.getRangeD(sb.st.len);
             } else {
                 velocity[ind].x = 0;
             }
 
             if(segment.startVelocityY != null && segment.velocityY == null) {
-                velocity[ind].y = segment.startVelocityY.getRangeD(sb);
+                velocity[ind].y = segment.startVelocityY.getRangeD(sb.st.len);
             } else if(segment.velocityY != null) {
-                velocity[ind].y = segment.velocityY.getRangeD(sb);
+                velocity[ind].y = segment.velocityY.getRangeD(sb.st.len);
             } else {
                 velocity[ind].y = 0;
             }
         } else if(v != null && moveAngle != null) {
             if(segment.moveAngle != null) {
-                moveAngle[ind] = segment.moveAngle.getRangeD(sb);
+                moveAngle[ind] = segment.moveAngle.getRangeD(sb.st.len);
             } else {
                 moveAngle[ind] = 0;
             }
 
             if(segment.velocity != null) {
-                v[ind] = segment.velocity.getRangeI(sb);
+                v[ind] = segment.velocity.getRangeI(sb.st.len);
             } else {
                 v[ind] = 0;
             }
@@ -507,23 +507,23 @@ public class BGEffectHandler {
         }
 
         if(segment.destroyLeft != null) {
-            destroyLeft[ind] = (int) segment.destroyLeft.getRangeX(sb);
+            destroyLeft[ind] = (int) segment.destroyLeft.getRangeX(sb.st.len);
         }
 
         if(segment.destroyTop != null) {
-            destroyTop[ind] = (int) segment.destroyTop.getRangeY(sb);
+            destroyTop[ind] = (int) segment.destroyTop.getRangeY(sb.battleHeight, sb.midH);
         }
 
         if(segment.destroyRight != null) {
-            destroyRight[ind] = (int) segment.destroyRight.getRangeX(sb);
+            destroyRight[ind] = (int) segment.destroyRight.getRangeX(sb.st.len);
         }
 
         if(segment.destroyBottom != null) {
-            destroyBottom[ind] = (int) segment.destroyBottom.getRangeY(sb);
+            destroyBottom[ind] = (int) segment.destroyBottom.getRangeY(sb.battleHeight, sb.midH);
         }
 
         if(segment.angleVelocity != null) {
-            angleVelocity[ind] = segment.angleVelocity.getRangeD(sb);
+            angleVelocity[ind] = segment.angleVelocity.getRangeD(sb.st.len);
         }
     }
 
