@@ -185,11 +185,11 @@ public class Res extends ImgCore {
 		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
 		aux.icon[1][P_DEATHSURGE] = new VImg("./org/page/icons/DeathSurge.png");
 
-		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/Summon.png");
+		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/SummonX.png");
 		aux.icon[1][P_DMGCUT] = new VImg("./org/page/icons/DmgCut.png");
 		aux.icon[1][P_DMGCAP] = new VImg("./org/page/icons/DmgCap.png");
-		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
-		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/Speed.png");
+		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreakX.png");
+		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/SpeedX.png");
 		aux.icon[1][P_BARRIER] = new VImg("./org/page/icons/Barrier.png");
 		aux.icon[1][P_COUNTER] = new VImg("./org/page/icons/Counter.png");
 

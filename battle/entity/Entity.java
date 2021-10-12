@@ -1423,26 +1423,25 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcut.prob > 0)
-			if (dmgcut.prob > 0 && dmg < dmgcut.dmg && dmg > 0) {
-				anim.getEff(P_DMGCUT);
+		if (((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmgcut.prob > 0 && dmg < dmgcut.dmg && dmg > 0) {
+			anim.getEff(P_DMGCUT);
 				if (dmgcut.type.procs)
 					return;
 				else
 					dmg = 0;
-			}
+		}
+
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false) && dmgcap.prob > 0)
-			if (dmgcap.prob > 0 && dmg > dmgcap.dmg) {
-				anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
-				if (dmgcap.type.nullify)
-					if (dmgcap.type.procs)
-						return;
-					else
-						dmg = 0;
+		if (((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmgcap.prob > 0 && dmg > dmgcap.dmg) {
+			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
+			if (dmgcap.type.nullify)
+				if (dmgcap.type.procs)
+					return;
 				else
-					dmg = dmgcap.dmg;
-			}
+					dmg = 0;
+			else
+				dmg = dmgcap.dmg;
+		}
 
 		boolean barrierContinue = status[P_BARRIER][0] == 0;
 		boolean shieldContinue = currentShield == 0;
