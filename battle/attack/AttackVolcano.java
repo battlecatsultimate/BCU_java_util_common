@@ -15,6 +15,7 @@ public class AttackVolcano extends AttackAb {
 	public AttackVolcano(Entity e, AttackSimple a, double sta, double end) {
 		super(e, a, sta, end, false);
 		vcapt = new HashMap<>();
+		isCounter = a.isCounter;
 		this.sta = sta;
 		this.end = end;
 		this.waveType = WT_VOLC;
