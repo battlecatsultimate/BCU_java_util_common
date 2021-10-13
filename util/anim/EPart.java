@@ -257,6 +257,28 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return fa.getSize().times(sca).times(gsca * mi * mi);
 	}
 
+	private P getBaseSize(boolean parent) {
+		if(model.ref.length > 0) {
+			double mi = 1.0 / model.ints[0];
+
+			if(parent) {
+				if(fa != null) {
+					return fa.getBaseSize(true).times(Math.signum(model.parts[ind][8]), Math.signum(model.parts[ind][9]));
+				} else {
+					return P.newP(Math.signum(model.parts[ind][8]), Math.signum(model.parts[ind][9]));
+				}
+			} else {
+				if(model.ref[0] == -1) {
+					return P.newP(model.parts[0][8] * mi, model.parts[0][9] * mi);
+				} else {
+					return getBaseSize(true).times(model.parts[model.ref[0]][8] * mi, model.parts[model.ref[0]][9] * mi);
+				}
+			}
+		} else {
+			return P.newP(1.0, 1.0);
+		}
+	}
+
 	public double opa() {
 		if (opacity == 0)
 			return 0;
@@ -280,13 +302,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		} else {
 			if (model.confs.length > 0) {
 				int[] data = model.confs[0];
-				P p0;
-
-				if(model.ref[0] != -1) {
-					p0 = P.newP(model.parts[model.ref[0]][8] * 1.0 / model.ints[0], model.parts[model.ref[0]][9] * 1.0 / model.ints[0]);
-				} else {
-					p0 = P.newP(model.parts[0][8] * 1.0 / model.ints[0], model.parts[0][9] * 1.0 / model.ints[0]);
-				}
+				P p0 = getBaseSize(false);
 
 				P shi = P.newP(data[2], data[3]).times(p0);
 				P.delete(p0);
