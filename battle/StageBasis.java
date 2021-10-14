@@ -90,7 +90,7 @@ public class StageBasis extends BattleObj {
 			ebase.added(1, shock ? boss_spawn : 700);
 		} else {
 			ebase = new ECastle(this);
-			ebase.added(1, 700);
+			ebase.added(1, 800);
 		}
 		ubase = new ECastle(this, bas);
 		ubase.added(-1, st.len - 800);
