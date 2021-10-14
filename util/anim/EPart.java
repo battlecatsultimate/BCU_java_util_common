@@ -151,6 +151,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return ent;
 	}
 
+	public int getInd() {
+		return ind;
+	}
+
 	protected void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
