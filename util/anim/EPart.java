@@ -258,7 +258,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	}
 
 	private P getBaseSize(boolean parent) {
-		if(model.ref.length > 0) {
+		if(model.confs.length > 0) {
 			double mi = 1.0 / model.ints[0];
 
 			if(parent) {
@@ -268,13 +268,13 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 					return P.newP(Math.signum(model.parts[ind][8]), Math.signum(model.parts[ind][9]));
 				}
 			} else {
-				if(model.ref[0] == -1) {
+				if(model.confs[0][0] == -1) {
 					return P.newP(model.parts[0][8] * mi, model.parts[0][9] * mi);
 				} else {
-					if (model.ref[0] == ind) {
-						return P.newP(model.parts[model.ref[0]][8] * mi, model.parts[model.ref[0]][9] * mi);
+					if (model.confs[0][0] == ind) {
+						return P.newP(model.parts[model.confs[0][0]][8] * mi, model.parts[model.confs[0][0]][9] * mi);
 					} else {
-						return ent[model.ref[0]].getBaseSize(true).times(model.parts[model.confs[0][0]][8] * mi, model.parts[model.confs[0][0]][9] * mi);
+						return ent[model.confs[0][0]].getBaseSize(true).times(model.parts[model.confs[0][0]][8] * mi, model.parts[model.confs[0][0]][9] * mi);
 					}
 				}
 			}
