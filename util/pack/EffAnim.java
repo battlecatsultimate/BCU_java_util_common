@@ -574,9 +574,9 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vdmgcap = new VImg(dmgcap+".png");
 		ImgCut icdmgcap = ImgCut.newIns(dmgcap+".imgcut");
 		effas.A_DMGCAP = new EffAnim<>(dmgcap, vdmgcap, icdmgcap, DmgCap.values());
+		effas.A_DMGCAP.rev = true;
 
 		effas.A_E_DMGCAP = new EffAnim<>(dmgcap, vdmgcap, icdmgcap, DmgCap.values());
-		effas.A_E_DMGCAP.rev = true;
 	}
 
 	private final VImg vimg;
