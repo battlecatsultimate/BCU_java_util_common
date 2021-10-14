@@ -1570,6 +1570,12 @@ public abstract class Entity extends AbEntity {
 					if (e.status[P_STRONG][0] != 0)
 						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
 
+					if (isWave && counter.type.counterWave != 2) {
+						reflectProc.getArr(P_WAVE).clear();
+						reflectProc.getArr(P_VOLC).clear();
+						reflectProc.getArr(P_MINIWAVE).clear();
+					}
+
 					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
 					if (counter.type.areaAttack)
 						as.capture();
