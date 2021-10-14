@@ -240,6 +240,9 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		System.arraycopy(cs, 0, bg.cs, 0, 4);
 		bg.top = top;
 		bg.ic = ic;
+		bg.effect = effect;
+		bg.overlay = overlay;
+		bg.overlayAlpha = overlayAlpha;
 		return bg;
 	}
 
