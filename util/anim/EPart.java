@@ -271,7 +271,11 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 				if(model.ref[0] == -1) {
 					return P.newP(model.parts[0][8] * mi, model.parts[0][9] * mi);
 				} else {
-					return ent[model.ref[0]].getBaseSize(true).times(model.parts[model.ref[0]][8] * mi, model.parts[model.ref[0]][9] * mi);
+					if (model.ref[0] == ind) {
+						return P.newP(model.parts[model.ref[0]][8] * mi, model.parts[model.ref[0]][9] * mi);
+					} else {
+						return ent[model.ref[0]].getBaseSize(true).times(model.parts[model.ref[0]][8] * mi, model.parts[model.ref[0]][9] * mi);
+					}
 				}
 			}
 		} else {
