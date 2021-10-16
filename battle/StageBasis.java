@@ -392,6 +392,7 @@ public class StageBasis extends BattleObj {
 	 * entities
 	 */
 	protected void update() {
+		boolean active = ebase.health > 0 && ubase.health > 0;
 		if(midH != -1 && bgEffect != null && !bgEffectInitialized) {
 			bgEffect.initialize(this);
 			bgEffectInitialized = true;
@@ -418,7 +419,7 @@ public class StageBasis extends BattleObj {
 			ubase.update();
 
 			int allow = st.max - entityCount(1);
-			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
+			if (respawnTime <= 0 && active && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
 					e.added(1, e.mark == 1 ? boss_spawn : 700.0);
@@ -435,26 +436,27 @@ public class StageBasis extends BattleObj {
 				}
 			}
 
-			if(unitRespawnTime > 0)
+			if(unitRespawnTime > 0 && active)
 				unitRespawnTime--;
 
-			if(respawnTime > 0)
+			if(respawnTime > 0 && active)
 				respawnTime--;
 
 			elu.update();
 			if(cannon == maxCannon -1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);
 			}
-			if (ubase.health > 0) {
+			if (active) {
 				cannon++;
 				maxMoney = b.t().getMaxMon(work_lv);
 				money += b.t().getMonInc(work_lv);
 			}
 
-			est.update();
+			if (active)
+				est.update();
 
 			canon.update();
-			if (sniper != null && ubase.health > 0)
+			if (sniper != null && active)
 				sniper.update();
 
 			tempe.forEach(EntCont::update);

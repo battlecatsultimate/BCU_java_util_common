@@ -15,7 +15,8 @@ public abstract class BattleField {
 	}
 
 	public void update() {
-		sb.time++;
+		if (sb.ubase.health > 0 && sb.ebase.health > 0)
+			sb.time++;
 		actions();
 		sb.update();
 	}
