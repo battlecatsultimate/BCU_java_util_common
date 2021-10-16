@@ -467,7 +467,13 @@ public abstract class Source {
 
 		@Override
 		public VImg readImage(String path, int ind) {
-			return new VImg(VFile.getFile(getFile(path + "/" + Data.trio(ind) + ".png")));
+			VFile vf = VFile.getFile(getFile(path + "/" + Data.trio(ind) + ".png"));
+
+			if(vf == null) {
+				return null;
+			} else {
+				return new VImg(vf);
+			}
 		}
 
 		@Override
