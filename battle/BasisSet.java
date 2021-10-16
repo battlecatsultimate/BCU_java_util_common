@@ -126,6 +126,11 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 			@SuppressWarnings("deprecation")
 			InStream is = CommonStatic.def.readBytes(old);
 			CommonStatic.ctx.noticeErr(() -> read(is), ErrType.WARN, "failed to read basis data");
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			old.delete();
 			return;
 		}
