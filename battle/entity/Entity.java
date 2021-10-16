@@ -1415,7 +1415,7 @@ public abstract class Entity extends AbEntity {
 		Proc.PT imuatk = getProc().IMUATK;
 		if ((atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false) && imuatk.prob > 0) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
-				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, -1)));
+				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
@@ -1600,7 +1600,7 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		double f = getFruit(atk.trait, 1);
+		double f = getFruit(atk.trait, atk.dire, 1);
 		double time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
 		if (atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || atk.canon != -2)
@@ -2161,8 +2161,8 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * get the extra proc time due to fruits, for EEnemy only
 	 */
-	private double getFruit(ArrayList<Trait> trait, int dire) {
-		if (receive(dire) || receive(-1))
+	private double getFruit(ArrayList<Trait> trait, int dire, int e) {
+		if (!receive(dire) || receive(e))
 			return 0;
 		ArrayList<Trait> sharedTraits = new ArrayList<>(trait);
 		sharedTraits.retainAll(traits);
