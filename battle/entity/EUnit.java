@@ -102,9 +102,9 @@ public class EUnit extends Entity {
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans *= basis.b.t().getRESISTSDEF(sharedTraits);
 		}
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKDef();
-		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKDef();
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
