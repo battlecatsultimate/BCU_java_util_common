@@ -1,6 +1,5 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -9,6 +8,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class FallingSnowBGEffect extends BackgroundEffect {
@@ -20,6 +20,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
     private final List<P> snowPosition = new ArrayList<>();
     private final List<Double> speed = new ArrayList<>();
     private final List<Double> size = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
 
@@ -61,11 +62,11 @@ public class FallingSnowBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                double siz = Data.BG_EFFECT_FALLING_SNOW_SIZE - Math.random() * 1.5;
+                double siz = Data.BG_EFFECT_FALLING_SNOW_SIZE - r.nextDouble() * 1.5;
 
-                snowPosition.get(capture.get(i)).x = Math.random() * (w + battleOffset + sw * siz) - sw * siz;
+                snowPosition.get(capture.get(i)).x = r.nextDouble() * (w + battleOffset + sw * siz) - sw * siz;
                 snowPosition.get(capture.get(i)).y = -sh * siz;
-                speed.set(capture.get(i), Data.BG_EFFECT_FALLING_SNOW_SPEED - Math.random() * 1.5);
+                speed.set(capture.get(i), Data.BG_EFFECT_FALLING_SNOW_SPEED - r.nextDouble() * 1.5);
                 size.set(capture.get(i), siz);
             }
         }
@@ -84,9 +85,9 @@ public class FallingSnowBGEffect extends BackgroundEffect {
         int number = w / 50;
 
         for(int i = 0; i < number; i++) {
-            snowPosition.add(P.newP((w + battleOffset + sw) * Math.random() - sw, (BGHeight * 3 + sh) * Math.random()));
-            speed.add(Data.BG_EFFECT_FALLING_SNOW_SPEED - Math.random() * 1.5);
-            size.add(Data.BG_EFFECT_FALLING_SNOW_SIZE - Math.random() * 1.5);
+            snowPosition.add(P.newP(r.nextInt(w + battleOffset + sw) - sw, r.nextInt(BGHeight * 3 + sh)));
+            speed.add(Data.BG_EFFECT_FALLING_SNOW_SPEED - r.nextDouble() * 1.5);
+            size.add(Data.BG_EFFECT_FALLING_SNOW_SIZE - r.nextDouble() * 1.5);
         }
     }
 }

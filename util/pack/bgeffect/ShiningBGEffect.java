@@ -9,6 +9,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class ShiningBGEffect extends BackgroundEffect {
@@ -19,6 +20,7 @@ public class ShiningBGEffect extends BackgroundEffect {
 
     private final List<P> shinePosition = new ArrayList<>();
     private final List<Byte> time = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
 
@@ -70,8 +72,8 @@ public class ShiningBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                shinePosition.get(capture.get(i)).x = Math.random() * (w + battleOffset);
-                shinePosition.get(capture.get(i)).y = BGHeight * 3 - BGHeight * Math.random();
+                shinePosition.get(capture.get(i)).x = r.nextInt(w + battleOffset);
+                shinePosition.get(capture.get(i)).y = r.nextInt(BGHeight * 3 - BGHeight);
                 time.set(capture.get(i), (byte) Data.BG_EFFECT_SHINING_TIME);
             }
         }
@@ -89,8 +91,8 @@ public class ShiningBGEffect extends BackgroundEffect {
         int number = w / 1600;
 
         for(int i = 0; i < number; i++) {
-            shinePosition.add(P.newP(Math.random() * (w + battleOffset), BGHeight * 3 - BGHeight * Math.random()));
-            time.add((byte) (Data.BG_EFFECT_SHINING_TIME * Math.random()));
+            shinePosition.add(P.newP(r.nextInt(w + battleOffset), r.nextInt(BGHeight * 3 - BGHeight)));
+            time.add((byte) (r.nextInt(Data.BG_EFFECT_SHINING_TIME)));
         }
     }
 }

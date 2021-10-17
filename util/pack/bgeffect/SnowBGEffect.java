@@ -8,6 +8,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class SnowBGEffect extends BackgroundEffect{
@@ -21,6 +22,7 @@ public class SnowBGEffect extends BackgroundEffect{
     private final List<P> initPos = new ArrayList<>();
     private final List<Byte> speed = new ArrayList<>();
     private final List<Double> slope = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
 
@@ -68,7 +70,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                double x = Math.random() * (w + sw + battleOffset);
+                double x = r.nextInt(w + sw + battleOffset);
                 double y = -sh;
 
                 snowPosition.get(capture.get(i)).x = x;
@@ -77,10 +79,10 @@ public class SnowBGEffect extends BackgroundEffect{
                 initPos.get(capture.get(i)).y = y;
 
                 //0 ~ 75
-                double angle = Math.toRadians(Math.random() * 75);
+                double angle = Math.toRadians(r.nextInt(75));
 
                 //-0.5angle + 1 is stabilizer
-                speed.set(capture.get(i), (byte) ((Data.BG_EFFECT_SNOW_SPEED - Math.random() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+                speed.set(capture.get(i), (byte) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
                 slope.set(capture.get(i), Math.tan(-angle));
             }
         }
@@ -97,16 +99,16 @@ public class SnowBGEffect extends BackgroundEffect{
         int number = w / 200;
 
         for(int i = 0; i < number; i++) {
-            double x = Math.random() * (w + sw + battleOffset);
-            double y = (1510 + sh) * Math.random();
+            double x = r.nextInt(w + sw + battleOffset);
+            double y = r.nextInt(1510 + sh);
             snowPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));
 
             //0~75
-            double angle = Math.toRadians(Math.random() * 75);
+            double angle = Math.toRadians(r.nextInt(75));
 
             //-0.5angle + 1 is stabilizer
-            speed.add((byte) ((Data.BG_EFFECT_SNOW_SPEED - Math.random() * (Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+            speed.add((byte) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
             slope.add(Math.tan(-angle));
         }
     }

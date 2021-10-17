@@ -10,6 +10,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class BalloonBGEffect extends BackgroundEffect {
@@ -19,6 +20,7 @@ public class BalloonBGEffect extends BackgroundEffect {
     private final List<P> balloonPosition = new ArrayList<>();
     private final List<Boolean> isBigBalloon = new ArrayList<>();
     private final List<Byte> speed = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
 
@@ -67,11 +69,11 @@ public class BalloonBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                boolean isBig = Math.random() >= 0.5;
+                boolean isBig = r.nextBoolean();
 
                 int bw = isBig ? bigBalloon.getWidth() : balloon.getWidth();
 
-                balloonPosition.get(capture.get(i)).x = Math.random() * (w + battleOffset + 2 * revertP(bw)) - revertP(bw);
+                balloonPosition.get(capture.get(i)).x = r.nextInt(w + battleOffset + 2 * revertP(bw)) - revertP(bw);
                 balloonPosition.get(capture.get(i)).y = BGHeight * 3;
                 isBigBalloon.set(capture.get(i), isBig);
             }
@@ -106,11 +108,11 @@ public class BalloonBGEffect extends BackgroundEffect {
         int number = w / 400;
 
         for(int i = 0; i < number; i++) {
-            boolean isBig = Math.random() >= 0.5;
+            boolean isBig = r.nextBoolean();
 
             int bw = isBig ? bigBalloon.getWidth() : balloon.getWidth();
 
-            balloonPosition.add(P.newP(Math.random() * (w + battleOffset + 2 * revertP(bw)) - revertP(bw), Math.random() * BGHeight * 3));
+            balloonPosition.add(P.newP(r.nextInt(w + battleOffset + 2 * revertP(bw)) - revertP(bw), r.nextInt(BGHeight) * 3));
             isBigBalloon.add(isBig);
             speed.add((byte) Data.BG_EFFECT_BALLOON_SPEED);
         }

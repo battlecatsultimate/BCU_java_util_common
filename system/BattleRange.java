@@ -5,11 +5,13 @@ import common.util.anim.EAnimD;
 import common.util.pack.bgeffect.BackgroundEffect;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class BattleRange<T extends Number> {
     public static final double battleRatio = 0.2;
     public static final double battleHeightOffset = 1020.0 / battleRatio;
     public static final double battleOffset = 400 / battleRatio;
+    private final Random r = new Random();
 
     public enum SNAP {
         LEFT,
@@ -98,7 +100,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return (int) (mi + Math.random() * (ma - mi));
+        return mi + r.nextInt(ma - mi);
     }
 
     public double getRangeD(int len) {
@@ -158,7 +160,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + Math.random() * (ma - mi);
+        return mi + r.nextDouble() * (ma - mi);
     }
 
     public double getRangeX(int len) {
@@ -194,7 +196,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + Math.random() * (ma - mi);
+        return mi + r.nextDouble() * (ma - mi);
     }
 
     public double getRangeY(double height, double midH) {
@@ -230,7 +232,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + Math.random() * (ma - mi);
+        return mi + r.nextDouble() * (ma - mi);
     }
 
     public int getPureRangeI() {
@@ -238,7 +240,7 @@ public class BattleRange<T extends Number> {
 
         int ma = max.intValue();
 
-        return (int) (mi + Math.random() * (ma - mi));
+        return mi + r.nextInt(ma - mi);
     }
 
     public int getAnimFrame(EAnimD<?> anim) {
@@ -262,7 +264,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return (int) (mi + Math.random() * (ma - mi));
+        return mi + r.nextInt(ma - mi);
     }
 
     public boolean isFront() {

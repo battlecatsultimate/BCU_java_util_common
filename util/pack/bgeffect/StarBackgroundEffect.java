@@ -8,6 +8,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class StarBackgroundEffect extends BackgroundEffect {
@@ -21,6 +22,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
     private final List<Integer> opacities = new ArrayList<>();
     private final List<P> positions = new ArrayList<>();
     private final List<Byte> colors = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> times = new ArrayList<>();
 
@@ -77,8 +79,8 @@ public class StarBackgroundEffect extends BackgroundEffect {
 
                 P.delete(positions.get(capture.get(i)));
 
-                positions.set(capture.get(i), P.newP(Math.random() * (w + battleOffset), Math.random() * rangeH));
-                colors.set(capture.get(i), (byte) (Math.random() * (starColors.length - 1)));
+                positions.set(capture.get(i), P.newP(r.nextInt(w + battleOffset), r.nextInt(rangeH)));
+                colors.set(capture.get(i), (byte) (r.nextInt(starColors.length - 1)));
                 times.set(capture.get(i), Data.BG_EFFECT_STAR_TIME);
             }
         }
@@ -102,11 +104,11 @@ public class StarBackgroundEffect extends BackgroundEffect {
         number = w / 100;
 
         for(int i = 0; i < number; i++) {
-            int time = (int) (Math.random() * Data.BG_EFFECT_STAR_TIME);
+            int time = (r.nextInt(Data.BG_EFFECT_STAR_TIME));
 
             opacities.add((int) (255 * Math.sin(Math.PI  * time / 20)));
-            positions.add(P.newP(Math.random() * (w + battleOffset), Math.random() * rangeH));
-            colors.add((byte) (Math.random() * (starColors.length - 1)));
+            positions.add(P.newP(r.nextInt(w + battleOffset), r.nextInt(rangeH)));
+            colors.add((byte) (r.nextInt(starColors.length - 1)));
             times.add(time);
         }
     }

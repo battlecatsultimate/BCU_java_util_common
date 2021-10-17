@@ -8,6 +8,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class BubbleBGEffect extends BackgroundEffect {
@@ -18,6 +19,7 @@ public class BubbleBGEffect extends BackgroundEffect {
 
     private final List<P> bubblePosition = new ArrayList<>();
     private final List<Byte> differentiator = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
 
@@ -66,8 +68,8 @@ public class BubbleBGEffect extends BackgroundEffect {
             for(int i = 0; i < capture.size(); i++) {
                 P.delete(bubblePosition.get(capture.get(i)));
 
-                bubblePosition.set(capture.get(i), P.newP(Math.random() * (w + battleOffset), BGHeight * 3));
-                differentiator.set(capture.get(i), (byte) (3 - Math.random() * 6));
+                bubblePosition.set(capture.get(i), P.newP(r.nextInt(w + battleOffset), BGHeight * 3));
+                differentiator.set(capture.get(i), (byte) (3 - r.nextInt(6)));
             }
         }
     }
@@ -81,11 +83,11 @@ public class BubbleBGEffect extends BackgroundEffect {
         bubblePosition.clear();
         differentiator.clear();
 
-        int number = w / 200 - (int) (Math.random() * w / 1000);
+        int number = w / 200 - (r.nextInt(w) / 1000);
 
         for(int i = 0; i < number; i++) {
-            bubblePosition.add(P.newP(Math.random() * (w + battleOffset), (BGHeight * 3.0 + bh) * Math.random()));
-            differentiator.add((byte) (3 - Math.random() * 6));
+            bubblePosition.add(P.newP(r.nextInt(w + battleOffset), r.nextDouble() * (BGHeight * 3.0 + bh)));
+            differentiator.add((byte) (3 - r.nextInt(6)));
         }
     }
 }

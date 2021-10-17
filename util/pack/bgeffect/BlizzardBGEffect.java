@@ -9,6 +9,7 @@ import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class BlizzardBGEffect extends BackgroundEffect {
@@ -23,6 +24,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
     private final List<Double> angle = new ArrayList<>();
     private final List<Byte> size = new ArrayList<>();
     private final List<Byte> speed = new ArrayList<>();
+    private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
 
@@ -74,9 +76,9 @@ public class BlizzardBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                byte sizeIndex = (byte) Math.min(Data.BG_EFFECT_BLIZZARD_SIZE.length - 1, Math.random() * (Data.BG_EFFECT_BLIZZARD_SIZE.length));
+                byte sizeIndex = (byte) Math.min(Data.BG_EFFECT_BLIZZARD_SIZE.length - 1, r.nextInt(Data.BG_EFFECT_BLIZZARD_SIZE.length));
 
-                double x = Math.random() * (w + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(BGHeight * 3)) - revertP(BGHeight * 3);
+                double x = r.nextDouble() * (w + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(BGHeight * 3)) - revertP(BGHeight * 3);
                 double y = -bh * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex];
 
                 blizzardPosition.get(capture.get(i)).x = x;
@@ -85,9 +87,9 @@ public class BlizzardBGEffect extends BackgroundEffect {
                 initPos.get(capture.get(i)).x = x;
                 initPos.get(capture.get(i)).y = y;
 
-                speed.set(capture.get(i), (byte) (Data.BG_EFFECT_BLIZZARD_SPEED - Math.random() * 5));
+                speed.set(capture.get(i), (byte) (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)));
 
-                double a = Math.toRadians(60 - Math.random() * 15);
+                double a = Math.toRadians(60 - r.nextInt(15));
 
                 angle.set(capture.get(i), a);
                 slope.set(capture.get(i), Math.tan(a));
@@ -112,16 +114,16 @@ public class BlizzardBGEffect extends BackgroundEffect {
         int number = w / 50;
 
         for(int i = 0; i < number; i++) {
-            byte sizeIndex = (byte) Math.min(Data.BG_EFFECT_BLIZZARD_SIZE.length - 1, Math.random() * (Data.BG_EFFECT_BLIZZARD_SIZE.length));
+            byte sizeIndex = (byte) Math.min(Data.BG_EFFECT_BLIZZARD_SIZE.length - 1, r.nextInt(Data.BG_EFFECT_BLIZZARD_SIZE.length));
 
-            double x = Math.random() * (w + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(BGHeight * 3)) - revertP(BGHeight * 3);
-            double y = Math.random() * (BGHeight * 3 + bh * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex]);
+            double x = r.nextDouble() * (w + battleOffset + bw * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex] + revertP(BGHeight * 3)) - revertP(BGHeight * 3);
+            double y = r.nextDouble() * (BGHeight * 3 + bh * Data.BG_EFFECT_BLIZZARD_SIZE[sizeIndex]);
 
             blizzardPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));
-            speed.add((byte) (Data.BG_EFFECT_BLIZZARD_SPEED - Math.random() * 5));
+            speed.add((byte) (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)));
 
-            double a = Math.toRadians(60 - Math.random() * 15);
+            double a = Math.toRadians(60 - r.nextInt(15));
 
             angle.add(a);
             slope.add(Math.tan(a));
