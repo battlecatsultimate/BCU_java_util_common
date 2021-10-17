@@ -1481,9 +1481,26 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if(!barrierContinue || !shieldContinue) {
+		if (!barrierContinue) {
 			return;
 		}
+
+		//75.0 is guessed value compared from BC
+		if (atk.getProc().CRIT.mult > 0) {
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
+			CommonStatic.setSE(SE_CRIT);
+		}
+
+		//75.0 is guessed value compared from BC
+		if (atk.getProc().SATK.mult > 0) {
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
+			CommonStatic.setSE(SE_SATK);
+		}
+
+		if (!shieldContinue)
+			return;
 
 		CommonStatic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
@@ -1502,20 +1519,6 @@ public abstract class Entity extends AbEntity {
 
 		anim.smokeLayer = (int) (layer + 3 - basis.r.nextDouble() * -6);
 		anim.smokeX = (int) (pos + 25 - basis.r.nextDouble() * -50);
-
-		//75.0 is guessed value compared from BC
-		if (atk.getProc().CRIT.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75.0));
-			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
-			CommonStatic.setSE(SE_CRIT);
-		}
-
-		//75.0 is guessed value compared from BC
-		if (atk.getProc().SATK.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75.0));
-			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
-			CommonStatic.setSE(SE_SATK);
-		}
 
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
