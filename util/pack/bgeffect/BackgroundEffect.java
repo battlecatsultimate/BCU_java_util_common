@@ -1,7 +1,6 @@
 package common.util.pack.bgeffect;
 
 import common.CommonStatic;
-import common.battle.StageBasis;
 import common.io.json.JsonClass;
 import common.pack.Context;
 import common.pack.Identifier;

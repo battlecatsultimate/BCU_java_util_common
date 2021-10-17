@@ -1,7 +1,6 @@
 package common.util.pack.bgeffect;
 
 import common.CommonStatic;
-import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.Data;
