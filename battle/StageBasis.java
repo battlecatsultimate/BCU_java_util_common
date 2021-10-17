@@ -396,7 +396,7 @@ public class StageBasis extends BattleObj {
 	protected void update() {
 		boolean active = ebase.health > 0 && ubase.health > 0;
 		if(midH != -1 && bgEffect != null && !bgEffectInitialized) {
-			bgEffect.initialize(this);
+			bgEffect.initialize(st.len, battleHeight, midH, bg);
 			bgEffectInitialized = true;
 		}
 
@@ -415,7 +415,7 @@ public class StageBasis extends BattleObj {
 
 		if (s_stop == 0) {
 			if(bgEffect != null)
-				bgEffect.update(this);
+				bgEffect.update(st.len, battleHeight, midH);
 
 			ubase.preUpdate();
 			ubase.update();
