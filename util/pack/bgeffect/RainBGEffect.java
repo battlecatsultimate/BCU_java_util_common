@@ -1,11 +1,11 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
 import common.util.Data;
+import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class RainBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         for(int i = 0; i < splashPosition.size(); i++) {
             P.delete(splashPosition.get(i));
         }
@@ -86,24 +86,24 @@ public class RainBGEffect extends BackgroundEffect {
         splashPosition.clear();
         rainPosition.clear();
 
-        int rainNumber = sb.st.len / 100;
-        int splashNumber = 2 * sb.st.len / 300;
+        int rainNumber = w / 100;
+        int splashNumber = 2 * w / 300;
 
         rainNumber += rainNumber / 6 - (int) (Math.random() * rainNumber / 3);
         splashNumber += splashNumber / 6 - (int) (Math.random() * splashNumber / 3);
 
         for(int i = 0; i < rainNumber; i++) {
-            rainPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), Math.random() * BGHeight * 3));
+            rainPosition.add(P.newP(Math.random() * (w + battleOffset), Math.random() * BGHeight * 3));
         }
 
         for(int i = 0; i < splashNumber; i++) {
             //Y : BGHeight * 3 - 100 - random(0 ~ 80)
-            splashPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), BGHeight * 3 - Data.BG_EFFECT_SPLASH_MIN_HEIGHT - Math.random() * Data.BG_EFFECT_SPLASH_RANGE));
+            splashPosition.add(P.newP(Math.random() * (w + battleOffset), BGHeight * 3 - Data.BG_EFFECT_SPLASH_MIN_HEIGHT - Math.random() * Data.BG_EFFECT_SPLASH_RANGE));
         }
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
 
     }
 }

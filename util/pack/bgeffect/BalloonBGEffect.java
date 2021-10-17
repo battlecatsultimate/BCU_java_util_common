@@ -1,6 +1,5 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -53,7 +52,7 @@ public class BalloonBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         capture.clear();
 
         for(int i = 0; i < balloonPosition.size(); i++) {
@@ -72,7 +71,7 @@ public class BalloonBGEffect extends BackgroundEffect {
 
                 int bw = isBig ? bigBalloon.getWidth() : balloon.getWidth();
 
-                balloonPosition.get(capture.get(i)).x = Math.random() * (sb.st.len + battleOffset + 2 * revertP(bw)) - revertP(bw);
+                balloonPosition.get(capture.get(i)).x = Math.random() * (w + battleOffset + 2 * revertP(bw)) - revertP(bw);
                 balloonPosition.get(capture.get(i)).y = BGHeight * 3;
                 isBigBalloon.set(capture.get(i), isBig);
             }
@@ -80,7 +79,7 @@ public class BalloonBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < balloonPosition.size(); i++) {
             P.delete(balloonPosition.get(i));
         }
@@ -91,27 +90,27 @@ public class BalloonBGEffect extends BackgroundEffect {
         balloon = null;
         bigBalloon = null;
 
-        Background bg;
+        Background background;
 
-        if(!sb.bg.id.pack.equals(Identifier.DEF) || sb.bg.effect != Data.BG_EFFECT_BALLOON) {
-            bg = UserProfile.getBCData().bgs.get(81);
+        if(!bg.id.pack.equals(Identifier.DEF) || bg.effect != Data.BG_EFFECT_BALLOON) {
+            background = UserProfile.getBCData().bgs.get(81);
         } else {
-            bg = sb.bg;
+            background = bg;
         }
 
-        bg.load();
+        background.load();
 
-        balloon = bg.parts[20];
-        bigBalloon = bg.parts[21];
+        balloon = background.parts[20];
+        bigBalloon = background.parts[21];
 
-        int number = sb.st.len / 400;
+        int number = w / 400;
 
         for(int i = 0; i < number; i++) {
             boolean isBig = Math.random() >= 0.5;
 
             int bw = isBig ? bigBalloon.getWidth() : balloon.getWidth();
 
-            balloonPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset + 2 * revertP(bw)) - revertP(bw), Math.random() * BGHeight * 3));
+            balloonPosition.add(P.newP(Math.random() * (w + battleOffset + 2 * revertP(bw)) - revertP(bw), Math.random() * BGHeight * 3));
             isBigBalloon.add(isBig);
             speed.add((byte) Data.BG_EFFECT_BALLOON_SPEED);
         }

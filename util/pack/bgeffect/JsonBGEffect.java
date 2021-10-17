@@ -4,11 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.pack.Background;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -71,16 +71,16 @@ public class JsonBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         for(int i = 0; i < handlers.size(); i++) {
-            handlers.get(i).update(sb);
+            handlers.get(i).update(w, h, midH);
         }
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < handlers.size(); i++) {
-            handlers.get(i).initialize(sb);
+            handlers.get(i).initialize(w, h, midH);
         }
     }
 

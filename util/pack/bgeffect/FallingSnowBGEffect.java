@@ -5,6 +5,7 @@ import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.Data;
+import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         capture.clear();
 
         for(int i = 0; i < snowPosition.size(); i++) {
@@ -62,7 +63,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
             for(int i = 0; i < capture.size(); i++) {
                 double siz = Data.BG_EFFECT_FALLING_SNOW_SIZE - Math.random() * 1.5;
 
-                snowPosition.get(capture.get(i)).x = Math.random() * (sb.st.len + battleOffset + sw * siz) - sw * siz;
+                snowPosition.get(capture.get(i)).x = Math.random() * (w + battleOffset + sw * siz) - sw * siz;
                 snowPosition.get(capture.get(i)).y = -sh * siz;
                 speed.set(capture.get(i), Data.BG_EFFECT_FALLING_SNOW_SPEED - Math.random() * 1.5);
                 size.set(capture.get(i), siz);
@@ -71,7 +72,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < snowPosition.size(); i++) {
             P.delete(snowPosition.get(i));
         }
@@ -80,10 +81,10 @@ public class FallingSnowBGEffect extends BackgroundEffect {
         speed.clear();
         size.clear();
 
-        int number = sb.st.len / 50;
+        int number = w / 50;
 
         for(int i = 0; i < number; i++) {
-            snowPosition.add(P.newP((sb.st.len + battleOffset + sw) * Math.random() - sw, (BGHeight * 3 + sh) * Math.random()));
+            snowPosition.add(P.newP((w + battleOffset + sw) * Math.random() - sw, (BGHeight * 3 + sh) * Math.random()));
             speed.add(Data.BG_EFFECT_FALLING_SNOW_SPEED - Math.random() * 1.5);
             size.add(Data.BG_EFFECT_FALLING_SNOW_SIZE - Math.random() * 1.5);
         }

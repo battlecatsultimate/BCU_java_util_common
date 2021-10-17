@@ -1,6 +1,5 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -87,7 +86,7 @@ public class RockBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         capture.clear();
 
         vibrate = !vibrate;
@@ -115,7 +114,7 @@ public class RockBGEffect extends BackgroundEffect {
 
                 int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
-                rockPosition.get(capture.get(i)).x = Math.random() * (sb.st.len + battleOffset + 2 * rw) - rw;
+                rockPosition.get(capture.get(i)).x = Math.random() * (w + battleOffset + 2 * rw) - rw;
                 rockPosition.get(capture.get(i)).y = l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3;
                 isRock.set(capture.get(i), isR);
                 angle.set(capture.get(i), Math.random() * Math.PI);
@@ -128,7 +127,7 @@ public class RockBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < rockPosition.size(); i++) {
             P.delete(rockPosition.get(i));
         }
@@ -143,25 +142,25 @@ public class RockBGEffect extends BackgroundEffect {
         rock = null;
         segment = null;
 
-        Background bg;
+        Background background;
 
-        if(!sb.bg.id.pack.equals(Identifier.DEF) || (sb.bg.id.id != 41 && sb.bg.id.id != 75)) {
-            bg = UserProfile.getBCData().bgs.get(75);
+        if(!bg.id.pack.equals(Identifier.DEF) || (bg.id.id != 41 && bg.id.id != 75)) {
+            background = UserProfile.getBCData().bgs.get(75);
         } else {
-            bg = sb.bg;
+            background = bg;
         }
 
-        bg.load();
+        background.load();
 
-        if(bg.id.id == 41) {
-            rock = bg.parts[21];
-            segment = bg.parts[20];
+        if(background.id.id == 41) {
+            rock = background.parts[21];
+            segment = background.parts[20];
         } else {
-            rock = bg.parts[22];
-            segment = bg.parts[21];
+            rock = background.parts[22];
+            segment = background.parts[21];
         }
 
-        int number = sb.st.len / 100;
+        int number = w / 100;
 
         for(int i = 0; i < number; i++) {
             byte l = (byte) (Math.random() >= 1/4.0 ? 0 : 1);
@@ -170,7 +169,7 @@ public class RockBGEffect extends BackgroundEffect {
 
             int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
-            rockPosition.add(P.newP(Math.random() * (sb.st.len + battleOffset + 2 * rw) - rw, (l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3) * Math.random()));
+            rockPosition.add(P.newP(Math.random() * (w + battleOffset + 2 * rw) - rw, (l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3) * Math.random()));
             speed.add(Data.BG_EFFECT_ROCK_SPEED[l] - Math.random() * 0.5);
             isRock.add(isR);
             angle.add(Math.random() * Math.PI);

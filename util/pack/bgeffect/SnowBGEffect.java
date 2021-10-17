@@ -1,10 +1,10 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.Data;
+import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +53,11 @@ public class SnowBGEffect extends BackgroundEffect{
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         capture.clear();
 
         for(int i = 0; i < snowPosition.size(); i++) {
-            if(snowPosition.get(i).y >= 1510 + sh || snowPosition.get(i).x < -sw || snowPosition.get(i).x >= sb.st.len + battleOffset) {
+            if(snowPosition.get(i).y >= 1510 + sh || snowPosition.get(i).x < -sw || snowPosition.get(i).x >= w + battleOffset) {
                 capture.add(i);
             } else {
                 snowPosition.get(i).y += speed.get(i);
@@ -68,7 +68,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                double x = Math.random() * (sb.st.len + sw + battleOffset);
+                double x = Math.random() * (w + sw + battleOffset);
                 double y = -sh;
 
                 snowPosition.get(capture.get(i)).x = x;
@@ -87,17 +87,17 @@ public class SnowBGEffect extends BackgroundEffect{
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < snowPosition.size(); i++) {
             P.delete(snowPosition.get(i));
         }
 
         snowPosition.clear();
 
-        int number = sb.st.len / 200;
+        int number = w / 200;
 
         for(int i = 0; i < number; i++) {
-            double x = Math.random() * (sb.st.len + sw + battleOffset);
+            double x = Math.random() * (w + sw + battleOffset);
             double y = (1510 + sh) * Math.random();
             snowPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));

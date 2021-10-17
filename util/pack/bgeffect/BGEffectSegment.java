@@ -2,15 +2,12 @@ package common.util.pack.bgeffect;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import common.battle.StageBasis;
 import common.system.BattleRange;
-import common.system.P;
-import common.system.fake.FakeGraphics;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-public class BGEffectSegment extends BackgroundEffect {
+public class BGEffectSegment {
     public enum BGFile {
         IMAGE,
         IMGCUT,
@@ -364,31 +361,6 @@ public class BGEffectSegment extends BackgroundEffect {
         } else {
             angleVelocity = null;
         }
-    }
-
-    @Override
-    public void check() {
-
-    }
-
-    @Override
-    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
-
-    }
-
-    @Override
-    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
-
-    }
-
-    @Override
-    public void update(StageBasis sb) {
-        //TODO Set codes to determine current position and current part lifetime
-    }
-
-    @Override
-    public void initialize(StageBasis sb) {
-
     }
 
     private BattleRange.SNAP getSnap(String base) {

@@ -1,6 +1,5 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -58,7 +57,7 @@ public class ShiningBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         capture.clear();
 
         for(int i = 0; i < shinePosition.size(); i++) {
@@ -71,7 +70,7 @@ public class ShiningBGEffect extends BackgroundEffect {
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                shinePosition.get(capture.get(i)).x = Math.random() * (sb.st.len + battleOffset);
+                shinePosition.get(capture.get(i)).x = Math.random() * (w + battleOffset);
                 shinePosition.get(capture.get(i)).y = BGHeight * 3 - BGHeight * Math.random();
                 time.set(capture.get(i), (byte) Data.BG_EFFECT_SHINING_TIME);
             }
@@ -79,7 +78,7 @@ public class ShiningBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < shinePosition.size(); i++) {
             P.delete(shinePosition.get(i));
         }
@@ -87,10 +86,10 @@ public class ShiningBGEffect extends BackgroundEffect {
         shinePosition.clear();
         time.clear();
 
-        int number = sb.st.len / 1600;
+        int number = w / 1600;
 
         for(int i = 0; i < number; i++) {
-            shinePosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), BGHeight * 3 - BGHeight * Math.random()));
+            shinePosition.add(P.newP(Math.random() * (w + battleOffset), BGHeight * 3 - BGHeight * Math.random()));
             time.add((byte) (Data.BG_EFFECT_SHINING_TIME * Math.random()));
         }
     }

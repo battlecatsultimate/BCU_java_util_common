@@ -11,6 +11,7 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
 import common.util.anim.ImgCut;
+import common.util.pack.Background;
 
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
@@ -99,15 +100,17 @@ public abstract class BackgroundEffect {
 
     /**
      * Update data here
-     * @param sb Stage data
+     * @param w Width of battlefield as P
+     * @param h Height of battlefield as Px
      */
-    public abstract void update(StageBasis sb);
+    public abstract void update(int w, double h, double midH);
 
     /**
      * Initialize data here
-     * @param sb Stage data
+     * @param w Width of battlefield as P
+     * @param h Height of battlefield as Px
      */
-    public abstract void initialize(StageBasis sb);
+    public abstract void initialize(int w, double h, double midH, Background bg);
 
     public void release() {
 

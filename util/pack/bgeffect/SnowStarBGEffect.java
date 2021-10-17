@@ -5,6 +5,7 @@ import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.Data;
+import common.util.pack.Background;
 
 public class SnowStarBGEffect extends BackgroundEffect {
     @Override
@@ -24,14 +25,14 @@ public class SnowStarBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
-        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).update(sb);
-        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).update(sb);
+    public void update(int w, double h, double midH) {
+        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).update(w, h, midH);
+        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).update(w, h, midH);
     }
 
     @Override
-    public void initialize(StageBasis sb) {
-        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).initialize(sb);
-        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).initialize(sb);
+    public void initialize(int w, double h, double midH, Background bg) {
+        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).initialize(w, h, midH, bg);
+        CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).initialize(w, h, midH, bg);
     }
 }

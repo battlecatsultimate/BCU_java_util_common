@@ -1,10 +1,10 @@
 package common.util.pack.bgeffect;
 
-import common.battle.StageBasis;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.Data;
+import common.util.pack.Background;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class BubbleBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(StageBasis sb) {
+    public void update(int w, double h, double midH) {
         capture.clear();
 
         for(int i = 0; i < bubblePosition.size(); i++) {
@@ -66,14 +66,14 @@ public class BubbleBGEffect extends BackgroundEffect {
             for(int i = 0; i < capture.size(); i++) {
                 P.delete(bubblePosition.get(capture.get(i)));
 
-                bubblePosition.set(capture.get(i), P.newP(Math.random() * (sb.st.len + battleOffset), BGHeight * 3));
+                bubblePosition.set(capture.get(i), P.newP(Math.random() * (w + battleOffset), BGHeight * 3));
                 differentiator.set(capture.get(i), (byte) (3 - Math.random() * 6));
             }
         }
     }
 
     @Override
-    public void initialize(StageBasis sb) {
+    public void initialize(int w, double h, double midH, Background bg) {
         for(int i = 0; i < bubblePosition.size(); i++) {
             P.delete(bubblePosition.get(i));
         }
@@ -81,10 +81,10 @@ public class BubbleBGEffect extends BackgroundEffect {
         bubblePosition.clear();
         differentiator.clear();
 
-        int number = sb.st.len / 200 - (int) (Math.random() * sb.st.len / 1000);
+        int number = w / 200 - (int) (Math.random() * w / 1000);
 
         for(int i = 0; i < number; i++) {
-            bubblePosition.add(P.newP(Math.random() * (sb.st.len + battleOffset), (BGHeight * 3.0 + bh) * Math.random()));
+            bubblePosition.add(P.newP(Math.random() * (w + battleOffset), (BGHeight * 3.0 + bh) * Math.random()));
             differentiator.add((byte) (3 - Math.random() * 6));
         }
     }
