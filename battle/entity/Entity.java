@@ -1423,7 +1423,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmgcut.prob > 0 && dmg < dmgcut.dmg && dmg > 0) {
+		if (((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && basis.r.nextDouble() * 100 < dmgcut.prob && dmg < dmgcut.dmg && dmg > 0) {
 			anim.getEff(P_DMGCUT);
 				if (dmgcut.type.procs)
 					return;
@@ -1432,7 +1432,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmgcap.prob > 0 && dmg > dmgcap.dmg) {
+		if (((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && basis.r.nextDouble() * 100 < dmgcap.prob && dmg > dmgcap.dmg) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.nullify)
 				if (dmgcap.type.procs)
@@ -1523,7 +1523,7 @@ public abstract class Entity extends AbEntity {
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
-			if (counter.prob > 0 && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
+			if (basis.r.nextDouble() * 100 < counter.prob && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
 				double[] ds = aam.touchRange();
 				if (counter.minRange != 0 || counter.maxRange != 0) {
 					ds[0] = pos + counter.minRange;
