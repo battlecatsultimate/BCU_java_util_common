@@ -302,6 +302,8 @@ public class StageBasis extends BattleObj {
 					e.pos = ebase.pos;
 					e.cont();
 				}
+			for(int[] c : elu.cool)
+				Arrays.fill(c, 0);
 			return true;
 		}
 		return false;
