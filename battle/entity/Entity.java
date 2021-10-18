@@ -1413,7 +1413,7 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = getProc().IMUATK;
-		if ((atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false) && imuatk.prob > 0) {
+		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false)) {
 			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
@@ -1423,7 +1423,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && basis.r.nextDouble() * 100 < dmgcut.prob && dmg < dmgcut.dmg && dmg > 0) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && basis.r.nextDouble() * 100 < dmgcut.prob) {
 			anim.getEff(P_DMGCUT);
 				if (dmgcut.type.procs)
 					return;
@@ -1432,7 +1432,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && basis.r.nextDouble() * 100 < dmgcap.prob && dmg > dmgcap.dmg) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && basis.r.nextDouble() * 100 < dmgcap.prob) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.nullify)
 				if (dmgcap.type.procs)
@@ -1524,16 +1524,11 @@ public abstract class Entity extends AbEntity {
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
 			if (basis.r.nextDouble() * 100 < counter.prob && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
-				double[] ds = aam.touchRange();
-				if (counter.minRange != 0 || counter.maxRange != 0) {
-					ds[0] = pos + counter.minRange;
-					ds[1] = pos + counter.maxRange;
-				}
-
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
-				if ((counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0) && (!isWave || counter.type.counterWave != 0)) {
-                    anim.getEff(Data.P_COUNTER);
+				if (!isWave || counter.type.counterWave != 0) {
+					double[] ds = counter.minRange != 0 || counter.maxRange != 0 ? new double[]{pos + counter.minRange, pos + counter.maxRange} : aam.touchRange();
 					int reflectAtk = FDmg;
+
 					Proc reflectProc = Proc.blank();
 					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "WAVE",
 							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "SHIELDBREAK", "MINIWAVE"};
@@ -1559,14 +1554,15 @@ public abstract class Entity extends AbEntity {
 						}
 					} else {
 						if (counter.type.useOwnDamage)
-							reflectAtk = counter.damage;
+							reflectAtk = data.allAtk();
 						reflectAtk = reflectAtk * counter.damage / 100;
-							 if (counter.type.procType >= 2) {
-								Proc p = data.getAllProc();
-								for (String s0 : par)
-									if (p.get(s0).perform(e.basis.r))
-										reflectProc.get(s0).set(p.get(s0));
-							}
+
+						if (counter.type.procType >= 2) {
+							Proc p = data.getAllProc();
+							for (String s0 : par)
+								if (p.get(s0).perform(e.basis.r))
+									reflectProc.get(s0).set(p.get(s0));
+						}
 					}
 					if (e.status[P_WEAK][0] > 0)
 						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
@@ -1582,7 +1578,8 @@ public abstract class Entity extends AbEntity {
 					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
 					if (counter.type.areaAttack)
 						as.capture();
-					as.counterEntity(e);
+					if (as.counterEntity(counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0 ? e : null))
+						anim.getEff(Data.P_COUNTER);
 				}
 			}
 		});

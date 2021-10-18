@@ -75,11 +75,12 @@ public class AttackSimple extends AttackAb {
 	/**
 	 * Method to manually add an unit to an attack for counters.
 	 */
-	public void counterEntity(Entity ce) {
+	public boolean counterEntity(Entity ce) {
 		isCounter = true;
-		if (!capt.contains(ce))
+		if (ce != null && !capt.contains(ce))
 			capt.add(ce);
 		excuse();
+		return capt.size() > 0;
 	}
 
 	@Override
