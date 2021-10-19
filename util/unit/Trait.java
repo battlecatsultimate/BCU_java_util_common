@@ -104,7 +104,7 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
 
     @JsonDecoder.OnInjected
     public void onInjected() {
-        icon = UserProfile.getUserPack(id.pack).source.readImage(Source.TRAITICON, id.id);
+        icon = UserProfile.getUserPack(id.pack).source.readImage(Source.BasePath.TRAIT.toString(), id.id);
     }
 
     @JsonClass.JCGetter

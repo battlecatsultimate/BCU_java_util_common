@@ -183,8 +183,9 @@ public abstract class PackData implements IndexContainer {
 				AnimUD anim = new AnimUD(name, Data.trio(i), null, null);
 				souls.add(new Soul(i, anim));
 			}
-			demonSouls.add(new DemonSoul(pre+"demonsoul/battle_demonsoul_00", 0, false, "demon_soul_0_e"));
-			demonSouls.add(new DemonSoul(pre+"demonsoul/battle_demonsoul_00", 0, true, "demon_soul_0"));
+			AnimUD enemyAnimD = new AnimUD(pre + "demonsoul/battle_demonsoul_", Data.duo(0), null, null);
+			demonSouls.add(new DemonSoul(0, enemyAnimD, false));
+			demonSouls.add(new DemonSoul(0, enemyAnimD, true));
 		}
 
 		private void loadUnits(Consumer<Double> bar) {

@@ -520,11 +520,11 @@ public abstract class Source {
 		}
 
 		public File getCasFile(Identifier<CastleImg> id) {
-			return getFile("./" + BasePath.CASTLE.toString() + "/" + Data.trio(id.id) + ".png");
+			return getFile("./" + BasePath.CASTLE + "/" + Data.trio(id.id) + ".png");
 		}
 
 		public File getTraitIconFile(Identifier<Trait> id) {
-			return getFile("./" + TRAITICON + "/" + Data.trio(id.id) + ".png");
+			return getFile("./" + BasePath.TRAIT + "/" + Data.trio(id.id) + ".png");
 		}
 
 		@Override

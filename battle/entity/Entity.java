@@ -26,7 +26,6 @@ import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
-import common.util.pack.Soul.SoulType;
 import common.util.unit.Trait;
 import common.util.unit.Level;
 
@@ -574,7 +573,7 @@ public abstract class Entity extends AbEntity {
 
 			if (e.getProc().DEATHSURGE.exists() && e.getProc().DEATHSURGE.perform(e.basis.r)) {
 				deathSurge = true;
-				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.DSOUL);
+				soul = (EAnimD<UType>) UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.DSOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
