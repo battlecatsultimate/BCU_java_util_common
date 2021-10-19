@@ -30,7 +30,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {
 		WALK(false), IDLE(false), ATK(true), HB(false), ENTER(true), BURROW_DOWN(true), BURROW_MOVE(false),
-		BURROW_UP(true), SOUL(true), DSOUL(true);
+		BURROW_UP(true), SOUL(true);
 
 		private final boolean rotate;
 

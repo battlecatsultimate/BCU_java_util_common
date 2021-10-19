@@ -5,15 +5,18 @@ import common.pack.IndexContainer;
 import common.pack.PackData;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.util.Data;
 import common.util.anim.*;
 
 @IndexContainer.IndexCont(PackData.class)
-public class DemonSoul extends Soul implements IndexContainer.Indexable<PackData, Soul> {
+public class DemonSoul extends AbSoul implements IndexContainer.Indexable<PackData, DemonSoul> {
 
+    private final Identifier<DemonSoul> id;
     boolean e;
 
     public DemonSoul(int id, AnimU<?> animS, boolean enemy) {
-        super(id, animS);
+        super(animS);
+        this.id = new Identifier<>(Identifier.DEF, DemonSoul.class, id);
         e = enemy;
 
         if (!enemy) {
@@ -23,7 +26,12 @@ public class DemonSoul extends Soul implements IndexContainer.Indexable<PackData
     }
 
     @Override
+    public Identifier<DemonSoul> getID() {
+        return id;
+    }
+
+    @Override
     public String toString() {
-        return "demon" + super.toString() + (e ? "_e" : "");
+        return "demonsoul_" + id + (e ? "_e" : "");
     }
 }

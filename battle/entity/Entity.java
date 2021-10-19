@@ -573,7 +573,7 @@ public abstract class Entity extends AbEntity {
 
 			if (e.getProc().DEATHSURGE.exists() && e.getProc().DEATHSURGE.perform(e.basis.r)) {
 				deathSurge = true;
-				soul = (EAnimD<UType>) UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.DSOUL);
+				soul = (EAnimD<UType>) UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.SOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {

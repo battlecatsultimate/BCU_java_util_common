@@ -29,7 +29,6 @@ public class AnimTypeLocale {
 	static {
 		Collections.addAll(TYPES, BGWvType.values());
 		Collections.addAll(TYPES, NyType.values());
-		Collections.addAll(TYPES, UType.SOUL);
 		Collections.addAll(TYPES, UType.values());
 		Collections.addAll(TYPES, WaveType.values());
 		Collections.addAll(TYPES, EffAnim.ArmorEff.values());
