@@ -12,18 +12,17 @@ import common.util.Data.Proc.THEME;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
+import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.stage.CastleImg;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
-import common.util.unit.EForm;
-import common.util.unit.EneRand;
-import common.util.unit.Form;
+import common.util.unit.*;
 
 import java.util.*;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class StageBasis extends BattleObj {
-
-	public static boolean testing = true;
 
 	public final BasisLU b;
 	public final Stage st;
@@ -49,21 +48,27 @@ public class StageBasis extends BattleObj {
 	public boolean goingUp = true;
 	public int changeFrame = -1;
 	public int changeDivision = -1;
+	public final double boss_spawn;
 
-	public int work_lv, maxMoney, can, max_can, upgradeCost, max_num;
+	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num;
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
-	public int money;
 	public boolean shock = false;
 	public int time, s_stop, temp_s_stop;
-	public int respawnTime;
+	public int respawnTime, unitRespawnTime;
 	public Background bg;
+	public BackgroundEffect bgEffect;
 
+	/**
+	 * Real groundHeight of battle
+	 */
+	public double midH = -1, battleHeight = -1;
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
 	private int themeTime;
 	private Identifier<Background> theme = null;
 	private THEME.TYPE themeType;
+	private boolean bgEffectInitialized = false;
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
 		b = bas;
@@ -74,12 +79,19 @@ public class StageBasis extends BattleObj {
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
 		bg = Identifier.getOr(st.bg, Background.class);
+		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
+		if (bg.effect != -1) {
+			bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
+		}
 		EEnemy ee = est.base(this);
-		if (ee != null)
+		if (ee != null) {
 			ebase = ee;
-		else
+			shock = ee.mark == -2;
+			ebase.added(1, shock ? boss_spawn : 700);
+		} else {
 			ebase = new ECastle(this);
-		ebase.added(1, 800);
+			ebase.added(1, 800);
+		}
 		ubase = new ECastle(this, bas);
 		ubase.added(-1, st.len - 800);
 		int sttime = 3;
@@ -91,11 +103,11 @@ public class StageBasis extends BattleObj {
 		}
 		int max = est.lim != null ? est.lim.num : 50;
 		max_num = max <= 0 ? 50 : max;
-		max_can = bas.t().CanonTime(sttime);
+		maxCannon = bas.t().CanonTime(sttime);
 
 		work_lv = 1 + bas.getInc(C_M_LV);
 		money = bas.getInc(C_M_INI) * 100;
-		can = max_can * bas.getInc(C_C_INI) / 100;
+		cannon = maxCannon * bas.getInc(C_C_INI) / 100;
 		canon = new Cannon(this, nyc[0]);
 		conf = ints;
 
@@ -152,21 +164,26 @@ public class StageBasis extends BattleObj {
 		themeType = type;
 	}
 
+	public void changeBG(Identifier<Background> id) {
+		theme = id;
+	}
+
 	public int entityCount(int d) {
 		int ans = 0;
 		if (ebase instanceof EEnemy)
-			ans++;
-		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire == d)
-				ans++;
+			ans += ((EEnemy)ebase).data.getWill() + 1;
+		for (Entity ent : le) {
+			if (ent.dire == d)
+				ans += ent.data.getWill() + 1;
+		}
 		return ans;
 	}
 
 	public int entityCount(int d, int g) {
 		int ans = 0;
-		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire == d && le.get(i).group == g)
-				ans++;
+		for (Entity ent : le)
+			if (ent.dire == d && ent.group == g)
+				ans += ent.data.getWill() + 1;
 		return ans;
 	}
 
@@ -187,20 +204,24 @@ public class StageBasis extends BattleObj {
 	}
 
 	public double getEBHP() {
-		return 1.0 * ebase.health / ebase.maxH;
+		return 100.0 * ebase.health / ebase.maxH;
 	}
 
 	/**
 	 * list of entities in the range of d0~d1 that can be touched by entity with
 	 * this direction and touch mode
+	 *
+	 * excludeLastEdge : If range is d0 ~ d1, normally it's true if d0 <= x <= d1 where x is entity's position<br>If this is true, then it will become d0 <= x < d1
 	 */
-	public List<AbEntity> inRange(int touch, int dire, double d0, double d1) {
+	public List<AbEntity> inRange(int touch, int dire, double d0, double d1, boolean excludeLastEdge) {
+		double start = Math.min(d0, d1);
+		double end = Math.max(d0, d1);
 		List<AbEntity> ans = new ArrayList<>();
 		if (dire == 0)
 			return ans;
 		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0
-					&& (le.get(i).pos - d0) * (le.get(i).pos - d1) <= 0)
+			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0 &&
+				le.get(i).pos >= start && (excludeLastEdge ? le.get(i).pos < end : le.get(i).pos <= end))
 				ans.add(le.get(i));
 		AbEntity b = dire == 1 ? ubase : ebase;
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
@@ -209,11 +230,22 @@ public class StageBasis extends BattleObj {
 		return ans;
 	}
 
+	public void registerBattleDimension(double midH, double battleHeight) {
+		this.midH = midH;
+		this.battleHeight = battleHeight;
+	}
+
+	public void release() {
+		if(bg != null && bg.effect != -1) {
+			CommonStatic.getBCAssets().bgEffects.get(bg.effect).release();
+		}
+	}
+
 	protected boolean act_can() {
 		if(ubase.health <= 0 || ebase.health <= 0)
 			return false;
 
-		if (can == max_can) {
+		if (cannon == maxCannon) {
 			if(canon.id == BASE_WALL && entityCount(-1) >= max_num) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 				return false;
@@ -221,7 +253,7 @@ public class StageBasis extends BattleObj {
 
 			CommonStatic.setSE(SE_SPEND_SUC);
 			canon.activate();
-			can = 0;
+			cannon = 0;
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
@@ -239,8 +271,6 @@ public class StageBasis extends BattleObj {
 			work_lv++;
 			upgradeCost = b.t().getLvCost(work_lv);
 			maxMoney = b.t().getMaxMon(work_lv);
-			if (work_lv == 8)
-				upgradeCost = -1;
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
@@ -250,6 +280,30 @@ public class StageBasis extends BattleObj {
 	protected boolean act_sniper() {
 		if (sniper != null) {
 			sniper.enabled = !sniper.enabled;
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean act_continue() {
+		if (!st.non_con && ubase.health <= 0) {
+			ubase.health = ubase.maxH;
+			if (getEBHP() <= st.mush)
+				CommonStatic.setBGM(st.mus1, st.loop1);
+			else
+				CommonStatic.setBGM(st.mus0, st.loop0);
+			money = Integer.MAX_VALUE;
+			while (work_lv < 8)
+				act_mon();
+			money = maxMoney;
+			cannon = maxCannon;
+			for (Entity e : le)
+				if (e.dire == 1) {
+					e.pos = ebase.pos;
+					e.cont();
+				}
+			for(int[] c : elu.cool)
+				Arrays.fill(c, 0);
 			return true;
 		}
 		return false;
@@ -282,6 +336,10 @@ public class StageBasis extends BattleObj {
 		if (ubase.health == 0) {
 			return false;
 		}
+
+		if (unitRespawnTime > 0)
+			return false;
+
 		if (elu.cool[i][j] > 0) {
 			if(boo) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
@@ -293,13 +351,13 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 		if (elu.price[i][j] > money) {
-			if (boo) {
+			if(boo) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 			}
 			return false;
 		}
 		if (locks[i][j] || boo) {
-			if (entityCount(-1) >= max_num) {
+			if (entityCount(-1) >= max_num - b.lu.efs[i][j].du.getWill()) {
 				if(boo) {
 					CommonStatic.setSE(SE_SPEND_FAIL);
 				}
@@ -317,6 +375,7 @@ public class StageBasis extends BattleObj {
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 			money -= elu.price[i][j];
+			unitRespawnTime = 1;
 			return true;
 		}
 		return false;
@@ -335,6 +394,12 @@ public class StageBasis extends BattleObj {
 	 * entities
 	 */
 	protected void update() {
+		boolean active = ebase.health > 0 && ubase.health > 0;
+		if(midH != -1 && bgEffect != null && !bgEffectInitialized) {
+			bgEffect.initialize(st.len, battleHeight, midH, bg);
+			bgEffectInitialized = true;
+		}
+
 		tempe.removeIf(e -> {
 			if (e.t == 0) {
 				le.add(e.ent);
@@ -343,16 +408,23 @@ public class StageBasis extends BattleObj {
 			return e.t == 0;
 		});
 
-		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0)
+		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
+			ebase.preUpdate();
 			ebase.update();
+		}
 
 		if (s_stop == 0) {
+			if(bgEffect != null)
+				bgEffect.update(st.len, battleHeight, midH);
+
+			ubase.preUpdate();
+			ubase.update();
 
 			int allow = st.max - entityCount(1);
-			if (respawnTime <= 0 && ebase.health > 0 && allow > 0) {
+			if (respawnTime <= 0 && active && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
-					e.added(1, e.mark == 1 ? 801 : 700);
+					e.added(1, e.mark == 1 ? boss_spawn : 700.0);
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.layer));
 
@@ -366,21 +438,27 @@ public class StageBasis extends BattleObj {
 				}
 			}
 
-			if(respawnTime > 0)
+			if(unitRespawnTime > 0 && active)
+				unitRespawnTime--;
+
+			if(respawnTime > 0 && active)
 				respawnTime--;
 
 			elu.update();
-			if(can == max_can-1) {
+			if(cannon == maxCannon -1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);
 			}
-			can++;
-			maxMoney = b.t().getMaxMon(work_lv);
-			money += b.t().getMonInc(work_lv);
+			if (active) {
+				cannon++;
+				maxMoney = b.t().getMaxMon(work_lv);
+				money += b.t().getMonInc(work_lv);
+			}
 
-			est.update();
+			if (active)
+				est.update();
 
 			canon.update();
-			if (sniper != null)
+			if (sniper != null && active)
 				sniper.update();
 
 			tempe.forEach(EntCont::update);
@@ -388,9 +466,14 @@ public class StageBasis extends BattleObj {
 
 		for (int i = 0; i < le.size(); i++)
 			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).preUpdate();
+
+		for (int i = 0; i < le.size(); i++)
+			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
 
 		if (s_stop == 0) {
+			tlw.forEach(ContAb::update);
 			lw.forEach(ContAb::update);
 			lea.forEach(EAnimCont::update);
 			ebaseSmoke.forEach(EAnimCont::update);
@@ -406,7 +489,7 @@ public class StageBasis extends BattleObj {
 		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();
 
-			if (!lethal && ebase.health <= 0 && est.hasBoss()) {
+			if (!lethal && ebase instanceof ECastle && ebase.health <= 0 && est.hasBoss()) {
 				lethal = true;
 				ebase.health = 1;
 			}
@@ -414,13 +497,13 @@ public class StageBasis extends BattleObj {
 
 		if (s_stop == 0) {
 			if (ebase.health <= 0) {
-				for (int i = 0; i < le.size(); i++)
-					if (le.get(i).dire == 1)
-						le.get(i).kill(false);
+				for (Entity entity : le)
+					if (entity.dire == 1)
+						entity.kill(false);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ebase.pos - 128 / 0.32 * r.nextDouble());
-					int y = (int) (-256 * r.nextDouble());
+					int x = (int) (ebase.pos + 50 - 500 * r.nextDouble());
+					int y = (int) (-288 * r.nextDouble());
 
 					ebaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
@@ -432,8 +515,8 @@ public class StageBasis extends BattleObj {
 						le.get(i).kill(false);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ubase.pos + 128 / 0.32 * r.nextDouble());
-					int y = (int) (-256 * r.nextDouble());
+					int x = (int) (ubase.pos - 50 + 500 * r.nextDouble());
+					int y = (int) (-288 * r.nextDouble());
 
 					ubaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
@@ -469,7 +552,7 @@ public class StageBasis extends BattleObj {
 			s_stop--;
 		s_stop = Math.max(s_stop, temp_s_stop);
 		temp_s_stop = 0;
-		can = Math.min(max_can, Math.max(0, can));
+		cannon = Math.min(maxCannon, Math.max(0, cannon));
 		money = Math.min(maxMoney, Math.max(0, money));
 
 		if(changeFrame != -1) {
@@ -488,7 +571,7 @@ public class StageBasis extends BattleObj {
 	private void updateTheme() {
 		if (theme != null) {
 			bg = Identifier.getOr(theme, Background.class);
-			if (themeType.kill) {
+			if (themeType != null && themeType.kill) {
 				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();
 				la.clear();
@@ -501,7 +584,10 @@ public class StageBasis extends BattleObj {
 		if (s_stop == 0 && themeTime > 0) {
 			themeTime--;
 			if (themeTime == 0)
-				theme = st.bg;
+				if (getEBHP() < st.bgh)
+					theme = st.bg1;
+				else
+					theme = st.bg;
 		}
 	}
 

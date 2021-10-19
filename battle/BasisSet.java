@@ -1,5 +1,6 @@
 package common.battle;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -25,24 +26,35 @@ import common.util.unit.Unit;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @JsonClass
 public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static BasisSet current() {
-		return UserProfile.getStatic("BasisSet_current", () -> def());
+		return UserProfile.getStatic("BasisSet_current", BasisSet::def);
 	}
 
 	public static BasisSet def() {
 		listRaw();
-		return UserProfile.getStatic("BasisSet_default", () -> new BasisSet());
+		return UserProfile.getStatic("BasisSet_default", BasisSet::new);
 	}
 
 	public static List<BasisSet> list() {
 		def();
 		return listRaw();
+	}
+
+	public static BasisSet[] getBackupSet(JsonElement element) {
+		JsonArray arr = element.getAsJsonObject().getAsJsonArray("list");
+
+		BasisSet[] sets = new BasisSet[arr.size()];
+
+		for(int i = 0; i < arr.size(); i++) {
+			sets[i] = JsonDecoder.decode(arr.get(i), BasisSet.class);
+		}
+
+		return sets;
 	}
 
 	/**
@@ -114,6 +126,11 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 			@SuppressWarnings("deprecation")
 			InStream is = CommonStatic.def.readBytes(old);
 			CommonStatic.ctx.noticeErr(() -> read(is), ErrType.WARN, "failed to read basis data");
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			old.delete();
 			return;
 		}

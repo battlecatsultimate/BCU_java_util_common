@@ -6,6 +6,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Context;
+import common.pack.Identifier;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
@@ -13,8 +14,10 @@ import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.anim.ImgCut;
+import common.util.anim.MaModel;
 import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
+import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.Music;
 import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
@@ -22,6 +25,8 @@ import common.util.unit.UnitLevel;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Character.isDigit;
 
@@ -41,8 +46,12 @@ public class CommonStatic {
 		public VImg[][] ico = new VImg[2][];
 		public VImg[][] num = new VImg[9][11];
 		public VImg[][] battle = new VImg[3][];
-		public VImg[][] icon = new VImg[4][];
+		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		/**
+		 * Use this if trait.icon is null
+		 */
+		public VImg dummyTrait; //TODO Implement dummy trait icon
 
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
@@ -63,8 +72,6 @@ public class CommonStatic {
 		// EffAnim
 		public final EffAnimStore effas = new EffAnimStore();
 
-		// Combo
-		public final Combo[][] combos = new Combo[Data.C_TOT][];
 		public final int[][] values = new int[Data.C_TOT][5];
 		public int[][] filter;
 
@@ -76,6 +83,9 @@ public class CommonStatic {
 
 		// def unit level
 		public UnitLevel defLv;
+
+		// bg effect
+		public final ArrayList<BackgroundEffect> bgEffects = new ArrayList<>();
 
 	}
 
@@ -90,8 +100,38 @@ public class CommonStatic {
 		public int[] ints = new int[] { 1, 1, 1, 2 };
 		public boolean ref = true, battle = false, icon = false;
 		public boolean twoRow = true;
+		/**
+		 * Use this variable to unlock plus level for aku outbreak
+		 */
+		public boolean plus = false;
+		/**
+		 * Use this variable to adjust level limit for aku outbreak
+		 */
+		public int levelLimit = 0;
 		// Lang
 		public int lang;
+		/**
+		 * Restoration target backup file, null means none
+		 */
+		public String backupFile;
+		/**
+		 * Used for partial restoration
+		 */
+		public String backupPath;
+		/**
+		 * Maximum number of backups, 0 means infinite
+		 */
+		public int maxBackup = 5;
+
+		/**
+		 * Preferred level for units
+		 */
+		public int prefLevel = 50;
+
+		/**
+		 * Decide whehter draw bg effect or not
+		 */
+		public boolean drawBGEffect = true;
 	}
 
 	public interface EditLink {
@@ -139,7 +179,7 @@ public class CommonStatic {
 		/**
 		 * exit
 		 */
-		void exit(boolean save);
+		void save(boolean save, boolean exit);
 
 		long getMusicLength(Music f);
 
@@ -160,6 +200,7 @@ public class CommonStatic {
 
 		void setSE(int ind);
 
+		void setBGM(Identifier<Music> mus, long loop);
 	}
 
 	public static class Lang {
@@ -169,7 +210,7 @@ public class CommonStatic {
 
 		@StaticPermitted
 		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
-				{ 0, 3, 1, 2 }, { 5, 0, 3, 1 }, { 6, 0, 3, 1 }, { 0, 3, 1, 2 }, { 8, 0, 3, 1 }, { 9, 0, 3, 1 } };
+				{ 0, 3, 1, 2 }, { 5, 3, 1, 2 }, { 6, 3, 1, 2 }, { 0, 3, 1, 2 }, { 8, 3, 1, 2 }, { 9, 3, 1, 2 } };
 
 	}
 
@@ -215,6 +256,29 @@ public class CommonStatic {
 
 	public static String verifyFileName(String str) {
 		return str.replaceAll("[\\\\/:*<>?\"|]", "_");
+	}
+
+	public static double parseDoubleN(String str) {
+		double ans;
+		try {
+			ans = parseDoublesN(str)[0];
+		} catch (Exception e) {
+			ans = -1.0;
+		}
+		return ans;
+	}
+
+	public static double[] parseDoublesN(String str) {
+		ArrayList<String> lstr = new ArrayList<>();
+		Matcher matcher = Pattern.compile("-?(((\\.|,)\\d+)|\\d+((\\.|,)\\d*)?)").matcher(str);
+
+		while (matcher.find())
+			lstr.add(matcher.group());
+
+		double[] result = new double[lstr.size()];
+		for (int i = 0; i < lstr.size(); i++)
+			result[i] = Double.parseDouble(lstr.get(i)); // TODO: safeParseDouble
+		return result;
 	}
 
 	public static int[] parseIntsN(String str) {
@@ -366,6 +430,15 @@ public class CommonStatic {
 		def.setSE(ind);
 	}
 
+	/**
+	 * play background music
+	 * @param music Music
+	 * @param loop looping time
+	 */
+	public static void setBGM(Identifier<Music> music, long loop) {
+		def.setBGM(music, loop);
+	}
+
 	public static String toArrayFormat(int... data) {
 		StringBuilder res = new StringBuilder("{");
 
@@ -380,4 +453,42 @@ public class CommonStatic {
 		return res.toString();
 	}
 
+	/**
+	 * Gets the minimum position value for a data enemy.
+	 */
+	public static double dataEnemyMinPos(MaModel model) {
+		int y = model.confs[0][2];
+		double z = (double) model.parts[0][8] / model.ints[0];
+		return 2.5 * Math.floor(y * z);
+	}
+
+	/**
+	 * Gets the minimum position value for a custom enemy.
+	 */
+	public static double customEnemyMinPos(MaModel model) {
+		int y = -model.parts[0][6];
+		double z = (double) model.parts[0][8] / model.ints[0];
+		return 2.5 * Math.floor(y * z);
+	}
+
+	/**
+	 * Gets the minimum position value for a data cat unit.
+	 */
+	public static int dataFormMinPos(MaModel model) {
+		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+	}
+
+	/**
+	 * Gets the minimum position value for a custom cat unit.
+	 */
+	public static int customFormMinPos(MaModel model) {
+		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.parts[0][6] - 1));
+	}
+
+	/**
+	 * Gets the boss spawn point for a castle.
+	 */
+	public static double bossSpawnPoint(int y, int z) {
+		return (int) (3200 + y * z / 10 + Math.round(0.25 * Math.round(3.6 * z))) / 4.0;
+	}
 }

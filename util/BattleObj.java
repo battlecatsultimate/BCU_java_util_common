@@ -4,6 +4,8 @@ import common.CommonStatic;
 import common.io.BCUException;
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context.ErrType;
+import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.unit.Trait;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -29,7 +31,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 
 	public static final String NONC = "NONC_";
 
-	private static final Class<?>[] EXCLUDE = { Number.class, String.class, Boolean.class, BattleStatic.class, Enum.class};
+	private static final Class<?>[] EXCLUDE = { Number.class, String.class, Boolean.class, BattleStatic.class, Trait.class, Enum.class, BackgroundEffect.class };
 
 	private static final Set<Class<?>> OLD = new HashSet<>();
 	private static final Set<Class<?>> UNCHECKED = new HashSet<>();

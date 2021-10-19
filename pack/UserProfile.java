@@ -52,12 +52,20 @@ public class UserProfile {
 		if (pack != null && !pack.equals(Identifier.DEF)) {
 			UserPack userpack = profile().packmap.get(pack);
 			list.add(userpack);
-			for (String dep : userpack.desc.dependency)
-				list.add(getPack(dep));
+			for (String dep : userpack.desc.dependency) {
+				PackData p = getPack(dep);
+
+				if(p != null)
+					list.add(p);
+			}
 		}
 		List ans = new ArrayList<>();
-		for (PackData data : list)
+		for (PackData data : list) {
+			if(data == null)
+				continue;
+
 			data.getList(cls, (r, l) -> ans.addAll(l.getList()), null);
+		}
 		return ans;
 	}
 
@@ -242,9 +250,14 @@ public class UserProfile {
 					+ ") is higher than BCU core version (" + AssetLoader.CORE_VER + ")");
 		}
 
-		UserPack data = new UserPack(new Workspace(folder.getName()), desc, elem);
+		return new UserPack(new Workspace(folder.getName()), desc, elem);
+	}
 
-		return data;
+	public static UserPack readBackupPack(String content, String id) {
+		JsonElement elem = JsonParser.parseString(content);
+		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
+
+		return new UserPack(new Workspace(id), desc, elem);
 	}
 
 	public static UserPack readZipPack(File f) throws Exception {

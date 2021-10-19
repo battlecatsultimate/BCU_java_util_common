@@ -44,6 +44,36 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 	}
 
+	public enum ShieldEff implements EffType<ShieldEff> {
+		FULL("00"), HALF("01"), BROKEN("_destruction"), BREAKER("_breaker"), REGENERATION("_revive");
+
+		private final String path;
+
+		ShieldEff(String str) {
+			this.path = str;
+		}
+
+		@Override
+		public String path() {
+			return path;
+		}
+	}
+
+	public enum DmgCap implements EffType<DmgCap> {
+		FAIL("_fail"), SUCCESS("_success");
+
+		private final String path;
+
+		DmgCap(String str) {
+			this.path = str;
+		}
+
+		@Override
+		public String path() {
+			return path;
+		}
+	}
+
 	public enum DefEff implements EffType<DefEff> {
 		DEF("");
 
@@ -129,61 +159,81 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		@Order(34)
 		public EffAnim<DefEff> A_SEAL;
 		@Order(35)
-		public EffAnim<DefEff> A_POI0;
+		public EffAnim<DefEff> A_E_SEAL;
 		@Order(36)
-		public EffAnim<DefEff> A_POI1;
+		public EffAnim<DefEff> A_POI0;
 		@Order(37)
-		public EffAnim<DefEff> A_POI2;
+		public EffAnim<DefEff> A_POI1;
 		@Order(38)
-		public EffAnim<DefEff> A_POI3;
+		public EffAnim<DefEff> A_POI1_E;
 		@Order(39)
-		public EffAnim<DefEff> A_POI4;
+		public EffAnim<DefEff> A_POI2;
 		@Order(40)
-		public EffAnim<DefEff> A_POI5;
+		public EffAnim<DefEff> A_POI3;
 		@Order(41)
-		public EffAnim<DefEff> A_POI6;
+		public EffAnim<DefEff> A_POI4;
 		@Order(42)
-		public EffAnim<DefEff> A_POI7;
+		public EffAnim<DefEff> A_POI5;
 		@Order(43)
-		public EffAnim<DefEff> A_SATK;
+		public EffAnim<DefEff> A_POI6;
 		@Order(44)
-		public EffAnim<DefEff> A_IMUATK;
+		public EffAnim<DefEff> A_POI7;
 		@Order(45)
-		public EffAnim<DefEff> A_POISON;
+		public EffAnim<DefEff> A_SATK;
 		@Order(46)
-		public EffAnim<VolcEff> A_VOLC;
+		public EffAnim<DefEff> A_IMUATK;
 		@Order(47)
-		public EffAnim<VolcEff> A_E_VOLC;
+		public EffAnim<DefEff> A_POISON;
 		@Order(48)
-		public EffAnim<DefEff> A_E_CURSE;
+		public EffAnim<VolcEff> A_VOLC;
 		@Order(49)
-		public EffAnim<DefEff> A_WAVE;
+		public EffAnim<VolcEff> A_E_VOLC;
 		@Order(50)
-		public EffAnim<DefEff> A_E_WAVE;
+		public EffAnim<DefEff> A_E_CURSE;
 		@Order(51)
-		public EffAnim<ArmorEff> A_ARMOR;
+		public EffAnim<DefEff> A_WAVE;
 		@Order(52)
-		public EffAnim<ArmorEff> A_E_ARMOR;
+		public EffAnim<DefEff> A_E_WAVE;
 		@Order(53)
-		public EffAnim<SpeedEff> A_SPEED;
+		public EffAnim<ArmorEff> A_ARMOR;
 		@Order(54)
-		public EffAnim<SpeedEff> A_E_SPEED;
+		public EffAnim<ArmorEff> A_E_ARMOR;
 		@Order(55)
-		public EffAnim<WeakUpEff> A_WEAK_UP;
+		public EffAnim<SpeedEff> A_SPEED;
 		@Order(56)
-		public EffAnim<WeakUpEff> A_E_WEAK_UP;
+		public EffAnim<SpeedEff> A_E_SPEED;
 		@Order(57)
-		public EffAnim<DefEff> A_MINIWAVE;
+		public EffAnim<WeakUpEff> A_WEAK_UP;
 		@Order(58)
-		public EffAnim<DefEff> A_E_MINIWAVE;
+		public EffAnim<WeakUpEff> A_E_WEAK_UP;
 		@Order(59)
-		public EffAnim<DefEff> A_ATK_SMOKE;
+		public EffAnim<DefEff> A_MINIWAVE;
 		@Order(60)
-		public EffAnim<DefEff> A_WHITE_SMOKE;
+		public EffAnim<DefEff> A_E_MINIWAVE;
 		@Order(61)
-		public EffAnim<DefEff> A_HEAL;
+		public EffAnim<DefEff> A_ATK_SMOKE;
 		@Order(62)
+		public EffAnim<DefEff> A_WHITE_SMOKE;
+		@Order(63)
+		public EffAnim<DefEff> A_HEAL;
+		@Order(64)
 		public EffAnim<DefEff> A_E_HEAL;
+		@Order(65)
+		public EffAnim<ShieldEff> A_DEMON_SHIELD;
+		@Order(66)
+		public EffAnim<ShieldEff> A_E_DEMON_SHIELD;
+		@Order(67)
+		public EffAnim<DefEff> A_COUNTER;
+		@Order(68)
+		public EffAnim<DefEff> A_E_COUNTER;
+		@Order(69)
+		public EffAnim<DefEff> A_DMGCUT;
+		@Order(70)
+		public EffAnim<DefEff> A_E_DMGCUT;
+		@Order(71)
+		public EffAnim<DmgCap> A_DMGCAP;
+		@Order(72)
+		public EffAnim<DmgCap> A_E_DMGCAP;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -389,6 +439,11 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		vmw = new VImg("./org/battle/s13/skill013.png");
 		icmw = ImgCut.newIns("./org/battle/s13/skill013.imgcut");
 		effas.A_E_MINIWAVE = new EffAnim<>("./org/battle/s13/skill_smallwave_attack_e", vmw, icmw, DefEff.values());
+		VImg vsh = new VImg("./org/battle/s14/skill014.png");
+		ImgCut icsh = ImgCut.newIns("./org/battle/s14/skill014.imgcut");
+		effas.A_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
+		effas.A_DEMON_SHIELD.rev = true;
+		effas.A_E_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
@@ -412,17 +467,28 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		String ski = "skill_";
 		EffAnimStore effas = CommonStatic.getBCAssets().effas;
 
-		VImg vseal = new VImg(stfs[3] + "skill003.png");
-		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
-		effas.A_SEAL = new EffAnim<>(stfs[3] + ski + "curse", vseal, icfs[3], DefEff.values());
+		String seal = stfs[3]+"seal/seal";
+		VImg vseal = new VImg(seal+".png");
+		ImgCut icseal = ImgCut.newIns(seal+".imgcut");
+		effas.A_SEAL = new EffAnim<>(seal, vseal, icseal, DefEff.values());
+		seal = stfs[3] +"seal_e/seal_e";
+		vseal = new VImg(seal+".png");
+		icseal = ImgCut.newIns(seal+".imgcut");
+		effas.A_E_SEAL = new EffAnim<>(seal, vseal, icseal, DefEff.values());
 		String burn = stfs[3] + "burn/burn";
 		ImgCut icburn = ImgCut.newIns(burn+".imgcut");
 		VImg vpois = new VImg(burn + ".png");
 		effas.A_POI0 = new EffAnim<>(burn, vpois, icburn, DefEff.values());
 		effas.A_POI0.name = "poison_DF";
+		String poison = stfs[3] + "poison/poison";
+		ImgCut icpoi = ImgCut.newIns(poison+".imgcut");
 		vpois = new VImg(stfs[3] + "poison.png");
-		effas.A_POI1 = new EffAnim<>(stfs[3] + ski + "curse", vpois, icfs[3], DefEff.values());
+		effas.A_POI1 = new EffAnim<>(poison, vpois, icpoi, DefEff.values());
 		effas.A_POI1.name = "poison_DT0";
+		poison = stfs[3] + "poison/poison_e";
+		icpoi = ImgCut.newIns(poison+".imgcut");
+		effas.A_POI1_E = new EffAnim<>(poison, vpois, icpoi, DefEff.values());
+		effas.A_POI1_E.name = "poison_DT0_e";
 		String strpb = stfs[3] + "poisbub/poisbub";
 		vpois = new VImg(strpb + ".png");
 		ImgCut icpois = ImgCut.newIns(strpb + ".imgcut");
@@ -487,6 +553,30 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		vheal = new VImg(heal + ".png");
 		icheal = ImgCut.newIns(heal+".imgcut");
 		effas.A_E_HEAL = new EffAnim<>(heal, vheal, icheal, DefEff.values());
+
+		String counter = stfs[3] + "counter/counter";
+		VImg vcount = new VImg(counter+".png");
+		ImgCut iccount = ImgCut.newIns(counter+".imgcut");
+		effas.A_COUNTER =  new EffAnim<>(counter, vcount, iccount, DefEff.values());
+
+		effas.A_E_COUNTER = new EffAnim<>(counter, vcount, iccount, DefEff.values());
+		effas.A_E_COUNTER.rev = true;
+
+		String dmgcut = stfs[3] + "dmgcut/dmgcut";
+		VImg vdmgcut = new VImg(dmgcut+".png");
+		ImgCut icdmgcut = ImgCut.newIns(dmgcut+".imgcut");
+		effas.A_DMGCUT = new EffAnim<>(dmgcut, vdmgcut, icdmgcut, DefEff.values());
+
+		effas.A_E_DMGCUT = new EffAnim<>(dmgcut, vdmgcut, icdmgcut, DefEff.values());
+		effas.A_E_DMGCUT.rev = true;
+
+		String dmgcap = stfs[3] + "dmgcap/dmgcap";
+		VImg vdmgcap = new VImg(dmgcap+".png");
+		ImgCut icdmgcap = ImgCut.newIns(dmgcap+".imgcut");
+		effas.A_DMGCAP = new EffAnim<>(dmgcap, vdmgcap, icdmgcap, DmgCap.values());
+		effas.A_DMGCAP.rev = true;
+
+		effas.A_E_DMGCAP = new EffAnim<>(dmgcap, vdmgcap, icdmgcap, DmgCap.values());
 	}
 
 	private final VImg vimg;

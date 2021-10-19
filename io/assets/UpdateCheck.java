@@ -120,7 +120,10 @@ public class UpdateCheck {
 	static {
 		addRequiredAssets("000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009",
 				"090900", "091000", "091001", "100000", "100002", "100100", "100102", "100103", "100104", "100200",
-				"100201", "100203");
+				"100201", "100203", "100204", "100300", "100303", "100304", "100400", "100401", "100403", "100500",
+				"100502", "100503", "100504", "100505", "100506", "100507", "100508", "100509", "100600", "100603",
+				"100700", "100701", "100800", "100802", "100803", "100804", "100900", "100902", "100904", "100905",
+				"100906", "100907", "101000", "101002");
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
@@ -139,10 +142,12 @@ public class UpdateCheck {
 	public static List<Downloader> checkAsset(UpdateJson json, String... type) throws Exception {
 		Set<String> local = AssetLoader.previewAssets();
 		Set<String> req = new HashSet<>(UserProfile.getPool(REG_REQLIB, String.class));
-		req.removeIf(id -> local.contains("asset_" + id));
+		if(local != null) {
+			req.removeIf(id -> local.contains("asset_" + id));
+		}
 		if (json == null && req.size() > 0)
 			throw new Exception("missing required libraries: " + req + ", internet connection required");
-		List<Downloader> set = new ArrayList<Downloader>();
+		List<Downloader> set = new ArrayList<>();
 		if (json == null)
 			return set;
 		for (AssetJson aj : json.assets) {
@@ -150,7 +155,7 @@ public class UpdateCheck {
 				continue;
 			if (!aj.type.equals("core") && !contains(type, aj.type))
 				continue;
-			if (local.contains("asset_" + aj.id))
+			if (local != null && local.contains("asset_" + aj.id))
 				continue;
 			String url = URL_NEW + aj.id + ".asset.bcuzip";
 			String alt = ALT_NEW + aj.id + ".asset.bcuzip";

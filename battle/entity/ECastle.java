@@ -4,13 +4,22 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackVolcano;
+import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.DefEff;
+import common.util.unit.Trait;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ECastle extends AbEntity {
 
 	private final StageBasis sb;
+	public int hit = 0;
+
+	public EAnimD<DefEff> smoke;
+	public int smokeLayer = -1;
+	public int smokeX = -1;
 
 	public ECastle(StageBasis b) {
 		super(b.st.health);
@@ -24,12 +33,14 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void damaged(AttackAb atk) {
-		if(atk.isLongAtk)
-			sb.lea.add(new EAnimCont(pos, atk.layer, effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF), -75.0));
+		hit = 2;
+		if(atk.isLongAtk || atk instanceof AttackVolcano)
+			smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
-			sb.lea.add(new EAnimCont(pos, atk.layer, effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), -75.0));
+			smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
 
-		sb.lea.sort(Comparator.comparingInt(e -> e.layer));
+		smokeLayer = (int) (atk.layer + 3 - sb.r.nextDouble() * -6);
+		smokeX = (int) (pos + 25 - sb.r.nextDouble() * -25);
 
 		int ans = atk.atk;
 		if ((atk.abi & AB_BASE) > 0)
@@ -72,9 +83,7 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean targetable(int type) {
-		return true;
-	}
+	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) { return true; }
 
 	@Override
 	public int touchable() {
@@ -83,6 +92,22 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void update() {
+		if(smoke != null) {
+			if(smoke.done()) {
+				smoke = null;
+				smokeLayer = -1;
+				smokeX = -1;
+			} else {
+				smoke.update(false);
+			}
+		}
+
+		if (hit > 0)
+			hit--;
+	}
+
+	@Override
+	public void preUpdate() {
 
 	}
 

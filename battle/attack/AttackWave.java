@@ -11,9 +11,10 @@ public class AttackWave extends AttackAb {
 
 	protected final Set<Entity> incl;
 
-	public AttackWave(AttackSimple a, double p0, double wid, int wt) {
-		super(a, p0 - wid / 2, p0 + wid / 2, false);
+	public AttackWave(Entity e, AttackSimple a, double p0, double wid, int wt) {
+		super(e, a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = wt;
+		isCounter = a.isCounter;
 		incl = new HashSet<>();
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
@@ -21,9 +22,10 @@ public class AttackWave extends AttackAb {
 			proc.WAVE.lv--;
 	}
 
-	public AttackWave(AttackWave a, double p0, double wid) {
-		super(a, p0 - wid / 2, p0 + wid / 2, false);
+	public AttackWave(Entity e, AttackWave a, double p0, double wid) {
+		super(e, a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = a.waveType;
+		isCounter = a.isCounter;
 		incl = a.incl;
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
@@ -31,9 +33,10 @@ public class AttackWave extends AttackAb {
 			proc.WAVE.lv--;
 	}
 
-	public AttackWave(AttackWave a, double pos, double start, double end) {
-		super(a, pos - start, pos + end, false);
+	public AttackWave(Entity e, AttackWave a, double pos, double start, double end) {
+		super(e, a, pos - start, pos + end, false);
 		waveType = a.waveType;
+		isCounter = a.isCounter;
 		incl = a.incl;
 		if(waveType == WT_MINI)
 			proc.MINIWAVE.lv--;
@@ -43,7 +46,7 @@ public class AttackWave extends AttackAb {
 
 	@Override
 	public void capture() {
-		List<AbEntity> le = model.b.inRange(touch, dire, sta, end);
+		List<AbEntity> le = model.b.inRange(touch, dire, sta, end, excludeLastEdge);
 		if (incl != null)
 			le.removeIf(incl::contains);
 		capt.clear();
@@ -51,7 +54,7 @@ public class AttackWave extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.targetable(type))
+				if (e.ctargetable(trait, attacker, true))
 					capt.add(e);
 	}
 

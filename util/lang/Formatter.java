@@ -29,18 +29,18 @@ public class Formatter {
 		public final String crright = "}";
 
 		@JsonField
-		public boolean isEnemy;
+		public final boolean isEnemy;
 		@JsonField
-		public boolean useSecond;
+		public final boolean useSecond;
+        @JsonField
+        public final double[] magnification;
 
 		public DecimalFormat df = new DecimalFormat("#.##");
 
-		public Context() {
-		}
-
-		public Context(boolean ene, boolean sec) {
+		public Context(boolean ene, boolean sec, double[] magnif) {
 			isEnemy = ene;
 			useSecond = sec;
+			magnification = magnif;
 		}
 
 		public String abs(int v) {
@@ -63,6 +63,18 @@ public class Formatter {
 
 		public String toSecond(int time) {
 			return df.format(time / 30.0);
+		}
+
+		public String summonMagnification(int buff) {
+			if (!isEnemy)
+				return "Level " + (int) (magnification[1] + buff);
+			else if (magnification[0] == magnification[1])
+				return (int) (buff * magnification[0]) + "%";
+			return "{" + (int) (buff * magnification[0]) + "%, " + (int) (buff * magnification[1]) + "%}";
+		}
+
+		public String shield(int hp) {
+			return "" + (int) (hp * magnification[0]);
 		}
 
 	}
@@ -268,7 +280,7 @@ public class Formatter {
 
 		private int eval() throws Exception {
 			Stack<Integer> stack = new Stack<>();
-			char opera = '\0';
+			char prevOp = ' ';
 			stack.push(nextElem());
 			while (ind < p1) {
 				char ch = str.charAt(ind++);
@@ -279,23 +291,25 @@ public class Formatter {
 				else if (ch == '%')
 					stack.push(stack.pop() % nextElem());
 				else if (ch == '+' || ch == '-') {
-					if (opera != ' ') {
+					if (prevOp == '*' || prevOp == '/' || prevOp == '%' && stack.size() >= 2) {
 						int b = stack.pop();
 						int a = stack.pop();
-						if (opera == '+')
+						if (ch == '+')
 							stack.push(a + b);
 						else
 							stack.push(a - b);
-					}
-					stack.push(nextElem());
-					opera = ch;
+					} else if (ch == '+')
+						stack.push(stack.pop() + nextElem());
+					else
+						stack.push(stack.pop() - nextElem());
 				} else
 					throw new Exception("unknown operator " + ch + " at " + (ind - 1));
+				prevOp = ch;
 			}
-			if (opera != '\0') {
+			if (prevOp == '+' || prevOp == '-' && stack.size() >= 2) {
 				int b = stack.pop();
 				int a = stack.pop();
-				if (opera == '+')
+				if (prevOp == '+')
 					stack.push(a + b);
 				else
 					stack.push(a - b);
@@ -330,7 +344,7 @@ public class Formatter {
 			return neg * (Integer) new RefObj(pre, ind).eval();
 		}
 
-		private int readNumber() throws Exception {
+		private int readNumber() {
 			int ans = 0;
 			while (ind < p1) {
 				char chr = str.charAt(ind);
@@ -368,9 +382,17 @@ public class Formatter {
 					parent = ctx;
 				else
 					parent = obj;
-			String name = str.substring(str.charAt(p0) == '_' ? p0 + 1 : p0, p1);
-			Field f = parent.getClass().getField(name);
-			return f.get(parent);
+			int ind = str.charAt(p0) == '_' ? p0 + 1 : p0;
+			String name = str.substring(ind, p1);
+
+			try {
+				Field f = parent.getClass().getField(name);
+				return f.get(parent);
+			} catch (NoSuchFieldException nse) {
+				if (CommonStatic.parseIntsN(name).length == 0)
+					throw new Exception("Unrecognized field: " + name);
+				return new IntExp(ind, p1).eval();
+			}
 		}
 	}
 
@@ -448,7 +470,7 @@ public class Formatter {
 
 		@Override
 		public void build(StringBuilder sb) throws Exception {
-			sb.append("" + eval());
+			sb.append(eval());
 		}
 
 		private Object eval() throws Exception {

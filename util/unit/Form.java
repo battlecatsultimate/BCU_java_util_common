@@ -19,6 +19,7 @@ import common.util.Data;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
+import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
 
 @JCGeneric(Form.FormJson.class)
@@ -43,7 +44,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 		@JCGetter
 		public Form get() {
-			return uid.get().forms[fid];
+			try {
+				return uid.get().forms[fid];
+			} catch (Exception e) {
+				return null;
+			}
 		}
 	}
 
@@ -64,6 +69,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public Orb orbs = null;
 	@JsonField
 	public String name = "";
+	@JsonField
+	public String explanation = "<br><br><br>";
 
 	@JCConstructor
 	public Form(Unit u) {
@@ -93,6 +100,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
+		MaModel model = anim.loader.getMM();
+		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}
 
 	@Override
@@ -103,9 +112,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	}
 
 	public int getDefaultPrice(int sta) {
-		PCoin pc = getPCoin();
-		int price = pc == null ? du.getPrice() : pc.full.getPrice();
-		return (int) (price * (1 + sta * 0.5));
+		MaskUnit upc = maxu();
+		return (int) (upc.getPrice() * (1 + sta * 0.5));
 	}
 
 	@Override
@@ -120,16 +128,13 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return new String[0];
 	}
 
-	public PCoin getPCoin() {
-		if (du instanceof DataUnit)
-			return ((DataUnit) du).pcoin;
-		return null;
-	}
-
 	public MaskUnit maxu() {
-		PCoin pc = getPCoin();
-		if (pc != null)
+		PCoin pc = du.getPCoin();
+		if (pc != null) {
+			if (pc.full == null)
+				pc.update();
 			return pc.full;
+		}
 		return du;
 	}
 
@@ -144,29 +149,58 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			if(u.getCont() instanceof PackData.UserPack) {
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
 
-				if(UserProfile.isOlderPack(pack, "0.5.1.0")) {
+				if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
 					form.type = Data.reorderTrait(form.type);
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.5.2.0") && form.tba != 0) {
 					form.tba += form.getPost() + 1;
 				}
+
+				if (UserProfile.isOlderPack(pack, "0.5.4.0") && form.getProc().SUMMON.prob > 0) {
+					form.getProc().SUMMON.form = 1;
+					form.getProc().SUMMON.mult = 1;
+					form.getProc().SUMMON.type.fix_buff = true;
+				}
+
+				if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
+					MaModel model = anim.loader.getMM();
+					form.limit = CommonStatic.customFormMinPos(model);
+					form.getProc().BARRIER.health = form.shield;
+					form.traits = Trait.convertType(form.type);
+					Proc proc = form.getProc();
+					if ((form.abi & (1 << 18)) != 0) //Seal Immunity
+						proc.IMUSEAL.mult = 100;
+					if ((form.abi & (1 << 7)) != 0) //Moving atk Immunity
+						proc.IMUMOVING.mult = 100;
+					if ((form.abi & (1 << 12)) != 0) //Poison Immunity
+						proc.IMUPOI.mult = 100;
+					form.abi = Data.reorderAbi(form.abi);
+				}
 			}
 		}
 	}
 
+	public int[] getPrefLvs() {
+		int[] ans = new int[6];
+		final PCoin pc = du instanceof CustomUnit ? du.getPCoin() : unit.forms.length >= 3 ? unit.forms[2].du.getPCoin() : null;
+		if (pc != null)
+			ans = pc.max.clone();
+		ans[0] = unit.getPrefLv();
+		return ans;
+	}
+
 	public int[] regulateLv(int[] mod, int[] lv) {
 		if (mod != null)
-			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, 6));
+			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, lv.length));
 		int[] maxs = new int[6];
 		maxs[0] = unit.max + unit.maxp;
-		PCoin pc = null;
-		if (unit.forms.length >= 3)
-			pc = unit.forms[2].getPCoin();
-		if (pc != null)
-			for (int i = 0; i < 5; i++)
-				maxs[i + 1] = Math.max(1, pc.info[i][1]);
-		for (int i = 0; i < 6; i++) {
+		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
+		if (pc != null) {
+			for (int i = 0; i < pc.info.size(); i++)
+				maxs[i + 1] = Math.max(1, pc.info.get(i)[1]);
+		}
+		for (int i = 0; i < lv.length; i++) {
 			if (lv[i] < 0)
 				lv[i] = 0;
 			if (lv[i] > maxs[i])
@@ -188,4 +222,12 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return base;
 	}
 
+	public String descriptionGet() {
+		String[] desp = MultiLangCont.getDesc(this);
+		if (desp != null && desp[fid + 1].length() > 0)
+			return desp[fid + 1];
+		if (explanation.length() > 0)
+			return explanation;
+		return "";
+	}
 }

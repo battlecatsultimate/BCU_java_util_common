@@ -4,16 +4,22 @@ import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 
+import java.util.ArrayList;
+
 @JsonClass
-public class CustomUnit extends CustomEntity implements MaskUnit {
+public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 
 	public Form pack;
 
 	@JsonField
-	public int price, resp, back, front;
+	public int price, resp, back, front, limit;
+
+	@JsonField(gen = JsonField.GenType.GEN)
+	public PCoin pcoin = null;
 
 	public CustomUnit() {
 		rep = new AtkDataModel(this);
@@ -23,7 +29,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		speed = 8;
 		hp = 1000;
 		hb = 1;
-		type = 0;
+		traits = new ArrayList<>();
 		price = 50;
 		resp = 60;
 		back = 0;
@@ -66,6 +72,14 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	}
 
 	@Override
+	public int getLimit() {
+		return limit;
+	}
+
+	@Override
+	public PCoin getPCoin() { return pcoin; }
+
+	@Override
 	public void importData(MaskEntity de) {
 		super.importData(de);
 		if (de instanceof MaskUnit) {
@@ -74,7 +88,26 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 			resp = mu.getRespawn();
 			back = Math.min(mu.getBack(), mu.getFront());
 			front = Math.max(mu.getBack(), mu.getFront());
+			limit = mu.getLimit();
+			PCoin p = mu.getPCoin();
+			if (p != null) {
+				pcoin = new PCoin(this);
+				for (int[] i : p.info) {
+					int[] j = new int[13];
+					System.arraycopy(i, 0, j, 0, 13);
+					pcoin.info.add(j);
+				}
+			}
 		}
+	}
+
+	@Override
+	public CustomUnit clone() {
+		CustomUnit ans = (CustomUnit) Data.err(super::clone);
+		ans.importData(this);
+		ans.pack = getPack();
+		ans.getPack().anim = getPack().anim;
+		return ans;
 	}
 
 	private void zread(int val, InStream is) {
@@ -88,5 +121,4 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		price = is.nextInt();
 		resp = is.nextInt();
 	}
-
 }

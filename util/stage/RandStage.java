@@ -5,7 +5,6 @@ import common.CommonStatic.BCAuxAssets;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.system.files.VFile;
-import common.util.stage.MapColc.DefMapColc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +23,13 @@ public class RandStage {
 		return BasisSet.current().sele;
 	}
 
-	public static Stage getStage(int sta) {
-		DefMapColc mc = DefMapColc.getMap("N");
-		if (sta == 47)
-			return mc.maps.get(48).list.get(0);
-		List<Stage> l = new ArrayList<Stage>();
-		l.addAll(mc.maps.get(sta).list.getList());
-		l.addAll(mc.maps.get(sta).list.getList());
+	public static Stage getStage(MapColc map, int sta) {
+		List<Stage> l = new ArrayList<>(map.maps.get(sta).list.getList());
+		return l.get((int) (Math.random() * l.size()));
+	}
+
+	public static Stage getStage(StageMap sm) {
+		List<Stage> l = new ArrayList<>(sm.list.getList());
 		return l.get((int) (Math.random() * l.size()));
 	}
 

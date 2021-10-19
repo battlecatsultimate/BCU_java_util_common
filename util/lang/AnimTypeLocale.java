@@ -42,11 +42,17 @@ public class AnimTypeLocale {
 		Collections.addAll(TYPES, EffAnim.WarpEff.values());
 		Collections.addAll(TYPES, EffAnim.WeakUpEff.values());
 		Collections.addAll(TYPES, EffAnim.ZombieEff.values());
+		Collections.addAll(TYPES, EffAnim.ShieldEff.values());
+		Collections.addAll(TYPES, EffAnim.DmgCap.values());
 	}
 
 	public static void read() {
 		String loc = CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang];
-		InputStream f = CommonStatic.ctx.getLangFile("animation_type.json");
+		InputStream f;
+		if (CommonStatic.getConfig().lang == 3)
+			f = CommonStatic.ctx.getLangFile("animation_type_jp.json");
+		else
+			f = CommonStatic.ctx.getLangFile("animation_type.json");
 		JsonElement je = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
 		for (AnimI.AnimType<?, ?> type : TYPES) {
 			JsonObject obj = je.getAsJsonObject().get(type.getClass().getSimpleName()).getAsJsonObject();

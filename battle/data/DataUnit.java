@@ -4,12 +4,15 @@ import common.CommonStatic;
 import common.pack.Identifier;
 import common.util.pack.Soul;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
+
+import java.util.ArrayList;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	private final Form form;
-	public int price, respawn;
+	public int price, respawn, limit;
 	private final int front;
 	private final int back;
 
@@ -149,11 +152,13 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				proc.IMUVOLC.mult = 100;
 			proc.CURSE.prob = ints[92];
 			proc.CURSE.time = ints[93];
-		} catch (IndexOutOfBoundsException ignored) {
-
+			proc.SHIELDBREAK.prob = ints[95];
+			if (ints[96] == 1)
+				t |= TB_DEMON;
+		} catch (IndexOutOfBoundsException e) {
 		}
 
-		type = t;
+		traits = new ArrayList<>(Trait.convertType(t));
 		abi = a;
 
 		datks = new DataAtk[getAtkCount()];
@@ -194,8 +199,17 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	}
 
 	@Override
-	protected DataUnit clone() {
+	public int getLimit() {
+		return limit;
+	}
+
+	@Override
+	public PCoin getPCoin() { return pcoin; }
+
+	@Override
+	public DataUnit clone() {
 		DataUnit ans = (DataUnit) err(super::clone);
+		ans.traits = new ArrayList<>(this.traits);
 		ans.proc = proc.clone();
 		ans.datks = new DataAtk[ans.getAtkCount()];
 		for (int i = 0; i < ans.getAtkCount(); i++) {

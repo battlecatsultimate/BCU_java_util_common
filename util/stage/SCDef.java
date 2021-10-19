@@ -146,13 +146,13 @@ public class SCDef implements Copable<SCDef> {
 	public int allow(StageBasis sb, AbEnemy e) {
 		Integer o = smap.get(e.getID());
 		o = o == null ? sdef : o;
-		if (allow(sb, o))
+		if (allow(sb, o, e))
 			return o;
 		return -1;
 	}
 
-	public boolean allow(StageBasis sb, int val) {
-		if (sb.entityCount(1) >= sb.st.max)
+	public boolean allow(StageBasis sb, int val, AbEnemy en) {
+		if (sb.entityCount(1) >= sb.st.max - ((Enemy)en).de.getWill())
 			return false;
 		if (val < 0 || val > 1000 || sub.get(val) == null)
 			return true;
@@ -162,6 +162,9 @@ public class SCDef implements Copable<SCDef> {
 
 	public boolean contains(Enemy e) {
 		for (Line dat : datas) {
+			if(dat.enemy == null)
+				continue;
+
 			if(dat.enemy.cls == EneRand.class) {
 				EneRand rand = (EneRand) Identifier.get(dat.enemy);
 
@@ -181,7 +184,7 @@ public class SCDef implements Copable<SCDef> {
 		for (int i = 0; i < datas.length; i++)
 			ans.datas[i] = datas[i].clone();
 		ans.sdef = sdef;
-		smap.forEach((e, i) -> ans.smap.put(e, i));
+		smap.forEach(ans.smap::put);
 		sub.forEach((i, e) -> ans.sub.set(i, e.copy(i)));
 		return ans;
 	}

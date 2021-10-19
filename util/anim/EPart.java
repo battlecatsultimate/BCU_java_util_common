@@ -151,6 +151,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return ent;
 	}
 
+	public int getInd() {
+		return ind;
+	}
+
 	protected void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
@@ -167,7 +171,36 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			drawImg(g, bimg, tpiv, sc, opa(), glow, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
 		else if (extType == 1)
 			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
-					glow == 1, 1.0 * extendX / model.ints[0]);
+					glow == 1, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+		P.delete(tpiv);
+		P.delete(sc);
+		g.setTransform(at);
+		g.delete(at);
+	}
+
+	/**
+	 * Draw part with specified opacity (Os). If part already has its own opacity (Oo), then formula is Oo * Op
+	 * @param g Graphic
+	 * @param base Base
+	 * @param opacity Opacity, range is 0 ~ 255
+	 */
+	protected void drawPartWithOpacity(FakeGraphics g, P base, int opacity) {
+		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
+			return;
+		FakeTransform at = g.getTransform();
+		transform(g, base);
+		FakeImage bimg = a.parts(img);
+		int w = bimg.getWidth();
+		int h = bimg.getHeight();
+		P p0 = getSize();
+		P tpiv = P.newP(piv).times(p0).times(base);
+		P sc = P.newP(w, h).times(p0).times(base);
+		P.delete(p0);
+		if (extType == 0)
+			drawImg(g, bimg, tpiv, sc, opa() * opacity / 255.0, glow, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+		else if (extType == 1)
+			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
+					glow == 1, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);
@@ -228,6 +261,32 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return fa.getSize().times(sca).times(gsca * mi * mi);
 	}
 
+	private P getBaseSize(boolean parent) {
+		if(model.confs.length > 0) {
+			double mi = 1.0 / model.ints[0];
+
+			if(parent) {
+				if(fa != null) {
+					return fa.getBaseSize(true).times(Math.signum(model.parts[ind][8]), Math.signum(model.parts[ind][9]));
+				} else {
+					return P.newP(Math.signum(model.parts[ind][8]), Math.signum(model.parts[ind][9]));
+				}
+			} else {
+				if(model.confs[0][0] == -1) {
+					return P.newP(model.parts[0][8] * mi, model.parts[0][9] * mi);
+				} else {
+					if (model.confs[0][0] == ind) {
+						return P.newP(model.parts[model.confs[0][0]][8] * mi, model.parts[model.confs[0][0]][9] * mi);
+					} else {
+						return ent[model.confs[0][0]].getBaseSize(true).times(model.parts[model.confs[0][0]][8] * mi, model.parts[model.confs[0][0]][9] * mi);
+					}
+				}
+			}
+		} else {
+			return P.newP(1.0, 1.0);
+		}
+	}
+
 	public double opa() {
 		if (opacity == 0)
 			return 0;
@@ -251,7 +310,8 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		} else {
 			if (model.confs.length > 0) {
 				int[] data = model.confs[0];
-				P p0 = getSize();
+				P p0 = getBaseSize(false);
+
 				P shi = P.newP(data[2], data[3]).times(p0);
 				P.delete(p0);
 				P p3 = shi.times(sizer);

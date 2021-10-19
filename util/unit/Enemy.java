@@ -20,6 +20,7 @@ import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
+import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.PackMapColc;
@@ -42,6 +43,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	public final MaskEnemy de;
 	@JsonField
 	public String name = "";
+	@JsonField
+	public String desc = "<br><br><br>";
 	public boolean inDic = false;
 
 	@JsonClass.JCConstructor
@@ -70,9 +73,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		de = new DataEnemy(this);
 		anim = new AnimUD(str, Data.trio(id.id) + "_e", "edi_" + Data.trio(id.id) + ".png", null);
 		anim.getEdi().check();
-		anim.partial();
-		((DataEnemy) de).limit = (int) (Math.abs(anim.mamodel.confs[0][2]) * Math.abs(anim.mamodel.parts[0][8]) * 3.0 / anim.mamodel.ints[0]);
-		anim.unload();
+		MaModel model = anim.loader.getMM();
+		((DataEnemy) de).limit = CommonStatic.dataEnemyMinPos(model);
 	}
 
 	public List<Stage> findApp() {
@@ -130,6 +132,9 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	@Override
 	public VImg getIcon() {
+		if(anim == null)
+			return null;
+
 		return anim.getEdi();
 	}
 
@@ -162,10 +167,23 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.5.4.0")) {
-				anim.partial();
-				enemy.limit = (int) (Math.abs(anim.mamodel.parts[0][6]) * 3.0 * Math.abs(anim.mamodel.parts[0][8]) / 1000.0);
-				anim.unload();
+				MaModel model = anim.loader.getMM();
+				enemy.limit = CommonStatic.customEnemyMinPos(model);
 			}
+
+			if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
+				enemy.getProc().BARRIER.health = enemy.shield;
+				enemy.traits = Trait.convertType(enemy.type);
+				Proc proc = enemy.getProc();
+				if ((enemy.abi & (1 << 18)) != 0) //Seal Immunity
+					proc.IMUSEAL.mult = 100;
+				if ((enemy.abi & (1 << 7)) != 0) //Moving atk Immunity
+					proc.IMUMOVING.mult = 100;
+				if ((enemy.abi & (1 << 12)) != 0) //Poison Immunity
+					proc.IMUPOI.mult = 100;
+				enemy.abi = Data.reorderAbi(enemy.abi);
+			}
+
 		}
 	}
 
@@ -179,4 +197,12 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		return Data.trio(id.id) + " - " + name;
 	}
 
+	public String descriptionGet() {
+		String[] desp = MultiLangCont.getDesc(this);
+		if (desp != null && desp[1].length() > 0)
+			return desp[1];
+		if (desc.length() == 0)
+			return "";
+		return desc;
+	}
 }

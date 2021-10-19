@@ -1,18 +1,18 @@
 {
   "KBEff": {
     "SW": "衝撃波",
-    "ASS": "スーニャイツパ",
+    "ASS": "スニャイパー",
     "KB": "ふっとばす"
   },
   "UType": {
-    "BURROW_UP": "埋葬終了",
-    "BURROW_MOVE": "地下移動",
-    "IDLE": "アイドル",
+    "BURROW_UP": "移動終了",
+    "BURROW_MOVE": "地中移動中",
+    "IDLE": "待機",
     "HB": "KB",
-    "BURROW_DOWN": "埋葬",
+    "BURROW_DOWN": "潜る",
     "ENTER": "到着",
     "ATK": "攻撃",
-    "WALK": "徒歩"
+    "WALK": "移動"
   },
   "VolcEff": {
     "DURING": "中",
@@ -59,10 +59,21 @@
     "DEF": "デフォルト"
   },
   "SniperEff": {
-    "IDLE": "アイドル",
+    "IDLE": "待機",
     "ATK": "攻撃"
   },
   "DefEff": {
     "DEF": "デフォルト"
+  },
+  "ShieldEff": {
+    "FULL" : "全開",
+    "HALF" : "半壊",
+    "BROKEN" : "壊れる",
+    "BREAKER" : "破壊",
+    "REGENERATION" : "再生"
+  },
+  "DmgCap": {
+    "FAIL" : "失敗",
+    "SUCCESS" : "成功"
   }
 }

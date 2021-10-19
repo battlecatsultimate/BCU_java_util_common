@@ -15,7 +15,8 @@ public abstract class BattleField {
 	}
 
 	public void update() {
-		sb.time++;
+		if (sb.ubase.health > 0 && sb.ebase.health > 0)
+			sb.time++;
 		actions();
 		sb.update();
 	}
@@ -35,6 +36,8 @@ public abstract class BattleField {
 	protected boolean act_sniper() {
 		return sb.act_sniper();
 	}
+
+	protected boolean act_continue() { return sb.act_continue(); }
 
 	protected boolean act_change_up() {
 		return sb.act_change_up();

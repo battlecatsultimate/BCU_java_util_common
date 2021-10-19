@@ -17,7 +17,9 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.VFile;
+import common.util.Data;
 import common.util.anim.*;
+import common.util.pack.bgeffect.BackgroundEffect;
 
 import java.util.Queue;
 
@@ -58,7 +60,124 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				new Background(new VImg(vf), ints);
+				Background bg = new Background(new VImg(vf), ints);
+
+				switch (bg.id.id) {
+					case 2:
+					case 14:
+					case 26:
+					case 34:
+						bg.effect = Data.BG_EFFECT_STAR;
+						break;
+					case 33:
+					case 58:
+						bg.effect = Data.BG_EFFECT_RAIN;
+						break;
+					case 13:
+					case 15:
+					case 72:
+						bg.effect = Data.BG_EFFECT_BUBBLE;
+						break;
+					case 40:
+						bg.effect = Data.BG_EFFECT_FALLING_SNOW;
+						break;
+					case 3:
+						bg.effect = Data.BG_EFFECT_SNOW;
+						break;
+					case 27:
+						bg.effect = Data.BG_EFFECT_SNOWSTAR;
+						break;
+					case 46:
+					case 47:
+						bg.effect = Data.BG_EFFECT_BLIZZARD;
+						break;
+					case 55:
+						bg.effect = Data.BG_EFFECT_SHINING;
+						break;
+					case 81:
+					case 101:
+					case 123:
+					case 146:
+						bg.effect = Data.BG_EFFECT_BALLOON;
+						break;
+					case 41:
+					case 75:
+						bg.effect = Data.BG_EFFECT_ROCK;
+						break;
+				}
+
+				switch (bg.id.id) {
+					case 13:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{0, 226, 255},
+								{255, 255, 255}
+						};
+						break;
+					case 15:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{0, 73, 173},
+								{66, 187, 255}
+						};
+						break;
+					case 19:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{160, 33, 32},
+								{240, 169, 54}
+						};
+						break;
+					case 46:
+					case 47:
+						bg.overlayAlpha = 67;
+						bg.overlay =  new int[][] {
+								{255, 255, 255},
+								{255, 255, 255}
+						};
+						break;
+					case 71:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{145, 45, 5},
+								{235, 160, 60}
+						};
+						break;
+					case 72:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{0, 35, 125},
+								{0, 0, 0}
+						};
+						break;
+					case 73:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{15, 30, 120},
+								{15, 30, 120}
+						};
+						break;
+					case 156:
+						bg.overlayAlpha = 51;
+						bg.overlay = new int[][] {
+								{255, 255, 255},
+								{255, 255, 255}
+						};
+						break;
+					case 167:
+						bg.overlayAlpha = 76;
+						bg.overlay = new int[][] {
+								{175, 104, 104},
+								{137, 104, 88}
+						};
+						break;
+					case 168:
+						bg.overlayAlpha = 76;
+						bg.overlay = new int[][] {
+								{49, 73, 97},
+								{68, 75, 77}
+						};
+				}
 			}
 	}
 
@@ -68,12 +187,21 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public VImg img;
 	@JsonField
 	public int[][] cs = new int[4][3];
+	@JsonField
+	public int effect = -1;
+	@JsonField
+	public int overlayAlpha;
+	@JsonField
+	public int[][] overlay;
 
 	public int ic;
 	@JsonField
 	public boolean top;
 
+	public BackgroundEffect[] efs = null;
 	public FakeImage[] parts = null;
+
+	private boolean loaded = false;
 
 	@JsonClass.JCConstructor
 	public Background() {
@@ -112,14 +240,18 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		System.arraycopy(cs, 0, bg.cs, 0, 4);
 		bg.top = top;
 		bg.ic = ic;
+		bg.effect = effect;
+		bg.overlay = overlay;
+		bg.overlayAlpha = overlayAlpha;
 		return bg;
 	}
 
 	public void draw(FakeGraphics g, P rect, final int pos, final int h, final double siz, final int groundHeight) {
 		check();
-		final int off = (int) (pos - shift * siz);
 		int fw = (int) (parts[BG].getWidth() * siz);
 		int fh = (int) (parts[BG].getHeight() * siz);
+
+		final int off = (int) (pos + 200 * siz - fw);
 
 		g.gradRect(0, h, (int) rect.x, groundHeight, 0, h, cs[2], 0, h + groundHeight, cs[3]);
 
@@ -167,9 +299,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 	@Override
 	public void load() {
+		if(loaded)
+			return;
+
 		img.mark(Marker.BG);
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		parts = aux.iclist.get(ic).cut(img.getImg());
+		loaded = true;
 	}
 
 	@Override

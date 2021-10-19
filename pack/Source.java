@@ -24,6 +24,7 @@ import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.io.*;
@@ -442,12 +443,23 @@ public abstract class Source {
 			}
 		}
 
-		public void export(UserPack pack, String password, String parentPassword, Consumer<Double> prog)
-				throws Exception {
+		public void export(UserPack pack, String password, String parentPassword, Consumer<Double> prog) throws Exception {
+			ArrayList<AnimCE> anims = new ArrayList<>();
+
 			for (Enemy e : pack.enemies) {
 				AnimCE anim = (AnimCE) e.anim;
 				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
-					new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_" + anim.id.id), anim).saveAll();
+					if(!anims.contains(anim)) {
+						anims.add(anim);
+					} else {
+						anim.id.pack = ResourceLocation.LOCAL;
+						anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
+					}
+
+					new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+
+					anim.id.pack = pack.getSID();
+					anim.id.id = "_mapped_"+anim.id.id;
 				}
 				if (anim.id.pack.startsWith(".temp_"))
 					anim.id.pack = anim.id.pack.substring(6);
@@ -456,8 +468,17 @@ public abstract class Source {
 				for (Form f : u.forms) {
 					AnimCE anim = (AnimCE) f.anim;
 					if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
-						new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_" + anim.id.id), anim)
-								.saveAll();
+						if(!anims.contains(anim)) {
+							anims.add(anim);
+						} else {
+							anim.id.pack = ResourceLocation.LOCAL;
+							anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
+						}
+
+						new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id), anim).saveAll();
+
+						anim.id.pack = pack.getSID();
+						anim.id.id = "_mapped_"+anim.id.id;
 					}
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
@@ -487,6 +508,11 @@ public abstract class Source {
 
 			PackLoader.writePack(dst, src, desc, password, prog);
 			Context.renameTo(dst, tar);
+
+			for(AnimCE anim : anims) {
+				anim.id.pack = ResourceLocation.LOCAL;
+				anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
+			}
 		}
 
 		public File getBGFile(Identifier<Background> id) {
@@ -495,6 +521,10 @@ public abstract class Source {
 
 		public File getCasFile(Identifier<CastleImg> id) {
 			return getFile("./" + BasePath.CASTLE.toString() + "/" + Data.trio(id.id) + ".png");
+		}
+
+		public File getTraitIconFile(Identifier<Trait> id) {
+			return getFile("./" + TRAITICON + "/" + Data.trio(id.id) + ".png");
 		}
 
 		@Override
@@ -514,7 +544,13 @@ public abstract class Source {
 
 		@Override
 		public VImg readImage(String path, int ind) {
-			return new VImg(VFile.getFile(getFile(path + "/" + Data.trio(ind) + ".png")));
+			VFile vf = VFile.getFile(getFile(path + "/" + Data.trio(ind) + ".png"));
+
+			if(vf == null) {
+				return null;
+			} else {
+				return new VImg(vf);
+			}
 		}
 
 		@Override
@@ -630,7 +666,13 @@ public abstract class Source {
 	}
 
 	public static enum BasePath {
-		ANIM("animations"), BG("backgrounds"), CASTLE("castles"), MUSIC("musics"), REPLAY("replays"), SOUL("souls");
+		ANIM("animations"),
+		BG("backgrounds"),
+		CASTLE("castles"),
+		MUSIC("musics"),
+		REPLAY("replays"),
+		SOUL("souls"),
+		TRAIT("traitIcons");
 
 		private final String path;
 

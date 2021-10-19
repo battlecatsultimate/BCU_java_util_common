@@ -15,7 +15,7 @@ public class Level implements BattleStatic {
 	}
 
 	public Level(int[] lvs) {
-		if (lvs.length == 6) {
+		if (lvs.length >= 1) {
 			this.lvs = lvs;
 		} else {
 			this.lvs = new int[] { 1, 0, 0, 0, 0, 0 };
@@ -23,7 +23,7 @@ public class Level implements BattleStatic {
 	}
 
 	public Level(int[] lvs, int[][] orbs) {
-		if (lvs.length == 6) {
+		if (lvs.length >= 1) {
 			this.lvs = lvs;
 		} else {
 			this.lvs = new int[] { 1, 0, 0, 0, 0, 0 };
@@ -73,7 +73,7 @@ public class Level implements BattleStatic {
 	}
 
 	public void setLvs(int[] lv) {
-		if (lv.length == 6) {
+		if (lv.length >= 1) {
 			lvs = lv;
 		}
 	}

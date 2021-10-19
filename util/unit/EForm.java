@@ -1,5 +1,6 @@
 package common.util.unit;
 
+import common.CommonStatic;
 import common.battle.StageBasis;
 import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
@@ -18,39 +19,69 @@ public class EForm extends Data {
 	public EForm(Form form, int... level) {
 		f = form;
 		this.level = new Level(level);
-		PCoin pc = f.getPCoin();
-		if (pc != null)
+		PCoin pc = f.du.getPCoin();
+		if (pc != null) {
+			if (pc.full == null)
+				pc.update();
 			du = pc.improve(level);
-		else
+		} else
 			du = form.du;
 	}
 
 	public EForm(Form form, Level level) {
 		f = form;
 		this.level = level;
-		PCoin pc = f.getPCoin();
-		if (pc != null)
+		PCoin pc = f.du.getPCoin();
+		if (pc != null) {
+			if (pc.full == null)
+				pc.update();
 			du = pc.improve(level.getLvs());
-		else
+		} else
 			du = form.du;
 	}
 
 	public EUnit getEntity(StageBasis b) {
+		int lv = level.getLvs()[0];
+
+		if(b.st.isAkuStage())
+			level.getLvs()[0] = getAkuStageLevel();
+
 		double d = f.unit.lv.getMult(level.getLvs()[0]);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
+
+		EUnit result = new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
+
+		level.getLvs()[0] = lv;
+
+		return result;
 	}
 
 	public EUnit invokeEntity(StageBasis b, int Lvl) {
 		double d = f.unit.lv.getMult(Lvl);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		return new EUnit(b, du, walkAnim, d, level, f.getPCoin());
+		return new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
 	}
 
 	public double getPrice(int sta) {
 		return du.getPrice() * (1 + sta * 0.5);
 	}
 
+	private int getAkuStageLevel() {
+		if(CommonStatic.getConfig().levelLimit == 0)
+			return level.getLvs()[0];
+
+		int normal = level.getLvs()[0];
+		int plus = 0;
+
+		if(normal > f.unit.max) {
+			plus = normal - f.unit.max;
+			normal = f.unit.max;
+		}
+
+		normal = Math.min(normal, CommonStatic.getConfig().levelLimit);
+
+		return CommonStatic.getConfig().plus ? normal + plus : normal;
+	}
 }
