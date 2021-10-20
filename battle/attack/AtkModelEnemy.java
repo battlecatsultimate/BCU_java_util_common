@@ -66,12 +66,12 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 }
 
 	@Override
-	protected int getAttack(int ind, Proc proc) {
+	protected int getAttack(int ind, Proc proc, boolean volc) {
 		int atk = atks[ind];
 		extraAtk(ind);
 		if (abis[ind] == 1)
 			setProc(ind, proc);
-		if (e.status[P_WEAK][0] > 0)
+		if (!volc && e.status[P_WEAK][0] > 0)
 			atk = atk * e.status[P_WEAK][1] / 100;
 		if (e.status[P_STRONG][0] != 0)
 			atk += atk * e.status[P_STRONG][0] / 100;

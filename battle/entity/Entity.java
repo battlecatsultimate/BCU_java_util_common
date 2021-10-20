@@ -622,7 +622,7 @@ public abstract class Entity extends AbEntity {
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
 					if (soul == null || adm.pre == soul.len() - dead)
-						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1, false));
 				}
 			}
 			if(smoke != null) {
@@ -709,7 +709,7 @@ public abstract class Entity extends AbEntity {
 					while (++preID < multi && pres[preID] == 0)
 						;
 					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
-					e.basis.getAttack(e.aam.getAttack(tempAtk));
+					e.basis.getAttack(e.aam.getAttack(tempAtk, false));
 					if (preID < multi) {
 						preTime = pres[preID];
 					} else {
@@ -878,7 +878,7 @@ public abstract class Entity extends AbEntity {
 				}
 				if (kbType == INT_HB && e.data.getRevenge() != null) {
 					if (KB_TIME[INT_HB] - e.kbTime == e.data.getRevenge().pre)
-						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount()));
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount(), false));
 				}
 			}
 		}
