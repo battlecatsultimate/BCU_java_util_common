@@ -9,6 +9,7 @@ import java.util.List;
 public class AttackVolcano extends AttackAb {
 
 	protected boolean attacked = false;
+	protected int volcTime = VOLC_ITV;
 
 	protected final HashMap<Entity, Integer> vcapt;
 
@@ -35,6 +36,12 @@ public class AttackVolcano extends AttackAb {
 	@Override
 	public void excuse() {
 		process();
+		if (volcTime == 0) {
+			vcapt.clear();
+			volcTime = VOLC_ITV;
+		} else
+			volcTime--;
+
 		for (AbEntity e : capt) {
 			if (e.isBase() && !(e instanceof Entity))
 				continue;
@@ -44,12 +51,5 @@ public class AttackVolcano extends AttackAb {
 				attacked = true;
 			}
 		}
-
-		vcapt.entrySet().removeIf(ent -> {
-			int n = ent.getValue() - 1;
-			if (n > 0)
-				ent.setValue(n);
-			return n == 0;
-		});
 	}
 }
