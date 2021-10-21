@@ -9,6 +9,8 @@ import common.system.files.VFile;
 
 public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
+	private String name;
+
 	static class DefImgLoader implements AnimU.ImageKeeper {
 
 		private final String spath;
@@ -109,6 +111,11 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
 	public AnimUD(String path, String name, String edi, String uni) {
 		super(path + name, new DefImgLoader(path, name, edi, uni));
+		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "soul " + name;
+	}
 }
