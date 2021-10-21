@@ -66,7 +66,7 @@ public class AtkModelUnit extends AtkModelEntity {
 	}
 
 	@Override
-	protected int getAttack(int ind, Proc proc, boolean volc) {
+	protected int getAttack(int ind, Proc proc) {
 
 		int atk = atks[ind];
 		if (abis[ind] == 1) {
@@ -74,7 +74,7 @@ public class AtkModelUnit extends AtkModelEntity {
 			proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB)) / 100;
 		}
 		extraAtk(ind);
-		if (!volc && e.status[P_WEAK][0] > 0)
+		if (e.status[P_WEAK][0] > 0)
 			atk = atk * e.status[P_WEAK][1] / 100;
 		if (e.status[P_STRONG][0] != 0)
 			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;

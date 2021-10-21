@@ -145,12 +145,12 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	/**
 	 * generate attack entity
 	 */
-	public final AttackAb getAttack(int ind, boolean volc) {
+	public final AttackAb getAttack(int ind) {
 		if (act[ind] == 0)
 			return null;
 		act[ind]--;
 		Proc proc = Proc.blank();
-		int atk = getAttack(ind, proc, volc);
+		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
 		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind));
 	}
@@ -160,7 +160,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	 */
 	public void getDeathSurge() {
 		Proc p = Proc.blank();
-		int atk = getAttack(0, p, true);
+		int atk = getAttack(0, p);
 		AttackSimple as = new AttackSimple(e, this, atk, e.traits, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
 		Proc.VOLC ds = e.getProc().DEATHSURGE;
 		int addp = ds.dis_0 + (int) (b.r.nextDouble() * (ds.dis_1 - ds.dis_0));
@@ -235,7 +235,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		}
 	}
 
-	protected abstract int getAttack(int ind, Proc proc, boolean volc);
+	protected abstract int getAttack(int ind, Proc proc);
 
 	@Override
 	protected int getLayer() {
