@@ -250,7 +250,7 @@ public abstract class Source {
 		}
 
 		public void saveIconDeploy() {
-			if (anim.getUni() != null)
+			if (anim.getUni() != null && !id.base.equals(BasePath.SOUL))
 				CommonStatic.ctx.noticeErr(() -> write("icon_deploy.png", anim.getUni().getImg()), ErrType.ERROR,
 						"Error during saving deploy icon: " + id);
 		}
