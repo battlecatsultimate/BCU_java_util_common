@@ -325,19 +325,6 @@ public abstract class Source {
 			}
 		}
 
-		public static void loadSouls(String id) { // TODO
-			if (id == null)
-				id = ResourceLocation.LOCAL;
-			File folder = CommonStatic.ctx.getWorkspaceFile("./" + id + "/" + BasePath.SOUL.toString() + "/");
-			if (!folder.exists() || !folder.isDirectory())
-				return;
-			File[] files = folder.listFiles();
-			for (File f : files) {
-				String path = "./" + id + "/" + BasePath.SOUL + "/" + f.getName() + "/sprite.png";
-				//TODO
-			}
-		}
-
 		public static void saveLocalAnimations() {
 			AnimCE.map().values().forEach(AnimCE::save);
 		}
