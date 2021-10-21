@@ -29,6 +29,8 @@ public class JsonEncoder {
 			return new JsonPrimitive((Boolean) obj);
 		if (obj instanceof String)
 			return new JsonPrimitive((String) obj);
+		if (obj instanceof Enum)
+			return encode(((Enum<?>) obj).toString(), par);
 		if (obj instanceof Class)
 			return new JsonPrimitive(((Class<?>) obj).getName());
 		Class<?> cls = obj.getClass();

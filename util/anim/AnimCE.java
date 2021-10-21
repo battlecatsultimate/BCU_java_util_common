@@ -43,9 +43,9 @@ public class AnimCE extends AnimCI {
 
 	private static final String REG_LOCAL_ANIM = "local_animation";
 
-	public static String getAvailable(String string) {
-		ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, string);
-		Workspace.validate(Source.BasePath.ANIM, rl);
+	public static String getAvailable(String string, Source.BasePath base) {
+		ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, string, base);
+		Workspace.validate(rl);
 		return rl.id;
 	}
 
@@ -63,13 +63,13 @@ public class AnimCE extends AnimCI {
 	public String group = "";
 
 	public AnimCE(ResourceLocation resourceLocation) {
-		super(new SourceAnimLoader(Source.BasePath.ANIM, resourceLocation, null));
+		super(new SourceAnimLoader(resourceLocation, null));
 		id = resourceLocation;
 		history("initial");
 	}
 
 	public AnimCE(ResourceLocation rl, AnimD<?, ?> ori) {
-		super(new SourceAnimLoader(Source.BasePath.ANIM, rl, null));
+		super(new SourceAnimLoader(rl, null));
 		id = rl;
 		copyFrom(ori);
 
@@ -92,8 +92,11 @@ public class AnimCE extends AnimCI {
 		partial = true;
 		imgcut = new ImgCut();
 		mamodel = new MaModel();
-		anims = new MaAnim[7];
-		for (int i = 0; i < 7; i++)
+		if (loader.getName().base.equals(Source.BasePath.ANIM))
+			anims = new MaAnim[7];
+		else
+			anims = new MaAnim[1];
+		for (int i = 0; i < anims.length; i++)
 			anims[i] = new MaAnim();
 		parts = imgcut.cut(getNum());
 		saved = false;
@@ -167,8 +170,8 @@ public class AnimCE extends AnimCI {
 							list.add(f);
 				if (list.size() == 0)
 					continue;
-				ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id);
-				Workspace.validate(Source.BasePath.ANIM, rl);
+				ResourceLocation rl = new ResourceLocation(pack.getSID(), id.id, id.base);
+				Workspace.validate(rl);
 				AnimCE tar = new AnimCE(rl, this);
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
@@ -245,7 +248,7 @@ public class AnimCE extends AnimCI {
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
 		saver.delete(false);
 		id.id = str;
-		Workspace.validate(Source.BasePath.ANIM, id);
+		Workspace.validate(id);
 		if (id.pack.equals(ResourceLocation.LOCAL))
 			map().put(id.id, this);
 		AnimGroup.workspaceGroup.renewGroup();

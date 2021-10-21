@@ -93,7 +93,7 @@ public abstract class VerFixer extends Source {
 			int type = is.nextInt();
 			if (type == 0) {
 				String id = is.nextString();
-				AnimCE anim = new AnimCE(new ResourceLocation(ResourceLocation.LOCAL, id));
+				AnimCE anim = new AnimCE(new ResourceLocation(ResourceLocation.LOCAL, id, BasePath.ANIM));
 
 				AnimCE.map().put(id, anim);
 
@@ -561,13 +561,13 @@ public abstract class VerFixer extends Source {
 			move(pa + "uni.png", pb + UNI);
 			move(pa + fi + ".imgcut", pb + IC);
 			move(pa + fi + ".mamodel", pb + MM);
-			move(pa + fi + "00.maanim", pb + MA[0]);
-			move(pa + fi + "01.maanim", pb + MA[1]);
-			move(pa + fi + "02.maanim", pb + MA[2]);
-			move(pa + fi + "03.maanim", pb + MA[3]);
-			move(pa + fi + "_zombie00.maanim", pb + MA[4]);
-			move(pa + fi + "_zombie01.maanim", pb + MA[5]);
-			move(pa + fi + "_zombie02.maanim", pb + MA[6]);
+			move(pa + fi + "00.maanim", pb + MA_ENTITY[0]);
+			move(pa + fi + "01.maanim", pb + MA_ENTITY[1]);
+			move(pa + fi + "02.maanim", pb + MA_ENTITY[2]);
+			move(pa + fi + "03.maanim", pb + MA_ENTITY[3]);
+			move(pa + fi + "_zombie00.maanim", pb + MA_ENTITY[4]);
+			move(pa + fi + "_zombie01.maanim", pb + MA_ENTITY[5]);
+			move(pa + fi + "_zombie02.maanim", pb + MA_ENTITY[6]);
 		}
 	}
 
@@ -597,7 +597,7 @@ public abstract class VerFixer extends Source {
 	}
 
 	@Override
-	public AnimCI loadAnimation(String name) {
+	public AnimCI loadAnimation(String name, BasePath base) {
 		return null;
 	}
 
@@ -617,7 +617,7 @@ public abstract class VerFixer extends Source {
 		ResourceLocation id = al.getName();
 		id.pack = target;
 		if (!target.equals(ResourceLocation.LOCAL))
-			Workspace.validate(Source.BasePath.ANIM, id);
+			Workspace.validate(id);
 		AnimCE ce = new AnimCE(al);
 		ce.check();
 		new SourceAnimSaver(id, ce).saveAll();
