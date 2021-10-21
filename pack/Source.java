@@ -67,7 +67,6 @@ public abstract class Source {
 		@JsonField
 		public String pack, id;
 
-		@JsonField
 		public BasePath base;
 
 		@JsonClass.JCConstructor
@@ -311,7 +310,7 @@ public abstract class Source {
 				}
 			}
 			if (soulFolder.exists() && soulFolder.isDirectory()) {
-				File[] soulFiles = animFolder.listFiles();
+				File[] soulFiles = soulFolder.listFiles();
 				Arrays.sort(soulFiles);
 				for (File f : soulFiles) {
 					String path = "./" + id + "/" + BasePath.SOUL + "/" + f.getName() + "/sprite.png";
