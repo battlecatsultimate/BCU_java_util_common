@@ -13,7 +13,7 @@
         "ENTER": "enter",
         "ATK": "attack",
         "WALK": "walk",
-        "SOUL": "default"
+        "SOUL": "soul"
     },
     "VolcEff": {
         "DURING": "on",
