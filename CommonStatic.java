@@ -198,7 +198,9 @@ public class CommonStatic {
 		@Deprecated
 		File route(String path);
 
-		void setSE(int ind);
+		void setSE(int mus);
+
+		void setSE(Identifier<Music> mus);
 
 		void setBGM(Identifier<Music> mus, long loop);
 	}
@@ -428,6 +430,13 @@ public class CommonStatic {
 	 */
 	public static void setSE(int ind) {
 		def.setSE(ind);
+	}
+
+	/**
+	 * play sound effect with identifier
+	 */
+	public static void setSE(Identifier<Music> mus) {
+		def.setSE(mus);
 	}
 
 	/**

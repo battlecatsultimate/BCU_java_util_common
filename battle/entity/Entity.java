@@ -25,6 +25,7 @@ import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.unit.Trait;
 import common.util.unit.Level;
+import io.BCMusic;
 
 import java.util.*;
 
@@ -2171,7 +2172,11 @@ public abstract class Entity extends AbEntity {
 	 * called when last KB reached
 	 */
 	private void preKill() {
-		CommonStatic.setSE(basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
+		Soul s = Identifier.get(data.getDeathAnim());
+		if (s != null && s.audio != null)
+			CommonStatic.setSE(s.audio);
+		else
+			CommonStatic.setSE(basis.r.irDouble() < 0.5 ? SE_DEATH_0 : SE_DEATH_1);
 
 		if (zx.prekill())
 			return;
