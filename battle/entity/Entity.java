@@ -17,11 +17,8 @@ import common.util.BattleObj;
 import common.util.Data;
 import common.util.Data.Proc.POISON;
 import common.util.Data.Proc.REVIVE;
-import common.util.anim.AnimU;
+import common.util.anim.*;
 import common.util.anim.AnimU.UType;
-import common.util.anim.EAnimD;
-import common.util.anim.EAnimU;
-import common.util.anim.MaModel;
 import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
@@ -72,7 +69,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * soul anim, null means not dead yet
 		 */
-		private EAnimD<UType> soul;
+		private EAnimI soul;
 
 		/**
 		 * smoke animation for each entity
@@ -574,12 +571,12 @@ public abstract class Entity extends AbEntity {
 			if (e.getProc().DEATHSURGE.perform(e.basis.r)) {
 				deathSurge = true;
 				e.cancelAllProc();
-				soul = (EAnimD<UType>) UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.SOUL);
+				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.SOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
 				Soul s = Identifier.get(e.data.getDeathAnim());
-				dead = s == null ? 0 : (soul = (EAnimD<UType>) s.getEAnim(UType.SOUL)).len();
+				dead = s == null ? 0 : (soul = s.getEAnim(UType.SOUL)).len();
 			}
 		}
 

@@ -1,5 +1,7 @@
 package common.util.pack;
 
+import common.battle.attack.AtkModelAb;
+import common.battle.data.AtkDataModel;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -13,20 +15,22 @@ import org.jetbrains.annotations.NotNull;
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 @IndexCont(PackData.class)
-public class Soul extends AbSoul implements Comparable<Soul>, Indexable<PackData, Soul> {
+public class Soul extends Animable<AnimU<?>, AnimU.UType> implements Comparable<Soul>, Indexable<PackData, Soul> {
 
 	@JsonClass.JCIdentifier
 	@JsonField
 	private final Identifier<Soul> id;
 
+	@JsonField(gen = JsonField.GenType.GEN, usePool = true)
+	public AtkDataModel[] atks = new AtkDataModel[0];
+
 	@JsonClass.JCConstructor
 	public Soul() {
-		super(null);
 		id = null;
 	}
 
 	public Soul(Identifier<Soul> id, AnimU<?> animS) {
-		super(animS);
+		anim = animS;
 		this.id = id;
 	}
 
@@ -43,5 +47,10 @@ public class Soul extends AbSoul implements Comparable<Soul>, Indexable<PackData
 	@Override
 	public int compareTo(Soul o) {
 		return id.compareTo(o.id);
+	}
+
+	@Override
+	public EAnimI getEAnim(AnimU.UType uType) {
+		return anim.getEAnim(uType);
 	}
 }
