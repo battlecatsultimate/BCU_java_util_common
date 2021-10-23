@@ -177,15 +177,16 @@ public abstract class PackData implements IndexContainer {
 
 		private void loadSoul() {
 			String pre = "./org/battle/soul/";
-			String mid = "/battle_soul_";
+			String mid = "/battle_";
 			for (int i = 0; i < 16; i++) {
 				String path = pre + Data.trio(i) + mid;
-				AnimUD anim = new AnimUD(path, Data.trio(i), null, null);
+				AnimUD anim = new AnimUD(path, "soul_" + Data.trio(i), null, null);
 				Identifier<Soul> identifier = new Identifier<>(Identifier.DEF, Soul.class, i);
 				souls.add(new Soul(identifier, anim));
 			}
-			demonSouls.add(new DemonSoul(0, new AnimUD(pre + "demonsoul/battle_demonsoul_", Data.duo(0), null, null), true));
-			demonSouls.add(new DemonSoul(0, new AnimUD(pre + "demonsoul/battle_demonsoul_", Data.duo(0), null, null), false));
+			String dem = "demonsoul";
+			demonSouls.add(new DemonSoul(0, new AnimUD(pre + dem + mid, "demonsoul_" + Data.duo(0), null, null), true));
+			demonSouls.add(new DemonSoul(0, new AnimUD(pre + dem + mid, "demonsoul_" + Data.duo(0), null, null), false));
 		}
 
 		private void loadUnits(Consumer<Double> bar) {
