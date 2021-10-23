@@ -95,6 +95,13 @@ public class EUnit extends Entity {
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
+			boolean isAntiTraited = targetTraited(atk.trait);
+			for (Trait t : atk.trait) {
+				if (t.BCTrait || sharedTraits.contains(t))
+					continue;
+				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)data).getPack()))
+					sharedTraits.add(t);
+			}
 			if ((getAbi() & AB_GOOD) != 0)
 				ans *= basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
 			if ((getAbi() & AB_RESIST) != 0)
