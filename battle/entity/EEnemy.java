@@ -5,6 +5,7 @@ import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
+import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
 import common.util.anim.EAnimU;
 import common.util.unit.Trait;
@@ -15,6 +16,8 @@ public class EEnemy extends Entity {
 
 	public final int mark;
 	public final double mult, mula;
+
+	public int hit;
 
 	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, double magnif, double atkMagnif, int d0, int d1, int m) {
 		super(b, de, ea, atkMagnif, magnif);
@@ -57,6 +60,13 @@ public class EEnemy extends Entity {
 		if (atk.model instanceof AtkModelUnit && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
+			boolean isAntiTraited = targetTraited(atk.trait);
+			for (Trait t : atk.trait) {
+				if (t.BCTrait || sharedTraits.contains(t))
+					continue;
+				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)atk.attacker.data).getPack()))
+					sharedTraits.add(t);
+			}
 			if ((atk.abi & AB_GOOD) != 0)
 				ans *= EUnit.OrbHandler.getOrbGood(atk, sharedTraits, basis.b.t());
 			if ((atk.abi & AB_MASSIVE) != 0)
@@ -98,5 +108,20 @@ public class EEnemy extends Entity {
 	@Override
 	protected int traitType() {
 		return 1;
+	}
+
+	@Override
+	public void damaged(AttackAb atk) {
+		hit = 2;
+		super.damaged(atk);
+	}
+
+	@Override
+	public void update() {
+		if(hit > 0) {
+			hit--;
+		}
+
+		super.update();
 	}
 }

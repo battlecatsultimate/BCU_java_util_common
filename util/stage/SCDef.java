@@ -152,7 +152,27 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	public boolean allow(StageBasis sb, int val, AbEnemy en) {
-		if (sb.entityCount(1) >= sb.st.max - ((Enemy)en).de.getWill())
+		Enemy e = null;
+
+		if(en instanceof Enemy) {
+			e = (Enemy) en;
+		} else if(en instanceof EneRand) {
+			Set<Enemy> enemies = en.getPossible();
+
+			for(Enemy enemy : enemies) {
+				if(e == null || e.de.getWill() < enemy.de.getWill()) {
+					e = enemy;
+				}
+			}
+
+			if(e == null)
+				return false;
+		} else {
+			System.out.println("W/SCDef | Unknown type of AbEnemy found : "+(en != null ? en.getClass().getName() : "Null"));
+			return false;
+		}
+
+		if (sb.entityCount(1) >= sb.st.max - e.de.getWill())
 			return false;
 		if (val < 0 || val > 1000 || sub.get(val) == null)
 			return true;
