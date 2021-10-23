@@ -1,7 +1,5 @@
 package common.util.pack;
 
-import common.battle.attack.AtkModelAb;
-import common.battle.data.AtkDataModel;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -11,7 +9,6 @@ import common.pack.PackData;
 import common.util.Animable;
 import common.util.anim.*;
 import common.util.stage.Music;
-import org.jetbrains.annotations.NotNull;
 
 @JsonClass
 @IndexCont(PackData.class)
@@ -21,9 +18,6 @@ public class Soul extends Animable<AnimU<?>, AnimU.UType> implements Comparable<
 	@JsonClass.JCIdentifier
 	@JsonField
 	private final Identifier<Soul> id;
-
-	@JsonField(gen = JsonField.GenType.GEN, usePool = true)
-	public AtkDataModel[] atks = new AtkDataModel[0];
 
 	@JsonField
 	public Identifier<Music> audio;
@@ -45,7 +39,10 @@ public class Soul extends Animable<AnimU<?>, AnimU.UType> implements Comparable<
 
 	@Override
 	public String toString() {
-		return "soul " + id.id;
+		if (id.pack.equals(Identifier.DEF))
+			return "soul " + id.id;
+		else
+			return "custom soul " + id.id;
 	}
 
 	@Override
