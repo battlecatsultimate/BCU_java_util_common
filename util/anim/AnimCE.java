@@ -375,12 +375,16 @@ public class AnimCE extends AnimCI {
 		mamodel = ori.mamodel.clone();
 		if (mamodel.confs.length < 1)
 			mamodel.confs = new int[2][6];
-		anims = new MaAnim[7];
-		for (int i = 0; i < 7; i++)
-			if (i < ori.anims.length)
-				anims[i] = ori.anims[i].clone();
-			else
-				anims[i] = new MaAnim();
+		if (id.base.equals(Source.BasePath.ANIM)) {
+			anims = new MaAnim[7];
+			for (int i = 0; i < 7; i++)
+				if (i < ori.anims.length)
+					anims[i] = ori.anims[i].clone();
+				else
+					anims[i] = new MaAnim();
+		} else {
+			anims = new MaAnim[] { ori.anims.length > 0 ? ori.anims[0].clone() : new MaAnim() };
+		}
 		loader.setNum(ori.getNum().cloneImage());
 		types = AnimU.TYPE7;
 		parts = imgcut.cut(ori.getNum());
