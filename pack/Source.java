@@ -548,8 +548,11 @@ public abstract class Source {
 		@Override
 		public VImg readImage(String path, int ind) {
 			String fullPath = path.startsWith("./") ? path + "/" + Data.trio(ind) + ".png" : "./" + path + "/" + Data.trio(ind) + ".png";
+			VFile vf = zip.tree.find(fullPath);
 
-			return new VImg(zip.tree.find(fullPath));
+			if (vf == null)
+				return null;
+			return new VImg(vf);
 		}
 
 		@Override
