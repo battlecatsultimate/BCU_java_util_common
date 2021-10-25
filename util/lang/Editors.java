@@ -443,6 +443,7 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
 				t.dmg = 0;
+				t.reduction = 0;
 				t.type.traitIgnore = false;
 				t.type.procs = false;
 			} else

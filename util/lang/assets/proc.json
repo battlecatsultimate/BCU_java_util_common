@@ -964,7 +964,7 @@
         "abbr_name" : "Spr. Armor",
         "full_name" : "Super Armor",
         "tooltip" : "This ability reduces all damage that is below certain amount to zero.",
-        "format" : "(prob)% chance to nullify[(type.traitIgnore){ all}] damage lower than (dmg)[(type.procs){ and also the attack's procs}]",
+        "format" : "(prob)% chance to [(reduction>=0){reduce}(reduction<0){increase}] [(type.traitIgnore){ all}] damage lower than (dmg) by (reduction)% [(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -974,9 +974,13 @@
                 "name" : "damage",
                 "tooltip" : "The maximum amount of damage to be negated."
             },
+            "reduction" : {
+                "name" : "reduction %",
+                "tooltip" : "Percentage of the damage to reduce it by."
+            },
             "type.traitIgnore" : {
                 "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+                "tooltip" : "When this is checked, this ability can trigger regardless of the attacker's trait."
             },
             "type.procs" : {
                 "name" : "ignore procs",
@@ -986,9 +990,9 @@
     },
     "DMGCAP" : {
         "abbr_name" : "M.Shield",
-        "full_name" : "Magic Shield",
+        "full_name" : "Mystic Shield",
         "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than (dmg)[(!type.nullify){ to (dmg)}(type.nullify&type.procs){ and also the attack's procs}]",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than (dmg)[(!type.nullify){ to (dmg)}(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -1000,7 +1004,7 @@
             },
             "type.traitIgnore" : {
                 "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait."
             },
             "type.nullify" : {
                 "name" : "nullify damage",
@@ -1008,7 +1012,7 @@
             },
             "type.procs" : {
                 "name" : "ignore procs",
-                "tooltip" : "When this is checked, procs from nullified attacks will also be negated. Only works if 'nullify damage' is checked"
+                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
             }
         }
     },

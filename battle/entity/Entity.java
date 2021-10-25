@@ -1383,6 +1383,7 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public void damaged(AttackAb atk) {
 		int dmg = getDamage(atk, atk.atk);
+		boolean proc = true;
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
 			if (getProc().IMUWAVE.mult > 0)
@@ -1424,23 +1425,30 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && basis.r.nextDouble() * 100 < dmgcut.prob) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && basis.r.nextDouble() * 100 < dmgcut.prob) {
 			anim.getEff(P_DMGCUT);
-				if (dmgcut.type.procs)
+			if (dmgcut.type.procs)
+				proc = false;
+
+			if (dmgcut.reduction == 100) {
+				if (!proc)
 					return;
-				else
-					dmg = 0;
+				dmg = 0;
+			} else
+				dmg = dmg * (100 - dmgcut.reduction) / 100;
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && basis.r.nextDouble() * 100 < dmgcap.prob) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && basis.r.nextDouble() * 100 < dmgcap.prob) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
-			if (dmgcap.type.nullify)
-				if (dmgcap.type.procs)
+			if (dmgcap.type.procs)
+				proc = false;
+
+			if (dmgcap.type.nullify) {
+				if (!proc)
 					return;
-				else
-					dmg = 0;
-			else
+				dmg = 0;
+			} else
 				dmg = dmgcap.dmg;
 		}
 
@@ -1586,7 +1594,7 @@ public abstract class Entity extends AbEntity {
 		});
 
 		// process proc part
-		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
+		if (!proc || !(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {

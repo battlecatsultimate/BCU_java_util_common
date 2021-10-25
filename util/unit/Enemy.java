@@ -186,6 +186,11 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				enemy.abi = Data.reorderAbi(enemy.abi);
 			}
 
+			if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
+				enemy.getProc().DMGCUT.reduction = 100;
+				enemy.getProc().DMGCUT.type.traitIgnore = true;
+				enemy.getProc().DMGCAP.type.traitIgnore = true;
+			}
 		}
 	}
 

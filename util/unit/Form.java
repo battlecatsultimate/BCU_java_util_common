@@ -177,6 +177,10 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						proc.IMUPOI.mult = 100;
 					form.abi = Data.reorderAbi(form.abi);
 				}
+
+				if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
+					form.getProc().DMGCUT.reduction = 100;
+				}
 			}
 		}
 	}

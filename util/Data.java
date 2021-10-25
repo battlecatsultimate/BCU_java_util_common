@@ -82,6 +82,8 @@ public class Data {
 			@Order(1)
 			public int dmg;
 			@Order(2)
+			public int reduction;
+			@Order(3)
 			public TYPE type = new TYPE();
 		}
 
