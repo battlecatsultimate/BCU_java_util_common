@@ -45,11 +45,13 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 				}
 				mula *= (100.0 - resist) / 100;
 				mult *= (100.0 - resist) / 100;
-				int l0 = 0, l1 = 9;
-				if (!conf.random_layer)
-					l0 = l1 = e.layer;
-				EEnemy ee = ene.getEntity(b, acs, mult, mula, l0, l1, 0);
-				ee.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
+
+				EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, 9, 0);
+				if (conf.random_layer)
+					ee.layer = (int) (b.r.nextDouble() * 9);
+				else
+					ee.layer = e.layer;
+
 				ee.group = allow;
 				if (ep < ee.data.getWidth())
 					ep = ee.data.getWidth();

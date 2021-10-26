@@ -1416,7 +1416,7 @@ public abstract class Entity extends AbEntity {
 
 		Proc.PT imuatk = getProc().IMUATK;
 		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false)) {
-			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
+			if (status[P_IMUATK][0] == 0 && (imuatk.prob == 100 || basis.r.nextDouble() * 100 < imuatk.prob)) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
 			}
@@ -1425,7 +1425,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && basis.r.nextDouble() * 100 < dmgcut.prob) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);
 			if (dmgcut.type.procs)
 				proc = false;
@@ -1439,7 +1439,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && basis.r.nextDouble() * 100 < dmgcap.prob) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.procs)
 				proc = false;
@@ -1532,7 +1532,7 @@ public abstract class Entity extends AbEntity {
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
-			if (basis.r.nextDouble() * 100 < counter.prob && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
+			if ((counter.prob == 100 || basis.r.nextDouble() * 100 < counter.prob) && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
 				if (!isWave || counter.type.counterWave != 0) {
 					double[] ds = counter.minRange != 0 || counter.maxRange != 0 ? new double[]{pos + counter.minRange, pos + counter.maxRange} : aam.touchRange();
@@ -1822,7 +1822,7 @@ public abstract class Entity extends AbEntity {
 		}
 		// lethal strike
 		if (getProc().LETHAL.prob > 0 && health <= 0) {
-			boolean b = basis.r.nextDouble() * 100 < getProc().LETHAL.prob;
+			boolean b = getProc().LETHAL.prob == 100 || basis.r.nextDouble() * 100 < getProc().LETHAL.prob;
 			if (status[P_LETHAL][0] == 0 && b) {
 				health = 1;
 				anim.getEff(P_LETHAL);

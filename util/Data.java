@@ -304,6 +304,8 @@ public class Data {
 					int prob = f.getInt(this);
 					if (prob == 0)
 						return false;
+					if (prob == 100)
+						return true;
 					return r.nextDouble() * 100 < prob;
 				} catch (Exception e) {
 					return exists();
