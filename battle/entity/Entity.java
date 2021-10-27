@@ -1434,7 +1434,7 @@ public abstract class Entity extends AbEntity {
 				if (!proc)
 					return;
 				dmg = 0;
-			} else
+			} else if (dmgcut.reduction != 0)
 				dmg = dmg * (100 - dmgcut.reduction) / 100;
 		}
 
@@ -1636,7 +1636,7 @@ public abstract class Entity extends AbEntity {
 		}
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
-			int rst = (atk.getProc().WEAK.mult - 100) * getProc().IMUWEAK.smartImu <= 0 ? getProc().IMUWEAK.mult : 0;
+			int rst = checkAIImmunity(atk.getProc().WEAK.mult - 100, getProc().IMUWEAK.smartImu, (atk.getProc().WEAK.mult - 100) * getProc().IMUWEAK.mult < 0) ? getProc().IMUWEAK.mult : 0;
 			val = val * (100 - rst) / 100;
 			if (rst < 100) {
 				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
@@ -1691,7 +1691,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (atk.getProc().POISON.time > 0) {
-			int res = getProc().IMUPOI.smartImu * atk.getProc().POISON.damage >= 0 ? getProc().IMUPOI.mult : 0;
+			int res = checkAIImmunity(atk.getProc().POISON.damage, getProc().IMUPOI.smartImu, atk.getProc().POISON.damage * getProc().IMUPOI.mult > 0) ? getProc().IMUPOI.mult : 0;
 			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
@@ -1702,7 +1702,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (!isBase && atk.getProc().ARMOR.time > 0) {
-			int res = getProc().IMUARMOR.smartImu * atk.getProc().ARMOR.mult >= 0 ? getProc().IMUARMOR.mult : 0;
+			int res = checkAIImmunity(atk.getProc().ARMOR.mult, getProc().IMUARMOR.smartImu, atk.getProc().ARMOR.mult * getProc().IMUARMOR.mult > 0) ? getProc().IMUARMOR.mult : 0;
 			if (res < 100) {
 				int val = (int) (atk.getProc().ARMOR.time * time);
 				status[P_ARMOR][0] = val * (100 - res) / 100;
@@ -1714,12 +1714,15 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc().SPEED.time > 0) {
 			int res = getProc().IMUSPEED.mult;
-			if (atk.getProc().SPEED.type == 0) {
-				int ar = getProc().IMUSPEED.smartImu;
-				if ((ar == 1 && atk.getProc().SPEED.speed >= data.getSpeed()) || (ar == -1 && atk.getProc().SPEED.speed <= data.getSpeed()))
-					res = 0;
-			} else if (getProc().IMUSPEED.smartImu * atk.getProc().SPEED.speed > 0)
+
+			boolean b;
+			if (atk.getProc().SPEED.type == 2)
+				b = (data.getSpeed() - atk.getProc().SPEED.speed) * res < 0;
+			else
+				b = atk.getProc().SPEED.speed * res < 0;
+			if (checkAIImmunity(atk.getProc().SPEED.speed, getProc().IMUSPEED.smartImu, b))
 				res = 0;
+
 			if (res < 100) {
 				int val = (int) (atk.getProc().SPEED.time * time);
 				status[P_SPEED][0] = val * (100 - res) / 100;
@@ -1728,6 +1731,16 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_SPEED);
 			} else
 				anim.getEff(INV);
+		}
+	}
+
+	private boolean checkAIImmunity(int val, int side, boolean invert) {
+		if (side == 0)
+			return true;
+		if (invert) {
+			return val * side < 0;
+		} else {
+			return val * side > 0;
 		}
 	}
 
@@ -2039,7 +2052,7 @@ public abstract class Entity extends AbEntity {
 		int criti = getProc().CRITI.mult;
 		if (criti == 100)
 			crit = 0;
-		else if (criti > 0)
+		else if (criti != 0)
 			crit *= (100 - getProc().CRITI.mult) / 100.0;
 		if (isMetal)
 			if (crit > 0)
