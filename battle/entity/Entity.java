@@ -839,6 +839,8 @@ public abstract class Entity extends AbEntity {
 
 				if(kbType == INT_HB && e.health > 0 && e.getProc().DEMONSHIELD.hp > 0) {
 					e.currentShield = (int) (e.getProc().DEMONSHIELD.hp * e.getProc().DEMONSHIELD.regen * e.shieldMagnification / 100.0);
+					if (e.currentShield > e.maxCurrentShield)
+						e.maxCurrentShield = e.currentShield;
 
 					e.anim.getEff(SHIELD_REGEN);
 				}
@@ -1323,7 +1325,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * Entity's shield hp
 	 */
-	public int currentShield;
+	public int currentShield, maxCurrentShield;
 
 	/**
 	 * Used for regenerating shield considering enemy's magnification
@@ -1346,7 +1348,7 @@ public abstract class Entity extends AbEntity {
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
-		currentShield = (int) (de.getProc().DEMONSHIELD.hp * hpMagnif);
+		maxCurrentShield = currentShield = (int) (de.getProc().DEMONSHIELD.hp * hpMagnif);
 		shieldMagnification = hpMagnif;
 	}
 
@@ -1369,7 +1371,7 @@ public abstract class Entity extends AbEntity {
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
-		currentShield = de.getProc().DEMONSHIELD.hp;
+		maxCurrentShield = currentShield = de.getProc().DEMONSHIELD.hp;
 	}
 
 	public void altAbi(int alt) {
@@ -1483,6 +1485,9 @@ public abstract class Entity extends AbEntity {
 				cancelAllProc();
 			} else {
 				currentShield -= dmg;
+
+				if (currentShield > maxCurrentShield)
+					currentShield = maxCurrentShield;
 
 				anim.getEff(SHIELD_HIT);
 
