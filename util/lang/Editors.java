@@ -550,10 +550,10 @@ public class Editors {
 			if (t.health > 0) {
 				t.regentime = Math.max(0, t.regentime);
 				t.timeout = Math.max(0, t.timeout);
-				t.type.magnif = false;
 			} else {
 				t.regentime = 0;
 				t.timeout = 0;
+				t.type.magnif = false;
 			}
 		}));
 
