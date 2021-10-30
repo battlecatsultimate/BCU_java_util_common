@@ -1706,7 +1706,7 @@ public abstract class Entity extends AbEntity {
 			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
-				if (ws.type.modifAffected)
+				if (atk.atk != 0 && ws.type.modifAffected)
 					ws.damage *= (double) getDamage(atk, atk.atk) / atk.atk;
 
 				pois.add(ws);
