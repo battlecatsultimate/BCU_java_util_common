@@ -1346,8 +1346,8 @@ public abstract class Entity extends AbEntity {
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
-		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (shieldMagnification * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
-		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (shieldMagnification * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
+		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (hpMagnif * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (hpMagnif * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
@@ -1371,8 +1371,8 @@ public abstract class Entity extends AbEntity {
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
-		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (shieldMagnification * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
-		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (shieldMagnification * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
+		status[P_DMGCUT][0] = getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
