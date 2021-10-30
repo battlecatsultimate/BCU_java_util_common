@@ -180,6 +180,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 				if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
 					form.getProc().DMGCUT.reduction = 100;
+					form.getProc().POISON.type.ignoreMetal = true;
 				}
 			}
 		}

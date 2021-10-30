@@ -288,7 +288,7 @@ public abstract class CustomEntity extends DataEntity {
 		speed = is.nextInt();
 		range = is.nextInt();
 		abi = is.nextInt();
-		traits = Trait.convertType(Data.reorderTrait(is.nextInt()));
+		type = is.nextInt();
 		width = is.nextInt();
 		int sh = is.nextInt();
 		tba = is.nextInt();

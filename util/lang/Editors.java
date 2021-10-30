@@ -400,6 +400,8 @@ public class Editors {
 				t.time = 0;
 				t.type.damage_type = 0;
 				t.type.unstackable = false;
+				t.type.ignoreMetal = false;
+				t.type.modifAffected = false;
 			} else {
 				t.time = Math.max(1, t.time);
 				t.itv = Math.max(1, t.itv);
@@ -446,6 +448,7 @@ public class Editors {
 				t.reduction = 0;
 				t.type.traitIgnore = false;
 				t.type.procs = false;
+				t.type.magnif = false;
 			} else
 				t.dmg = Math.max(t.dmg,0);
 		}));
@@ -457,6 +460,7 @@ public class Editors {
 				t.type.traitIgnore = false;
 				t.type.nullify = false;
 				t.type.procs = false;
+				t.type.magnif = false;
 			} else
 				t.dmg = Math.max(t.dmg,0);
 		}));
@@ -546,6 +550,7 @@ public class Editors {
 			if (t.health > 0) {
 				t.regentime = Math.max(0, t.regentime);
 				t.timeout = Math.max(0, t.timeout);
+				t.type.magnif = false;
 			} else {
 				t.regentime = 0;
 				t.timeout = 0;

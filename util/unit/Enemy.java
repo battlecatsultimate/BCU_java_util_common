@@ -190,6 +190,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				enemy.getProc().DMGCUT.reduction = 100;
 				enemy.getProc().DMGCUT.type.traitIgnore = true;
 				enemy.getProc().DMGCAP.type.traitIgnore = true;
+				enemy.getProc().POISON.type.ignoreMetal = true;
 			}
 		}
 	}

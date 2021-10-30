@@ -908,7 +908,6 @@ public abstract class Entity extends AbEntity {
 			type &= 7;
 			long mul = type == 0 ? 100 : type == 1 ? e.maxH : type == 2 ? e.health : (e.maxH - e.health);
 			e.damage += mul * dmg / 100;
-
 		}
 
 		private void getMax() {
@@ -929,7 +928,10 @@ public abstract class Entity extends AbEntity {
 					ws.time--;
 					ws.prob--;// used as counter for itv
 					if (e.health > 0 && ws.prob <= 0) {
-						damage(ws.damage, type(ws));
+						if (!ws.type.ignoreMetal && (e instanceof EEnemy && e.data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL)) || (e instanceof EUnit && (e.getAbi() & AB_METALIC) != 0)))
+							e.damage += 1;
+						else
+							damage(ws.damage, type(ws));
 						ws.prob += ws.itv;
 					}
 				}
@@ -1002,7 +1004,7 @@ public abstract class Entity extends AbEntity {
 			} else if (e.status[P_BARRIER][1] > 0) {
 				e.status[P_BARRIER][1]--;
 				if (e.status[P_BARRIER][1] == 0) {
-					e.status[P_BARRIER][0] = e.getProc().BARRIER.health;
+					e.status[P_BARRIER][0] = e.getProc().BARRIER.type.magnif ? (int) (e.shieldMagnification * e.getProc().BARRIER.health) : e.getProc().BARRIER.health;
 					int timeout = e.getProc().BARRIER.timeout;
 					if (timeout > 0)
 						e.status[P_BARRIER][2] = timeout + effas().A_B.len(BarrierEff.NONE);
@@ -1339,11 +1341,13 @@ public abstract class Entity extends AbEntity {
 		aam = AtkModelEntity.getEnemyAtk(this, atkMagnif);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
-		status[P_BARRIER][0] = getProc().BARRIER.health;
+		status[P_BARRIER][0] = getProc().BARRIER.type.magnif ? (int) (getProc().BARRIER.health * hpMagnif) : getProc().BARRIER.health;
 		status[P_BARRIER][1] = getProc().BARRIER.regentime;
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
+		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (shieldMagnification * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (shieldMagnification * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
@@ -1367,6 +1371,8 @@ public abstract class Entity extends AbEntity {
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
+		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (shieldMagnification * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (shieldMagnification * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
@@ -1427,7 +1433,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);
 			if (dmgcut.type.procs)
 				proc = false;
@@ -1441,7 +1447,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.procs)
 				proc = false;
@@ -1700,6 +1706,9 @@ public abstract class Entity extends AbEntity {
 			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
+				if (ws.type.modifAffected)
+					ws.damage *= (double) getDamage(atk, atk.atk) / atk.atk;
+
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
