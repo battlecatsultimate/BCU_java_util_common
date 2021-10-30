@@ -422,7 +422,7 @@ public class Data {
 			@Order(2)
 			public int timeout;
 			@Order(3)
-			public TYPE type;
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
