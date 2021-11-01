@@ -947,8 +947,8 @@
                 "tooltip" : "특정 시간이 지나면 베리어가 자동으로 부숴집니다. 0으로 설정하여 비활성화할 수 있습니다"
             },
             "type.magnif" : {
-                "name" : "Use Magnification",
-                "tooltip" : "Activate this to make barrier's HP affected by the entity's HP magnification."
+                "name" : "배율 고려",
+                "tooltip" : "개체의 체력 배율에 따라서 베리어의 체력도 같이 증가하게 만듭니다"
             }
         }
     },
@@ -975,8 +975,8 @@
                 "tooltip" : "켜져 있을 경우 받은 공격의 능력 또한 같이 무효화됩니다"
             },
             "type.magnif" : {
-                "name" : "Use Magnification",
-                "tooltip" : "Activate this to make armor's HP affected by the entity's HP magnification."
+                "name" : "배율 고려",
+                "tooltip" : "개체의 체력 배율에 따라서 베리어의 체력도 같이 증가하게 만듭니다"
             }
         }
     },
@@ -1007,8 +1007,8 @@
                 "tooltip" : "켜져 있을 경우 받은 공격의 능력 또한 같이 무효화됩니다"
             },
             "type.magnif" : {
-                "name" : "Use Magnification",
-                "tooltip" : "Activate this to make shield's HP affected by the entity's HP magnification."
+                "name" : "배율 고려",
+                "tooltip" : "개체의 체력 배율에 따라서 베리어의 체력도 같이 증가하게 만듭니다"
             }
         }
     },
