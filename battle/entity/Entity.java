@@ -333,7 +333,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (t == HEAL) {
-				EffAnim<DefEff> eff = effas().A_HEAL;
+				EffAnim<DefEff> eff = dire == -1 ? effas().A_HEAL : effas().A_E_HEAL;
 
 				effs[dire == -1 ? A_HEAL : A_E_HEAL] = eff.getEAnim(DefEff.DEF);
 			}
@@ -488,9 +488,10 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 
-			if(effs[A_HEAL] != null) {
-				if(effs[A_HEAL].done())
-					effs[A_HEAL] = null;
+			int healId = e.dire == -1 ? A_HEAL : A_E_HEAL;
+
+			if(effs[healId] != null && effs[healId].done()) {
+				effs[healId] = null;
 			}
 
 			if(effs[A_COUNTER] != null && effs[A_COUNTER].done()) {
