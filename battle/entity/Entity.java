@@ -348,7 +348,7 @@ public abstract class Entity extends AbEntity {
 
 				EffAnim<ShieldEff> eff = dire == -1 ? effas().A_DEMON_SHIELD : effas().A_E_DEMON_SHIELD;
 
-				boolean half = e.currentShield * 1.0 / e.getProc().DEMONSHIELD.hp < 0.5;
+				boolean half = e.currentShield * 1.0 / e.getProc().DEMONSHIELD.hp * e.shieldMagnification < 0.5;
 
 				effs[id] = eff.getEAnim(half ? ShieldEff.HALF : ShieldEff.FULL);
 				status[P_DEMONSHIELD][0] = effs[id].len();
