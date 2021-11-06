@@ -245,17 +245,18 @@ public class Replay extends Data {
 		}
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
-		rl.id = str;
 		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		rl.id = str;
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
 		Workspace.validate(Source.REPLAY, rl);
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
 			write();
+			src.delete();
 			return;
 		}
-		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
-		Context.renameTo(src, dst);
+		Context.renameTo(dst, src);
 	}
 
 	@Override
