@@ -242,6 +242,9 @@ public class BattleRange<T extends Number> {
 
         int ma = max.intValue();
 
+        if (ma == mi)
+            return mi;
+
         return mi + nextFlexibleInt(r, mi, ma);
     }
 
