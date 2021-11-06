@@ -378,8 +378,9 @@ public class BGEffectSegment {
             case "backChara":
                 return BattleRange.SNAP.BACK;
             case "animeInterval":
-            case "animeLength":
                 return BattleRange.SNAP.INTERVAL;
+            case "animeLength":
+                return BattleRange.SNAP.LENGTH;
             case "secondToFrame":
                 return BattleRange.SNAP.SECOND;
             case "percentToFloat":
@@ -440,7 +441,7 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
+        return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 
     @Nonnull
@@ -494,7 +495,7 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
+        return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 
     private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword) {
@@ -547,7 +548,7 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
+        return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 
     private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword, Function<Integer, Double> func) {
@@ -600,6 +601,6 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
+        return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 }

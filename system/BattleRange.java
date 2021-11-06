@@ -19,6 +19,7 @@ public class BattleRange<T extends Number> {
         TOP,
         BOTTOM,
         INTERVAL,
+        LENGTH,
         FRONT,
         BACK,
         SECOND,
@@ -41,7 +42,8 @@ public class BattleRange<T extends Number> {
             !(isZAxis(minSnap) && isZAxis(maxSnap)) &&
             !(isSecond(minSnap) && isSecond(maxSnap)) &&
             !(isPercentage(minSnap) && isPercentage(maxSnap)) &&
-            !(isInterval(minSnap) && isInterval(maxSnap))
+            !(isInterval(minSnap) && isInterval(maxSnap)) &&
+            !(isLength(minSnap) && isLength(maxSnap))
         ) {
             throw new IllegalStateException("Snap direction must be either top/bottom or left/right or front/back or second or percentage! -> minSnap : "+minSnap+" | maxSnap : "+maxSnap);
         } else if((minSnap == SNAP.FRONT && maxSnap == SNAP.BACK) || (minSnap == SNAP.BACK && maxSnap == SNAP.FRONT)) {
@@ -100,7 +102,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + r.nextInt(ma - mi);
+        return mi + nextFlexibleInt(r, mi, ma);
     }
 
     public double getRangeD(int len) {
@@ -240,7 +242,7 @@ public class BattleRange<T extends Number> {
 
         int ma = max.intValue();
 
-        return mi + r.nextInt(ma - mi);
+        return mi + nextFlexibleInt(r, mi, ma);
     }
 
     public int getAnimFrame(EAnimD<?> anim) {
@@ -248,6 +250,8 @@ public class BattleRange<T extends Number> {
 
         if (minSnap == SNAP.INTERVAL) {
             mi = min.intValue() + anim.len() * 5;
+        } else if(minSnap == SNAP.LENGTH) {
+            mi = (int) (min.intValue() * anim.len() / 100.0);
         } else {
             mi = min.intValue();
         }
@@ -256,6 +260,8 @@ public class BattleRange<T extends Number> {
 
         if(maxSnap == SNAP.INTERVAL) {
             ma = max.intValue() + anim.len() * 5;
+        } else if(maxSnap == SNAP.LENGTH) {
+            ma = (int) (max.intValue() * anim.len() / 100.0);
         } else {
             ma = max.intValue();
         }
@@ -264,7 +270,7 @@ public class BattleRange<T extends Number> {
             return mi;
         }
 
-        return mi + r.nextInt(ma - mi);
+        return mi + nextFlexibleInt(r, mi, ma);
     }
 
     public boolean isFront() {
@@ -293,5 +299,17 @@ public class BattleRange<T extends Number> {
 
     private boolean isInterval(SNAP snap) {
         return snap == null || snap == SNAP.INTERVAL;
+    }
+
+    private boolean isLength(SNAP snap) {
+        return snap == null || snap == SNAP.LENGTH;
+    }
+
+    private int nextFlexibleInt(Random r, int min, int max) {
+        if(max < min) {
+            return -r.nextInt(min - max);
+        } else {
+            return r.nextInt(max - min);
+        }
     }
 }

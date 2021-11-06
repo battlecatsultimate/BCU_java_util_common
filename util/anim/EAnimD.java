@@ -11,7 +11,7 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
 	protected MaAnim ma;
 
-	protected int f = -1;
+	public int f = -1;
 
 	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim) {
 		super(ia, mm);
