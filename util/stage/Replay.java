@@ -253,10 +253,10 @@ public class Replay extends Data {
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
 			write();
-			src.delete();
 			return;
 		}
 		Context.renameTo(dst, src);
+		write();
 	}
 
 	@Override
