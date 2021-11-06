@@ -440,7 +440,7 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(min, minSnap, max, maxSnap);
+        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
     }
 
     @Nonnull
@@ -494,7 +494,7 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(min, minSnap, max, maxSnap);
+        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
     }
 
     private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword) {
@@ -547,7 +547,7 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(min, minSnap, max, maxSnap);
+        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
     }
 
     private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword, Function<Integer, Double> func) {
@@ -600,6 +600,6 @@ public class BGEffectSegment {
             throw new IllegalStateException("Unhandled situation while reading bg effect! | Caused while reading x : "+ xObject);
         }
 
-        return new BattleRange<>(min, minSnap, max, maxSnap);
+        return new BattleRange<>(Math.min(min, max), minSnap, Math.max(min, max), maxSnap);
     }
 }
