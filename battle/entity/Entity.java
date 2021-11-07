@@ -1643,7 +1643,7 @@ public abstract class Entity extends AbEntity {
 		}
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
-			int rst = checkAIImmunity(atk.getProc().WEAK.mult - 100, getProc().IMUWEAK.smartImu, (atk.getProc().WEAK.mult - 100) * getProc().IMUWEAK.mult < 0) ? getProc().IMUWEAK.mult : 0;
+			int rst = checkAIImmunity(atk.getProc().WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0;
 			val = val * (100 - rst) / 100;
 			if (rst < 100) {
 				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
@@ -1698,7 +1698,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (atk.getProc().POISON.time > 0) {
-			int res = checkAIImmunity(atk.getProc().POISON.damage, getProc().IMUPOI.smartImu, atk.getProc().POISON.damage * getProc().IMUPOI.mult > 0) ? getProc().IMUPOI.mult : 0;
+			int res = checkAIImmunity(atk.getProc().POISON.damage, getProc().IMUPOI.smartImu, getProc().IMUPOI.mult < 0) ? getProc().IMUPOI.mult : 0;
 			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
@@ -1712,7 +1712,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (!isBase && atk.getProc().ARMOR.time > 0) {
-			int res = checkAIImmunity(atk.getProc().ARMOR.mult, getProc().IMUARMOR.smartImu, atk.getProc().ARMOR.mult * getProc().IMUARMOR.mult > 0) ? getProc().IMUARMOR.mult : 0;
+			int res = checkAIImmunity(atk.getProc().ARMOR.mult, getProc().IMUARMOR.smartImu, getProc().IMUARMOR.mult < 0) ? getProc().IMUARMOR.mult : 0;
 			if (res < 100) {
 				int val = (int) (atk.getProc().ARMOR.time * time);
 				status[P_ARMOR][0] = val * (100 - res) / 100;
@@ -1727,9 +1727,9 @@ public abstract class Entity extends AbEntity {
 
 			boolean b;
 			if (atk.getProc().SPEED.type == 2)
-				b = (data.getSpeed() - atk.getProc().SPEED.speed) * res < 0;
+				b = (data.getSpeed() > atk.getProc().SPEED.speed && res > 0) || (data.getSpeed() < atk.getProc().SPEED.speed && res < 0);
 			else
-				b = atk.getProc().SPEED.speed * res < 0;
+				b = res < 0;
 			if (checkAIImmunity(atk.getProc().SPEED.speed, getProc().IMUSPEED.smartImu, b))
 				res = 0;
 
