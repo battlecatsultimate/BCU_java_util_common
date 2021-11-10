@@ -2,6 +2,7 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.io.json.JsonClass;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
@@ -11,7 +12,9 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 
 @IndexContainer.IndexCont(PackData.class)
@@ -138,5 +141,29 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 				formSrc[j++] = forms[i];
 		}
 		forms = formSrc;
+	}
+
+	@SuppressWarnings("ForLoopReplaceableByForEach")
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		boolean broken = false;
+
+		for(int i = 0; i < forms.length; i++) {
+			if(forms[i] == null) {
+				broken = true;
+				break;
+			}
+		}
+
+		if(broken) {
+			List<Form> f = new ArrayList<>();
+
+			for(int i = 0; i < forms.length; i++) {
+				if(forms[i] != null)
+					f.add(forms[i]);
+			}
+
+			forms = f.toArray(new Form[0]);
+		}
 	}
 }
