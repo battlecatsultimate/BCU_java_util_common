@@ -316,7 +316,6 @@ public class LineUp extends Data {
 							Form f = fs[0][j];
 							if (f == null)
 								continue;
-							System.out.println(f.unit+" | "+fu);
 							if (f.unit == fu.unit && f.fid >= fu.fid)
 								loc[j]++;
 						}
