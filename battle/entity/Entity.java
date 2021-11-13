@@ -1328,7 +1328,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * Used for regenerating shield considering enemy's magnification
 	 */
-	double shieldMagnification = 1.0;
+	private final double shieldMagnification;
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double atkMagnif, double hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
@@ -1373,7 +1373,8 @@ public abstract class Entity extends AbEntity {
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
-		maxCurrentShield = currentShield = de.getProc().DEMONSHIELD.hp;
+		maxCurrentShield = currentShield = (int) (de.getProc().DEMONSHIELD.hp * lvMagnif);
+		shieldMagnification = lvMagnif;
 	}
 
 	public void altAbi(int alt) {
