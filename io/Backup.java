@@ -112,7 +112,7 @@ public class Backup {
     }
 
     private static String getTimeStamp() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
 
         return df.format(date);
