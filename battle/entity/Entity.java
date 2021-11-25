@@ -1552,9 +1552,10 @@ public abstract class Entity extends AbEntity {
 
 					if (counter.type.procType == 1 || counter.type.procType == 3)
 						for (String s0 : par)
-							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE") && isWave)
-								reflectProc.get(s0).set(e.data.getAllProc().get(s0));
-							else
+							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE")) {
+								if (isWave && counter.type.counterWave == 2)
+									reflectProc.get(s0).set(atk.getProc().get(s0));
+							} else
 								reflectProc.get(s0).set(atk.getProc().get(s0));
 
 					if (data.getCounter() != null) {
@@ -1576,21 +1577,19 @@ public abstract class Entity extends AbEntity {
 
 						if (counter.type.procType >= 2) {
 							Proc p = data.getAllProc();
-							for (String s0 : par)
+							for (String s0 : par) {
+								if ((s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE")) && (!isWave || counter.type.counterWave != 2))
+									continue;
+
 								if (p.get(s0).perform(e.basis.r))
 									reflectProc.get(s0).set(p.get(s0));
+							}
 						}
 					}
 					if (e.status[P_WEAK][0] > 0)
 						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
 					if (e.status[P_STRONG][0] != 0)
 						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
-
-					if (isWave && counter.type.counterWave != 2) {
-						reflectProc.getArr(P_WAVE).clear();
-						reflectProc.getArr(P_VOLC).clear();
-						reflectProc.getArr(P_MINIWAVE).clear();
-					}
 
 					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
 					if (counter.type.areaAttack)
