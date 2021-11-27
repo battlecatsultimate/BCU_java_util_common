@@ -1609,7 +1609,7 @@ public abstract class Entity extends AbEntity {
 			if (rst == 100) {
 				anim.getEff(INV);
 			} else {
-				damage += maxH * atk.getProc().POIATK.mult / 100;
+				damage += (maxH * atk.getProc().POIATK.mult / 100) * ((100 - rst) / 100);
 				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
 				basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 				CommonStatic.setSE(SE_POISON);
