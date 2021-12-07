@@ -48,6 +48,8 @@ public class StageBasis extends BattleObj {
 	public boolean goingUp = true;
 	public int changeFrame = -1;
 	public int changeDivision = -1;
+	public int buttonDelay = 0;
+	public int[] selectedUnit = {-1, -1};
 	public final double boss_spawn;
 
 	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num;
@@ -242,6 +244,9 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_can() {
+		if(buttonDelay > 0)
+			return false;
+
 		if(ubase.health <= 0 || ebase.health <= 0)
 			return false;
 
@@ -265,6 +270,9 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_mon() {
+		if(buttonDelay > 0)
+			return false;
+
 		if (work_lv < 8 && money > upgradeCost) {
 			CommonStatic.setSE(SE_SPEND_SUC);
 			money -= upgradeCost;
@@ -333,8 +341,21 @@ public class StageBasis extends BattleObj {
 		if (lineupChanging)
 			return false;
 
+		if (buttonDelay > 0)
+			return false;
+
 		if (ubase.health == 0) {
 			return false;
+		}
+
+		if(boo && selectedUnit[0] == -1) {
+			if(elu.price[i][j] != -1 || b.lu.fs[i][j] == null) {
+				buttonDelay = 6;
+				selectedUnit[0] = i;
+				selectedUnit[1] = j;
+
+				return false;
+			}
 		}
 
 		if (unitRespawnTime > 0)
@@ -564,6 +585,17 @@ public class StageBasis extends BattleObj {
 				lineupChanging = false;
 			} else if(changeFrame == changeDivision-1) {
 				frontLineup = 1 - frontLineup;
+			}
+		}
+
+		if(buttonDelay > 0) {
+			buttonDelay--;
+
+			if(buttonDelay == 0) {
+				act_spawn(selectedUnit[0], selectedUnit[1], true);
+
+				selectedUnit[0] = -1;
+				selectedUnit[1] = -1;
 			}
 		}
 	}
