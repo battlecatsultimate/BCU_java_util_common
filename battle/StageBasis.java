@@ -348,7 +348,7 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 
-		if(boo && selectedUnit[0] == -1) {
+		if(CommonStatic.getConfig().buttonDelay && boo && selectedUnit[0] == -1) {
 			if(elu.price[i][j] != -1 || b.lu.fs[i][j] == null) {
 				buttonDelay = 6;
 				selectedUnit[0] = i;

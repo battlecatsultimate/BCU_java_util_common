@@ -132,6 +132,11 @@ public class CommonStatic {
 		 * Decide whehter draw bg effect or not
 		 */
 		public boolean drawBGEffect = true;
+
+		/**
+		 * Enable 6f button delay on spawn
+		 */
+		public boolean buttonDelay = true;
 	}
 
 	public interface EditLink {
