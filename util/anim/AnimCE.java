@@ -173,6 +173,8 @@ public class AnimCE extends AnimCI {
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
 			}
+		saver.saveAll();
+		reloImg();
 	}
 
 	public void merge(AnimCE a, int x, int y) {
