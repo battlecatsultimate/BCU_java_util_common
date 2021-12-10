@@ -320,6 +320,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		loaded = true;
 	}
 
+	public void forceLoad() {
+		img.mark(Marker.BG);
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		parts = aux.iclist.get(ic).cut(img.getImg());
+		loaded = true;
+	}
+
 	@Override
 	public String[] names() {
 		return new String[] { toString(), "enemy wave", "unit wave" };
