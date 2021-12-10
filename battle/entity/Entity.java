@@ -1110,7 +1110,6 @@ public abstract class Entity extends AbEntity {
 				int[][] status = e.status;
 				doRevive(c);
 				// clear state
-				e.waitTime = 0;
 				e.bdist = 0;
 				status[P_BURROW][2] = 0;
 				status[P_STOP] = new int[PROC_WIDTH];
