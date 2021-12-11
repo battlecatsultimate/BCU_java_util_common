@@ -153,8 +153,6 @@ public class AnimCE extends AnimCI {
 		check();
 		map().remove(id.id);
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
-		saver.delete(false);
-		AnimGroup.workspaceGroup.renewGroup();
 		for (UserPack pack : UserProfile.getUserPacks())
 			if (pack.editable) {
 				List<Animable<AnimU<?>, UType>> list = new ArrayList<>();
@@ -173,8 +171,8 @@ public class AnimCE extends AnimCI {
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
 			}
-		saver.saveAll();
-		reloImg();
+		saver.delete(true);
+		AnimGroup.workspaceGroup.renewGroup();
 	}
 
 	public void merge(AnimCE a, int x, int y) {
