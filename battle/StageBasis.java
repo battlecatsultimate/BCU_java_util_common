@@ -338,9 +338,6 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_spawn(int i, int j, boolean boo) {
-		if (lineupChanging)
-			return false;
-
 		if (buttonDelay > 0)
 			return false;
 
@@ -350,6 +347,9 @@ public class StageBasis extends BattleObj {
 
 		if(CommonStatic.getConfig().buttonDelay && boo && selectedUnit[0] == -1) {
 			if(elu.price[i][j] != -1 || b.lu.fs[i][j] == null) {
+				if (lineupChanging)
+					return false;
+
 				buttonDelay = 6;
 				selectedUnit[0] = i;
 				selectedUnit[1] = j;
