@@ -19,8 +19,8 @@ public class SBCtrl extends BattleField {
 	public final Replay re;
 
 	public SBCtrl(FakeKey kh, Stage stage, int star, BasisLU bas, int[] ints, long seed) {
-		super(new EStage(stage, star), bas, ints, seed);
-		re = new Replay(bas, stage.id, star, ints, seed);
+		super(new EStage(stage, star), bas, ints, seed, CommonStatic.getConfig().buttonDelay);
+		re = new Replay(bas, stage.id, star, ints, seed, CommonStatic.getConfig().buttonDelay);
 		keys = kh;
 	}
 

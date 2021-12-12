@@ -45,6 +45,7 @@ public class StageBasis extends BattleObj {
 	public final CopRand r;
 	public final Recorder rx = new Recorder();
 	public final boolean isOneLineup;
+	public final boolean buttonDelayOn;
 	public boolean goingUp = true;
 	public int changeFrame = -1;
 	public int changeDivision = -1;
@@ -72,7 +73,7 @@ public class StageBasis extends BattleObj {
 	private THEME.TYPE themeType;
 	private boolean bgEffectInitialized = false;
 
-	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
+	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
 		b = bas;
 		r = new CopRand(seed);
 		nyc = bas.nyc;
@@ -137,6 +138,7 @@ public class StageBasis extends BattleObj {
 		}
 
 		isOneLineup = oneLine;
+		this.buttonDelayOn = buttonDelayOn;
 	}
 
 	/**
@@ -354,7 +356,7 @@ public class StageBasis extends BattleObj {
 				selectedUnit[0] = i;
 				selectedUnit[1] = j;
 
-				return false;
+				return true;
 			}
 		}
 
