@@ -394,7 +394,7 @@ public class AnimCE extends AnimCI {
 
 	private void history(String str) {
 		partial();
-		OutStream os = OutStream.getIns();
+		OutStream os = OutStream.getAnimIns();
 		imgcut.write(os);
 		mamodel.write(os);
 		os.writeInt(anims.length);
