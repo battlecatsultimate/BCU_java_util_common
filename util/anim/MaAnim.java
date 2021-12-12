@@ -70,6 +70,16 @@ public class MaAnim extends Data implements BattleStatic {
 	}
 
 	public void validate() {
+		for (int i = 0; i < parts.length; i++) {
+			if(parts[i].ints[1] == 2) {
+				for(int j = 0; j < parts[i].moves.length; j++) {
+					if(parts[i].moves[j][1] < 0) {
+						parts[i].moves[j][1] = 0;
+					}
+				}
+			}
+		}
+
 		max = 1;
 		for (int i = 0; i < n; i++)
 			if (parts[i].getMax() > max)
