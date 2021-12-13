@@ -876,9 +876,9 @@
         "tooltip": null,
         "format": [
             "(prob)% chance to ",
-            "[(speed>=0){increase}(speed<0){decrease}][(type==2){set}]",
+            "[(type==2){set}(type!=2){[(speed>=0){increase}(speed<0){decrease}]}]",
             " target's speed ",
-            "[(type!=2){by}(type==2){to}] (_abs(speed))[(type==1){%}]",
+            "[(type!=2){by}(type==2){to}] [(type==2){(speed)}(type!=2){(_abs(speed))}][(type==1){%}]",
             " for (_dispTime(time))"
         ],
         "class": {
