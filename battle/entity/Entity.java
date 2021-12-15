@@ -1621,7 +1621,7 @@ public abstract class Entity extends AbEntity {
 		double dist = 1 + f * 0.1;
 		if (atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || atk.canon != -2)
 			dist = time = 1;
-		if (atk.getProc().STOP.prob > 0) {
+		if (atk.getProc().STOP.time != 0 || atk.getProc().STOP.prob > 0) {
 			int val = (int) (atk.getProc().STOP.time * time);
 			int rst = getProc().IMUSTOP.mult;
 			if (rst < 100) {
@@ -1634,7 +1634,7 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INV);
 		}
-		if (atk.getProc().SLOW.prob > 0) {
+		if (atk.getProc().SLOW.time != 0 || atk.getProc().SLOW.prob > 0) {
 			int val = (int) (atk.getProc().SLOW.time * time);
 			int rst = getProc().IMUSLOW.mult;
 			if (rst < 100) {
@@ -1657,7 +1657,7 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INV);
 		}
-		if (atk.getProc().CURSE.prob > 0) {
+		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
 			int rst = getProc().IMUCURSE.mult;
 			if (rst < 100) {
