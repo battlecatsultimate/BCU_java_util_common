@@ -1624,21 +1624,27 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().STOP.time > 0) {
 			int val = (int) (atk.getProc().STOP.time * time);
 			int rst = getProc().IMUSTOP.mult;
-			val = val * (100 - rst) / 100;
-			status[P_STOP][0] = Math.max(status[P_STOP][0], val);
-			if (rst < 100)
+			if (rst < 100) {
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_STOP][0] = Math.max(status[P_STOP][0], Math.abs(val));
+				else
+					status[P_STOP][0] = val;
 				anim.getEff(P_STOP);
-			else
+			} else
 				anim.getEff(INV);
 		}
 		if (atk.getProc().SLOW.time > 0) {
 			int val = (int) (atk.getProc().SLOW.time * time);
 			int rst = getProc().IMUSLOW.mult;
-			val = val * (100 - rst) / 100;
-			status[P_SLOW][0] = Math.max(status[P_SLOW][0], val);
-			if (rst < 100)
+			if (rst < 100) {
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_SLOW][0] = Math.max(status[P_SLOW][0], Math.abs(val));
+				else
+					status[P_SLOW][0] = val;
 				anim.getEff(P_SLOW);
-			else
+			} else
 				anim.getEff(INV);
 		}
 		if (atk.getProc().WEAK.time > 0) {
@@ -1654,11 +1660,14 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().CURSE.time > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
 			int rst = getProc().IMUCURSE.mult;
-			val = val * (100 - rst) / 100;
-			status[P_CURSE][0] = Math.max(status[P_CURSE][0], val);
-			if (rst < 100)
+			if (rst < 100) {
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_CURSE][0] = Math.max(status[P_CURSE][0], Math.abs(val));
+				else
+					status[P_CURSE][0] = val;
 				anim.getEff(P_CURSE);
-			else
+			} else
 				anim.getEff(INV);
 		}
 		if (atk.getProc().KB.dis != 0) {
@@ -1688,10 +1697,14 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INVWARP);
 
 		if (atk.getProc().SEAL.time > 0) {
-			int res = data.getProc().IMUSEAL.mult;
-			if (res < 100) {
+			int rst = data.getProc().IMUSEAL.mult;
+			if (rst < 100) {
 				int val = (int) (atk.getProc().SEAL.time * time);
-				status[P_SEAL][0] = val * (100 - res) / 100;
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_SEAL][0] = Math.max(status[P_SEAL][0], Math.abs(val));
+				else
+					status[P_SEAL][0] = val;
 				anim.getEff(P_SEAL);
 			} else
 				anim.getEff(INV);

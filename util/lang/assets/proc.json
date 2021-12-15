@@ -27,7 +27,7 @@
         "abbr_name": "stop",
         "full_name": "Freeze",
         "tooltip": null,
-        "format": "(prob)% chance to freeze for (_dispTime(time))",
+        "format": "(prob)% chance to freeze for (_dispTime(_abs(time)))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -35,7 +35,7 @@
             },
             "time": {
                 "name": "duration",
-                "tooltip": "actual duration is subjected to treasure values and traits"
+                "tooltip": "actual duration is subjected to treasure values and traits. Set duration to negative to override only if proc duration is higher"
             }
         }
     },
@@ -43,7 +43,7 @@
         "abbr_name": "slow",
         "full_name": "Slow",
         "tooltip": null,
-        "format": "(prob)% chance to slow for (_dispTime(time))",
+        "format": "(prob)% chance to slow for (_dispTime(_abs(time)))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -51,7 +51,7 @@
             },
             "time": {
                 "name": "duration",
-                "tooltip": "actual duration is subjected to treasure values and traits"
+                "tooltip": "actual duration is subjected to treasure values and traits. Set duration to negative to override only if proc duration is higher"
             }
         }
     },
@@ -147,7 +147,7 @@
         "abbr_name": "curse",
         "full_name": "Curse",
         "tooltip": "Disable trait related abilities",
-        "format": "(prob)% chance to curse for (_dispTime(time))",
+        "format": "(prob)% chance to curse for (_dispTime(_abs(time)))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -155,7 +155,7 @@
             },
             "time": {
                 "name": "duration",
-                "tooltip": null
+                "tooltip": "actual duration is subjected to treasure values and traits. Set duration to negative to override only if proc duration is higher"
             }
         }
     },
@@ -467,7 +467,7 @@
         "abbr_name": "seal",
         "full_name": "Seal",
         "tooltip": "Seal will disable all abilities except Burrow, Metal, Self-Destruct, Only-Attack, and basic Revive",
-        "format": "(prob)% chance to seal target for (_dispTime(time))",
+        "format": "(prob)% chance to seal target for (_dispTime(_abs(time)))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -475,7 +475,7 @@
             },
             "time": {
                 "name": "duration",
-                "tooltip": null
+                "tooltip": "actual duration is subjected to treasure values and traits. Set duration to negative to override only if proc duration is higher"
             }
         }
     },

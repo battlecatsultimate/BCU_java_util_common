@@ -227,8 +227,8 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0)
 				t.time = 0;
-			else
-				t.time = Math.max(t.time, 1);
+			else if (t.time == 0)
+				t.time = 1;
 		});
 
 		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
