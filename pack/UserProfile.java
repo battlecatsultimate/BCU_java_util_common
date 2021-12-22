@@ -15,7 +15,6 @@ import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.util.Data;
-import main.Opts;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -237,7 +236,7 @@ public class UserProfile {
 			}
 
 			if (missingDependencies.size() > 0)
-				Opts.pop(pk.desc.name + " requires parent packs you don't have, which are: " + missingDependencies, "Parent Pack Missing");
+				CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.name + "(" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
 		}
 	}
 
