@@ -15,6 +15,7 @@ import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.util.Data;
+import main.Opts;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -227,6 +228,17 @@ public class UserProfile {
 			prog.accept(1.0 * (ind++) / tot);
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
+
+		for (PackData.UserPack pk : profile.packlist) {
+			List<String> missingDependencies = new ArrayList<>();
+			for (String dep : pk.desc.dependency) {
+				if (!profile.packmap.containsKey(dep))
+					missingDependencies.add(dep);
+			}
+
+			if (missingDependencies.size() > 0)
+				Opts.pop(pk.desc.name + " requires parent packs you don't have, which are: " + missingDependencies, "Parent Pack Missing");
+		}
 	}
 
 	public static UserProfile profile() {
