@@ -174,7 +174,7 @@ public class StageBasis extends BattleObj {
 
 	public int entityCount(int d) {
 		int ans = 0;
-		if (ebase instanceof EEnemy)
+		if (ebase instanceof EEnemy && d == 1)
 			ans += ((EEnemy)ebase).data.getWill() + 1;
 		for (Entity ent : le) {
 			if (ent.dire == d)
