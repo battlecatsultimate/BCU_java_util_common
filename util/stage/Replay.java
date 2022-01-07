@@ -248,10 +248,10 @@ public class Replay extends Data {
 		}
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
-		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
 		rl.id = str;
-		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
-		Workspace.validate(Source.REPLAY, rl);
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
+		Workspace.validate(rl);
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
