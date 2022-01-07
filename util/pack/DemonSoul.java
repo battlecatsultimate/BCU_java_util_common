@@ -32,6 +32,6 @@ public class DemonSoul extends AbSoul implements IndexContainer.Indexable<PackDa
 
     @Override
     public String toString() {
-        return "demonsoul_" + id + (e ? "_e" : "");
+        return (e ? "enemy " : "") + "demonsoul " + id;
     }
 }
