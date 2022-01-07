@@ -228,9 +228,9 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (data.getAtkModel(ind).getAltAbi() != 0)
 			e.altAbi(data.getAtkModel(ind).getAltAbi());
 		if (abis[ind] == 1) {
-			if (b.r.nextDouble() * 100 < getProc(ind).TIME.prob)
+			if (getProc(ind).TIME.prob != 0 && (getProc(ind).TIME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).TIME.prob))
 				b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind).TIME.time);
-			if (b.r.nextDouble() * 100 < getProc(ind).THEME.prob)
+			if (getProc(ind).THEME.prob != 0 && (getProc(ind).THEME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).THEME.prob))
 				b.changeTheme(getProc(ind).THEME.id, getProc(ind).THEME.time, getProc(ind).THEME.type);
 		}
 	}

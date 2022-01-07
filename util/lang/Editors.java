@@ -227,8 +227,8 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0)
 				t.time = 0;
-			else
-				t.time = Math.max(t.time, 1);
+			else if (t.time == 0)
+				t.time = 1;
 		});
 
 		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
@@ -400,6 +400,8 @@ public class Editors {
 				t.time = 0;
 				t.type.damage_type = 0;
 				t.type.unstackable = false;
+				t.type.ignoreMetal = false;
+				t.type.modifAffected = false;
 			} else {
 				t.time = Math.max(1, t.time);
 				t.itv = Math.max(1, t.itv);
@@ -443,8 +445,10 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
 				t.dmg = 0;
+				t.reduction = 0;
 				t.type.traitIgnore = false;
 				t.type.procs = false;
+				t.type.magnif = false;
 			} else
 				t.dmg = Math.max(t.dmg,0);
 		}));
@@ -456,6 +460,7 @@ public class Editors {
 				t.type.traitIgnore = false;
 				t.type.nullify = false;
 				t.type.procs = false;
+				t.type.magnif = false;
 			} else
 				t.dmg = Math.max(t.dmg,0);
 		}));
@@ -548,6 +553,7 @@ public class Editors {
 			} else {
 				t.regentime = 0;
 				t.timeout = 0;
+				t.type.magnif = false;
 			}
 		}));
 

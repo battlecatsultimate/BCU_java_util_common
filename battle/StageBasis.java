@@ -45,9 +45,12 @@ public class StageBasis extends BattleObj {
 	public final CopRand r;
 	public final Recorder rx = new Recorder();
 	public final boolean isOneLineup;
+	public final boolean buttonDelayOn;
 	public boolean goingUp = true;
 	public int changeFrame = -1;
 	public int changeDivision = -1;
+	public int buttonDelay = 0;
+	public int[] selectedUnit = {-1, -1};
 	public final double boss_spawn;
 
 	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num;
@@ -70,7 +73,7 @@ public class StageBasis extends BattleObj {
 	private THEME.TYPE themeType;
 	private boolean bgEffectInitialized = false;
 
-	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
+	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
 		b = bas;
 		r = new CopRand(seed);
 		nyc = bas.nyc;
@@ -135,6 +138,7 @@ public class StageBasis extends BattleObj {
 		}
 
 		isOneLineup = oneLine;
+		this.buttonDelayOn = buttonDelayOn;
 	}
 
 	/**
@@ -170,7 +174,7 @@ public class StageBasis extends BattleObj {
 
 	public int entityCount(int d) {
 		int ans = 0;
-		if (ebase instanceof EEnemy)
+		if (ebase instanceof EEnemy && d == 1)
 			ans += ((EEnemy)ebase).data.getWill() + 1;
 		for (Entity ent : le) {
 			if (ent.dire == d)
@@ -242,6 +246,9 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_can() {
+		if(buttonDelay > 0)
+			return false;
+
 		if(ubase.health <= 0 || ebase.health <= 0)
 			return false;
 
@@ -265,6 +272,9 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_mon() {
+		if(buttonDelay > 0)
+			return false;
+
 		if (work_lv < 8 && money > upgradeCost) {
 			CommonStatic.setSE(SE_SPEND_SUC);
 			money -= upgradeCost;
@@ -330,11 +340,24 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_spawn(int i, int j, boolean boo) {
-		if (lineupChanging)
+		if (buttonDelay > 0)
 			return false;
 
 		if (ubase.health == 0) {
 			return false;
+		}
+
+		if(buttonDelayOn && boo && selectedUnit[0] == -1) {
+			if(elu.price[i][j] != -1 || b.lu.fs[i][j] == null) {
+				if (lineupChanging)
+					return false;
+
+				buttonDelay = 6;
+				selectedUnit[0] = i;
+				selectedUnit[1] = j;
+
+				return true;
+			}
 		}
 
 		if (unitRespawnTime > 0)
@@ -502,8 +525,8 @@ public class StageBasis extends BattleObj {
 						entity.kill(false);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ebase.pos + 50 - 500 * r.nextDouble());
-					int y = (int) (-288 * r.nextDouble());
+					int x = (int) (ebase.pos + 50 - 500 * r.irDouble());
+					int y = (int) (-288 * r.irDouble());
 
 					ebaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
@@ -515,8 +538,8 @@ public class StageBasis extends BattleObj {
 						le.get(i).kill(false);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
-					int x = (int) (ubase.pos - 50 + 500 * r.nextDouble());
-					int y = (int) (-288 * r.nextDouble());
+					int x = (int) (ubase.pos - 50 + 500 * r.irDouble());
+					int y = (int) (-288 * r.irDouble());
 
 					ubaseSmoke.add(new EAnimCont(x, 0, EffAnim.effas().A_ATK_SMOKE.getEAnim(DefEff.DEF), y));
 				}
@@ -564,6 +587,17 @@ public class StageBasis extends BattleObj {
 				lineupChanging = false;
 			} else if(changeFrame == changeDivision-1) {
 				frontLineup = 1 - frontLineup;
+			}
+		}
+
+		if(buttonDelay > 0) {
+			buttonDelay--;
+
+			if(buttonDelay == 0) {
+				act_spawn(selectedUnit[0], selectedUnit[1], true);
+
+				selectedUnit[0] = -1;
+				selectedUnit[1] = -1;
 			}
 		}
 	}

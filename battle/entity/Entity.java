@@ -19,6 +19,8 @@ import common.util.Data.Proc.POISON;
 import common.util.Data.Proc.REVIVE;
 import common.util.anim.*;
 import common.util.anim.AnimU.UType;
+import common.util.anim.EAnimD;
+import common.util.anim.EAnimU;
 import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
@@ -107,10 +109,6 @@ public abstract class Entity extends AbEntity {
 			e = ent;
 			anim = ea;
 			status = e.status;
-		}
-
-		protected MaModel getMaModel() {
-			return anim.anim().mamodel;
 		}
 
 		/**
@@ -336,7 +334,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (t == HEAL) {
-				EffAnim<DefEff> eff = effas().A_HEAL;
+				EffAnim<DefEff> eff = dire == -1 ? effas().A_HEAL : effas().A_E_HEAL;
 
 				effs[dire == -1 ? A_HEAL : A_E_HEAL] = eff.getEAnim(DefEff.DEF);
 			}
@@ -346,7 +344,7 @@ public abstract class Entity extends AbEntity {
 
 				EffAnim<ShieldEff> eff = dire == -1 ? effas().A_DEMON_SHIELD : effas().A_E_DEMON_SHIELD;
 
-				boolean half = e.currentShield * 1.0 / e.getProc().DEMONSHIELD.hp < 0.5;
+				boolean half = e.currentShield * 1.0 / (e.getProc().DEMONSHIELD.hp * e.shieldMagnification) < 0.5;
 
 				effs[id] = eff.getEAnim(half ? ShieldEff.HALF : ShieldEff.FULL);
 				status[P_DEMONSHIELD][0] = effs[id].len();
@@ -491,9 +489,10 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 
-			if(effs[A_HEAL] != null) {
-				if(effs[A_HEAL].done())
-					effs[A_HEAL] = null;
+			int healId = e.dire == -1 ? A_HEAL : A_E_HEAL;
+
+			if(effs[healId] != null && effs[healId].done()) {
+				effs[healId] = null;
 			}
 
 			if(effs[A_COUNTER] != null && effs[A_COUNTER].done()) {
@@ -837,6 +836,8 @@ public abstract class Entity extends AbEntity {
 
 				if(kbType == INT_HB && e.health > 0 && e.getProc().DEMONSHIELD.hp > 0) {
 					e.currentShield = (int) (e.getProc().DEMONSHIELD.hp * e.getProc().DEMONSHIELD.regen * e.shieldMagnification / 100.0);
+					if (e.currentShield > e.maxCurrentShield)
+						e.maxCurrentShield = e.currentShield;
 
 					e.anim.getEff(SHIELD_REGEN);
 				}
@@ -904,7 +905,6 @@ public abstract class Entity extends AbEntity {
 			type &= 7;
 			long mul = type == 0 ? 100 : type == 1 ? e.maxH : type == 2 ? e.health : (e.maxH - e.health);
 			e.damage += mul * dmg / 100;
-
 		}
 
 		private void getMax() {
@@ -925,7 +925,10 @@ public abstract class Entity extends AbEntity {
 					ws.time--;
 					ws.prob--;// used as counter for itv
 					if (e.health > 0 && ws.prob <= 0) {
-						damage(ws.damage, type(ws));
+						if (!ws.type.ignoreMetal && (e instanceof EEnemy && e.data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL)) || (e instanceof EUnit && (e.getAbi() & AB_METALIC) != 0)))
+							e.damage += 1;
+						else
+							damage(ws.damage, type(ws));
 						ws.prob += ws.itv;
 					}
 				}
@@ -998,7 +1001,7 @@ public abstract class Entity extends AbEntity {
 			} else if (e.status[P_BARRIER][1] > 0) {
 				e.status[P_BARRIER][1]--;
 				if (e.status[P_BARRIER][1] == 0) {
-					e.status[P_BARRIER][0] = e.getProc().BARRIER.health;
+					e.status[P_BARRIER][0] = e.getProc().BARRIER.type.magnif ? (int) (e.shieldMagnification * e.getProc().BARRIER.health) : e.getProc().BARRIER.health;
 					int timeout = e.getProc().BARRIER.timeout;
 					if (timeout > 0)
 						e.status[P_BARRIER][2] = timeout + effas().A_B.len(BarrierEff.NONE);
@@ -1108,7 +1111,6 @@ public abstract class Entity extends AbEntity {
 				int[][] status = e.status;
 				doRevive(c);
 				// clear state
-				e.waitTime = 0;
 				e.bdist = 0;
 				status[P_BURROW][2] = 0;
 				status[P_STOP] = new int[PROC_WIDTH];
@@ -1321,12 +1323,12 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * Entity's shield hp
 	 */
-	public int currentShield;
+	public int currentShield, maxCurrentShield;
 
 	/**
 	 * Used for regenerating shield considering enemy's magnification
 	 */
-	double shieldMagnification = 1.0;
+	private final double shieldMagnification;
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double atkMagnif, double hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
@@ -1335,16 +1337,18 @@ public abstract class Entity extends AbEntity {
 		aam = AtkModelEntity.getEnemyAtk(this, atkMagnif);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
-		status[P_BARRIER][0] = getProc().BARRIER.health;
+		status[P_BARRIER][0] = getProc().BARRIER.type.magnif ? (int) (getProc().BARRIER.health * hpMagnif) : getProc().BARRIER.health;
 		status[P_BARRIER][1] = getProc().BARRIER.regentime;
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
+		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (hpMagnif * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (hpMagnif * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
-		currentShield = (int) (de.getProc().DEMONSHIELD.hp * hpMagnif);
+		maxCurrentShield = currentShield = (int) (de.getProc().DEMONSHIELD.hp * hpMagnif);
 		shieldMagnification = hpMagnif;
 	}
 
@@ -1363,11 +1367,14 @@ public abstract class Entity extends AbEntity {
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
+		status[P_DMGCUT][0] = getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;
 		sealed.REVIVE.health = data.getProc().REVIVE.health;
-		currentShield = de.getProc().DEMONSHIELD.hp;
+		maxCurrentShield = currentShield = (int) (de.getProc().DEMONSHIELD.hp * lvMagnif);
+		shieldMagnification = lvMagnif;
 	}
 
 	public void altAbi(int alt) {
@@ -1381,6 +1388,7 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public void damaged(AttackAb atk) {
 		int dmg = getDamage(atk, atk.atk);
+		boolean proc = true;
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
 			if (getProc().IMUWAVE.mult > 0)
@@ -1413,7 +1421,7 @@ public abstract class Entity extends AbEntity {
 
 		Proc.PT imuatk = getProc().IMUATK;
 		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false)) {
-			if (status[P_IMUATK][0] == 0 && basis.r.nextDouble() * 100 < imuatk.prob) {
+			if (status[P_IMUATK][0] == 0 && (imuatk.prob == 100 || basis.r.nextDouble() * 100 < imuatk.prob)) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
 			}
@@ -1422,23 +1430,30 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmg < dmgcut.dmg && dmg > 0 && basis.r.nextDouble() * 100 < dmgcut.prob) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);
-				if (dmgcut.type.procs)
+			if (dmgcut.type.procs)
+				proc = false;
+
+			if (dmgcut.reduction == 100) {
+				if (!proc)
 					return;
-				else
-					dmg = 0;
+				dmg = 0;
+			} else if (dmgcut.reduction != 0)
+				dmg = dmg * (100 - dmgcut.reduction) / 100;
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || atk.dire == -1 || receive(-1) || ctargetable(atk.trait, atk.attacker, false)) && dmg > dmgcap.dmg && basis.r.nextDouble() * 100 < dmgcap.prob) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
-			if (dmgcap.type.nullify)
-				if (dmgcap.type.procs)
+			if (dmgcap.type.procs)
+				proc = false;
+
+			if (dmgcap.type.nullify) {
+				if (!proc)
 					return;
-				else
-					dmg = 0;
-			else
+				dmg = 0;
+			} else
 				dmg = dmgcap.dmg;
 		}
 
@@ -1473,6 +1488,9 @@ public abstract class Entity extends AbEntity {
 				cancelAllProc();
 			} else {
 				currentShield -= dmg;
+
+				if (currentShield > maxCurrentShield)
+					currentShield = maxCurrentShield;
 
 				anim.getEff(SHIELD_HIT);
 
@@ -1522,7 +1540,7 @@ public abstract class Entity extends AbEntity {
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
-			if (basis.r.nextDouble() * 100 < counter.prob && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
+			if ((counter.prob == 100 || basis.r.nextDouble() * 100 < counter.prob) && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
 				if (!isWave || counter.type.counterWave != 0) {
 					double[] ds = counter.minRange != 0 || counter.maxRange != 0 ? new double[]{pos + counter.minRange, pos + counter.maxRange} : aam.touchRange();
@@ -1534,9 +1552,10 @@ public abstract class Entity extends AbEntity {
 
 					if (counter.type.procType == 1 || counter.type.procType == 3)
 						for (String s0 : par)
-							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE") && isWave)
-								reflectProc.get(s0).set(e.data.getAllProc().get(s0));
-							else
+							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE")) {
+								if (isWave && counter.type.counterWave == 2)
+									reflectProc.get(s0).set(atk.getProc().get(s0));
+							} else
 								reflectProc.get(s0).set(atk.getProc().get(s0));
 
 					if (data.getCounter() != null) {
@@ -1558,21 +1577,19 @@ public abstract class Entity extends AbEntity {
 
 						if (counter.type.procType >= 2) {
 							Proc p = data.getAllProc();
-							for (String s0 : par)
+							for (String s0 : par) {
+								if ((s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE")) && (!isWave || counter.type.counterWave != 2))
+									continue;
+
 								if (p.get(s0).perform(e.basis.r))
 									reflectProc.get(s0).set(p.get(s0));
+							}
 						}
 					}
 					if (e.status[P_WEAK][0] > 0)
 						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
 					if (e.status[P_STRONG][0] != 0)
 						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
-
-					if (isWave && counter.type.counterWave != 2) {
-						reflectProc.getArr(P_WAVE).clear();
-						reflectProc.getArr(P_VOLC).clear();
-						reflectProc.getArr(P_MINIWAVE).clear();
-					}
 
 					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
 					if (counter.type.areaAttack)
@@ -1584,7 +1601,7 @@ public abstract class Entity extends AbEntity {
 		});
 
 		// process proc part
-		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
+		if (!proc || !(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -1592,7 +1609,8 @@ public abstract class Entity extends AbEntity {
 			if (rst == 100) {
 				anim.getEff(INV);
 			} else {
-				damage += maxH * atk.getProc().POIATK.mult / 100;
+				double poiDmg = atk.getProc().POIATK.mult * (100 - rst) / 10000.0;
+				damage += maxH * poiDmg;
 				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
 				basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 				CommonStatic.setSE(SE_POISON);
@@ -1604,29 +1622,35 @@ public abstract class Entity extends AbEntity {
 		double dist = 1 + f * 0.1;
 		if (atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || atk.canon != -2)
 			dist = time = 1;
-		if (atk.getProc().STOP.time > 0) {
+		if (atk.getProc().STOP.time != 0 || atk.getProc().STOP.prob > 0) {
 			int val = (int) (atk.getProc().STOP.time * time);
 			int rst = getProc().IMUSTOP.mult;
-			val = val * (100 - rst) / 100;
-			status[P_STOP][0] = Math.max(status[P_STOP][0], val);
-			if (rst < 100)
+			if (rst < 100) {
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_STOP][0] = Math.max(status[P_STOP][0], Math.abs(val));
+				else
+					status[P_STOP][0] = val;
 				anim.getEff(P_STOP);
-			else
+			} else
 				anim.getEff(INV);
 		}
-		if (atk.getProc().SLOW.time > 0) {
+		if (atk.getProc().SLOW.time != 0 || atk.getProc().SLOW.prob > 0) {
 			int val = (int) (atk.getProc().SLOW.time * time);
 			int rst = getProc().IMUSLOW.mult;
-			val = val * (100 - rst) / 100;
-			status[P_SLOW][0] = Math.max(status[P_SLOW][0], val);
-			if (rst < 100)
+			if (rst < 100) {
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_SLOW][0] = Math.max(status[P_SLOW][0], Math.abs(val));
+				else
+					status[P_SLOW][0] = val;
 				anim.getEff(P_SLOW);
-			else
+			} else
 				anim.getEff(INV);
 		}
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
-			int rst = (atk.getProc().WEAK.mult - 100) * getProc().IMUWEAK.smartImu <= 0 ? getProc().IMUWEAK.mult : 0;
+			int rst = checkAIImmunity(atk.getProc().WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0;
 			val = val * (100 - rst) / 100;
 			if (rst < 100) {
 				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
@@ -1634,14 +1658,17 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INV);
 		}
-		if (atk.getProc().CURSE.time > 0) {
+		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
 			int rst = getProc().IMUCURSE.mult;
-			val = val * (100 - rst) / 100;
-			status[P_CURSE][0] = Math.max(status[P_CURSE][0], val);
-			if (rst < 100)
+			if (rst < 100) {
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_CURSE][0] = Math.max(status[P_CURSE][0], Math.abs(val));
+				else
+					status[P_CURSE][0] = val;
 				anim.getEff(P_CURSE);
-			else
+			} else
 				anim.getEff(INV);
 		}
 		if (atk.getProc().KB.dis != 0) {
@@ -1670,21 +1697,28 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INVWARP);
 
-		if (atk.getProc().SEAL.time > 0) {
-			int res = data.getProc().IMUSEAL.mult;
-			if (res < 100) {
+		if (atk.getProc().SEAL.prob > 0) {
+			int rst = data.getProc().IMUSEAL.mult;
+			if (rst < 100) {
 				int val = (int) (atk.getProc().SEAL.time * time);
-				status[P_SEAL][0] = val * (100 - res) / 100;
+				val = val * (100 - rst) / 100;
+				if (val < 0)
+					status[P_SEAL][0] = Math.max(status[P_SEAL][0], Math.abs(val));
+				else
+					status[P_SEAL][0] = val;
 				anim.getEff(P_SEAL);
 			} else
 				anim.getEff(INV);
 		}
 
 		if (atk.getProc().POISON.time > 0) {
-			int res = getProc().IMUPOI.smartImu * atk.getProc().POISON.damage >= 0 ? getProc().IMUPOI.mult : 0;
+			int res = checkAIImmunity(atk.getProc().POISON.damage, getProc().IMUPOI.smartImu, getProc().IMUPOI.mult < 0) ? getProc().IMUPOI.mult : 0;
 			if (res < 100) {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
+				if (atk.atk != 0 && ws.type.modifAffected)
+					ws.damage *= (double) getDamage(atk, atk.atk) / atk.atk;
+
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
@@ -1692,7 +1726,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (!isBase && atk.getProc().ARMOR.time > 0) {
-			int res = getProc().IMUARMOR.smartImu * atk.getProc().ARMOR.mult >= 0 ? getProc().IMUARMOR.mult : 0;
+			int res = checkAIImmunity(atk.getProc().ARMOR.mult, getProc().IMUARMOR.smartImu, getProc().IMUARMOR.mult < 0) ? getProc().IMUARMOR.mult : 0;
 			if (res < 100) {
 				int val = (int) (atk.getProc().ARMOR.time * time);
 				status[P_ARMOR][0] = val * (100 - res) / 100;
@@ -1704,12 +1738,15 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc().SPEED.time > 0) {
 			int res = getProc().IMUSPEED.mult;
-			if (atk.getProc().SPEED.type == 0) {
-				int ar = getProc().IMUSPEED.smartImu;
-				if ((ar == 1 && atk.getProc().SPEED.speed >= data.getSpeed()) || (ar == -1 && atk.getProc().SPEED.speed <= data.getSpeed()))
-					res = 0;
-			} else if (getProc().IMUSPEED.smartImu * atk.getProc().SPEED.speed > 0)
+
+			boolean b;
+			if (atk.getProc().SPEED.type == 2)
+				b = (data.getSpeed() > atk.getProc().SPEED.speed && res > 0) || (data.getSpeed() < atk.getProc().SPEED.speed && res < 0);
+			else
+				b = res < 0;
+			if (checkAIImmunity(atk.getProc().SPEED.speed, getProc().IMUSPEED.smartImu, b))
 				res = 0;
+
 			if (res < 100) {
 				int val = (int) (atk.getProc().SPEED.time * time);
 				status[P_SPEED][0] = val * (100 - res) / 100;
@@ -1718,6 +1755,16 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_SPEED);
 			} else
 				anim.getEff(INV);
+		}
+	}
+
+	private boolean checkAIImmunity(int val, int side, boolean invert) {
+		if (side == 0)
+			return true;
+		if (invert) {
+			return val * side < 0;
+		} else {
+			return val * side > 0;
 		}
 	}
 
@@ -1812,7 +1859,7 @@ public abstract class Entity extends AbEntity {
 		}
 		// lethal strike
 		if (getProc().LETHAL.prob > 0 && health <= 0) {
-			boolean b = basis.r.nextDouble() * 100 < getProc().LETHAL.prob;
+			boolean b = getProc().LETHAL.prob == 100 || basis.r.nextDouble() * 100 < getProc().LETHAL.prob;
 			if (status[P_LETHAL][0] == 0 && b) {
 				health = 1;
 				anim.getEff(P_LETHAL);
@@ -2029,7 +2076,7 @@ public abstract class Entity extends AbEntity {
 		int criti = getProc().CRITI.mult;
 		if (criti == 100)
 			crit = 0;
-		else if (criti > 0)
+		else if (criti != 0)
 			crit *= (100 - getProc().CRITI.mult) / 100.0;
 		if (isMetal)
 			if (crit > 0)

@@ -162,7 +162,7 @@ public class BGEffectHandler {
             wait = null;
 
         for(int i = 0; i < count; i++) {
-            EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
+            EAnimD<BGEffectAnim.BGEffType> anim = anims[Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
             anim.removeBasePivot();
 
             int time = 0;
@@ -173,7 +173,8 @@ public class BGEffectHandler {
                 time = segment.frame.getAnimFrame(anim);
             }
 
-            anim.setTime(time);
+            anim.setTime(time - 1);
+            anim.update(false);
 
             animation.add(anim);
 
@@ -299,10 +300,6 @@ public class BGEffectHandler {
             if(segment.angleVelocity != null) {
                 angleVelocity[i] = segment.angleVelocity.getRangeD(w);
             }
-
-            if(segment.frame != null) {
-                animation.get(i).setTime(segment.frame.getRangeI(w));
-            }
         }
     }
 
@@ -314,7 +311,7 @@ public class BGEffectHandler {
                 wait[i]--;
 
                 if(wait[i] == 0) {
-                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
+                    EAnimD<BGEffectAnim.BGEffType> anim = anims[Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
 
                     animation.set(i, anim);
@@ -322,7 +319,8 @@ public class BGEffectHandler {
                     if(segment.frame != null) {
                         int time = segment.frame.getAnimFrame(anim);
 
-                        anim.setTime(time);
+                        anim.setTime(time - 1);
+                        anim.update(false);
 
                         reInitialize(i, w, h, midH, time);
                     } else {
@@ -361,7 +359,7 @@ public class BGEffectHandler {
                 if(segment.wait != null) {
                     wait[ind] = segment.wait.getPureRangeI();
                 } else {
-                    EAnimD<BGEffectAnim.BGEffType> anim = anims[(int) Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
+                    EAnimD<BGEffectAnim.BGEffType> anim = anims[Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();
 
                     animation.set(ind, anim);
@@ -369,7 +367,8 @@ public class BGEffectHandler {
                     if(segment.frame != null) {
                         int time = segment.frame.getAnimFrame(anim);
 
-                        anim.setTime(time);
+                        anim.setTime(time - 1);
+                        anim.update(false);
 
                         reInitialize(ind, w, h, midH, time);
                     } else {
@@ -386,6 +385,10 @@ public class BGEffectHandler {
         for(int i = 0; i < count; i++) {
             if(!zOrder[i]) {
                 EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
+
+                if(anim.done())
+                    continue;
+
                 g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
                 g.rotate(angle[i]);
                 anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
@@ -403,6 +406,10 @@ public class BGEffectHandler {
         for(int i = 0; i < count; i++) {
             if(zOrder[i]) {
                 EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
+
+                if(anim.done())
+                    continue;
+
                 g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
                 g.rotate(angle[i]);
                 anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
@@ -499,12 +506,12 @@ public class BGEffectHandler {
         }
 
         if(segment.lifeTime != null) {
-            lifeTime[ind] = segment.lifeTime.getAnimFrame(animation.get(ind));
+            int l = segment.lifeTime.getAnimFrame(animation.get(ind));
+
+            lifeTime[ind] = Math.max(0,l - time);
 
             if(lifeTime[ind] == 0)
                 lifeTime[ind] = -1;
-            else
-                lifeTime[ind] = Math.max(1, lifeTime[ind] - time);
         }
 
         if(segment.destroyLeft != null) {

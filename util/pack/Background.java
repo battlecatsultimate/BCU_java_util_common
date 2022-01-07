@@ -47,19 +47,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		qs.poll();
 		for (VFile vf : VFile.get("./org/img/bg/").list())
 			if (vf.getName().length() == 9) {
-				int[] ints = new int[15];
-				try {
-					String q = qs.poll();
+				String q = qs.poll();
 
-					if(q == null)
-						continue;
+				if(q == null)
+					continue;
 
-					String[] strs = q.split(",");
-					for (int i = 0; i < 15; i++)
-						ints[i] = Integer.parseInt(strs[i]);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				int[] ints = CommonStatic.parseIntsN(q);
+
 				Background bg = new Background(new VImg(vf), ints);
 
 				switch (bg.id.id) {
@@ -225,6 +219,24 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		UserProfile.getBCData().bgs.add(this);
+
+		if(ints.length == 19) {
+			overlayAlpha = ints[18];
+			overlay = new int[][] {
+					{ints[15], ints[16], ints[17]},
+					{ints[15], ints[16], ints[17]}
+			};
+		} else if(ints.length == 23) {
+			if(ints[18] != ints[22]) {
+				System.out.println("W/Background | Different overlay alpha value found! : A0 = "+ints[18]+" / A1 = "+ints[22]);
+			}
+
+			overlayAlpha = ints[18];
+			overlay = new int[][] {
+					{ints[15], ints[16], ints[17]},
+					{ints[19], ints[20], ints[21]}
+			};
+		}
 	}
 
 	@Override
@@ -302,6 +314,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		if(loaded)
 			return;
 
+		img.mark(Marker.BG);
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		parts = aux.iclist.get(ic).cut(img.getImg());
+		loaded = true;
+	}
+
+	public void forceLoad() {
 		img.mark(Marker.BG);
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		parts = aux.iclist.get(ic).cut(img.getImg());

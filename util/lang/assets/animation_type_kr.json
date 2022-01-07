@@ -1,0 +1,79 @@
+{
+  "KBEff": {
+    "SW": "보스 파동",
+    "ASS": "스나이퍼 공격",
+    "KB": "밀치기"
+  },
+  "UType": {
+    "BURROW_UP": "버로우 업",
+    "BURROW_MOVE": "버로우 이동",
+    "IDLE": "대기",
+    "HB": "히트백",
+    "BURROW_DOWN": "버로우 다운",
+    "ENTER": "입장",
+    "ATK": "공격",
+    "WALK": "이동"
+  },
+  "VolcEff": {
+    "DURING": "진행",
+    "START": "시작",
+    "END": "끝"
+  },
+  "ArmorEff": {
+    "BUFF": "버프",
+    "DEBUFF": "디버프"
+  },
+  "SpeedEff": {
+    "UP": "증가",
+    "DOWN": "감소"
+  },
+  "WaveType": {
+    "DEF": "기본"
+  },
+  "WeakUpEff": {
+    "UP": "증가"
+  },
+  "WarpEff": {
+    "ENTER": "입장",
+    "EXIT": "퇴장"
+  },
+  "NyType": {
+    "BASE": "성 이펙트",
+    "ATK": "성 공격",
+    "EXT": "엑스트라"
+  },
+  "BarrierEff": {
+    "DESTR": "부서짐",
+    "BREAK": "파괴",
+    "NONE": "기본"
+  },
+  "BGWvType": {
+    "ENEMY": "적 파동",
+    "UNIT": "유닛 파동"
+  },
+  "ZombieEff": {
+    "DOWN": "녹다운",
+    "REVIVE": "부활"
+  },
+  "SoulType": {
+    "DEF": "기본"
+  },
+  "SniperEff": {
+    "IDLE": "대기",
+    "ATK": "공격"
+  },
+  "DefEff": {
+    "DEF": "기본"
+  },
+  "ShieldEff": {
+    "FULL" : "최대",
+    "HALF" : "절반",
+    "BROKEN" : "부서짐",
+    "BREAKER" : "파괴",
+    "REGENERATION" : "회복"
+  },
+  "DmgCap": {
+    "FAIL" : "실패",
+    "SUCCESS" : "성공"
+  }
+}

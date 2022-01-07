@@ -144,7 +144,7 @@ public class Replay extends Data {
 			is.nextString();
 			is.nextString();
 		}
-		Replay ans = new Replay(lu, st.id, star, conf, seed);
+		Replay ans = new Replay(lu, st.id, star, conf, seed, false);
 		int[] act = new int[action.nextInt()];
 		for (int i = 0; i < act.length; i++)
 			act[i] = action.nextInt();
@@ -194,6 +194,8 @@ public class Replay extends Data {
 	public Identifier<Stage> st;
 	@JsonField
 	public BasisLU lu;
+	@JsonField
+	public boolean buttonDelay = false;
 	public int[] action;
 	public boolean marked;// FIXME mark save
 
@@ -203,17 +205,18 @@ public class Replay extends Data {
 
 	}
 
-	public Replay(BasisLU blu, Identifier<Stage> sta, int stars, int[] con, long se) {
+	public Replay(BasisLU blu, Identifier<Stage> sta, int stars, int[] con, long se, boolean buttonDelay) {
 		lu = blu;
 		st = sta;
 		star = stars;
 		conf = con;
 		seed = se;
+		this.buttonDelay = buttonDelay;
 	}
 
 	@Override
 	public Replay clone() {
-		return new Replay(lu.copy(), st, star, conf.clone(), seed);
+		return new Replay(lu.copy(), st, star, conf.clone(), seed, buttonDelay);
 	}
 
 	public int getLen() {
@@ -245,17 +248,18 @@ public class Replay extends Data {
 		}
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
+		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
 		rl.id = str;
-		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
-		Workspace.validate(rl);
+		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
+		Workspace.validate(Source.REPLAY, rl);
 		if (rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
 			write();
 			return;
 		}
-		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
-		Context.renameTo(src, dst);
+		Context.renameTo(dst, src);
+		write();
 	}
 
 	@Override

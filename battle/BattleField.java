@@ -6,8 +6,8 @@ public abstract class BattleField {
 
 	public StageBasis sb;
 
-	protected BattleField(EStage stage, BasisLU bas, int[] ints, long seed) {
-		sb = new StageBasis(stage, bas, ints, seed);
+	protected BattleField(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelay) {
+		sb = new StageBasis(stage, bas, ints, seed, buttonDelay);
 	}
 
 	protected BattleField(StageBasis bas) {

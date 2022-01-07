@@ -155,9 +155,7 @@ public class AnimCE extends AnimCI {
 	public void localize() {
 		check();
 		map().remove(id.id);
-		AnimGroup.workspaceGroup.renewGroup();
 		SourceAnimSaver saver = new SourceAnimSaver(id, this);
-		saver.delete(true);
 		for (UserPack pack : UserProfile.getUserPacks())
 			if (pack.editable) {
 				List<Animable<AnimU<?>, UType>> list = new ArrayList<>();
@@ -176,6 +174,8 @@ public class AnimCE extends AnimCI {
 				for (Animable<AnimU<?>, UType> a : list)
 					a.anim = tar;
 			}
+		saver.delete(true);
+		AnimGroup.workspaceGroup.renewGroup();
 	}
 
 	public void merge(AnimCE a, int x, int y) {
@@ -401,7 +401,7 @@ public class AnimCE extends AnimCI {
 
 	private void history(String str) {
 		partial();
-		OutStream os = OutStream.getIns();
+		OutStream os = OutStream.getAnimIns();
 		imgcut.write(os);
 		mamodel.write(os);
 		os.writeInt(anims.length);

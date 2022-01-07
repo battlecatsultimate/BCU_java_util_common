@@ -227,6 +227,19 @@ public class UserProfile {
 			prog.accept(1.0 * (ind++) / tot);
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
+
+		for (PackData.UserPack pk : profile.packlist) {
+			checkMissingParents(pk);
+		}
+	}
+
+	public static void checkMissingParents(UserPack pk) {
+		List<String> missingDependencies = new ArrayList<>();
+		for (String dep : pk.desc.dependency)
+			if (!profile.packmap.containsKey(dep))
+				missingDependencies.add(dep);
+		if (missingDependencies.size() > 0)
+			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.name + " (" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
 	}
 
 	public static UserProfile profile() {
@@ -303,8 +316,44 @@ public class UserProfile {
 		profile().failed.clear();
 	}
 
+	public static void reloadExternalPacks() {
+		UserProfile profile = profile();
+		for (UserPack pack : getUserPacks()) {
+			if (pack.editable)
+				continue;
+
+			profile.packmap.remove(pack.desc.id);
+			profile.packlist.remove(pack);
+			profile.failed.remove(pack);
+			pack.unregister();
+		}
+
+		File packs = CommonStatic.ctx.getAuxFile("./packs");
+		if (packs.exists())
+			for (File f : packs.listFiles())
+				if (f.getName().endsWith(".pack.bcuzip")) {
+					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
+							"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
+
+					if (pack != null) {
+						if (profile.packlist.contains(pack)) {
+							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) pack.source).getPackFile().getName()
+									+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
+						} else {
+							profile.add(pack);
+						}
+					}
+				}
+
+		profile.packlist.addAll(profile.failed);
+
+		for (PackData.UserPack pk : profile.packlist) {
+			checkMissingParents(pk);
+		}
+	}
+
 	public static void unloadPack(UserPack pack) {
-		pack.unregister();;
+		pack.unregister();
 
 		profile().packmap.remove(pack.getSID());
 		profile().packlist.remove(pack);

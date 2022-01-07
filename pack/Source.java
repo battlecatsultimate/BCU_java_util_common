@@ -275,7 +275,7 @@ public abstract class Source {
 		private void write(String type, Consumer<PrintStream> con) throws IOException {
 			File f = CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/" + id.base + "/" + id.id + "/" + type);
 			Context.check(f);
-			PrintStream ps = new PrintStream(f);
+			PrintStream ps = new PrintStream(f, StandardCharsets.UTF_8.toString());
 			con.accept(ps);
 			ps.close();
 		}

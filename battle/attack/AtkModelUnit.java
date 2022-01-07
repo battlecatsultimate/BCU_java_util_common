@@ -53,10 +53,11 @@ public class AtkModelUnit extends AtkModelEntity {
 				EUnit eu = ef.invokeEntity(b, lvl[0]);
 				if (conf.same_health)
 					eu.health = e.health;
-				int l0 = 0, l1 = 9;
+
 				if (!conf.random_layer)
-					l0 = l1 = e.layer;
-				eu.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
+					eu.layer = e.layer;
+				else
+					eu.layer = (int) (b.r.nextDouble() * 9);
 				eu.added(-1, (int) up);
 				b.tempe.add(new EntCont(eu, time));
 				eu.setSummon(conf.anim_type);

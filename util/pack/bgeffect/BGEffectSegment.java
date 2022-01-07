@@ -379,12 +379,14 @@ public class BGEffectSegment {
                 return BattleRange.SNAP.BACK;
             case "animeInterval":
                 return BattleRange.SNAP.INTERVAL;
+            case "animeLength":
+                return BattleRange.SNAP.LENGTH;
             case "secondToFrame":
                 return BattleRange.SNAP.SECOND;
             case "percentToFloat":
                 return BattleRange.SNAP.PERCENT;
             default:
-                throw new IllegalStateException("Unknown base type found : "+base);
+                throw new IllegalStateException("Unknown base type found in " + json + " : "+base);
         }
     }
 

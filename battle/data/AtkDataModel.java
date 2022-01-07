@@ -149,7 +149,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	public boolean isOmni() {
-		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0);
+		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0) || (ld0 < 0 && ld1 == 0);
 	}
 
 	private void zread(String ver, InStream is) {

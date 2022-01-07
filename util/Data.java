@@ -76,12 +76,16 @@ public class Data {
 				public boolean traitIgnore;
 				@Order(1)
 				public boolean procs;
+				@Order(2)
+				public boolean magnif;
 			}
 			@Order(0)
 			public int prob;
 			@Order(1)
 			public int dmg;
 			@Order(2)
+			public int reduction;
+			@Order(3)
 			public TYPE type = new TYPE();
 		}
 
@@ -95,6 +99,8 @@ public class Data {
 				public boolean nullify;
 				@Order(2)
 				public boolean procs;
+				@Order(3)
+				public boolean magnif;
 			}
 			@Order(0)
 			public int prob;
@@ -191,6 +197,10 @@ public class Data {
 				public int damage_type;
 				@Order(1)
 				public boolean unstackable;
+				@Order(2)
+				public boolean ignoreMetal;
+				@Order(3)
+				public boolean modifAffected;
 			}
 
 			@Order(0)
@@ -302,6 +312,8 @@ public class Data {
 					int prob = f.getInt(this);
 					if (prob == 0)
 						return false;
+					if (prob == 100)
+						return true;
 					return r.nextDouble() * 100 < prob;
 				} catch (Exception e) {
 					return exists();
@@ -397,12 +409,20 @@ public class Data {
 
 		@JsonClass(noTag = NoTag.LOAD) // Starred Barrier
 		public static class BARRIER extends ProcItem {
+
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@Order(0)
+				public boolean magnif;
+			}
 			@Order(0)
 			public int health;
 			@Order(1)
 			public int regentime;
 			@Order(2)
 			public int timeout;
+			@Order(3)
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
