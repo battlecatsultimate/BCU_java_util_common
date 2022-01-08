@@ -193,7 +193,7 @@ public class UserProfile {
 		profile.fixpending = null;
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
-		if (packs.exists())
+		if (packs.exists()) {
 			for (File f : packs.listFiles())
 				if (f.getName().endsWith(".pack.bcuzip")) {
 					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
@@ -208,7 +208,9 @@ public class UserProfile {
 						}
 					}
 				}
-
+		} else {
+			packs.mkdir();
+		}
 		if (workspace.exists())
 			for (File f : workspace.listFiles())
 				if (f.isDirectory()) {
