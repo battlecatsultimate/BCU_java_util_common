@@ -156,7 +156,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 
 			if(ints[93] == 1)
 				traits.add(BCTraits.get(TRAIT_DEMON));
-			if(ints[94] == 1)
+			if(ints.length > 94 && ints[94] == 1)
 				traits.add(BCTraits.get(TRAIT_BARON));
 
 			abi = a;
