@@ -155,6 +155,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			proc.SHIELDBREAK.prob = ints[95];
 			if (ints[96] == 1)
 				t |= TB_DEMON;
+			if (ints[97] == 1)
+				a |= AB_BAKILL;
 		} catch (IndexOutOfBoundsException e) {
 		}
 
