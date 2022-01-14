@@ -205,6 +205,7 @@ public class Res extends ImgCore {
 		aux.icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
 		aux.icon[0][ABI_IMUSW] = new VImg("./org/page/icons/BossWaveX.png");
 		aux.icon[0][ABI_SNIPERI] = new VImg("./org/page/icons/SnipeX.png");
+		//aux.icon[0][ABI_BAKILL] = new VImg("./org/page/icons/BaronKiller.png");
 		aux.icon[1][P_IMUPOI] = new VImg("./org/page/icons/PoisonX.png");
 		aux.icon[1][P_IMUSEAL] = new VImg("./org/page/icons/SealX.png");
 		aux.icon[0][ABI_GHOST] = new VImg("./org/page/icons/Ghost.png");
