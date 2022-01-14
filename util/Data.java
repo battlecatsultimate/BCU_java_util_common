@@ -890,8 +890,9 @@ public class Data {
 	public static final int TRAIT_WHITE = 9;
 	public static final int TRAIT_EVA = 10;
 	public static final int TRAIT_WITCH = 11;
-	public static final int TRAIT_INFH = 12;
-	public static final int TRAIT_TOT = 13;
+	public static final int TRAIT_BARON = 12;
+	public static final int TRAIT_INFH = 13;
+	public static final int TRAIT_TOT = 14;
 
 	// treasure
 	public static final int T_RED = 0;
@@ -954,8 +955,7 @@ public class Data {
 	public static final int AB_IMUSW = 1 << 16;
 	public static final int AB_RESISTS = 1 << 17;
 	public static final int AB_MASSIVES = 1 << 18;
-	public static final int AB_BARON = 1 << 19;
-	public static final int AB_BAKILL = 1 << 20;
+	public static final int AB_BAKILL = 1 << 19;
 
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
@@ -981,8 +981,7 @@ public class Data {
 	public static final int ABI_IMUSW = 16;
 	public static final int ABI_RESISTS = 17;
 	public static final int ABI_MASSIVES = 18;
-	public static final int ABI_BARON = 19;
-	public static final int ABI_BAKILL = 20;
+	public static final int ABI_BAKILL = 19;
 	public static final int ABI_TOT = 22;// 20 currently
 
 	// proc index

@@ -8,7 +8,6 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
