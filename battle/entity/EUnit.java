@@ -115,6 +115,8 @@ public class EUnit extends Entity {
 			ans *= basis.b.t().getEKDef();
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
+		if ((atk.abi & AB_BARON) > 0 && (getAbi() & AB_BAKILL) > 0)
+			ans *= 0.7;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
