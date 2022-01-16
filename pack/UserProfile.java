@@ -323,10 +323,12 @@ public class UserProfile {
 		profile.packlist.removeIf(p -> {
 			if(!p.editable) {
 				p.unregister();
+				profile.packmap.remove(p.desc.id);
 			}
 
 			return !p.editable;
 		});
+		profile.failed.removeIf(p -> !p.editable);
 
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
 		if (packs.exists())
