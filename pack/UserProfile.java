@@ -320,15 +320,13 @@ public class UserProfile {
 
 	public static void reloadExternalPacks() {
 		UserProfile profile = profile();
-		for (UserPack pack : getUserPacks()) {
-			if (pack.editable)
-				continue;
+		profile.packlist.removeIf(p -> {
+			if(!p.editable) {
+				p.unregister();
+			}
 
-			profile.packmap.remove(pack.desc.id);
-			profile.packlist.remove(pack);
-			profile.failed.remove(pack);
-			pack.unregister();
-		}
+			return !p.editable;
+		});
 
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
 		if (packs.exists())
