@@ -17,7 +17,7 @@ import common.util.pack.Background;
 public abstract class BackgroundEffect {
     public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
-    public static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172, 173, 174};
+    public static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172, 173, 174, 1000};
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
@@ -67,7 +67,7 @@ public abstract class BackgroundEffect {
             for(int i = 0; i < jsonList.length; i++) {
                 asset.bgEffects.add(new JsonBGEffect(BackgroundEffect.jsonList[i]));
 
-                UserProfile.getBCData().bgs.get(BackgroundEffect.jsonList[i]).effect = currentSize;
+                UserProfile.getBCData().bgs.getRaw(BackgroundEffect.jsonList[i]).effect = currentSize;
 
                 currentSize++;
             }

@@ -1519,13 +1519,12 @@ public class Data {
 	}
 
 	public static String trio(int i) {
-		i %= 1000;
-		String str = "";
-		if (i < 100)
-			str += "0";
-		if (i < 10)
-			str += "0";
-		return str + i;
+		if(i < 10)
+			return "00" + i;
+		else if(i < 100)
+			return "0" + i;
+		else
+			return "" + i;
 	}
 
 	public static int reorderTrait(int oldTrait) {

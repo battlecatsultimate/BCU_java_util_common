@@ -55,6 +55,10 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 		return parseIntRaw(v, cls);
 	}
 
+	public static <T extends IndexContainer.Indexable<?, T>> Identifier<T> rawParseInt(int v, Class<? extends T> cls) {
+		return new Identifier<>(DEF, cls, v);
+	}
+
 	@Deprecated
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Identifier parseIntRaw(int v, Class<?> cls) {
