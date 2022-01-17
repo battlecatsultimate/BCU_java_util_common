@@ -40,7 +40,7 @@ public class FixIndexList<T> extends Data {
 		}
 
 		@JsonField
-		public int[] order;
+		private int[] order;
 
 		public final Class<T> cls;
 
@@ -159,7 +159,7 @@ public class FixIndexList<T> extends Data {
 		}
 	}
 
-	public T[] arr;
+	protected T[] arr;
 	protected int size = 0;
 
 	@SuppressWarnings("unchecked")
