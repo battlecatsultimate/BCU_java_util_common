@@ -328,25 +328,46 @@ public class UserProfile {
 
 			return !p.editable;
 		});
+
 		profile.failed.removeIf(p -> !p.editable);
 
-		File packs = CommonStatic.ctx.getAuxFile("./packs");
-		if (packs.exists())
-			for (File f : packs.listFiles())
-				if (f.getName().endsWith(".pack.bcuzip")) {
-					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
-							"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
+		profile.pending = new HashMap<>();
 
-					if (pack != null) {
-						if (profile.packlist.contains(pack)) {
-							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) pack.source).getPackFile().getName()
-									+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
-						} else {
-							profile.add(pack);
+		File packs = CommonStatic.ctx.getAuxFile("./packs");
+
+		if (packs.exists()) {
+			File[] fs = packs.listFiles();
+
+			if(fs != null) {
+				for (File f : fs)
+					if (f.getName().endsWith(".pack.bcuzip")) {
+						UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
+								"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
+
+						if (pack != null) {
+							UserPack p = profile.pending.put(pack.desc.id, pack);
+
+							if (p != null) {
+								CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) p.source).getPackFile().getName()
+										+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
+							}
 						}
 					}
-				}
+			}
+		}
 
+		Set<UserPack> queue = new HashSet<>(profile.pending.values());
+
+		profile.packlist.addAll(profile.failed);
+
+		int tot = queue.size();
+		int ind = 0;
+
+		while(queue.removeIf(profile::add)) {
+
+		}
+
+		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 
 		for (PackData.UserPack pk : profile.packlist) {
