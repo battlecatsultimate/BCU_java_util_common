@@ -359,13 +359,7 @@ public class UserProfile {
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
 
 		profile.packlist.addAll(profile.failed);
-
-		int tot = queue.size();
-		int ind = 0;
-
-		while(queue.removeIf(profile::add)) {
-
-		}
+		queue.removeIf(profile::add);
 
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
