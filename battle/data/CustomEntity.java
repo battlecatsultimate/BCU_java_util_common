@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
+import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +153,13 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		traits = new ArrayList<>(de.getTraits());
+		traits = new ArrayList<>();
+		for(Trait t : de.getTraits()) {
+			if(!t.BCTrait)
+				traits.add(t);
+			else if(t.id.id != Data.TRAIT_EVA && t.id.id != Data.TRAIT_WITCH)
+				traits.add(t);
+		}
 		width = de.getWidth();
 		tba = de.getTBA();
 		touch = de.getTouch();
