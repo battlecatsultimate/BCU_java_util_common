@@ -62,4 +62,6 @@ public interface FakeImage {
 	void unload();
 
 	FakeImage cloneImage();
+
+	FakeGraphics getGraphics();
 }

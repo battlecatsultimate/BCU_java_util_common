@@ -6,7 +6,9 @@ import common.battle.entity.AbEntity;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
+import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.util.anim.ImgCut;
 
 public class Res extends ImgCore {
@@ -93,11 +95,8 @@ public class Res extends ImgCore {
 		for (VImg vs : aux.ico[1])
 			vs.setCut(aux.unicut);
 
-		ImgCut ic029 = ImgCut.newIns("./org/page/img029.imgcut");
-		VImg img029 = new VImg("./org/page/img029.png");
-		FakeImage[] parts = ic029.cut(img029.getImg());
-		aux.slot[1] = new VImg(parts[9]);
-		aux.slot[2] = new VImg(parts[10]);
+		aux.slot[1] = makeLineupIconFrame(true);
+		aux.slot[2] = makeLineupIconFrame(false);
 		aux.dummyTrait = new VImg("./org/page/Trait.png");
 		readAbiIcon();
 		readBattle();
@@ -306,4 +305,23 @@ public class Res extends ImgCore {
 		// money, lv, lv dark,cost,cost dark,hp, money light,time,point
 	}
 
+	private static VImg makeLineupIconFrame(boolean isMagenta) {
+		FakeImage fimg = ImageBuilder.builder.build(110, 85);
+		FakeGraphics g = fimg.getGraphics();
+
+		if(g != null) {
+			if(isMagenta) {
+				g.setColor(FakeGraphics.MAGENTA);
+			} else {
+				g.setColor(255, 255, 0);
+			}
+
+			g.fillRect(0, 0, 5, 85);
+			g.fillRect(105, 0, 5, 85);
+			g.fillRect(0, 0, 110, 5);
+			g.fillRect(0, 80, 110, 5);
+		}
+
+		return new VImg(fimg);
+	}
 }
