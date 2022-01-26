@@ -30,11 +30,12 @@ public class WebFileIO {
 
 	public static void download(int size, String url, File file, Consumer<Double> c, boolean direct) throws Exception {
 		Context.check(file);
-		OutputStream out = new FileOutputStream(file);
-		if (direct)
-			direct(url, out, c);
-		else
-			impl(size, url, out, c, 0);
+		try (OutputStream out = new FileOutputStream(file)) {
+			if (direct)
+				direct(url, out, c);
+			else
+				impl(size, url, out, c, 0);
+		}
 	}
 
 	public static void download(String url, File file) throws Exception {

@@ -49,8 +49,9 @@ public class UpdateCheck {
 		}
 
 		public void run(Consumer<Double> prog) throws Exception {
-			if (temp.exists())
-				temp.delete();
+			if (temp.exists() && !temp.delete()) {
+				System.out.println("W/UpdateCheck::Downloader - Failed to delete " +temp.getAbsolutePath());
+			}
 			boolean success = false;
 			for (String u : url) {
 				try {
@@ -123,17 +124,18 @@ public class UpdateCheck {
 				"100201", "100203", "100204", "100300", "100303", "100304", "100400", "100401", "100403", "100500",
 				"100502", "100503", "100504", "100505", "100506", "100507", "100508", "100509", "100600", "100603",
 				"100700", "100701", "100800", "100802", "100803", "100804", "100900", "100902", "100904", "100905",
-				"100906", "100907", "101000", "101002", "110000");
+				"100906", "100907", "101000", "101002", "110000", "110002", "110100", "110101", "110200");
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
 	public static final String URL_LIB = "https://github.com/battlecatsultimate/bcu-assets/raw/master/BCU_lib/";
 	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
-	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
+	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/ass2321ets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
 
 	public static final String ALT_RES = "https://gitee.com/lcy0x1/bcu-resources/raw/master/resources/";
 	public static final String ALT_NEW = "https://gitee.com/lcy0x1/bcu-assets/raw/master/assets/";
+	public static final String ALT_UPDATE = "https://gitee.com/lcy0x1/bcu-assets/raw/master/updateInfo.json";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -246,10 +248,15 @@ public class UpdateCheck {
 
 	public static UpdateJson checkUpdate() throws Exception {
 		JsonElement update = WebFileIO.read(URL_UPDATE);
-		if (update == null)
-			return null;
-		UpdateJson json = JsonDecoder.decode(update, UpdateJson.class);
-		return json;
+
+		if (update == null) {
+			update = WebFileIO.read(ALT_UPDATE);
+
+			if(update == null)
+				return null;
+		}
+
+		return JsonDecoder.decode(update, UpdateJson.class);
 	}
 
 }
