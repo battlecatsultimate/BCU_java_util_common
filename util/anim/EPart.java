@@ -252,6 +252,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		extendX = args[13];
 		gsca = model.ints[0];
 		hf = vf = 1;
+		extendX = extendY = 0;
 	}
 
 	private P getSize() {
