@@ -130,7 +130,7 @@ public class UpdateCheck {
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
 	public static final String URL_LIB = "https://github.com/battlecatsultimate/bcu-assets/raw/master/BCU_lib/";
 	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
-	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/ass2321ets/";
+	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
 
 	public static final String ALT_RES = "https://gitee.com/lcy0x1/bcu-resources/raw/master/resources/";
