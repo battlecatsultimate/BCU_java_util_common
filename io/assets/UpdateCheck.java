@@ -133,8 +133,6 @@ public class UpdateCheck {
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
 
-	public static final String ALT_UPDATE = "https://gitee.com/lcy0x1/bcu-assets/raw/master/updateInfo.json";
-
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
 	}
@@ -245,10 +243,7 @@ public class UpdateCheck {
 		JsonElement update = WebFileIO.read(URL_UPDATE);
 
 		if (update == null) {
-			update = WebFileIO.read(ALT_UPDATE);
-
-			if(update == null)
-				return null;
+			return null;
 		}
 
 		return JsonDecoder.decode(update, UpdateJson.class);
