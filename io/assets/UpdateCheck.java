@@ -133,8 +133,6 @@ public class UpdateCheck {
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
 
-	public static final String ALT_RES = "https://gitee.com/lcy0x1/bcu-resources/raw/master/resources/";
-	public static final String ALT_NEW = "https://gitee.com/lcy0x1/bcu-assets/raw/master/assets/";
 	public static final String ALT_UPDATE = "https://gitee.com/lcy0x1/bcu-assets/raw/master/updateInfo.json";
 
 	public static void addRequiredAssets(String... str) {
@@ -160,10 +158,9 @@ public class UpdateCheck {
 			if (local != null && local.contains("asset_" + aj.id))
 				continue;
 			String url = URL_NEW + aj.id + ".asset.bcuzip";
-			String alt = ALT_NEW + aj.id + ".asset.bcuzip";
 			File temp = CommonStatic.ctx.getAssetFile("./assets/.asset.bcuzip.temp");
 			File target = CommonStatic.ctx.getAssetFile("./assets/" + aj.id + ".asset.bcuzip");
-			set.add(new Downloader(target, temp, aj.desc, false, url, alt));
+			set.add(new Downloader(target, temp, aj.desc, false, url));
 		}
 		return set;
 	}
@@ -221,8 +218,7 @@ public class UpdateCheck {
 				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
 				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
 				String url = URL_MUSIC + Data.trio(i) + ".ogg";
-				String alt = ALT_RES + "music/" + Data.trio(i) + ".ogg";
-				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url, alt));
+				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url));
 			}
 		return ans;
 	}
@@ -238,9 +234,8 @@ public class UpdateCheck {
 					str.remove(f.getName());
 			for (String s : str) {
 				String url = URL_LIB + s;
-				String alt = ALT_RES + "jar/BCU_lib/" + s;
 				libs.add(new Downloader(new File("./BCU_lib/" + s), new File("./BCU_lib/.jar.temp"),
-						"downloading BCU library " + s, false, url, alt));
+						"downloading BCU library " + s, false, url));
 			}
 		}
 		return libs;
