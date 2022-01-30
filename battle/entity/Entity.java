@@ -901,7 +901,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void damage(int dmg, int type) {
-			type &= 7;
+			type &= 3;
 			long mul = type == 0 ? 100 : type == 1 ? e.maxH : type == 2 ? e.health : (e.maxH - e.health);
 			e.damage += mul * dmg / 100;
 		}
