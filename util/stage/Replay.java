@@ -238,21 +238,22 @@ public class Replay extends Data {
 		Context.renameTo(src, dst);
 	}
 
-	public void rename(String str) {
+	public void rename(String str, Boolean putInMap) {
 		if (rl == null) {
 			rl = new ResourceLocation(ResourceLocation.LOCAL, str);
 			Workspace.validate(Source.REPLAY, rl);
 			write();
-			getMap().put(rl.id, this);
+			if (putInMap)
+				getMap().put(rl.id, this);
 			return;
 		}
-		if (rl.pack.equals(ResourceLocation.LOCAL))
+		if (putInMap && rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
 		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
 		rl.id = str;
 		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath(Source.REPLAY) + ".replay");
 		Workspace.validate(Source.REPLAY, rl);
-		if (rl.pack.equals(ResourceLocation.LOCAL))
+		if (putInMap && rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
 			write();
