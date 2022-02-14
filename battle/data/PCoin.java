@@ -33,7 +33,7 @@ public class PCoin extends Data {
 	public MaskUnit full = null;
 	public ArrayList<Trait> trait = new ArrayList<>();
 
-	public int[] max = new int[6];
+	public int[] max = new int[7];
 	@JsonField(generic = int[].class)
 	public final ArrayList<int[]> info = new ArrayList<>();
 
@@ -60,9 +60,12 @@ public class PCoin extends Data {
 	}
 
 	public void update() {
-		max = new int[1 + info.size()];
-		for (int i = 0; i < info.size(); i++)
-			max[i + 1] = info.get(i)[1];
+		if (max.length - 1 != info.size()) {
+			max = new int[info.size() + 1];
+			for (int i = 0; i < info.size(); i++)
+				max[i + 1] = info.get(i)[1];
+		}
+
 		full = improve(max);
 	}
 
