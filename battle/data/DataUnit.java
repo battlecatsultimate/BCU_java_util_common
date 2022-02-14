@@ -169,8 +169,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 				for(int i = 0; i < getAtkCount(); i++) {
 					if(i == 0) {
-						lds[0] = lds0;
-						ldr[0] = ldr0;
+						lds[i] = lds0;
+						ldr[i] = ldr0;
 					} else {
 						if(ints[99 + (i - 1) * 3] == 1) {
 							lds[i] = ints[99 + (i - 1) * 3 + 1];

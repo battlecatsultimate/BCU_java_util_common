@@ -33,6 +33,11 @@ public abstract class DefaultData extends DataEntity {
 	}
 
 	@Override
+	public MaskAtk[] getAtks() {
+		return datks;
+	}
+
+	@Override
 	public int getItv() {
 		return getLongPre() + Math.max(getTBA() - 1, getPost());
 	}

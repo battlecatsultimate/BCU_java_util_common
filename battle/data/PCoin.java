@@ -33,7 +33,7 @@ public class PCoin extends Data {
 	public MaskUnit full = null;
 	public ArrayList<Trait> trait = new ArrayList<>();
 
-	@JsonField(generic = Integer.class)
+	@JsonField(block = true)
 	public final ArrayList<Integer> max = new ArrayList<>();
 	@JsonField(generic = int[].class)
 	public final ArrayList<int[]> info = new ArrayList<>();

@@ -91,6 +91,11 @@ public abstract class CustomEntity extends DataEntity {
 		return null;
 	}
 
+	@Override
+	public MaskAtk[] getAtks() {
+		return atks;
+	}
+
 	public String getAvailable(String str) {
 		while (contains(str))
 			str += "'";

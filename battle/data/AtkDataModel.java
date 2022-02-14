@@ -148,6 +148,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		return ld0 > 0 || ld1 < 0;
 	}
 
+	@Override
 	public boolean isOmni() {
 		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0) || (ld0 < 0 && ld1 == 0);
 	}

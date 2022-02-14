@@ -32,6 +32,8 @@ public interface MaskAtk extends BattleStatic {
 		return Data.TCH_N;
 	}
 
+	boolean isOmni();
+
 	boolean isRange();
 
 	default int loopCount() {
