@@ -956,6 +956,7 @@ public class Data {
 	public static final int AB_RESISTS = 1 << 17;
 	public static final int AB_MASSIVES = 1 << 18;
 	public static final int AB_BAKILL = 1 << 19;
+	public static final int AB_CKILL = 1 << 20;
 
 	// 0111 1010 1110 0001 0111 1111
 	@Deprecated
@@ -982,6 +983,7 @@ public class Data {
 	public static final int ABI_RESISTS = 17;
 	public static final int ABI_MASSIVES = 18;
 	public static final int ABI_BAKILL = 19;
+	public static final int ABI_CKILL = 20;
 	public static final int ABI_TOT = 22;// 20 currently
 
 	// proc index

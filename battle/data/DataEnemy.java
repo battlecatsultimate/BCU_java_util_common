@@ -85,8 +85,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.STRONG.mult = ints[33];
 		proc.LETHAL.prob = ints[34];
 
-		lds = ints[35];
-		ldr = ints[36];
+		lds[0] = ints[35];
+		ldr[0] = ints[36];
 		if (ints[37] == 1)
 			proc.IMUWAVE.mult = 100;
 		if (ints[38] == 1)

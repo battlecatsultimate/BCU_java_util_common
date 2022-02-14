@@ -89,8 +89,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		proc.LETHAL.prob = ints[42];
 		if (ints[43] == 1)
 			a |= AB_METALIC;
-		lds = ints[44];
-		ldr = ints[45];
+		lds[0] = ints[44];
+		ldr[0] = ints[45];
 
 		if (ints[46] == 1)
 			proc.IMUWAVE.mult = 100;
@@ -157,6 +157,28 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				t |= TB_DEMON;
 			if (ints[97] == 1)
 				a |= AB_BAKILL;
+			if (ints[98] == 1)
+				a |= AB_CKILL;
+
+			if(getAtkCount() > 1) {
+				int lds0 = lds[0];
+				int ldr0 = ldr[0];
+
+				lds = new int[getAtkCount()];
+				ldr = new int[getAtkCount()];
+
+				for(int i = 0; i < getAtkCount(); i++) {
+					if(i == 0) {
+						lds[0] = lds0;
+						ldr[0] = ldr0;
+					} else {
+						if(ints[99 + (i - 1) * 3] == 1) {
+							lds[i] = ints[99 + (i - 1) * 3 + 1];
+							ldr[i] = ints[99 + (i - 1) * 3 + 2];
+						}
+					}
+				}
+			}
 		} catch (IndexOutOfBoundsException e) {
 		}
 

@@ -29,7 +29,7 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int getLongPoint() {
-		return data.lds + data.ldr;
+		return data.lds[index] + data.ldr[index];
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int getShortPoint() {
-		return data.lds;
+		return data.lds[index];
 	}
 
 	@Override
