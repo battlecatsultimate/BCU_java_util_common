@@ -53,7 +53,8 @@
   },
   "ZombieEff": {
     "DOWN": "녹다운",
-    "REVIVE": "부활"
+    "REVIVE": "부활",
+    "BACK" : "밀쳐남"
   },
   "SoulType": {
     "DEF": "기본"

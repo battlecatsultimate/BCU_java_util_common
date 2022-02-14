@@ -347,7 +347,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 	}
 
 	public enum ZombieEff implements EffType<ZombieEff> {
-		REVIVE("_revive"), DOWN("_down");
+		REVIVE("_revive"), DOWN("_down"), BACK("_back");
 
 		private final String path;
 
