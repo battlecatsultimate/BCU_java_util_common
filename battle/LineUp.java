@@ -204,7 +204,7 @@ public class LineUp extends Data {
 	/**
 	 * set level record of an Unit
 	 */
-	public synchronized void setLv(Unit u, int[] lv) {
+	public synchronized void setLv(Unit u, ArrayList<Integer> lv) {
 		boolean sub = updating;
 		updating = true;
 
@@ -226,7 +226,7 @@ public class LineUp extends Data {
 	/**
 	 * set orb data of an Unit
 	 */
-	public synchronized void setOrb(Unit u, int[] lvs, int[][] orbs) {
+	public synchronized void setOrb(Unit u, ArrayList<Integer> lvs, int[][] orbs) {
 		// lvs must be generated before doing something with orbs
 		boolean sub = updating;
 		updating = true;
@@ -379,7 +379,7 @@ public class LineUp extends Data {
 				orbs = is.nextIntsBB();
 			}
 			if (u != null)
-				map.put(u.id, new Level(lv, orbs));
+				map.put(u.id, new Level(Level.LvList(lv), orbs));
 		}
 		arrange();
 	}

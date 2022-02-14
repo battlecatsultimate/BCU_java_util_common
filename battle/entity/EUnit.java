@@ -65,7 +65,7 @@ public class EUnit extends Entity {
 			lvl = 1;
 			health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
 		} else {
-			lvl = level.getLvs()[0];
+			lvl = level.getLv();
 		}
 		this.level = level;
 	}

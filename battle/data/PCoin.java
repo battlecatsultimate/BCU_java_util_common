@@ -33,7 +33,8 @@ public class PCoin extends Data {
 	public MaskUnit full = null;
 	public ArrayList<Trait> trait = new ArrayList<>();
 
-	public int[] max = new int[7];
+	@JsonField(generic = Integer.class)
+	public final ArrayList<Integer> max = new ArrayList<>();
 	@JsonField(generic = int[].class)
 	public final ArrayList<int[]> info = new ArrayList<>();
 
@@ -50,9 +51,9 @@ public class PCoin extends Data {
 			info.add(new int[13]);
 			for (int j = 0; j < 13; j++)
 				info.get(i)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
-			max[i + 1] = info.get(i)[1];
-			if (max[i + 1] == 0)
-				max[i + 1] = 1;
+			max.add(info.get(i)[1]);
+			if (max.get(i + 1) == 0)
+				max.set(i + 1, 1);
 		}
 		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
 		((DataUnit)du).pcoin = this;
@@ -60,22 +61,24 @@ public class PCoin extends Data {
 	}
 
 	public void update() {
-		if (max.length - 1 != info.size()) {
-			max = new int[info.size() + 1];
+		if (max.size() - 1 != info.size())
 			for (int i = 0; i < info.size(); i++)
-				max[i + 1] = info.get(i)[1];
-		}
+				if (i + 1 < max.size())
+					max.set(i + 1, info.get(i)[1]);
+				else
+					max.add(info.get(i)[1]);
 
 		full = improve(max);
 	}
 
 	@SuppressWarnings("deprecation")
-	public MaskUnit improve(int[] lvs) {
+	public MaskUnit improve(ArrayList<Integer> lvs) {
 		MaskUnit ans = du.clone();
-		if (lvs.length < max.length)
-			System.arraycopy(max, 1, lvs, lvs.length, max.length - lvs.length);
+		for (int i = lvs.size(); i < max.size(); i++)
+			lvs.add(max.get(i));
+
 		for (int i = 0; i < info.size(); i++) {
-			if (du instanceof CustomUnit && max[i + 1] == 0)
+			if (du instanceof CustomUnit && max.get(i + 1) == 0)
 				continue;
 			if (info.get(i)[0] >= PC_CORRES.length) {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]);
@@ -86,7 +89,7 @@ public class PCoin extends Data {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]);
 				continue;
 			}
-			if (lvs[i + 1] == 0) {
+			if (lvs.get(i + 1) == 0) {
 				if (type[0] == PC_TRAIT) {
 					Trait types = UserProfile.getBCData().traits.get(type[1]);
 					ans.getTraits().remove(types);
@@ -104,7 +107,7 @@ public class PCoin extends Data {
 				for (int j = 0; j < 4; j++) {
 					int v0 = info.get(i)[2 + j * 2];
 					int v1 = info.get(i)[3 + j * 2];
-					modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+					modifs[j] = (v1 - v0) * (lvs.get(i + 1) - 1) / (maxlv - 1) + v0;
 				}
 			}
 			else
@@ -207,11 +210,11 @@ public class PCoin extends Data {
 		}
 	}
 
-	public double getAtkMultiplication(int[] lvs) {
+	public double getAtkMultiplication(ArrayList<Integer> lvs) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
-			if(lvs[i + 1] == 0)
+			if(lvs.get(i + 1) == 0)
 				continue;
 			int[] type = PC_CORRES[info.get(i)[0]];
 
@@ -225,7 +228,7 @@ public class PCoin extends Data {
 					for (int j = 0; j < 4; j++) {
 						int v0 = info.get(i)[2 + j * 2];
 						int v1 = info.get(i)[3 + j * 2];
-						modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+						modifs[j] = (v1 - v0) * (lvs.get(i + 1) - 1) / (maxlv - 1) + v0;
 					}
 				}
 				if (maxlv == 0)
@@ -239,11 +242,11 @@ public class PCoin extends Data {
 		return 1.0;
 	}
 
-	public double getHPMultiplication(int[] lvs) {
+	public double getHPMultiplication(ArrayList<Integer> lvs) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
-			if(lvs[i + 1] == 0)
+			if(lvs.get(i + 1) == 0)
 				continue;
 			int[] type = PC_CORRES[info.get(i)[0]];
 
@@ -257,7 +260,7 @@ public class PCoin extends Data {
 					for (int j = 0; j < 4; j++) {
 						int v0 = info.get(i)[2 + j * 2];
 						int v1 = info.get(i)[3 + j * 2];
-						modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+						modifs[j] = (v1 - v0) * (lvs.get(i + 1) - 1) / (maxlv - 1) + v0;
 					}
 				}
 				if (maxlv == 0)
@@ -273,8 +276,7 @@ public class PCoin extends Data {
 	
 	@OnInjected
 	public void onInjected() {
-		max = new int[1 + info.size()];
-		for (int i = 0; i < info.size(); i++)
-			max[i + 1] = info.get(i)[1];
+		for (int[] ints : info)
+			max.add(ints[1]);
 	}
 }

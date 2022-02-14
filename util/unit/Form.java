@@ -22,6 +22,8 @@ import common.util.anim.EAnimU;
 import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
 
+import java.util.ArrayList;
+
 @JCGeneric(Form.FormJson.class)
 @JsonClass(read = RType.FILL)
 public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopable<Form, Unit> {
@@ -186,33 +188,42 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		}
 	}
 
-	public int[] getPrefLvs() {
-		int[] ans = new int[6];
+	public ArrayList<Integer> getPrefLvs() {
+		ArrayList<Integer> ans;
 		final PCoin pc = du instanceof CustomUnit ? du.getPCoin() : unit.forms.length >= 3 ? unit.forms[2].du.getPCoin() : null;
-		if (pc != null)
-			ans = pc.max.clone();
-		ans[0] = unit.getPrefLv();
+
+		if (pc != null) {
+			ans = new ArrayList<>(pc.max);
+			ans.set(0, unit.getPrefLv());
+		} else {
+			ans = new ArrayList<>();
+			ans.add(unit.getPrefLv());
+		}
+
+
 		return ans;
 	}
 
-	public int[] regulateLv(int[] mod, int[] lv) {
+	public ArrayList<Integer> regulateLv(int[] mod, ArrayList<Integer> lv) {
 		if (mod != null)
-			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, lv.length));
-		int[] maxs = new int[6];
+			for (int i = 0; i < Math.min(mod.length, lv.size()); i++)
+				lv.set(i, mod[i]);
+
+		int[] maxs = new int[lv.size()];
 		maxs[0] = unit.max + unit.maxp;
 		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
 		if (pc != null) {
 			for (int i = 0; i < pc.info.size(); i++)
 				maxs[i + 1] = Math.max(1, pc.info.get(i)[1]);
 		}
-		for (int i = 0; i < lv.length; i++) {
-			if (lv[i] < 0)
-				lv[i] = 0;
-			if (lv[i] > maxs[i])
-				lv[i] = maxs[i];
+		for (int i = 0; i < lv.size(); i++) {
+			if (lv.get(i) < 0)
+				lv.set(i, 0);
+			if (lv.get(i) > maxs[i])
+				lv.set(i, maxs[i]);
 		}
-		if (lv[0] == 0)
-			lv[0] = 1;
+		if (lv.get(0) == 0)
+			lv.set(0, 1);
 		return lv;
 	}
 

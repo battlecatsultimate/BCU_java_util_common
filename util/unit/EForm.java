@@ -9,6 +9,8 @@ import common.util.Data;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimU;
 
+import java.util.ArrayList;
+
 public class EForm extends Data {
 
 	private final Form f;
@@ -16,7 +18,14 @@ public class EForm extends Data {
 
 	public final MaskUnit du;
 
-	public EForm(Form form, int... level) {
+	public EForm(Form form, int lv) {
+		f = form;
+		level = new Level();
+		level.setLv(lv);
+
+		du = form.du;
+	}
+	public EForm(Form form, ArrayList<Integer> level) {
 		f = form;
 		this.level = new Level(level);
 		PCoin pc = f.du.getPCoin();
@@ -41,18 +50,18 @@ public class EForm extends Data {
 	}
 
 	public EUnit getEntity(StageBasis b) {
-		int lv = level.getLvs()[0];
+		int lv = level.getLv();
 
 		if(b.st.isAkuStage())
-			level.getLvs()[0] = getAkuStageLevel();
+			level.setLv(getAkuStageLevel());
 
-		double d = f.unit.lv.getMult(level.getLvs()[0]);
+		double d = f.unit.lv.getMult(level.getLv());
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
 
 		EUnit result = new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
 
-		level.getLvs()[0] = lv;
+		level.setLv(lv);
 
 		return result;
 	}
@@ -70,9 +79,9 @@ public class EForm extends Data {
 
 	private int getAkuStageLevel() {
 		if(CommonStatic.getConfig().levelLimit == 0)
-			return level.getLvs()[0];
+			return level.getLv();
 
-		int normal = level.getLvs()[0];
+		int normal = level.getLv();
 		int plus = 0;
 
 		if(normal > f.unit.max) {

@@ -17,6 +17,7 @@ import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 @IndexCont(PackData.class)
@@ -117,10 +118,10 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null) {
-					int[] mlv = valid(f).getLvs();
-					int[] flv = lu.map.get(f.unit.id).getLvs();
-					for (int i = 0; i < 6; i++)
-						if (mlv[i] < flv[i])
+					ArrayList<Integer> mlv = valid(f).getLvs();
+					ArrayList<Integer> flv = lu.map.get(f.unit.id).getLvs();
+					for (int i = 0; i < mlv.size(); i++)
+						if (mlv.get(i) < flv.get(i))
 							return false;
 				}
 		return true;
@@ -156,12 +157,12 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 				mod = true;
 			}
 		if (mod)
-			return new Level(f.regulateLv(null, lv));
+			return new Level(f.regulateLv(null, Level.LvList(lv)));
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], rares[f.unit.rarity][i]);
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], all[i]);
-		return new Level(f.regulateLv(null, lv));
+		return new Level(f.regulateLv(null, Level.LvList(lv)));
 	}
 
 	public void validate(LineUp lu) {
