@@ -65,7 +65,7 @@ public abstract class DefaultData extends DataEntity {
 	@Override
 	public boolean isLD() {
 		for(int i = 0; i < ldr.length; i++) {
-			if(ldr[i] < 0)
+			if(ldr[i] <= 0)
 				return false;
 		}
 

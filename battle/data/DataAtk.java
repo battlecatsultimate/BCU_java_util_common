@@ -34,6 +34,8 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int getLongPoint() {
+		if (index >= data.lds.length)
+			return data.lds[0] + data.ldr[0];
 		return data.lds[index] + data.ldr[index];
 	}
 
@@ -47,6 +49,8 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int getShortPoint() {
+		if (index >= data.lds.length)
+			return data.lds[0];
 		return data.lds[index];
 	}
 
