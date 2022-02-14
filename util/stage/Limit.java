@@ -18,6 +18,11 @@ public class Limit extends Data implements BattleStatic {
 
 		public DefLimit(String[] strs) {
 			int mid = Integer.parseInt(strs[0]);
+
+			if(mid == 22000) {
+				mid = 3015;
+			}
+
 			StageMap map = DefMapColc.getMap(mid);
 			map.lim.add(this);
 			star = Integer.parseInt(strs[1]);

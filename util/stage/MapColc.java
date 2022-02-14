@@ -137,10 +137,12 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 			add(14, id -> new StageMap(id, akuOutbreak+"MSDDM/MapStageDataDM_000.csv", 0));
 
+			add(15, id -> new StageMap(id, abbr + "2_0_Z.csv", 3)).name = "CotC 3 Zombie";
+
 			VFile stz = VFile.get("./org/stage/CH/stageZ/");
 			for (VFile vf : stz.list()) {
 				String str = vf.getName();
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(6, 8));
 					id1 = Integer.parseInt(str.substring(9, 11));
@@ -156,11 +158,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					maps.get(12).add(id1, id -> new Stage(id, vf, 0));
 				else if (id0 == 6)
 					maps.get(13).add(id1, id -> new Stage(id, vf, 0));
+				else if (id0 == 7)
+					maps.get(15).add(id1, id -> new Stage(id, vf, 0));
 			}
 			VFile stw = VFile.get("./org/stage/CH/stageW/");
 			for (VFile vf : stw.list()) {
 				String str = vf.getName();
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(6, 8));
 					id1 = Integer.parseInt(str.substring(9, 11));
@@ -177,7 +181,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					maps.get(11).add(0, id -> new Stage(id, vf, 0));
 					continue;
 				}
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(10, 12));
 					id1 = Integer.parseInt(str.substring(13, 15));
@@ -191,7 +195,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			VFile st = VFile.get("./org/stage/CH/stage/");
 			for (VFile vf : st.list()) {
 				String str = vf.getName();
-				int id0 = -1;
+				int id0;
 				try {
 					id0 = Integer.parseInt(str.substring(5, 7));
 				} catch (Exception e) {
@@ -223,7 +227,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			for (VFile m : map.list()) {
 				String str = m.getName();
 				int len = str.length();
-				int id = -1;
+				int id;
 				try {
 					id = Integer.parseInt(str.substring(len - 7, len - 4));
 				} catch (Exception e) {
@@ -236,7 +240,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			for (VFile s : stage) {
 				String str = s.getName();
 				int len = str.length();
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(len - 10, len - 7));
 					id1 = Integer.parseInt(str.substring(len - 6, len - 4));
@@ -274,7 +278,6 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
 		}
 
-		@SuppressWarnings("deprecation")
 		@Deprecated
 		public PackMapColc(UserPack pack, InStream is) throws VerFixerException {
 			this.pack = pack;
