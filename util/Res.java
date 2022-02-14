@@ -183,6 +183,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
 		aux.icon[1][P_SHIELDBREAK] = new VImg(parts[296]);
 		aux.icon[0][ABI_BAKILL] = new VImg(parts[297]);
+		aux.icon[0][ABI_CKILL] = new VImg(parts[300]);
 		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
 		aux.icon[1][P_DEATHSURGE] = new VImg("./org/page/icons/DeathSurge.png");
 
