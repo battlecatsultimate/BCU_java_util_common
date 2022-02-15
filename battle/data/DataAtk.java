@@ -29,7 +29,7 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public boolean isOmni() {
-		return data.lds[index] < 0;
+		return data.ldr[index] < 0;
 	}
 
 	@Override
