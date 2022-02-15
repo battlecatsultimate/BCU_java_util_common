@@ -14,6 +14,7 @@ import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Queue;
 
 @JsonClass(read = JsonClass.RType.FILL)
@@ -24,7 +25,7 @@ public class PCoin extends Data {
 		for (String str : qs) {
 			String[] strs = str.trim().split(",");
 
-			if (strs.length == 67)
+			if (strs.length == 80)
 				new PCoin(strs);
 		}
 	}
@@ -47,13 +48,17 @@ public class PCoin extends Data {
 		int id = CommonStatic.parseIntN(strs[0]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
 
-		for (int i = 0; i < 5; i++) {
-			info.add(new int[13]);
-			for (int j = 0; j < 13; j++)
-				info.get(i)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
-			max.add(info.get(i)[1]);
-			if (max.get(i + 1) == 0)
-				max.set(i + 1, 1);
+		max.add(0);
+
+		for (int i = 0; i < 6; i++) {
+			if(!allZero(strs, 2 + i * 13)) {
+				info.add(new int[13]);
+				for (int j = 0; j < 13; j++)
+					info.get(info.size() - 1)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
+				max.add(info.get(info.size() - 1)[1]);
+				if (max.get(info.size()) == 0)
+					max.set(info.size(), 1);
+			}
 		}
 		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
 		((DataUnit)du).pcoin = this;
@@ -81,12 +86,12 @@ public class PCoin extends Data {
 			if (du instanceof CustomUnit && max.get(i + 1) == 0)
 				continue;
 			if (info.get(i)[0] >= PC_CORRES.length) {
-				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
 			}
 			int[] type = PC_CORRES[info.get(i)[0]];
 			if (type[0] == -1) {
-				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
 			}
 			if (lvs.get(i + 1) == 0) {
@@ -278,5 +283,15 @@ public class PCoin extends Data {
 	public void onInjected() {
 		for (int[] ints : info)
 			max.add(ints[1]);
+	}
+
+	private boolean allZero(String[] data, int index) {
+		for(int i = index; i < index + 12; i++) {
+			if(!data[i].trim().equals("0")) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
