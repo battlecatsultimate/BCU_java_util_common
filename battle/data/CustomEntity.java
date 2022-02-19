@@ -148,7 +148,10 @@ public abstract class CustomEntity extends DataEntity {
 
 	@Override
 	public int getTouch() {
-		return touch;
+		if((abi & AB_CKILL) > 0)
+			return touch | TCH_CORPSE;
+		else
+			return touch;
 	}
 
 	public void importData(MaskEntity de) {

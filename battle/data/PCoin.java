@@ -41,12 +41,19 @@ public class PCoin extends Data {
 
 	public PCoin(CustomEntity ce) {
 		du = (CustomUnit)ce;
+		max.add(0);
 		((CustomUnit)du).pcoin = this;
 	}
 
 	private PCoin(String[] strs) {
 		int id = CommonStatic.parseIntN(strs[0]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
+		max.add(0);
+
+		for (int i = 0; i < 6; i++) {
+			if (CommonStatic.parseIntN(strs[2 + i * 13]) == 0)
+				break;
+		}
 
 		max.add(0);
 
@@ -60,6 +67,7 @@ public class PCoin extends Data {
 					max.set(info.size(), 1);
 			}
 		}
+
 		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
 		((DataUnit)du).pcoin = this;
 		full = improve(max);
@@ -281,6 +289,7 @@ public class PCoin extends Data {
 	
 	@OnInjected
 	public void onInjected() {
+		max.add(0);
 		for (int[] ints : info)
 			max.add(ints[1]);
 	}

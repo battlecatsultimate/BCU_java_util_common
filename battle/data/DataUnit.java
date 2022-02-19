@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	private final Form form;
-	public int price, respawn, limit;
+	public int price, respawn, limit, touch = TCH_N;
 	private final int front;
 	private final int back;
 
@@ -157,8 +157,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				t |= TB_DEMON;
 			if (ints[97] == 1)
 				a |= AB_BAKILL;
-			if (ints[98] == 1)
+			if (ints[98] == 1) {
 				a |= AB_CKILL;
+				touch |= TCH_CORPSE;
+			}
 			if(getAtkCount() > 1) {
 				int lds0 = lds[0];
 				int ldr0 = ldr[0];
@@ -240,4 +242,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		return ans;
 	}
 
+	@Override
+	public int getTouch() {
+		return touch;
+	}
 }

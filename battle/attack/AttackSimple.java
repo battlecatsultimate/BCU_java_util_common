@@ -30,6 +30,10 @@ public class AttackSimple extends AttackAb {
 	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk) {
 		this(attacker, ent, ATK, tr, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
 		touch = mask.getTarget();
+
+		if((attacker.data.getAbi() & AB_CKILL) > 0)
+			touch |= TCH_CORPSE;
+
 		dire *= mask.getDire();
 	}
 

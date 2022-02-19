@@ -178,7 +178,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 					}
 				}
 			}
-		} catch (IndexOutOfBoundsException i) {
+		} catch (IndexOutOfBoundsException ignored) {
 
 		}
 

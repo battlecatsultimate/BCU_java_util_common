@@ -66,7 +66,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * corpse anim
 		 */
-		private EAnimD<ZombieEff> corpse;
+		public EAnimD<ZombieEff> corpse;
 
 		/**
 		 * soul anim, null means not dead yet
@@ -121,8 +121,10 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 			FakeTransform at = gra.getTransform();
-			if (corpse != null)
+			if (corpse != null) {
+				corpse.paraTo(back);
 				corpse.draw(gra, p, siz);
+			}
 			if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
 				if (corpse != null) {
 					gra.setTransform(at);
@@ -528,7 +530,11 @@ public abstract class Entity extends AbEntity {
 		private void kbAnim() {
 			int t = e.kb.kbType;
 			if (t != INT_SW && t != INT_WARP)
-				setAnim(UType.HB, true);
+				if(e.status[P_REVIVE][1] > 0) {
+					e.anim.corpse = (e.dire == -1 ? effas().A_U_ZOMBIE : effas().A_ZOMBIE).getEAnim(ZombieEff.BACK);
+				} else {
+					setAnim(UType.HB, true);
+				}
 			else
 				setAnim(UType.WALK, false);
 			if (t == INT_WARP) {
@@ -827,6 +833,10 @@ public abstract class Entity extends AbEntity {
 				}
 
 				e.anim.back = null;
+
+				if(e.status[P_REVIVE][1] > 0)
+					e.anim.corpse = (e.dire == -1 ? effas().A_U_ZOMBIE : effas().A_ZOMBIE).getEAnim(ZombieEff.DOWN);
+
 				e.anim.setAnim(UType.WALK, true);
 
 				kbDuration = 0;
@@ -2164,10 +2174,6 @@ public abstract class Entity extends AbEntity {
 			status[P_BURROW][2] = 0;
 			bdist = 0;
 			kbTime = 0;
-		}
-		if (status[P_REVIVE][1] > 0) {
-			status[P_REVIVE][1] = 0;
-			anim.corpse = null;
 		}
 	}
 

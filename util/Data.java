@@ -1213,7 +1213,7 @@ public class Data {
 			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Devil
 			{ 0, P_SHIELDBREAK }, //58 : shield piercing
 			{ 1, AB_CKILL} //59 : corpse killer
-			};
+	};
 
 	// foot icon index used in battle
 	public static final int INV = -1;

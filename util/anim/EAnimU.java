@@ -53,15 +53,4 @@ public class EAnimU extends EAnimD<AnimU.UType> {
 		g.setTransform(at);
 		g.delete(at);
 	}
-
-	/**
-	 * make this animation a component of another, used in warp and kb
-	 */
-	public void paraTo(EAnimD<?> base) {
-		if (base == null)
-			ent[0].setPara(null);
-		else
-			ent[0].setPara(base.ent[1]);
-	}
-
 }
