@@ -24,7 +24,7 @@ public class PCoin extends Data {
 		for (String str : qs) {
 			String[] strs = str.trim().split(",");
 
-			if (strs.length == 67)
+			if (strs.length == 80)
 				new PCoin(strs);
 		}
 	}
@@ -40,14 +40,19 @@ public class PCoin extends Data {
 
 	public PCoin(CustomEntity ce) {
 		du = (CustomUnit)ce;
+		max.add(0);
 		((CustomUnit)du).pcoin = this;
 	}
 
 	private PCoin(String[] strs) {
 		int id = CommonStatic.parseIntN(strs[0]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
+		max.add(0);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
+			if (CommonStatic.parseIntN(strs[2 + i * 13]) == 0)
+				break;
+
 			info.add(new int[13]);
 			for (int j = 0; j < 13; j++)
 				info.get(i)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
@@ -276,6 +281,7 @@ public class PCoin extends Data {
 	
 	@OnInjected
 	public void onInjected() {
+		max.add(0);
 		for (int[] ints : info)
 			max.add(ints[1]);
 	}

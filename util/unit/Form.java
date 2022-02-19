@@ -200,7 +200,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			ans.add(unit.getPrefLv());
 		}
 
-
 		return ans;
 	}
 
