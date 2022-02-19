@@ -48,15 +48,8 @@ public class PCoin extends Data {
 	private PCoin(String[] strs) {
 		int id = CommonStatic.parseIntN(strs[0]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
-		max.add(0);
-
-		for (int i = 0; i < 6; i++) {
-			if (CommonStatic.parseIntN(strs[2 + i * 13]) == 0)
-				break;
-		}
 
 		max.add(0);
-
 		for (int i = 0; i < 6; i++) {
 			if(!allZero(strs, 2 + i * 13)) {
 				info.add(new int[13]);
