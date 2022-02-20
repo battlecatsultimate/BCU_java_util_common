@@ -285,7 +285,10 @@ public class LineUp extends Data {
 		List<Combo> tcom = new ArrayList<>();
 		inc = new int[C_TOT];
 		loc = new int[5];
-		for (PackData p : UserProfile.getAllPacks())
+		for (PackData p : UserProfile.getAllPacks()) {
+			if (p instanceof PackData.UserPack && !((PackData.UserPack)p).useCombos)
+				continue;
+
 			for (Combo c : p.combos) {
 				boolean b = true;
 				for (int i = 0; i < c.forms.length; i++) {
@@ -321,6 +324,7 @@ public class LineUp extends Data {
 						}
 				}
 			}
+		}
 		for (int i = 0; i < coms.size(); i++)
 			if (!tcom.contains(coms.get(i))) {
 				coms.remove(i);

@@ -281,6 +281,7 @@ public abstract class PackData implements IndexContainer {
 		public Source source;
 
 		public boolean editable;
+		public boolean useCombos = true;
 		public boolean loaded = false;
 
 		private JsonElement elem;
