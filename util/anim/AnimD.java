@@ -31,7 +31,7 @@ public abstract class AnimD<A extends AnimD<A, T>, T extends Enum<T> & AnimI.Ani
 		if (mamodel == null)
 			return null;
 		MaAnim anim = getMaAnim(t);
-		return anim == null ? null : new EAnimD<T>(this, mamodel, anim);
+		return anim == null ? null : new EAnimD<T>(this, mamodel, anim, t);
 	}
 
 	public final MaAnim getMaAnim(T t) {
