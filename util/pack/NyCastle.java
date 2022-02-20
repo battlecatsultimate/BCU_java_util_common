@@ -70,11 +70,11 @@ public class NyCastle extends AnimI<NyCastle, NyCastle.NyType> {
 	public EAnimD<NyType> getEAnim(NyType t) {
 		check();
 		if (t == NyType.BASE)
-			return new EAnimD<>(this, model, manim);
+			return new EAnimD<>(this, model, manim, t);
 		if (t == NyType.ATK)
-			return new EAnimD<>(this, atkm, atka);
+			return new EAnimD<>(this, atkm, atka, t);
 		if (t == NyType.EXT)
-			return new EAnimD<>(this, extm, exta);
+			return new EAnimD<>(this, extm, exta, t);
 		return null;
 	}
 

@@ -1192,9 +1192,11 @@ public abstract class Entity extends AbEntity {
 					anim.corpse = ea.getEAnim(ZombieEff.REVIVE);
 					anim.corpse.setTime(0);
 				}
-				status[P_REVIVE][1]--;
-				if (anim.corpse != null)
-					anim.corpse.update(false);
+				if(e.kbTime == 0) {
+					status[P_REVIVE][1]--;
+					if (anim.corpse != null)
+						anim.corpse.update(false);
+				}
 				if (status[P_REVIVE][1] == 0)
 					anim.corpse = null;
 			}
@@ -1398,6 +1400,10 @@ public abstract class Entity extends AbEntity {
 	public void damaged(AttackAb atk) {
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;
+
+		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE)
+			return;
+
 		// if immune to wave and the attack is wave, jump out
 		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
 			if (getProc().IMUWAVE.mult > 0)

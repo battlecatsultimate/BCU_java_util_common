@@ -9,7 +9,7 @@ import common.util.anim.AnimU.UType;
 public class EAnimU extends EAnimD<AnimU.UType> {
 
 	protected EAnimU(AnimU<?> ani, UType i) {
-		super(ani, ani.mamodel, ani.getMaAnim(i));
+		super(ani, ani.mamodel, ani.getMaAnim(i), i);
 		type = i;
 	}
 

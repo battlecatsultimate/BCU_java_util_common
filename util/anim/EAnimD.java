@@ -13,9 +13,10 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
 	public int f = -1;
 
-	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim) {
+	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim, T t) {
 		super(ia, mm);
 		ma = anim;
+		type = t;
 	}
 
 	@SuppressWarnings("unchecked")
