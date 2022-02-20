@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.files.VFile;
@@ -20,10 +21,12 @@ import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class JsonBGEffect extends BackgroundEffect {
+    private final int id;
     private final List<BGEffectHandler> handlers = new ArrayList<>();
 
     public JsonBGEffect(int bgID) throws IOException {
-        String jsonName = "bg"+ Data.trio(bgID)+".json";
+        id = bgID;
+        String jsonName = "bg"+ Data.trio(id)+".json";
 
         VFile vf = VFile.get("./org/data/"+jsonName);
 
@@ -44,8 +47,17 @@ public class JsonBGEffect extends BackgroundEffect {
 
             for(int i = 0; i < arr.size(); i++) {
                 BGEffectSegment segment = new BGEffectSegment(arr.get(i).getAsJsonObject(), jsonName);
-                handlers.add(new BGEffectHandler(segment, bgID));
+                handlers.add(new BGEffectHandler(segment, id));
             }
+        } else if (obj.has("id")) {
+            int efID = obj.get("id").getAsInt();
+
+            ArrayList<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects;
+            for (BackgroundEffect bge : effs)
+                if (bge instanceof JsonBGEffect && ((JsonBGEffect)bge).id == efID) {
+                    handlers.addAll(((JsonBGEffect)bge).handlers);
+                    break;
+                }
         }
     }
 
