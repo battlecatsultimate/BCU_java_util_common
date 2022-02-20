@@ -1192,9 +1192,11 @@ public abstract class Entity extends AbEntity {
 					anim.corpse = ea.getEAnim(ZombieEff.REVIVE);
 					anim.corpse.setTime(0);
 				}
-				status[P_REVIVE][1]--;
-				if (anim.corpse != null)
-					anim.corpse.update(false);
+				if(e.kbTime == 0) {
+					status[P_REVIVE][1]--;
+					if (anim.corpse != null)
+						anim.corpse.update(false);
+				}
 				if (status[P_REVIVE][1] == 0)
 					anim.corpse = null;
 			}
