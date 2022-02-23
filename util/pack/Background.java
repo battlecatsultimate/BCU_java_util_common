@@ -18,8 +18,9 @@ import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.VFile;
 import common.util.Data;
-import common.util.anim.*;
-import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.anim.AnimI;
+import common.util.anim.EAnimD;
+import common.util.anim.ImgCut;
 
 import java.util.Queue;
 
@@ -170,6 +171,19 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 					};
 			}
 		}
+
+		for(int i = 0; i < UserProfile.getBCData().bgs.size(); i++) {
+			Background bg = UserProfile.getBCData().bgs.get(i);
+
+			if(bg.reference != -1) {
+				Background ref = UserProfile.getBCData().bgs.get(bg.reference);
+
+				if(ref.overlay != null) {
+					bg.overlay = ref.overlay.clone();
+					bg.overlayAlpha = ref.overlayAlpha;
+				}
+			}
+		}
 	}
 
 	@JsonClass.JCIdentifier
@@ -184,12 +198,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public int overlayAlpha;
 	@JsonField
 	public int[][] overlay;
+	@JsonField(block = true)
+	public int reference = -1;
 
 	public int ic;
 	@JsonField
 	public boolean top;
 
-	public BackgroundEffect[] efs = null;
 	public FakeImage[] parts = null;
 
 	private boolean loaded = false;
@@ -214,6 +229,7 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		VImg image;
 
 		if(ints.length >= 16 && ints[15] != -1) {
+			reference = ints[15];
 			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(ints[15])+".png"));
 		} else {
 			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id)+".png"));

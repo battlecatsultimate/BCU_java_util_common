@@ -84,7 +84,11 @@ public class StageBasis extends BattleObj {
 		bg = Identifier.getOr(st.bg, Background.class);
 		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
 		if (bg.effect != -1) {
-			bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
+			if(bg.effect == -bg.id.id && BackgroundEffect.mixture.containsKey(bg.id.id)) {
+				bgEffect = BackgroundEffect.mixture.get(bg.id.id);
+			} else if(bg.effect >= 0) {
+				bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
+			}
 		}
 		EEnemy ee = est.base(this);
 		if (ee != null) {
