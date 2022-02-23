@@ -386,9 +386,6 @@ public class BGEffectHandler {
             if(!zOrder[i]) {
                 EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
 
-                if(anim.done())
-                    continue;
-
                 g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
                 g.rotate(angle[i]);
                 anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
@@ -406,9 +403,6 @@ public class BGEffectHandler {
         for(int i = 0; i < count; i++) {
             if(zOrder[i]) {
                 EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
-
-                if(anim.done())
-                    continue;
 
                 g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
                 g.rotate(angle[i]);
