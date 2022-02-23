@@ -99,8 +99,6 @@ public abstract class BackgroundEffect {
                     }
                 }
             }
-
-            System.out.println(mixture);
         }, Context.ErrType.FATAL, "Failed to read bg effect data");
     }
 
