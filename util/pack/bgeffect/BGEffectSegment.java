@@ -186,12 +186,16 @@ public class BGEffectSegment {
 
         if(elem.has("x")) {
             x = readRangedJsonObjectI(elem, "x", i -> i*4);
+        } else if(elem.has("startX")) {
+            x = readRangedJsonObjectI(elem, "startX", i -> i*4);
         } else {
             x = new BattleRange<>(0, null, 0, null);
         }
 
         if(elem.has("y")) {
             y = readRangedJsonObjectI(elem, "y", i -> i*4);
+        } else if(elem.has("startY")) {
+            y = readRangedJsonObjectI(elem, "startY", i -> i*4);
         } else {
             y = new BattleRange<>(0, null, 0, null);
         }
