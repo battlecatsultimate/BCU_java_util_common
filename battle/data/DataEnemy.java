@@ -146,6 +146,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.dis_0 = ints[82] / 4;
 		proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
 		proc.VOLC.time = ints[84] * VOLC_ITV;
+		if (ints[85] == 1)
+			proc.IMUVOLC.mult = 100;
 		proc.DEMONSHIELD.hp = ints[87];
 		proc.DEMONSHIELD.regen = ints[88];
 		proc.DEATHSURGE.prob = ints[89];
