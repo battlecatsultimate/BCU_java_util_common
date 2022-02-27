@@ -53,7 +53,8 @@
   },
   "ZombieEff": {
     "DOWN": "死",
-    "REVIVE": "復活"
+    "REVIVE": "復活",
+    "BACK": "ふっとばす"
   },
   "SoulType": {
     "DEF": "デフォルト"
