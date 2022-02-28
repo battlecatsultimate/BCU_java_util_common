@@ -245,7 +245,14 @@ public class StageBasis extends BattleObj {
 
 	public void release() {
 		if(bg != null && bg.effect != -1) {
-			CommonStatic.getBCAssets().bgEffects.get(bg.effect).release();
+			if(bg.effect < 0) {
+				BackgroundEffect eff = BackgroundEffect.mixture.get(-bg.effect);
+
+				if(eff != null)
+					eff.release();
+			} else {
+				CommonStatic.getBCAssets().bgEffects.get(bg.effect).release();
+			}
 		}
 	}
 
