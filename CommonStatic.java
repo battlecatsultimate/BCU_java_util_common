@@ -136,6 +136,11 @@ public class CommonStatic {
 		 * Enable 6f button delay on spawn
 		 */
 		public boolean buttonDelay = true;
+
+		/**
+		 * Color of background in viewer
+		 */
+		public int viewerColor = -1;
 	}
 
 	public interface EditLink {
