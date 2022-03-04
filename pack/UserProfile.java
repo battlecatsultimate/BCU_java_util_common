@@ -90,8 +90,6 @@ public class UserProfile {
 		UserProfile profile = profile();
 		if (str.equals(Identifier.DEF))
 			return profile.def;
-		if (profile.fixpending != null && profile.fixpending.containsKey(str))
-			return profile.fixpending.get(str).data;
 		if (profile.pending != null && profile.pending.containsKey(str))
 			return profile.pending.get(str);
 		if (profile.packmap.containsKey(str))
@@ -146,8 +144,6 @@ public class UserProfile {
 	 */
 	public static UserPack getUserPack(String str) {
 		UserProfile profile = profile();
-		if (profile.fixpending != null && profile.fixpending.containsKey(str))
-			return profile.fixpending.get(str).data;
 		if (profile.pending != null && profile.pending.containsKey(str))
 			return profile.pending.get(str);
 		if (profile.packmap.containsKey(str))
@@ -184,13 +180,6 @@ public class UserProfile {
 			profile.pending = new HashMap<>();
 		}
 
-		if (profile.fixpending == null) {
-			profile.fixpending = new HashMap<>();
-		}
-
-		CommonStatic.ctx.noticeErr(() -> VerFixer.fix(profile.fixpending), ErrType.FATAL,
-				"failed to convert old format");
-		profile.fixpending = null;
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
 		if (packs.exists()) {
@@ -395,7 +384,6 @@ public class UserProfile {
 
 	private final Map<String, Map<String, ?>> registers = new HashMap<>();
 
-	private Map<String, VerFixer> fixpending = new HashMap<>();
 	public Map<String, UserPack> pending = new HashMap<>();
 
 	private UserProfile() {

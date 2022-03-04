@@ -10,13 +10,12 @@ import java.util.LinkedHashMap;
 @JsonClass
 public class MultiLangData extends Data {
     @JsonField(generic = {Integer.class, String.class})
-    private final LinkedHashMap<Integer, String> dat;
+    private final LinkedHashMap<Integer, String> dat = new LinkedHashMap<>();
 
     public MultiLangData() {
-        dat = new LinkedHashMap<>();
     }
-    public MultiLangData(MultiLangData data) {
-        dat = new LinkedHashMap<>(data.dat);
+    public MultiLangData(String str) {
+        dat.put(lang(), str);
     }
 
     public void put(String data) {

@@ -1,7 +1,6 @@
 package common.util.stage;
 
 import common.CommonStatic;
-import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.Dependency;
 import common.io.json.JsonClass;
@@ -10,10 +9,8 @@ import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
 import common.pack.PackData.PackDesc;
-import common.pack.PackData.UserPack;
 import common.pack.Source.ResourceLocation;
 import common.pack.UserProfile;
-import common.pack.VerFixer.VerFixerException;
 import common.system.BasedCopable;
 import common.system.files.VFile;
 import common.util.BattleStatic;
@@ -163,32 +160,6 @@ public class Stage extends Data
 		name = "stage " + sm.list.size();
 		lim = new Limit();
 		data = new SCDef(0);
-	}
-
-	@Deprecated
-	public Stage(UserPack pack, Identifier<Stage> id, InStream is) throws VerFixerException {
-		this(id);
-		int val = getVer(is.nextString());
-		if (val < 407)
-			throw new VerFixerException("stage version has to be higher than 407, got " + val);
-		name = is.nextString();
-		bg = Identifier.parseInt(is.nextInt(), Background.class);
-		castle = Identifier.parseInt(is.nextInt(), CastleImg.class);
-		health = is.nextInt();
-		len = is.nextInt();
-		mus0 = Identifier.parseInt(is.nextInt(), Music.class);
-		mush = is.nextInt();
-		mus1 = Identifier.parseInt(is.nextInt(), Music.class);
-		max = is.nextByte();
-		non_con = is.nextByte() == 1;
-		data = SCDef.zread(is.subStream());
-		lim = new Limit.PackLimit(pack, is);
-		int t = is.nextInt();
-		for (int i = 0; i < t; i++) {
-			String name = is.nextString();
-			Replay.getRecd(this, is.subStream(), name);
-		}
-		validate();
 	}
 
 	@SuppressWarnings("deprecation")

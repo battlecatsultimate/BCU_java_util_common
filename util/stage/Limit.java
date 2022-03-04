@@ -1,12 +1,9 @@
 package common.util.stage;
 
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
-import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
-import common.pack.VerFixer.VerFixerException;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.stage.MapColc.DefMapColc;
@@ -45,29 +42,6 @@ public class Limit extends Data implements BattleStatic {
 
 		public PackLimit() {
 		}
-
-		@Deprecated
-		public PackLimit(UserPack mc, InStream is) throws VerFixerException {
-			int ver = Data.getVer(is.nextString());
-			if (ver != 308)
-				throw new VerFixerException("Limit requires ver 308, got " + ver);
-
-			name = is.nextString();
-			sid = is.nextInt();
-			star = is.nextInt();
-			rare = is.nextInt();
-			num = is.nextByte();
-			line = is.nextByte();
-			min = is.nextInt();
-			max = is.nextInt();
-			int g = is.nextInt();
-			if (g >= 0)
-				group = mc.groups.get(g);
-			int l = is.nextInt();
-			if (l >= 0)
-				lvr = mc.lvrs.get(l);
-		}
-
 	}
 
 	@JsonField

@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
@@ -16,8 +15,6 @@ import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.Identifier;
 import common.pack.UserProfile;
-import common.pack.VerFixer;
-import common.pack.VerFixer.VerFixerException;
 import common.system.Copable;
 import common.util.unit.Form;
 import common.util.unit.Level;
@@ -121,19 +118,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 
 	public static void read() {
 		def();
-		File old = CommonStatic.ctx.getUserFile("./basis.v");
-		if (old.exists()) {
-			@SuppressWarnings("deprecation")
-			InStream is = CommonStatic.def.readBytes(old);
-			CommonStatic.ctx.noticeErr(() -> read(is), ErrType.WARN, "failed to read basis data");
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			old.delete();
-			return;
-		}
 		File f = CommonStatic.ctx.getUserFile("./basis.json");
 		if (f.exists())
 			try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
@@ -146,11 +130,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to read basis data");
 			}
-	}
-
-	@Deprecated
-	public static void read(InStream is) throws VerFixerException {
-		zreads(is, false);
 	}
 
 	public static void setCurrent(BasisSet cur) {
@@ -188,22 +167,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		return UserProfile.getStatic("BasisSet_list", () -> new ArrayList<>());
 	}
 
-	private static List<BasisSet> zreads(InStream is, boolean bac) throws VerFixerException {
-		int ver = getVer(is.nextString());
-		if (ver != 308)
-			throw new VerFixer.VerFixerException("basis set has to have version 308, got " + ver);
-		List<BasisSet> ans = bac ? new ArrayList<BasisSet>() : list();
-		int n = is.nextInt();
-		for (int i = 1; i < n; i++) {
-			BasisSet bs = new BasisSet(ver, is.subStream());
-			ans.add(bs);
-		}
-		int ind = Math.max(is.nextInt(), ans.size() - 1);
-		if (!bac)
-			setCurrent(list().get(ind));
-		return ans;
-	}
-
 	@JsonField(gen = GenType.FILL)
 	private final Treasure t;
 
@@ -230,13 +193,6 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		setCurrent(this);
 		for (BasisLU blu : ref.lb)
 			lb.add(sele = new BasisLU(this, blu));
-	}
-
-	@Deprecated
-	private BasisSet(int ver, InStream is) throws VerFixerException {
-		name = is.nextString();
-		t = new Treasure(this, ver, is);
-		zread(ver, is);
 	}
 
 	public BasisLU add() {
@@ -281,22 +237,4 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public int zser() {
 		return lb.indexOf(sele);
 	}
-
-	@Deprecated
-	private void zread(int val, InStream is) throws VerFixerException {
-		val = getVer(is.nextString());
-		if (val != 308)
-			throw new VerFixer.VerFixerException("basis set has to have version 308, got " + val);
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			String str = is.nextString();
-			int[] ints = is.nextIntsB();
-			InStream sub = is.subStream();
-			BasisLU bl = new BasisLU(this, new LineUp(308, sub), str, ints);
-			lb.add(bl);
-		}
-		int ind = is.nextInt();
-		sele = lb.get(ind);
-	}
-
 }

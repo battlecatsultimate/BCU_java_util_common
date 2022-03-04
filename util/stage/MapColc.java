@@ -1,6 +1,5 @@
 package common.util.stage;
 
-import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
@@ -9,7 +8,6 @@ import common.pack.FixIndexList.FixIndexMap;
 import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
-import common.pack.VerFixer.VerFixerException;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
@@ -276,43 +274,6 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 		public PackMapColc(UserPack pack) {
 			this.pack = pack;
 			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
-		}
-
-		@Deprecated
-		public PackMapColc(UserPack pack, InStream is) throws VerFixerException {
-			this.pack = pack;
-			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
-			int val = getVer(is.nextString());
-			if (val != 308)
-				throw new VerFixerException("MapColc requires 308, got " + val);
-			is.nextString();
-
-			int n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				CharaGroup cg = new CharaGroup(pack, is);
-				pack.groups.set(cg.id.id, cg);
-			}
-
-			n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				LvRestrict lr = new LvRestrict(pack, is);
-				pack.lvrs.set(lr.id.id, lr);
-			}
-
-			n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				StageMap sm = add(i, StageMap::new);
-				sm.name = is.nextString();
-				sm.stars = is.nextIntsB();
-				int m = is.nextInt();
-				for (int j = 0; j < m; j++) {
-					InStream sub = is.subStream();
-					sm.add(id -> Data.err(() -> new Stage(pack, id, sub)));
-				}
-				m = is.nextInt();
-				for (int j = 0; j < m; j++)
-					sm.lim.add(new Limit.PackLimit(pack, is));
-			}
 		}
 
 		@Override

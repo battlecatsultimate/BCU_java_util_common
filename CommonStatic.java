@@ -442,7 +442,6 @@ public class CommonStatic {
 	/**
 	 * play background music
 	 * @param music Music
-	 * @param loop looping time
 	 */
 	public static void setBGM(Identifier<Music> music) {
 		def.setBGM(music);

@@ -48,7 +48,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	@JsonField(io = JsonField.IOType.R)
 	public String desc = "<br><br><br>";
 	@JsonField(gen = JsonField.GenType.GEN)
-	public MultiLangData description = new MultiLangData();
+	public MultiLangData description = new MultiLangData("<br><br><br>");
 
 	public boolean inDic = false;
 
@@ -63,13 +63,6 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		de = ce;
 		ce.pack = this;
 		anim = ac;
-	}
-
-	public Enemy(Identifier<AbEnemy> ID, Enemy old) {
-		id = ID;
-		de = ((CustomEnemy) old.de).copy(this);
-		name = old.name;
-		anim = old.anim;
 	}
 
 	public Enemy(VFile f) {

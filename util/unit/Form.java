@@ -79,7 +79,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@JsonField(io = JsonField.IOType.R)
 	public String explanation = "<br><br><br>";
 	@JsonField(gen = JsonField.GenType.GEN)
-	public MultiLangData description = new MultiLangData();
+	public MultiLangData description = new MultiLangData("<br><br><br>");
 
 	@JCConstructor
 	public Form(Unit u) {

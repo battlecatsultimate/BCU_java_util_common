@@ -1,7 +1,6 @@
 package common.battle.data;
 
 import common.battle.Basis;
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -43,10 +42,6 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		ce.pack = e;
 
 		return ce;
-	}
-
-	public void fillData(int ver, InStream is) {
-		zread(ver, is);
 	}
 
 	@Override
@@ -96,18 +91,5 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	@Override
 	public double getLimit() {
 		return limit;
-	}
-
-	private void zread(int val, InStream is) {
-		val = getVer(is.nextString());
-		if (val >= 400)
-			zread$000400(is);
-
-	}
-
-	private void zread$000400(InStream is) {
-		zreada(is);
-		star = is.nextByte();
-		drop = is.nextInt();
 	}
 }

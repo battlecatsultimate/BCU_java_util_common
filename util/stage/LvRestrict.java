@@ -1,7 +1,6 @@
 package common.util.stage;
 
 import common.battle.LineUp;
-import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCIdentifier;
@@ -12,7 +11,6 @@ import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
 import common.pack.PackData.UserPack;
-import common.pack.VerFixer.VerFixerException;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
@@ -55,33 +53,6 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			rares[i] = lvr.rares[i].clone();
 		for (CharaGroup cg : lvr.res.keySet())
 			res.put(cg, lvr.res.get(cg).clone());
-	}
-
-	@Deprecated
-	public LvRestrict(UserPack mc, InStream is) throws VerFixerException {
-		int ver = getVer(is.nextString());
-		if (ver != 308)
-			throw new VerFixerException("LvRestrict requires 308, got " + ver);
-		name = is.nextString();
-		id = Identifier.parseInt(is.nextInt(), LvRestrict.class);
-		int[] tb = is.nextIntsB();
-		for (int i = 0; i < tb.length; i++)
-			all[i] = tb[i];
-		int[][] tbb = is.nextIntsBB();
-		for (int i = 0; i < tbb.length; i++)
-			for (int j = 0; j < tbb[i].length; j++)
-				rares[i][j] = tbb[i][j];
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			int cg = is.nextInt();
-			int[] vals = new int[6];
-			tb = is.nextIntsB();
-			for (int j = 0; j < tb.length; j++)
-				vals[j] = tb[j];
-			CharaGroup cgs = mc.groups.get(cg);
-			if (cgs != null)
-				res.put(cgs, vals);
-		}
 	}
 
 	private LvRestrict(LvRestrict lvr) {
