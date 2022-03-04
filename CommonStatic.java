@@ -209,7 +209,7 @@ public class CommonStatic {
 
 		void setSE(int ind);
 
-		void setBGM(Identifier<Music> mus, long loop);
+		void setBGM(Identifier<Music> mus);
 	}
 
 	public static class Lang {
@@ -444,8 +444,8 @@ public class CommonStatic {
 	 * @param music Music
 	 * @param loop looping time
 	 */
-	public static void setBGM(Identifier<Music> music, long loop) {
-		def.setBGM(music, loop);
+	public static void setBGM(Identifier<Music> music) {
+		def.setBGM(music);
 	}
 
 	public static String toArrayFormat(int... data) {

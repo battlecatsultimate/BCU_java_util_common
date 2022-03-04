@@ -313,9 +313,9 @@ public class StageBasis extends BattleObj {
 		if (!st.non_con && ubase.health <= 0) {
 			ubase.health = ubase.maxH;
 			if (getEBHP() <= st.mush)
-				CommonStatic.setBGM(st.mus1, st.loop1);
+				CommonStatic.setBGM(st.mus1);
 			else
-				CommonStatic.setBGM(st.mus0, st.loop0);
+				CommonStatic.setBGM(st.mus0);
 			money = Integer.MAX_VALUE;
 			while (work_lv < 8)
 				act_mon();

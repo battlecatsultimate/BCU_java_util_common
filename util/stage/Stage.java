@@ -135,7 +135,6 @@ public class Stage extends Data
 	public Identifier<CastleImg> castle;
 	public Identifier<Background> bg, bg1;
 	public Identifier<Music> mus0, mus1;
-	public long loop0, loop1;
 	public SCDef data;
 	public Limit lim;
 	@JsonField(generic = Replay.class, alias = ResourceLocation.class)
@@ -180,14 +179,6 @@ public class Stage extends Data
 		mus0 = Identifier.parseInt(is.nextInt(), Music.class);
 		mush = is.nextInt();
 		mus1 = Identifier.parseInt(is.nextInt(), Music.class);
-		if (val == 408) {
-			loop0 = is.nextInt();
-			loop1 = is.nextInt();
-		}
-		if (val == 409) {
-			loop0 = is.nextLong();
-			loop1 = is.nextLong();
-		}
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
 		data = SCDef.zread(is.subStream());
