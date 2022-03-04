@@ -616,6 +616,10 @@
         "name": "背景ID",
         "tooltip": null
       },
+      "mus": {
+        "name": "BGM ID",
+        "tooltip": null
+      },
       "type.kill": {
         "name": "削除",
         "tooltip": "全ての実体を削除する"

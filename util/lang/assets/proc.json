@@ -638,6 +638,10 @@
                 "name": "BG ID",
                 "tooltip": null
             },
+            "mus": {
+                "name": "BGM ID",
+                "tooltip": null
+            },
             "type.kill": {
                 "name": "kill",
                 "tooltip": "Kill all entities in the stage"

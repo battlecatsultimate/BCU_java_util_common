@@ -390,7 +390,15 @@ public class Editors {
 			}
 		}));
 
-		map().put("THEME", new EditControl<>(Proc.THEME.class, (t) -> t.prob = MathUtil.clip(t.prob, 0, 100)));
+		map().put("THEME", new EditControl<>(Proc.THEME.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.time = 0;
+				t.id = null;
+				t.mus = null;
+				t.type = new Proc.THEME.TYPE();
+			}
+		}));
 
 		map().put("POISON", new EditControl<>(Proc.POISON.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);

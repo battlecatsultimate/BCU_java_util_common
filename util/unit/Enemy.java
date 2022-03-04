@@ -42,12 +42,12 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
-	@JsonField(gen = JsonField.GenType.GEN)
+	@JsonField(generic = MultiLangData.class)
 	public MultiLangData Name = new MultiLangData();
 
 	@JsonField(io = JsonField.IOType.R)
 	public String desc = "<br><br><br>";
-	@JsonField(gen = JsonField.GenType.GEN)
+	@JsonField(generic = MultiLangData.class)
 	public MultiLangData description = new MultiLangData("<br><br><br>");
 
 	public boolean inDic = false;
@@ -210,7 +210,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		return Data.trio(id.id) + " - " + nam;
 	}
 
-	public String descriptionGet() {
+	public String getExplaination() {
 		String[] desp = MultiLangCont.getDesc(this);
 		if (desp != null && desp[1].length() > 0)
 			return desp[1];

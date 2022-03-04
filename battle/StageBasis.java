@@ -69,7 +69,7 @@ public class StageBasis extends BattleObj {
 	public double midH = -1, battleHeight = -1;
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
-	private int themeTime;
+	public int themeTime;
 	private Identifier<Background> theme = null;
 	public Identifier<Music> mus = null;
 	private THEME.TYPE themeType;

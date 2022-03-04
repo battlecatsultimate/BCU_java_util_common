@@ -73,12 +73,12 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
-	@JsonField(gen = JsonField.GenType.GEN)
+	@JsonField(generic = MultiLangData.class)
 	public MultiLangData Name = new MultiLangData();
 
 	@JsonField(io = JsonField.IOType.R)
 	public String explanation = "<br><br><br>";
-	@JsonField(gen = JsonField.GenType.GEN)
+	@JsonField(generic = MultiLangData.class)
 	public MultiLangData description = new MultiLangData("<br><br><br>");
 
 	@JCConstructor
@@ -129,13 +129,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@Override
 	public EAnimU getEAnim(AnimU.UType t) {
 		return anim.getEAnim(t);
-	}
-
-	public String[] getExplanation() {
-		String[] exp = MultiLangCont.getStatic().FEXP.getCont(this);
-		if (exp != null)
-			return exp;
-		return new String[0];
 	}
 
 	public MaskUnit maxu() {
@@ -252,7 +245,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return base;
 	}
 
-	public String descriptionGet() {
+	public String getExplaination() {
 		String[] desp = MultiLangCont.getDesc(this);
 		if (desp != null && desp[fid + 1].length() > 0)
 			return desp[fid + 1];
