@@ -17,6 +17,9 @@ public class Music implements Indexable<PackData, Music> {
 	@JsonField
 	@JsonClass.JCIdentifier
 	public final Identifier<Music> id;
+	@JsonField
+	public long loop;
+
 	public FileData data;
 
 	@JsonClass.JCConstructor

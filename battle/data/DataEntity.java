@@ -16,7 +16,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	public int hp, hb, speed, range;
 	public int abi, width;
 	public int loop = -1, will;
-	@JsonField(block = true)
+	@JsonField(io = JsonField.IOType.R)
 	public int type, shield;
 
 	public Identifier<Soul> death;

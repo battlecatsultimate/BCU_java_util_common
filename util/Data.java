@@ -16,6 +16,7 @@ import common.pack.Context.SupExc;
 import common.pack.Identifier;
 import common.util.pack.Background;
 import common.util.pack.EffAnim.EffAnimStore;
+import common.util.stage.Music;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
@@ -501,6 +502,8 @@ public class Data {
 			@Order(2)
 			public Identifier<Background> id;
 			@Order(3)
+			public Identifier<Music> mus;
+			@Order(4)
 			public TYPE type = new TYPE();
 		}
 

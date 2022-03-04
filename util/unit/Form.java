@@ -21,6 +21,7 @@ import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
+import common.util.lang.MultiLangData;
 
 import java.util.ArrayList;
 
@@ -69,10 +70,16 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@JsonField
 	public int fid;
 	public Orb orbs = null;
-	@JsonField
+
+	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
-	@JsonField
+	@JsonField(gen = JsonField.GenType.GEN)
+	public MultiLangData Name = new MultiLangData();
+
+	@JsonField(io = JsonField.IOType.R)
 	public String explanation = "<br><br><br>";
+	@JsonField(gen = JsonField.GenType.GEN)
+	public MultiLangData description = new MultiLangData();
 
 	@JCConstructor
 	public Form(Unit u) {
@@ -86,13 +93,14 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		unit = u;
 		uid = u.id;
 		fid = f;
-		name = str;
+		Name.put(str);
 		anim = ac;
 		du = cu;
 		cu.pack = this;
 		orbs = new Orb(-1);
 	}
 
+	//Used for BC units
 	protected Form(Unit u, int f, String str, String data) {
 		unit = u;
 		uid = u.id;
@@ -110,7 +118,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public Form copy(Unit b) {
 		CustomUnit cu = new CustomUnit();
 		cu.importData(du);
-		return new Form(b, fid, name, anim, cu);
+		return new Form(b, fid, Name.toString(), anim, cu);
 	}
 
 	public int getDefaultPrice(int sta) {
@@ -184,6 +192,11 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					form.getProc().DMGCUT.reduction = 100;
 					form.getProc().POISON.type.ignoreMetal = true;
 				}
+
+				if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
+					Name.put(name);
+					description.put(explanation);
+				}
 			}
 		}
 	}
@@ -232,8 +245,10 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return base + desp;
-		if (name.length() > 0)
-			return base + name;
+
+		String nam = Name.toString();
+		if (nam.length() > 0)
+			return base + nam;
 		return base;
 	}
 
@@ -241,8 +256,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		String[] desp = MultiLangCont.getDesc(this);
 		if (desp != null && desp[fid + 1].length() > 0)
 			return desp[fid + 1];
-		if (explanation.length() > 0)
-			return explanation;
-		return "";
+		return description.toString();
 	}
 }

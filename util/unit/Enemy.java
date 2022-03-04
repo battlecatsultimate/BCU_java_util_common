@@ -22,15 +22,13 @@ import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
+import common.util.lang.MultiLangData;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
@@ -41,10 +39,17 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	public final Identifier<AbEnemy> id;
 	@JsonField
 	public final MaskEnemy de;
-	@JsonField
+
+	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
-	@JsonField
+	@JsonField(gen = JsonField.GenType.GEN)
+	public MultiLangData Name = new MultiLangData();
+
+	@JsonField(io = JsonField.IOType.R)
 	public String desc = "<br><br><br>";
+	@JsonField(gen = JsonField.GenType.GEN)
+	public MultiLangData description = new MultiLangData();
+
 	public boolean inDic = false;
 
 	@JsonClass.JCConstructor
@@ -192,6 +197,11 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				enemy.getProc().DMGCAP.type.traitIgnore = true;
 				enemy.getProc().POISON.type.ignoreMetal = true;
 			}
+
+			if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
+				Name.put(name);
+				description.put(desc);
+			}
 		}
 	}
 
@@ -200,17 +210,17 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return Data.trio(id.id) + " - " + desp;
-		if (name.length() == 0)
+
+		String nam = Name.toString();
+		if (nam.length() == 0)
 			return Data.trio(id.id);
-		return Data.trio(id.id) + " - " + name;
+		return Data.trio(id.id) + " - " + nam;
 	}
 
 	public String descriptionGet() {
 		String[] desp = MultiLangCont.getDesc(this);
 		if (desp != null && desp[1].length() > 0)
 			return desp[1];
-		if (desc.length() == 0)
-			return "";
-		return desc;
+		return description.toString();
 	}
 }

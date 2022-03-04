@@ -16,6 +16,7 @@ import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
 import common.util.stage.EStage;
 import common.util.stage.MapColc.DefMapColc;
+import common.util.stage.Music;
 import common.util.stage.Stage;
 import common.util.unit.*;
 
@@ -70,6 +71,7 @@ public class StageBasis extends BattleObj {
 	private boolean lethal = false;
 	private int themeTime;
 	private Identifier<Background> theme = null;
+	public Identifier<Music> mus = null;
 	private THEME.TYPE themeType;
 	private boolean bgEffectInitialized = false;
 
@@ -166,10 +168,11 @@ public class StageBasis extends BattleObj {
 		return upgradeCost == -1 ? -1 : upgradeCost / 100;
 	}
 
-	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
-		theme = id;
-		themeTime = time;
-		themeType = type;
+	public void changeTheme(THEME th) {
+		theme = th.id;
+		mus = th.mus;
+		themeTime = th.time;
+		themeType = th.type;
 	}
 
 	public void changeBG(Identifier<Background> id) {
@@ -628,11 +631,14 @@ public class StageBasis extends BattleObj {
 		}
 		if (s_stop == 0 && themeTime > 0) {
 			themeTime--;
-			if (themeTime == 0)
+			if (themeTime == 0) {
 				if (getEBHP() < st.bgh)
 					theme = st.bg1;
 				else
 					theme = st.bg;
+
+				mus = null;
+			}
 		}
 	}
 
