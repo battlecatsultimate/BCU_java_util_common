@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.util.Data;
@@ -284,6 +285,14 @@ public abstract class CustomEntity extends DataEntity {
 		atks = new AtkDataModel[ce.atks.length];
 		for (int i = 0; i < atks.length; i++)
 			atks[i] = tnew.get(inds[i]);
+	}
 
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		for (int i = 0; i < traits.size(); i++)
+			if (traits.get(i) == null) {
+				traits.remove(i);
+				i--;
+			}
 	}
 }
