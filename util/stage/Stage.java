@@ -16,6 +16,7 @@ import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.lang.MultiLangData;
 import common.util.pack.Background;
 import common.util.stage.SCDef.Line;
 import common.util.unit.Enemy;
@@ -38,7 +39,6 @@ public class Stage extends Data
 		public final int energy, xp, once, rand;
 		public final int[][] drop;
 		public final int[][] time;
-		public int diff = -1;
 
 		protected StageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
 			map = info;
@@ -124,7 +124,12 @@ public class Stage extends Data
 
 	@JsonClass.JCIdentifier
 	public final Identifier<Stage> id;
+
+	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
+	@JsonField(generic = MultiLangData.class)
+	public MultiLangData Name = new MultiLangData();
+
 	public boolean non_con, trail;
 	public int len, health, max, mush, bgh;
 	public int timeLimit = 0;
@@ -147,7 +152,7 @@ public class Stage extends Data
 		len = 3000;
 		health = 60000;
 		max = 8;
-		name = "stage " + getCont().list.size();
+		Name.put("stage " + getCont().list.size());
 		lim = new Limit();
 		data = new SCDef(0);
 	}
@@ -157,7 +162,7 @@ public class Stage extends Data
 		len = 3000;
 		health = 60000;
 		max = 8;
-		name = "stage " + sm.list.size();
+		Name.put("stage " + sm.list.size());
 		lim = new Limit();
 		data = new SCDef(0);
 	}
@@ -170,7 +175,7 @@ public class Stage extends Data
 		if (sm.info != null)
 			sm.info.getData(this);
 		Queue<String> qs = f.getData().readLine();
-		name = "" + id;
+		Name.put("" + id);
 		String temp;
 		if (type == 0) {
 			temp = qs.poll();
@@ -261,7 +266,7 @@ public class Stage extends Data
 			ans.bg1 = bg1.clone();
 		if (castle != null)
 			ans.castle = castle.clone();
-		ans.name = toString();
+		ans.Name.put(toString());
 		ans.data = data.copy();
 		ans.lim = lim != null ? lim.clone() : getLim(0);
 		if (mus0 != null)
@@ -308,7 +313,7 @@ public class Stage extends Data
 	public void setName(String str) {
 		while (!checkName(str))
 			str += "'";
-		name = str;
+		Name.put(str);
 	}
 
 	@Override
@@ -316,8 +321,9 @@ public class Stage extends Data
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return desp;
-		if (name.length() > 0)
-			return name;
+		String n = Name.toString();
+		if (n.length() > 0)
+			return n;
 		return map + " - " + id();
 	}
 
@@ -348,7 +354,7 @@ public class Stage extends Data
 
 	private boolean checkName(String str) {
 		for (Stage st : getCont().list)
-			if (st != this && st.name.equals(str))
+			if (st != this && st.Name.toString().equals(str))
 				return false;
 		return true;
 	}

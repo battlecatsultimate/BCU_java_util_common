@@ -44,39 +44,7 @@ public class Replay extends Data {
 		return UserProfile.getRegister("Replay_local", Replay.class);
 	}
 
-	public static void getRecd(Stage stage, InStream is, String str) {
-		String sid = stage.getCont().getCont().getSID();
-		ResourceLocation rl = new ResourceLocation(".temp_" + sid, str);
-		stage.recd.add(getRecd(is, rl, stage));
-	}
-
-	@Deprecated
 	public static void read() {
-		File fold = CommonStatic.def.route("./replay/");
-		if (fold.exists()) {
-			File[] fs = fold.listFiles();
-			for (File fi : fs) {
-				String str = fi.getName();
-				if (str.endsWith(".replay")) {
-					try {
-						String name = str.substring(0, str.length() - 7);
-						InStream is = CommonStatic.def.readBytes(fi);
-						Replay rec = getRecd(is, new ResourceLocation(ResourceLocation.LOCAL, name), null);
-						rec.write();
-						getMap().put(name, rec);
-					} catch (Exception e) {
-						e.printStackTrace();
-						CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to reformat "+fi.getName());
-					}
-				}
-			}
-		}
-		try {
-			Context.delete(fold);
-		} catch (IOException e) {
-			e.printStackTrace();
-			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to remove folder : "+fold.getName());
-		}
 		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.REPLAY);
 		if (f.exists())
 			for (File fi : f.listFiles())
@@ -116,69 +84,6 @@ public class Replay extends Data {
 			return rep;
 		}
 		return null;
-	}
-
-	private static Replay getRecd(InStream is, ResourceLocation name, Stage st) {
-		int val = getVer(is.nextString());
-		if (val < 401)
-			return null;
-		long seed = is.nextLong();
-		int[] conf = is.nextIntsB();
-		int star = is.nextInt();
-		BasisLU lu = BasisLU.zread(is.subStream());
-		InStream action = is.subStream();
-		int pid = is.nextInt();
-		if (st == null)
-			if (pid == 0) {
-				int id = is.nextInt();
-				StageMap sm = DefMapColc.getMap(id / 1000);
-				st = sm.list.get(id % 1000);
-				if (st == null) {
-					return null;
-				}
-			} else {
-				st = zreads$000401(is, pid);
-			}
-		else {
-			is.nextString();
-			is.nextString();
-			is.nextString();
-		}
-		Replay ans = new Replay(lu, st.id, star, conf, seed, false);
-		int[] act = new int[action.nextInt()];
-		for (int i = 0; i < act.length; i++)
-			act[i] = action.nextInt();
-		ans.action = act;
-		ans.rl = name;
-		ans.write();
-		return ans;
-	}
-
-	private static Stage zreads$000401(InStream is, int pid) {
-		String mcn = is.nextString();
-		String smid = is.nextString();
-		String stid = is.nextString();
-		PackData pack = UserProfile.getPack(Data.hex(pid));
-		if (pid != 0 && pack == null) {
-			return null;
-		}
-		MapColc mc = null;
-		if (pid == 0)
-			mc = DefMapColc.getMap(mcn);
-		else
-			mc = ((UserPack) pack).mc;
-		StageMap sm = null;
-		for (StageMap map : mc.maps)
-			if (map.name.equals(smid))
-				sm = map;
-		if (sm == null) {
-			return null;
-		}
-		Stage st = null;
-		for (Stage s : sm.list)
-			if (s.name.equals(stid))
-				st = s;
-		return st;
 	}
 
 	@JsonClass.JCIdentifier

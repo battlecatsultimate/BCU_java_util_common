@@ -12,6 +12,7 @@ import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.lang.MultiLangData;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -71,8 +72,12 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	@JsonField(generic = Stage.class)
 	public final FixIndexMap<Stage> list = new FixIndexMap<>(Stage.class);
-	@JsonField
+
+	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
+	@JsonField(generic = MultiLangData.class)
+	public MultiLangData Name = new MultiLangData();
+
 	@JsonField
 	public int price = 1, retyp, pllim, set, cast = -1;
 	@JsonField
@@ -137,9 +142,9 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return desp;
-		if (name.length() == 0)
+		String stName = Name.toString();
+		if (stName.length() == 0)
 			return id + " (" + list.size() + ")";
-		return name;
+		return stName;
 	}
-
 }

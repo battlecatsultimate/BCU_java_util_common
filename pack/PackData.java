@@ -23,6 +23,7 @@ import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import common.util.Data;
 import common.util.Res;
+import common.util.lang.MultiLangData;
 import common.util.pack.*;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleList.PackCasList;
@@ -222,7 +223,12 @@ public abstract class PackData implements IndexContainer {
 		public String BCU_VERSION;
 		public String id;
 		public String author;
+
+		@JsonField(io = JsonField.IOType.R)
 		public String name;
+		@JsonField(generic = MultiLangData.class)
+		public MultiLangData Name = new MultiLangData();
+
 		public String desc;
 		public String time;
 		public int version;
@@ -244,7 +250,7 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return name + " - " + id;
+			return Name.toString() + " - " + id;
 		}
 
 		@Override
@@ -252,7 +258,7 @@ public abstract class PackData implements IndexContainer {
 			PackDesc desc = new PackDesc(id);
 
 			desc.author = author;
-			desc.name = name;
+			desc.Name.put(Name.toString());
 			desc.desc = this.desc;
 			desc.time = time;
 			desc.version = version;
@@ -260,6 +266,13 @@ public abstract class PackData implements IndexContainer {
 			desc.parentPassword = parentPassword == null ? null : parentPassword.clone();
 
 			return desc;
+		}
+
+		@JsonDecoder.OnInjected
+		public void onInjected() {
+			//Temporary value, may need to make a separate isOlderPack function later on
+			if (Data.getVer(BCU_VERSION) < Data.getVer("0.6.4.0"))
+				Name.put(name);
 		}
 	}
 
@@ -374,7 +387,7 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return desc.name == null || desc.name.isEmpty() ? desc.id : desc.name;
+			return desc.Name == null || desc.Name.toString().isEmpty() ? desc.id : desc.Name.toString();
 		}
 
 		public void unregister() {

@@ -3,6 +3,7 @@ package common.util.stage;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
+import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.IndexContainer;
@@ -283,9 +284,18 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		@Override
 		public String toString() {
-			return pack.desc.name;
+			return pack.desc.Name.toString();
 		}
 
+		@OnInjected
+		public void onInjected() {
+			if (UserProfile.isOlderPack(pack, "0.6.4.0"))
+				for (StageMap sm : maps) {
+					sm.Name.put(sm.name);
+					for (Stage st : sm.list)
+						st.Name.put(st.name);
+				}
+		}
 	}
 
 	public static class StItr implements Iterator<Stage>, Iterable<Stage> {
