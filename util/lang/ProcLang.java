@@ -151,6 +151,9 @@ public class ProcLang {
 			case 3:
 				f = CommonStatic.ctx.getLangFile("proc_jp.json");
 				break;
+			case 6:
+				f = CommonStatic.ctx.getLangFile("proc_es.json");
+				break;
 			default:
 				f = CommonStatic.ctx.getLangFile("proc.json");
 		}
