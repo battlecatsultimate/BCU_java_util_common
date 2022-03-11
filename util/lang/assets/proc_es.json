@@ -270,9 +270,9 @@
         "abbr_name": "imu. Rep",
         "full_name": "Inmune/Resistente ante Repulsión",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Repulsión",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Repulsión",
             "[(mult<100&mult>0){ (_left)Reduce la distancia un (mult)%(_right)}(mult<0){ (_left)Aumenta la distancia un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Repulsión}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Repulsión",
             "[(block<100&block>0){ (_left)Reduce la distancia un (block)%(_right)}(block<0){ (_left)Aumenta la distancia un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -289,9 +289,9 @@
         "abbr_name": "imu. Para",
         "full_name": "Inmune/Resistente ante Parálisis",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Parálisis",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Parálisis",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Parálisis}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Parálisis",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -308,9 +308,9 @@
         "abbr_name": "imu. Ralent",
         "full_name": "Inmune/Resistente ante Ralentización",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Ralentización",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Ralentización",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Ralentización}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Ralentización",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -339,9 +339,9 @@
         "abbr_name": "imu. Desgaste",
         "full_name": "Inmune/Resistente ante Desgaste",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante el Desgaste",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante el Desgaste",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Desgaste}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Desgaste",
             "[(block<100&block>0){ (_left)Reduce la duración um (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]",
             "[(smartImu!=0){. Solo afecta a [(smartImu>0){disminuciones}(smartImu<0){aumentos}]}]"],
         "class": {
@@ -363,9 +363,9 @@
         "abbr_name": "imu. Abduc",
         "full_name": "Inmune/Resistente ante Abducción",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Abducción",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Abducción",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Abducción}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Abducción",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -382,9 +382,9 @@
         "abbr_name": "imu. Mald.",
         "full_name": "Inmune/Resistente ante Maldición",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Maldición",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Maldición",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Maldición}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Maldición",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -401,9 +401,9 @@
         "abbr_name": "imu. Sellar",
         "full_name": "Inmune/Resistente ante Sellamiento",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Sellamiento",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Sellamiento",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Sellar}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Sellamiento",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -420,9 +420,9 @@
         "abbr_name": "imu. Invoc",
         "full_name": "Inmune/Resistente ante Invocación",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante la Invocación con el parámetro Tras golpear/Tras eliminar",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante la Invocación con el parámetro Tras golpear/Tras eliminar",
             "[(mult<100&mult>0){ (_left)Reduce un (mult)% de la fuerza de la entidad invocada(_right)}(mult<0){ (_left)Las entidades invocadas serán un (_abs(mult))% más fuertes(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}(block!=0) Invocación}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador de}(block<100&block>0){Absorbedor de}(block<0){Aumentador de}] Invocación",
             "[(block<100&block>0){ (_left)Reduce un (block)% de la fuerza de la entidad invocada(_right)}(block<0){ (_left)Las entidades invocadas serán un (_abs(block))% más fuertes(_right)}]}]"],
         "class": {
             "mult": {
@@ -696,11 +696,11 @@
         "abbr_name": "imu. Veneno",
         "full_name": "Inmune/Resistente ante el Veneno",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Veneno",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Veneno",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador} de Veneno}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador}] de Veneno",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]",
-            "[(smartImu!=0){. Solo afecta al veneno [(smartImu>0){perjudicial}(smartImu<0){curativo}]]"],
+            "[(smartImu!=0){. Solo afecta al veneno [(smartImu>0){perjudicial}(smartImu<0){curativo}]}]"],
         "class": {
             "mult": {
                 "name": "porcentaje",
@@ -732,9 +732,9 @@
         "abbr_name": "imu. crít",
         "full_name": "Inmunidad ante Daño Crítico",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Daño Crítico",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Daño Crítico",
             "[(mult<100&mult>0){ (_left)Reduce el daño recibido un (mult)%(_right)}(mult<0){ (_left)Aumenta el daño recibido un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador} de Daño Crítico}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador}] de Daño Crítico",
             "[(block<100&block>0){ (_left)Reduce el daño recibido un (block)%(_right)}(block<0){ (_left)Aumenta el daño recibido un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -823,9 +823,9 @@
         "abbr_name": "imu. toxic",
         "full_name": "Inmune/Resistente ante la Toxicidad",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Toxicidad",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Toxicidad",
             "[(mult<100&mult>0){ (_left)Reduce el daño recibido un (mult)%(_right)}(mult<0){ (_left)Aumenta el daño recibido un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador} de Toxicidad}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador}] de Toxicidad",
             "[(block<100&block>0){ (_left)Reduce el daño recibido un (block)%(_right)}(block<0){ (_left)Aumenta el daño recibido un (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
@@ -851,8 +851,8 @@
         }
     },
     "ARMOR": {
-        "abbr_name": "romper armadura",
-        "full_name": "Romper Armadura",
+        "abbr_name": "rompearmadura",
+        "full_name": "RompeArmadura",
         "tooltip": null,
         "format": "probabilidad del (prob)% de [(mult<0){mejorar}(mult>=0){romper}] la armadura del objetivo por (_dispTime(time)) (_left)El objetivo recibirá (_abs(mult))% [(mult<0){menos}(mult>=0){más}] daño(_right)",
         "class": {
@@ -902,11 +902,11 @@
     },
     "IMUARMOR": {
         "abbr_name": "Imu. Romp.A",
-        "full_name": "Inmune/Resistente ante Romper Armadura",
+        "full_name": "Inmune/Resistente ante RompeArmadura",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Romper Armadura",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante RompeArmadura",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador} de Romper Armadura}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador}] de RompeArmadura",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]",
             "[(smartImu!=0){. Solo afecta a [(smartImu>0){roturas}(smartImu<0){fortalecimientos}] de armadura}]"],
         "class": {
@@ -928,9 +928,9 @@
         "abbr_name": "Imu.Prisa",
         "full_name": "Inmune/Resistente ante Prisa",
         "tooltip": null,
-        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}]}] ante Prisa",
+        "format": ["[(mult!=0&block!=100){[(mult==100){Inmune}(mult<100&mult>0){Resistente}(mult<0){Débil}] ante Prisa",
             "[(mult<100&mult>0){ (_left)Reduce la duración un (mult)%(_right)}(mult<0){ (_left)Aumenta la duración un (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador} de Prisa}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(block==100){Bloqueador}(block<100&block>0){Absorbedor}(block<0){Aumentador}] de Prisa",
             "[(block<100&block>0){ (_left)Reduce la duración un (block)%(_right)}(block<0){ (_left)Aumenta la duración un (_abs(block))%(_right)}]}]",
             "[(smartImu!=0){. Solo afecta a [(smartImu>0){disminuciones}(smartImu<0){aumentos}]}]"],
         "class": {
