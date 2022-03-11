@@ -230,7 +230,7 @@ public class UserProfile {
 			if (!profile.packmap.containsKey(dep))
 				missingDependencies.add(dep);
 		if (missingDependencies.size() > 0)
-			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.Name.toString() + " (" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
+			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.names.toString() + " (" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
 	}
 
 	public static UserProfile profile() {

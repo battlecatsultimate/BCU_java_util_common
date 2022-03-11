@@ -43,7 +43,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
 	@JsonField(generic = MultiLangData.class)
-	public MultiLangData Name = new MultiLangData();
+	public MultiLangData names = new MultiLangData();
 
 	@JsonField(io = JsonField.IOType.R)
 	public String desc = "<br><br><br>";
@@ -192,7 +192,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
-				Name.put(name);
+				names.put(name);
 				description.put(desc);
 			}
 		}
@@ -204,7 +204,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		if (desp != null && desp.length() > 0)
 			return Data.trio(id.id) + " - " + desp;
 
-		String nam = Name.toString();
+		String nam = names.toString();
 		if (nam.length() == 0)
 			return Data.trio(id.id);
 		return Data.trio(id.id) + " - " + nam;

@@ -76,7 +76,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
 	@JsonField(generic = MultiLangData.class)
-	public MultiLangData Name = new MultiLangData();
+	public MultiLangData names = new MultiLangData();
 
 	@JsonField
 	public int price = 1, retyp, pllim, set, cast = -1;
@@ -142,7 +142,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return desp;
-		String stName = Name.toString();
+		String stName = names.toString();
 		if (stName.length() == 0)
 			return id + " (" + list.size() + ")";
 		return stName;

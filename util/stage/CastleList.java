@@ -60,7 +60,7 @@ public abstract class CastleList extends FixIndexMap<CastleImg> implements Index
 
 		@Override
 		public String toString() {
-			return pack.desc.Name.toString() + " (" + size() + ")";
+			return pack.desc.names.toString() + " (" + size() + ")";
 		}
 	}
 

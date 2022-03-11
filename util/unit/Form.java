@@ -74,7 +74,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
 	@JsonField(generic = MultiLangData.class)
-	public MultiLangData Name = new MultiLangData();
+	public MultiLangData names = new MultiLangData();
 
 	@JsonField(io = JsonField.IOType.R)
 	public String explanation = "<br><br><br>";
@@ -93,7 +93,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		unit = u;
 		uid = u.id;
 		fid = f;
-		Name.put(str);
+		names.put(str);
 		anim = ac;
 		du = cu;
 		cu.pack = this;
@@ -118,7 +118,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public Form copy(Unit b) {
 		CustomUnit cu = new CustomUnit();
 		cu.importData(du);
-		return new Form(b, fid, Name.toString(), anim, cu);
+		return new Form(b, fid, names.toString(), anim, cu);
 	}
 
 	public int getDefaultPrice(int sta) {
@@ -187,7 +187,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
-					Name.put(name);
+					names.put(name);
 					description.put(explanation);
 				}
 			}
@@ -239,7 +239,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		if (desp != null && desp.length() > 0)
 			return base + desp;
 
-		String nam = Name.toString();
+		String nam = names.toString();
 		if (nam.length() > 0)
 			return base + nam;
 		return base;

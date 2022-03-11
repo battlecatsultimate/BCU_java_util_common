@@ -158,7 +158,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		String desp = MultiLangCont.get(forms == null ? null : forms[0]);
 		if (desp != null && desp.length() > 0)
 			return Data.trio(id.id) + " " + desp;
-		String name = forms[0].Name.toString();
+		String name = forms[0].names.toString();
 		if (name.length() > 0)
 			return Data.trio(id.id) + " " + name;
 		return Data.trio(id.id);

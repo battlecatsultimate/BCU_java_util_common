@@ -227,7 +227,7 @@ public abstract class PackData implements IndexContainer {
 		@JsonField(io = JsonField.IOType.R)
 		public String name;
 		@JsonField(generic = MultiLangData.class)
-		public MultiLangData Name = new MultiLangData();
+		public MultiLangData names = new MultiLangData();
 
 		public String desc;
 		public String time;
@@ -250,7 +250,7 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return Name.toString() + " - " + id;
+			return names.toString() + " - " + id;
 		}
 
 		@Override
@@ -258,7 +258,7 @@ public abstract class PackData implements IndexContainer {
 			PackDesc desc = new PackDesc(id);
 
 			desc.author = author;
-			desc.Name.put(Name.toString());
+			desc.names.put(names.toString());
 			desc.desc = this.desc;
 			desc.time = time;
 			desc.version = version;
@@ -272,7 +272,7 @@ public abstract class PackData implements IndexContainer {
 		public void onInjected() {
 			//Temporary value, may need to make a separate isOlderPack function later on
 			if (Data.getVer(BCU_VERSION) < Data.getVer("0.6.4.0"))
-				Name.put(name);
+				names.put(name);
 		}
 	}
 
@@ -387,7 +387,7 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return desc.Name == null || desc.Name.toString().isEmpty() ? desc.id : desc.Name.toString();
+			return desc.names == null || desc.names.toString().isEmpty() ? desc.id : desc.names.toString();
 		}
 
 		public void unregister() {

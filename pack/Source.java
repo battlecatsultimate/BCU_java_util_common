@@ -303,7 +303,7 @@ public abstract class Source {
 			for (UserPack up : UserProfile.getUserPacks())
 				if (up.source instanceof Workspace)
 					CommonStatic.ctx.noticeErr(() -> ((Workspace) up.source).save(up), ErrType.WARN,
-							"failed to save pack " + up.desc.Name.toString());
+							"failed to save pack " + up.desc.names.toString());
 		}
 
 		public static void validate(String folder, ResourceLocation rl) {

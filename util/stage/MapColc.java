@@ -284,16 +284,16 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		@Override
 		public String toString() {
-			return pack.desc.Name.toString();
+			return pack.desc.names.toString();
 		}
 
 		@OnInjected
 		public void onInjected() {
 			if (UserProfile.isOlderPack(pack, "0.6.4.0"))
 				for (StageMap sm : maps) {
-					sm.Name.put(sm.name);
+					sm.names.put(sm.name);
 					for (Stage st : sm.list)
-						st.Name.put(st.name);
+						st.names.put(st.name);
 				}
 		}
 	}
