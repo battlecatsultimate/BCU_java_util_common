@@ -92,7 +92,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	public StageMap(Identifier<StageMap> id) {
 		this.id = id;
-		name = "new stage map";
+		names.put("new stage map");
 
 	}
 
