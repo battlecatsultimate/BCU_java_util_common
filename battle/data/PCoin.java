@@ -41,7 +41,6 @@ public class PCoin extends Data {
 
 	public PCoin(CustomEntity ce) {
 		du = (CustomUnit)ce;
-		max.add(0);
 		((CustomUnit)du).pcoin = this;
 	}
 
