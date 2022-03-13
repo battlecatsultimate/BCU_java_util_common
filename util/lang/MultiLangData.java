@@ -1,5 +1,7 @@
 package common.util.lang;
 
+import androidx.annotation.NonNull;
+
 import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
@@ -26,10 +28,18 @@ public class MultiLangData extends Data {
     public void remove() {
         dat.remove(lang());
     }
+    @NonNull
     @Override
     public String toString() {
-        if (dat.containsKey(lang()))
-            return dat.get(lang());
+        if (dat.containsKey(lang())) {
+            String temp = dat.get(lang());
+
+            if(temp == null) {
+                return "";
+            } else {
+                return temp;
+            }
+        }
 
         for (String i : dat.values())
             return i;
