@@ -39,6 +39,7 @@ public class Stage extends Data
 		public final int energy, xp, once, rand;
 		public final int[][] drop;
 		public final int[][] time;
+		public int diff;
 
 		protected StageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
 			map = info;
