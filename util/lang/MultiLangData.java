@@ -1,11 +1,10 @@
 package common.util.lang;
 
-import androidx.annotation.NonNull;
-
 import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.util.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 
@@ -28,7 +27,8 @@ public class MultiLangData extends Data {
     public void remove() {
         dat.remove(lang());
     }
-    @NonNull
+
+    @NotNull
     @Override
     public String toString() {
         if (dat.containsKey(lang())) {
