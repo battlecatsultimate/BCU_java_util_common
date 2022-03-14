@@ -1,6 +1,7 @@
 package common.util.lang;
 
 import common.CommonStatic;
+import common.CommonStatic.Lang;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.util.Data;
@@ -34,15 +35,25 @@ public class MultiLangData extends Data {
         if (dat.containsKey(lang())) {
             String temp = dat.get(lang());
 
-            if(temp == null) {
-                return "";
-            } else {
+            if(temp != null)
                 return temp;
-            }
         }
 
-        for (String i : dat.values())
-            return i;
+        for (int i = 1; i < Lang.LOC_CODE.length; i++) {
+            if (i < Lang.pref[lang()].length) {
+                if (dat.containsKey(Lang.pref[lang()][i])) {
+                    String temp = dat.get(Lang.pref[lang()][i]);
+
+                    if (temp != null)
+                        return temp;
+                }
+            } else if (dat.containsKey(i)) {
+                String temp = dat.get(i);
+
+                if(temp != null)
+                    return temp;
+            }
+        }
         return "";
     }
 
