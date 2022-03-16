@@ -33,13 +33,8 @@ import common.util.stage.MapColc.PackMapColc;
 import common.util.unit.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Set;
 import java.util.function.Consumer;
 
 @JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
@@ -368,14 +363,25 @@ public abstract class PackData implements IndexContainer {
 
 		public void loadMusics() {
 			String[] path = source.listFile("./musics");
+
+			HashMap<Integer, Long> loopMap = new HashMap<>();
+			for (Music m : musics) {
+				if (m == null || m.id == null)
+					continue;
+
+				loopMap.put(m.id.id, m.loop);
+			}
+
 			musics.clear();
 			if (path != null)
 				for (String str : path)
 					if (str.length() == 7 && str.endsWith(".ogg")) {
 						Integer ind = Data.ignore(() -> Integer.parseInt(str.substring(0, 3)));
-						if (ind != null)
-							add(musics, ind, id -> new Music(id, 0, source.getFileData("./musics/" + str)));
-					} //TODO Find how to load loop data from music
+						if (ind != null) {
+							long loop = loopMap.getOrDefault(ind, (long) 0);
+							add(musics, ind, id -> new Music(id, loop, source.getFileData("./musics/" + str)));
+						}
+					}
 			musics.reset();
 		}
 

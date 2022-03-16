@@ -23,7 +23,7 @@ public class MultiLangData extends Data {
     }
 
     public void put(String data) {
-        if (data.length() > 0)
+        if (data != null && data.length() > 0)
             dat.put(lang(), data);
         else
             dat.remove(lang());
