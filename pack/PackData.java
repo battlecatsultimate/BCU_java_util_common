@@ -168,7 +168,7 @@ public abstract class PackData implements IndexContainer {
 				int id = CommonStatic.parseIntN(str.substring(0, 3));
 				if (id == -1)
 					continue;
-				musics.set(id, new Music(Identifier.parseInt(id, Music.class), new FDFile(f)));
+				musics.set(id, new Music(Identifier.parseInt(id, Music.class), 0, new FDFile(f)));
 			}
 		}
 
@@ -374,8 +374,8 @@ public abstract class PackData implements IndexContainer {
 					if (str.length() == 7 && str.endsWith(".ogg")) {
 						Integer ind = Data.ignore(() -> Integer.parseInt(str.substring(0, 3)));
 						if (ind != null)
-							add(musics, ind, id -> new Music(id, source.getFileData("./musics/" + str)));
-					}
+							add(musics, ind, id -> new Music(id, 0, source.getFileData("./musics/" + str)));
+					} //TODO Find how to load loop data from music
 			musics.reset();
 		}
 
