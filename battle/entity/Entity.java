@@ -125,7 +125,7 @@ public abstract class Entity extends AbEntity {
 				corpse.paraTo(back);
 				corpse.draw(gra, p, siz);
 			}
-			if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
+			if (corpse == null || status[P_REVIVE][1] < REVIVE_SHOW_TIME) {
 				if (corpse != null) {
 					gra.setTransform(at);
 					anim.changeAnim(UType.IDLE, false);
@@ -530,9 +530,14 @@ public abstract class Entity extends AbEntity {
 		private void kbAnim() {
 			int t = e.kb.kbType;
 			if (t != INT_SW && t != INT_WARP)
-				if(e.status[P_REVIVE][1] > 0) {
+				if(e.status[P_REVIVE][1] >= REVIVE_SHOW_TIME) {
 					e.anim.corpse = (e.dire == -1 ? effas().A_U_ZOMBIE : effas().A_ZOMBIE).getEAnim(ZombieEff.BACK);
 				} else {
+					if (e.anim.corpse != null) {
+						e.anim.corpse = null;
+						status[P_REVIVE][1] = 0;
+					}
+
 					setAnim(UType.HB, true);
 				}
 			else
@@ -1401,7 +1406,7 @@ public abstract class Entity extends AbEntity {
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;
 
-		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE)
+		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
 			return;
 
 		// if immune to wave and the attack is wave, jump out
@@ -1995,7 +2000,7 @@ public abstract class Entity extends AbEntity {
 		int ex = getProc().REVIVE.type.revive_others ? TCH_ZOMBX : 0;
 		if (kbTime == -1)
 			return TCH_SOUL | ex;
-		if (status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
+		if (status[P_REVIVE][1] >= REVIVE_SHOW_TIME && anim.corpse != null && anim.corpse.type != ZombieEff.BACK)
 			return TCH_CORPSE | ex;
 		if (status[P_BURROW][2] > 0)
 			return n | TCH_UG | ex;
