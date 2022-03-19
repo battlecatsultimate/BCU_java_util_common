@@ -96,14 +96,22 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		lv.units.add(this);
 	}
 
-	public Unit(VFile p) {
+	public Unit(VFile p, int[] m) {
 		id = new Identifier<>(Identifier.DEF, Unit.class, CommonStatic.parseIntN(p.getName()));
 		String str = "./org/unit/" + Data.trio(id.id) + "/";
 		Queue<String> qs = VFile.readLine(str + "unit" + Data.trio(id.id) + ".csv");
-		forms = new Form[p.countSubDire()];
-		for (int i = 0; i < forms.length; i++)
-			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
-		for (Form f : forms)
+
+		if (p.countSubDire() != 0)
+			forms = new Form[p.countSubDire()];
+		else
+			forms = new Form[m.length];
+
+		for (int i = 0; i < forms.length; i++) {
+			if (p.countSubDire() != 0) {
+				forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
+			} else
+				forms[i] = new Form(this, i, m[i], "./org/unit/m/" + Data.trio(m[i]) + "/", qs.poll());
+		} for (Form f : forms)
 			f.anim.getEdi().check();
 	}
 

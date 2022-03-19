@@ -179,11 +179,20 @@ public abstract class PackData implements IndexContainer {
 		private void loadUnits(Consumer<Double> bar) {
 			int x = 0;
 			Collection<VFile> list = VFile.get("./org/unit").list();
+			Queue<String> qs = VFile.readLine("./org/data/unitbuy.csv");
 			for (VFile p : list) {
-				units.add(new Unit(p));
+				String[] strs = qs.poll().split(",");
+
+				Unit u = new Unit(p, new int[]{Integer.parseInt(strs[strs.length - 2]), Integer.parseInt(strs[strs.length - 1])});
+				u.rarity = Integer.parseInt(strs[13]);
+				u.max = Integer.parseInt(strs[50]);
+				u.maxp = Integer.parseInt(strs[51]);
+				u.info.fillBuy(strs);
+
+				units.add(u);
 				bar.accept(1.0 * (x++) / list.size());
 			}
-			Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
+			qs = VFile.readLine("./org/data/unitlevel.csv");
 			List<Unit> lu = units.getList();
 			FixIndexList<UnitLevel> l = unitLevels;
 			for (Unit u : lu) {
@@ -201,14 +210,6 @@ public abstract class PackData implements IndexContainer {
 				l.get(ind).units.add(u);
 			}
 			CommonStatic.getBCAssets().defLv = l.get(2);
-			qs = VFile.readLine("./org/data/unitbuy.csv");
-			for (Unit u : lu) {
-				String[] strs = qs.poll().split(",");
-				u.rarity = Integer.parseInt(strs[13]);
-				u.max = Integer.parseInt(strs[50]);
-				u.maxp = Integer.parseInt(strs[51]);
-				u.info.fillBuy(strs);
-			}
 		}
 
 	}

@@ -113,6 +113,18 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		MaModel model = anim.loader.getMM();
 		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}
+	protected Form(Unit u, int f, int m, String str, String data) {
+		unit = u;
+		uid = u.id;
+		fid = f;
+		String nam = trio(m) + "_m";
+		anim = new AnimUD(str, nam, "edi" + nam + duo(fid) + ".png", "uni" + nam + duo(fid) + ".png");
+		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
+		String[] strs = data.split("//")[0].trim().split(",");
+		du = new DataUnit(this, unit, strs);
+		MaModel model = anim.loader.getMM();
+		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
+	}
 
 	@Override
 	public Form copy(Unit b) {

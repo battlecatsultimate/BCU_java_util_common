@@ -166,12 +166,6 @@ public class CommonStatic {
 			return r.readFile(is);
 		}
 
-		static VImg readImg(InStream is, ImgReader r) {
-			if (r != null && !r.isNull())
-				return r.readImgOptional(is.nextString());
-			return ImageBuilder.toVImg(is.nextBytesI());
-		}
-
 		default boolean isNull() {
 			return true;
 		}
