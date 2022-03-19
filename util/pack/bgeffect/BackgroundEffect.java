@@ -21,7 +21,7 @@ public abstract class BackgroundEffect {
     public static Map<Integer, MixedBGEffect> mixture = new HashMap<>();
     public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
-    public static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172, 173, 174, 180, 1000, 1002, 1003, 1004, 1005, 1006, 1007, 1008};
+    public static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172, 173, 174, 180, 181, 1000, 1002, 1003, 1004, 1005, 1006, 1007, 1008};
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
