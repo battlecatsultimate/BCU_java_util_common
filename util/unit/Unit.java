@@ -110,7 +110,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 			if (p.countSubDire() != 0) {
 				forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
 			} else
-				forms[i] = new Form(this, i, m[i], "./org/unit/m/" + Data.trio(m[i]) + "/", qs.poll());
+				forms[i] = new Form(this, i, m[i], "./org/img/m/" + Data.trio(m[i]) + "/", qs.poll());
 		} for (Form f : forms)
 			f.anim.getEdi().check();
 	}
