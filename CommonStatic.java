@@ -251,6 +251,20 @@ public class CommonStatic {
 		return true;
 	}
 
+	public static boolean isDouble(String str) {
+		int dots = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				if(str.charAt(i) != '.' || dots > 0)
+					return false;
+				else
+					dots++;
+			}
+		}
+
+		return true;
+	}
+
 	public static int parseIntN(String str) {
 		int ans;
 		try {
@@ -331,7 +345,7 @@ public class CommonStatic {
 	}
 
 	public static double safeParseDouble(String v) {
-		if(isInteger(v)) {
+		if(isDouble(v)) {
 			BigDecimal big = new BigDecimal(v);
 
 			if(big.compareTo(maxdbl) > 0) {
