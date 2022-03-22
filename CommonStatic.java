@@ -21,6 +21,7 @@ import common.util.stage.Music;
 import common.util.unit.UnitLevel;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -225,7 +226,11 @@ public class CommonStatic {
 	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger max = new BigInteger(String.valueOf(Integer.MAX_VALUE));
 	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigDecimal maxdbl = new BigDecimal(String.valueOf(Double.MAX_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger min = new BigInteger(String.valueOf(Integer.MIN_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigDecimal mindbl = new BigDecimal(String.valueOf(Double.MIN_VALUE));
 
 	public static BCAuxAssets getBCAssets() {
 		return UserProfile.getStatic("BCAuxAssets", BCAuxAssets::new);
@@ -327,11 +332,11 @@ public class CommonStatic {
 
 	public static double safeParseDouble(String v) {
 		if(isInteger(v)) {
-			BigInteger big = new BigInteger(v);
+			BigDecimal big = new BigDecimal(v);
 
-			if(big.compareTo(new BigInteger(String.valueOf(Double.MAX_VALUE))) > 0) {
+			if(big.compareTo(maxdbl) > 0) {
 				return Double.MAX_VALUE;
-			} else if(big.compareTo(new BigInteger(String.valueOf(Double.MIN_VALUE))) < 0) {
+			} else if(big.compareTo(mindbl) < 0) {
 				return Double.MIN_VALUE;
 			} else {
 				return Double.parseDouble(v);
