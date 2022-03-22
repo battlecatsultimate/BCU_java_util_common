@@ -226,7 +226,11 @@ public class CommonStatic {
 	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger max = new BigInteger(String.valueOf(Integer.MAX_VALUE));
 	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigInteger maxDouble = new BigInteger(String.valueOf(Double.MAX_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger min = new BigInteger(String.valueOf(Integer.MIN_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigInteger minDouble = new BigInteger(String.valueOf(Double.MIN_VALUE));
 
 	public static BCAuxAssets getBCAssets() {
 		return UserProfile.getStatic("BCAuxAssets", BCAuxAssets::new);
@@ -280,7 +284,7 @@ public class CommonStatic {
 
 		double[] result = new double[lstr.size()];
 		for (int i = 0; i < lstr.size(); i++)
-			result[i] = Double.parseDouble(lstr.get(i)); // TODO: safeParseDouble
+			result[i] = safeParseDouble(lstr.get(i));
 		return result;
 	}
 
@@ -320,6 +324,22 @@ public class CommonStatic {
 				return Integer.MIN_VALUE;
 			} else {
 				return Integer.parseInt(v);
+			}
+		} else {
+			throw new IllegalStateException("Value "+v+" isn't a number");
+		}
+	}
+
+	public static double safeParseDouble(String v) {
+		if(isInteger(v)) {
+			BigInteger big = new BigInteger(v);
+
+			if(big.compareTo(maxDouble) > 0) {
+				return Double.MAX_VALUE;
+			} else if(big.compareTo(minDouble) < 0) {
+				return Double.MIN_VALUE;
+			} else {
+				return Double.parseDouble(v);
 			}
 		} else {
 			throw new IllegalStateException("Value "+v+" isn't a number");
