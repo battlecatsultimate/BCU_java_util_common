@@ -11,7 +11,6 @@ import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.anim.MaModel;
