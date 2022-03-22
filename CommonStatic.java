@@ -50,7 +50,7 @@ public class CommonStatic {
 		/**
 		 * Use this if trait.icon is null
 		 */
-		public VImg dummyTrait; //TODO Implement dummy trait icon
+		public VImg dummyTrait;
 
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
