@@ -225,11 +225,7 @@ public class CommonStatic {
 	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger max = new BigInteger(String.valueOf(Integer.MAX_VALUE));
 	@StaticPermitted(StaticPermitted.Type.FINAL)
-	public static final BigInteger maxDouble = new BigInteger(String.valueOf(Double.MAX_VALUE));
-	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger min = new BigInteger(String.valueOf(Integer.MIN_VALUE));
-	@StaticPermitted(StaticPermitted.Type.FINAL)
-	public static final BigInteger minDouble = new BigInteger(String.valueOf(Double.MIN_VALUE));
 
 	public static BCAuxAssets getBCAssets() {
 		return UserProfile.getStatic("BCAuxAssets", BCAuxAssets::new);
@@ -333,9 +329,9 @@ public class CommonStatic {
 		if(isInteger(v)) {
 			BigInteger big = new BigInteger(v);
 
-			if(big.compareTo(maxDouble) > 0) {
+			if(big.compareTo(new BigInteger(String.valueOf(Double.MAX_VALUE))) > 0) {
 				return Double.MAX_VALUE;
-			} else if(big.compareTo(minDouble) < 0) {
+			} else if(big.compareTo(new BigInteger(String.valueOf(Double.MIN_VALUE))) < 0) {
 				return Double.MIN_VALUE;
 			} else {
 				return Double.parseDouble(v);
