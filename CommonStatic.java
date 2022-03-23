@@ -255,7 +255,7 @@ public class CommonStatic {
 		int dots = 0;
 		for (int i = 0; i < str.length(); i++) {
 			if (!Character.isDigit(str.charAt(i))) {
-				if(str.charAt(i) != '.' || dots > 0)
+				if((i == 0 && str.charAt(i) != '-') || str.charAt(i) != '.' || dots > 0)
 					return false;
 				else
 					dots++;
