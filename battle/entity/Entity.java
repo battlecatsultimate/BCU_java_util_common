@@ -1410,7 +1410,7 @@ public abstract class Entity extends AbEntity {
 			return;
 
 		// if immune to wave and the attack is wave, jump out
-		if ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0) {
+		if (atk.waveType != 5 && ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0)) {
 			if (getProc().IMUWAVE.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUWAVE.mult == 100)

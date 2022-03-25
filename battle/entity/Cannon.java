@@ -213,7 +213,7 @@ public class Cannon extends AtkModelAb {
 					proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + b.b.getInc(C_STOP)) / 100);
 					proc.SNIPER.prob = 1;
 					double p = b.ubase.pos - wid / 2 + 100;
-					CTrait.set(CTrait.size() - 1,UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
+					CTrait.set(0, UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
 					AttackCanon eatk = new AttackCanon(this, 0, CTrait, AB_ONLY | AB_ZKILL, proc, 0, 0, 1);
 					new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
 				} else if (id == 6) {
