@@ -9,6 +9,7 @@ import common.util.Data;
 import common.pack.IndexContainer.Indexable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -105,6 +106,7 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     @JsonDecoder.OnInjected
     public void onInjected() {
         icon = UserProfile.getUserPack(id.pack).source.readImage(Source.TRAITICON, id.id);
+        others.removeIf(Objects::isNull);
     }
 
     @JsonClass.JCGetter
