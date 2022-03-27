@@ -46,12 +46,6 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class CRITI extends ProcItem {
-			@Order(0)
-			public int type;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
 		public static class IMU extends ProcItem {
 			@Order(0)
 			public int mult;
@@ -575,6 +569,12 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class CANNI extends ProcItem {
+			@Order(0)
+			public int type;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class WEAK extends ProcItem {
 			@Order(0)
 			public int prob;
@@ -702,28 +702,30 @@ public class Data {
 		@Order(38)
 		public final WAVEI IMUMOVING = new WAVEI();
 		@Order(39)
-		public final IMUAD IMUARMOR = new IMUAD();
+		public final CANNI IMUCANNON = new CANNI();
 		@Order(40)
-		public final IMUAD IMUSPEED = new IMUAD();
+		public final IMUAD IMUARMOR = new IMUAD();
 		@Order(41)
-		public final IMU CRITI = new IMU();
+		public final IMUAD IMUSPEED = new IMUAD();
 		@Order(42)
-		public final COUNTER COUNTER = new COUNTER();
+		public final IMU CRITI = new IMU();
 		@Order(43)
-		public final PT IMUATK = new PT();
+		public final COUNTER COUNTER = new COUNTER();
 		@Order(44)
-		public final DMGCUT DMGCUT = new DMGCUT();
+		public final PT IMUATK = new PT();
 		@Order(45)
-		public final DMGCAP DMGCAP = new DMGCAP();
+		public final DMGCUT DMGCUT = new DMGCUT();
 		@Order(46)
-		public final BURROW BURROW = new BURROW();
+		public final DMGCAP DMGCAP = new DMGCAP();
 		@Order(47)
-		public final REVIVE REVIVE = new REVIVE();
+		public final BURROW BURROW = new BURROW();
 		@Order(48)
-		public final BARRIER BARRIER = new BARRIER();
+		public final REVIVE REVIVE = new REVIVE();
 		@Order(49)
-		public final DSHIELD DEMONSHIELD = new DSHIELD();
+		public final BARRIER BARRIER = new BARRIER();
 		@Order(50)
+		public final DSHIELD DEMONSHIELD = new DSHIELD();
+		@Order(51)
         public final VOLC DEATHSURGE = new VOLC();
 
 		@Override
@@ -939,7 +941,7 @@ public class Data {
 	public static final int T_TOT = 11;
 
 	// abi bit filter
-	public static final int AB_GOOD = 1 << 0;
+	public static final int AB_GOOD = 1;
 	public static final int AB_RESIST = 1 << 1;
 	public static final int AB_MASSIVE = 1 << 2;
 	public static final int AB_ONLY = 1 << 3;
@@ -960,10 +962,6 @@ public class Data {
 	public static final int AB_MASSIVES = 1 << 18;
 	public static final int AB_BAKILL = 1 << 19;
 	public static final int AB_CKILL = 1 << 20;
-
-	// 0111 1010 1110 0001 0111 1111
-	@Deprecated
-	public static final int AB_ELIMINATOR = 0x7ae17f;
 
 	// abi index
 	public static final int ABI_GOOD = 0;
@@ -1056,14 +1054,15 @@ public class Data {
 	public static final int P_IMUPOI = 36;
 	public static final int P_IMUPOIATK = 37;
 	public static final int P_IMUMOVING = 38;
-	public static final int P_IMUARMOR = 39;
-	public static final int P_IMUSPEED = 40;
-	public static final int P_CRITI = 41;
-	public static final int P_COUNTER = 42;
-	public static final int P_IMUATK = 43;
-	public static final int P_DMGCUT = 44;
-	public static final int P_DMGCAP = 45;
-	public static final int P_BURROW = 46;
+	public static final int P_IMUCANNON = 39;
+	public static final int P_IMUARMOR = 40;
+	public static final int P_IMUSPEED = 41;
+	public static final int P_CRITI = 42;
+	public static final int P_COUNTER = 43;
+	public static final int P_IMUATK = 44;
+	public static final int P_DMGCUT = 45;
+	public static final int P_DMGCAP = 46;
+	public static final int P_BURROW = 47;
 	/**
 	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
 	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
@@ -1071,11 +1070,11 @@ public class Data {
 	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
 	 * others
 	 */
-	public static final int P_REVIVE = 47;
-	public static final int P_BARRIER = 48;
-	public static final int P_DEMONSHIELD = 49;
-	public static final int P_DEATHSURGE = 50;
-	public static final int PROC_TOT = 51;// 51
+	public static final int P_REVIVE = 48;
+	public static final int P_BARRIER = 49;
+	public static final int P_DEMONSHIELD = 50;
+	public static final int P_DEATHSURGE = 51;
+	public static final int PROC_TOT = 52;// 52
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1118,6 +1117,7 @@ public class Data {
 			true,  //imu.BCU poison
 			true,  //imu.poison
 			true,  //imu.moving atk
+			true,  //imu.cannon
 			true,  //imu.armor break
 			true,  //imu.haste
 			true,  //imu. critical

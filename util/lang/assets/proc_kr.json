@@ -1134,5 +1134,23 @@
                 "tooltip": "받은 공격 자체의 봉인 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
+    },
+    "IMUCANNON": {
+        "abbr_name": "Imu.Cannon",
+        "full_name": "Cannon Immunity",
+        "tooltip": null,
+        "format": ["Immune to [(type!=127){[(type<<0){regular cannon waves[(type>2){, }]}",
+            "(type<<1){slow beam[(type>4){, }]}",
+            "(type<<2){thunderbolt[(type>8){, }]}",
+            "(type<<3){waterblast[(type>16){, }]}",
+            "(type<<4){holy blast[(type>32){, }]}",
+            "(type<<5){breakerblast[(type>64){, and}]}",
+            "(type<<6){curseblast}]}(type==127){cannon attacks}]"],
+        "class": {
+            "type": {
+                "name": "type",
+                "tooltip": "+1 for regular cannon immunity, +2 for slow beam immunity, +4 for thunderbolt immunity, +8 for waterblast immunity, +16 for holy blast immunity, +32 for breakerblast immunity, +64 for curseblast immunity"
+            }
+        }
     }
 }

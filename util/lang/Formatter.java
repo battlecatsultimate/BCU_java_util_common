@@ -100,9 +100,10 @@ public class Formatter {
 						if (i == 3)
 							return fi0 != fi1;
 						if (i == 4)
-							return fi0 > fi1;
+							return ((1 << fi1) & fi0) > 0;
 						if (i == 5)
-							return fi0 < fi1;
+							return fi0 > fi1;
+						return fi0 < fi1;
 					}
 			return (Boolean) new RefObj(p0, p1).eval();
 		}
@@ -554,7 +555,7 @@ public class Formatter {
 	}
 
 	@StaticPermitted
-	private static final String[] MATCH = { ">=", "<=", "==", "!=", ">", "<" };
+	private static final String[] MATCH = { ">=", "<=", "==", "!=", "<<", ">", "<" };
 
 	public static String format(String pattern, Object obj, Object ctx) {
 		StringBuilder sb = new StringBuilder();

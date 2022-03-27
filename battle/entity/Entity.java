@@ -1409,6 +1409,14 @@ public abstract class Entity extends AbEntity {
 		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
 			return;
 
+		if (atk.canon >= 0 && getProc().IMUCANNON.type > 0) {
+			int ci = getProc().IMUCANNON.type;
+
+			if ((atk.canon < 2 && ((atk.canon + 1) & ci) > 0) || (atk.canon > 2 && ((1 << (atk.canon - 1)) & ci) > 0)) {
+				anim.getEff(P_WAVE);
+				return;
+			}
+		}
 		// if immune to wave and the attack is wave, jump out
 		if (atk.waveType != 5 && ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0)) {
 			if (getProc().IMUWAVE.mult > 0)
