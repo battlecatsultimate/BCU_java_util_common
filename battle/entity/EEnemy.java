@@ -82,7 +82,7 @@ public class EEnemy extends Entity {
 			ans *= basis.b.t().getEKAtk();
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (atk.abi & AB_BAKILL) > 0)
 			ans *= 1.6;
-		if (atk.canon == 5)
+		if (atk.canon == 16)
 			if ((touchable() & TCH_UG) > 0)
 				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND));
 			else

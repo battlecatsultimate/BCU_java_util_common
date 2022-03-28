@@ -1409,10 +1409,10 @@ public abstract class Entity extends AbEntity {
 		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
 			return;
 
-		if (atk.canon >= 0 && getProc().IMUCANNON.type > 0) {
+		if (atk.canon > 0 && getProc().IMUCANNON.type > 0) {
 			int ci = getProc().IMUCANNON.type;
 
-			if ((atk.canon < 2 && ((atk.canon + 1) & ci) > 0) || (atk.canon > 2 && ((1 << (atk.canon - 1)) & ci) > 0)) {
+			if ((atk.canon & ci) > 0) {
 				anim.getEff(P_WAVE);
 				return;
 			}
