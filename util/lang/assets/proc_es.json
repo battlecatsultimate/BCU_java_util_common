@@ -1164,12 +1164,12 @@
         "full_name": "Cannon Immunity",
         "tooltip": null,
         "format": ["Immune to [(type!=127){[(type#1){regular cannon waves[(type>2){, }]}",
-            "(type#2){slow beam[(type>4){, }]}",
-            "(type#4){thunderbolt[(type>8){, }]}",
-            "(type#8){waterblast[(type>16){, }]}",
-            "(type#16){holy blast[(type>32){, }]}",
-            "(type#32){breakerblast[(type>64){, and}]}",
-            "(type#64){curseblast}]}(type==127){cannon attacks}]"],
+            "(type&2>0){slow beam[(type>4){, }]}",
+            "(type&4>0){thunderbolt[(type>8){, }]}",
+            "(type&8>0){waterblast[(type>16){, }]}",
+            "(type&16>0){holy blast[(type>32){, }]}",
+            "(type&32>0){breakerblast[(type>64){, and}]}",
+            "(type&64>0){curseblast}]}(type==127){cannon attacks}]"],
         "class": {
             "type": {
                 "name": "type",

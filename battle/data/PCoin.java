@@ -161,9 +161,9 @@ public class PCoin extends Data {
 				}
 			} else if (type[0] == PC_AB || type[0] == PC_BASE) {
 				if (du instanceof DataUnit)
-					BCImprove((DataUnit)ans,type,modifs);
+					Improve((DataUnit)ans,type,modifs);
 				else
-					diyImprove((CustomUnit)ans,type,modifs);
+					Improve((CustomUnit)ans,type,modifs);
 			} else if (type[0] == PC_IMU)
 				ans.getProc().getArr(type[1]).set(0, 100);
 			else if (type[0] == PC_TRAIT) {
@@ -175,7 +175,7 @@ public class PCoin extends Data {
 		return ans;
 	}
 
-	private void BCImprove(DataUnit ans, int[] type, int[] modifs) {
+	private void Improve(DataUnit ans, int[] type, int[] modifs) {
 		if (type[0] == PC_AB)
 			ans.abi |= type[1];
 		else {
@@ -195,7 +195,7 @@ public class PCoin extends Data {
 		}
 	}
 
-	private void diyImprove(CustomUnit ans, int[] type, int[] modifs) {
+	private void Improve(CustomUnit ans, int[] type, int[] modifs) {
 		if (type[0] == PC_AB)
 			ans.abi |= type[1];
 		else {
