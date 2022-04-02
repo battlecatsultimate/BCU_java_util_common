@@ -91,7 +91,7 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 				if (f != null) {
 					ArrayList<Integer> mlv = valid(f).getLvs();
 					ArrayList<Integer> flv = lu.map.get(f.unit.id).getLvs();
-					for (int i = 0; i < mlv.size(); i++)
+					for (int i = 0; i < Math.min(mlv.size(), flv.size()); i++)
 						if (mlv.get(i) < flv.get(i))
 							return false;
 				}
