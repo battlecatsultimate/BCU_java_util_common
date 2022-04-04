@@ -1171,7 +1171,7 @@
             "(type&16>0){holy blast[(type>32){, }]}",
             "(type&32>0){breakerblast[(type>64){, and}]}",
             "(type&64>0){curseblast}]}(type==127){cannon attacks}]",
-            "[(mult!=100){ [(mult>0){Reduces}(mult<0){Increases}] damage taken and procs by (_abs(mult))%}]"],
+            "[(mult!=100){ (_left)[(mult>0){Reduces}(mult<0){Increases}] damage taken and procs by (_abs(mult))%(_right)}]"],
         "class": {
             "mult": {
                 "name": "porcentaje",
