@@ -1409,14 +1409,34 @@ public abstract class Entity extends AbEntity {
 		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
 			return;
 
-		if (atk.canon > 0 && getProc().IMUCANNON.type > 0) {
-			int ci = getProc().IMUCANNON.type;
+		Proc.CANNI cRes = getProc().IMUCANNON;
+		if (atk.canon > 0 && cRes.mult != 0)
+			if ((atk.canon & cRes.type) > 0) {
+				if (cRes.mult > 0)
+					anim.getEff(P_WAVE);
 
-			if ((atk.canon & ci) > 0) {
-				anim.getEff(P_WAVE);
-				return;
+				if (cRes.mult == 100)
+					return;
+				else {
+					dmg = dmg * (100 - cRes.mult) / 100;
+					switch (atk.canon) {
+						case 2:
+							atk.getProc().SLOW.time = atk.getProc().SLOW.time * (100 - cRes.mult) / 100;
+							break;
+						case 4:
+						case 16:
+							atk.getProc().STOP.time = atk.getProc().STOP.time * (100 - cRes.mult) / 100;
+							break;
+						case 32:
+							if (cRes.mult > 0 && basis.r.nextDouble() * 100 < cRes.mult)
+								atk.getProc().BREAK.clear();
+							atk.getProc().KB.time = atk.getProc().KB.time * (100 - cRes.mult) / 100;
+							break;
+						case 64:
+							atk.getProc().CURSE.time = atk.getProc().CURSE.time * (100 - cRes.mult) / 100;
+					}
+				}
 			}
-		}
 		// if immune to wave and the attack is wave, jump out
 		if (atk.waveType != 5 && ((atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0)) {
 			if (getProc().IMUWAVE.mult > 0)

@@ -571,6 +571,8 @@ public class Data {
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class CANNI extends ProcItem {
 			@Order(0)
+			public int mult;
+			@Order(1)
 			public int type;
 		}
 

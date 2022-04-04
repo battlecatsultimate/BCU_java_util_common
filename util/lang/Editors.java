@@ -548,7 +548,11 @@ public class Editors {
 		map().put("IMUMOVING", wavei);
 
 		map().put("IMUCANNON", new EditControl<>(Proc.CANNI.class, (t) -> {
-			t.type = MathUtil.clip(t.type, 0, 127);
+			t.mult = Math.min(t.mult, 100);
+			if (t.mult != 0)
+				t.type = MathUtil.clip(t.type, 1, 127);
+			else
+				t.type = 0;
 		}));
 
 		map().put("IMUPOI", imuad);
