@@ -190,7 +190,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						proc.IMUMOVING.mult = 100;
 					if ((form.abi & (1 << 12)) != 0) //Poison Immunity
 						proc.IMUPOI.mult = 100;
-					form.abi = Data.reorderAbi(form.abi);
+					form.abi = Data.reorderAbi(form.abi, 0);
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.1.0")) {

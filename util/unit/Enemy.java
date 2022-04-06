@@ -181,7 +181,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 					proc.IMUMOVING.mult = 100;
 				if ((enemy.abi & (1 << 12)) != 0) //Poison Immunity
 					proc.IMUPOI.mult = 100;
-				enemy.abi = Data.reorderAbi(enemy.abi);
+				enemy.abi = Data.reorderAbi(enemy.abi, 0);
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.1.0")) {

@@ -1577,16 +1577,18 @@ public class Data {
 		return newTrait;
 	}
 
-	public static int reorderAbi(int ab) {
+	public static int reorderAbi(int ab, int ver) {
 		int newAbi = 0, abiAdd = 0;
-		for (int i = 0; i + abiAdd < ABI_TOT ; i++) {
-			if (i == 7 || i == 12 || i == 18)
-				abiAdd++;
-			int i1 = i + abiAdd;
-			if (i1 == 12 || i1 == 18)
-				continue;
-			if (((ab >> i1) & 1) > 0)
-				newAbi |= 1 << i;
+		if (ver == 0) { //Currently, this is always true, but this is here to reformat base destroyer and double bounty in future
+			for (int i = 0; i + abiAdd < ABI_TOT; i++) {
+				if (i == 7 || i == 12 || i == 18)
+					abiAdd++;
+				int i1 = i + abiAdd;
+				if (i1 == 12 || i1 == 18)
+					continue;
+				if (((ab >> i1) & 1) > 0)
+					newAbi |= 1 << i;
+			}
 		}
 		return newAbi;
 	}

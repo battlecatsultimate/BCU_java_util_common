@@ -1,5 +1,6 @@
 package common.util.lang;
 
+import com.google.common.primitives.Ints;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -11,11 +12,15 @@ import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Editors {
+
+	private static final Map<String, EditorGroup> eg = new HashMap<>();
 
 	public static class DispItem implements Displayable {
 
@@ -156,10 +161,12 @@ public class Editors {
 
 		public final EditorGroup par;
 		public final EdiField field;
+		public final String name;
 
-		public Editor(EditorGroup par, EdiField field, String f) throws Exception {
+		public Editor(EditorGroup par, EdiField field, String f) {
 			this.par = par;
 			this.field = field;
+			this.name = f;
 		}
 
 		/**
@@ -168,7 +175,9 @@ public class Editors {
 		protected abstract void setData();
 
 		protected final void update() {
+			setComponentVisibility(par, true, 1);
 			par.ctrl.update(par);
+			par.updateVisibility();
 		}
 
 	}
@@ -194,6 +203,7 @@ public class Editors {
 			for (int i = 0; i < arr.length; i++) {
 				list[i] = getEditor(ctrl, this, arr[i], edit);
 			}
+			eg.put(proc, this);
 		}
 
 		public LocaleCenter.Binder getItem(Formatter.Context ctx) {
@@ -208,6 +218,27 @@ public class Editors {
 				e.setData();
 		}
 
+		public void updateVisibility() {
+			ProcItem item = getProcItem();
+			if (item instanceof Proc.IMUAD)
+				setComponentVisibility(this, item.exists(), 2);
+			else if (!(item instanceof Proc.IMU)) {
+				ArrayList<Integer> visFields = new ArrayList<>();
+				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+				for (int i = 1; i < list.length; i++) {
+					if (edi.EditorVisible(list[i]))
+						visFields.add(i);
+				}
+
+				if (item instanceof Proc.REVIVE)
+					System.out.println(visFields);
+				if (visFields.size() == list.length - 1)
+					setComponentVisibility(this, item.exists(), 1);
+				if (visFields.size() > 0)
+					setComponentVisibility(this, item.exists(), Ints.toArray(visFields));
+			}
+		}
+
 		private ProcItem getProcItem() {
 			return (ProcItem) obj;
 		}
@@ -217,6 +248,12 @@ public class Editors {
 	public interface EditorSupplier {
 
 		Editor getEditor(EditControl<?> ctrl, EditorGroup g, String field, boolean edit);
+
+		void setEditorVisibility(Editor e, boolean b);
+
+		boolean EditorVisible(Editor e);
+
+		boolean isEnemy();
 
 	}
 
@@ -335,6 +372,7 @@ public class Editors {
 					t.type.range_type = MathUtil.clip(t.type.range_type, 0, 3);
 				}
 			}
+			setComponentVisibility("REVIVE", t.type.revive_others, 3, 4, 5, 7);
 		}));
 
 		map().put("SNIPER", prob);
@@ -360,16 +398,19 @@ public class Editors {
 				t.type.same_health = false;
 			} else {
 				t.time = Math.max(0, t.time);
-				try {
+				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+				if (!edi.isEnemy()) {
 					Unit u = Identifier.getOr(t.id, Unit.class);
 					t.form = MathUtil.clip(t.form, 1, u.forms.length);
 					if (!t.type.fix_buff)
 						t.mult = MathUtil.clip(t.mult, -u.max - u.maxp, u.max + u.maxp);
 					else
 						t.mult = MathUtil.clip(t.mult, 1, u.max + u.maxp);
-				} catch(ClassCastException r) {
+					setComponentVisibility("SUMMON", true, 12);
+				} else {
 					t.form = 1;
 					t.mult = Math.max(1, t.mult);
+					setComponentVisibility("SUMMON", false, 12);
 				}
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
 			}
@@ -593,6 +634,28 @@ public class Editors {
 				t.time = Math.max(1, t.time / Data.VOLC_ITV) * Data.VOLC_ITV;
 			}
 		}));
+	}
+
+	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
+		EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+		if (fields.length > 2)
+			for (int field : fields)
+				edi.setEditorVisibility(egg.list[field], boo);
+		else {
+			int l1 = fields.length == 2 ? fields[1] : egg.list.length;
+			for (int i = fields[0]; i < l1; i++)
+				edi.setEditorVisibility(egg.list[i], boo);
+		}
+	}
+
+	private static void setComponentVisibility(String proc, boolean boo, int... fields) {
+		EditorGroup egg = eg.getOrDefault(proc, null);
+		if (egg == null) {
+			System.out.println("There is no proc named " + proc);
+			return;
+		}
+
+		setComponentVisibility(egg, boo, fields);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {
