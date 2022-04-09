@@ -194,6 +194,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/SpeedX.png");
 		aux.icon[1][P_BARRIER] = new VImg("./org/page/icons/Barrier.png");
 		aux.icon[1][P_COUNTER] = new VImg("./org/page/icons/Counter.png");
+		aux.icon[1][P_IMUCANNON] = new VImg("./org/page/icons/CannonX.png");
 
 		//These are used for talent edit page icons
 		aux.icon[4][PC2_HP] = new VImg(parts[120]);
