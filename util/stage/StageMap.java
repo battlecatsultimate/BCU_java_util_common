@@ -115,7 +115,9 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	@Override
 	public StageMap copy(MapColc mc) {
 		StageMap sm = new StageMap(mc.getNextID());
-		sm.name = toString();
+		sm.names = names.clone();
+		sm.names.put(toString());
+
 		sm.stars = stars.clone();
 		for (Stage st : list)
 			sm.add(st.copy(sm));
