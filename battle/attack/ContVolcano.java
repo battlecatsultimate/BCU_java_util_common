@@ -11,17 +11,26 @@ import common.util.pack.EffAnim.VolcEff;
 public class ContVolcano extends ContAb {
 	protected final EAnimD<VolcEff> anim;
 	protected final AttackVolcano v;
+	private final Proc defProc;
 
 	private final int aliveTime;
 
 	private int t = 0;
+	private final int ind;
+	private final int[] cursed = new int[2]; // Synchronize curse/seal status with entity and become independent from it when this one dies
+	private final boolean[] performed = new boolean[4]; // [0,1] - check if curse/seal rng has passed, [2,3] - check if unit process needs to be updated
 
-	protected ContVolcano(AttackVolcano v, double p, int lay, int alive) {
+	protected ContVolcano(AttackVolcano v, double p, int lay, int alive, int ind) {
 		super(v.model.b, p, lay);
 		anim = (v.dire == 1 ? effas().A_E_VOLC : effas().A_VOLC).getEAnim(VolcEff.START);
 		this.v = v;
 		aliveTime = alive;
+		defProc = v.getProc().clone();
+		this.ind = ind;
 		CommonStatic.setSE(SE_VOLC_START);
+
+		performed[0] = performed[2] = v.attacker.status[P_CURSE][0] == 0;
+		performed[1] = performed[3] = v.attacker.status[P_SEAL][0] == 0;
 
 		update();
 	}
@@ -36,6 +45,7 @@ public class ContVolcano extends ContAb {
 
 	@Override
 	public void update() {
+		updateProc();
 		if (t >= VOLC_PRE && t <= VOLC_PRE + aliveTime && anim.type != VolcEff.DURING) {
 			anim.changeAnim(VolcEff.DURING, false);
 			CommonStatic.setSE(SE_VOLC_LOOP);
@@ -53,6 +63,47 @@ public class ContVolcano extends ContAb {
 				sb.getAttack(v);
 			anim.update(false);
 			t++;
+		}
+	}
+
+	private void updateProc() {
+		if (v.attacker.anim.dead != 0) {
+			cursed[0] = v.attacker.status[P_CURSE][0];
+			cursed[1] = v.attacker.status[P_SEAL][0];
+		} else {
+			if (cursed[0] > 0)
+				cursed[0]--;
+			if (cursed[1] > 0)
+				cursed[1]--;
+		}
+
+		String[] sealp = { "CRIT", "WAVE", "MOVEWAVE", "SNIPER", "BREAK", "SUMMON", "SATK", "VOLC", "MINIWAVE", "SHIELDBREAK"};
+		if (cursed[1] > 0 && performed[3]) {
+			performed[3] = false;
+			for (String s : sealp)
+				v.proc.get(s).clear();
+		} else if (cursed[1] == 0 && !performed[3]) {
+			AtkModelEntity aam = (AtkModelEntity) v.model;
+			for (String s : sealp)
+				if (!v.proc.get(s).exists() && (defProc.get(s).exists() || (!performed[1] && aam.getProc(ind).get(s).perform(aam.b.r)))) {
+					defProc.get(s).set(aam.getProc(ind).get(s));
+					v.proc.get(s).set(aam.getProc(ind).get(s));
+				}
+			performed[1] = performed[3] = true;
+		}
+		String[] cursep = {"KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "POIATK", "ARMOR", "SPEED", "DMGCUT", "DMGCAP"};
+		if (cursed[0] > 0 || cursed[1] > 0 && performed[2]) {
+			performed[2] = false;
+			for (String s : cursep)
+				v.proc.get(s).clear();
+		} else if (cursed[0] == 0 && cursed[1] == 0 && !performed[2]) {
+			AtkModelEntity aam = (AtkModelEntity) v.model;
+			for (String s : cursep)
+				if (!v.proc.get(s).exists() && (defProc.get(s).exists() || (!performed[0] && aam.getProc(ind).get(s).perform(aam.b.r)))) {
+					defProc.get(s).set(aam.getProc(ind).get(s));
+					v.proc.get(s).set(aam.getProc(ind).get(s));
+				}
+			performed[0] = performed[2] = true;
 		}
 	}
 

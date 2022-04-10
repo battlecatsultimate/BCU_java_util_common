@@ -13,7 +13,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 	protected AtkModelEnemy(EEnemy ent, double d0) {
 		super(ent, d0, 1);
-		String[] arr = { "KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "IMUATK",
+		String[] arr = { "KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS",
 				"POIATK", "ARMOR", "SPEED", "DMGCUT", "DMGCAP" };
 		cursed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < cursed.length; i++) {
@@ -81,7 +81,7 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 	}
 
 	@Override
-	protected Proc getProc(int ind) {
+	public Proc getProc(int ind) {
 		if (e.status[P_CURSE][0] > 0 && e.status[P_SEAL][0] == 0 && ind < cursed.length)
 			return cursed[ind];
 		return super.getProc(ind);

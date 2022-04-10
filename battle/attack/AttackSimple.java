@@ -20,6 +20,7 @@ public class AttackSimple extends AttackAb {
 	 */
 	private final Set<AbEntity> attacked = new HashSet<>();
 	private final boolean range;
+	public int ind = 0;
 
 	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, double p0, double p1, boolean isr,
 						MaskAtk matk, int layer, boolean isLongAtk, int duration) {
@@ -35,6 +36,11 @@ public class AttackSimple extends AttackAb {
 			touch |= TCH_CORPSE;
 
 		dire *= mask.getDire();
+	}
+
+	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc proc, double p0, double p1, MaskAtk mask, int layer, boolean isLongAtk, int ind) {
+		this(attacker, ent, ATK, tr, eab, proc, p0, p1, mask, layer, isLongAtk);
+		this.ind = ind;
 	}
 
 	@Override
@@ -129,7 +135,7 @@ public class AttackSimple extends AttackAb {
 			double sta = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 			double end = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-			new ContVolcano(new AttackVolcano(attacker, this, sta, end), p0, layer, volc.time);
+			new ContVolcano(new AttackVolcano(attacker, this, sta, end), p0, layer, volc.time, ind);
 		}
 	}
 

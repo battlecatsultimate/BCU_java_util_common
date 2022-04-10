@@ -152,7 +152,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
-		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind));
+		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind), ind);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time);
+		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time, 0);
 	}
 
 	@Override
@@ -242,7 +242,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return e.layer;
 	}
 
-	protected Proc getProc(int ind) {
+	public Proc getProc(int ind) {
 		if (e.status[P_SEAL][0] > 0 && ind < sealed.length)
 			return sealed[ind];
 		return data.getAtkModel(ind).getProc();

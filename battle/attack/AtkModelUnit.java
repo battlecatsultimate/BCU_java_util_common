@@ -83,7 +83,7 @@ public class AtkModelUnit extends AtkModelEntity {
 	}
 
 	@Override
-	protected Proc getProc(int ind) {
+	public Proc getProc(int ind) {
 		if (e.status[P_SEAL][0] > 0 || ind >= buffed.length)
 			return super.getProc(ind);
 		return buffed[ind];
