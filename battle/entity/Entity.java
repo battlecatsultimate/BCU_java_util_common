@@ -813,12 +813,8 @@ public abstract class Entity extends AbEntity {
 			if (mov < 0)
 				e.updateMove(-mov, -mov);
 			else {
-				if(kbType == INT_WARP) {
-					e.pos -= mov * e.dire;
-				} else {
-					double lim = e.getLim();
-					e.pos -= Math.min(mov, lim) * e.dire;
-				}
+				double lim = e.getLim();
+				e.pos -= Math.min(mov, lim) * e.dire;
 			}
 		}
 
