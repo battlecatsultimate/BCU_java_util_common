@@ -1587,7 +1587,7 @@ public abstract class Entity extends AbEntity {
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
-			if ((counter.prob == 100 || basis.r.nextDouble() * 100 < counter.prob) && e.dire != dire && (e.touchable() & data.getTouch()) > 0) {
+			if ((counter.prob == 100 || basis.r.nextDouble() * 100 < counter.prob) && e.dire != dire && (e.touchable() & getTouch()) > 0) {
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
 				if (!isWave || counter.type.counterWave != 0) {
 					double[] ds = counter.minRange != 0 || counter.maxRange != 0 ? new double[]{pos + counter.minRange, pos + counter.maxRange} : aam.touchRange();
@@ -2345,12 +2345,21 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
+	 * get touch state
+	 */
+	public int getTouch() {
+		if ((getAbi() & AB_CKILL) > 0)
+			return data.getTouch() | TCH_CORPSE;
+		return data.getTouch();
+	}
+
+	/**
 	 * verify touch state
 	 */
 	public void checkTouch() {
 		touch = true;
 		double[] ds = aam.touchRange();
-		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1], false);
+		List<AbEntity> le = basis.inRange(getTouch(), dire, ds[0], ds[1], false);
 		boolean blds;
 		if (data.isLD() || data.isOmni()) {
 			double bpos = basis.getBase(dire).pos;
