@@ -66,12 +66,8 @@ public class PCoin extends Data {
 	}
 
 	public void update() {
-		if (max.size() - 1 != info.size())
-			for (int i = 0; i < info.size(); i++)
-				if (i + 1 < max.size())
-					max.set(i + 1, info.get(i)[1]);
-				else
-					max.add(info.get(i)[1]);
+		while (max.size() - 1 < info.size())
+			max.add(info.get(max.size() - 1)[1]);
 
 		full = improve(max);
 	}

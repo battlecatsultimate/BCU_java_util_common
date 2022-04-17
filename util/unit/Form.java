@@ -146,8 +146,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public MaskUnit maxu() {
 		PCoin pc = du.getPCoin();
 		if (pc != null) {
-			if (pc.full == null)
-				pc.update();
 			return pc.full;
 		}
 		return du;
@@ -158,6 +156,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		CustomUnit form = (CustomUnit) du;
 		form.pack = this;
 
+		if (form.getPCoin() != null)
+			form.pcoin.update();
 		if((unit != null || uid != null)) {
 			Unit u = unit == null ? uid.get() : unit;
 
