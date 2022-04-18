@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.battle.entity.EAnimCont;
@@ -263,6 +264,9 @@ public abstract class AtkModelEntity extends AtkModelAb {
 						proc.SUMMON.set(sprc);
 				} else
 					proc.get(s0).set(getProc(ind).get(s0));
+
+		if (data instanceof CustomEntity)
+			for (int b : BCShareable) proc.getArr(b).set(getProc(ind).getArr(b));
 
 		if (proc.CRIT.exists() && proc.CRIT.mult == 0)
 			proc.CRIT.mult = 200;
