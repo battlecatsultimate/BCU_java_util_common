@@ -179,6 +179,12 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 					}
 				}
 			}
+
+			if (ints[105] == 1) {
+				proc.BSTHUNT.type.active = true;
+				proc.BSTHUNT.prob = ints[106];
+				proc.BSTHUNT.time = ints[107];
+			}
 		} catch (IndexOutOfBoundsException e) {
 		}
 

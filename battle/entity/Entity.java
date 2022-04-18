@@ -1471,6 +1471,17 @@ public abstract class Entity extends AbEntity {
 				return;
 		}
 
+		if (atk.trait.contains(BCTraits.get(TRAIT_BEAST))) {
+			Proc.BSTHUNT beastDodge = getProc().BSTHUNT;
+			if (beastDodge.prob > 0 && (atk.dire == -1 || receive(-1))) {
+				if (status[P_BSTHUNT][0] == 0 && (beastDodge.prob == 100 || basis.r.nextDouble() * 100 < imuatk.prob))
+					status[P_BSTHUNT][0] = beastDodge.time;
+
+				if (status[P_BSTHUNT][0] > 0)
+					return;
+			}
+		}
+
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
 		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);

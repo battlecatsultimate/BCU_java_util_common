@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedHashMap;
 
 @JsonClass(read = JsonClass.RType.FILL)
-public class MultiLangData extends Data implements Cloneable {
+public class MultiLangData extends Data {
     @JsonField(generic = {Integer.class, String.class})
     private final LinkedHashMap<Integer, String> dat = new LinkedHashMap<>();
 
@@ -64,8 +64,11 @@ public class MultiLangData extends Data implements Cloneable {
         return CommonStatic.getConfig().lang;
     }
 
-    @Override
-    public MultiLangData clone() {
-        return (MultiLangData) Data.err(super::clone);
-    }
+    public MultiLangData copy() { //Makes a copy of this MultiLangData object
+        MultiLangData ans = new MultiLangData();
+        for (int lang : dat.keySet())
+            ans.dat.put(lang, dat.get(lang));
+
+        return ans;
+    };
 }

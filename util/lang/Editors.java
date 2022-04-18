@@ -230,8 +230,6 @@ public class Editors {
 						visFields.add(i);
 				}
 
-				if (item instanceof Proc.REVIVE)
-					System.out.println(visFields);
 				if (visFields.size() == list.length - 1)
 					setComponentVisibility(this, item.exists(), 1);
 				if (visFields.size() > 0)
@@ -637,6 +635,20 @@ public class Editors {
 
 		map().put("BOUNTY", new EditControl<>(Proc.MULT.class, (t) -> {}));
 		map().put("ATKBASE", new EditControl<>(Proc.MULT.class, (t) -> {}));
+
+		map().put("BSTHUNT", new EditControl<>(Proc.BSTHUNT.class, (t) -> {
+			if (t.type.active)
+				t.prob = MathUtil.clip(t.prob, 0, 100);
+			else
+				t.prob = 0;
+			setComponentVisibility("BSTHUNT", t.prob != 0, 1, 2);
+
+			if (t.prob == 0)
+				t.time = 0;
+			else
+				t.time = Math.max(1, t.time);
+			setComponentVisibility("BSTHUNT", t.time != 0, 2);
+		}));
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {

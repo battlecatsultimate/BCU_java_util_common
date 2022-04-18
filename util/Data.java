@@ -270,6 +270,9 @@ public class Data {
 
 							if (((Integer) o) != 0)
 								return true;
+						} else {
+							if (((IntType) f.get(this)).toInt() > 0)
+								return true;
 						}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -600,6 +603,21 @@ public class Data {
 			public int regen;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class BSTHUNT extends ProcItem {
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@Order(0)
+				public boolean active;
+			}
+			@Order(0)
+			public TYPE type = new TYPE();
+			@Order(1)
+			public int prob;
+			@Order(2)
+			public int time;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -739,6 +757,8 @@ public class Data {
 		public final MULT BOUNTY = new MULT();
 		@Order(53)
 		public final MULT ATKBASE = new MULT();
+		@Order(54)
+		public final BSTHUNT BSTHUNT = new BSTHUNT(); //Unsure what does the 1st param of beast killer do, so this is temporary
 
 		@Override
 		public Proc clone() {
@@ -908,8 +928,9 @@ public class Data {
 	public static final int TRAIT_EVA = 10;
 	public static final int TRAIT_WITCH = 11;
 	public static final int TRAIT_BARON = 12;
-	public static final int TRAIT_INFH = 13;
-	public static final int TRAIT_TOT = 14;
+	public static final int TRAIT_BEAST = 13;
+	public static final int TRAIT_INFH = 14;
+	public static final int TRAIT_TOT = 15;
 
 	// treasure
 	public static final int T_RED = 0;
@@ -1084,7 +1105,8 @@ public class Data {
 	public static final int P_DEATHSURGE = 51;
 	public static final int P_BOUNTY = 52;
 	public static final int P_ATKBASE = 53;
-	public static final int PROC_TOT = 54;// 52
+	public static final int P_BSTHUNT = 54; //Beast Killer
+	public static final int PROC_TOT = 55;// 53
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {

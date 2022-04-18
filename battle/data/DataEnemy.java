@@ -180,6 +180,9 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 					}
 				}
 			}
+
+			if (ints[101] == 1)
+				traits.add(BCTraits.get(TRAIT_BEAST));
 		} catch (IndexOutOfBoundsException ignored) {
 
 		}
