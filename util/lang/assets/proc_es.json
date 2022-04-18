@@ -1182,5 +1182,29 @@
                 "tooltip": "+1 para inmunidad ante el cañón normal, +2 para inmunidad ante el cañón ralentizador, +4 para inmunidad ante el cañón inmovilizador, +8 para inmunidad ante la chorrimanguera, +16 para inmunidad ante el cañón de ráfagas, +32 para inmunidad ante el cañón rompebarreras, +64 para inmunidad ante el cañón maldecidor"
             }
         }
+    },
+    "BOUNTY": {
+        "abbr_name": "2x Money",
+        "full_name": "Money Multiplier",
+        "tooltip": null,
+        "format": "[(mult>0){Greedy Sweep}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "ATKBASE": {
+        "abbr_name": "Vs. Base",
+        "full_name": "Base Destroyer",
+        "tooltip": null,
+        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
     }
 }

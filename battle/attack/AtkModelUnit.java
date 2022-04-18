@@ -1,6 +1,7 @@
 package common.battle.attack;
 
 import common.battle.BasisLU;
+import common.battle.data.DataUnit;
 import common.battle.data.PCoin;
 import common.battle.entity.EUnit;
 import common.battle.entity.EntCont;
@@ -74,6 +75,9 @@ public class AtkModelUnit extends AtkModelEntity {
 			setProc(ind, proc);
 			proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB)) / 100;
 		}
+		if (e.data instanceof DataUnit)
+			for (int j : BCShareable) proc.getArr(j).set(e.getProc().getArr(j));
+
 		extraAtk(ind);
 		if (e.status[P_WEAK][0] > 0)
 			atk = atk * e.status[P_WEAK][1] / 100;

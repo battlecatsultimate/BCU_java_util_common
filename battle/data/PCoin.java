@@ -138,8 +138,12 @@ public class PCoin extends Data {
 				if (du instanceof DataUnit) {
 					if (type[1] == P_STRONG && modifs[0] != 0)
 						tar.set(0, 100 - tar.get(0));
-					if (type[1] == P_WEAK)
+					else if (type[1] == P_WEAK)
 						tar.set(2, 100 - tar.get(2));
+					else if (type[1] == P_BOUNTY)
+						tar.set(0, 100);
+					else if (type[1] == P_ATKBASE)
+						tar.set(0, 300);
 				} else if (!((CustomEntity)du).common && !(type[1] == P_STRONG && modifs[0] != 0)) {
 					for (AtkDataModel atk : ((CustomEntity)ans).atks) {
 						ProcItem atks = atk.proc.getArr(type[1]);

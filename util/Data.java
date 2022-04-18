@@ -216,6 +216,12 @@ public class Data {
 			public int prob;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class MULT extends ProcItem {
+			@Order(0)
+			public int mult;
+		}
+
 		public static abstract class ProcItem implements Cloneable, BattleStatic {
 			public ProcItem clear() {
 				try {
@@ -729,6 +735,10 @@ public class Data {
 		public final DSHIELD DEMONSHIELD = new DSHIELD();
 		@Order(51)
         public final VOLC DEATHSURGE = new VOLC();
+		@Order(52)
+		public final MULT BOUNTY = new MULT();
+		@Order(53)
+		public final MULT ATKBASE = new MULT();
 
 		@Override
 		public Proc clone() {
@@ -947,47 +957,43 @@ public class Data {
 	public static final int AB_RESIST = 1 << 1;
 	public static final int AB_MASSIVE = 1 << 2;
 	public static final int AB_ONLY = 1 << 3;
-	public static final int AB_EARN = 1 << 4;
-	public static final int AB_BASE = 1 << 5;
-	public static final int AB_METALIC = 1 << 6;
-	public static final int AB_WAVES = 1 << 7;
-	public static final int AB_SNIPERI = 1 << 8;
-	public static final int AB_TIMEI = 1 << 9;
-	public static final int AB_GHOST = 1 << 10;
-	public static final int AB_ZKILL = 1 << 11;
-	public static final int AB_WKILL = 1 << 12;
-	public static final int AB_GLASS = 1 << 13;
-	public static final int AB_THEMEI = 1 << 14;
-	public static final int AB_EKILL = 1 << 15;
-	public static final int AB_IMUSW = 1 << 16;
-	public static final int AB_RESISTS = 1 << 17;
-	public static final int AB_MASSIVES = 1 << 18;
-	public static final int AB_BAKILL = 1 << 19;
-	public static final int AB_CKILL = 1 << 20;
+	public static final int AB_METALIC = 1 << 4;
+	public static final int AB_WAVES = 1 << 5;
+	public static final int AB_SNIPERI = 1 << 6;
+	public static final int AB_TIMEI = 1 << 7;
+	public static final int AB_GHOST = 1 << 8;
+	public static final int AB_ZKILL = 1 << 9;
+	public static final int AB_WKILL = 1 << 10;
+	public static final int AB_GLASS = 1 << 11;
+	public static final int AB_THEMEI = 1 << 12;
+	public static final int AB_EKILL = 1 << 13;
+	public static final int AB_IMUSW = 1 << 14;
+	public static final int AB_RESISTS = 1 << 15;
+	public static final int AB_MASSIVES = 1 << 16;
+	public static final int AB_BAKILL = 1 << 17;
+	public static final int AB_CKILL = 1 << 18;
 
 	// abi index
 	public static final int ABI_GOOD = 0;
 	public static final int ABI_RESIST = 1;
 	public static final int ABI_MASSIVE = 2;
 	public static final int ABI_ONLY = 3;
-	public static final int ABI_EARN = 4;
-	public static final int ABI_BASE = 5;
-	public static final int ABI_METALIC = 6;
-	public static final int ABI_WAVES = 7;
-	public static final int ABI_SNIPERI = 8;
-	public static final int ABI_TIMEI = 9;
-	public static final int ABI_GHOST = 10;
-	public static final int ABI_ZKILL = 11;
-	public static final int ABI_WKILL = 12;
-	public static final int ABI_GLASS = 13;
-	public static final int ABI_THEMEI = 14;
-	public static final int ABI_EKILL = 15;
-	public static final int ABI_IMUSW = 16;
-	public static final int ABI_RESISTS = 17;
-	public static final int ABI_MASSIVES = 18;
-	public static final int ABI_BAKILL = 19;
-	public static final int ABI_CKILL = 20;
-	public static final int ABI_TOT = 22;// 20 currently
+	public static final int ABI_METALIC = 4;
+	public static final int ABI_WAVES = 5;
+	public static final int ABI_SNIPERI = 6;
+	public static final int ABI_TIMEI = 7;
+	public static final int ABI_GHOST = 8;
+	public static final int ABI_ZKILL = 9;
+	public static final int ABI_WKILL = 10;
+	public static final int ABI_GLASS = 11;
+	public static final int ABI_THEMEI = 12;
+	public static final int ABI_EKILL = 13;
+	public static final int ABI_IMUSW = 14;
+	public static final int ABI_RESISTS = 15;
+	public static final int ABI_MASSIVES = 16;
+	public static final int ABI_BAKILL = 17;
+	public static final int ABI_CKILL = 18;
+	public static final int ABI_TOT = 19;// 20 currently
 
 	// proc index
 	public static final int P_KB = 0;
@@ -1076,7 +1082,9 @@ public class Data {
 	public static final int P_BARRIER = 49;
 	public static final int P_DEMONSHIELD = 50;
 	public static final int P_DEATHSURGE = 51;
-	public static final int PROC_TOT = 52;// 52
+	public static final int P_BOUNTY = 52;
+	public static final int P_ATKBASE = 53;
+	public static final int PROC_TOT = 54;// 52
 	public static final int PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1132,8 +1140,18 @@ public class Data {
 			true,  //barrier
 			true,  //demon barrier
 			true,  //death surge
+			false, //2x money
+			false, //base destroyer
 	};
 
+	/**
+	 * Procs in here are shareable on any hit for BC entities, but not shareable for custom entities
+	 */
+	public static final int[] BCShareable = { P_BOUNTY, P_ATKBASE };
+
+	/**
+	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
+	 */
 	public static final int[] REMOVABLE_PROC = {
 			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED
 	};
@@ -1170,11 +1188,11 @@ public class Data {
 			{ 0, P_WARP, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ 1, AB_BASE, 0 }, // 12: Base Destroyer
+			{ 0, P_ATKBASE, 0 }, // 12: Base Destroyer
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
-			{ 1, AB_EARN }, // 16: 2x income
+			{ 0, P_BOUNTY }, // 16: 2x income
 			{ 0, P_WAVE }, // 17: wave
 			{ 0, P_IMUWEAK }, // 18: res weak
 			{ 0, P_IMUSTOP }, // 19: res stop
@@ -1215,7 +1233,7 @@ public class Data {
 			{ 0, P_IMUVOLC }, // 54: resist to surge ?
 			{ 3, P_IMUVOLC }, // 55: immune to surge
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
-			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Devil
+			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Aku
 			{ 0, P_SHIELDBREAK }, //58 : shield piercing
 			{ 1, AB_CKILL} //59 : corpse killer
 	};
@@ -1579,13 +1597,21 @@ public class Data {
 
 	public static int reorderAbi(int ab, int ver) {
 		int newAbi = 0, abiAdd = 0;
-		if (ver == 0) { //Currently, this is always true, but this is here to reformat base destroyer and double bounty in future
-			for (int i = 0; i + abiAdd < ABI_TOT; i++) {
+		if (ver == 0) {
+			for (int i = 0; i + abiAdd < ABI_TOT + 2; i++) {
 				if (i == 7 || i == 12 || i == 18)
 					abiAdd++;
 				int i1 = i + abiAdd;
 				if (i1 == 12 || i1 == 18)
 					continue;
+				if (((ab >> i1) & 1) > 0)
+					newAbi |= 1 << i;
+			}
+		} else if (ver == 1) { //Reformat Bounty and Base destroyer
+			for (int i = 0; i + abiAdd < ABI_TOT; i++) {
+				if (i == 4)
+					abiAdd += 2;
+				int i1 = i + abiAdd;
 				if (((ab >> i1) & 1) > 0)
 					newAbi |= 1 << i;
 			}

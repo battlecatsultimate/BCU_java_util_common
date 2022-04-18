@@ -1271,11 +1271,6 @@ public abstract class Entity extends AbEntity {
 	private int kbTime;
 
 	/**
-	 * temp field: marker for double income
-	 */
-	protected boolean tempearn;
-
-	/**
 	 * wait FSM time
 	 */
 	private int waitTime;
@@ -1570,9 +1565,10 @@ public abstract class Entity extends AbEntity {
 
 		damage += dmg;
 		zx.damaged(atk);
-		tempearn |= (atk.abi & AB_EARN) > 0;
+		if (this instanceof EEnemy)
+			status[P_BOUNTY][0] = atk.getProc().BOUNTY.mult;
 
-		if(atk instanceof AttackSimple && atk.atk < 0)
+		if(atk.atk < 0)
 			anim.getEff(HEAL);
 
 		//75.0 is guessed value compared from BC
@@ -1928,9 +1924,6 @@ public abstract class Entity extends AbEntity {
 
 		// update ZKill
 		zx.postUpdate();
-
-		if (health > 0)
-			tempearn = false;
 
 		if (isBase && health < 0) {
 			health = 0;

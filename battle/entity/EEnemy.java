@@ -45,9 +45,7 @@ public class EEnemy extends Entity {
 	public void kill(boolean atk) {
 		super.kill(atk);
 		if (!basis.st.trail && !atk) {
-			double mul = basis.b.t().getDropMulti();
-			if (tempearn)
-				mul *= 2;
+			double mul = basis.b.t().getDropMulti() * (1 + (status[P_BOUNTY][0] / 100.0));
 			basis.money += mul * ((MaskEnemy) data).getDrop();
 		}
 	}
@@ -74,8 +72,8 @@ public class EEnemy extends Entity {
 			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0)
 				ans *= basis.b.t().getMASSIVESATK(sharedTraits);
 		}
-		if (isBase && (atk.abi & AB_BASE) > 0)
-			ans *= 4;
+		if (isBase)
+			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (atk.abi & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKAtk();
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (atk.abi & AB_EKILL) > 0)
@@ -125,5 +123,13 @@ public class EEnemy extends Entity {
 		}
 
 		super.update();
+	}
+
+	@Override
+	public void postUpdate() {
+		super.postUpdate();
+
+		if (health > 0)
+			status[P_BOUNTY][0] = 0;
 	}
 }

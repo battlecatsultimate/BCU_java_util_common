@@ -156,8 +156,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		CustomUnit form = (CustomUnit) du;
 		form.pack = this;
 
-		if (form.getPCoin() != null)
-			form.pcoin.update();
 		if((unit != null || uid != null)) {
 			Unit u = unit == null ? uid.get() : unit;
 
@@ -202,8 +200,20 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					names.put(name);
 					description.put(explanation);
 				}
+
+				if (UserProfile.isOlderPack(pack, "0.6.5.0")) {
+					Proc proc = form.getProc();
+
+					if ((form.abi & 16) > 0) //2x money
+						proc.BOUNTY.mult = 100;
+					if ((form.abi & 32) > 0) //base destroyer
+						proc.ATKBASE.mult = 300;
+					form.abi = Data.reorderAbi(form.abi, 1);
+				}
 			}
 		}
+		if (form.getPCoin() != null)
+			form.pcoin.update();
 	}
 
 	public ArrayList<Integer> getPrefLvs() {

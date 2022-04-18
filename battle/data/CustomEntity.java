@@ -179,8 +179,11 @@ public abstract class CustomEntity extends DataEntity {
 		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();
 		atks = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			atks[i] = new AtkDataModel(this, de, i);
+			for (int j : BCShareable)
+				atks[i].proc.getArr(j).set(de.getProc().getArr(j));
+		}
 	}
 
 	@Override

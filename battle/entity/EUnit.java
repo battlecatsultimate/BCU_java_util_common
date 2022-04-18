@@ -113,8 +113,8 @@ public class EUnit extends Entity {
 			ans *= basis.b.t().getWKDef();
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKDef();
-		if (isBase && (atk.abi & AB_BASE) > 0)
-			ans *= 4;
+		if (isBase)
+			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (getAbi() & AB_BAKILL) > 0)
 			ans *= 0.7;
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);

@@ -634,6 +634,9 @@ public class Editors {
 				t.time = Math.max(1, t.time / Data.VOLC_ITV) * Data.VOLC_ITV;
 			}
 		}));
+
+		map().put("BOUNTY", new EditControl<>(Proc.MULT.class, (t) -> {}));
+		map().put("ATKBASE", new EditControl<>(Proc.MULT.class, (t) -> {}));
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {

@@ -148,12 +148,12 @@ public class Res extends ImgCore {
 		aux.icon[1][P_STOP] = new VImg(parts[197]);
 		aux.icon[1][P_SLOW] = new VImg(parts[198]);
 		aux.icon[1][P_LETHAL] = new VImg(parts[199]);
-		aux.icon[0][ABI_BASE] = new VImg(parts[200]);
+		aux.icon[1][P_ATKBASE] = new VImg(parts[200]);
 		aux.icon[1][P_CRIT] = new VImg(parts[201]);
 		aux.icon[0][ABI_ONLY] = new VImg(parts[202]);
 		aux.icon[0][ABI_GOOD] = new VImg(parts[203]);
 		aux.icon[0][ABI_RESIST] = new VImg(parts[204]);
-		aux.icon[0][ABI_EARN] = new VImg(parts[205]);
+		aux.icon[1][P_BOUNTY] = new VImg(parts[205]);
 		aux.icon[0][ABI_MASSIVE] = new VImg(parts[206]);
 		aux.icon[1][P_KB] = new VImg(parts[207]);
 		aux.icon[1][P_WAVE] = new VImg(parts[208]);

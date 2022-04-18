@@ -1149,5 +1149,29 @@
         "tooltip": "+1 = デフォルトにゃんこ砲の波動、+2 = スロウ砲無効、+4 = かみなり砲無効、+8 = 水鉄砲無効、+16 = エンジェル砲無効、+32 = ブレイク砲無効、+64 = 呪い砲無効"
       }
     }
+  },
+  "BOUNTY": {
+    "abbr_name": "撃破時お金x2",
+    "full_name": "撃破時お金アップ",
+    "tooltip": null,
+    "format": "撃破時お金(_abs(mult))%[(mult>0){UP}(mult<0){DOWN}]",
+    "class": {
+      "mult": {
+        "name": "割合",
+        "tooltip": null
+      }
+    }
+  },
+  "ATKBASE": {
+    "abbr_name": "城破壊得意",
+    "full_name": "城破壊が得意",
+    "tooltip": null,
+    "format": "対 お城 与ダメ[(mult>0){+}](mult)%",
+    "class": {
+      "mult": {
+        "name": "割合",
+        "tooltip": null
+      }
+    }
   }
 }

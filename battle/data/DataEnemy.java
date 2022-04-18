@@ -69,7 +69,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.CRIT.prob = ints[25];
 		int a = 0;
 		if (ints[26] == 1)
-			a |= AB_BASE;
+			proc.ATKBASE.mult = 300;
 		if(ints.length < 87 || ints[86] != 1) {
 			proc.WAVE.prob = ints[27];
 			proc.WAVE.lv = ints[28];

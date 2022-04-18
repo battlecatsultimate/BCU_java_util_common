@@ -43,8 +43,8 @@ public class ECastle extends AbEntity {
 		smokeX = (int) (pos + 25 - sb.r.nextDouble() * -25);
 
 		int ans = atk.atk;
-		if ((atk.abi & AB_BASE) > 0)
-			ans *= 4;
+		ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
+
 		int satk = atk.getProc().SATK.mult;
 		if (satk > 0) {
 			ans *= (100 + satk) * 0.01;

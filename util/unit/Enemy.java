@@ -195,6 +195,14 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				names.put(name);
 				description.put(desc);
 			}
+
+			if (UserProfile.isOlderPack(pack, "0.6.5.0")) {
+				Proc proc = enemy.getProc();
+
+				if ((enemy.abi & 32) > 0) //base destroyer
+					proc.ATKBASE.mult = 300;
+				enemy.abi = Data.reorderAbi(enemy.abi, 1);
+			}
 		}
 	}
 

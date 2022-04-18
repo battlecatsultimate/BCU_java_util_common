@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.battle.data.DataEnemy;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
@@ -73,6 +74,9 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 		extraAtk(ind);
 		if (abis[ind] == 1)
 			setProc(ind, proc);
+		if (e.data instanceof DataEnemy)
+			for (int j : BCShareable) proc.getArr(j).set(e.getProc().getArr(j));
+
 		if (e.status[P_WEAK][0] > 0)
 			atk = atk * e.status[P_WEAK][1] / 100;
 		if (e.status[P_STRONG][0] != 0)

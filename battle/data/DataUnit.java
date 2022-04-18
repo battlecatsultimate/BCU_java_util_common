@@ -70,9 +70,9 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		if (ints[32] == 1)
 			a |= AB_ONLY;
 		if (ints[33] == 1)
-			a |= AB_EARN;
+			proc.BOUNTY.mult = 100;
 		if (ints[34] == 1)
-			a |= AB_BASE;
+			proc.ATKBASE.mult = 300;
 		if(ints.length < 95 || ints[94] != 1) {
 			proc.WAVE.prob = ints[35];
 			proc.WAVE.lv = ints[36];
