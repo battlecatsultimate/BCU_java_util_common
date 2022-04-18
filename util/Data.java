@@ -1164,6 +1164,7 @@ public class Data {
 			true,  //death surge
 			false, //2x money
 			false, //base destroyer
+			true, //beast hunter
 	};
 
 	/**
@@ -1257,7 +1258,8 @@ public class Data {
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
 			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Aku
 			{ 0, P_SHIELDBREAK }, //58 : shield piercing
-			{ 1, AB_CKILL} //59 : corpse killer
+			{ 1, AB_CKILL }, //59 : corpse killer
+			{ 0, P_CURSE } //60 : curse
 	};
 
 	// foot icon index used in battle

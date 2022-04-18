@@ -86,6 +86,10 @@ public class VFile implements Comparable<VFile> {
 		return name.compareTo(o.name);
 	}
 
+	public boolean containsSubDire(String dir) {
+		return subs.containsKey(dir);
+	}
+
 	public int countSubDire() {
 		int ans = 0;
 		for (VFile f : subs.values())

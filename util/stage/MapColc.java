@@ -54,6 +54,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("RA", 24);
 			idmap.put("H", 25);
 			idmap.put("CA", 27);
+			idmap.put("Q", 50); //Not sure about the ID
+
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
 			VFile f = VFile.get("./org/stage/");

@@ -101,13 +101,15 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		String str = "./org/unit/" + Data.trio(id.id) + "/";
 		Queue<String> qs = VFile.readLine(str + "unit" + Data.trio(id.id) + ".csv");
 
-		if (p.countSubDire() != 0)
+		if (p.countSubDire() != 0 && m[0] + m[1] >= 0)
+			forms = new Form[p.countSubDire() + m.length];
+		else if (p.countSubDire() != 0)
 			forms = new Form[p.countSubDire()];
 		else
 			forms = new Form[m.length];
 
 		for (int i = 0; i < forms.length; i++) {
-			if (p.countSubDire() != 0) {
+			if (p.containsSubDire(SUFX[i])) {
 				forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
 			} else
 				forms[i] = new Form(this, i, m[i], "./org/img/m/" + Data.trio(m[i]) + "/", qs.poll());

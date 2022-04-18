@@ -113,6 +113,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		MaModel model = anim.loader.getMM();
 		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}
+	//Used for BC eggs
 	protected Form(Unit u, int f, int m, String str, String data) {
 		unit = u;
 		uid = u.id;

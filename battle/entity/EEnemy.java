@@ -7,6 +7,7 @@ import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
+import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.unit.Trait;
 
@@ -80,6 +81,8 @@ public class EEnemy extends Entity {
 			ans *= basis.b.t().getEKAtk();
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (atk.abi & AB_BAKILL) > 0)
 			ans *= 1.6;
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
+			ans *= 2.5;
 		if (atk.canon == 16)
 			if ((touchable() & TCH_UG) > 0)
 				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND));

@@ -88,6 +88,23 @@ public class EUnit extends Entity {
 	}
 
 	@Override
+	public void damaged(AttackAb atk) {
+		if (atk.trait.contains(BCTraits.get(TRAIT_BEAST))) {
+			Proc.BSTHUNT beastDodge = getProc().BSTHUNT;
+			if (beastDodge.prob > 0 && (atk.dire != dire)) {
+				if (status[P_BSTHUNT][0] == 0 && (beastDodge.prob == 100 || basis.r.nextDouble() * 100 < beastDodge.prob)) {
+					status[P_BSTHUNT][0] = beastDodge.time;
+					anim.getEff(P_IMUATK);
+				}
+
+				if (status[P_BSTHUNT][0] > 0)
+					return;
+			}
+		}
+		super.damaged(atk);
+	}
+
+	@Override
 	protected int getDamage(AttackAb atk, int ans) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
@@ -117,6 +134,8 @@ public class EUnit extends Entity {
 			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (getAbi() & AB_BAKILL) > 0)
 			ans *= 0.7;
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
+			ans *= 0.3; //Not sure
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
