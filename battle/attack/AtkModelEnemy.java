@@ -30,39 +30,51 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 
 	if(ene == null)
 		return;
-		if (resist < 100) {
-			SUMMON.TYPE conf = proc.type;
-			if (conf.same_health && ent.health <= 0)
-				return;
-			int time = proc.time;
-			int allow = b.st.data.allow(b, ene);
-			if (allow >= 0 || conf.ignore_limit) {
-				double ep = ent.pos + getDire() * proc.dis;
-				double mula = proc.mult * 0.01;
-				double mult = proc.mult * 0.01;
-				if (!conf.fix_buff) {
-					mult *= ((EEnemy) e).mult;
-					mula *= ((EEnemy) e).mula;
-				}
-				mula *= (100.0 - resist) / 100;
-				mult *= (100.0 - resist) / 100;
+	if (resist < 100) {
+		SUMMON.TYPE conf = proc.type;
 
-				EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, 9, 0);
-				if (conf.random_layer)
-					ee.layer = (int) (b.r.nextDouble() * 9);
-				else
-					ee.layer = e.layer;
+		if (conf.same_health && ent.health <= 0)
+			return;
 
-				ee.group = allow;
-				if (ep < ee.data.getWidth())
-					ep = ee.data.getWidth();
-				if (ep > b.st.len - 800)
-					ep = b.st.len - 800;
-				ee.added(1, (int) ep);
-				b.tempe.add(new EntCont(ee, time));
-				if (conf.same_health)
-					ee.health = e.health;
-				ee.setSummon(conf.anim_type);
+		int time = proc.time;
+		int allow = b.st.data.allow(b, ene);
+
+		if (allow >= 0 || conf.ignore_limit) {
+			double ep = ent.pos + getDire() * proc.dis;
+			double mula = proc.mult * 0.01;
+			double mult = proc.mult * 0.01;
+
+			if (!conf.fix_buff) {
+				mult *= ((EEnemy) e).mult;
+				mula *= ((EEnemy) e).mula;
+			}
+
+			mula *= (100.0 - resist) / 100;
+			mult *= (100.0 - resist) / 100;
+
+			EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, 9, 0);
+
+			if (conf.random_layer)
+				ee.layer = (int) (b.r.nextDouble() * 9);
+			else
+				ee.layer = e.layer;
+
+			ee.group = allow;
+
+			if (ep < ee.data.getWidth())
+				ep = ee.data.getWidth();
+
+			if (ep > b.st.len - 800)
+				ep = b.st.len - 800;
+
+			ee.added(1, (int) ep);
+
+			b.tempe.add(new EntCont(ee, time));
+
+			if (conf.same_health)
+				ee.health = e.health;
+
+			ee.setSummon(conf.anim_type);
 		}
 	} else
 		ent.anim.getEff(INV);
