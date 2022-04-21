@@ -327,7 +327,11 @@ public class BGEffectSegment {
                 System.out.println("W/BGEffectSegment | "+json+" / Non-defined velocity data found while moveAngle is defined -> vx == null : "+(velocityX == null)+" | vy == null : "+(velocityY == null));
             }
         } else {
-            moveAngle = null;
+            if(velocity != null) {
+                moveAngle = new BattleRange<>(0.0, null, 0.0, null);
+            } else {
+                moveAngle = null;
+            }
         }
 
         if(elem.has("alpha")) {
