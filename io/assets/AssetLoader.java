@@ -72,7 +72,7 @@ public class AssetLoader {
 
 	}
 
-	public static final String CORE_VER = "0.6.4.0";
+	public static final String CORE_VER = "0.6.5.0";
 
 	private static final String[] ANIMFL = { ".imgcut", ".mamodel", ".maanim" };
 	private static final String[] NONPRE = { "\\./org/img/../.....\\.png", "\\./org/enemy/.../..._.\\.png",
