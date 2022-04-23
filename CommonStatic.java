@@ -24,6 +24,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,7 @@ public class CommonStatic {
 		public VImg[] slot = new VImg[3];
 		public VImg[][] ico = new VImg[2][];
 		public VImg[][] num = new VImg[9][11];
-		public VImg[][] battle = new VImg[3][];
+		public VImg[][] battle = new VImg[4][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
 		/**

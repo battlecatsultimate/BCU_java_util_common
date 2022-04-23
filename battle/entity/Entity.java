@@ -164,8 +164,10 @@ public abstract class Entity extends AbEntity {
 			for(int i = 0; i < effs.length; i++) {
 				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD ||
 						i == A_COUNTER || i == A_E_COUNTER || i == A_DMGCUT || i == A_E_DMGCUT ||
-						i == A_DMGCAP || i == A_E_DMGCAP
-				)
+						i == A_DMGCAP || i == A_E_DMGCAP)
+					continue;
+
+				if ((i == A_SLOW || i == A_E_SLOW && status[P_STOP][0] != 0) || (i == A_UP || i == A_E_UP && status[P_WEAK][0] != 0) || (i == A_CURSE || i == A_E_CURSE && status[P_SEAL][0] != 0))
 					continue;
 
 				EAnimD<?> eae = effs[i];
@@ -185,8 +187,7 @@ public abstract class Entity extends AbEntity {
 			for(int i = 0; i < effs.length; i++) {
 				if(i == A_B || i == A_E_B || i == A_DEMON_SHIELD || i == A_E_DEMON_SHIELD ||
 						i == A_COUNTER || i == A_E_COUNTER || i == A_DMGCUT || i == A_E_DMGCUT ||
-						i == A_DMGCAP || i == A_E_DMGCAP
-				) {
+						i == A_DMGCAP || i == A_E_DMGCAP) {
 					EAnimD<?> eae = effs[i];
 
 					if(eae == null)

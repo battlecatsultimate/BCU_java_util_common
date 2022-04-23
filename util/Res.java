@@ -241,6 +241,7 @@ public class Res extends ImgCore {
 		aux.battle[0] = new VImg[4];
 		aux.battle[1] = new VImg[22];
 		aux.battle[2] = new VImg[5];
+		aux.battle[3] = new VImg[158];
 		ImgCut ic001 = ImgCut.newIns("./org/page/img001.imgcut");
 		VImg img001 = new VImg("./org/page/img001.png");
 		FakeImage[] parts = ic001.cut(img001.getImg());
@@ -307,6 +308,14 @@ public class Res extends ImgCore {
 		aux.battle[2][3] = new VImg(parts[33]);
 		aux.battle[2][4] = new VImg(parts[38]);
 		// money, lv, lv dark,cost,cost dark,hp, money light,time,point
+
+		ic002 = ImgCut.newIns("./org/page/fonts/StageFont.imgcut");
+		img002 = new VImg("./org/page/fonts/StageFont.png");
+		parts = ic002.cut(img002.getImg());
+
+		for (int i = 0; i < aux.battle[3].length; i++)
+			aux.battle[3][i] = new VImg(parts[i]);
+		// BCEN fonts
 	}
 
 	private static VImg makeLineupIconFrame(boolean isMagenta) {
