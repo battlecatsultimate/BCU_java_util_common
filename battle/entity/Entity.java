@@ -167,7 +167,7 @@ public abstract class Entity extends AbEntity {
 						i == A_DMGCAP || i == A_E_DMGCAP)
 					continue;
 
-				if ((i == A_SLOW || i == A_E_SLOW && status[P_STOP][0] != 0) || (i == A_UP || i == A_E_UP && status[P_WEAK][0] != 0) || (i == A_CURSE || i == A_E_CURSE && status[P_SEAL][0] != 0))
+				if (((i == A_SLOW || i == A_E_SLOW) && status[P_STOP][0] != 0) || ((i == A_UP || i == A_E_UP) && status[P_WEAK][0] != 0) || ((i == A_CURSE || i == A_E_CURSE) && status[P_SEAL][0] != 0))
 					continue;
 
 				EAnimD<?> eae = effs[i];
