@@ -1,13 +1,11 @@
 package common;
 
-import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Identifier;
-import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -30,7 +28,6 @@ import java.util.regex.Pattern;
 
 import static java.lang.Character.isDigit;
 
-@SuppressWarnings("DeprecatedIsStillUsed")
 public class CommonStatic {
 
 	public interface BattleConst {
@@ -45,7 +42,7 @@ public class CommonStatic {
 		public VImg[] slot = new VImg[3];
 		public VImg[][] ico = new VImg[2][];
 		public VImg[][] num = new VImg[9][11];
-		public VImg[][] battle = new VImg[4][];
+		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
 		/**
@@ -158,26 +155,6 @@ public class CommonStatic {
 
 	}
 
-	@Deprecated
-	public interface ImgReader {
-
-		static File loadMusicFile(InStream is, ImgReader r, int pid, int mid) {
-			if (r == null || r.isNull())
-				r = CommonStatic.def.getMusicReader(pid, mid);
-			return r.readFile(is);
-		}
-
-		default boolean isNull() {
-			return true;
-		}
-
-		File readFile(InStream is);
-
-		FakeImage readImg(String str);
-
-		VImg readImgOptional(String str);
-	}
-
 	public interface Itf {
 
 		/**
@@ -186,18 +163,6 @@ public class CommonStatic {
 		void save(boolean save, boolean exit);
 
 		long getMusicLength(Music f);
-
-		@Deprecated
-		ImgReader getMusicReader(int pid, int mid);
-
-		@Deprecated
-		ImgReader getReader(File f);
-
-		@Deprecated
-		Source.AnimLoader loadAnim(InStream is, ImgReader r);
-
-		@Deprecated
-		InStream readBytes(File fi);
 
 		@Deprecated
 		File route(String path);
