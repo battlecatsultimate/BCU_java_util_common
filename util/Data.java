@@ -1453,7 +1453,7 @@ public class Data {
 	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100, 600 };// not sure
 	public static final int SNIPER_CD = 300;// not sure
 	public static final int SNIPER_PRE = 5;// not sure
-	public static final int SNIPER_POS = -500;// not sure
+	public static final double SNIPER_POS = -442.5;
 	public static final int REVIVE_SHOW_TIME = 16;
 
 	public static final int ORB_ATK = 0;

@@ -17,10 +17,10 @@ public class Sniper extends AtkModelAb {
 
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
-	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0, angle = 0;
+	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	//private P path;
 	public boolean enabled = true, canDo = true;
-	public double pos, height, updown;
+	public double pos, height, updown, bulletX;
 
 	public Sniper(StageBasis sb) {
 		super(sb);
@@ -30,22 +30,22 @@ public class Sniper extends AtkModelAb {
 	 * attack part of animation
 	 */
 	public void drawAtk(FakeGraphics g, P ori, double siz) {
-		// TODO
+		//TODO
 	}
 
 	/**
 	 * base part of animation
 	 */
 	public void drawBase(FakeGraphics gra, P ori, double siz) {
-		// TODO
-		// double angle = Math.atan2(getPos() - pos, height);
-
 		height = ori.y;
 		if (atkTime == 0)
 			anim.draw(gra, ori, siz);
-		else
+		else {
 			atka.draw(gra, ori, siz);
+		}
 
+		if (bulletX != 0)
+			drawAtk(gra, ori, siz);
 	}
 
 	@Override
@@ -75,11 +75,25 @@ public class Sniper extends AtkModelAb {
 			preTime = SNIPER_PRE;
 			atkTime = atka.len();
 			atka.setup();
+			anim.setup();
 		}
 		if (preTime > 0) {
 			preTime--;
 			if (preTime == 0) {
-				// attack
+				//fire bullet
+				bulletX = SNIPER_POS - 750;
+			}
+		}
+
+		// find enemy pos
+		pos = -1;
+		for (Entity e : b.le)
+			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0)
+				pos = e.pos;
+
+		if (bulletX != 0 && bulletX < pos) {
+			bulletX += 750;
+			if (bulletX > pos) {
 				int atk = b.b.t().getBaseHealth() / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;
@@ -88,6 +102,8 @@ public class Sniper extends AtkModelAb {
 				AttackAb a = new AttackSimple(null, this, atk, CTrait, 0, proc, 0, getPos(), false, null, -1, true, 1);
 				a.canon = -1;
 				b.getAttack(a);
+
+				bulletX = 0;
 			}
 		}
 		if (atkTime > 0) {
@@ -97,14 +113,8 @@ public class Sniper extends AtkModelAb {
 			anim.update(true);
 		}
 
-		// find enemy pos
-		pos = -1;
-		for (Entity e : b.le)
-			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0)
-				pos = e.pos;
-
 		// Get angle of cannon and bullet
-		angle = -(int) (Math.toDegrees(Math.atan(height / (getPos() - pos)))) * 10;
+		int angle = -(int) (Math.toDegrees(Math.atan(height / (getPos() - pos)))) * 10;
 
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);
