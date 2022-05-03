@@ -133,7 +133,7 @@ public class UpdateCheck {
 	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
-	public static final String URL_FONT = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/fonts/";
+	public static final String URL_FONT = "https://github.com/battlecatsultimate/bcu-assets/raw/master/fonts/";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
