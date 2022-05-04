@@ -203,11 +203,11 @@ public class UpdateCheck {
 	}
 
 	public static Downloader checkFont() { //If more fonts are added, it may need to be a list like the rest. For now it's like this because there is only one font
-		File fonts = CommonStatic.ctx.getAssetFile("./fonts/StageFont.otf");
+		File fonts = CommonStatic.ctx.getAssetFile("./fonts/stage_font.otf");
 
 		if (!fonts.exists()) {
 			File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
-			String url = URL_FONT + "StageFont.otf";
+			String url = URL_FONT + "stage_font.otf";
 			return new Downloader(fonts, temp, "Stage Name Fonts", false, url);
 		}
 		return null;

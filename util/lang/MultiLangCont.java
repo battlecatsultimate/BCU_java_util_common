@@ -122,7 +122,7 @@ public class MultiLangCont<I, T> extends Lang {
 			T ans =  getSub(LOC_CODE[pref[CommonStatic.getConfig().lang][i]]).get(x);
 
 			if(ans != null)
-				return i;
+				return pref[CommonStatic.getConfig().lang][i];
 		}
 
 		return -1;
