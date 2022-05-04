@@ -60,6 +60,26 @@ public class MultiLangData extends Data {
         return "";
     }
 
+    public int getGrabbedLocale() {
+        for (int i = 1; i < Lang.LOC_CODE.length; i++) {
+            if (i < Lang.pref[lang()].length) {
+                if (dat.containsKey(Lang.pref[lang()][i])) {
+                    String temp = dat.get(Lang.pref[lang()][i]);
+
+                    if (temp != null)
+                        return Lang.pref[lang()][i];
+                }
+            } else if (dat.containsKey(i)) {
+                String temp = dat.get(i);
+
+                if(temp != null)
+                    return Lang.pref[lang()][i];
+            }
+        }
+
+        return -1;
+    }
+
     private static int lang() {
         return CommonStatic.getConfig().lang;
     }
