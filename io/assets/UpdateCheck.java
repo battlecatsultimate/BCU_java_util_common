@@ -133,6 +133,7 @@ public class UpdateCheck {
 	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
+	public static final String URL_FONT = "https://github.com/battlecatsultimate/bcu-assets/raw/master/fonts/";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -199,6 +200,17 @@ public class UpdateCheck {
 			}
 			return list;
 		};
+	}
+
+	public static Downloader checkFont() { //If more fonts are added, it may need to be a list like the rest. For now it's like this because there is only one font
+		File fonts = CommonStatic.ctx.getAssetFile("./fonts/StageFont.otf");
+
+		if (!fonts.exists()) {
+			File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
+			String url = URL_FONT + "StageFont.otf";
+			return new Downloader(fonts, temp, "Stage Name Fonts", false, url);
+		}
+		return null;
 	}
 
 	public static List<Downloader> checkMusic(int count) {
