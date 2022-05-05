@@ -20,7 +20,7 @@ public class Sniper extends AtkModelAb {
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	//private P path;
 	public boolean enabled = true, canDo = true;
-	public double pos, height, updown, bulletX;
+	public double pos, height, updown, bulletX, t = 0;
 
 	public Sniper(StageBasis sb) {
 		super(sb);
@@ -30,7 +30,7 @@ public class Sniper extends AtkModelAb {
 	 * attack part of animation
 	 */
 	public void drawAtk(FakeGraphics g, P ori, double siz) {
-		//TODO
+		//TODO - bulletAnim.draw(g, ori, siz)
 	}
 
 	/**
@@ -64,12 +64,13 @@ public class Sniper extends AtkModelAb {
 	}
 
 	private void getAngle() {
+		t++;
 		int Cx = b.st.len - 900;
 		int Uy = 1120;
 		int Cy = 1100;
 		int r = b.pos; //???
 
-		double theta = Math.atan2((10*Math.sin(6) + Math.floorDiv(Cy, 10) - 369) - Math.floorDiv(Uy, 10) + 58, Math.floorDiv(Cx - r, 10) + 203 - Math.floorDiv((int) pos - r, 10));
+		double theta = Math.atan2((10*Math.sin(6 * t) + Math.floorDiv(Cy, 10) - 369) - Math.floorDiv(Uy, 10) + 58, Math.floorDiv(Cx - r, 10) + 203 - (pos - r) / 10);
 		bulletX -= Math.floor(750*Math.cos(theta));
 	}
 
@@ -114,6 +115,7 @@ public class Sniper extends AtkModelAb {
 				b.getAttack(a);
 
 				bulletX = 0;
+				t = 0;
 			}
 		}
 		if (atkTime > 0) {
@@ -128,8 +130,5 @@ public class Sniper extends AtkModelAb {
 
 		anim.ent[5].alter(11, angle);
 		atka.ent[5].alter(11, angle);
-
-		//TODO Get distance which bullet will fly
-		// path = new P(-(getPos()-pos+300),height);
 	}
 }
