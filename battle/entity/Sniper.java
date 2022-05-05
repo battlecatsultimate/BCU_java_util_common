@@ -67,7 +67,7 @@ public class Sniper extends AtkModelAb {
 		int Cx = b.st.len - 900;
 		int Uy = 1120;
 		int Cy = 1100;
-		int r = 100; //?????idk the value that goes here
+		int r = b.pos; //???
 
 		double theta = Math.atan2((10*Math.sin(6) + Math.floorDiv(Cy, 10) - 369) - Math.floorDiv(Uy, 10) + 58, Math.floorDiv(Cx - r, 10) + 203 - Math.floorDiv((int) pos - r, 10));
 		bulletX -= Math.floor(750*Math.cos(theta));

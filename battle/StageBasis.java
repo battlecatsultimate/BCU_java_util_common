@@ -54,7 +54,7 @@ public class StageBasis extends BattleObj {
 	public int[] selectedUnit = {-1, -1};
 	public final double boss_spawn;
 
-	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num;
+	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num, pos;
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
 	public boolean shock = false;
