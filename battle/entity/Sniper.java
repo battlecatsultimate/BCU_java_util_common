@@ -63,6 +63,16 @@ public class Sniper extends AtkModelAb {
 		return b.st.len + SNIPER_POS;
 	}
 
+	private void getAngle() {
+		int Cx = b.st.len - 900;
+		int Uy = 1120;
+		int Cy = 1100;
+		int r = 100; //?????idk the value that goes here
+
+		double theta = Math.atan2((10*Math.sin(6) + Math.floorDiv(Cy, 10) - 369) - Math.floorDiv(Uy, 10) + 58, Math.floorDiv(Cx - r, 10) + 203 - Math.floorDiv((int) pos - r, 10));
+		bulletX -= Math.floor(750*Math.cos(theta));
+	}
+
 	public void update() {
 		if (canDo && b.ubase.health <= 0) {
 			canDo = false;
@@ -81,7 +91,7 @@ public class Sniper extends AtkModelAb {
 			preTime--;
 			if (preTime == 0) {
 				//fire bullet
-				bulletX = SNIPER_POS - 750;
+				bulletX = getPos() - 900;
 			}
 		}
 
@@ -92,8 +102,8 @@ public class Sniper extends AtkModelAb {
 				pos = e.pos;
 
 		if (bulletX != 0 && bulletX < pos) {
-			bulletX += 750;
-			if (bulletX > pos) {
+			getAngle();
+			if (bulletX <= pos) {
 				int atk = b.b.t().getBaseHealth() / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;

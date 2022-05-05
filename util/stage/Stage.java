@@ -270,6 +270,7 @@ public class Stage extends Data
 		ans.names.put(toString());
 		ans.data = data.copy();
 		ans.lim = lim != null ? lim.clone() : getLim(0);
+		ans.non_con = non_con;
 		if (mus0 != null)
 			ans.mus0 = mus0.clone();
 		if (mus1 != null)
