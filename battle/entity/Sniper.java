@@ -101,7 +101,7 @@ public class Sniper extends AtkModelAb {
 			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0)
 				pos = e.pos;
 
-		if (bulletX != 0 && bulletX < pos) {
+		if (bulletX != 0 && bulletX > pos) {
 			getAngle();
 			if (bulletX <= pos) {
 				int atk = b.b.t().getBaseHealth() / 20;
