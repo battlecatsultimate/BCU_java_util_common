@@ -8,7 +8,6 @@ import common.battle.attack.AttackSimple;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
-import common.util.Data;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.SniperEff;
 import common.util.unit.Trait;
@@ -20,7 +19,6 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
-	//private P path;
 	public boolean enabled = true, canDo = true;
 	public double pos, height, bulletX,cannonAngle = 0, bulletAngle = 0;
 
