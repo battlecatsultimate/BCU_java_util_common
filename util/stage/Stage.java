@@ -350,8 +350,6 @@ public class Stage extends Data
 
 		if(getCont().getCont().getSID().equals("000006") || getCont().getCont().getSID().equals("000011"))
 			trail = data.isTrail();
-		else
-			trail = false;
 	}
 
 	private boolean checkName(String str) {
