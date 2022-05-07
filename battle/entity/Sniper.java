@@ -58,7 +58,7 @@ public class Sniper extends AtkModelAb {
 		double Cx = b.st.len * 4 - 3200;
 		double Uy = 4480;
 		double Cy = 4400;
-		double r = b.pos / CommonStatic.BattleConst.ratio * 4;
+		double r = b.pos / CommonStatic.BattleConst.ratio * 4 / b.siz;
 
 		double theta = Math.toDegrees(Math.atan2((10 * Math.sin(Math.PI / 30 * b.time) + (int) (Cy / 10) - 369) - (int) (Uy / 10) + 58 - 4 * layer, (int) ((Cx - r) / 10) + 203 - (int) ((pos * 4 - r) / 10)));
 
