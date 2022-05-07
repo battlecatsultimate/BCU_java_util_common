@@ -55,17 +55,17 @@ public class Sniper extends AtkModelAb {
 	}
 
 	private void getAngle() {
-		double Cx = b.st.len - 225;
-		double Uy = 280;
-		double Cy = 275;
-		double r = b.pos / CommonStatic.BattleConst.ratio;
+		double Cx = b.st.len * 4 - 3200;
+		double Uy = 4480;
+		double Cy = 4400;
+		double r = b.pos / CommonStatic.BattleConst.ratio * 4;
 
 		if(bulletX == 0) {
-			bulletAngle = Math.atan2((2.5 * Math.sin(Math.PI / 30 * b.time) + (int) (Cy / 10) - 92.25) - (int) (Uy / 10) + 14.5, (int) ((Cx - r) / 10) + 50.75 - (int) ((pos - r) / 10));
+			bulletAngle = Math.atan2((10 * Math.sin(Math.PI / 30 * b.time) + (int) (Cy / 10) - 369) - (int) (Uy / 10) + 58, (int) ((Cx - r) / 10) + 203 - (int) ((pos * 4 - r) / 10));
 		}
 
 		//Formula is different, only for visual
-		cannonAngle = Math.atan2((2.5 * Math.sin(Math.PI / 30 * b.time) + (int) (Cy / 10) - 92.25) - (int) (Uy / 10) + 14.5, (int) ((Cx - r) / 10) - 50.75 - (int) ((pos - r) / 10));
+		cannonAngle = Math.atan2((10 * Math.sin(Math.PI / 30 * b.time) + (int) (Cy / 10) - 369) - (int) (Uy / 10) + 58, (int) ((Cx - r) / 10) - 203 - (int) ((pos * 4 - r) / 10));
 	}
 
 	public void update() {
@@ -105,6 +105,9 @@ public class Sniper extends AtkModelAb {
 
 		if (bulletX != 0 && bulletX > pos) {
 			bulletX -= ((int) (1500 * Math.cos(bulletAngle))) / 4.0;
+
+			System.out.println("Position : "+bulletX*4);
+			System.out.println("Pos : "+pos);
 
 			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(bulletAngle) * CommonStatic.BattleConst.ratio * 1.13));
 			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(bulletAngle) * CommonStatic.BattleConst.ratio * 1.13));
