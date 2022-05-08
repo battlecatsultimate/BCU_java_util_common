@@ -18,9 +18,10 @@ public class Sniper extends AtkModelAb {
 
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
+	private final int sizer = 1500;
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	public boolean enabled = true, canDo = true;
-	public double pos, layer, height, bulletX,cannonAngle = 0, bulletAngle = 0;
+	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
 
 	public Sniper(StageBasis sb) {
 		super(sb);
@@ -31,6 +32,11 @@ public class Sniper extends AtkModelAb {
 	 */
 	public void drawBase(FakeGraphics gra, P ori, double siz) {
 		height = ori.y;
+
+		anim.ent[1].alter(9, sizer);
+		anim.ent[1].alter(10, sizer);
+		atka.ent[1].alter(9, sizer);
+		atka.ent[1].alter(10, sizer);
 
 		if (atkTime == 0)
 			anim.draw(gra, ori, siz);
@@ -73,7 +79,7 @@ public class Sniper extends AtkModelAb {
 		}
 
 		//Formula is different, only for visual
-		cannonAngle = theta;
+		targetAngle = theta;
 	}
 
 	public void update() {
@@ -144,6 +150,26 @@ public class Sniper extends AtkModelAb {
 		}
 
 		if(bulletX > 0) {
+			cannonAngle = targetAngle;
+		} else {
+			if(cannonAngle != targetAngle) {
+				if(cannonAngle < targetAngle) {
+					cannonAngle += 1;
+
+					if(cannonAngle > targetAngle) {
+						cannonAngle = targetAngle;
+					}
+				} else {
+					cannonAngle -= 1;
+
+					if(cannonAngle < targetAngle) {
+						cannonAngle = targetAngle;
+					}
+				}
+			}
+		}
+
+		if(bulletX > 0) {
 			anim.ent[6].alter(12, 1000);
 			anim.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
 		} else {
@@ -152,7 +178,7 @@ public class Sniper extends AtkModelAb {
 
 		atka.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
 
-		anim.ent[1].alter(5, - (int) Math.round((989.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
-		atka.ent[1].alter(5, - (int) Math.round((989.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+		anim.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+		atka.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
 	}
 }
