@@ -18,7 +18,6 @@ public class Sniper extends AtkModelAb {
 
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
-	private final int sizer = 1500;
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	public boolean enabled = true, canDo = true;
 	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
@@ -33,10 +32,10 @@ public class Sniper extends AtkModelAb {
 	public void drawBase(FakeGraphics gra, P ori, double siz) {
 		height = ori.y;
 
-		anim.ent[1].alter(9, sizer);
-		anim.ent[1].alter(10, sizer);
-		atka.ent[1].alter(9, sizer);
-		atka.ent[1].alter(10, sizer);
+		anim.ent[1].alter(9, 1500);
+		anim.ent[1].alter(10, 1500);
+		atka.ent[1].alter(9, 1500);
+		atka.ent[1].alter(10, 1500);
 
 		if (atkTime == 0)
 			anim.draw(gra, ori, siz);
@@ -122,8 +121,8 @@ public class Sniper extends AtkModelAb {
 		if (bulletX != 0 && bulletX > pos) {
 			bulletX = (int) (bulletX * 4 - 1500 * Math.cos(Math.toRadians((int) bulletAngle))) / 4.0;
 
-			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13));
-			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13));
+			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13 / 1.5));
+			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13 / 1.5));
 
 			if (bulletX <= pos) {
 				int atk = b.b.t().getBaseHealth() / 20;
