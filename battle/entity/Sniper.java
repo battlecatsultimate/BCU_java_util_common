@@ -55,12 +55,18 @@ public class Sniper extends AtkModelAb {
 	}
 
 	private void getAngle() {
-		double Cx = b.st.len * 4 - 3200;
-		double Uy = 4480;
-		double Cy = 4400;
-		double r = b.pos / CommonStatic.BattleConst.ratio * 4 / b.siz;
+		int Cx = b.st.len * 4 - 3200;
+		int Cy = 4400;
 
-		double theta = Math.toDegrees(Math.atan2((10 * Math.sin(Math.PI / 30 * b.time) + (int) (Cy / 10) - 369) - (int) (Uy / 10) + 58 - 4 * layer, (int) ((Cx - r) / 10) + 203 - (int) ((pos * 4 - r) / 10)));
+		int Ux = (int) (pos * 4);
+		int Uy = 4480;
+
+		int scrollPos = (int) (-Math.round(b.pos * 1.0 / CommonStatic.BattleConst.ratio * 4 / b.siz));
+
+		int sniperX = (Cx - scrollPos) / 10 + 203;
+		int sniperY = (int) (Math.sin(Math.PI / 30 * b.time) * 10) + Cy / 10 - 369;
+
+		double theta = Math.toDegrees(Math.atan2(sniperY - Uy / 10 - 4 * layer + 58, sniperX - (Ux - scrollPos) / 10));
 
 		if(bulletX == 0) {
 			bulletAngle = theta;
@@ -146,7 +152,7 @@ public class Sniper extends AtkModelAb {
 
 		atka.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
 
-		anim.ent[1].alter(5, - (int) Math.round((989.5 + 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
-		atka.ent[1].alter(5, - (int) Math.round((989.5 + 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+		anim.ent[1].alter(5, - (int) Math.round((989.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+		atka.ent[1].alter(5, - (int) Math.round((989.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
 	}
 }
