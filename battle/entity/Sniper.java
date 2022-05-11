@@ -121,8 +121,8 @@ public class Sniper extends AtkModelAb {
 		if (bulletX != 0 && bulletX > pos) {
 			bulletX = (int) (bulletX * 4 - 1500 * Math.cos(Math.toRadians((int) bulletAngle))) / 4.0;
 
-			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13 / 1.5));
-			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13 / 1.5));
+			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
+			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
 
 			if (bulletX <= pos) {
 				int atk = b.b.t().getBaseHealth() / 20;
@@ -179,5 +179,10 @@ public class Sniper extends AtkModelAb {
 
 		anim.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
 		atka.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+
+		atka.ent[6].alter(9, 900);
+		anim.ent[6].alter(9, 900);
+		atka.ent[6].alter(10, 900);
+		anim.ent[6].alter(10, 900);
 	}
 }
