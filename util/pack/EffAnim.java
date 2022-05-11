@@ -407,7 +407,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		effas.A_SNIPER = new EffAnim<>(strs + "000_snyaipa", vis, ics, SniperEff.values());
 		effas.A_CURSE = new EffAnim<>(stfs[3] + ski + "curse", vfs[3], icfs[3], DefEff.values());
 
-		readCustom(stfs, icfs);
+		readCustom(stfs);
 
 		VImg vuw = new VImg("./org/battle/s4/skill004.png");
 		ImgCut icsvuw = ImgCut.newIns("./org/battle/s4/skill004.imgcut");
@@ -463,8 +463,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		fimg.mark(Marker.RECOLORED);
 	}
 
-	private static void readCustom(String[] stfs, ImgCut[] icfs) {
-		String ski = "skill_";
+	private static void readCustom(String[] stfs) {
 		EffAnimStore effas = CommonStatic.getBCAssets().effas;
 
 		String seal = stfs[3]+"seal/seal";

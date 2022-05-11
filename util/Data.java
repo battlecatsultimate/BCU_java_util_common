@@ -1298,6 +1298,7 @@ public class Data {
 	public static final int C_BASE = 10;
 	public static final int C_M_INI = 5;
 	public static final int C_M_LV = 4;
+	public static final int C_M_INC = 8;
 	public static final int C_M_MAX = 9;
 	public static final int C_RESP = 11;
 	public static final int C_MEAR = 12;

@@ -37,7 +37,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	public void alter(int m, int v) {
 		if (m == 0)
-			if (v < ent.length && v >= 0)
+			if (v < ent.length && v >= 0 && v != ind)
 				fa = ent[par = v];
 			else
 				fa = ent[par = 0];

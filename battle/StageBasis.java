@@ -489,7 +489,7 @@ public class StageBasis extends BattleObj {
 			if (active) {
 				cannon++;
 				maxMoney = b.t().getMaxMon(work_lv);
-				money += b.t().getMonInc(work_lv);
+				money += b.t().getMonInc(work_lv) * (b.getInc(C_M_INC) / 100 + 1);
 			}
 
 			if (active)

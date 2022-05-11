@@ -1,40 +1,31 @@
 package common.util.stage;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.Treasure;
 import common.io.DataIO;
-import common.io.InStream;
 import common.io.PackLoader;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
-import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonField.IOType;
 import common.io.json.JsonField;
+import common.io.json.JsonField.IOType;
 import common.pack.Context;
-import common.pack.PackData;
+import common.pack.Context.ErrType;
+import common.pack.Identifier;
 import common.pack.Source;
-import common.pack.PackData.UserPack;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
-import common.pack.Context.ErrType;
-import common.pack.Identifier;
 import common.util.Data;
-import common.util.stage.MapColc.DefMapColc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 @JsonClass
 @JsonClass.JCGeneric(ResourceLocation.class)
