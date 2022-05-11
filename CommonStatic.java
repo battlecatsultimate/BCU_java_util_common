@@ -45,6 +45,7 @@ public class CommonStatic {
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		public VImg[][] moneySign = new VImg[4][4]; //Money on, off/Cost on, off
 		/**
 		 * Use this if trait.icon is null
 		 */

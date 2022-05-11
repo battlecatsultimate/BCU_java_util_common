@@ -1,6 +1,5 @@
 package common.battle.data;
 
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;

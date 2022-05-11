@@ -92,7 +92,7 @@ public class EStage extends BattleObj {
 			num[ind] = -1;
 			double multi = data.multiple * mul * 0.01;
 
-			if(sb.st.getCont().getCont().getSID().equals("000006") || sb.st.getCont().getCont().getSID().equals("000011"))
+			if(sb.st.trail)
 				multi = Integer.MAX_VALUE;
 
 			double mulatk = data.mult_atk * mul * 0.01;

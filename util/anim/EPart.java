@@ -37,7 +37,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	public void alter(int m, int v) {
 		if (m == 0)
-			if (v < ent.length)
+			if (v < ent.length && v >= 0 && v != ind)
 				fa = ent[par = v];
 			else
 				fa = ent[par = 0];
@@ -159,7 +159,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return ind;
 	}
 
-	protected void drawPart(FakeGraphics g, P base) {
+	public void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
 		FakeTransform at = g.getTransform();

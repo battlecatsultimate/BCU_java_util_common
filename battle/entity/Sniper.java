@@ -1,5 +1,6 @@
 package common.battle.entity;
 
+import common.CommonStatic;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelAb;
 import common.battle.attack.AttackAb;
@@ -18,19 +19,11 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
-	//private P path;
 	public boolean enabled = true, canDo = true;
-	public double pos, height, updown, bulletX, t = 0;
+	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
 
 	public Sniper(StageBasis sb) {
 		super(sb);
-	}
-
-	/**
-	 * attack part of animation
-	 */
-	public void drawAtk(FakeGraphics g, P ori, double siz) {
-		//TODO - bulletAnim.draw(g, ori, siz)
 	}
 
 	/**
@@ -38,14 +31,17 @@ public class Sniper extends AtkModelAb {
 	 */
 	public void drawBase(FakeGraphics gra, P ori, double siz) {
 		height = ori.y;
+
+		anim.ent[1].alter(9, 1500);
+		anim.ent[1].alter(10, 1500);
+		atka.ent[1].alter(9, 1500);
+		atka.ent[1].alter(10, 1500);
+
 		if (atkTime == 0)
 			anim.draw(gra, ori, siz);
 		else {
 			atka.draw(gra, ori, siz);
 		}
-
-		if (bulletX != 0)
-			drawAtk(gra, ori, siz);
 	}
 
 	@Override
@@ -60,18 +56,29 @@ public class Sniper extends AtkModelAb {
 
 	@Override
 	public double getPos() {
-		return b.st.len + SNIPER_POS;
+		return b.ubase.pos + SNIPER_POS;
 	}
 
 	private void getAngle() {
-		t++;
-		int Cx = b.st.len - 900;
-		int Uy = 1120;
-		int Cy = 1100;
-		int r = b.pos; //???
+		int Cx = b.st.len * 4 - 3200;
+		int Cy = 4400;
 
-		double theta = Math.atan2((10*Math.sin(6 * t) + Math.floorDiv(Cy, 10) - 369) - Math.floorDiv(Uy, 10) + 58, Math.floorDiv(Cx - r, 10) + 203 - (pos - r) / 10);
-		bulletX -= Math.floor(750*Math.cos(theta));
+		int Ux = (int) (pos * 4);
+		int Uy = 4480;
+
+		int scrollPos = (int) (-Math.round(b.pos * 1.0 / CommonStatic.BattleConst.ratio * 4 / b.siz));
+
+		int sniperX = (Cx - scrollPos) / 10 + 203;
+		int sniperY = (int) (Math.sin(Math.PI / 30 * b.time) * 10) + Cy / 10 - 369;
+
+		double theta = Math.toDegrees(Math.atan2(sniperY - Uy / 10 - 4 * layer + 58, sniperX - (Ux - scrollPos) / 10));
+
+		if(bulletX == 0) {
+			bulletAngle = theta;
+		}
+
+		//Formula is different, only for visual
+		targetAngle = theta;
 	}
 
 	public void update() {
@@ -81,6 +88,7 @@ public class Sniper extends AtkModelAb {
 
 		if (enabled && coolTime > 0)
 			coolTime--;
+
 		if (coolTime == 0 && enabled && pos > 0 && canDo) {
 			coolTime = SNIPER_CD;
 			preTime = SNIPER_PRE;
@@ -88,22 +96,34 @@ public class Sniper extends AtkModelAb {
 			atka.setup();
 			anim.setup();
 		}
-		if (preTime > 0) {
-			preTime--;
-			if (preTime == 0) {
-				//fire bullet
-				bulletX = getPos() - 900;
-			}
-		}
 
 		// find enemy pos
 		pos = -1;
 		for (Entity e : b.le)
-			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0)
+			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0) {
 				pos = e.pos;
+				layer = e.layer;
+			}
+
+		getAngle();
+
+		if (preTime > 0) {
+			preTime--;
+			if (preTime == 0) {
+				//fire bullet
+				bulletX = b.ubase.pos + SNIPER_POS + 375 * Math.cos(Math.toRadians((int) bulletAngle));
+
+				atka.ent[6].alter(12, 1000);
+				anim.ent[6].alter(12, 1000);
+			}
+		}
 
 		if (bulletX != 0 && bulletX > pos) {
-			getAngle();
+			bulletX = (int) (bulletX * 4 - 1500 * Math.cos(Math.toRadians((int) bulletAngle))) / 4.0;
+
+			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13 / 1.5));
+			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 1.13 / 1.5));
+
 			if (bulletX <= pos) {
 				int atk = b.b.t().getBaseHealth() / 20;
 				Proc proc = Proc.blank();
@@ -115,9 +135,12 @@ public class Sniper extends AtkModelAb {
 				b.getAttack(a);
 
 				bulletX = 0;
-				t = 0;
+
+				atka.ent[6].alter(12, 0);
+				anim.ent[6].alter(12, 0);
 			}
 		}
+
 		if (atkTime > 0) {
 			atkTime--;
 			atka.update(false);
@@ -125,10 +148,36 @@ public class Sniper extends AtkModelAb {
 			anim.update(true);
 		}
 
-		// Get angle of cannon and bullet
-		int angle = -(int) (Math.toDegrees(Math.atan(height / (getPos() - pos)))) * 10;
+		if(bulletX > 0) {
+			cannonAngle = targetAngle;
+		} else {
+			if(cannonAngle != targetAngle) {
+				if(cannonAngle < targetAngle) {
+					cannonAngle += 1;
 
-		anim.ent[5].alter(11, angle);
-		atka.ent[5].alter(11, angle);
+					if(cannonAngle > targetAngle) {
+						cannonAngle = targetAngle;
+					}
+				} else {
+					cannonAngle -= 1;
+
+					if(cannonAngle < targetAngle) {
+						cannonAngle = targetAngle;
+					}
+				}
+			}
+		}
+
+		if(bulletX > 0) {
+			anim.ent[6].alter(12, 1000);
+			anim.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
+		} else {
+			anim.ent[5].alter(11, (int) Math.round(cannonAngle * 10));
+		}
+
+		atka.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
+
+		anim.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+		atka.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
 	}
 }

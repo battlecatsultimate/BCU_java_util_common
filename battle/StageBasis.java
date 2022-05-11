@@ -54,6 +54,7 @@ public class StageBasis extends BattleObj {
 	public int[] selectedUnit = {-1, -1};
 	public final double boss_spawn;
 
+	public double siz;
 	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num, pos;
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
@@ -488,7 +489,7 @@ public class StageBasis extends BattleObj {
 			if (active) {
 				cannon++;
 				maxMoney = b.t().getMaxMon(work_lv);
-				money += b.t().getMonInc(work_lv);
+				money += b.t().getMonInc(work_lv) * (b.getInc(C_M_INC) / 100 + 1);
 			}
 
 			if (active)

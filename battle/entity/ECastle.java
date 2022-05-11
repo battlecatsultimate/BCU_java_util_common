@@ -22,7 +22,7 @@ public class ECastle extends AbEntity {
 	public int smokeX = -1;
 
 	public ECastle(StageBasis b) {
-		super(b.st.health);
+		super(b.st.trail ? Integer.MAX_VALUE : b.st.health);
 		sb = b;
 	}
 

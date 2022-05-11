@@ -46,9 +46,10 @@ public class Res extends ImgCore {
 		if (cost == -1)
 			return coor.draw(aux.battle[0][3].getImg());
 		int[] val = getLab(cost);
-		FakeImage[] input = new FakeImage[val.length];
+		FakeImage[] input = new FakeImage[val.length + 1];
 		for (int i = 0; i < val.length; i++)
 			input[i] = aux.num[enable ? 3 : 4][val[i]].getImg();
+		input[input.length - 1] = aux.moneySign[enable ? 2 : 3][decideLocale()].getImg();
 		return coor.draw(input);
 	}
 
@@ -56,12 +57,13 @@ public class Res extends ImgCore {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		int[] val0 = getLab(mon);
 		int[] val1 = getLab(max);
-		FakeImage[] input = new FakeImage[val0.length + val1.length + 1];
+		FakeImage[] input = new FakeImage[val0.length + val1.length + 2];
 		for (int i = 0; i < val0.length; i++)
 			input[i] = aux.num[0][val0[i]].getImg();
 		input[val0.length] = aux.num[0][10].getImg();
 		for (int i = 0; i < val1.length; i++)
 			input[val0.length + i + 1] = aux.num[0][val1[i]].getImg();
+		input[input.length - 1] = aux.moneySign[0][decideLocale()].getImg();
 
 		return sym.draw(input);
 	}
@@ -262,6 +264,17 @@ public class Res extends ImgCore {
 		for(int i = 0; i < aux.timer.length; i++)
 			aux.timer[i] = new VImg(parts[i + 83]);
 
+		ImgCut moneyCut = ImgCut.newIns("./org/page/moneySign.imgcut");
+		VImg moneyImg = new VImg("./org/page/moneySign.png");
+
+		parts = moneyCut.cut(moneyImg.getImg());
+
+		for(int i = 0; i < aux.moneySign.length; i++) {
+			for(int j = 0; j < aux.moneySign[0].length; j++) {
+				aux.moneySign[i][j] = new VImg(parts[i * 4 + j]);
+			}
+		}
+
 		ImgCut ic002 = ImgCut.newIns("./org/page/img002.imgcut");
 		VImg img002 = new VImg("./org/page/img002.png");
 
@@ -327,5 +340,16 @@ public class Res extends ImgCore {
 		}
 
 		return new VImg(fimg);
+	}
+
+	private static int decideLocale() {
+		switch (CommonStatic.getConfig().lang) {
+			case 1:
+			case 2:
+			case 3:
+				return CommonStatic.getConfig().lang;
+			default:
+				return 0;
+		}
 	}
 }
