@@ -12,6 +12,7 @@ import common.pack.PackData.PackDesc;
 import common.pack.Source.ResourceLocation;
 import common.pack.UserProfile;
 import common.system.BasedCopable;
+import common.system.P;
 import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
@@ -40,6 +41,8 @@ public class Stage extends Data
 		public final int[][] drop;
 		public final int[][] time;
 		public int diff = -1;
+		public boolean exConnection = false;
+		public int exChance = -1, exMapID = -1, exStageIDMin = -1, exStageIDMax = -1;
 
 		protected StageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
 			map = info;
@@ -85,7 +88,23 @@ public class Stage extends Data
 		}
 
 		public String getHTML() {
-			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ");
+			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp);
+
+			ans.append("<br> EX stage existing : ")
+					.append(exConnection);
+
+			if(exConnection) {
+				ans.append("<br> EX stage appearance chance : ")
+						.append(exChance)
+						.append("%<br> EX Map Name : ")
+						.append(MultiLangCont.get(MapColc.get("000004").maps.get(exMapID)))
+						.append("<br> EX Stage ID Min : ")
+						.append(Data.duo(exStageIDMin))
+						.append("<bR> EX Stage ID Max : ")
+						.append(Data.duo(exStageIDMax));
+			}
+
+			ans.append("<br> drop rewards: ");
 			if (drop.length == 0)
 				ans.append("none");
 			else if (drop.length == 1)
@@ -188,6 +207,18 @@ public class Stage extends Data
 				cas = sm.cast * 1000 + cas;
 			castle = Identifier.parseInt(cas, CastleImg.class);
 			non_con = strs[1].equals("1");
+
+			if(info != null) {
+				int chance = CommonStatic.parseIntN(strs[2]);
+
+				info.exConnection = chance != 0;
+				info.exChance = chance;
+
+				info.exMapID = CommonStatic.parseIntN(strs[3]);
+
+				info.exStageIDMin = CommonStatic.parseIntN(strs[4]);
+				info.exStageIDMax = CommonStatic.parseIntN(strs[5]);
+			}
 		} else {
 			castle = Identifier.parseInt(sm.cast * 1000 + CH_CASTLES[id.id], CastleImg.class);
 			non_con = false;
