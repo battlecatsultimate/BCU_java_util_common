@@ -1008,7 +1008,7 @@
         "abbr_name" : "Escudo M.",
         "full_name" : "Escudo Místico",
         "tooltip" : "Esta habilidad reduce todo el daño que esté por encima de cierta cantidad a dicha cantidad (O lo anula, si 'anular daño' está activado).",
-        "format" : "Probabilidad del (prob)% de [(type.nullify){anular[(type.traitIgnore){ todo}]}(!type.nullify){fijar}] daño mayor que [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ a (dmg)}(type.procs){ e ignorar los efectos del ataque}]",
+        "format" : "Probabilidad del (prob)% de [(type.nullify){anular[(type.traitIgnore){ todo}]}(!type.nullify){fijar}] daño mayor que [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ a [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]}(type.procs){ e ignorar los efectos del ataque}]",
         "class" : {
             "prob" : {
                 "name" : "probabilidad",

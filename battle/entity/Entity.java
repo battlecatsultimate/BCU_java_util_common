@@ -1497,7 +1497,7 @@ public abstract class Entity extends AbEntity {
 					return;
 				dmg = 0;
 			} else
-				dmg = dmgcap.dmg;
+				dmg = status[P_DMGCAP][0];
 		}
 
 		boolean barrierContinue = status[P_BARRIER][0] == 0;
@@ -1616,7 +1616,7 @@ public abstract class Entity extends AbEntity {
 						}
 					} else {
 						if (counter.type.useOwnDamage)
-							reflectAtk = data.allAtk();
+							reflectAtk = getAtk();
 						reflectAtk = reflectAtk * counter.damage / 100;
 
 						if (counter.type.procType >= 2) {
@@ -1823,7 +1823,7 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
-	 * get the currently attack, only used in display
+	 * get the currently attack, only used in display and counter
 	 */
 	public int getAtk() {
 		return aam.getAtk();
