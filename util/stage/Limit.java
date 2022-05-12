@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import common.battle.data.MaskUnit;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -7,6 +8,7 @@ import common.pack.UserProfile;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.stage.MapColc.DefMapColc;
+import common.util.unit.Unit;
 
 @JsonClass
 public class Limit extends Data implements BattleStatic {
@@ -96,6 +98,16 @@ public class Limit extends Data implements BattleStatic {
 				lvr.combine(l.lvr);
 			else
 				lvr = l.lvr;
+	}
+
+	public boolean unusable(MaskUnit du, int price) {
+		double cost = du.getPrice() * (1 + price * 0.5);
+		if ((min > 0 && cost < min) || (max > 0 && cost > max))
+			return true;
+		Unit u = du.getPack().unit;
+		if (rare != 0 && ((rare >> u.rarity) & 1) == 0)
+			return true;
+		return group != null && !group.allow(u);
 	}
 
 	@Override
