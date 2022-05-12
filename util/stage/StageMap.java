@@ -30,6 +30,10 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 		public int rand, time, lim;
 
+		public int waitTime = -1, clearLimit = -1, resetMode = -1;
+
+		public boolean hiddenUponClear = false;
+
 		private StageMapInfo(StageMap map, FileData ad) {
 			sm = map;
 			qs = ad.readLine();
@@ -79,11 +83,13 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	public MultiLangData names = new MultiLangData();
 
 	@JsonField
-	public int price = 1, retyp, pllim, set, cast = -1;
+	public int price = 1, cast = -1;
 	@JsonField
 	public int[] stars = new int[] { 100 };
 
 	public int starMask = 0;
+
+
 
 	@JCConstructor
 	public StageMap() {

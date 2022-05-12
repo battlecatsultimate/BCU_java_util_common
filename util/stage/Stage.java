@@ -90,7 +90,37 @@ public class Stage extends Data
 		public String getHTML() {
 			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp);
 
-			ans.append("<br> EX stage existing : ")
+			ans.append("<br> Will be hidden upon full clear : ")
+					.append(st.getCont().info.hiddenUponClear);
+
+			if(st.getCont().info.resetMode != -1) {
+				switch (st.getCont().info.resetMode) {
+					case 1:
+						ans.append("<br> This map's reward will get reset upon each appearance");
+						break;
+					case 2:
+						ans.append("<br> This map's clear status will be reset upon each appearance");
+						break;
+					case 3:
+						ans.append("<br> This map's number of plays can be done will be reset upon each appearance");
+					default:
+						ans.append("<br> Reset mode flag ")
+								.append(st.getCont().info.resetMode);
+				}
+			}
+
+			if(st.getCont().info.waitTime != -1) {
+				ans.append("<br> You have to wait for ")
+						.append(st.getCont().info.waitTime)
+						.append(" minute(s) to play this stage");
+			}
+
+			if(st.getCont().info.clearLimit != -1) {
+				ans.append("<br> number that you can play this stage : ")
+						.append(st.getCont().info.clearLimit);
+			}
+
+			ans.append("<br><br> EX stage existing : ")
 					.append(exConnection);
 
 			if(exConnection) {
@@ -101,7 +131,10 @@ public class Stage extends Data
 						.append("<br> EX Stage ID Min : ")
 						.append(Data.duo(exStageIDMin))
 						.append("<bR> EX Stage ID Max : ")
-						.append(Data.duo(exStageIDMax));
+						.append(Data.duo(exStageIDMax))
+						.append("<br>");
+			} else {
+				ans.append("<br>");
 			}
 
 			ans.append("<br> drop rewards: ");

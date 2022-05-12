@@ -93,11 +93,28 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				sm.stars = new int[len];
 				for (int i = 0; i < len; i++)
 					sm.stars[i] = Integer.parseInt(strs[2 + i]);
-				sm.set = Integer.parseInt(strs[6]);
-				sm.retyp = Integer.parseInt(strs[7]);
-				sm.pllim = Integer.parseInt(strs[8]);
 				sm.name += strs[10];
 				sm.starMask = Integer.parseInt(strs[12]);
+
+				if(sm.info != null) {
+					if(!strs[7].equals("0")) {
+						sm.info.resetMode = Integer.parseInt(strs[7]);
+
+						if(sm.info.resetMode > 3) {
+							System.out.println("W/MapColc | Unknown stage reward reset mode " + sm.info.resetMode);
+						}
+					}
+
+					if(!strs[8].equals("0")) {
+						sm.info.clearLimit = Integer.parseInt(strs[8]);
+					}
+
+					sm.info.hiddenUponClear = !strs[13].equals("0");
+
+					if(!strs[10].equals("0")) {
+						sm.info.waitTime = Integer.parseInt(strs[10]);
+					}
+				}
 			}
 		}
 
