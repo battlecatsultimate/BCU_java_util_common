@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
@@ -93,11 +94,133 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				sm.stars = new int[len];
 				for (int i = 0; i < len; i++)
 					sm.stars[i] = Integer.parseInt(strs[2 + i]);
-				sm.set = Integer.parseInt(strs[6]);
-				sm.retyp = Integer.parseInt(strs[7]);
-				sm.pllim = Integer.parseInt(strs[8]);
 				sm.name += strs[10];
 				sm.starMask = Integer.parseInt(strs[12]);
+
+				if(sm.info != null) {
+					if(!strs[7].equals("0")) {
+						sm.info.resetMode = Integer.parseInt(strs[7]);
+
+						if(sm.info.resetMode > 3) {
+							System.out.println("W/MapColc | Unknown stage reward reset mode " + sm.info.resetMode);
+						}
+					}
+
+					if(!strs[8].equals("0")) {
+						sm.info.clearLimit = Integer.parseInt(strs[8]);
+					}
+
+					sm.info.hiddenUponClear = !strs[13].equals("0");
+
+					if(!strs[10].equals("0")) {
+						sm.info.waitTime = Integer.parseInt(strs[10]);
+					}
+				}
+			}
+			qs = VFile.readLine("./org/data/EX_lottery.csv");
+			List<Stage> exLottery = new ArrayList<>();
+
+			String lotteryLine = qs.poll();
+			boolean canGo = true;
+
+			while(lotteryLine != null && !lotteryLine.isEmpty()) {
+				int[] lotteryData = CommonStatic.parseIntsN(lotteryLine);
+
+				if(lotteryData.length != 2) {
+					System.out.println("W/MapColc | New format of EX lottery line found : "+Arrays.toString(lotteryData));
+
+					canGo = false;
+					break;
+				}
+
+				StageMap sm = getMap(lotteryData[0]);
+
+				if(sm == null) {
+					System.out.println("W/MapColc | No such stage map found : "+lotteryData[0]);
+
+					canGo = false;
+					break;
+				}
+
+				Stage s = sm.list.get(lotteryData[1]);
+
+				if(s == null) {
+					System.out.println("W/MapColc | No such stage found : "+lotteryData[0]+" - "+lotteryData[1]);
+
+					canGo = false;
+					break;
+				}
+
+				exLottery.add(s);
+
+				lotteryLine = qs.poll();
+			}
+
+			if(canGo) {
+				qs = VFile.readLine("./org/data/EX_group.csv");
+
+				String groupLine = qs.poll();
+
+				while(groupLine != null && !groupLine.isEmpty()) {
+					int[] groupData = CommonStatic.parseIntsN(groupLine);
+
+					double maxPercentage = groupData[0];
+
+					StageMap sm = getMap(groupData[1]);
+
+					if(sm == null) {
+						groupLine = qs.poll();
+
+						continue;
+					}
+
+					Stage s = sm.list.get(groupData[2]);
+
+					if(s == null || s.info == null) {
+						groupLine = qs.poll();
+
+						continue;
+					}
+
+					int exLength = groupData.length - 3;
+
+					if(exLength % 2 != 0) {
+						System.out.println("W/MapColc | Invalid EX group format : " + Arrays.toString(groupData));
+
+						groupLine = qs.poll();
+
+						continue;
+					}
+
+					exLength /= 2;
+
+					Stage[] exStage = new Stage[exLength];
+					double[] exChance = new double[exLength];
+
+					for(int i = 0; i < exLength; i++) {
+						if(groupData[i * 2 + 3] >= exLottery.size()) {
+							System.out.println("M/MapColc | EX lottery ID is higher than actual length : In group -> "+groupData[i * 2 + 3]+" / In lottery -> "+exLottery.size());
+
+							break;
+						}
+
+						exStage[i] = exLottery.get(groupData[i * 2 + 3]);
+						exChance[i] = maxPercentage * (groupData[i * 2 + 4] / 100.0);
+
+						maxPercentage -= exChance[i];
+					}
+
+					maxPercentage = groupData[0];
+
+					for(int i = 0; i < exLength; i++) {
+						exChance[i] /= maxPercentage / 100;
+					}
+
+					s.info.exStages = exStage;
+					s.info.exChances = exChance;
+
+					groupLine = qs.poll();
+				}
 			}
 		}
 
