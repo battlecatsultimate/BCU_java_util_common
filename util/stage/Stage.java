@@ -12,7 +12,6 @@ import common.pack.PackData.PackDesc;
 import common.pack.Source.ResourceLocation;
 import common.pack.UserProfile;
 import common.system.BasedCopable;
-import common.system.P;
 import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
@@ -22,10 +21,9 @@ import common.util.pack.Background;
 import common.util.stage.SCDef.Line;
 import common.util.unit.Enemy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
 
 @IndexContainer.IndexCont(StageMap.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -40,9 +38,10 @@ public class Stage extends Data
 		public final int energy, xp, once, rand;
 		public final int[][] drop;
 		public final int[][] time;
-		public int diff = -1;
+		public Stage[] exStages;
+		public double[] exChances;
+		public int diff = -1, exChance = -1, exMapID = -1, exStageIDMin = -1, exStageIDMax = -1;
 		public boolean exConnection = false;
-		public int exChance = -1, exMapID = -1, exStageIDMin = -1, exStageIDMax = -1;
 
 		protected StageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
 			map = info;
@@ -121,7 +120,7 @@ public class Stage extends Data
 			}
 
 			ans.append("<br><br> EX stage existing : ")
-					.append(exConnection);
+					.append(exConnection || (exStages != null && exChances != null));
 
 			if(exConnection) {
 				ans.append("<br> EX stage appearance chance : ")
@@ -133,7 +132,44 @@ public class Stage extends Data
 						.append("<bR> EX Stage ID Max : ")
 						.append(Data.duo(exStageIDMax))
 						.append("<br>");
-			} else {
+			}
+
+			if(exStages != null && exChances != null) {
+				NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+				DecimalFormat df = (DecimalFormat) nf;
+
+				df.applyPattern("#.##");
+
+				ans.append("<table><tr><th>EX Stage Name</th><th>Chance</th></tr>");
+
+				for(int i = 0; i < exStages.length; i++) {
+					if(exStages[i] == null)
+						continue;
+
+					String name = MultiLangCont.get(exStages[i]);
+					String smName = MultiLangCont.get(exStages[i].getCont());
+
+					if(name == null || name.isEmpty())
+						name = exStages[i].id.toString();
+					else if(smName == null || smName.isEmpty()) {
+						smName = exStages[i].getCont().id.toString();
+
+						name = smName + " - " + name;
+					} else {
+						name = smName + " - " + name;
+					}
+
+					ans.append("<tr><td>")
+							.append(name)
+							.append("</td><td>")
+							.append(df.format(exChances[i]))
+							.append("%</td></tr>");
+				}
+
+				ans.append("</table>");
+			}
+
+			if(!exConnection && (exStages == null || exChances == null)) {
 				ans.append("<br>");
 			}
 
