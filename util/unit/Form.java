@@ -239,7 +239,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 		int[] maxs = new int[lv.size()];
 		maxs[0] = unit.max + unit.maxp;
-		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
+		PCoin pc = du.getPCoin();
 		if (pc != null) {
 			for (int i = 0; i < pc.info.size(); i++)
 				maxs[i + 1] = Math.max(1, pc.info.get(i)[1]);

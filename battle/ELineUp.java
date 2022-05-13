@@ -21,20 +21,8 @@ public class ELineUp extends BattleObj {
 				}
 				price[i][j] = (int) (lu.efs[i][j].getPrice(sb.st.getCont().price) * 100);
 				maxC[i][j] = sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn());
-				if (lim == null)
-					continue;
-				int overl = lim.rare >> lu.fs[i][j].unit.rarity;
-				if (lim.rare != 0 && (overl & 1) == 0)
+				if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(lu.efs[i][j].du, sb.st.getCont().price)))
 					price[i][j] = -1;
-				if (lim.line == 1 && i == 1)
-					price[i][j] = -1;
-				if (lim.min > 0 && price[i][j] < lim.min * 100)
-					price[i][j] = -1;
-				if (lim.max > 0 && price[i][j] > lim.max * 100)
-					price[i][j] = -1;
-				if (lim.group != null && !lim.group.allow(lu.fs[i][j].unit))
-					price[i][j] = -1;
-
 			}
 	}
 

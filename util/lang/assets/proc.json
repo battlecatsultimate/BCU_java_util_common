@@ -1008,7 +1008,7 @@
         "abbr_name" : "M.Shield",
         "full_name" : "Mystic Shield",
         "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to (dmg)}(type.procs){ and ignore the attack's procs}]",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]}(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",

@@ -41,6 +41,15 @@ public class Res extends ImgCore {
 		}
 	}
 
+	public static void getLv(int lv, SymCoord coor) {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		int[] val = getLab(lv);
+		FakeImage[] input = new FakeImage[val.length];
+		for (int i = 0; i < val.length; i++)
+			input[i] = aux.num[3][val[i]].getImg();
+		coor.draw(input);
+	}
+
 	public static P getCost(int cost, boolean enable, SymCoord coor) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		if (cost == -1)
