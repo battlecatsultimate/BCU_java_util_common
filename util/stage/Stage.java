@@ -33,6 +33,7 @@ public class Stage extends Data
 
 	public static class StageInfo {
 
+		private static final DecimalFormat df = new DecimalFormat("#.##");
 		public final Stage st;
 		public final StageMap.StageMapInfo map;
 		public final int energy, xp, once, rand;
@@ -92,7 +93,7 @@ public class Stage extends Data
 			ans.append("<br> Will be hidden upon full clear : ")
 					.append(st.getCont().info.hiddenUponClear);
 
-			if(st.getCont().info.resetMode != -1) {
+			if (st.getCont().info.resetMode != -1) {
 				switch (st.getCont().info.resetMode) {
 					case 1:
 						ans.append("<br> This map's reward will get reset upon each appearance");
@@ -108,13 +109,13 @@ public class Stage extends Data
 				}
 			}
 
-			if(st.getCont().info.waitTime != -1) {
+			if (st.getCont().info.waitTime != -1) {
 				ans.append("<br> You have to wait for ")
 						.append(st.getCont().info.waitTime)
 						.append(" minute(s) to play this stage");
 			}
 
-			if(st.getCont().info.clearLimit != -1) {
+			if (st.getCont().info.clearLimit != -1) {
 				ans.append("<br> number that you can play this stage : ")
 						.append(st.getCont().info.clearLimit);
 			}
@@ -122,7 +123,7 @@ public class Stage extends Data
 			ans.append("<br><br> EX stage existing : ")
 					.append(exConnection || (exStages != null && exChances != null));
 
-			if(exConnection) {
+			if (exConnection) {
 				ans.append("<br> EX stage appearance chance : ")
 						.append(exChance)
 						.append("%<br> EX Map Name : ")
@@ -134,7 +135,7 @@ public class Stage extends Data
 						.append("<br>");
 			}
 
-			if(exStages != null && exChances != null) {
+			if (exStages != null && exChances != null) {
 				NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
 				DecimalFormat df = (DecimalFormat) nf;
 
@@ -142,16 +143,16 @@ public class Stage extends Data
 
 				ans.append("<table><tr><th>EX Stage Name</th><th>Chance</th></tr>");
 
-				for(int i = 0; i < exStages.length; i++) {
-					if(exStages[i] == null)
+				for (int i = 0; i < exStages.length; i++) {
+					if (exStages[i] == null)
 						continue;
 
 					String name = MultiLangCont.get(exStages[i]);
 					String smName = MultiLangCont.get(exStages[i].getCont());
 
-					if(name == null || name.isEmpty())
+					if (name == null || name.isEmpty())
 						name = exStages[i].id.toString();
-					else if(smName == null || smName.isEmpty()) {
+					else if (smName == null || smName.isEmpty()) {
 						smName = exStages[i].getCont().id.toString();
 
 						name = smName + " - " + name;
@@ -169,7 +170,7 @@ public class Stage extends Data
 				ans.append("</table>");
 			}
 
-			if(!exConnection && (exStages == null || exChances == null)) {
+			if (!exConnection && (exStages == null || exChances == null)) {
 				ans.append("<br>");
 			}
 
@@ -177,24 +178,23 @@ public class Stage extends Data
 			if (drop.length == 0)
 				ans.append("none");
 			else if (drop.length == 1)
-				ans.append("{chance: ").append(drop[0][0]).append("%, item ID: ").append(drop[0][1]).append(", number: ").append(drop[0][2]).append("}, once: ").append(once);
+				ans.append("{chance: ").append(drop[0][0]).append("%, item name: ").append(MultiLangCont.getStatic().RWNAME.getCont(drop[0][1])).append(", number: ").append(drop[0][2]).append("}, once: ").append(once);
 			else {
 				ans.append("count: ").append(drop.length).append(", rand mode: ").append(rand).append(", once: ").append(once).append("<br>");
-				ans.append("<table><tr><th>chance</th><th>item ID</th><th>number</th></tr>");
+				ans.append("<table><tr><th>chance</th><th>item name</th><th>number</th></tr>");
 				for (int[] dp : drop)
-					ans.append("<tr><td>").append(dp[0]).append("%</td><td>").append(dp[1]).append("</td><td>").append(dp[2]).append("</td><tr>");
+					ans.append("<tr><td>").append(dp[0]).append("%</td><td>").append(MultiLangCont.getStatic().RWNAME.getCont(dp[1])).append("</td><td>").append(dp[2]).append("</td><tr>");
 				ans.append("</table>");
 			}
 			if (time.length > 0) {
 				ans.append("<br> time scores: count: ").append(time.length).append("<br>");
-				ans.append("<table><tr><th>score</th><th>item ID</th><th>number</th></tr>");
+				ans.append("<table><tr><th>score</th><th>item name</th><th>number</th></tr>");
 				for (int[] tm : time)
-					ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(tm[1]).append("</td><td>").append(tm[2]).append("</td><tr>");
+					ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(MultiLangCont.getStatic().RWNAME.getCont(tm[1])).append("</td><td>").append(tm[2]).append("</td><tr>");
 				ans.append("</table>");
 			}
 			return ans.toString();
 		}
-
 	}
 
 	@StaticPermitted
