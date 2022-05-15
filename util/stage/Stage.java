@@ -21,10 +21,9 @@ import common.util.pack.Background;
 import common.util.stage.SCDef.Line;
 import common.util.unit.Enemy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
 
 @IndexContainer.IndexCont(StageMap.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -39,7 +38,10 @@ public class Stage extends Data
 		public final int energy, xp, once, rand;
 		public final int[][] drop;
 		public final int[][] time;
-		public int diff = -1;
+		public Stage[] exStages;
+		public double[] exChances;
+		public int diff = -1, exChance = -1, exMapID = -1, exStageIDMin = -1, exStageIDMax = -1;
+		public boolean exConnection = false;
 
 		protected StageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
 			map = info;
@@ -85,7 +87,93 @@ public class Stage extends Data
 		}
 
 		public String getHTML() {
-			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp + "<br> drop rewards: ");
+			StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp);
+
+			ans.append("<br> Will be hidden upon full clear : ")
+					.append(st.getCont().info.hiddenUponClear);
+
+			if(st.getCont().info.resetMode != -1) {
+				switch (st.getCont().info.resetMode) {
+					case 1:
+						ans.append("<br> This map's reward will get reset upon each appearance");
+						break;
+					case 2:
+						ans.append("<br> This map's clear status will be reset upon each appearance");
+						break;
+					case 3:
+						ans.append("<br> This map's number of plays can be done will be reset upon each appearance");
+					default:
+						ans.append("<br> Reset mode flag ")
+								.append(st.getCont().info.resetMode);
+				}
+			}
+
+			if(st.getCont().info.waitTime != -1) {
+				ans.append("<br> You have to wait for ")
+						.append(st.getCont().info.waitTime)
+						.append(" minute(s) to play this stage");
+			}
+
+			if(st.getCont().info.clearLimit != -1) {
+				ans.append("<br> number that you can play this stage : ")
+						.append(st.getCont().info.clearLimit);
+			}
+
+			ans.append("<br><br> EX stage existing : ")
+					.append(exConnection || (exStages != null && exChances != null));
+
+			if(exConnection) {
+				ans.append("<br> EX stage appearance chance : ")
+						.append(exChance)
+						.append("%<br> EX Map Name : ")
+						.append(MultiLangCont.get(MapColc.get("000004").maps.get(exMapID)))
+						.append("<br> EX Stage ID Min : ")
+						.append(Data.duo(exStageIDMin))
+						.append("<bR> EX Stage ID Max : ")
+						.append(Data.duo(exStageIDMax))
+						.append("<br>");
+			}
+
+			if(exStages != null && exChances != null) {
+				NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+				DecimalFormat df = (DecimalFormat) nf;
+
+				df.applyPattern("#.##");
+
+				ans.append("<table><tr><th>EX Stage Name</th><th>Chance</th></tr>");
+
+				for(int i = 0; i < exStages.length; i++) {
+					if(exStages[i] == null)
+						continue;
+
+					String name = MultiLangCont.get(exStages[i]);
+					String smName = MultiLangCont.get(exStages[i].getCont());
+
+					if(name == null || name.isEmpty())
+						name = exStages[i].id.toString();
+					else if(smName == null || smName.isEmpty()) {
+						smName = exStages[i].getCont().id.toString();
+
+						name = smName + " - " + name;
+					} else {
+						name = smName + " - " + name;
+					}
+
+					ans.append("<tr><td>")
+							.append(name)
+							.append("</td><td>")
+							.append(df.format(exChances[i]))
+							.append("%</td></tr>");
+				}
+
+				ans.append("</table>");
+			}
+
+			if(!exConnection && (exStages == null || exChances == null)) {
+				ans.append("<br>");
+			}
+
+			ans.append("<br> drop rewards: ");
 			if (drop.length == 0)
 				ans.append("none");
 			else if (drop.length == 1)
@@ -188,6 +276,18 @@ public class Stage extends Data
 				cas = sm.cast * 1000 + cas;
 			castle = Identifier.parseInt(cas, CastleImg.class);
 			non_con = strs[1].equals("1");
+
+			if(info != null) {
+				int chance = CommonStatic.parseIntN(strs[2]);
+
+				info.exConnection = chance != 0;
+				info.exChance = chance;
+
+				info.exMapID = CommonStatic.parseIntN(strs[3]);
+
+				info.exStageIDMin = CommonStatic.parseIntN(strs[4]);
+				info.exStageIDMax = CommonStatic.parseIntN(strs[5]);
+			}
 		} else {
 			castle = Identifier.parseInt(sm.cast * 1000 + CH_CASTLES[id.id], CastleImg.class);
 			non_con = false;
