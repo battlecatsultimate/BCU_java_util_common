@@ -39,9 +39,10 @@ public class SBCtrl extends BattleField {
 	}
 
 	@Override
-	public double[] sniperCoords() {
+	public double[] sniperCoords(boolean put) {
 		double[] coords = new double[]{sb.pos, sb.siz};
-		sb.rx.sniperCoords.put(sb.time, coords);
+		if (put)
+			sb.rx.sniperCoords.put(sb.time, coords);
 		return coords;
 	}
 

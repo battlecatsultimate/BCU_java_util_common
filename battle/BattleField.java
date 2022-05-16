@@ -50,7 +50,7 @@ public abstract class BattleField {
 		return sb.act_spawn(i, j, boo);
 	}
 
-	public abstract double[] sniperCoords();
+	public abstract double[] sniperCoords(boolean put);
 
 	protected abstract void actions();
 

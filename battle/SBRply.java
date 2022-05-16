@@ -70,7 +70,7 @@ class Mirror extends BattleField {
 	}
 
 	@Override
-	public double[] sniperCoords() {
+	public double[] sniperCoords(boolean put) {
 		double[] coords = rl.getSniperCoords(sb.time);
 		if (coords == null)
 			coords = new double[]{sb.pos, sb.siz};
