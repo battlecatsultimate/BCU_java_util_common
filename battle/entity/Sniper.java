@@ -69,7 +69,7 @@ public class Sniper extends AtkModelAb {
 		int Ux = (int) (pos * 4);
 		int Uy = 4480;
 
-		double[] coords = bf.sniperCoords(bulletX != 0);
+		double[] coords = bf.sniperCoords(preTime > 0);
 		int scrollPos = (int) (-Math.round(coords[0] / CommonStatic.BattleConst.ratio * 4 / coords[1]));
 
 		int sniperX = (Cx - scrollPos) / 10 + 203;

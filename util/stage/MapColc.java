@@ -409,6 +409,9 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		@Override
 		public String toString() {
+			String str = pack.desc.names.toString();
+			if (str.isEmpty())
+				return pack.desc.id;
 			return pack.desc.names.toString();
 		}
 

@@ -1425,37 +1425,37 @@ public class Data {
 
 	// After this line all number is game data
 
-	public static final int INT_KB = 0, INT_HB = 1, INT_SW = 2, INT_ASS = 3, INT_WARP = 4;
+	public static final byte INT_KB = 0, INT_HB = 1, INT_SW = 2, INT_ASS = 3, INT_WARP = 4;
 
-	public static final int[] KB_PRI = new int[] { 2, 4, 5, 1, 3 };
-	public static final int[] KB_TIME = new int[] { 11, 23, 47, 11, -1 };
-	public static final int[] KB_DIS = new int[] { 165, 345, 705, 55, -1 };
+	public static final byte[] KB_PRI = new byte[] { 2, 4, 5, 1, 3 };
+	public static final byte[] KB_TIME = new byte[] { 11, 23, 47, 11, -1 };
+	public static final short[] KB_DIS = new short[] { 165, 345, 705, 55, -1 };
 
-	public static final int W_E_INI = -33;
-	public static final int W_U_INI = -67;
-	public static final int W_PROG = 200;
-	public static final int W_E_WID = 500;
-	public static final int W_U_WID = 400;
-	public static final int W_TIME = 3;
-	public static final int W_MINI_TIME = 2; // mini wave spawn interval
-	public static final int E_IMU = -1;
-	public static final int E_IWAVE = -2;
-	public static final int E_SWAVE = -3;
-	public static final int W_VOLC = 375;
-	public static final int W_VOLC_INNER = 250; // volcano inner width
-	public static final int W_VOLC_PIERCE = 125; // volcano pierce width
-	public static final int VOLC_ITV = 20;
+	public static final byte W_E_INI = -33;
+	public static final byte W_U_INI = -67;
+	public static final short W_PROG = 200;
+	public static final short W_E_WID = 500;
+	public static final short W_U_WID = 400;
+	public static final byte W_TIME = 3;
+	public static final byte W_MINI_TIME = 2; // mini wave spawn interval
+	public static final byte E_IMU = -1;
+	public static final byte E_IWAVE = -2;
+	public static final byte E_SWAVE = -3;
+	public static final short W_VOLC = 375;
+	public static final short W_VOLC_INNER = 250; // volcano inner width
+	public static final byte W_VOLC_PIERCE = 125; // volcano pierce width
+	public static final byte VOLC_ITV = 20;
 
-	public static final int VOLC_PRE = 15; // volcano pre-atk
-	public static final int VOLC_POST = 10; // volcano post-atk
-	public static final int VOLC_SE = 30; // volcano se loop duration
+	public static final byte VOLC_PRE = 15; // volcano pre-atk
+	public static final byte VOLC_POST = 10; // volcano post-atk
+	public static final byte VOLC_SE = 30; // volcano se loop duration
 
 	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 9, 2 };// not sure, 10f for bblast
 	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100, 600 };// not sure
-	public static final int SNIPER_CD = 300;// not sure
-	public static final int SNIPER_PRE = 8;// not sure
+	public static final short SNIPER_CD = 300;// not sure
+	public static final byte SNIPER_PRE = 8;// not sure
 	public static final double SNIPER_POS = 442.5;
-	public static final int REVIVE_SHOW_TIME = 16;
+	public static final byte REVIVE_SHOW_TIME = 16;
 
 	public static final int ORB_ATK = 0;
 	public static final int ORB_RES = 1;

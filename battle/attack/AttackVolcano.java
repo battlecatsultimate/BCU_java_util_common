@@ -9,7 +9,7 @@ import java.util.List;
 public class AttackVolcano extends AttackAb {
 
 	protected boolean attacked = false;
-	protected int volcTime = VOLC_ITV;
+	private byte volcTime = VOLC_ITV;
 
 	protected final List<Entity> vcapt = new ArrayList<>();
 	private final List<Entity> temp = new ArrayList<>();
