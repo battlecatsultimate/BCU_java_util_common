@@ -74,7 +74,8 @@ class Mirror extends BattleField {
 		double[] coords = rl.getSniperCoords(sb.time);
 		if (coords == null)
 			coords = new double[]{sb.pos, sb.siz};
-		sb.rx.sniperCoords.put(sb.time, coords);
+		if (put)
+			sb.rx.sniperCoords.put(sb.time, coords);
 		return coords;
 	}
 
