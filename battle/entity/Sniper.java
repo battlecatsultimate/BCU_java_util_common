@@ -1,6 +1,7 @@
 package common.battle.entity;
 
 import common.CommonStatic;
+import common.battle.BattleField;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelAb;
 import common.battle.attack.AttackAb;
@@ -21,9 +22,11 @@ public class Sniper extends AtkModelAb {
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	public boolean enabled = true, canDo = true;
 	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
+	public final BattleField bf; //Used for replay pos/siz gathering
 
-	public Sniper(StageBasis sb) {
+	public Sniper(StageBasis sb, BattleField bf) {
 		super(sb);
+		this.bf = bf;
 	}
 
 	/**
@@ -66,7 +69,8 @@ public class Sniper extends AtkModelAb {
 		int Ux = (int) (pos * 4);
 		int Uy = 4480;
 
-		int scrollPos = (int) (-Math.round(b.pos * 1.0 / CommonStatic.BattleConst.ratio * 4 / b.siz));
+		double[] coords = bf.sniperCoords();
+		int scrollPos = (int) (-Math.round(coords[0] / CommonStatic.BattleConst.ratio * 4 / coords[1]));
 
 		int sniperX = (Cx - scrollPos) / 10 + 203;
 		int sniperY = (int) (Math.sin(Math.PI / 30 * b.time) * 10) + Cy / 10 - 369;

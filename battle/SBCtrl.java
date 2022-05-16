@@ -8,6 +8,7 @@ import common.util.stage.Replay;
 import common.util.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SBCtrl extends BattleField {
@@ -32,8 +33,16 @@ public class SBCtrl extends BattleField {
 
 	public Replay getData() {
 		re.action = sb.rx.write();
+		re.sniperCoords = new HashMap<>(sb.rx.sniperCoords);
 		re.len = sb.time;
 		return re;
+	}
+
+	@Override
+	public double[] sniperCoords() {
+		double[] coords = new double[]{sb.pos, sb.siz};
+		sb.rx.sniperCoords.put(sb.time, coords);
+		return coords;
 	}
 
 	/**
@@ -128,6 +137,7 @@ public class SBCtrl extends BattleField {
 class Recorder extends BattleObj {
 
 	private final List<Integer> recd = new ArrayList<>();
+	protected final HashMap<Integer, double[]> sniperCoords = new HashMap<>();
 
 	private int num, rep;
 

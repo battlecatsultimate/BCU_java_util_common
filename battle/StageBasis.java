@@ -76,7 +76,7 @@ public class StageBasis extends BattleObj {
 	private THEME.TYPE themeType;
 	private boolean bgEffectInitialized = false;
 
-	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
+	public StageBasis(BattleField bf, EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
 		b = bas;
 		r = new CopRand(seed);
 		nyc = bas.nyc;
@@ -131,7 +131,7 @@ public class StageBasis extends BattleObj {
 		if ((conf[0] & 1) > 0)
 			work_lv = 8;
 		if ((conf[0] & 2) > 0)
-			sniper = new Sniper(this);
+			sniper = new Sniper(this, bf);
 		else
 			sniper = null;
 		upgradeCost = bas.t().getLvCost(work_lv);

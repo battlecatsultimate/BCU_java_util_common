@@ -4,6 +4,8 @@ import common.CommonStatic.FakeKey;
 import common.util.stage.EStage;
 import common.util.stage.Replay;
 
+import java.util.HashMap;
+
 public class SBRply extends Mirror {
 
 	private final Replay r;
@@ -64,7 +66,16 @@ class Mirror extends BattleField {
 
 	protected Mirror(Replay r) {
 		super(new EStage(r.st.get(), r.star), r.lu, r.conf, r.seed, r.buttonDelay);
-		rl = new Release(r.action);
+		rl = new Release(r.action, r.sniperCoords);
+	}
+
+	@Override
+	public double[] sniperCoords() {
+		double[] coords = rl.getSniperCoords(sb.time);
+		if (coords == null)
+			coords = new double[]{sb.pos, sb.siz};
+		sb.rx.sniperCoords.put(sb.time, coords);
+		return coords;
 	}
 
 	/**
@@ -139,10 +150,12 @@ class MirrorSet {
 class Release {
 
 	protected final int[] recd;
+	private final HashMap<Integer, double[]> sniperCoords;
 	private int ind, rec, rex;
 
-	protected Release(int[] action) {
+	protected Release(int[] action, HashMap<Integer, double[]> sniperCoords) {
 		recd = action;
+		this.sniperCoords = sniperCoords;
 	}
 
 	private Release(Release r) {
@@ -150,6 +163,7 @@ class Release {
 		ind = r.ind;
 		rec = r.rec;
 		rex = r.rex;
+		sniperCoords = r.sniperCoords;
 	}
 
 	@Override
@@ -167,6 +181,10 @@ class Release {
 			}
 		rex--;
 		return rec;
+	}
+
+	protected double[] getSniperCoords(int t) {
+		return sniperCoords.get(t);
 	}
 
 }

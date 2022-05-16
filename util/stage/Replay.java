@@ -25,6 +25,7 @@ import common.util.Data;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 @JsonClass
@@ -93,6 +94,7 @@ public class Replay extends Data {
 	@JsonField
 	public boolean buttonDelay = false;
 	public int[] action;
+	public HashMap<Integer, double[]> sniperCoords;
 	public boolean marked;// FIXME mark save
 
 	@JCConstructor
