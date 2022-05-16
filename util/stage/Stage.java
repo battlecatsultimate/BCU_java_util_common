@@ -111,6 +111,7 @@ public class Stage extends Data
 						break;
 					case 3:
 						ans.append("<br> This map's number of plays can be done will be reset upon each appearance");
+						break;
 					default:
 						ans.append("<br> Reset mode flag ")
 								.append(st.getCont().info.resetMode);
