@@ -4,6 +4,7 @@ import common.io.json.JsonClass;
 import common.util.Data;
 import common.util.pack.Background;
 import common.util.stage.CastleImg;
+import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -41,6 +42,8 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 
 		if(cls == EneRand.class) {
 			return (T) new Identifier(DEF, Enemy.class, 0).get();
+		} else if (cls == Stage.class) {
+			return (T) new Identifier(DEF + "/0", Stage.class, 0).get();
 		} else {
 			return (T) new Identifier(DEF, cls, 0).get();
 		}
