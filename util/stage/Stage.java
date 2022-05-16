@@ -33,7 +33,15 @@ public class Stage extends Data
 
 	public static class StageInfo {
 
-		private static final DecimalFormat df = new DecimalFormat("#.##");
+		private static final DecimalFormat df;
+
+		static {
+			NumberFormat nf = NumberFormat.getInstance(Locale.US);
+			df = (DecimalFormat) nf;
+
+			df.applyPattern("#.##");
+		}
+
 		public final Stage st;
 		public final StageMap.StageMapInfo map;
 		public final int energy, xp, once, rand;
@@ -136,11 +144,6 @@ public class Stage extends Data
 			}
 
 			if (exStages != null && exChances != null) {
-				NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-				DecimalFormat df = (DecimalFormat) nf;
-
-				df.applyPattern("#.##");
-
 				ans.append("<table><tr><th>EX Stage Name</th><th>Chance</th></tr>");
 
 				for (int i = 0; i < exStages.length; i++) {
@@ -174,18 +177,15 @@ public class Stage extends Data
 				ans.append("<br>");
 			}
 
-			ans.append("<br> drop rewards: ");
-			if (drop.length == 0)
-				ans.append("none");
-			else if (drop.length == 1)
-				ans.append("{chance: ").append(drop[0][0]).append("%, item name: ").append(MultiLangCont.getStatic().RWNAME.getCont(drop[0][1])).append(", number: ").append(drop[0][2]).append("}, once: ").append(once);
-			else {
-				ans.append("count: ").append(drop.length).append(", rand mode: ").append(rand).append(", once: ").append(once).append("<br>");
-				ans.append("<table><tr><th>chance</th><th>item name</th><th>number</th></tr>");
-				for (int[] dp : drop)
-					ans.append("<tr><td>").append(dp[0]).append("%</td><td>").append(MultiLangCont.getStatic().RWNAME.getCont(dp[1])).append("</td><td>").append(dp[2]).append("</td><tr>");
-				ans.append("</table>");
+			ans.append("<br> drop rewards");
+
+			if(drop == null || drop.length == 0) {
+				ans.append(" : none");
+			} else {
+				ans.append("<br>");
+				appendDropData(ans);
 			}
+
 			if (time.length > 0) {
 				ans.append("<br> time scores: count: ").append(time.length).append("<br>");
 				ans.append("<table><tr><th>score</th><th>item name</th><th>number</th></tr>");
@@ -194,6 +194,125 @@ public class Stage extends Data
 				ans.append("</table>");
 			}
 			return ans.toString();
+		}
+
+		private void appendDropData(StringBuilder ans) {
+			if (drop == null || drop.length == 0) {
+				ans.append("none");
+				return;
+			}
+
+			List<String> chances = analyzeRewardChance();
+
+			if(chances == null) {
+				ans.append("none");
+				return;
+			}
+
+			if(chances.isEmpty()) {
+				ans.append("<table><tr><th>No.</th><th>item name</th><th>amount</th></tr>");
+			} else {
+				ans.append("<table><tr><th>chance</th><th>item name</th><th>amount</th></tr>");
+			}
+
+			for(int i = 0; i < drop.length; i++) {
+				if(!chances.isEmpty() && i < chances.size() && Double.parseDouble(chances.get(i)) == 0.0)
+					continue;
+
+				String chance;
+
+				if(chances.isEmpty())
+					chance = String.valueOf(i + 1);
+				else
+					chance = chances.get(i) + "%";
+
+				String reward = MultiLangCont.getStatic().RWNAME.getCont(drop[i][1]);
+
+				if(reward == null || reward.isEmpty())
+					reward = "Reward " + drop[i][1];
+
+				if(i == 0 && (rand == 1 || (drop[i][1] >= 1000 && drop[i][1] < 30000)))
+					reward += " (Once)";
+
+				if(i == 0 && drop[i][0] != 100 && rand != -4)
+					reward += " [Treasure Radar]";
+
+				ans.append("<tr><td>")
+						.append(chance)
+						.append("</td><td>")
+						.append(reward)
+						.append("</td><td>")
+						.append(drop[i][2])
+						.append("</td></tr>");
+			}
+
+			ans.append("</table>");
+		}
+
+		private List<String> analyzeRewardChance() {
+			ArrayList<String> res = new ArrayList<>();
+
+			int sum = 0;
+
+			for(int[] d : drop) {
+				sum += d[0];
+			}
+
+			if(sum == 0)
+				return null;
+
+			if(sum == 1000) {
+				for(int[] d : drop) {
+					res.add(df.format(d[0]/10.0));
+				}
+			} else if((sum == drop.length && sum != 1) || rand == -3) {
+				return res;
+			} else if(sum == 100) {
+				for(int[] d : drop) {
+					res.add(String.valueOf(d[0]));
+				}
+			} else if(sum > 100 && (rand == 0 || rand == 1)) {
+				double rest = 100.0;
+
+				if(drop[0][0] == 100) {
+					res.add(String.valueOf(100));
+
+					for(int i = 1; i < drop.length; i++) {
+						double filter = rest * drop[i][0] / 100.0;
+
+						rest -= filter;
+
+						res.add(df.format(filter));
+					}
+				} else {
+					for(int[] d : drop) {
+						double filter = rest * d[0] / 100.0;
+
+						rest -= filter;
+
+						res.add(df.format(filter));
+					}
+				}
+			} else if(rand == -4) {
+				int total = 0;
+
+				for(int[] d : drop) {
+					total += d[0];
+				}
+
+				if(total == 0)
+					return null;
+
+				for(int[] d : drop) {
+					res.add(df.format(d[0] * 100.0 / total));
+				}
+			} else {
+				for(int[] d : drop) {
+					res.add(String.valueOf(d[0]));
+				}
+			}
+
+			return res;
 		}
 	}
 
