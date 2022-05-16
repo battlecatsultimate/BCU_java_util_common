@@ -140,6 +140,11 @@ public class CommonStatic {
 		 * Color of background in viewer
 		 */
 		public int viewerColor = -1;
+
+		/**
+		 * Make BCU show ex stage continuation pop-up if true
+		 */
+		public boolean exContinuation = false;
 	}
 
 	public interface EditLink {
