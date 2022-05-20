@@ -96,7 +96,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * responsive effect FSM type
 		 */
-		private int eftp;
+		private byte eftp;
 
 		/**
 		 * on-entity effect icons<br>
@@ -428,15 +428,15 @@ public abstract class Entity extends AbEntity {
 			if (efft == 0)
 				effs[eftp] = null;
 			if (status[P_STOP][0] == 0) {
-				int id = dire == -1 ? A_STOP : A_E_STOP;
+				byte id = dire == -1 ? A_STOP : A_E_STOP;
 				effs[id] = null;
 			}
 			if (status[P_SLOW][0] == 0) {
-				int id = dire == -1 ? A_SLOW : A_E_SLOW;
+				byte id = dire == -1 ? A_SLOW : A_E_SLOW;
 				effs[id] = null;
 			}
 			if (status[P_WEAK][0] == 0) {
-				int id;
+				byte id;
 
 				if (status[P_WEAK][1] <= 100) {
 					id = dire == -1 ? A_DOWN : A_E_DOWN;
@@ -447,7 +447,7 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 			if (status[P_CURSE][0] == 0) {
-				int id = dire == -1 ? A_CURSE : A_E_CURSE;
+				byte id = dire == -1 ? A_CURSE : A_E_CURSE;
 				effs[id] = null;
 			}
 			if (status[P_IMUATK][0] == 0 && status[P_BSTHUNT][0] == 0) {
@@ -462,36 +462,36 @@ public abstract class Entity extends AbEntity {
 				effs[dire == -1 ? A_SEAL : A_E_SEAL] = null;
 			}
 			if (status[P_LETHAL][1] == 0) {
-				int id = dire == -1 ? A_SHIELD : A_E_SHIELD;
+				byte id = dire == -1 ? A_SHIELD : A_E_SHIELD;
 				effs[id] = null;
 			} else
 				status[P_LETHAL][1]--;
 			if (status[P_WAVE][0] == 0) {
-				int id = dire == -1 ? A_WAVE_INVALID : A_E_WAVE_INVALID;
+				byte id = dire == -1 ? A_WAVE_INVALID : A_E_WAVE_INVALID;
 				effs[id] = null;
 			} else
 				status[P_WAVE][0]--;
 			if (status[P_STRONG][0] == 0) {
-				int id = dire == -1 ? A_UP : A_E_UP;
+				byte id = dire == -1 ? A_UP : A_E_UP;
 				effs[id] = null;
 			}
 			if (status[P_BREAK][0] == 0) {
-				int id = dire == -1 ? A_B : A_E_B;
+				byte id = dire == -1 ? A_B : A_E_B;
 				effs[id] = null;
 			} else
 				status[P_BREAK][0]--;
 
 			if (status[P_ARMOR][0] == 0) {
-				int id = dire == -1 ? A_ARMOR : A_E_ARMOR;
+				byte id = dire == -1 ? A_ARMOR : A_E_ARMOR;
 				effs[id] = null;
 			}
 
 			if (status[P_SPEED][0] == 0) {
-				int id = dire == -1 ? A_SPEED : A_E_SPEED;
+				byte id = dire == -1 ? A_SPEED : A_E_SPEED;
 				effs[id] = null;
 			}
 
-			int healId = e.dire == -1 ? A_HEAL : A_E_HEAL;
+			byte healId = e.dire == -1 ? A_HEAL : A_E_HEAL;
 
 			if(effs[healId] != null && effs[healId].done()) {
 				effs[healId] = null;
@@ -1057,7 +1057,7 @@ public abstract class Entity extends AbEntity {
 			e = ent;
 		}
 
-		private int canRevive() {
+		private byte canRevive() {
 			if (e.status[P_REVIVE][0] != 0)
 				return 1;
 			int tot = totExRev();

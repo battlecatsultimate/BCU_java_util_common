@@ -133,7 +133,7 @@ public class UpdateCheck {
 	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
-	public static final String URL_FONT = "https://github.com/battlecatsultimate/bcu-assets/raw/master/fonts/";
+	public static final String URL_FONT = "https://github.com/battlecatsultimate/bcu-assets/raw/master/fonts/stage_font.otf";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -203,12 +203,20 @@ public class UpdateCheck {
 	}
 
 	public static Downloader checkFont() { //If more fonts are added, it may need to be a list like the rest. For now it's like this because there is only one font
-		File fonts = CommonStatic.ctx.getAssetFile("./fonts/stage_font.otf");
+		try {
+			File fonts = CommonStatic.ctx.getAssetFile("./fonts/stage_font.otf");
+			JsonElement je0 = WebFileIO.read(URL_FONT);
+			ContentJson cont = JsonDecoder.decode(je0, ContentJson.class);
 
-		if (!fonts.exists()) {
-			File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
-			String url = URL_FONT + "stage_font.otf";
-			return new Downloader(fonts, temp, "Stage Name Fonts", false, url);
+			if (!fonts.exists() || !cont.sha.equals(CommonStatic.getConfig().fontSHA)) {
+				File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
+
+				Downloader d = new Downloader(fonts, temp, "Stage Name Fonts", false, URL_FONT);
+				d.post = () -> CommonStatic.getConfig().fontSHA = cont.sha;
+				return d;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

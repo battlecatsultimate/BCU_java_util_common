@@ -5,8 +5,8 @@ import common.util.Data;
 import java.util.Map;
 
 public class CannonLevelCurve extends Data  {
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 1;
+    private static final byte MIN_VALUE = 0;
+    private static final byte MAX_VALUE = 1;
 
     public final int max;
 
