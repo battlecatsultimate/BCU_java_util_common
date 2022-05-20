@@ -92,7 +92,6 @@ public class CommonStatic {
 
 		@JsonField(generic = { String.class, String.class })
 		public HashMap<String, String> localLangMap = new HashMap<>();
-		public String fontSHA;
 
 		// ImgCore
 		public int deadOpa = 10, fullOpa = 90;

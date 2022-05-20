@@ -203,20 +203,11 @@ public class UpdateCheck {
 	}
 
 	public static Downloader checkFont() { //If more fonts are added, it may need to be a list like the rest. For now it's like this because there is only one font
-		try {
-			File fonts = CommonStatic.ctx.getAssetFile("./fonts/stage_font.otf");
-			JsonElement je0 = WebFileIO.read(URL_FONT);
-			ContentJson cont = JsonDecoder.decode(je0, ContentJson.class);
+		File fonts = CommonStatic.ctx.getAssetFile("./fonts/stage_font.otf");
 
-			if (!fonts.exists() || !cont.sha.equals(CommonStatic.getConfig().fontSHA)) {
-				File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
-
-				Downloader d = new Downloader(fonts, temp, "Stage Name Fonts", false, URL_FONT);
-				d.post = () -> CommonStatic.getConfig().fontSHA = cont.sha;
-				return d;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (!fonts.exists()) {
+			File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
+			return new Downloader(fonts, temp, "Stage Name Fonts", false, URL_FONT);
 		}
 		return null;
 	}
