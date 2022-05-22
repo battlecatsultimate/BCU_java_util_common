@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class EEnemy extends Entity {
 
-	public final byte mark;
+	public final int mark;
 	public final double mult, mula;
 
 	public byte hit;
@@ -24,7 +24,7 @@ public class EEnemy extends Entity {
 		super(b, de, ea, atkMagnif, magnif);
 		mult = magnif;
 		mula = atkMagnif;
-		mark = (byte) m;
+		mark = m;
 		isBase = mark <= -1;
 		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
 		traits = de.getTraits();

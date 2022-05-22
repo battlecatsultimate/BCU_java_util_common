@@ -900,7 +900,7 @@ public class Data {
 	public static final byte RARITY_TOT = 6;
 
 	// trait bit filter
-	public static final byte TB_RED = 1;
+	public static final int TB_RED = 1;
 	public static final byte TB_FLOAT = 2;
 	public static final byte TB_BLACK = 4;
 	public static final byte TB_METAL = 8;
@@ -953,7 +953,7 @@ public class Data {
 	public static final byte LV_RECH = 5;
 	public static final byte LV_CATK = 6;
 	public static final byte LV_CRG = 7;
-	public static final byte LV_XP = 8;
+	public static final int LV_XP = 8;
 	public static final byte LV_TOT = 9;
 
 	// default treasure value
@@ -969,8 +969,8 @@ public class Data {
 	public static final byte T_RECH = 6;
 	public static final byte T_CATK = 7;
 	public static final byte T_BASE = 8;
-	public static final byte T_XP1 = 9;
-	public static final byte T_XP2 = 10;
+	public static final int T_XP1 = 9;
+	public static final int T_XP2 = 10;
 	public static final byte T_TOT = 11;
 
 	// abi bit filter
@@ -1391,7 +1391,7 @@ public class Data {
 	public static final byte BASE_GROUND = 5;
 	public static final byte BASE_BARRIER = 6;
 	public static final byte BASE_CURSE = 7;
-	public static final byte BASE_TOT = 8;
+	public static final int BASE_TOT = 8;
 
 	// base type
 	public static final byte BASE_ATK_MAGNIFICATION = 0;
