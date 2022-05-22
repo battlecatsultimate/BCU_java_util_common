@@ -412,7 +412,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			String str = pack.desc.names.toString();
 			if (str.isEmpty())
 				return pack.desc.id;
-			return pack.desc.names.toString();
+			return str;
 		}
 
 		@OnInjected
