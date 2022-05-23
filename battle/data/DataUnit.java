@@ -185,7 +185,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				proc.BSTHUNT.prob = ints[106];
 				proc.BSTHUNT.time = ints[107];
 			}
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException ignored) {
 		}
 
 		traits = new ArrayList<>(Trait.convertType(t));

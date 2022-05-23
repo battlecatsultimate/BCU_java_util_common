@@ -295,14 +295,22 @@ public abstract class Source {
 			return list;
 		}
 
+		public static void autoSave() {
+			AnimCE.map().values().forEach(AnimCE::autosave);
+			for (UserPack up : UserProfile.getUserPacks())
+				if (up.source instanceof Workspace)
+					CommonStatic.ctx.noticeErr(() -> ((Workspace) up.source).save(up, true), ErrType.WARN,
+							"failed to save pack " + up.desc.names.toString());
+		}
+
 		public static void saveLocalAnimations() {
-			AnimCE.map().values().forEach(e -> e.save());
+			AnimCE.map().values().forEach(AnimCE::save);
 		}
 
 		public static void saveWorkspace() {
 			for (UserPack up : UserProfile.getUserPacks())
 				if (up.source instanceof Workspace)
-					CommonStatic.ctx.noticeErr(() -> ((Workspace) up.source).save(up), ErrType.WARN,
+					CommonStatic.ctx.noticeErr(() -> ((Workspace) up.source).save(up, false), ErrType.WARN,
 							"failed to save pack " + up.desc.names.toString());
 		}
 
@@ -412,7 +420,7 @@ public abstract class Source {
 						if (rep != null && rep.rl.pack.startsWith(".temp_")) {
 							rep.rl.pack = rep.rl.pack.substring(6);
 						}
-			save(pack);
+			save(pack, false);
 			String star = id.startsWith(".temp_") ? "./packs/" : "./exports/";
 			File tar = CommonStatic.ctx.getAuxFile(star + pack.getSID() + ".pack.bcuzip");
 			File dst = CommonStatic.ctx.getAuxFile(star + ".pack.bcuzip.temp");
@@ -487,8 +495,8 @@ public abstract class Source {
 			return new FileOutputStream(f);
 		}
 
-		protected void save(UserPack up) throws IOException {
-			File f = getFile("pack.json");
+		protected void save(UserPack up, boolean auto) throws IOException {
+			File f = auto ? CommonStatic.ctx.getWorkspaceFile("./_autosave/pack_" + id + ".json") : getFile("pack.json");
 			Context.check(f);
 			OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
 			fw.write(JsonEncoder.encode(up).toString());

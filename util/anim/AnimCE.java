@@ -53,7 +53,7 @@ public class AnimCE extends AnimCI {
 		return UserProfile.getRegister(REG_LOCAL_ANIM, AnimCE.class);
 	}
 
-	private boolean saved = false;
+	private boolean saved = true;
 
 	public EditLink link;
 
@@ -301,6 +301,11 @@ public class AnimCE extends AnimCI {
 	public void revert() {
 		super.revert();
 		unSave("revert");
+	}
+
+	public void autosave() {
+		if (loaded && !isSaved())
+			new SourceAnimSaver(new ResourceLocation("_autosave", id.id), this).saveData();
 	}
 
 	public void save() {

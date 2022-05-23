@@ -171,12 +171,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					form.tba += form.getPost() + 1;
 				}
 
-				if (UserProfile.isOlderPack(pack, "0.5.4.0") && form.getProc().SUMMON.prob > 0) {
-					form.getProc().SUMMON.form = 1;
-					form.getProc().SUMMON.mult = 1;
-					form.getProc().SUMMON.type.fix_buff = true;
-				}
-
 				if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
 					MaModel model = anim.loader.getMM();
 					form.limit = CommonStatic.customFormMinPos(model);
@@ -210,6 +204,12 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					if ((form.abi & 32) > 0) //base destroyer
 						proc.ATKBASE.mult = 300;
 					form.abi = Data.reorderAbi(form.abi, 1);
+				}
+
+				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form == 0) {
+					form.getProc().SUMMON.form = 1;
+					form.getProc().SUMMON.mult = 1;
+					form.getProc().SUMMON.type.fix_buff = true;
 				}
 			}
 		}
