@@ -45,6 +45,7 @@ public class BGEffectHandler {
     private int[] destroyLeft, destroyTop, destroyRight, destroyBottom;
 
     private int[] wait;
+    private boolean[] startWaitDone;
 
     private boolean animLoaded = false;
 
@@ -156,10 +157,15 @@ public class BGEffectHandler {
         else
             angleVelocity = null;
 
-        if(segment.wait != null)
+        if(segment.wait != null || segment.startWait != null)
             wait = new int[count];
         else
             wait = null;
+
+        if(segment.startWait != null)
+            startWaitDone = new boolean[count];
+        else
+            startWaitDone = null;
 
         for(int i = 0; i < count; i++) {
             EAnimD<BGEffectAnim.BGEffType> anim = anims[Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
@@ -356,8 +362,18 @@ public class BGEffectHandler {
             for(int i = 0; i < capture.size(); i++) {
                 int ind = capture.get(i);
 
-                if(segment.wait != null) {
-                    wait[ind] = segment.wait.getPureRangeI();
+                if(segment.wait != null || segment.startWait != null) {
+                    if(segment.wait != null && segment.startWait != null) {
+                        if(!startWaitDone[ind]) {
+                            wait[ind] = segment.startWait.getPureRangeI();
+                            startWaitDone[ind] = true;
+                        } else {
+                            wait[ind] = segment.wait.getPureRangeI();
+                        }
+                    } else if(segment.wait != null)
+                        wait[ind] = segment.wait.getPureRangeI();
+                    else
+                        wait[ind] = segment.startWait.getPureRangeI();
                 } else {
                     EAnimD<BGEffectAnim.BGEffType> anim = anims[Math.min(anims.length - 1, r.nextInt(anims.length))].getEAnim(BGEffectAnim.BGEffType.DEF);
                     anim.removeBasePivot();

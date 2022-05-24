@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import common.system.BattleRange;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 public class BGEffectSegment {
@@ -14,6 +16,13 @@ public class BGEffectSegment {
         MODEL,
         ANIME
     }
+
+    public static List<String> tags = Arrays.asList(
+            "name", "model", "file", "count", "x", "y", "startX", "startY", "z", "angle", "scale", "scaleX", "scaleY",
+            "startFrame", "frame", "wait", "lifeTime", "startScale", "v", "vx", "vy", "startV", "startVx", "startVy",
+            "moveAngle", "alpha", "destroyLeft", "destroyTop", "destroyRight", "destroyBottom", "angularV", "startWait",
+            "equallySpaced"
+    );
 
     public String name = "";
     public final String json;
@@ -59,6 +68,13 @@ public class BGEffectSegment {
     public final BattleRange<Integer> frame;
 
     public final BattleRange<Integer> wait;
+    public final BattleRange<Integer> startWait;
+
+    /**
+     * Draw same segment over and over again until reaching battle boundary
+     * Count is assumed to be 1
+     */
+    public final BGEffectSpacer spacer;
 
     /**
      * The speed this component will rotate. If there is a maximum value, the value will be a random number between the minimum and maximum value.
@@ -260,6 +276,12 @@ public class BGEffectSegment {
             wait = null;
         }
 
+        if(elem.has("startWait")) {
+            startWait = readRangedJsonObjectI(elem, "startWait");
+        } else {
+            startWait = null;
+        }
+
         if(elem.has("lifeTime")) {
             lifeTime = readRangedJsonObjectI(elem, "lifeTime");
         } else {
@@ -368,6 +390,38 @@ public class BGEffectSegment {
             angleVelocity = readRangedJsonObjectD(elem, "angularV", Math::toRadians);
         } else {
             angleVelocity = null;
+        }
+
+        if(elem.has("equallySpaced")) {
+            JsonObject obj = elem.getAsJsonObject("equallySpaced");
+
+            BattleRange.SNAP snap;
+
+            switch (obj.get("base").getAsString()) {
+                case "default":
+                    snap = BattleRange.SNAP.DEFAULT;
+                    break;
+                case "bgImage":
+                    snap = BattleRange.SNAP.BGIMAGE;
+                    break;
+                default:
+                    throw new IllegalStateException("E/BGEffectSegment | "+json+" / Unhandled snap mode for equallySpaced tag : " + obj.get("base").getAsString());
+            }
+
+            spacer = new BGEffectSpacer(obj.get("pos1").getAsInt(), obj.get("pos2").getAsInt(), obj.get("value").getAsInt(), snap);
+
+            if(!count.isSingledValue() || count.getPureRangeI() != 1) {
+                System.out.println("W/BGEffectSegment | "+json+" / Count isn't 1 while spacer is defined -> Has Random Value : "+!count.isSingledValue()+" | Count gotten : "+count.getPureRangeI());
+            }
+        } else {
+            spacer = null;
+        }
+
+        //Check unknown tags
+        for(String tag : elem.getAsJsonObject().keySet()) {
+            if(!tags.contains(tag)) {
+                System.out.println("W/BGEffectSegment | "+json+" / Unknown tag found -> " + tag);
+            }
         }
     }
 
