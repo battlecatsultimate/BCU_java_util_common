@@ -414,8 +414,6 @@ public class BGEffectSegment {
                     throw new IllegalStateException("E/BGEffectSegment | "+json+" / Unhandled snap mode for equallySpaced tag : " + obj.get("base").getAsString());
             }
 
-            System.out.println(json+"->"+snap);
-
             spacer = new BGEffectSpacer(obj.get("pos1").getAsInt(), obj.get("pos2").getAsInt(), obj.get("value").getAsInt(), snap, bgID);
 
             if(count.hasRandomValue() || count.getPureRangeI() != 1) {
