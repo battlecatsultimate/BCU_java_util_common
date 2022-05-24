@@ -46,7 +46,7 @@ public class JsonBGEffect extends BackgroundEffect {
             JsonArray arr = obj.getAsJsonArray("data");
 
             for(int i = 0; i < arr.size(); i++) {
-                BGEffectSegment segment = new BGEffectSegment(arr.get(i).getAsJsonObject(), jsonName);
+                BGEffectSegment segment = new BGEffectSegment(arr.get(i).getAsJsonObject(), jsonName, id);
                 handlers.add(new BGEffectHandler(segment, id));
             }
         } else if (obj.has("id")) {

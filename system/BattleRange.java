@@ -282,8 +282,8 @@ public class BattleRange<T extends Number> {
         return minSnap == maxSnap && maxSnap == SNAP.FRONT;
     }
 
-    public boolean isSingledValue() {
-        return max.equals(min);
+    public boolean hasRandomValue() {
+        return !max.equals(min);
     }
 
     private boolean isXAxis(SNAP snap) {

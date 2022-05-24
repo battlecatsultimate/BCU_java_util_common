@@ -130,7 +130,7 @@ public class BGEffectSegment {
      */
     public final BattleRange<Integer> opacity;
 
-    public BGEffectSegment(JsonObject elem, String json) {
+    public BGEffectSegment(JsonObject elem, String json, int bgID) {
         this.json = json;
 
         if(elem.has("name")) {
@@ -164,7 +164,13 @@ public class BGEffectSegment {
             files = new String[BGFile.values().length];
 
             if(fileObject.has("image")) {
-                files[BGFile.IMAGE.ordinal()] = "./org/img/bgEffect/"+fileObject.get("image").getAsString();
+                String imageName = fileObject.get("image").getAsString();
+
+                if(imageName.matches("bg\\d{3}\\.png")) {
+                    files[BGFile.IMAGE.ordinal()] = "./org/img/bg/"+imageName;
+                } else {
+                    files[BGFile.IMAGE.ordinal()] = "./org/img/bgEffect/"+fileObject.get("image").getAsString();
+                }
             }
 
             if(fileObject.has("imgcut")) {
@@ -408,10 +414,12 @@ public class BGEffectSegment {
                     throw new IllegalStateException("E/BGEffectSegment | "+json+" / Unhandled snap mode for equallySpaced tag : " + obj.get("base").getAsString());
             }
 
-            spacer = new BGEffectSpacer(obj.get("pos1").getAsInt(), obj.get("pos2").getAsInt(), obj.get("value").getAsInt(), snap);
+            System.out.println(json+"->"+snap);
 
-            if(!count.isSingledValue() || count.getPureRangeI() != 1) {
-                System.out.println("W/BGEffectSegment | "+json+" / Count isn't 1 while spacer is defined -> Has Random Value : "+!count.isSingledValue()+" | Count gotten : "+count.getPureRangeI());
+            spacer = new BGEffectSpacer(obj.get("pos1").getAsInt(), obj.get("pos2").getAsInt(), obj.get("value").getAsInt(), snap, bgID);
+
+            if(count.hasRandomValue() || count.getPureRangeI() != 1) {
+                System.out.println("W/BGEffectSegment | "+json+" / Count isn't 1 while spacer is defined -> Has Random Value : "+ count.hasRandomValue() +" | Count gotten : "+count.getPureRangeI());
             }
         } else {
             spacer = null;

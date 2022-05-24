@@ -15,19 +15,19 @@ import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class BGEffectHandler {
-    private static final P origin = new P(0, 0);
+    protected static final P origin = new P(0, 0);
 
     private final BGEffectSegment segment;
     private final BGEffectAnim[] anims;
 
     private int count;
 
-    private final List<EAnimD<BGEffectAnim.BGEffType>> animation = new ArrayList<>();
+    protected final List<EAnimD<BGEffectAnim.BGEffType>> animation = new ArrayList<>();
 
-    private P[] position;
-    private double[] angle;
-    private P[] size;
-    private int[] opacity;
+    protected P[] position;
+    protected double[] angle;
+    protected P[] size;
+    protected int[] opacity;
     /**
      * false if behind, true if front
      */
@@ -400,11 +400,15 @@ public class BGEffectHandler {
 
         for(int i = 0; i < count; i++) {
             if(!zOrder[i]) {
-                EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
+                if(segment.spacer != null) {
+                    segment.spacer.drawWithSpacer(g, rect, siz, this, i);
+                } else {
+                    EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
 
-                g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
-                g.rotate(angle[i]);
-                anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
+                    g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
+                    g.rotate(angle[i]);
+                    anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
+                }
             }
 
             g.setTransform(at);
@@ -418,11 +422,15 @@ public class BGEffectHandler {
 
         for(int i = 0; i < count; i++) {
             if(zOrder[i]) {
-                EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
+                if(segment.spacer != null) {
+                    segment.spacer.drawWithSpacer(g, rect, siz, this, i);
+                } else {
+                    EAnimD<BGEffectAnim.BGEffType> anim = animation.get(i);
 
-                g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
-                g.rotate(angle[i]);
-                anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
+                    g.translate(convertP(position[i].x, siz) + rect.x, convertP(position[i].y, siz) - rect.y);
+                    g.rotate(angle[i]);
+                    anim.drawBGEffect(g, origin, siz * 0.8, opacity[i], size[i].x, size[i].y);
+                }
             }
 
             g.setTransform(at);
