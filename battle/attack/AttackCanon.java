@@ -14,8 +14,6 @@ public class AttackCanon extends AttackSimple {
 		waveType |= WT_CANN;
 		if (canon == 16)
 			touch = TCH_UG | TCH_N;
-		if (canon == 16 || canon == 32)
-			touch |= TCH_CORPSE;
 	}
 
 }

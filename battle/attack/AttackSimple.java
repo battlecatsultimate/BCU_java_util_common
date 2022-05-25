@@ -32,7 +32,7 @@ public class AttackSimple extends AttackAb {
 		this(attacker, ent, ATK, tr, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
 		touch = mask.getTarget();
 
-		if((attacker.getAbi() & AB_CKILL) > 0)
+		if((eab & AB_CKILL) > 0)
 			touch |= TCH_CORPSE;
 
 		dire *= mask.getDire();
