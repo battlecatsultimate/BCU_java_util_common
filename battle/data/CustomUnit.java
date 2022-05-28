@@ -93,7 +93,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 					System.arraycopy(i, 0, j, 0, 13);
 					pcoin.info.add(j);
 				}
-				pcoin.update();
 			}
 		}
 	}
