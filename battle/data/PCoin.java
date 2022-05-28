@@ -79,8 +79,6 @@ public class PCoin extends Data {
 			lvs.add(max.get(i));
 
 		for (int i = 0; i < info.size(); i++) {
-			if (du instanceof CustomUnit && max.get(i + 1) == 0)
-				continue;
 			if (info.get(i)[0] >= PC_CORRES.length) {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
@@ -286,7 +284,7 @@ public class PCoin extends Data {
 			max.add(ints[1]);
 	}
 
-	private boolean allZero(String[] data, int index) {
+	private static boolean allZero(String[] data, int index) {
 		for(int i = index; i < index + 12; i++) {
 			if(!data[i].trim().equals("0")) {
 				return false;

@@ -91,6 +91,8 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 				for (int[] i : p.info) {
 					int[] j = new int[13];
 					System.arraycopy(i, 0, j, 0, 13);
+					j[1] = Math.max(1, j[1]);
+
 					pcoin.info.add(j);
 				}
 			}
