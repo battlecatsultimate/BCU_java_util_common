@@ -988,7 +988,7 @@
         "abbr_name" : "마법 쉴드",
         "full_name" : "마법 쉴드",
         "tooltip" : "설정된 값보다 높은 공격을 무시하거나 그 설정된 값의 공격력으로 받아들입니다",
-        "format" : "(prob)% 확률료 [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){[(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 로 받아들인다}]",
+        "format" : "(prob)% 확률료 [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){(dmg) 로 받아들인다}]",
         "class" : {
             "prob" : {
                 "name" : "확률",
@@ -1169,7 +1169,7 @@
         "abbr_name": "성 파괴가 특기",
         "full_name": "성 파괴가 특기",
         "tooltip": "적 성에게 추가 혹은 감소된 데미지를 가하도록 하는 능력입니다",
-        "format": "[성 파괴(mult>0){가 특기}(mult<0){에 약함}] (_left)적 성에게 (_abs(mult))% 만큼 [(mult>0){추가}(mult<0){감소된}] 데미지(_right)",
+        "format": "성 파괴[(mult>0){가 특기}(mult<0){에 약함}] (_left)적 성에게 (_abs(mult))% 만큼 [(mult>0){추가}(mult<0){감소된}] 데미지(_right)",
         "class": {
             "mult": {
                 "name": "퍼센트",
