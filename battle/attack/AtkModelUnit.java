@@ -77,6 +77,7 @@ public class AtkModelUnit extends AtkModelEntity {
 		}
 		if (e.data instanceof DataUnit)
 			for (int j : BCShareable) proc.getArr(j).set(e.getProc().getArr(j));
+		proc.getArr(P_BSTHUNT).set(e.getProc().getArr(P_BSTHUNT));
 
 		extraAtk(ind);
 		if (e.status[P_WEAK][0] > 0)
