@@ -205,4 +205,9 @@ public class Replay extends Data {
 		Data.err(() -> JsonDecoder.inject(e, Treasure.class, lu.t()));
 	}
 
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		if (sniperCoords == null)
+			sniperCoords = new HashMap<>();
+	}
 }
