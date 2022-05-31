@@ -1002,7 +1002,6 @@ public abstract class Entity extends AbEntity {
 
 	private static class Barrier extends BattleObj {
 		private final Entity e;
-
 		private Barrier (Entity ent) { e = ent; }
 
 		private void update() {
@@ -1373,13 +1372,13 @@ public abstract class Entity extends AbEntity {
 		aam = AtkModelEntity.getUnitAtk(this, tAtk, lvMagnif, pc, lv);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
-		status[P_BARRIER][0] = getProc().BARRIER.health;
+		status[P_BARRIER][0] = getProc().BARRIER.type.magnif ? (int) (getProc().BARRIER.health * lvMagnif) : getProc().BARRIER.health;
 		status[P_BARRIER][1] = getProc().BARRIER.regentime;
 		status[P_BARRIER][2] = getProc().BARRIER.timeout;
 		status[P_BURROW][0] = getProc().BURROW.count;
 		status[P_REVIVE][0] = getProc().REVIVE.count;
-		status[P_DMGCUT][0] = getProc().DMGCUT.dmg;
-		status[P_DMGCAP][0] = getProc().DMGCAP.dmg;
+		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (lvMagnif * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
+		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (lvMagnif * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
 		sealed.BURROW.set(data.getProc().BURROW);
 		sealed.REVIVE.count = data.getProc().REVIVE.count;
 		sealed.REVIVE.time = data.getProc().REVIVE.time;

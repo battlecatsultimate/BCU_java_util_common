@@ -397,7 +397,7 @@ public class UserProfile {
 	 */
 	private boolean add(UserPack pack) {
 		packlist.add(pack);
-		ArrayList<String> deps = pack.editable ? pack.desc.dependency : pack.PreGetDependencies();
+		ArrayList<String> deps = pack.editable ? pack.desc.dependency : pack.preGetDependencies();
 
 		if (!canAdd(deps))
 			return false;

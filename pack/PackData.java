@@ -402,7 +402,7 @@ public abstract class PackData implements IndexContainer {
 			UserProfile.unregister(getSID());
 		}
 
-		public ArrayList<String> PreGetDependencies() {
+		public ArrayList<String> preGetDependencies() {
 			ArrayList<String> deps = new ArrayList<>();
 			JsonArray jarr = elem.getAsJsonObject().getAsJsonObject("desc").get("dependency").getAsJsonArray();
 			for (int i = 0; i < jarr.size(); i++)
