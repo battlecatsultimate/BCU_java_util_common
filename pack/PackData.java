@@ -1,5 +1,6 @@
 package common.pack;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import common.CommonStatic;
 import common.battle.Treasure;
@@ -399,6 +400,14 @@ public abstract class PackData implements IndexContainer {
 
 		public void unregister() {
 			UserProfile.unregister(getSID());
+		}
+
+		public ArrayList<String> PreGetDependencies() {
+			ArrayList<String> deps = new ArrayList<>();
+			JsonArray jarr = elem.getAsJsonObject().getAsJsonObject("desc").get("dependency").getAsJsonArray();
+			for (int i = 0; i < jarr.size(); i++)
+				deps.add(jarr.get(i).getAsString());
+			return deps;
 		}
 
 		public void load() throws Exception {

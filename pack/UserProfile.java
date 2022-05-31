@@ -213,9 +213,10 @@ public class UserProfile {
 				}
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
 		int tot = queue.size();
-		int ind = 0;
-		while (queue.removeIf(profile::add))
-			prog.accept(1.0 * (ind++) / tot);
+		while (queue.size() > 0) {
+			queue.removeIf(profile::add);
+			prog.accept((1.0 * (tot - queue.size())) / tot);
+		}
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 
@@ -323,7 +324,6 @@ public class UserProfile {
 		profile.pending = new HashMap<>();
 
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
-
 		if (packs.exists()) {
 			File[] fs = packs.listFiles();
 
@@ -348,7 +348,9 @@ public class UserProfile {
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
 
 		profile.packlist.addAll(profile.failed);
-		queue.removeIf(profile::add);
+		while (queue.size() > 0) {
+			queue.removeIf(profile::add);
+		};
 
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
@@ -395,7 +397,9 @@ public class UserProfile {
 	 */
 	private boolean add(UserPack pack) {
 		packlist.add(pack);
-		if (!canAdd(pack))
+		ArrayList<String> deps = pack.editable ? pack.desc.dependency : pack.PreGetDependencies();
+
+		if (!canAdd(deps))
 			return false;
 		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null))) {
 			failed.add(pack);
@@ -405,8 +409,8 @@ public class UserProfile {
 		return true;
 	}
 
-	private boolean canAdd(UserPack s) {
-		for (String dep : s.desc.dependency)
+	private boolean canAdd(ArrayList<String> deps) {
+		for (String dep : deps)
 			if (!packmap.containsKey(dep))
 				return false;
 		return true;
