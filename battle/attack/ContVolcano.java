@@ -126,4 +126,8 @@ public class ContVolcano extends ContAb {
 		}
 	}
 
+	@Override
+	public boolean IMUTime() {
+		return (v.attacker.getAbi() & AB_TIMEI) != 0;
+	}
 }

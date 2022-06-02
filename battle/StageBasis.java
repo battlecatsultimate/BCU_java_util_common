@@ -59,7 +59,10 @@ public class StageBasis extends BattleObj {
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
 	public boolean shock = false;
-	public int time, s_stop, temp_s_stop;
+	public int time, s_stop, temp_s_stop, inten, temp_inten;
+	public int sn_stop, sn_temp_stop;
+	public float n_inten, temp_n_inten;
+
 	public int respawnTime, unitRespawnTime;
 	public Background bg;
 	public BackgroundEffect bgEffect;
@@ -446,6 +449,15 @@ public class StageBasis extends BattleObj {
 			return e.t == 0;
 		});
 
+		if (temp_inten > 0) {
+			inten++;
+			if (inten % temp_inten == 0) {
+				temp_s_stop = s_stop - 1;
+				s_stop = 0;
+				inten = 0;
+			}
+		}
+
 		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.preUpdate();
 			ebase.update();
@@ -502,17 +514,15 @@ public class StageBasis extends BattleObj {
 			tempe.forEach(EntCont::update);
 		}
 
-		for (int i = 0; i < le.size(); i++)
-			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).preUpdate();
-
-		for (int i = 0; i < le.size(); i++)
-			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).update();
+		if (temp_n_inten > 0)
+			n_inten += temp_n_inten;
+		updateEntities(s_stop == 0);
+		while (n_inten >= 1) {
+			updateEntities(false);
+			n_inten--;
+		}
 
 		if (s_stop == 0) {
-			tlw.forEach(ContAb::update);
-			lw.forEach(ContAb::update);
 			lea.forEach(EAnimCont::update);
 			ebaseSmoke.forEach(EAnimCont::update);
 			ubaseSmoke.forEach(EAnimCont::update);
@@ -590,6 +600,18 @@ public class StageBasis extends BattleObj {
 			s_stop--;
 		s_stop = Math.max(s_stop, temp_s_stop);
 		temp_s_stop = 0;
+		if (s_stop == 0)
+			inten = temp_inten = 0;
+
+		if (sn_stop > 0)
+			sn_stop--;
+		sn_stop = Math.max(sn_stop, sn_temp_stop);
+		sn_temp_stop = 0;
+		if (sn_stop == 0) {
+			n_inten = 0;
+			temp_n_inten = 0;
+		}
+
 		cannon = Math.min(maxCannon, Math.max(0, cannon));
 		money = Math.min(maxMoney, Math.max(0, money));
 
@@ -615,6 +637,22 @@ public class StageBasis extends BattleObj {
 				selectedUnit[1] = -1;
 			}
 		}
+	}
+
+	private void updateEntities(boolean time) {
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).preUpdate();
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update();
+
+		for (int i = 0; i < tlw.size(); i++)
+			if (time || tlw.get(i).IMUTime())
+				tlw.get(i).update();
+		for (int i = 0; i < lw.size(); i++)
+			if (time || lw.get(i).IMUTime())
+				lw.get(i).update();
 	}
 
 	private void updateTheme() {

@@ -419,6 +419,10 @@
             "time": {
                 "name": "시간",
                 "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "intensity": {
+                "name": "intensity",
+                "tooltip": "The power of the timestop. If the intensity is lower than the duration, there will be certain intervals where units will be able to move. Set to negative to speed up entities with time stop immunity"
             }
         }
     },

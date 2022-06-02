@@ -429,7 +429,7 @@
     "abbr_name": "時間停止",
     "full_name": "時間停止",
     "tooltip": "能力の動きを止める能力と違い、この能力は波動、お金の取得、敵と味方の再生産含む全てを停止します。",
-    "format": "(prob)%の確率で(_dispTime(time))の間時間を停止させる",
+    "format": "(prob)%の確率で(_dispTime(time))の間時間を停止させる (_left)強度: (intensity)(_right)",
     "class": {
       "prob": {
         "name": "確率",
@@ -438,6 +438,10 @@
       "time": {
         "name": "継続期間",
         "tooltip": null
+      },
+      "intensity": {
+        "name": "強度",
+        "tooltip": "時間停止の強度のこと。強度が継続期間より低い場合、ユニットが移動できる間隔が一定になる。マイナスに設定すると時間停止無効の実体が早くなります。"
       }
     }
   },

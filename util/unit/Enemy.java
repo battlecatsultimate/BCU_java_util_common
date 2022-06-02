@@ -201,6 +201,9 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 					proc.ATKBASE.mult = 300;
 				enemy.abi = Data.reorderAbi(enemy.abi, 1);
 			}
+			if (UserProfile.isOlderPack(pack, "0.6.6.0") && enemy.getProc().TIME.prob > 0)
+				enemy.getProc().TIME.intensity = enemy.getProc().TIME.time;
+
 			if (enemy.getProc().SUMMON.prob > 0)
 				enemy.getProc().SUMMON.form = 1; //There for imports
 		}

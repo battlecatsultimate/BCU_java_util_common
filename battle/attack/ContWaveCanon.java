@@ -100,4 +100,8 @@ public class ContWaveCanon extends ContWaveAb {
 		new ContWaveCanon(new AttackWave(atk.attacker, atk, np, NYRAN[canid]), np, canid, maxt - t, waves);
 	}
 
+	@Override
+	public boolean IMUTime() {
+		return false;
+	}
 }

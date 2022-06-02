@@ -205,6 +205,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						proc.ATKBASE.mult = 300;
 					form.abi = Data.reorderAbi(form.abi, 1);
 				}
+				if (UserProfile.isOlderPack(pack, "0.6.6.0") && form.getProc().TIME.prob > 0)
+					form.getProc().TIME.intensity = form.getProc().TIME.time;
 
 				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form == 0) {
 					form.getProc().SUMMON.form = 1;

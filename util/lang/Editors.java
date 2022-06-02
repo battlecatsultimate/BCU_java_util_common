@@ -375,7 +375,18 @@ public class Editors {
 
 		map().put("SNIPER", prob);
 
-		map().put("TIME", pt);
+		map().put("TIME", new EditControl<>(Proc.TIME.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob > 0) {
+				t.time = Math.max(1, t.time);
+				t.intensity = Math.min(t.intensity, t.time);
+				if (t.intensity == 0)
+					t.intensity = 1;
+			} else {
+				t.time = 0;
+				t.intensity = 0;
+			}
+		}));
 
 		map().put("SEAL", pt);
 

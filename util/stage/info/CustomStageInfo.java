@@ -4,7 +4,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
-import common.util.stage.MapColc;
+import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Stage;
 
 import java.text.DecimalFormat;
@@ -29,7 +29,7 @@ public class CustomStageInfo implements StageInfo {
     public final ArrayList<Stage> stages = new ArrayList<>();
     @JsonField(generic = Float.class)
     public final ArrayList<Float> chances = new ArrayList<>();
-    public byte totalChance;
+    public short totalChance;
 
     @JsonClass.JCConstructor
     public CustomStageInfo() {
@@ -39,7 +39,7 @@ public class CustomStageInfo implements StageInfo {
     public CustomStageInfo(Stage st) {
         this.st = st;
         st.info = this;
-        ((MapColc.PackMapColc)st.getCont().getCont()).si.add(this);
+        ((PackMapColc)st.getCont().getCont()).si.add(this);
     }
 
     @Override
@@ -82,16 +82,31 @@ public class CustomStageInfo implements StageInfo {
         float maxChance = 0;
         for (int i = 0; i < chances.size(); i++)
             maxChance += chances.get(i);
+        totalChance = (short)maxChance;
+
         if (maxChance > 100)
             setTotalChance((byte) 100);
-        else
-            totalChance = (byte)maxChance;
     }
 
     public void setTotalChance(byte newChance) {
         for (int i = 0; i < chances.size(); i++)
             chances.set(i, (chances.get(i) / totalChance) * newChance);
         totalChance = newChance;
+    }
+
+    public void equalizeChances() {
+        for (int i = 0; i < chances.size(); i++)
+            chances.set(i, (float)totalChance / chances.size());
+    }
+
+    /**
+     * Called to detach the followup from the stage and remove it from the list storing it
+     */
+    public void destroy() {
+        stages.clear();
+        chances.clear();
+        ((PackMapColc)st.getCont().getCont()).si.remove(this);
+        st.info = null;
     }
 
     @JsonDecoder.OnInjected

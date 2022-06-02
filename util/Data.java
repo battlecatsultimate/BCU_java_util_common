@@ -382,6 +382,16 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class TIME extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int intensity;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class REVIVE extends ProcItem {
 
 			@JsonClass(noTag = NoTag.LOAD)
@@ -680,7 +690,7 @@ public class Data {
 		@Order(14)
 		public final SUMMON SUMMON = new SUMMON();
 		@Order(15)
-		public final PT TIME = new PT();
+		public final TIME TIME = new TIME();
 		@Order(16)
 		public final PROB SNIPER = new PROB();
 		@Order(17)
