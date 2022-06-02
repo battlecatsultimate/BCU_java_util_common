@@ -13,6 +13,7 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.MultiLangData;
+import common.util.stage.info.DefStageInfo;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -55,7 +56,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 			int[] ints = CommonStatic.parseIntsN(line.split("//")[0]);
 			if (ints.length <= 4)
 				return;
-			s.info = new Stage.StageInfo(this, s, ints);
+			s.info = new DefStageInfo(this, s, ints);
 		}
 
 	}

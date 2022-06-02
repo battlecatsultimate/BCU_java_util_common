@@ -13,6 +13,7 @@ import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.stage.info.DefStageInfo;
 
 import java.util.*;
 
@@ -164,7 +165,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				while(groupLine != null && !groupLine.isEmpty()) {
 					int[] groupData = CommonStatic.parseIntsN(groupLine);
 
-					double maxPercentage = groupData[0];
+					float maxPercentage = groupData[0];
 
 					StageMap sm = getMap(groupData[1]);
 
@@ -195,7 +196,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					exLength /= 2;
 
 					Stage[] exStage = new Stage[exLength];
-					double[] exChance = new double[exLength];
+					float[] exChance = new float[exLength];
 
 					for(int i = 0; i < exLength; i++) {
 						if(groupData[i * 2 + 3] >= exLottery.size()) {
@@ -205,7 +206,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 						}
 
 						exStage[i] = exLottery.get(groupData[i * 2 + 3]);
-						exChance[i] = maxPercentage * (groupData[i * 2 + 4] / 100.0);
+						exChance[i] = maxPercentage * (groupData[i * 2 + 4] / 100f);
 
 						maxPercentage -= exChance[i];
 					}
@@ -216,8 +217,9 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 						exChance[i] /= maxPercentage / 100;
 					}
 
-					s.info.exStages = exStage;
-					s.info.exChances = exChance;
+					DefStageInfo def = ((DefStageInfo)s.info);
+					def.exStages = exStage;
+					def.exChances = exChance;
 
 					groupLine = qs.poll();
 				}
