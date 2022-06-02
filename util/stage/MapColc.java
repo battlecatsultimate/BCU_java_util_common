@@ -13,6 +13,7 @@ import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.stage.info.CustomStageInfo;
 import common.util.stage.info.DefStageInfo;
 
 import java.util.*;
@@ -398,6 +399,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 	public static class PackMapColc extends MapColc {
 
 		public final UserPack pack;
+		@JsonField(generic = CustomStageInfo.class)
+		public ArrayList<CustomStageInfo> si = new ArrayList<>();
 
 		public PackMapColc(UserPack pack) {
 			this.pack = pack;
