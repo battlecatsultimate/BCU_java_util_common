@@ -86,6 +86,10 @@ public abstract class CustomEntity extends DataEntity {
 			return rev;
 		if (ind == atks.length + 1)
 			return res;
+		if (ind == atks.length + 2)
+			return bur;
+		if (ind == atks.length + 3)
+			return resu;
 		return null;
 	}
 

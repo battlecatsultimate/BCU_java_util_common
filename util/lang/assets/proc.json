@@ -451,7 +451,7 @@
         "abbr_name": "time",
         "full_name": "Stop Time",
         "tooltip": "Unlike Stop, this ability freezes everything including waves, money gain, cat and enemy cool down, etc",
-        "format": "(prob)% chance to [(inten>0){stop}(inten<0){speed up}] time for (_dispTime(time)), with a intensity of (_abs(intensity))",
+        "format": "(prob)% chance to [(intensity>0){stop}(intensity<0){speed up}] time for (_dispTime(time)), with a intensity of (_abs(intensity))",
         "class": {
             "prob": {
                 "name": "chance",
