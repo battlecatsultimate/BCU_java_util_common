@@ -2287,6 +2287,8 @@ public abstract class Entity extends AbEntity {
 			acted = true;
 			// burrow down
 			status[P_BURROW][2]--;
+			if (data.getGouge() != null && anim.anim.len() - status[P_BURROW][2] == data.getGouge().pre)
+				basis.getAttack(aam.getAttack(data.getAtkCount() + 2));
 			if (status[P_BURROW][2] == 0) {
 				kbTime = -3;
 				anim.setAnim(UType.BURROW_MOVE, true);
@@ -2308,6 +2310,8 @@ public abstract class Entity extends AbEntity {
 			// burrow up
 			acted = true;
 			status[P_BURROW][2]--;
+			if (data.getResurface() != null && anim.anim.len() - status[P_BURROW][2] == data.getResurface().pre)
+				basis.getAttack(aam.getAttack(data.getAtkCount() + 3));
 			if (status[P_BURROW][2] <= 0)
 				kbTime = 0;
 		}

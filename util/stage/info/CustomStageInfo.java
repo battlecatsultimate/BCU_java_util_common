@@ -78,6 +78,21 @@ public class CustomStageInfo implements StageInfo {
         return FChances;
     }
 
+    public void remove(Stage s) {
+        remove(stages.indexOf(s));
+    }
+
+    public void remove(int ind) {
+        if (ind == -1 || ind >= stages.size())
+            return;
+        if (stages.size() == 1) {
+            destroy();
+        } else {
+            stages.remove(ind);
+            chances.remove(ind);
+        }
+    }
+
     public void checkChances() {
         float maxChance = 0;
         for (int i = 0; i < chances.size(); i++)
