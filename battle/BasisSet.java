@@ -164,7 +164,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	}
 
 	private static List<BasisSet> listRaw() {
-		return UserProfile.getStatic("BasisSet_list", () -> new ArrayList<>());
+		return UserProfile.getStatic("BasisSet_list", ArrayList::new);
 	}
 
 	@JsonField(gen = GenType.FILL)
@@ -193,6 +193,13 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		setCurrent(this);
 		for (BasisLU blu : ref.lb)
 			lb.add(sele = new BasisLU(this, blu));
+	}
+
+	public BasisLU add (int ind) {
+		if (ind == -1 || ind >= lb.size())
+			return add();
+		lb.add(ind, sele = new BasisLU(this));
+		return sele;
 	}
 
 	public BasisLU add() {
