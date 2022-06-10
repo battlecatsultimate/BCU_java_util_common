@@ -109,8 +109,8 @@ public class MaAnim extends Data implements BattleStatic {
 
 	protected void update(int f, EAnimD<?> eAnim, boolean rotate) {
 		if (rotate)
-			f %= max;
-		if (f == 0 || rotate && f % max == 0) {
+			f %= max + 1;
+		if (f == 0) {
 			for (EPart e : eAnim.ent)
 				e.setValue();
 		}
@@ -122,34 +122,22 @@ public class MaAnim extends Data implements BattleStatic {
 			boolean prot = rotate || loop == -1;
 			int frame = 0;
 			if (prot) {
-				int mf = loop == -1 ? smax : max;
+				int mf = loop == -1 ? smax : max + 1;
 				frame = mf == 0 ? 0 : (f + parts[i].off) % mf;
-				if (loop > 0 && lmax != 0) {
-					if (frame > fir + loop * lmax) {
-						parts[i].ensureLast(eAnim.ent);
-						continue;
-					}
-					if (frame <= fir)
-						;
-					else if (frame < fir + loop * lmax)
-						frame = fir + (frame - fir) % lmax;
-					else
-						frame = smax;
-				}
 			} else {
 				frame = f + parts[i].off;
-				if (loop > 0 && lmax != 0) {
-					if (frame > fir + loop * lmax) {
-						parts[i].ensureLast(eAnim.ent);
-						continue;
-					}
-					if (frame <= fir)
-						;
-					else if (frame < fir + loop * lmax)
-						frame = fir + (frame - fir) % lmax;
-					else
-						frame = smax;
+			}
+			if (loop > 0 && lmax != 0) {
+				if (frame > fir + loop * lmax) {
+					parts[i].ensureLast(eAnim.ent);
+					continue;
 				}
+				if (frame <= fir)
+					;
+				else if (frame < fir + loop * lmax)
+					frame = fir + (frame - fir) % lmax;
+				else
+					frame = smax;
 			}
 			parts[i].update(frame, eAnim.ent);
 		}
