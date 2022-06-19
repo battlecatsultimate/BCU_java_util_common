@@ -2,11 +2,15 @@ package common.battle.attack;
 
 import common.battle.data.DataEnemy;
 import common.battle.entity.EEnemy;
+import common.battle.entity.EUnit;
 import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
 import common.pack.Identifier;
 import common.util.Data.Proc.SUMMON;
 import common.util.unit.AbEnemy;
+import common.util.unit.EForm;
+import common.util.unit.Unit;
+import org.jcodec.common.tools.MathUtil;
 
 public class AtkModelEnemy extends AtkModelEntity {
 
@@ -26,55 +30,79 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 @Override
 public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
-	AbEnemy ene = (AbEnemy) Identifier.get(proc.id);
-
-	if(ene == null)
-		return;
 	if (resist < 100) {
-		SUMMON.TYPE conf = proc.type;
+		if (proc.id == null || proc.id.cls != Unit.class) {
+			AbEnemy ene = Identifier.getOr(proc.id, AbEnemy.class);
+			SUMMON.TYPE conf = proc.type;
 
-		if (conf.same_health && ent.health <= 0)
-			return;
+			if (conf.same_health && ent.health <= 0)
+				return;
 
-		int time = proc.time;
-		int allow = b.st.data.allow(b, ene);
+			int time = proc.time;
+			int allow = b.st.data.allow(b, ene);
 
-		if (allow >= 0 || conf.ignore_limit) {
-			double ep = ent.pos + getDire() * proc.dis;
-			double mula = proc.mult * 0.01;
-			double mult = proc.mult * 0.01;
+			if (allow >= 0 || conf.ignore_limit) {
+				double ep = ent.pos + getDire() * proc.dis;
+				double mula = proc.mult * 0.01;
+				double mult = proc.mult * 0.01;
 
-			if (!conf.fix_buff) {
-				mult *= ((EEnemy) e).mult;
-				mula *= ((EEnemy) e).mula;
+				if (!conf.fix_buff) {
+					mult *= ((EEnemy) e).mult;
+					mula *= ((EEnemy) e).mula;
+				}
+
+				mula *= (100.0 - resist) / 100;
+				mult *= (100.0 - resist) / 100;
+
+				EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, 9, 0);
+
+				if (conf.random_layer)
+					ee.layer = (int) (b.r.nextDouble() * 9);
+				else
+					ee.layer = e.layer;
+
+				ee.group = allow;
+
+				if (ep < ee.data.getWidth())
+					ep = ee.data.getWidth();
+
+				if (ep > b.st.len - 800)
+					ep = b.st.len - 800;
+
+				ee.added(1, (int) ep);
+
+				b.tempe.add(new EntCont(ee, time));
+
+				if (conf.same_health)
+					ee.health = e.health;
+
+				ee.setSummon(conf.anim_type);
 			}
+		} else {
+			Unit u = Identifier.getOr(proc.id, Unit.class);
+			SUMMON.TYPE conf = proc.type;
+			if (conf.same_health && ent.health <= 0)
+				return;
+			int time = proc.time;
+			if (b.entityCount(-1) < b.max_num - u.forms[proc.form - 1].du.getWill() || conf.ignore_limit) {
+				int lvl = proc.mult;
+				lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
+				lvl *= (100.0 - resist) / 100;
 
-			mula *= (100.0 - resist) / 100;
-			mult *= (100.0 - resist) / 100;
+				double up = ent.pos + getDire() * proc.dis;
+				EForm ef = new EForm(u.forms[Math.max(proc.form - 1, 0)], lvl);
+				EUnit eu = ef.invokeEntity(b, lvl);
+				if (conf.same_health)
+					eu.health = e.health;
 
-			EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, 9, 0);
-
-			if (conf.random_layer)
-				ee.layer = (int) (b.r.nextDouble() * 9);
-			else
-				ee.layer = e.layer;
-
-			ee.group = allow;
-
-			if (ep < ee.data.getWidth())
-				ep = ee.data.getWidth();
-
-			if (ep > b.st.len - 800)
-				ep = b.st.len - 800;
-
-			ee.added(1, (int) ep);
-
-			b.tempe.add(new EntCont(ee, time));
-
-			if (conf.same_health)
-				ee.health = e.health;
-
-			ee.setSummon(conf.anim_type);
+				if (!conf.random_layer)
+					eu.layer = e.layer;
+				else
+					eu.layer = (int) (b.r.nextDouble() * 9);
+				eu.added(-1, (int) up);
+				b.tempe.add(new EntCont(eu, time));
+				eu.setSummon(conf.anim_type);
+			}
 		}
 	} else
 		ent.anim.getEff(INV);

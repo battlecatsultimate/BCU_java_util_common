@@ -314,12 +314,8 @@ public abstract class CustomEntity extends DataEntity {
 			inds[i] = temp.indexOf(ce.atks[i]);
 		}
 		atks = new AtkDataModel[ce.atks.length];
-		for (int i = 0; i < atks.length; i++) {
+		for (int i = 0; i < atks.length; i++)
 			atks[i] = tnew.get(inds[i]);
-
-			if (!ce.getClass().equals(getClass()))
-				atks[i].getProc().SUMMON.id = null;
-		}
 	}
 
 	@JsonDecoder.OnInjected

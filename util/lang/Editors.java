@@ -216,6 +216,7 @@ public class Editors {
 			this.obj = obj;
 			for (Editor e : list)
 				e.setData();
+			updateVisibility();
 		}
 
 		public void updateVisibility() {
@@ -408,7 +409,7 @@ public class Editors {
 			} else {
 				t.time = Math.max(0, t.time);
 				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
-				if (!edi.isEnemy()) {
+				if (t.id == null || t.id.cls == Unit.class) {
 					Unit u = Identifier.getOr(t.id, Unit.class);
 					t.form = MathUtil.clip(t.form, 1, u.forms.length);
 					if (!t.type.fix_buff)
