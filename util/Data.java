@@ -4,12 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.FieldOrder;
+import common.io.json.*;
 import common.io.json.FieldOrder.Order;
-import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
@@ -475,7 +472,7 @@ public class Data {
 				@Order(3)
 				public boolean same_health;
 				@Order(4)
-				public boolean random_layer;
+				public boolean bond_hp;
 				@Order(5)
 				public boolean on_hit;
 				@Order(6)
@@ -490,12 +487,18 @@ public class Data {
 			@Order(2)
 			public int dis;
 			@Order(3)
-			public int mult;
+			public int max_dis;
 			@Order(4)
-			public TYPE type = new TYPE();
+			public int mult;
 			@Order(5)
-			public int time;
+			public int min_layer;
 			@Order(6)
+			public int max_layer;
+			@Order(7)
+			public TYPE type = new TYPE();
+			@Order(8)
+			public int time;
+			@Order(9)
 			public int form;
 		}
 

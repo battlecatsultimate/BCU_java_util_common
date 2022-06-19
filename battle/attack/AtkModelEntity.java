@@ -237,7 +237,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			if (getProc(ind).TIME.prob != 0 && (getProc(ind).TIME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).TIME.prob)) {
 				if (getProc(ind).TIME.intensity > 0) {
 					b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind).TIME.time);
-					b.temp_inten = (int) ((double) getProc(ind).TIME.intensity / b.temp_s_stop * b.temp_s_stop);
+					b.temp_inten = getProc(ind).TIME.intensity;
 				} else {
 					b.sn_temp_stop = Math.max(b.sn_temp_stop, getProc(ind).TIME.time);
 					b.temp_n_inten = (float)Math.abs(getProc(ind).TIME.intensity) / b.sn_temp_stop;

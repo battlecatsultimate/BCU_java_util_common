@@ -1208,11 +1208,28 @@ public abstract class Entity extends AbEntity {
 
 	}
 
+	private static class SummonManager extends BattleObj {
+		public List<Entity> children = new ArrayList<>();
+
+		public void damaged(AttackAb atk, int dmg, boolean proc) {
+			for (int i = 0; i < children.size(); i++) {
+				if (proc)
+					children.get(i).processProcs(atk);
+				children.get(i).damage += dmg;
+			}
+		}
+		public void update() {
+			children.removeIf(e -> e.anim.dead == 0);
+		}
+	}
+
 	public final AnimManager anim;
 
 	private final AtkManager atkm;
 
 	private final ZombX zx = new ZombX(this);
+
+	public final SummonManager bondTree = new SummonManager();
 
 	/**
 	 * game engine, contains environment configuration
@@ -1400,7 +1417,7 @@ public abstract class Entity extends AbEntity {
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;
 
-		if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
+		if (anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
 			return;
 
 		Proc.CANNI cRes = getProc().IMUCANNON;
@@ -1515,14 +1532,14 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if(!shieldContinue) {
-			if(atk.getProc().SHIELDBREAK.prob > 0) {
+		if (!shieldContinue) {
+			if (atk.getProc().SHIELDBREAK.prob > 0) {
 				currentShield = 0;
 
 				anim.getEff(SHIELD_BREAKER);
 
 				shieldContinue = true;
-			} else if(dmg >= currentShield) {
+			} else if (dmg >= currentShield) {
 				currentShield = 0;
 
 				anim.getEff(SHIELD_BROKEN);
@@ -1568,11 +1585,11 @@ public abstract class Entity extends AbEntity {
 		if (this instanceof EEnemy)
 			status[P_BOUNTY][0] = atk.getProc().BOUNTY.mult;
 
-		if(atk.atk < 0)
+		if (atk.atk < 0)
 			anim.getEff(HEAL);
 
 		//75.0 is guessed value compared from BC
-		if(atk.isLongAtk || atk instanceof AttackVolcano)
+		if (atk.isLongAtk || atk instanceof AttackVolcano)
 			anim.smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
 			anim.smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
@@ -1580,6 +1597,7 @@ public abstract class Entity extends AbEntity {
 		anim.smokeLayer = (int) (layer + 3 - basis.r.nextDouble() * -6);
 		anim.smokeX = (int) (pos + 25 - basis.r.nextDouble() * -50);
 
+		bondTree.damaged(atk, dmg, proc);
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
@@ -1642,9 +1660,13 @@ public abstract class Entity extends AbEntity {
 				}
 			}
 		});
+		if (proc)
+			processProcs(atk);
+	}
 
+	private void processProcs(AttackAb atk) {
 		// process proc part
-		if (!proc || !(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
+		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -1938,7 +1960,7 @@ public abstract class Entity extends AbEntity {
 	 * Sets the animation that will be used for the summon
 	 * @param conf The type of animation used
 	 */
-	public void setSummon(int conf) {
+	public void setSummon(int conf, Entity bond) {
 		// conf 1
 		if (conf == 1) {
 			kb.kbType = INT_WARP;
@@ -1955,6 +1977,11 @@ public abstract class Entity extends AbEntity {
 			kbTime = -3;
 			status[P_BURROW] = new int[PROC_WIDTH];
 			bdist = -1;
+		}
+
+		if (bond != null) {
+			bond.bondTree.children.add(this);
+			bondTree.children.add(bond);
 		}
 	}
 
@@ -2106,6 +2133,7 @@ public abstract class Entity extends AbEntity {
 
 		//update animation
 		anim.update();
+		bondTree.update();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {

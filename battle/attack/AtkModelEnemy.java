@@ -31,7 +31,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 @Override
 public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 	if (resist < 100) {
-		if (proc.id == null || proc.id.cls != Unit.class) {
+		if (proc.id == null || proc.id.cls.isAssignableFrom(AbEnemy.class)) {
 			AbEnemy ene = Identifier.getOr(proc.id, AbEnemy.class);
 			SUMMON.TYPE conf = proc.type;
 
@@ -42,7 +42,8 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 			int allow = b.st.data.allow(b, ene);
 
 			if (allow >= 0 || conf.ignore_limit) {
-				double ep = ent.pos + getDire() * proc.dis;
+				int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextDouble() * (proc.max_dis - proc.dis + 1));
+				double ep = ent.pos + getDire() * dis;
 				double mula = proc.mult * 0.01;
 				double mult = proc.mult * 0.01;
 
@@ -54,12 +55,10 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 				mula *= (100.0 - resist) / 100;
 				mult *= (100.0 - resist) / 100;
 
-				EEnemy ee = ene.getEntity(b, acs, mult, mula, 0, 9, 0);
-
-				if (conf.random_layer)
-					ee.layer = (int) (b.r.nextDouble() * 9);
-				else
-					ee.layer = e.layer;
+				int minlayer = proc.min_layer, maxlayer = proc.max_layer;
+				if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
+					minlayer = maxlayer = e.layer;
+				EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0);
 
 				ee.group = allow;
 
@@ -76,7 +75,7 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 				if (conf.same_health)
 					ee.health = e.health;
 
-				ee.setSummon(conf.anim_type);
+				ee.setSummon(conf.anim_type, conf.bond_hp ? e : null);
 			}
 		} else {
 			Unit u = Identifier.getOr(proc.id, Unit.class);
@@ -89,19 +88,20 @@ public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 				lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
 				lvl *= (100.0 - resist) / 100;
 
-				double up = ent.pos + getDire() * proc.dis;
+				int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextDouble() * (proc.max_dis - proc.dis + 1));
+				double up = ent.pos + getDire() * dis;
+				int minlayer = proc.min_layer, maxlayer = proc.max_layer;
+				if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
+					minlayer = maxlayer = e.layer;
+
 				EForm ef = new EForm(u.forms[Math.max(proc.form - 1, 0)], lvl);
-				EUnit eu = ef.invokeEntity(b, lvl);
+				EUnit eu = ef.invokeEntity(b, lvl, minlayer, maxlayer);
 				if (conf.same_health)
 					eu.health = e.health;
 
-				if (!conf.random_layer)
-					eu.layer = e.layer;
-				else
-					eu.layer = (int) (b.r.nextDouble() * 9);
 				eu.added(-1, (int) up);
 				b.tempe.add(new EntCont(eu, time));
-				eu.setSummon(conf.anim_type);
+				eu.setSummon(conf.anim_type, conf.bond_hp ? e : null);
 			}
 		}
 	} else

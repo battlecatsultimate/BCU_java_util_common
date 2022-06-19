@@ -395,6 +395,7 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
 				t.dis = 0;
+				t.max_dis = 0;
 				t.id = null;
 				t.mult = 0;
 				t.time = 0;
@@ -404,23 +405,32 @@ public class Editors {
 				t.type.ignore_limit = false;
 				t.type.on_hit = false;
 				t.type.on_kill = false;
-				t.type.random_layer = false;
+				t.min_layer = 0;
+				t.max_layer = 0;
 				t.type.same_health = false;
 			} else {
 				t.time = Math.max(0, t.time);
+
+				int temp = t.dis;
+				t.dis = Math.min(temp, t.max_dis);
+				t.max_dis = Math.max(temp, t.max_dis);
+				temp = t.min_layer;
+				t.min_layer = Math.min(temp, t.max_layer);
+				t.max_layer = Math.max(temp, t.max_layer);
+
 				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
-				if (t.id == null || t.id.cls == Unit.class) {
+				if ((!edi.isEnemy() && t.id == null) || (t.id != null && t.id.cls == Unit.class)) {
 					Unit u = Identifier.getOr(t.id, Unit.class);
 					t.form = MathUtil.clip(t.form, 1, u.forms.length);
 					if (!t.type.fix_buff)
 						t.mult = MathUtil.clip(t.mult, -u.max - u.maxp, u.max + u.maxp);
 					else
 						t.mult = MathUtil.clip(t.mult, 1, u.max + u.maxp);
-					setComponentVisibility("SUMMON", true, 12);
+					setComponentVisibility("SUMMON", true, 15);
 				} else {
 					t.form = 1;
 					t.mult = Math.max(1, t.mult);
-					setComponentVisibility("SUMMON", false, 12);
+					setComponentVisibility("SUMMON", false, 15);
 				}
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
 			}
@@ -677,7 +687,7 @@ public class Editors {
 	}
 
 	private static void setComponentVisibility(String proc, boolean boo, int... fields) {
-		EditorGroup egg = eg.getOrDefault(proc, null);
+		EditorGroup egg = eg.get(proc);
 		if (egg == null) {
 			System.out.println("There is no proc named " + proc);
 			return;

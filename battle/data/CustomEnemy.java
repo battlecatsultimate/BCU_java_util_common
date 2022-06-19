@@ -8,7 +8,6 @@ import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
-import common.util.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -64,11 +63,11 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	public Set<AbEnemy> getSummon() {
 		Set<AbEnemy> ans = new TreeSet<>();
 		if (common) {
-			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || rep.proc.SUMMON.id.cls != Unit.class))
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || rep.proc.SUMMON.id.cls.isAssignableFrom(AbEnemy.class)))
 				ans.add(Identifier.getOr(rep.proc.SUMMON.id, AbEnemy.class));
 		} else
 			for (AtkDataModel adm : atks)
-				if (adm.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || rep.proc.SUMMON.id.cls != Unit.class))
+				if (adm.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || rep.proc.SUMMON.id.cls.isAssignableFrom(AbEnemy.class)))
 					ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
 		return ans;
 	}

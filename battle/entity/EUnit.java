@@ -56,18 +56,24 @@ public class EUnit extends Entity {
 
 	protected final Level level;
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level, PCoin pc) {
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, int layer0, int layer1, Level level, PCoin pc) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
+		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextDouble() * (layer1 - layer0 + 1));
+		traits = de.getTraits();
+		lvl = level.getLv();
+
+		this.level = level;
+	}
+
+	//used for waterblast
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0) {
+		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), null, null);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		traits = de.getTraits();
-		// if level is null, update HP to match level
-		if (level == null) {
-			lvl = 1;
-			health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
-		} else {
-			lvl = level.getLv();
-		}
-		this.level = level;
+
+		lvl = 1;
+		health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
+		level = null;
 	}
 
 	@Override

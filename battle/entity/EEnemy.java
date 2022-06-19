@@ -25,7 +25,7 @@ public class EEnemy extends Entity {
 		mula = atkMagnif;
 		mark = m;
 		isBase = mark <= -1;
-		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
+		layer = d0 == d1 ? d0 : d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
 		traits = de.getTraits();
 
 		canBurrow = mark != 1;
