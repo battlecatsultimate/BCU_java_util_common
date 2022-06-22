@@ -211,7 +211,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 					enemy.getProc().SUMMON.max_layer = -1;
 				}
 			}
-			if (enemy.getProc().SUMMON.prob > 0 && (enemy.getProc().SUMMON.id == null || !enemy.getProc().SUMMON.id.cls.isAssignableFrom(AbEnemy.class)))
+			if (enemy.getProc().SUMMON.prob > 0 && (enemy.getProc().SUMMON.id == null || !AbEnemy.class.isAssignableFrom(enemy.getProc().SUMMON.id.cls)))
 				enemy.getProc().SUMMON.form = 1; //There for imports
 		}
 	}

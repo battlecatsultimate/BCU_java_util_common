@@ -63,11 +63,11 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	public Set<AbEnemy> getSummon() {
 		Set<AbEnemy> ans = new TreeSet<>();
 		if (common) {
-			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || rep.proc.SUMMON.id.cls.isAssignableFrom(AbEnemy.class)))
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
 				ans.add(Identifier.getOr(rep.proc.SUMMON.id, AbEnemy.class));
 		} else
 			for (AtkDataModel adm : atks)
-				if (adm.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || rep.proc.SUMMON.id.cls.isAssignableFrom(AbEnemy.class)))
+				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
 					ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
 		return ans;
 	}

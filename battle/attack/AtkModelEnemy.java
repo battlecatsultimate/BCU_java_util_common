@@ -31,7 +31,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 @Override
 public void summon(SUMMON proc, Entity ent, Object acs, int resist) {
 	if (resist < 100) {
-		if (proc.id == null || proc.id.cls.isAssignableFrom(AbEnemy.class)) {
+		if (proc.id == null || AbEnemy.class.isAssignableFrom(proc.id.cls)) {
 			AbEnemy ene = Identifier.getOr(proc.id, AbEnemy.class);
 			SUMMON.TYPE conf = proc.type;
 
