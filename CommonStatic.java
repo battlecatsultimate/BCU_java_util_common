@@ -145,6 +145,11 @@ public class CommonStatic {
 		 * Make BCU show ex stage continuation pop-up if true
 		 */
 		public boolean exContinuation = false;
+
+		/**
+		 * Make EX stage pop-up shown considering real chance
+		 */
+		public boolean realEx = false;
 	}
 
 	public interface EditLink {
