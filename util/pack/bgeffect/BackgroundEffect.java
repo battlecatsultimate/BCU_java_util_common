@@ -92,11 +92,6 @@ public abstract class BackgroundEffect {
                         bg.effect = ref.effect;
                     else if(bg.effect >= 0 && ref.effect != -1) {
                         if(ref.effect >= 0) {
-                            if(bg.id.id == 1010) {
-                                System.out.println(bg.reference+"| "+bg.effect+" | "+ref.effect+" | "+ref.id.id);
-
-
-                            }
                             mixture.put(bg.id.id, new MixedBGEffect(asset.bgEffects.get(bg.effect), asset.bgEffects.get(ref.effect)));
 
                             bg.effect = -bg.id.id;
