@@ -575,6 +575,7 @@ public abstract class Entity extends AbEntity {
 		 */
 		private void kill() {
 			if ((e.getAbi() & AB_GLASS) != 0) {
+				e.dead = true;
 				dead = 0;
 				return;
 			}
@@ -645,6 +646,8 @@ public abstract class Entity extends AbEntity {
 					smoke.update(false);
 				}
 			}
+
+			e.dead = dead == 0;
 		}
 
 	}
@@ -1246,6 +1249,32 @@ public abstract class Entity extends AbEntity {
 	 */
 	public int group;
 
+	/**
+	 * Summoned entity without using summon ability<br>
+	 * This is for calculating specific entity's actual damage output during the battle<br>
+	 * This entity must not be removed from entity list in battle (Indicator of atk, hp, etc.)<br>
+	 * if this list isn't empty
+	 */
+	public final List<ContAb> summoned = new ArrayList<>();
+
+	/**
+	 * Confirmation that this entity is fully dead, not being able to be revived, etc.<br>
+	 * This variable is for counting entity number when summoned variable isn't empty
+	 */
+	public boolean dead = false;
+
+	/**
+	 * Damage given to targets<br>
+	 * If entity has area attack and attacked several targets, then formula will be dmg * number_of_targets<br>
+	 * Formula for calculating damage done to each target is min(atk, target_hp)
+	 */
+	public int damageGiven = 0;
+
+	/**
+	 * The time that this entity has been alive
+	 */
+	public int livingTime = 0;
+
 	private final KBManager kb = new KBManager(this);
 
 	/**
@@ -1659,6 +1688,14 @@ public abstract class Entity extends AbEntity {
 						anim.getEff(Data.P_COUNTER);
 				}
 			}
+
+			int d = FDmg;
+
+			if (status[P_ARMOR][0] > 0) {
+				d *= (100 + status[P_ARMOR][1]) / 100.0;
+			}
+
+			e.damageGiven += Math.min(d, health);
 		});
 		if (proc)
 			processProcs(atk);
@@ -1952,6 +1989,12 @@ public abstract class Entity extends AbEntity {
 			atkm.stopAtk();
 			anim.setAnim(UType.HB, true);
 		}
+
+		if(!dead || !summoned.isEmpty()) {
+			livingTime++;
+		}
+
+		summoned.removeIf(s -> !s.activate);
 
 		acted = false;
 	}

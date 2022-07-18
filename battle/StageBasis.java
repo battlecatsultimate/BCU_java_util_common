@@ -188,7 +188,7 @@ public class StageBasis extends BattleObj {
 		if (ebase instanceof EEnemy && d == 1)
 			ans += ((EEnemy)ebase).data.getWill() + 1;
 		for (Entity ent : le) {
-			if (ent.dire == d)
+			if (ent.dire == d && !ent.dead)
 				ans += ent.data.getWill() + 1;
 		}
 		return ans;
@@ -197,7 +197,7 @@ public class StageBasis extends BattleObj {
 	public int entityCount(int d, int g) {
 		int ans = 0;
 		for (Entity ent : le)
-			if (ent.dire == d && ent.group == g)
+			if (ent.dire == d && ent.group == g && !ent.dead)
 				ans += ent.data.getWill() + 1;
 		return ans;
 	}
@@ -589,7 +589,7 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0) {
-			le.removeIf(e -> e.anim.dead == 0);
+			le.removeIf(e -> e.anim.dead == 0 && e.summoned.isEmpty());
 			lw.removeIf(w -> !w.activate);
 			lea.removeIf(EAnimCont::done);
 			ebaseSmoke.removeIf(EAnimCont::done);
