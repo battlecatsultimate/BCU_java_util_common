@@ -899,9 +899,9 @@ public class Data {
 	public static final byte SE_VOLC_START = 111;
 	public static final byte SE_VOLC_LOOP = 112;
 	public static final short SE_SHIELD_HIT = 136;
-	public static final short SE_SHIELD_BROKEN = 137;
+	public static final short SE_SHIELD_BROKEN = 139;
 	public static final short SE_SHIELD_REGEN = 138;
-	public static final short SE_SHIELD_BREAKER = 139;
+	public static final short SE_SHIELD_BREAKER = 137;
 	public static final short SE_DEATH_SURGE = 143;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
