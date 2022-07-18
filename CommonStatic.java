@@ -150,6 +150,11 @@ public class CommonStatic {
 		 * Make EX stage pop-up shown considering real chance
 		 */
 		public boolean realEx = false;
+
+		/**
+		 * Make stage name image displayed in battle
+		 */
+		public boolean stageName = true;
 	}
 
 	public interface EditLink {
