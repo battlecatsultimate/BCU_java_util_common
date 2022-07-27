@@ -139,7 +139,7 @@ public class SCDef implements Copable<SCDef> {
 			datas = new Line[0];
 	}
 
-	protected SCDef(int s) {
+	public SCDef(int s) {
 		datas = new Line[s];
 	}
 
