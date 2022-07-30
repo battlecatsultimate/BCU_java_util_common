@@ -55,6 +55,7 @@ public class EEnemy extends Entity {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
+		System.out.println(ans);
 		if (atk.model instanceof AtkModelUnit && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
@@ -65,9 +66,9 @@ public class EEnemy extends Entity {
 				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)atk.attacker.data).getPack()))
 					sharedTraits.add(t);
 			}
-			if ((atk.abi & AB_GOOD) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_GOOD) != 0)
 				ans *= EUnit.OrbHandler.getOrbGood(atk, sharedTraits, basis.b.t());
-			if ((atk.abi & AB_MASSIVE) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVE) != 0)
 				ans *= EUnit.OrbHandler.getOrbMassive(atk, sharedTraits, basis.b.t());
 			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0)
 				ans *= basis.b.t().getMASSIVESATK(sharedTraits);
