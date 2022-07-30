@@ -181,7 +181,7 @@ public class EUnit extends Entity {
 				continue;
 			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_RES || !trait.contains(orbType))
+			if (line[ORB_TYPE] != Data.ORB_ATK || !trait.contains(orbType))
 				continue;
 
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -229,6 +229,7 @@ public class EUnit extends Entity {
 
 				if (levelOrbs[i][ORB_TYPE] == ORB_MASSIVE) {
 					Trait orbType = Trait.convertType(levelOrbs[i][ORB_TRAIT]).get(0);
+
 					if (eTraits.contains(orbType))
 						ini += ORB_MASSIVE_MULTI[levelOrbs[i][ORB_GRADE]];
 				}
@@ -239,6 +240,7 @@ public class EUnit extends Entity {
 			return ini;
 
 		double com = 1 + t.b.getInc(C_MASSIVE) * 0.01;
+
 		return ini * com;
 	}
 
