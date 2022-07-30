@@ -1703,6 +1703,12 @@ public abstract class Entity extends AbEntity {
 			}
 
 			e.damageGiven += Math.min(d, health);
+
+			if(e instanceof EUnit && ((EUnit) e).index != null) {
+				int[] index = ((EUnit) e).index;
+
+				basis.totalDamageGiven[index[0]][index[1]] += Math.min(d, health);
+			}
 		});
 		if (proc)
 			processProcs(atk);

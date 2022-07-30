@@ -29,6 +29,8 @@ public class StageBasis extends BattleObj {
 	public final Stage st;
 	public final EStage est;
 	public final ELineUp elu;
+	public final long[][] totalDamageTaken = new long[2][5];
+	public final long[][] totalDamageGiven = new long[2][5];
 	public final int[] nyc;
 	public final boolean[][] locks = new boolean[2][5];
 	public final AbEntity ebase, ubase;
@@ -411,7 +413,7 @@ public class StageBasis extends BattleObj {
 			}
 			CommonStatic.setSE(SE_SPEND_SUC);
 			elu.get(i, j);
-			EUnit eu = f.getEntity(this);
+			EUnit eu = f.getEntity(this, new int[] {i, j});
 			eu.added(-1, st.len - 700);
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));

@@ -53,14 +53,16 @@ public class EUnit extends Entity {
 	}
 
 	public final int lvl;
+	public final int[] index;
 
 	protected final Level level;
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, int layer0, int layer1, Level level, PCoin pc) {
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, int layer0, int layer1, Level level, PCoin pc, int[] index) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextDouble() * (layer1 - layer0 + 1));
 		traits = de.getTraits();
 		lvl = level.getLv();
+		this.index = index;
 
 		this.level = level;
 	}
@@ -70,6 +72,7 @@ public class EUnit extends Entity {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), null, null);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		traits = de.getTraits();
+		this.index = null;
 
 		lvl = 1;
 		health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
@@ -103,11 +106,23 @@ public class EUnit extends Entity {
 					anim.getEff(P_IMUATK);
 				}
 
-				if (status[P_BSTHUNT][0] > 0)
+				if (status[P_BSTHUNT][0] > 0) {
+					damageTaken += atk.atk;
+
+					if(index != null) {
+						basis.totalDamageTaken[index[0]][index[1]] += atk.atk;
+					}
+
 					return;
+				}
 			}
 		}
+
 		super.damaged(atk);
+
+		if(index != null) {
+			basis.totalDamageTaken[index[0]][index[1]] += atk.atk;
+		}
 	}
 
 	@Override
