@@ -35,6 +35,11 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 		public boolean hiddenUponClear = false;
 
+		public StageMapInfo(StageMap map) {
+			sm = map;
+			qs = null;
+		}
+
 		private StageMapInfo(StageMap map, FileData ad) {
 			sm = map;
 			qs = ad.readLine();
