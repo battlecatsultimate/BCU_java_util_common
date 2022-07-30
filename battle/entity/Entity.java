@@ -1268,7 +1268,12 @@ public abstract class Entity extends AbEntity {
 	 * If entity has area attack and attacked several targets, then formula will be dmg * number_of_targets<br>
 	 * Formula for calculating damage done to each target is min(atk, target_hp)
 	 */
-	public int damageGiven = 0;
+	public long damageGiven = 0;
+
+	/**
+	 * Damage taken from opponents
+	 */
+	public long damageTaken = 0;
 
 	/**
 	 * The time that this entity has been alive
@@ -1443,6 +1448,8 @@ public abstract class Entity extends AbEntity {
 	 */
 	@Override
 	public void damaged(AttackAb atk) {
+		damageTaken += atk.atk;
+
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;
 
