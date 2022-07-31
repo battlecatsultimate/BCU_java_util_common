@@ -79,7 +79,18 @@ public class Res extends ImgCore {
 
 	public static P getWorkerLv(int lv, boolean enable, SymCoord coor) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
-		return coor.draw(aux.num[enable ? 1 : 2][10].getImg(), aux.num[enable ? 1 : 2][lv].getImg());
+
+		int[] val = getLab(lv);
+
+		FakeImage[] input = new FakeImage[val.length + 1];
+
+		input[0] = aux.num[enable ? 1 : 2][10].getImg();
+
+		for(int i = 1; i < input.length; i++) {
+			input[i] = aux.num[enable ? 1 : 2][val[i - 1]].getImg();
+		}
+
+		return coor.draw(input);
 	}
 
 	public static void readData() {
