@@ -61,9 +61,21 @@ public class AttackWave extends AttackAb {
 	@Override
 	public void excuse() {
 		process();
+
+		if(attacker != null) {
+			if(attacker.status[P_WEAK][0] != 0) {
+				atk = rawAtk * attacker.status[P_WEAK][1] / 100;
+			}
+
+			if(attacker.status[P_STRONG][0] != 0) {
+				atk = rawAtk * attacker.status[P_STRONG][0] / 100;
+			}
+		}
+
 		for (AbEntity e : capt) {
 			if (e.isBase())
 				continue;
+
 			if (e instanceof Entity) {
 				e.damaged(this);
 				incl.add((Entity) e);
