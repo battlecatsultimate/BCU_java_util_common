@@ -69,7 +69,7 @@ public class ECastle extends AbEntity {
 		if (health <= 0)
 			health = 0;
 
-		if(CommonStatic.getConfig().shake && sb.shakeCoolDown[0] == 0 && (sb.shake == null || !Arrays.equals(sb.shake, SHAKE_MODE_BOSS))) {
+		if(dire == -1 && CommonStatic.getConfig().shake && sb.shakeCoolDown[0] == 0 && (sb.shake == null || !Arrays.equals(sb.shake, SHAKE_MODE_BOSS))) {
 			sb.shake = SHAKE_MODE_HIT;
 			sb.shakeDuration = SHAKE_MODE_HIT[SHAKE_DURATION];
 			sb.shakeCoolDown[0] = SHAKE_MODE_HIT[SHAKE_COOL_DOWN];
