@@ -262,7 +262,7 @@ public class Res extends ImgCore {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		aux.battle[0] = new VImg[4];
 		aux.battle[1] = new VImg[22];
-		aux.battle[2] = new VImg[5];
+		aux.battle[2] = new VImg[9];
 		ImgCut ic001 = ImgCut.newIns("./org/page/img001.imgcut");
 		VImg img001 = new VImg("./org/page/img001.png");
 		FakeImage[] parts = ic001.cut(img001.getImg());
@@ -334,11 +334,22 @@ public class Res extends ImgCore {
 
 		aux.battle[1][20] = new VImg(parts[0]);
 		aux.battle[1][21] = new VImg(parts[1]);
-		aux.battle[2][0] = new VImg(parts[27]);
-		aux.battle[2][1] = new VImg(parts[29]);
-		aux.battle[2][2] = new VImg(parts[32]);
-		aux.battle[2][3] = new VImg(parts[33]);
-		aux.battle[2][4] = new VImg(parts[38]);
+
+		ImgCut icMap = ImgCut.newIns("./org/page/mapicon.imgcut");
+		VImg imgMap = new VImg("./org/page/mapicon.png");
+		parts = icMap.cut(imgMap.getImg());
+
+		aux.battle[2][0] = new VImg(parts[0]);
+		aux.battle[2][1] = new VImg(parts[2]);
+		aux.battle[2][2] = new VImg(parts[5]);
+		aux.battle[2][3] = new VImg(parts[6]);
+		aux.battle[2][4] = new VImg(parts[11]);
+		aux.battle[2][5] = new VImg(parts[16]);
+
+		for(int i = 6; i < 9; i++) {
+			aux.battle[2][i] = new VImg("./org/page/speedUp" + (i - 3) + ".png");
+		}
+
 		// money, lv, lv dark,cost,cost dark,hp, money light,time,point
 	}
 
