@@ -16,6 +16,7 @@ public class EStage extends BattleObj {
 	public final int[] num, rem;
 	public final double mul;
 	public final int star;
+	public final int[] killCounter;
 
 	private StageBasis b;
 
@@ -30,6 +31,14 @@ public class EStage extends BattleObj {
 			num[i] = datas[i].number;
 		lim = st.getLim(star);
 		mul = st.getCont().stars[star] * 0.01;
+
+		killCounter = new int[s.data.datas.length];
+
+		for(int i = 0; i < killCounter.length; i++) {
+			if(s.data.datas[i].castle_0 != 0) {
+				killCounter[i] = s.data.datas[i].kill_count;
+			}
+		}
 	}
 
 	/**
@@ -41,7 +50,8 @@ public class EStage extends BattleObj {
 
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
-			if (inHealth(data) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] == 0 && num[i] != -1) {
+
+			if (inHealth(data) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] == 0 && num[i] != -1 && killCounter[i] == 0) {
 				if(!s.trail && data.respawn_0 >= data.respawn_1)
 					rem[i] = data.respawn_0;
 				else

@@ -1391,6 +1391,11 @@ public abstract class Entity extends AbEntity {
 	 */
 	private final double shieldMagnification;
 
+	/**
+	 * Whether onLastBreathe is called or not
+	 */
+	private boolean killCounted = false;
+
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double atkMagnif, double hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
 		basis = b;
@@ -2010,6 +2015,11 @@ public abstract class Entity extends AbEntity {
 		summoned.removeIf(s -> !s.activate);
 
 		acted = false;
+
+		if(health <= 0 && zx.canRevive() == 0 && !killCounted) {
+			onLastBreathe();
+			killCounted = true;
+		}
 	}
 
 	/**
@@ -2222,6 +2232,11 @@ public abstract class Entity extends AbEntity {
 	protected abstract int getDamage(AttackAb atk, int ans);
 
 	/**
+	 * called when entity starts final hb, no revive, no lethal strike
+	 */
+	protected abstract void onLastBreathe();
+
+	/**
 	 * get max distance to go back
 	 */
 	protected abstract double getLim();
@@ -2343,6 +2358,7 @@ public abstract class Entity extends AbEntity {
 
 		if (zx.prekill())
 			return;
+
 		kill(false);
 	}
 

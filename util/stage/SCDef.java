@@ -11,12 +11,15 @@ import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData.PackDesc;
 import common.system.Copable;
-import common.util.Data;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
-import java.util.*;
+
+import java.util.Arrays;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 @JsonClass
 public class SCDef implements Copable<SCDef> {
@@ -28,6 +31,7 @@ public class SCDef implements Copable<SCDef> {
 		public int spawn_0, spawn_1, respawn_0, respawn_1;
 		public int castle_0, castle_1, layer_0, layer_1;
 		public int mult_atk;
+		public int kill_count;
 
 		@JCConstructor
 		public Line() {
@@ -48,6 +52,7 @@ public class SCDef implements Copable<SCDef> {
 			castle_1 = arr[C1];
 			layer_1 = arr[L1];
 			mult_atk = arr[M1];
+			kill_count = arr[KC];
 		}
 
 		@Override
@@ -61,41 +66,8 @@ public class SCDef implements Copable<SCDef> {
 		}
 	}
 
-	@Deprecated
-	public static final int SIZE = 14, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
-			S1 = 10, C1 = 11, G = 12, M1 = 13;
-
-	public static SCDef zread(InStream is) {
-		int t = is.nextInt();
-		int ver = Data.getVer(is.nextString());
-		if (t == 0) {
-			if (ver >= 402) {
-				int n = is.nextInt();
-				int m = is.nextInt();
-				SCDef scd = new SCDef(n);
-				int[] tmp = new int[SIZE];
-				for (int i = 0; i < n; i++) {
-					Arrays.fill(tmp, 0);
-					for (int j = 0; j < m; j++)
-						tmp[j] = is.nextInt();
-					if (m < 14)
-						tmp[M1] = tmp[M];
-					scd.datas[i] = new Line(tmp);
-				}
-				scd.sdef = is.nextInt();
-				n = is.nextInt();
-				for (int i = 0; i < n; i++)
-					scd.smap.put(Identifier.parseInt(is.nextInt(), AbEnemy.class), is.nextInt());
-				n = is.nextInt();
-				for (int i = 0; i < n; i++) {
-					SCGroup scg = SCGroup.zread(is);
-					scd.sub.set(scg.id, scg);
-				}
-				return scd;
-			}
-		}
-		return null;
-	}
+	public static final int SIZE = 15, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
+			S1 = 10, C1 = 11, G = 12, M1 = 13, KC = 14;
 
 	@JsonField
 	public Line[] datas;
@@ -204,7 +176,7 @@ public class SCDef implements Copable<SCDef> {
 		for (int i = 0; i < datas.length; i++)
 			ans.datas[i] = datas[i].clone();
 		ans.sdef = sdef;
-		smap.forEach(ans.smap::put);
+		ans.smap.putAll(smap);
 		sub.forEach((i, e) -> ans.sub.set(i, e.copy(i)));
 		return ans;
 	}

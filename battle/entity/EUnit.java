@@ -289,4 +289,9 @@ public class EUnit extends Entity {
 		double com = 1 + t.b.getInc(C_GOOD) * 0.01;
 		return ini * com;
 	}
+
+	@Override
+	protected void onLastBreathe() {
+		basis.notifyUnitDeath();
+	}
 }

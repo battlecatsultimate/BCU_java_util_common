@@ -13,11 +13,8 @@ import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
 import common.util.pack.bgeffect.BackgroundEffect;
-import common.util.stage.CastleImg;
-import common.util.stage.EStage;
+import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
-import common.util.stage.Music;
-import common.util.stage.Stage;
 import common.util.unit.*;
 
 import java.util.*;
@@ -55,6 +52,7 @@ public class StageBasis extends BattleObj {
 	public int buttonDelay = 0;
 	public int[] selectedUnit = {-1, -1};
 	public final double boss_spawn;
+	public final int[] shakeCoolDown = {0, 0};
 
 	public double siz;
 	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num, pos;
@@ -250,6 +248,23 @@ public class StageBasis extends BattleObj {
 	public void registerBattleDimension(double midH, double battleHeight) {
 		this.midH = midH;
 		this.battleHeight = battleHeight;
+	}
+
+	public void notifyUnitDeath() {
+		double percentage = ebase.health * 100.0 / ebase.maxH;
+
+		for(int i = 0; i < est.killCounter.length; i++) {
+			SCDef.Line line = est.s.data.datas[i];
+
+			if(est.killCounter[i] == 0 || line.castle_0 == 0)
+				continue;
+
+			if(line.castle_0 == line.castle_1 && percentage <= line.castle_0) {
+				est.killCounter[i] -= 1;
+			} else if(line.castle_0 != line.castle_1 && percentage >= Math.min(line.castle_0, line.castle_1) && percentage <= Math.max(line.castle_0, line.castle_1)) {
+				est.killCounter[i] -= 1;
+			}
+		}
 	}
 
 	public void release() {

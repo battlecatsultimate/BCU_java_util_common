@@ -134,4 +134,8 @@ public class EEnemy extends Entity {
 		if (health > 0)
 			status[P_BOUNTY][0] = 0;
 	}
+
+	@Override
+	protected void onLastBreathe() {
+	}
 }

@@ -8,6 +8,7 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
+import common.pack.PackData;
 import common.pack.PackData.PackDesc;
 import common.pack.Source.ResourceLocation;
 import common.pack.UserProfile;
@@ -23,8 +24,6 @@ import common.util.stage.info.DefStageInfo;
 import common.util.stage.info.StageInfo;
 import common.util.unit.Enemy;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 @IndexContainer.IndexCont(StageMap.class)
@@ -92,7 +91,6 @@ public class Stage extends Data
 		data = new SCDef(0);
 	}
 
-	@SuppressWarnings("deprecation")
 	protected Stage(Identifier<Stage> id, VFile f, int type) {
 		this.id = id;
 		isBCstage = true;
@@ -104,76 +102,110 @@ public class Stage extends Data
 		String temp;
 		if (type == 0) {
 			temp = qs.poll();
-			String[] strs = temp.split(",");
-			int cas = CommonStatic.parseIntN(strs[0]);
-			if (cas == -1)
-				cas = CH_CASTLES[id.id];
-			if (sm.cast != -1)
-				cas = sm.cast * 1000 + cas;
-			castle = Identifier.parseInt(cas, CastleImg.class);
-			non_con = strs[1].equals("1");
 
-			if(info != null)
-				((DefStageInfo)info).setData(strs);
+			if(temp != null) {
+				String[] strs = temp.split(",");
+				int cas = CommonStatic.parseIntN(strs[0]);
+				if (cas == -1)
+					cas = CH_CASTLES[id.id];
+				if (sm.cast != -1)
+					cas = sm.cast * 1000 + cas;
+				castle = Identifier.parseInt(cas, CastleImg.class);
+				non_con = strs[1].equals("1");
+
+				if(info != null)
+					((DefStageInfo)info).setData(strs);
+			}
 		} else {
 			castle = Identifier.parseInt(sm.cast * 1000 + CH_CASTLES[id.id], CastleImg.class);
 			non_con = false;
 		}
 		int intl = type == 2 ? 9 : 10;
-		String[] strs = qs.poll().split(",");
-		len = Integer.parseInt(strs[0]);
-		health = Integer.parseInt(strs[1]);
-		minSpawn = Integer.parseInt(strs[2]);
-		maxSpawn = Integer.parseInt(strs[3]);
-		bg = Identifier.rawParseInt(Integer.parseInt(strs[4]), Background.class);
-		max = Integer.parseInt(strs[5]);
-		timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
-		if(timeLimit != 0)
-			health = Integer.MAX_VALUE;
-		trail = timeLimit != 0;
-		int isBase = Integer.parseInt(strs[6]) - 2;
-		List<int[]> ll = new ArrayList<>();
+		temp = qs.poll();
 
-		while (qs.size() > 0)
-			if ((temp = qs.poll()).length() > 0) {
-				if (!Character.isDigit(temp.charAt(0)))
-					break;
-				if (temp.startsWith("0,"))
-					break;
-				String[] ss = temp.split(",");
-				int[] data = new int[SCDef.SIZE];
-				for (int i = 0; i < intl; i++)
-					if(i < ss.length)
-						data[i] = Integer.parseInt(ss[i]);
-					else
-						//Handle missing value manually
-						if(i == 9)
-							data[i] = 100;
-				data[0] -= 2;
-				data[2] *= 2;
-				data[3] *= 2;
-				data[4] *= 2;
-				if (timeLimit == 0 && intl > 9 && data[5] > 100 && data[9] == 100) {
-					data[9] = data[5];
-					data[5] = 100;
+		if(temp != null) {
+			String[] strs = temp.split(",");
+
+			len = Integer.parseInt(strs[0]);
+			health = Integer.parseInt(strs[1]);
+			minSpawn = Integer.parseInt(strs[2]);
+			maxSpawn = Integer.parseInt(strs[3]);
+			bg = Identifier.rawParseInt(Integer.parseInt(strs[4]), Background.class);
+			max = Integer.parseInt(strs[5]);
+			timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
+			if(timeLimit != 0)
+				health = Integer.MAX_VALUE;
+			trail = timeLimit != 0;
+
+			int isBase = Integer.parseInt(strs[6]) - 2;
+
+			List<int[]> ll = new ArrayList<>();
+
+			while (qs.size() > 0)
+				if ((temp = qs.poll()).length() > 0) {
+					if (!Character.isDigit(temp.charAt(0)))
+						break;
+					if (temp.startsWith("0,"))
+						break;
+
+					String[] ss = temp.split(",");
+
+					for(int i = 0; i < ss.length; i++) {
+						ss[i] = ss[i].trim();
+					}
+
+					int[] data = new int[SCDef.SIZE];
+
+					for (int i = 0; i < intl; i++)
+						if(i < ss.length)
+							data[i] = Integer.parseInt(ss[i]);
+						else
+							//Handle missing value manually
+							if(i == 9)
+								data[i] = 100;
+
+					data[0] -= 2;
+					data[2] *= 2;
+					data[3] *= 2;
+					data[4] *= 2;
+
+					if (timeLimit == 0 && intl > 9 && data[5] > 100 && data[9] == 100) {
+						data[9] = data[5];
+						data[5] = 100;
+					}
+
+					if (ss.length > 11 && CommonStatic.isInteger(ss[11])) {
+						data[SCDef.M1] = Integer.parseInt(ss[11]);
+
+						if(data[SCDef.M1] == 0)
+							data[SCDef.M1] = data[SCDef.M];
+					} else
+						data[SCDef.M1] = data[SCDef.M];
+
+					if(ss.length > 12 && CommonStatic.isInteger(ss[12]) && Integer.parseInt(ss[12]) == 1) {
+						data[SCDef.S0] *= -1;
+					}
+
+					if(ss.length > 13 && CommonStatic.isInteger(ss[13])) {
+						data[SCDef.KC] = Integer.parseInt(ss[13]);
+					}
+
+					if (data[0] == isBase)
+						data[SCDef.C0] = 0;
+
+					ll.add(data);
 				}
-				if (ss.length > 11 && CommonStatic.isInteger(ss[11]))
-					data[SCDef.M1] = Integer.parseInt(ss[11]);
-				else
-					data[SCDef.M1] = data[SCDef.M];
+			SCDef scd = new SCDef(ll.size());
+			for (int i = 0; i < ll.size(); i++)
+				scd.datas[i] = new Line(ll.get(scd.datas.length - i - 1));
 
-				if (data[0] == isBase)
-					data[SCDef.C0] = 0;
-				ll.add(data);
-			}
-		SCDef scd = new SCDef(ll.size());
-		for (int i = 0; i < ll.size(); i++)
-			scd.datas[i] = new Line(ll.get(scd.datas.length - i - 1));
+			int ano = CommonStatic.parseIntN(strs[6]);
+			if (ano == 317)
+				scd.datas[ll.size() - 1].castle_0 = 0;
 
-		int ano = CommonStatic.parseIntN(strs[6]);
-		if (ano == 317)
-			scd.datas[ll.size() - 1].castle_0 = 0;
-		data = scd;
+			data = scd;
+		}
+
 		validate();
 	}
 
@@ -228,7 +260,12 @@ public class Stage extends Data
 
 	public Set<String> isSuitable(String pack) {
 		Dependency dep = Dependency.collect(this);
-		PackDesc desc = UserProfile.getUserPack(pack).desc;
+		PackData.UserPack us = UserProfile.getUserPack(pack);
+
+		if(us == null)
+			return new TreeSet<>();
+
+		PackDesc desc = us.desc;
 		Set<String> set = dep.getPacks();
 		System.out.println("Stage: " + set);// FIXME
 		set.remove(Identifier.DEF);
