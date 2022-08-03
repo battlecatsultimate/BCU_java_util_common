@@ -636,9 +636,14 @@ public abstract class Entity extends AbEntity {
 			if (dead >= 0) {
 				if (deathSurge && soul.len() - dead == 21) // 21 is guessed delay compared to BC
 					e.aam.getDeathSurge();
+
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
+
 					if (soul == null || adm.pre == soul.len() - dead)
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+
+					if (dead == 0 && adm.pre >= soul.len() && !e.dead)
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 				}
 			}
@@ -862,6 +867,10 @@ public abstract class Entity extends AbEntity {
 						e.maxCurrentShield = e.currentShield;
 
 					e.anim.getEff(SHIELD_REGEN);
+				}
+
+				if(kbType == INT_HB && e.data.getRevenge() != null && e.data.getRevenge().pre >= KB_TIME[INT_HB]) {
+					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount()));
 				}
 
 				if (e.health <= 0)
