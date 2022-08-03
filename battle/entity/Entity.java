@@ -535,7 +535,12 @@ public abstract class Entity extends AbEntity {
 					e.anim.corpse = (e.dire == -1 ? effas().A_U_ZOMBIE : effas().A_ZOMBIE).getEAnim(ZombieEff.BACK);
 				} else {
 					if (e.anim.corpse != null) {
+						if(e.anim.corpse.type == ZombieEff.REVIVE && e.data.getRevive() != null && e.data.getRevive().pre >= e.anim.corpse.len()) {
+							e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 4));
+						}
+
 						e.anim.corpse = null;
+
 						status[P_REVIVE][1] = 0;
 					}
 
@@ -1201,11 +1206,21 @@ public abstract class Entity extends AbEntity {
 				}
 				if(e.kbTime == 0) {
 					status[P_REVIVE][1]--;
+
+					if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && e.data.getRevive() != null && anim.corpse.len() - status[P_REVIVE][1] == e.data.getRevive().pre) {
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 4));
+					}
+
 					if (anim.corpse != null)
 						anim.corpse.update(false);
 				}
-				if (status[P_REVIVE][1] == 0)
+				if (status[P_REVIVE][1] == 0) {
+					if(anim.corpse != null && e.anim.corpse.type == ZombieEff.REVIVE && e.data.getRevive() != null && e.data.getRevive().pre >= e.anim.corpse.len()) {
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 4));
+					}
+
 					anim.corpse = null;
+				}
 			}
 		}
 

@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class CustomEntity extends DataEntity {
 
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rep, rev, res, cntr, bur, resu;
+	public AtkDataModel rep, rev, res, cntr, bur, resu, revi;
 
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
@@ -90,6 +90,9 @@ public abstract class CustomEntity extends DataEntity {
 			return bur;
 		if (ind == atks.length + 3)
 			return resu;
+		if (ind == atks.length + 4)
+			return revi;
+
 		return null;
 	}
 
@@ -101,6 +104,7 @@ public abstract class CustomEntity extends DataEntity {
 	public String getAvailable(String str) {
 		while (contains(str))
 			str += "'";
+
 		return str;
 	}
 
@@ -151,6 +155,11 @@ public abstract class CustomEntity extends DataEntity {
 	@Override
 	public AtkDataModel getResurface() {
 		return resu;
+	}
+
+	@Override
+	public AtkDataModel getRevive() {
+		return revi;
 	}
 
 	@Override
@@ -213,6 +222,8 @@ public abstract class CustomEntity extends DataEntity {
 			ans |= getGouge().isLD();
 		if(getResurface() != null)
 			ans |= getResurface().isLD();
+		if(getRevive() != null)
+			ans |= getRevive().isLD();
 		return ans;
 	}
 
@@ -231,6 +242,8 @@ public abstract class CustomEntity extends DataEntity {
 			return bur.isLD();
 		if (ind == atks.length + 3)
 			return resu.isLD();
+		if (ind == atks.length + 4)
+			return revi.isLD();
 		return atks[ind].isLD();
 	}
 
@@ -247,6 +260,8 @@ public abstract class CustomEntity extends DataEntity {
 			ans |= getGouge().isOmni();
 		if(getResurface() != null)
 			ans |= getResurface().isOmni();
+		if(getRevive() != null)
+			ans |= getRevive().isOmni();
 		return ans;
 	}
 
@@ -265,6 +280,9 @@ public abstract class CustomEntity extends DataEntity {
 			return bur.isOmni();
 		if (ind == atks.length + 3)
 			return resu.isOmni();
+		if (ind == atks.length + 4)
+			return revi.isOmni();
+
 		return atks[ind].isOmni();
 	}
 

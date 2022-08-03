@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
@@ -48,10 +49,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
-		atks = new int[raw.length + 4];
-		abis = new int[raw.length + 4];
-		act = new int[raw.length + 4];
-		acs = new BattleObj[raw.length + 4];
+		atks = new int[raw.length + 5];
+		abis = new int[raw.length + 5];
+		act = new int[raw.length + 5];
+		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
 			atks[i] = atks[i];
@@ -73,10 +74,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
-		atks = new int[raw.length + 4];
-		abis = new int[raw.length + 4];
-		act = new int[raw.length + 4];
-		acs = new BattleObj[raw.length + 4];
+		atks = new int[raw.length + 5];
+		abis = new int[raw.length + 5];
+		act = new int[raw.length + 5];
+		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
 
@@ -98,29 +99,32 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	public void setExtraAtks(int[][] raw, double d0) {
-		if (data.getRevenge() != null) {
-			atks[raw.length] = (int) (data.getRevenge().atk * d0);
-			abis[raw.length] = 1;
-			acs[raw.length] = new BattleObj();
-			act[raw.length] = data.getRevenge().loopCount();
-		}
-		if (data.getResurrection() != null) {
-			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
-			abis[raw.length + 1] = 1;
-			acs[raw.length + 1] = new BattleObj();
-			act[raw.length + 1] = data.getResurrection().loopCount();
-		}
-		if (data.getGouge() != null) {
-			atks[raw.length + 2] = (int) (data.getGouge().atk * d0);
-			abis[raw.length + 2] = 1;
-			acs[raw.length + 2] = new BattleObj();
-			act[raw.length + 2] = data.getGouge().loopCount();
-		}
-		if (data.getResurface() != null) {
-			atks[raw.length + 3] = (int) (data.getResurface().atk * d0);
-			abis[raw.length + 3] = 1;
-			acs[raw.length + 3] = new BattleObj();
-			act[raw.length + 3] = data.getResurface().loopCount();
+		for(int i = 0; i <= 4; i++) {
+			AtkDataModel model;
+
+			switch (i) {
+				case 0:
+					model = data.getRevenge();
+					break;
+				case 1:
+					model = data.getResurrection();
+					break;
+				case 2:
+					model = data.getGouge();
+					break;
+				case 3:
+					model = data.getResurface();
+					break;
+				default:
+					model = data.getRevive();
+			}
+
+			if(model != null) {
+				atks[raw.length + i] = (int) (model.atk * d0);
+				abis[raw.length + i] = 1;
+				acs[raw.length + i] = new BattleObj();
+				act[raw.length + i] = model.loopCount();
+			}
 		}
 	}
 
