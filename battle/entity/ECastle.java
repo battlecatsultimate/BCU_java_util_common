@@ -10,6 +10,7 @@ import common.util.pack.EffAnim.DefEff;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class ECastle extends AbEntity {
@@ -34,6 +35,7 @@ public class ECastle extends AbEntity {
 	@Override
 	public void damaged(AttackAb atk) {
 		hit = 2;
+
 		if(atk.isLongAtk || atk instanceof AttackVolcano)
 			smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
@@ -60,11 +62,18 @@ public class ECastle extends AbEntity {
 		}
 		CommonStatic.setSE(SE_HIT_BASE);
 		health -= ans;
+
 		if (health > maxH)
 			health = maxH;
 
 		if (health <= 0)
 			health = 0;
+
+		if(CommonStatic.getConfig().shake && sb.shakeCoolDown[0] == 0 && (sb.shake == null || !Arrays.equals(sb.shake, SHAKE_MODE_BOSS))) {
+			sb.shake = SHAKE_MODE_HIT;
+			sb.shakeDuration = SHAKE_MODE_HIT[SHAKE_DURATION];
+			sb.shakeCoolDown[0] = SHAKE_MODE_HIT[SHAKE_COOL_DOWN];
+		}
 	}
 
 	@Override

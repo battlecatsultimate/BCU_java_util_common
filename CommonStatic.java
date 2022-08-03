@@ -155,6 +155,11 @@ public class CommonStatic {
 		 * Make stage name image displayed in battle
 		 */
 		public boolean stageName = true;
+
+		/**
+		 * Make battle shaken
+		 */
+		public boolean shake = true;
 	}
 
 	public interface EditLink {

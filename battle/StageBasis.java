@@ -62,6 +62,9 @@ public class StageBasis extends BattleObj {
 	public int time, s_stop, temp_s_stop, inten, temp_inten;
 	public int sn_stop, sn_temp_stop;
 	public float n_inten, temp_n_inten;
+	public int[] shake;
+	public int shakeDuration;
+	public double shakeOffset;
 
 	public int respawnTime, unitRespawnTime;
 	public Background bg;
@@ -529,6 +532,20 @@ public class StageBasis extends BattleObj {
 				sniper.update();
 
 			tempe.forEach(EntCont::update);
+
+			if(shakeDuration <= 0) {
+				shake = null;
+				shakeOffset = 0;
+			}
+
+			if(shake != null) {
+				shakeOffset = getOffset();
+				shakeDuration--;
+			}
+
+			for(int i = 0; i < shakeCoolDown.length; i++)
+				if(shakeCoolDown[i] != 0)
+					shakeCoolDown[i] -= 1;
 		}
 
 		if (temp_n_inten > 0)
@@ -698,4 +715,10 @@ public class StageBasis extends BattleObj {
 		}
 	}
 
+	private double getOffset() {
+		if(shake == null)
+			return 0;
+
+		return (1 - 2 * ((shake[SHAKE_DURATION] - shakeDuration) % 2)) * (1.0 * (shake[SHAKE_END] - shake[SHAKE_INITIAL]) / (shake[SHAKE_DURATION] - 1) * (shake[SHAKE_DURATION] - shakeDuration) + shake[SHAKE_INITIAL]) / SHAKE_STABILIZER;
+	}
 }

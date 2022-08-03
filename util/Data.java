@@ -1520,6 +1520,14 @@ public class Data {
 	public static final int[] BG_EFFECT_ROCK_SPEED = {1, 3};
 	public static final int BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET = 190;
 
+	public static final int[] SHAKE_MODE_HIT = {5, 7, 2, 30};
+	public static final int[] SHAKE_MODE_BOSS = {10, 15, 2, 0};
+	public static final int SHAKE_DURATION = 0;
+	public static final int SHAKE_INITIAL = 1;
+	public static final int SHAKE_END = 2;
+	public static final int SHAKE_COOL_DOWN = 3;
+	public static final double SHAKE_STABILIZER = 2.5;
+
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
 	public static EffAnimStore effas() {

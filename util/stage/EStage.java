@@ -62,8 +62,15 @@ public class EStage extends BattleObj {
 					if (num[i] == 0)
 						num[i] = -1;
 				}
-				if (data.boss == 1 && !b.shock)
+
+				if (data.boss >= 1 && !b.shock)
 					b.shock = true;
+
+				if (CommonStatic.getConfig().shake && data.boss == 2 && b.shakeCoolDown[1] == 0) {
+					b.shake = SHAKE_MODE_BOSS;
+					b.shakeDuration = SHAKE_MODE_BOSS[SHAKE_DURATION];
+					b.shakeCoolDown[1] = SHAKE_MODE_BOSS[SHAKE_COOL_DOWN];
+				}
 
 				double multi = (data.multiple == 0 ? 100 : data.multiple) * mul * 0.01;
 				double mulatk = (data.multiple == 0 ? 100 : data.mult_atk) * mul * 0.01;
