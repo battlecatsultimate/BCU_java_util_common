@@ -28,7 +28,7 @@ public class EEnemy extends Entity {
 		layer = d0 == d1 ? d0 : d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
 		traits = de.getTraits();
 
-		canBurrow = mark != 1;
+		canBurrow = mark < 1;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class EEnemy extends Entity {
 		double ans;
 		double minPos = ((MaskEnemy) data).getLimit();
 
-		if (mark == 1)
+		if (mark >= 1)
 			ans = pos - (minPos + basis.boss_spawn); // guessed value compared to BC
 		else
 			ans = pos - minPos;

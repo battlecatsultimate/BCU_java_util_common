@@ -494,7 +494,7 @@ public class StageBasis extends BattleObj {
 			if (respawnTime <= 0 && active && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
-					e.added(1, e.mark == 1 ? boss_spawn : 700.0);
+					e.added(1, e.mark >= 1 ? boss_spawn : 700.0);
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.layer));
 
