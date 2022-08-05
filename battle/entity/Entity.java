@@ -640,11 +640,13 @@ public abstract class Entity extends AbEntity {
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
 
-					if (soul == null || adm.pre == soul.len() - dead)
+					if ((soul == null && !e.dead) || (soul != null && adm.pre == soul.len() - dead))
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 
-					if (dead == 0 && adm.pre >= soul.len() && !e.dead)
+					if (soul != null && dead == 0 && adm.pre >= soul.len() && !e.dead) {
+						System.out.println("##");
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
+					}
 				}
 			}
 			if(smoke != null) {
