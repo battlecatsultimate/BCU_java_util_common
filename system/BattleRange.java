@@ -23,7 +23,9 @@ public class BattleRange<T extends Number> {
         FRONT,
         BACK,
         SECOND,
-        PERCENT
+        PERCENT,
+        DEFAULT,
+        BGIMAGE
     }
 
     private final T min;
@@ -278,6 +280,10 @@ public class BattleRange<T extends Number> {
 
     public boolean isFront() {
         return minSnap == maxSnap && maxSnap == SNAP.FRONT;
+    }
+
+    public boolean hasRandomValue() {
+        return !max.equals(min);
     }
 
     private boolean isXAxis(SNAP snap) {

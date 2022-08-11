@@ -2,7 +2,9 @@ package common.pack;
 
 import common.io.json.JsonClass;
 import common.util.Data;
+import common.util.pack.Background;
 import common.util.stage.CastleImg;
+import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -12,6 +14,7 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Queue;
 
+import common.util.unit.Unit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Comparable<Identifier<?>>, Cloneable {
 
 	public static final String DEF = "000000";
-
-	static final String STATIC_FIXER = "id_fixer";
 
 	@Nullable
 	public static <T extends IndexContainer.Indexable<?, T>> T get(Identifier<T> id) {
@@ -41,6 +42,8 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 
 		if(cls == EneRand.class) {
 			return (T) new Identifier(DEF, Enemy.class, 0).get();
+		} else if (cls == Stage.class) {
+			return (T) new Identifier(DEF + "/0", Stage.class, 0).get();
 		} else {
 			return (T) new Identifier(DEF, cls, 0).get();
 		}
@@ -55,6 +58,10 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 		return parseIntRaw(v, cls);
 	}
 
+	public static <T extends IndexContainer.Indexable<?, T>> Identifier<T> rawParseInt(int v, Class<? extends T> cls) {
+		return new Identifier<>(DEF, cls, v);
+	}
+
 	@Deprecated
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Identifier parseIntRaw(int v, Class<?> cls) {
@@ -67,10 +74,19 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 			}
 		}
 		if (cls == null || cls.isInterface() || !IndexContainer.Indexable.class.isAssignableFrom(cls))
-			cls = UserProfile.getStatic(STATIC_FIXER, () -> new VerFixer.IdFixer(null)).parse(v, cls);
+			cls = parse(v, cls);
 		String pack = cls != CastleImg.class && v / 1000 == 0 ? DEF : Data.hex(v / 1000);
 		int id = v % 1000;
 		return new Identifier(pack, cls, id);
+	}
+
+	public static Class<?> parse(int val, Class<?> cls) {
+		if (cls == Data.Proc.THEME.class)
+			return Background.class;
+		else if (cls == Unit.class)
+			return cls;
+		else
+			return val % 1000 < 500 ? Enemy.class : EneRand.class;
 	}
 
 	private static Object getContainer(Class<?> cls, String str) {

@@ -4,18 +4,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.FieldOrder;
+import common.io.json.*;
 import common.io.json.FieldOrder.Order;
-import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
 import common.pack.Identifier;
 import common.util.pack.Background;
 import common.util.pack.EffAnim.EffAnimStore;
+import common.util.stage.Music;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
@@ -42,12 +40,6 @@ public class Data {
 			public int count;
 			@Order(1)
 			public int dis;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class CRITI extends ProcItem {
-			@Order(0)
-			public int type;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -221,6 +213,12 @@ public class Data {
 			public int prob;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class MULT extends ProcItem {
+			@Order(0)
+			public int mult;
+		}
+
 		public static abstract class ProcItem implements Cloneable, BattleStatic {
 			public ProcItem clear() {
 				try {
@@ -268,6 +266,9 @@ public class Data {
 								return false;
 
 							if (((Integer) o) != 0)
+								return true;
+						} else {
+							if (((IntType) f.get(this)).toInt() > 0)
 								return true;
 						}
 				} catch (Exception e) {
@@ -378,6 +379,16 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class TIME extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int intensity;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class REVIVE extends ProcItem {
 
 			@JsonClass(noTag = NoTag.LOAD)
@@ -461,7 +472,7 @@ public class Data {
 				@Order(3)
 				public boolean same_health;
 				@Order(4)
-				public boolean random_layer;
+				public boolean bond_hp;
 				@Order(5)
 				public boolean on_hit;
 				@Order(6)
@@ -476,12 +487,18 @@ public class Data {
 			@Order(2)
 			public int dis;
 			@Order(3)
-			public int mult;
+			public int max_dis;
 			@Order(4)
-			public TYPE type = new TYPE();
+			public int mult;
 			@Order(5)
-			public int time;
+			public int min_layer;
 			@Order(6)
+			public int max_layer;
+			@Order(7)
+			public TYPE type = new TYPE();
+			@Order(8)
+			public int time;
+			@Order(9)
 			public int form;
 		}
 
@@ -501,6 +518,8 @@ public class Data {
 			@Order(2)
 			public Identifier<Background> id;
 			@Order(3)
+			public Identifier<Music> mus;
+			@Order(4)
 			public TYPE type = new TYPE();
 		}
 
@@ -572,6 +591,14 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class CANNI extends ProcItem {
+			@Order(0)
+			public int mult;
+			@Order(1)
+			public int type;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class WEAK extends ProcItem {
 			@Order(0)
 			public int prob;
@@ -587,6 +614,21 @@ public class Data {
 			public int hp;
 			@Order(1)
 			public int regen;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class BSTHUNT extends ProcItem {
+			@JsonClass(noTag = NoTag.LOAD)
+			public static class TYPE extends IntType {
+				@Order(0)
+				public boolean active;
+			}
+			@Order(0)
+			public TYPE type = new TYPE();
+			@Order(1)
+			public int prob;
+			@Order(2)
+			public int time;
 		}
 
 		public static Proc blank() {
@@ -651,7 +693,7 @@ public class Data {
 		@Order(14)
 		public final SUMMON SUMMON = new SUMMON();
 		@Order(15)
-		public final PT TIME = new PT();
+		public final TIME TIME = new TIME();
 		@Order(16)
 		public final PROB SNIPER = new PROB();
 		@Order(17)
@@ -699,29 +741,37 @@ public class Data {
 		@Order(38)
 		public final WAVEI IMUMOVING = new WAVEI();
 		@Order(39)
-		public final IMUAD IMUARMOR = new IMUAD();
+		public final CANNI IMUCANNON = new CANNI();
 		@Order(40)
-		public final IMUAD IMUSPEED = new IMUAD();
+		public final IMUAD IMUARMOR = new IMUAD();
 		@Order(41)
-		public final IMU CRITI = new IMU();
+		public final IMUAD IMUSPEED = new IMUAD();
 		@Order(42)
-		public final COUNTER COUNTER = new COUNTER();
+		public final IMU CRITI = new IMU();
 		@Order(43)
-		public final PT IMUATK = new PT();
+		public final COUNTER COUNTER = new COUNTER();
 		@Order(44)
-		public final DMGCUT DMGCUT = new DMGCUT();
+		public final PT IMUATK = new PT();
 		@Order(45)
-		public final DMGCAP DMGCAP = new DMGCAP();
+		public final DMGCUT DMGCUT = new DMGCUT();
 		@Order(46)
-		public final BURROW BURROW = new BURROW();
+		public final DMGCAP DMGCAP = new DMGCAP();
 		@Order(47)
-		public final REVIVE REVIVE = new REVIVE();
+		public final BURROW BURROW = new BURROW();
 		@Order(48)
-		public final BARRIER BARRIER = new BARRIER();
+		public final REVIVE REVIVE = new REVIVE();
 		@Order(49)
-		public final DSHIELD DEMONSHIELD = new DSHIELD();
+		public final BARRIER BARRIER = new BARRIER();
 		@Order(50)
+		public final DSHIELD DEMONSHIELD = new DSHIELD();
+		@Order(51)
         public final VOLC DEATHSURGE = new VOLC();
+		@Order(52)
+		public final MULT BOUNTY = new MULT();
+		@Order(53)
+		public final MULT ATKBASE = new MULT();
+		@Order(54)
+		public final BSTHUNT BSTHUNT = new BSTHUNT(); //Unsure what does the 1st param of beast killer do, so this is temporary
 
 		@Override
 		public Proc clone() {
@@ -822,37 +872,37 @@ public class Data {
 
 	}
 
-	public static final int restrict_name = 32;
-	public static final int SE_VICTORY = 8;
-	public static final int SE_DEFEAT = 9;
-	public static final int SE_HIT_0 = 20;
-	public static final int SE_HIT_1 = 21;
-	public static final int SE_DEATH_0 = 23;
-	public static final int SE_DEATH_1 = 24;
-	public static final int SE_HIT_BASE = 22;
-	public static final int SE_ZKILL = 59;
-	public static final int SE_CRIT = 44;
-	public static final int SE_SATK = 90;
-	public static final int SE_WAVE = 26;
-	public static final int SE_LETHAL = 50;
-	public static final int SE_WARP_ENTER = 73;
-	public static final int SE_WARP_EXIT = 74;
-	public static final int SE_BOSS = 45;
-	public static final int SE_SPEND_FAIL = 15;
-	public static final int SE_SPEND_SUC = 19;
-	public static final int SE_SPEND_REF = 27;
-	public static final int SE_CANNON_CHARGE = 28;
-	public static final int SE_BARRIER_ABI = 70;
-	public static final int SE_BARRIER_NON = 71;
-	public static final int SE_BARRIER_ATK = 72;
-	public static final int SE_POISON = 110;
-	public static final int SE_VOLC_START = 111;
-	public static final int SE_VOLC_LOOP = 112;
-	public static final int SE_SHIELD_HIT = 136;
-	public static final int SE_SHIELD_BROKEN = 137;
-	public static final int SE_SHIELD_REGEN = 138;
-	public static final int SE_SHIELD_BREAKER = 139;
-	public static final int SE_DEATH_SURGE = 143;
+	public static final byte restrict_name = 32;
+	public static final byte SE_VICTORY = 8;
+	public static final byte SE_DEFEAT = 9;
+	public static final byte SE_HIT_0 = 20;
+	public static final byte SE_HIT_1 = 21;
+	public static final byte SE_DEATH_0 = 23;
+	public static final byte SE_DEATH_1 = 24;
+	public static final byte SE_HIT_BASE = 22;
+	public static final byte SE_ZKILL = 59;
+	public static final byte SE_CRIT = 44;
+	public static final byte SE_SATK = 90;
+	public static final byte SE_WAVE = 26;
+	public static final byte SE_LETHAL = 50;
+	public static final byte SE_WARP_ENTER = 73;
+	public static final byte SE_WARP_EXIT = 74;
+	public static final byte SE_BOSS = 45;
+	public static final byte SE_SPEND_FAIL = 15;
+	public static final byte SE_SPEND_SUC = 19;
+	public static final byte SE_SPEND_REF = 27;
+	public static final byte SE_CANNON_CHARGE = 28;
+	public static final byte SE_BARRIER_ABI = 70;
+	public static final byte SE_BARRIER_NON = 71;
+	public static final byte SE_BARRIER_ATK = 72;
+	public static final byte SE_POISON = 110;
+	public static final byte SE_VOLC_START = 111;
+	public static final byte SE_VOLC_LOOP = 112;
+	public static final short SE_SHIELD_HIT = 136;
+	public static final short SE_SHIELD_BROKEN = 139;
+	public static final short SE_SHIELD_REGEN = 138;
+	public static final short SE_SHIELD_BREAKER = 137;
+	public static final short SE_DEATH_SURGE = 143;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -860,126 +910,124 @@ public class Data {
 	public static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65, 73,
 			74, 83, 84, 85, 86, 90, 110, 111, 112, 124 };
 
-	public static final int RARITY_TOT = 6;
+	public static final byte RARITY_TOT = 6;
 
 	// trait bit filter
 	public static final int TB_RED = 1;
-	public static final int TB_FLOAT = 2;
-	public static final int TB_BLACK = 4;
-	public static final int TB_METAL = 8;
-	public static final int TB_ANGEL = 16;
-	public static final int TB_ALIEN = 32;
-	public static final int TB_ZOMBIE = 64;
-	public static final int TB_RELIC = 128;
-	public static final int TB_WHITE = 256;
-	public static final int TB_EVA = 512;
-	public static final int TB_WITCH = 1024;
-	public static final int TB_INFH = 2048;
-	public static final int TB_DEMON = 4096;
+	public static final byte TB_FLOAT = 2;
+	public static final byte TB_BLACK = 4;
+	public static final byte TB_METAL = 8;
+	public static final byte TB_ANGEL = 16;
+	public static final byte TB_ALIEN = 32;
+	public static final byte TB_ZOMBIE = 64;
+	public static final short TB_RELIC = 128;
+	public static final short TB_WHITE = 256;
+	public static final short TB_EVA = 512;
+	public static final short TB_WITCH = 1024;
+	public static final short TB_INFH = 2048;
+	public static final short TB_DEMON = 4096;
 
 	// trait index
-	public static final int TRAIT_RED = 0;
-	public static final int TRAIT_FLOAT = 1;
-	public static final int TRAIT_BLACK = 2;
-	public static final int TRAIT_METAL = 3;
-	public static final int TRAIT_ANGEL = 4;
-	public static final int TRAIT_ALIEN = 5;
-	public static final int TRAIT_ZOMBIE = 6;
-	public static final int TRAIT_DEMON = 7;
-	public static final int TRAIT_RELIC = 8;
-	public static final int TRAIT_WHITE = 9;
-	public static final int TRAIT_EVA = 10;
-	public static final int TRAIT_WITCH = 11;
-	public static final int TRAIT_INFH = 12;
-	public static final int TRAIT_TOT = 13;
+	public static final byte TRAIT_RED = 0;
+	public static final byte TRAIT_FLOAT = 1;
+	public static final byte TRAIT_BLACK = 2;
+	public static final byte TRAIT_METAL = 3;
+	public static final byte TRAIT_ANGEL = 4;
+	public static final byte TRAIT_ALIEN = 5;
+	public static final byte TRAIT_ZOMBIE = 6;
+	public static final byte TRAIT_DEMON = 7;
+	public static final byte TRAIT_RELIC = 8;
+	public static final byte TRAIT_WHITE = 9;
+	public static final byte TRAIT_EVA = 10;
+	public static final byte TRAIT_WITCH = 11;
+	public static final byte TRAIT_BARON = 12;
+	public static final byte TRAIT_BEAST = 13;
+	public static final byte TRAIT_INFH = 14;
+	public static final byte TRAIT_TOT = 15;
 
 	// treasure
-	public static final int T_RED = 0;
-	public static final int T_FLOAT = 1;
-	public static final int T_BLACK = 2;
-	public static final int T_ANGEL = 3;
-	public static final int T_METAL = 4;
-	public static final int T_ALIEN = 5;
-	public static final int T_ZOMBIE = 6;
+	public static final byte T_RED = 0;
+	public static final byte T_FLOAT = 1;
+	public static final byte T_BLACK = 2;
+	public static final byte T_ANGEL = 3;
+	public static final byte T_METAL = 4;
+	public static final byte T_ALIEN = 5;
+	public static final byte T_ZOMBIE = 6;
 
 	// default tech value
 	public static final int[] MLV = new int[] { 30, 30, 30, 30, 30, 30, 30, 10, 30 };
 
 	// tech index
-	public static final int LV_RES = 0;
-	public static final int LV_ACC = 1;
-	public static final int LV_BASE = 2;
-	public static final int LV_WORK = 3;
-	public static final int LV_WALT = 4;
-	public static final int LV_RECH = 5;
-	public static final int LV_CATK = 6;
-	public static final int LV_CRG = 7;
+	public static final byte LV_RES = 0;
+	public static final byte LV_ACC = 1;
+	public static final byte LV_BASE = 2;
+	public static final byte LV_WORK = 3;
+	public static final byte LV_WALT = 4;
+	public static final byte LV_RECH = 5;
+	public static final byte LV_CATK = 6;
+	public static final byte LV_CRG = 7;
 	public static final int LV_XP = 8;
-	public static final int LV_TOT = 9;
+	public static final byte LV_TOT = 9;
 
 	// default treasure value
 	public static final int[] MT = new int[] { 300, 300, 300, 300, 300, 300, 600, 600, 600, 300, 300 };
 
 	// treasure index
-	public static final int T_ATK = 0;
-	public static final int T_DEF = 1;
-	public static final int T_RES = 2;
-	public static final int T_ACC = 3;
-	public static final int T_WORK = 4;
-	public static final int T_WALT = 5;
-	public static final int T_RECH = 6;
-	public static final int T_CATK = 7;
-	public static final int T_BASE = 8;
+	public static final byte T_ATK = 0;
+	public static final byte T_DEF = 1;
+	public static final byte T_RES = 2;
+	public static final byte T_ACC = 3;
+	public static final byte T_WORK = 4;
+	public static final byte T_WALT = 5;
+	public static final byte T_RECH = 6;
+	public static final byte T_CATK = 7;
+	public static final byte T_BASE = 8;
 	public static final int T_XP1 = 9;
 	public static final int T_XP2 = 10;
-	public static final int T_TOT = 11;
+	public static final byte T_TOT = 11;
 
 	// abi bit filter
-	public static final int AB_GOOD = 1 << 0;
+	public static final int AB_GOOD = 1;
 	public static final int AB_RESIST = 1 << 1;
 	public static final int AB_MASSIVE = 1 << 2;
 	public static final int AB_ONLY = 1 << 3;
-	public static final int AB_EARN = 1 << 4;
-	public static final int AB_BASE = 1 << 5;
-	public static final int AB_METALIC = 1 << 6;
-	public static final int AB_WAVES = 1 << 7;
-	public static final int AB_SNIPERI = 1 << 8;
-	public static final int AB_TIMEI = 1 << 9;
-	public static final int AB_GHOST = 1 << 10;
-	public static final int AB_ZKILL = 1 << 11;
-	public static final int AB_WKILL = 1 << 12;
-	public static final int AB_GLASS = 1 << 13;
-	public static final int AB_THEMEI = 1 << 14;
-	public static final int AB_EKILL = 1 << 15;
-	public static final int AB_IMUSW = 1 << 16;
-	public static final int AB_RESISTS = 1 << 17;
-	public static final int AB_MASSIVES = 1 << 18;
-
-	// 0111 1010 1110 0001 0111 1111
-	@Deprecated
-	public static final int AB_ELIMINATOR = 0x7ae17f;
+	public static final int AB_METALIC = 1 << 4;
+	public static final int AB_WAVES = 1 << 5;
+	public static final int AB_SNIPERI = 1 << 6;
+	public static final int AB_TIMEI = 1 << 7;
+	public static final int AB_GHOST = 1 << 8;
+	public static final int AB_ZKILL = 1 << 9;
+	public static final int AB_WKILL = 1 << 10;
+	public static final int AB_GLASS = 1 << 11;
+	public static final int AB_THEMEI = 1 << 12;
+	public static final int AB_EKILL = 1 << 13;
+	public static final int AB_IMUSW = 1 << 14;
+	public static final int AB_RESISTS = 1 << 15;
+	public static final int AB_MASSIVES = 1 << 16;
+	public static final int AB_BAKILL = 1 << 17;
+	public static final int AB_CKILL = 1 << 18;
 
 	// abi index
-	public static final int ABI_GOOD = 0;
-	public static final int ABI_RESIST = 1;
-	public static final int ABI_MASSIVE = 2;
-	public static final int ABI_ONLY = 3;
-	public static final int ABI_EARN = 4;
-	public static final int ABI_BASE = 5;
-	public static final int ABI_METALIC = 6;
-	public static final int ABI_WAVES = 7;
-	public static final int ABI_SNIPERI = 8;
-	public static final int ABI_TIMEI = 9;
-	public static final int ABI_GHOST = 10;
-	public static final int ABI_ZKILL = 11;
-	public static final int ABI_WKILL = 12;
-	public static final int ABI_GLASS = 13;
-	public static final int ABI_THEMEI = 14;
-	public static final int ABI_EKILL = 15;
-	public static final int ABI_IMUSW = 16;
-	public static final int ABI_RESISTS = 17;
-	public static final int ABI_MASSIVES = 18;
-	public static final int ABI_TOT = 22;// 20 currently
+	public static final byte ABI_GOOD = 0;
+	public static final byte ABI_RESIST = 1;
+	public static final byte ABI_MASSIVE = 2;
+	public static final byte ABI_ONLY = 3;
+	public static final byte ABI_METALIC = 4;
+	public static final byte ABI_WAVES = 5;
+	public static final byte ABI_SNIPERI = 6;
+	public static final byte ABI_TIMEI = 7;
+	public static final byte ABI_GHOST = 8;
+	public static final byte ABI_ZKILL = 9;
+	public static final byte ABI_WKILL = 10;
+	public static final byte ABI_GLASS = 11;
+	public static final byte ABI_THEMEI = 12;
+	public static final byte ABI_EKILL = 13;
+	public static final byte ABI_IMUSW = 14;
+	public static final byte ABI_RESISTS = 15;
+	public static final byte ABI_MASSIVES = 16;
+	public static final byte ABI_BAKILL = 17;
+	public static final byte ABI_CKILL = 18;
+	public static final byte ABI_TOT = 19;// 20 currently
 
 	// proc index
 	public static final int P_KB = 0;
@@ -1048,14 +1096,15 @@ public class Data {
 	public static final int P_IMUPOI = 36;
 	public static final int P_IMUPOIATK = 37;
 	public static final int P_IMUMOVING = 38;
-	public static final int P_IMUARMOR = 39;
-	public static final int P_IMUSPEED = 40;
-	public static final int P_CRITI = 41;
-	public static final int P_COUNTER = 42;
-	public static final int P_IMUATK = 43;
-	public static final int P_DMGCUT = 44;
-	public static final int P_DMGCAP = 45;
-	public static final int P_BURROW = 46;
+	public static final int P_IMUCANNON = 39;
+	public static final int P_IMUARMOR = 40;
+	public static final int P_IMUSPEED = 41;
+	public static final int P_CRITI = 42;
+	public static final int P_COUNTER = 43;
+	public static final int P_IMUATK = 44;
+	public static final int P_DMGCUT = 45;
+	public static final int P_DMGCAP = 46;
+	public static final int P_BURROW = 47;
 	/**
 	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
 	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
@@ -1063,12 +1112,15 @@ public class Data {
 	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
 	 * others
 	 */
-	public static final int P_REVIVE = 47;
-	public static final int P_BARRIER = 48;
-	public static final int P_DEMONSHIELD = 49;
-	public static final int P_DEATHSURGE = 50;
-	public static final int PROC_TOT = 51;// 51
-	public static final int PROC_WIDTH = 6;
+	public static final int P_REVIVE = 48;
+	public static final int P_BARRIER = 49;
+	public static final int P_DEMONSHIELD = 50;
+	public static final int P_DEATHSURGE = 51;
+	public static final int P_BOUNTY = 52;
+	public static final int P_ATKBASE = 53;
+	public static final int P_BSTHUNT = 54; //Beast Killer
+	public static final byte PROC_TOT = 55;// 53
+	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
 			false, //kb
@@ -1110,6 +1162,7 @@ public class Data {
 			true,  //imu.BCU poison
 			true,  //imu.poison
 			true,  //imu.moving atk
+			true,  //imu.cannon
 			true,  //imu.armor break
 			true,  //imu.haste
 			true,  //imu. critical
@@ -1122,25 +1175,36 @@ public class Data {
 			true,  //barrier
 			true,  //demon barrier
 			true,  //death surge
+			false, //2x money
+			false, //base destroyer
+			true, //beast hunter
 	};
 
-	public static final int[] REMOVABLE_PROC = {
+	/**
+	 * Procs in here are shareable on any hit for BC entities, but not shareable for custom entities
+	 */
+	public static final int[] BCShareable = { P_BOUNTY, P_ATKBASE };
+
+	/**
+	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
+	 */
+	public static final byte[] REMOVABLE_PROC = {
 			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED
 	};
 
-	public static final int WT_WAVE = 1;
-	public static final int WT_MOVE = 2;
-	public static final int WT_CANN = 2;
-	public static final int WT_VOLC = 4;
-	public static final int WT_MINI = 8;
-	public static final int PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
-	public static final int PC2_HP = 0;
-	public static final int PC2_ATK = 1;
-	public static final int PC2_SPEED = 2;
-	public static final int PC2_COST = 3;
-	public static final int PC2_CD = 4;
-	public static final int PC2_HB = 5;
-	public static final int PC2_TOT = 6;
+	public static final byte WT_WAVE = 1;
+	public static final byte WT_MOVE = 2;
+	public static final byte WT_CANN = 2;
+	public static final byte WT_VOLC = 4;
+	public static final byte WT_MINI = 8;
+	public static final byte PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
+	public static final byte PC2_HP = 0;
+	public static final byte PC2_ATK = 1;
+	public static final byte PC2_SPEED = 2;
+	public static final byte PC2_COST = 3;
+	public static final byte PC2_CD = 4;
+	public static final byte PC2_HB = 5;
+	public static final byte PC2_TOT = 6;
 	// -1 for None
 	// 0 for Proc
 	// 1 for Ability
@@ -1160,11 +1224,11 @@ public class Data {
 			{ 0, P_WARP, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ 1, AB_BASE, 0 }, // 12: Base Destroyer
+			{ 0, P_ATKBASE, 0 }, // 12: Base Destroyer
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
-			{ 1, AB_EARN }, // 16: 2x income
+			{ 0, P_BOUNTY }, // 16: 2x income
 			{ 0, P_WAVE }, // 17: wave
 			{ 0, P_IMUWEAK }, // 18: res weak
 			{ 0, P_IMUSTOP }, // 19: res stop
@@ -1205,203 +1269,206 @@ public class Data {
 			{ 0, P_IMUVOLC }, // 54: resist to surge ?
 			{ 3, P_IMUVOLC }, // 55: immune to surge
 			{ 0, P_VOLC }, // 56: surge, level up to chance up
-			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Devil
-			{ 0, P_SHIELDBREAK } //58 : shield piercing
-			};
+			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Aku
+			{ 0, P_SHIELDBREAK }, //58 : shield piercing
+			{ 1, AB_CKILL }, //59 : corpse killer
+			{ 0, P_CURSE } //60 : curse
+	};
 
 	// foot icon index used in battle
-	public static final int INV = -1;
-	public static final int INVWARP = -2;
-	public static final int STPWAVE = -3;
-	public static final int BREAK_ABI = -4;
-	public static final int BREAK_ATK = -5;
-	public static final int BREAK_NON = -6;
-	public static final int HEAL = -7;
-	public static final int SHIELD_HIT = -8;
-	public static final int SHIELD_BROKEN = -9;
-	public static final int SHIELD_REGEN = -10;
-	public static final int SHIELD_BREAKER = -11;
-	public static final int DMGCAP_FAIL = -12;
-	public static final int DMGCAP_SUCCESS = -13;
+	public static final byte INV = -1;
+	public static final byte INVWARP = -2;
+	public static final byte STPWAVE = -3;
+	public static final byte BREAK_ABI = -4;
+	public static final byte BREAK_ATK = -5;
+	public static final byte BREAK_NON = -6;
+	public static final byte HEAL = -7;
+	public static final byte SHIELD_HIT = -8;
+	public static final byte SHIELD_BROKEN = -9;
+	public static final byte SHIELD_REGEN = -10;
+	public static final byte SHIELD_BREAKER = -11;
+	public static final byte DMGCAP_FAIL = -12;
+	public static final byte DMGCAP_SUCCESS = -13;
 
 	// Combo index
-	public static final int C_ATK = 0;
-	public static final int C_DEF = 1;
-	public static final int C_SPE = 2;
-	public static final int C_GOOD = 14;
-	public static final int C_MASSIVE = 15;
-	public static final int C_RESIST = 16;
-	public static final int C_KB = 17;
-	public static final int C_SLOW = 18;
-	public static final int C_STOP = 19;
-	public static final int C_WEAK = 20;
-	public static final int C_STRONG = 21;
-	public static final int C_WKILL = 22;
-	public static final int C_EKILL = 23;
-	public static final int C_CRIT = 24;
-	public static final int C_C_INI = 3;
-	public static final int C_C_ATK = 6;
-	public static final int C_C_SPE = 7;
-	public static final int C_BASE = 10;
-	public static final int C_M_INI = 5;
-	public static final int C_M_LV = 4;
-	public static final int C_M_MAX = 9;
-	public static final int C_RESP = 11;
-	public static final int C_MEAR = 12;
-	public static final int C_XP = 13;// abandoned
-	public static final int C_TOT = 25;
+	public static final byte C_ATK = 0;
+	public static final byte C_DEF = 1;
+	public static final byte C_SPE = 2;
+	public static final byte C_GOOD = 14;
+	public static final byte C_MASSIVE = 15;
+	public static final byte C_RESIST = 16;
+	public static final byte C_KB = 17;
+	public static final byte C_SLOW = 18;
+	public static final byte C_STOP = 19;
+	public static final byte C_WEAK = 20;
+	public static final byte C_STRONG = 21;
+	public static final byte C_WKILL = 22;
+	public static final byte C_EKILL = 23;
+	public static final byte C_CRIT = 24;
+	public static final byte C_C_INI = 3;
+	public static final byte C_C_ATK = 6;
+	public static final byte C_C_SPE = 7;
+	public static final byte C_BASE = 10;
+	public static final byte C_M_INI = 5;
+	public static final byte C_M_LV = 4;
+	public static final byte C_M_INC = 8;
+	public static final byte C_M_MAX = 9;
+	public static final byte C_RESP = 11;
+	public static final byte C_MEAR = 12;
+	public static final byte C_XP = 13;// abandoned
+	public static final byte C_TOT = 25;
 
 	// Effects Anim index
-	public static final int A_KB = 29;
-	public static final int A_CRIT = 28;
-	public static final int A_SHOCKWAVE = 27;
-	public static final int A_ZOMBIE = 26;
-	public static final int A_EFF_INV = 18;
-	public static final int A_EFF_DEF = 19;// unused
-	public static final int A_Z_STRONG = 20;
-	public static final int A_B = 21;
-	public static final int A_E_B = 22;
-	public static final int A_W = 23;
-	public static final int A_W_C = 24;
-	public static final int A_CURSE = 25;
-	public static final int A_DOWN = 0;
-	public static final int A_UP = 2;
-	public static final int A_SLOW = 4;
-	public static final int A_STOP = 6;
-	public static final int A_SHIELD = 8;
-	public static final int A_FARATTACK = 10;
-	public static final int A_WAVE_INVALID = 12;
-	public static final int A_WAVE_STOP = 14;
-	public static final int A_WAVEGUARD = 16;// unused
-	public static final int A_E_DOWN = 1;
-	public static final int A_E_UP = 3;
-	public static final int A_E_SLOW = 5;
-	public static final int A_E_STOP = 7;
-	public static final int A_E_SHIELD = 9;
-	public static final int A_E_FARATTACK = 11;
-	public static final int A_E_WAVE_INVALID = 13;
-	public static final int A_E_WAVE_STOP = 15;
-	public static final int A_E_WAVEGUARD = 17;// unused
-	public static final int A_SNIPER = 30;
-	public static final int A_U_ZOMBIE = 31;
-	public static final int A_SEAL = 32;
-	public static final int A_E_SEAL = 33;
-	public static final int A_POI0 = 34;
-	public static final int A_POI1 = 35;
-	public static final int A_POI2 = 36;
-	public static final int A_POI3 = 37;
-	public static final int A_POI4 = 38;
-	public static final int A_POI5 = 39;
-	public static final int A_POI6 = 40;
-	public static final int A_POI7 = 41;
-	public static final int A_SATK = 42;
-	public static final int A_IMUATK = 43;
-	public static final int A_POISON = 44;
-	public static final int A_VOLC = 45;
-	public static final int A_E_VOLC = 46;
-	public static final int A_E_CURSE = 47;
-	public static final int A_WAVE = 48;
-	public static final int A_E_WAVE = 49;
-	public static final int A_ARMOR = 50;
-	public static final int A_E_ARMOR = 51;
-	public static final int A_SPEED = 52;
-	public static final int A_E_SPEED = 53;
-	public static final int A_WEAK_UP = 54;
-	public static final int A_E_WEAK_UP = 55;
-	public static final int A_HEAL = 56;
-	public static final int A_E_HEAL = 57;
-	public static final int A_DEMON_SHIELD = 58;
-	public static final int A_E_DEMON_SHIELD = 59;
-	public static final int A_COUNTER = 60;
-	public static final int A_E_COUNTER = 61;
-	public static final int A_DMGCUT = 62;
-	public static final int A_E_DMGCUT = 63;
-	public static final int A_DMGCAP = 64;
-	public static final int A_E_DMGCAP = 65;
-	public static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final int A_TOT = 66;
+	public static final byte A_KB = 29;
+	public static final byte A_CRIT = 28;
+	public static final byte A_SHOCKWAVE = 27;
+	public static final byte A_ZOMBIE = 26;
+	public static final byte A_EFF_INV = 18;
+	public static final byte A_EFF_DEF = 19;// unused
+	public static final byte A_Z_STRONG = 20;
+	public static final byte A_B = 21;
+	public static final byte A_E_B = 22;
+	public static final byte A_W = 23;
+	public static final byte A_W_C = 24;
+	public static final byte A_CURSE = 25;
+	public static final byte A_DOWN = 0;
+	public static final byte A_UP = 2;
+	public static final byte A_SLOW = 4;
+	public static final byte A_STOP = 6;
+	public static final byte A_SHIELD = 8;
+	public static final byte A_FARATTACK = 10;
+	public static final byte A_WAVE_INVALID = 12;
+	public static final byte A_WAVE_STOP = 14;
+	public static final byte A_WAVEGUARD = 16;// unused
+	public static final byte A_E_DOWN = 1;
+	public static final byte A_E_UP = 3;
+	public static final byte A_E_SLOW = 5;
+	public static final byte A_E_STOP = 7;
+	public static final byte A_E_SHIELD = 9;
+	public static final byte A_E_FARATTACK = 11;
+	public static final byte A_E_WAVE_INVALID = 13;
+	public static final byte A_E_WAVE_STOP = 15;
+	public static final byte A_E_WAVEGUARD = 17;// unused
+	public static final byte A_SNIPER = 30;
+	public static final byte A_U_ZOMBIE = 31;
+	public static final byte A_SEAL = 32;
+	public static final byte A_E_SEAL = 33;
+	public static final byte A_POI0 = 34;
+	public static final byte A_POI1 = 35;
+	public static final byte A_POI2 = 36;
+	public static final byte A_POI3 = 37;
+	public static final byte A_POI4 = 38;
+	public static final byte A_POI5 = 39;
+	public static final byte A_POI6 = 40;
+	public static final byte A_POI7 = 41;
+	public static final byte A_SATK = 42;
+	public static final byte A_IMUATK = 43;
+	public static final byte A_POISON = 44;
+	public static final byte A_VOLC = 45;
+	public static final byte A_E_VOLC = 46;
+	public static final byte A_E_CURSE = 47;
+	public static final byte A_WAVE = 48;
+	public static final byte A_E_WAVE = 49;
+	public static final byte A_ARMOR = 50;
+	public static final byte A_E_ARMOR = 51;
+	public static final byte A_SPEED = 52;
+	public static final byte A_E_SPEED = 53;
+	public static final byte A_WEAK_UP = 54;
+	public static final byte A_E_WEAK_UP = 55;
+	public static final byte A_HEAL = 56;
+	public static final byte A_E_HEAL = 57;
+	public static final byte A_DEMON_SHIELD = 58;
+	public static final byte A_E_DEMON_SHIELD = 59;
+	public static final byte A_COUNTER = 60;
+	public static final byte A_E_COUNTER = 61;
+	public static final byte A_DMGCUT = 62;
+	public static final byte A_E_DMGCUT = 63;
+	public static final byte A_DMGCAP = 64;
+	public static final byte A_E_DMGCAP = 65;
+	public static final byte[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
+	public static final byte A_TOT = 66;
 
 	// atk type index used in filter page
-	public static final int ATK_SINGLE = 0;
-	public static final int ATK_AREA = 1;
-	public static final int ATK_LD = 2;
-	public static final int ATK_OMNI = 4;
-	public static final int ATK_TOT = 8;
+	public static final byte ATK_SINGLE = 0;
+	public static final byte ATK_AREA = 1;
+	public static final byte ATK_LD = 2;
+	public static final byte ATK_OMNI = 4;
+	public static final byte ATK_TOT = 8;
 
 	// base and canon level
-	public static final int BASE_H = 0;
-	public static final int BASE_SLOW = 1;
-	public static final int BASE_WALL = 2;
-	public static final int BASE_STOP = 3;
-	public static final int BASE_WATER = 4;
-	public static final int BASE_GROUND = 5;
-	public static final int BASE_BARRIER = 6;
-	public static final int BASE_CURSE = 7;
+	public static final byte BASE_H = 0;
+	public static final byte BASE_SLOW = 1;
+	public static final byte BASE_WALL = 2;
+	public static final byte BASE_STOP = 3;
+	public static final byte BASE_WATER = 4;
+	public static final byte BASE_GROUND = 5;
+	public static final byte BASE_BARRIER = 6;
+	public static final byte BASE_CURSE = 7;
 	public static final int BASE_TOT = 8;
 
 	// base type
-	public static final int BASE_ATK_MAGNIFICATION = 0;
-	public static final int BASE_SLOW_TIME = 1;
-	public static final int BASE_TIME = 2;
-	public static final int BASE_WALL_MAGNIFICATION = 3;
-	public static final int BASE_WALL_ALIVE_TIME = 4;
-	public static final int BASE_RANGE = 5;
+	public static final byte BASE_ATK_MAGNIFICATION = 0;
+	public static final byte BASE_SLOW_TIME = 1;
+	public static final byte BASE_TIME = 2;
+	public static final byte BASE_WALL_MAGNIFICATION = 3;
+	public static final byte BASE_WALL_ALIVE_TIME = 4;
+	public static final byte BASE_RANGE = 5;
 	//Figure out type 6
-	public static final int BASE_HEALTH_PERCENTAGE = 7;
+	public static final byte BASE_HEALTH_PERCENTAGE = 7;
 	//Figure out type 8
-	public static final int BASE_HOLY_ATK_SURFACE = 9;
-	public static final int BASE_HOLY_ATK_UNDERGROUND = 10;
+	public static final byte BASE_HOLY_ATK_SURFACE = 9;
+	public static final byte BASE_HOLY_ATK_UNDERGROUND = 10;
 	//Figure out type 11
-	public static final int BASE_CURSE_TIME = 12;
+	public static final byte BASE_CURSE_TIME = 12;
 
 
 
 	// touchable ID
-	public static final int TCH_N = 1;
-	public static final int TCH_KB = 2;
-	public static final int TCH_UG = 4;
-	public static final int TCH_CORPSE = 8;
-	public static final int TCH_SOUL = 16;
-	public static final int TCH_EX = 32;
-	public static final int TCH_ZOMBX = 64;
-	public static final int TCH_ENTER = 128;
+	public static final byte TCH_N = 1;
+	public static final byte TCH_KB = 2;
+	public static final byte TCH_UG = 4;
+	public static final byte TCH_CORPSE = 8;
+	public static final byte TCH_SOUL = 16;
+	public static final byte TCH_EX = 32;
+	public static final byte TCH_ZOMBX = 64;
+	public static final short TCH_ENTER = 128;
 
 	public static final String[] A_PATH = new String[] { "down", "up", "slow", "stop", "shield", "farattack",
 			"wave_invalid", "wave_stop", "waveguard" };
 
 	// After this line all number is game data
 
-	public static final int INT_KB = 0, INT_HB = 1, INT_SW = 2, INT_ASS = 3, INT_WARP = 4;
+	public static final byte INT_KB = 0, INT_HB = 1, INT_SW = 2, INT_ASS = 3, INT_WARP = 4;
 
-	public static final int[] KB_PRI = new int[] { 2, 4, 5, 1, 3 };
-	public static final int[] KB_TIME = new int[] { 11, 23, 47, 11, -1 };
-	public static final int[] KB_DIS = new int[] { 165, 345, 705, 55, -1 };
+	public static final byte[] KB_PRI = new byte[] { 2, 4, 5, 1, 3 };
+	public static final byte[] KB_TIME = new byte[] { 11, 23, 47, 11, -1 };
+	public static final short[] KB_DIS = new short[] { 165, 345, 705, 55, -1 };
 
-	public static final int W_E_INI = -33;
-	public static final int W_U_INI = -67;
-	public static final int W_PROG = 200;
-	public static final int W_E_WID = 500;
-	public static final int W_U_WID = 400;
-	public static final int W_TIME = 3;
-	public static final int W_MINI_TIME = 2; // mini wave spawn interval
-	public static final int E_IMU = -1;
-	public static final int E_IWAVE = -2;
-	public static final int E_SWAVE = -3;
-	public static final int W_VOLC = 375;
-	public static final int W_VOLC_INNER = 250; // volcano inner width
-	public static final int W_VOLC_PIERCE = 125; // volcano pierce width
-	public static final int VOLC_ITV = 20;
+	public static final byte W_E_INI = -33;
+	public static final byte W_U_INI = -67;
+	public static final short W_PROG = 200;
+	public static final short W_E_WID = 500;
+	public static final short W_U_WID = 400;
+	public static final byte W_TIME = 3;
+	public static final byte W_MINI_TIME = 2; // mini wave spawn interval
+	public static final byte E_IMU = -1;
+	public static final byte E_IWAVE = -2;
+	public static final byte E_SWAVE = -3;
+	public static final short W_VOLC = 375;
+	public static final short W_VOLC_INNER = 250; // volcano inner width
+	public static final byte W_VOLC_PIERCE = 125; // volcano pierce width
+	public static final byte VOLC_ITV = 20;
 
-	public static final int VOLC_PRE = 15; // volcano pre-atk
-	public static final int VOLC_POST = 10; // volcano post-atk
-	public static final int VOLC_SE = 30; // volcano se loop duration
+	public static final byte VOLC_PRE = 15; // volcano pre-atk
+	public static final byte VOLC_POST = 10; // volcano post-atk
+	public static final byte VOLC_SE = 30; // volcano se loop duration
 
-	public static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 9, 2 };// not sure, 10f for bblast
-	public static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100, 600 };// not sure
-	public static final int SNIPER_CD = 300;// not sure
-	public static final int SNIPER_PRE = 5;// not sure
-	public static final int SNIPER_POS = -500;// not sure
-	public static final int REVIVE_SHOW_TIME = 16;
+	public static final byte[] NYPRE = new byte[] { 18, 2, -1, 28, 37, 18, 9, 2 };// not sure, 10f for bblast
+	public static final short[] NYRAN = new short[] { 710, 600, -1, 500, 500, 710, 100, 600 };// not sure
+	public static final short SNIPER_CD = 300;// not sure
+	public static final byte SNIPER_PRE = 8;// not sure
+	public static final float SNIPER_POS = 442.5f;
+	public static final byte REVIVE_SHOW_TIME = 16;
 
 	public static final int ORB_ATK = 0;
 	public static final int ORB_RES = 1;
@@ -1452,6 +1519,14 @@ public class Data {
 	public static final double[] BG_EFFECT_ROCK_SIZE = {1.0, 2.25};
 	public static final int[] BG_EFFECT_ROCK_SPEED = {1, 3};
 	public static final int BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET = 190;
+
+	public static final int[] SHAKE_MODE_HIT = {5, 7, 2, 30};
+	public static final int[] SHAKE_MODE_BOSS = {10, 15, 2, 0};
+	public static final int SHAKE_DURATION = 0;
+	public static final int SHAKE_INITIAL = 1;
+	public static final int SHAKE_END = 2;
+	public static final int SHAKE_COOL_DOWN = 3;
+	public static final double SHAKE_STABILIZER = 2.5;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
@@ -1516,13 +1591,12 @@ public class Data {
 	}
 
 	public static String trio(int i) {
-		i %= 1000;
-		String str = "";
-		if (i < 100)
-			str += "0";
-		if (i < 10)
-			str += "0";
-		return str + i;
+		if(i < 10)
+			return "00" + i;
+		else if(i < 100)
+			return "0" + i;
+		else
+			return "" + i;
 	}
 
 	public static int reorderTrait(int oldTrait) {
@@ -1567,16 +1641,26 @@ public class Data {
 		return newTrait;
 	}
 
-	public static int reorderAbi(int ab) {
+	public static int reorderAbi(int ab, int ver) {
 		int newAbi = 0, abiAdd = 0;
-		for (int i = 0; i + abiAdd < ABI_TOT ; i++) {
-			if (i == 7 || i == 12 || i == 18)
-				abiAdd++;
-			int i1 = i + abiAdd;
-			if (i1 == 12 || i1 == 18)
-				continue;
-			if (((ab >> i1) & 1) > 0)
-				newAbi |= 1 << i;
+		if (ver == 0) {
+			for (int i = 0; i + abiAdd < ABI_TOT + 2; i++) {
+				if (i == 7 || i == 12 || i == 18)
+					abiAdd++;
+				int i1 = i + abiAdd;
+				if (i1 == 12 || i1 == 18)
+					continue;
+				if (((ab >> i1) & 1) > 0)
+					newAbi |= 1 << i;
+			}
+		} else if (ver == 1) { //Reformat Bounty and Base destroyer
+			for (int i = 0; i + abiAdd < ABI_TOT; i++) {
+				if (i == 4)
+					abiAdd += 2;
+				int i1 = i + abiAdd;
+				if (((ab >> i1) & 1) > 0)
+					newAbi |= 1 << i;
+			}
 		}
 		return newAbi;
 	}

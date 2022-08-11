@@ -1,5 +1,6 @@
 package common.util.lang;
 
+import com.google.common.primitives.Ints;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -11,11 +12,15 @@ import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Editors {
+
+	private static final Map<String, EditorGroup> eg = new HashMap<>();
 
 	public static class DispItem implements Displayable {
 
@@ -156,10 +161,12 @@ public class Editors {
 
 		public final EditorGroup par;
 		public final EdiField field;
+		public final String name;
 
-		public Editor(EditorGroup par, EdiField field, String f) throws Exception {
+		public Editor(EditorGroup par, EdiField field, String f) {
 			this.par = par;
 			this.field = field;
+			this.name = f;
 		}
 
 		/**
@@ -168,7 +175,9 @@ public class Editors {
 		protected abstract void setData();
 
 		protected final void update() {
+			setComponentVisibility(par, true, 1);
 			par.ctrl.update(par);
+			par.updateVisibility();
 		}
 
 	}
@@ -194,6 +203,7 @@ public class Editors {
 			for (int i = 0; i < arr.length; i++) {
 				list[i] = getEditor(ctrl, this, arr[i], edit);
 			}
+			eg.put(proc, this);
 		}
 
 		public LocaleCenter.Binder getItem(Formatter.Context ctx) {
@@ -206,6 +216,26 @@ public class Editors {
 			this.obj = obj;
 			for (Editor e : list)
 				e.setData();
+			updateVisibility();
+		}
+
+		public void updateVisibility() {
+			ProcItem item = getProcItem();
+			if (item instanceof Proc.IMUAD)
+				setComponentVisibility(this, item.exists(), 2);
+			else if (!(item instanceof Proc.IMU)) {
+				ArrayList<Integer> visFields = new ArrayList<>();
+				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+				for (int i = 1; i < list.length; i++) {
+					if (edi.EditorVisible(list[i]))
+						visFields.add(i);
+				}
+
+				if (visFields.size() == list.length - 1)
+					setComponentVisibility(this, item.exists(), 1);
+				if (visFields.size() > 0)
+					setComponentVisibility(this, item.exists(), Ints.toArray(visFields));
+			}
 		}
 
 		private ProcItem getProcItem() {
@@ -217,6 +247,12 @@ public class Editors {
 	public interface EditorSupplier {
 
 		Editor getEditor(EditControl<?> ctrl, EditorGroup g, String field, boolean edit);
+
+		void setEditorVisibility(Editor e, boolean b);
+
+		boolean EditorVisible(Editor e);
+
+		boolean isEnemy();
 
 	}
 
@@ -335,11 +371,23 @@ public class Editors {
 					t.type.range_type = MathUtil.clip(t.type.range_type, 0, 3);
 				}
 			}
+			setComponentVisibility("REVIVE", t.type.revive_others, 3, 4, 5, 7);
 		}));
 
 		map().put("SNIPER", prob);
 
-		map().put("TIME", pt);
+		map().put("TIME", new EditControl<>(Proc.TIME.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob > 0) {
+				t.time = Math.max(1, t.time);
+				t.intensity = Math.min(t.intensity, t.time);
+				if (t.intensity == 0)
+					t.intensity = 1;
+			} else {
+				t.time = 0;
+				t.intensity = 0;
+			}
+		}));
 
 		map().put("SEAL", pt);
 
@@ -347,6 +395,7 @@ public class Editors {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
 				t.dis = 0;
+				t.max_dis = 0;
 				t.id = null;
 				t.mult = 0;
 				t.time = 0;
@@ -356,20 +405,32 @@ public class Editors {
 				t.type.ignore_limit = false;
 				t.type.on_hit = false;
 				t.type.on_kill = false;
-				t.type.random_layer = false;
+				t.min_layer = 0;
+				t.max_layer = 0;
 				t.type.same_health = false;
 			} else {
 				t.time = Math.max(0, t.time);
-				try {
+
+				int temp = t.dis;
+				t.dis = Math.min(temp, t.max_dis);
+				t.max_dis = Math.max(temp, t.max_dis);
+				temp = t.min_layer;
+				t.min_layer = Math.min(temp, t.max_layer);
+				t.max_layer = Math.max(temp, t.max_layer);
+
+				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+				if ((!edi.isEnemy() && t.id == null) || (t.id != null && t.id.cls == Unit.class)) {
 					Unit u = Identifier.getOr(t.id, Unit.class);
 					t.form = MathUtil.clip(t.form, 1, u.forms.length);
 					if (!t.type.fix_buff)
 						t.mult = MathUtil.clip(t.mult, -u.max - u.maxp, u.max + u.maxp);
 					else
 						t.mult = MathUtil.clip(t.mult, 1, u.max + u.maxp);
-				} catch(ClassCastException r) {
+					setComponentVisibility("SUMMON", true, 15);
+				} else {
 					t.form = 1;
 					t.mult = Math.max(1, t.mult);
+					setComponentVisibility("SUMMON", false, 15);
 				}
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
 			}
@@ -390,7 +451,15 @@ public class Editors {
 			}
 		}));
 
-		map().put("THEME", new EditControl<>(Proc.THEME.class, (t) -> t.prob = MathUtil.clip(t.prob, 0, 100)));
+		map().put("THEME", new EditControl<>(Proc.THEME.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.time = 0;
+				t.id = null;
+				t.mus = null;
+				t.type = new Proc.THEME.TYPE();
+			}
+		}));
 
 		map().put("POISON", new EditControl<>(Proc.POISON.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -539,6 +608,14 @@ public class Editors {
 
 		map().put("IMUMOVING", wavei);
 
+		map().put("IMUCANNON", new EditControl<>(Proc.CANNI.class, (t) -> {
+			t.mult = Math.min(t.mult, 100);
+			if (t.mult != 0)
+				t.type = MathUtil.clip(t.type, 1, 127);
+			else
+				t.type = 0;
+		}));
+
 		map().put("IMUPOI", imuad);
 
 		map().put("IMUARMOR", imuad);
@@ -577,6 +654,46 @@ public class Editors {
 				t.time = Math.max(1, t.time / Data.VOLC_ITV) * Data.VOLC_ITV;
 			}
 		}));
+
+		map().put("BOUNTY", new EditControl<>(Proc.MULT.class, (t) -> {}));
+		map().put("ATKBASE", new EditControl<>(Proc.MULT.class, (t) -> {}));
+
+		map().put("BSTHUNT", new EditControl<>(Proc.BSTHUNT.class, (t) -> {
+			setComponentVisibility("BSTHUNT", t.type.active, 1);
+			if (t.type.active) {
+				t.prob = MathUtil.clip(t.prob, 0, 100);
+				if (t.prob == 0)
+					t.time = 0;
+				else
+					t.time = Math.max(1, t.time);
+				setComponentVisibility("BSTHUNT", t.prob != 0, 2);
+			} else {
+				t.prob = 0;
+				t.time = 0;
+			}
+		}));
+	}
+
+	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
+		EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+		if (fields.length > 2)
+			for (int field : fields)
+				edi.setEditorVisibility(egg.list[field], boo);
+		else {
+			int l1 = fields.length == 2 ? fields[1] : egg.list.length;
+			for (int i = fields[0]; i < l1; i++)
+				edi.setEditorVisibility(egg.list[i], boo);
+		}
+	}
+
+	private static void setComponentVisibility(String proc, boolean boo, int... fields) {
+		EditorGroup egg = eg.get(proc);
+		if (egg == null) {
+			System.out.println("There is no proc named " + proc);
+			return;
+		}
+
+		setComponentVisibility(egg, boo, fields);
 	}
 
 	public static void setEditorSupplier(EditorSupplier sup) {

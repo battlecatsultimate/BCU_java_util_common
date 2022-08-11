@@ -53,21 +53,30 @@ public class EUnit extends Entity {
 	}
 
 	public final int lvl;
+	public final int[] index;
 
 	protected final Level level;
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, Level level, PCoin pc) {
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, int layer0, int layer1, Level level, PCoin pc, int[] index) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
+		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextDouble() * (layer1 - layer0 + 1));
+		traits = de.getTraits();
+		lvl = level.getLv();
+		this.index = index;
+
+		this.level = level;
+	}
+
+	//used for waterblast
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0) {
+		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), null, null);
 		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
 		traits = de.getTraits();
-		// if level is null, update HP to match level
-		if (level == null) {
-			lvl = 1;
-			health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
-		} else {
-			lvl = level.getLvs()[0];
-		}
-		this.level = level;
+		this.index = null;
+
+		lvl = 1;
+		health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
+		level = null;
 	}
 
 	@Override
@@ -85,6 +94,35 @@ public class EUnit extends Entity {
 	public void update() {
 		super.update();
 		traits = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getTraits() : new ArrayList<>();
+	}
+
+	@Override
+	public void damaged(AttackAb atk) {
+		if (atk.trait.contains(BCTraits.get(TRAIT_BEAST))) {
+			Proc.BSTHUNT beastDodge = getProc().BSTHUNT;
+			if (beastDodge.prob > 0 && (atk.dire != dire)) {
+				if (status[P_BSTHUNT][0] == 0 && (beastDodge.prob == 100 || basis.r.nextDouble() * 100 < beastDodge.prob)) {
+					status[P_BSTHUNT][0] = beastDodge.time;
+					anim.getEff(P_IMUATK);
+				}
+
+				if (status[P_BSTHUNT][0] > 0) {
+					damageTaken += atk.atk;
+
+					if(index != null) {
+						basis.totalDamageTaken[index[0]][index[1]] += atk.atk;
+					}
+
+					return;
+				}
+			}
+		}
+
+		super.damaged(atk);
+
+		if(index != null) {
+			basis.totalDamageTaken[index[0]][index[1]] += atk.atk;
+		}
 	}
 
 	@Override
@@ -113,8 +151,12 @@ public class EUnit extends Entity {
 			ans *= basis.b.t().getWKDef();
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKDef();
-		if (isBase && (atk.abi & AB_BASE) > 0)
-			ans *= 4;
+		if (isBase)
+			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (getAbi() & AB_BAKILL) > 0)
+			ans *= 0.7;
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
+			ans *= 0.6; //Not sure
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
@@ -154,7 +196,7 @@ public class EUnit extends Entity {
 				continue;
 			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] == Data.ORB_RES || !trait.contains(orbType))
+			if (line[ORB_TYPE] != Data.ORB_ATK || !trait.contains(orbType))
 				continue;
 
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -202,6 +244,7 @@ public class EUnit extends Entity {
 
 				if (levelOrbs[i][ORB_TYPE] == ORB_MASSIVE) {
 					Trait orbType = Trait.convertType(levelOrbs[i][ORB_TRAIT]).get(0);
+
 					if (eTraits.contains(orbType))
 						ini += ORB_MASSIVE_MULTI[levelOrbs[i][ORB_GRADE]];
 				}
@@ -212,6 +255,7 @@ public class EUnit extends Entity {
 			return ini;
 
 		double com = 1 + t.b.getInc(C_MASSIVE) * 0.01;
+
 		return ini * com;
 	}
 
@@ -244,5 +288,10 @@ public class EUnit extends Entity {
 
 		double com = 1 + t.b.getInc(C_GOOD) * 0.01;
 		return ini * com;
+	}
+
+	@Override
+	protected void onLastBreathe() {
+		basis.notifyUnitDeath();
 	}
 }

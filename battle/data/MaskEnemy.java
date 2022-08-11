@@ -17,7 +17,7 @@ public interface MaskEnemy extends MaskEntity {
 	int getStar();
 
 	default Set<AbEnemy> getSummon() {
-		return new TreeSet<AbEnemy>();
+		return new TreeSet<>();
 	}
 
 	double multi(Basis b);

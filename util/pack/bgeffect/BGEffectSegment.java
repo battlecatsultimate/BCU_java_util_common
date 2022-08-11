@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import common.system.BattleRange;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 public class BGEffectSegment {
@@ -14,6 +16,13 @@ public class BGEffectSegment {
         MODEL,
         ANIME
     }
+
+    public static List<String> tags = Arrays.asList(
+            "name", "model", "file", "count", "x", "y", "startX", "startY", "z", "angle", "scale", "scaleX", "scaleY",
+            "startFrame", "frame", "wait", "lifeTime", "startScale", "v", "vx", "vy", "startV", "startVx", "startVy",
+            "moveAngle", "alpha", "destroyLeft", "destroyTop", "destroyRight", "destroyBottom", "angularV", "startWait",
+            "equallySpaced"
+    );
 
     public String name = "";
     public final String json;
@@ -59,6 +68,13 @@ public class BGEffectSegment {
     public final BattleRange<Integer> frame;
 
     public final BattleRange<Integer> wait;
+    public final BattleRange<Integer> startWait;
+
+    /**
+     * Draw same segment over and over again until reaching battle boundary
+     * Count is assumed to be 1
+     */
+    public final BGEffectSpacer spacer;
 
     /**
      * The speed this component will rotate. If there is a maximum value, the value will be a random number between the minimum and maximum value.
@@ -114,7 +130,7 @@ public class BGEffectSegment {
      */
     public final BattleRange<Integer> opacity;
 
-    public BGEffectSegment(JsonObject elem, String json) {
+    public BGEffectSegment(JsonObject elem, String json, int bgID) {
         this.json = json;
 
         if(elem.has("name")) {
@@ -148,7 +164,13 @@ public class BGEffectSegment {
             files = new String[BGFile.values().length];
 
             if(fileObject.has("image")) {
-                files[BGFile.IMAGE.ordinal()] = "./org/img/bgEffect/"+fileObject.get("image").getAsString();
+                String imageName = fileObject.get("image").getAsString();
+
+                if(imageName.matches("bg\\d{3}\\.png")) {
+                    files[BGFile.IMAGE.ordinal()] = "./org/img/bg/"+imageName;
+                } else {
+                    files[BGFile.IMAGE.ordinal()] = "./org/img/bgEffect/"+fileObject.get("image").getAsString();
+                }
             }
 
             if(fileObject.has("imgcut")) {
@@ -186,12 +208,16 @@ public class BGEffectSegment {
 
         if(elem.has("x")) {
             x = readRangedJsonObjectI(elem, "x", i -> i*4);
+        } else if(elem.has("startX")) {
+            x = readRangedJsonObjectI(elem, "startX", i -> i*4);
         } else {
             x = new BattleRange<>(0, null, 0, null);
         }
 
         if(elem.has("y")) {
             y = readRangedJsonObjectI(elem, "y", i -> i*4);
+        } else if(elem.has("startY")) {
+            y = readRangedJsonObjectI(elem, "startY", i -> i*4);
         } else {
             y = new BattleRange<>(0, null, 0, null);
         }
@@ -254,6 +280,12 @@ public class BGEffectSegment {
             wait = readRangedJsonObjectI(elem, "wait");
         } else {
             wait = null;
+        }
+
+        if(elem.has("startWait")) {
+            startWait = readRangedJsonObjectI(elem, "startWait");
+        } else {
+            startWait = null;
         }
 
         if(elem.has("lifeTime")) {
@@ -323,7 +355,11 @@ public class BGEffectSegment {
                 System.out.println("W/BGEffectSegment | "+json+" / Non-defined velocity data found while moveAngle is defined -> vx == null : "+(velocityX == null)+" | vy == null : "+(velocityY == null));
             }
         } else {
-            moveAngle = null;
+            if(velocity != null) {
+                moveAngle = new BattleRange<>(0.0, null, 0.0, null);
+            } else {
+                moveAngle = null;
+            }
         }
 
         if(elem.has("alpha")) {
@@ -360,6 +396,38 @@ public class BGEffectSegment {
             angleVelocity = readRangedJsonObjectD(elem, "angularV", Math::toRadians);
         } else {
             angleVelocity = null;
+        }
+
+        if(elem.has("equallySpaced")) {
+            JsonObject obj = elem.getAsJsonObject("equallySpaced");
+
+            BattleRange.SNAP snap;
+
+            switch (obj.get("base").getAsString()) {
+                case "default":
+                    snap = BattleRange.SNAP.DEFAULT;
+                    break;
+                case "bgImage":
+                    snap = BattleRange.SNAP.BGIMAGE;
+                    break;
+                default:
+                    throw new IllegalStateException("E/BGEffectSegment | "+json+" / Unhandled snap mode for equallySpaced tag : " + obj.get("base").getAsString());
+            }
+
+            spacer = new BGEffectSpacer(obj.get("pos1").getAsInt(), obj.get("pos2").getAsInt(), obj.get("value").getAsInt(), snap, bgID);
+
+            if(count.hasRandomValue() || count.getPureRangeI() != 1) {
+                System.out.println("W/BGEffectSegment | "+json+" / Count isn't 1 while spacer is defined -> Has Random Value : "+ count.hasRandomValue() +" | Count gotten : "+count.getPureRangeI());
+            }
+        } else {
+            spacer = null;
+        }
+
+        //Check unknown tags
+        for(String tag : elem.getAsJsonObject().keySet()) {
+            if(!tags.contains(tag)) {
+                System.out.println("W/BGEffectSegment | "+json+" / Unknown tag found -> " + tag);
+            }
         }
     }
 

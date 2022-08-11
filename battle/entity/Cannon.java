@@ -159,7 +159,7 @@ public class Cannon extends AtkModelAb {
 			Form f = Identifier.parseInt(339, Unit.class).get().forms[0];
 			EAnimU enter = f.getEAnim(UType.ENTER);
 			enter.setTime(0);
-			wall = new EUnit(b, f.du, enter, 1, null, null);
+			wall = new EUnit(b, f.du, enter, 1);
 			b.le.add(wall);
 			b.le.sort(Comparator.comparingInt(e -> e.layer));
 			wall.added(-1, (int) (pos + 100)); // guessed distance from enemy compared from BC
@@ -213,8 +213,8 @@ public class Cannon extends AtkModelAb {
 					proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + b.b.getInc(C_STOP)) / 100);
 					proc.SNIPER.prob = 1;
 					double p = b.ubase.pos - wid / 2 + 100;
-					CTrait.set(CTrait.size() - 1,UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
-					AttackCanon eatk = new AttackCanon(this, 0, CTrait, AB_ONLY | AB_ZKILL, proc, 0, 0, 1);
+					CTrait.set(0, UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
+					AttackCanon eatk = new AttackCanon(this, 0, CTrait, AB_ONLY | AB_ZKILL | AB_CKILL, proc, 0, 0, 1);
 					new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
 				} else if (id == 6) {
 					// barrier canon
@@ -226,7 +226,7 @@ public class Cannon extends AtkModelAb {
 					int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
 					double rad = b.b.t().getCannonMagnification(id, Data.BASE_RANGE);
 					double newPos = getBreakerSpawnPoint(pos, rad);
-					b.getAttack(new AttackCanon(this, atk, CTrait, 0, proc, newPos - rad, newPos-1, duration));
+					b.getAttack(new AttackCanon(this, atk, CTrait, AB_CKILL, proc, newPos - rad, newPos-1, duration));
 
 					atka = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK);
 					exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);

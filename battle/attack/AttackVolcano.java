@@ -9,10 +9,9 @@ import java.util.List;
 public class AttackVolcano extends AttackAb {
 
 	protected boolean attacked = false;
-	protected int volcTime = VOLC_ITV;
+	private byte volcTime = VOLC_ITV;
 
 	protected final List<Entity> vcapt = new ArrayList<>();
-	private final List<Entity> temp = new ArrayList<>();
 
 	public AttackVolcano(Entity e, AttackSimple a, double sta, double end) {
 		super(e, a, sta, end, false);
@@ -29,11 +28,7 @@ public class AttackVolcano extends AttackAb {
 		capt.clear();
 
 		for (AbEntity e : le)
-			if (e instanceof Entity) {
-				if(!vcapt.contains(e)) {
-					temp.add((Entity) e);
-				}
-
+			if (e instanceof Entity && !vcapt.contains((Entity) e)) {
 				capt.add(e);
 			}
 	}
@@ -42,22 +37,21 @@ public class AttackVolcano extends AttackAb {
 	public void excuse() {
 		process();
 
-		if(!temp.isEmpty()) {
-			for(Entity e : temp) {
-				e.damaged(this);
-				attacked = true;
-			}
-
-			vcapt.addAll(temp);
-
-			temp.clear();
-		}
-
 		if (volcTime == 0) {
 			volcTime = VOLC_ITV;
+			vcapt.clear();
 		} else {
 			volcTime--;
-			return;
+		}
+
+		if(attacker != null) {
+			if(attacker.status[P_WEAK][0] != 0) {
+				atk = rawAtk * attacker.status[P_WEAK][1] / 100;
+			}
+
+			if(attacker.status[P_STRONG][0] != 0) {
+				atk = rawAtk * attacker.status[P_STRONG][0] / 100;
+			}
 		}
 
 		for (AbEntity e : capt) {
@@ -67,6 +61,8 @@ public class AttackVolcano extends AttackAb {
 			if (e instanceof Entity) {
 				e.damaged(this);
 				attacked = true;
+
+				vcapt.add((Entity) e);
 			}
 		}
 	}

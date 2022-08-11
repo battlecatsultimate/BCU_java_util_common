@@ -1,18 +1,20 @@
 package common.util.stage;
 
-import common.io.InStream;
+import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.RType;
+import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.IndexContainer;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
-import common.pack.VerFixer.VerFixerException;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.stage.info.CustomStageInfo;
+import common.util.stage.info.DefStageInfo;
 
 import java.util.*;
 
@@ -55,6 +57,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("RA", 24);
 			idmap.put("H", 25);
 			idmap.put("CA", 27);
+			idmap.put("Q", 31);
+
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
 			VFile f = VFile.get("./org/stage/");
@@ -92,11 +96,134 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				sm.stars = new int[len];
 				for (int i = 0; i < len; i++)
 					sm.stars[i] = Integer.parseInt(strs[2 + i]);
-				sm.set = Integer.parseInt(strs[6]);
-				sm.retyp = Integer.parseInt(strs[7]);
-				sm.pllim = Integer.parseInt(strs[8]);
 				sm.name += strs[10];
 				sm.starMask = Integer.parseInt(strs[12]);
+
+				if(sm.info != null) {
+					if(!strs[7].equals("0")) {
+						sm.info.resetMode = Integer.parseInt(strs[7]);
+
+						if(sm.info.resetMode > 3) {
+							System.out.println("W/MapColc | Unknown stage reward reset mode " + sm.info.resetMode);
+						}
+					}
+
+					if(!strs[8].equals("0")) {
+						sm.info.clearLimit = Integer.parseInt(strs[8]);
+					}
+
+					sm.info.hiddenUponClear = !strs[13].equals("0");
+
+					if(!strs[10].equals("0")) {
+						sm.info.waitTime = Integer.parseInt(strs[10]);
+					}
+				}
+			}
+			qs = VFile.readLine("./org/data/EX_lottery.csv");
+			List<Stage> exLottery = new ArrayList<>();
+
+			String lotteryLine = qs.poll();
+			boolean canGo = true;
+
+			while(lotteryLine != null && !lotteryLine.isEmpty()) {
+				int[] lotteryData = CommonStatic.parseIntsN(lotteryLine);
+
+				if(lotteryData.length != 2) {
+					System.out.println("W/MapColc | New format of EX lottery line found : "+Arrays.toString(lotteryData));
+
+					canGo = false;
+					break;
+				}
+
+				StageMap sm = getMap(lotteryData[0]);
+
+				if(sm == null) {
+					System.out.println("W/MapColc | No such stage map found : "+lotteryData[0]);
+
+					canGo = false;
+					break;
+				}
+
+				Stage s = sm.list.get(lotteryData[1]);
+
+				if(s == null) {
+					System.out.println("W/MapColc | No such stage found : "+lotteryData[0]+" - "+lotteryData[1]);
+
+					canGo = false;
+					break;
+				}
+
+				exLottery.add(s);
+
+				lotteryLine = qs.poll();
+			}
+
+			if(canGo) {
+				qs = VFile.readLine("./org/data/EX_group.csv");
+
+				String groupLine = qs.poll();
+
+				while(groupLine != null && !groupLine.isEmpty()) {
+					int[] groupData = CommonStatic.parseIntsN(groupLine);
+
+					float maxPercentage = groupData[0];
+
+					StageMap sm = getMap(groupData[1]);
+
+					if(sm == null) {
+						groupLine = qs.poll();
+
+						continue;
+					}
+
+					Stage s = sm.list.get(groupData[2]);
+
+					if(s == null || s.info == null) {
+						groupLine = qs.poll();
+
+						continue;
+					}
+
+					int exLength = groupData.length - 3;
+
+					if(exLength % 2 != 0) {
+						System.out.println("W/MapColc | Invalid EX group format : " + Arrays.toString(groupData));
+
+						groupLine = qs.poll();
+
+						continue;
+					}
+
+					exLength /= 2;
+
+					Stage[] exStage = new Stage[exLength];
+					float[] exChance = new float[exLength];
+
+					for(int i = 0; i < exLength; i++) {
+						if(groupData[i * 2 + 3] >= exLottery.size()) {
+							System.out.println("M/MapColc | EX lottery ID is higher than actual length : In group -> "+groupData[i * 2 + 3]+" / In lottery -> "+exLottery.size());
+
+							break;
+						}
+
+						exStage[i] = exLottery.get(groupData[i * 2 + 3]);
+						exChance[i] = maxPercentage * (groupData[i * 2 + 4] / 100f);
+
+						maxPercentage -= exChance[i];
+					}
+
+					maxPercentage = groupData[0];
+
+					for(int i = 0; i < exLength; i++) {
+						exChance[i] /= maxPercentage / 100;
+					}
+
+					DefStageInfo def = ((DefStageInfo)s.info);
+					def.exStages = exStage;
+					def.exChances = exChance;
+
+					groupLine = qs.poll();
+				}
 			}
 		}
 
@@ -137,10 +264,12 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 			add(14, id -> new StageMap(id, akuOutbreak+"MSDDM/MapStageDataDM_000.csv", 0));
 
+			add(15, id -> new StageMap(id, abbr + "2_0_Z.csv", 3)).name = "CotC 1 Zombie";
+
 			VFile stz = VFile.get("./org/stage/CH/stageZ/");
 			for (VFile vf : stz.list()) {
 				String str = vf.getName();
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(6, 8));
 					id1 = Integer.parseInt(str.substring(9, 11));
@@ -156,11 +285,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					maps.get(12).add(id1, id -> new Stage(id, vf, 0));
 				else if (id0 == 6)
 					maps.get(13).add(id1, id -> new Stage(id, vf, 0));
+				else if (id0 == 7)
+					maps.get(15).add(id1, id -> new Stage(id, vf, 0));
 			}
 			VFile stw = VFile.get("./org/stage/CH/stageW/");
 			for (VFile vf : stw.list()) {
 				String str = vf.getName();
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(6, 8));
 					id1 = Integer.parseInt(str.substring(9, 11));
@@ -177,7 +308,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					maps.get(11).add(0, id -> new Stage(id, vf, 0));
 					continue;
 				}
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(10, 12));
 					id1 = Integer.parseInt(str.substring(13, 15));
@@ -191,7 +322,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			VFile st = VFile.get("./org/stage/CH/stage/");
 			for (VFile vf : st.list()) {
 				String str = vf.getName();
-				int id0 = -1;
+				int id0;
 				try {
 					id0 = Integer.parseInt(str.substring(5, 7));
 				} catch (Exception e) {
@@ -223,7 +354,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			for (VFile m : map.list()) {
 				String str = m.getName();
 				int len = str.length();
-				int id = -1;
+				int id;
 				try {
 					id = Integer.parseInt(str.substring(len - 7, len - 4));
 				} catch (Exception e) {
@@ -236,7 +367,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			for (VFile s : stage) {
 				String str = s.getName();
 				int len = str.length();
-				int id0 = -1, id1 = -1;
+				int id0, id1;
 				try {
 					id0 = Integer.parseInt(str.substring(len - 10, len - 7));
 					id1 = Integer.parseInt(str.substring(len - 6, len - 4));
@@ -268,48 +399,12 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 	public static class PackMapColc extends MapColc {
 
 		public final UserPack pack;
+		@JsonField(generic = CustomStageInfo.class)
+		public ArrayList<CustomStageInfo> si = new ArrayList<>();
 
 		public PackMapColc(UserPack pack) {
 			this.pack = pack;
 			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
-		}
-
-		@SuppressWarnings("deprecation")
-		@Deprecated
-		public PackMapColc(UserPack pack, InStream is) throws VerFixerException {
-			this.pack = pack;
-			UserProfile.getRegister(REG_MAPCOLC, MapColc.class).put(pack.getSID(), this);
-			int val = getVer(is.nextString());
-			if (val != 308)
-				throw new VerFixerException("MapColc requires 308, got " + val);
-			is.nextString();
-
-			int n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				CharaGroup cg = new CharaGroup(pack, is);
-				pack.groups.set(cg.id.id, cg);
-			}
-
-			n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				LvRestrict lr = new LvRestrict(pack, is);
-				pack.lvrs.set(lr.id.id, lr);
-			}
-
-			n = is.nextInt();
-			for (int i = 0; i < n; i++) {
-				StageMap sm = add(i, StageMap::new);
-				sm.name = is.nextString();
-				sm.stars = is.nextIntsB();
-				int m = is.nextInt();
-				for (int j = 0; j < m; j++) {
-					InStream sub = is.subStream();
-					sm.add(id -> Data.err(() -> new Stage(pack, id, sub)));
-				}
-				m = is.nextInt();
-				for (int j = 0; j < m; j++)
-					sm.lim.add(new Limit.PackLimit(pack, is));
-			}
 		}
 
 		@Override
@@ -319,9 +414,21 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		@Override
 		public String toString() {
-			return pack.desc.name;
+			String str = pack.desc.names.toString();
+			if (str.isEmpty())
+				return pack.desc.id;
+			return str;
 		}
 
+		@OnInjected
+		public void onInjected() {
+			if (UserProfile.isOlderPack(pack, "0.6.4.0"))
+				for (StageMap sm : maps) {
+					sm.names.put(sm.name);
+					for (Stage st : sm.list)
+						st.names.put(st.name);
+				}
+		}
 	}
 
 	public static class StItr implements Iterator<Stage>, Iterable<Stage> {

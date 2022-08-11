@@ -49,8 +49,9 @@ public class UpdateCheck {
 		}
 
 		public void run(Consumer<Double> prog) throws Exception {
-			if (temp.exists())
-				temp.delete();
+			if (temp.exists() && !temp.delete()) {
+				System.out.println("W/UpdateCheck::Downloader - Failed to delete " +temp.getAbsolutePath());
+			}
 			boolean success = false;
 			for (String u : url) {
 				try {
@@ -123,7 +124,9 @@ public class UpdateCheck {
 				"100201", "100203", "100204", "100300", "100303", "100304", "100400", "100401", "100403", "100500",
 				"100502", "100503", "100504", "100505", "100506", "100507", "100508", "100509", "100600", "100603",
 				"100700", "100701", "100800", "100802", "100803", "100804", "100900", "100902", "100904", "100905",
-				"100906", "100907", "101000", "101002", "110000");
+				"100906", "100907", "101000", "101002", "110000", "110002", "110100", "110101", "110200", "110300",
+				"110400", "110403", "110500", "110503", "110504", "110505", "110506", "110600", "110603", "110604",
+				"110700", "110703", "110800");
 	}
 
 	public static final String URL_UPDATE = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/updateInfo.json";
@@ -131,9 +134,7 @@ public class UpdateCheck {
 	public static final String URL_MUSIC = "https://github.com/battlecatsultimate/bcu-assets/raw/master/music/";
 	public static final String URL_NEW = "https://github.com/battlecatsultimate/bcu-assets/raw/master/assets/";
 	public static final String URL_LANG_CHECK = "https://api.github.com/repos/battlecatsultimate/bcu-assets/contents/lang";
-
-	public static final String ALT_RES = "https://gitee.com/lcy0x1/bcu-resources/raw/master/resources/";
-	public static final String ALT_NEW = "https://gitee.com/lcy0x1/bcu-assets/raw/master/assets/";
+	public static final String URL_FONT = "https://github.com/battlecatsultimate/bcu-assets/raw/master/fonts/stage_font.otf";
 
 	public static void addRequiredAssets(String... str) {
 		Collections.addAll(UserProfile.getPool(REG_REQLIB, String.class), str);
@@ -158,10 +159,9 @@ public class UpdateCheck {
 			if (local != null && local.contains("asset_" + aj.id))
 				continue;
 			String url = URL_NEW + aj.id + ".asset.bcuzip";
-			String alt = ALT_NEW + aj.id + ".asset.bcuzip";
 			File temp = CommonStatic.ctx.getAssetFile("./assets/.asset.bcuzip.temp");
 			File target = CommonStatic.ctx.getAssetFile("./assets/" + aj.id + ".asset.bcuzip");
-			set.add(new Downloader(target, temp, aj.desc, false, url, alt));
+			set.add(new Downloader(target, temp, aj.desc, false, url));
 		}
 		return set;
 	}
@@ -203,6 +203,16 @@ public class UpdateCheck {
 		};
 	}
 
+	public static Downloader checkFont() { //If more fonts are added, it may need to be a list like the rest. For now it's like this because there is only one font
+		File fonts = CommonStatic.ctx.getAssetFile("./fonts/stage_font.otf");
+
+		if (!fonts.exists()) {
+			File temp = CommonStatic.ctx.getAssetFile("./fonts/.otf.temp");
+			return new Downloader(fonts, temp, "Stage Name Fonts", false, URL_FONT);
+		}
+		return null;
+	}
+
 	public static List<Downloader> checkMusic(int count) {
 		boolean[] exi = new boolean[count];
 		File music = CommonStatic.ctx.getAssetFile("./music/");
@@ -219,8 +229,7 @@ public class UpdateCheck {
 				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
 				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
 				String url = URL_MUSIC + Data.trio(i) + ".ogg";
-				String alt = ALT_RES + "music/" + Data.trio(i) + ".ogg";
-				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url, alt));
+				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url));
 			}
 		return ans;
 	}
@@ -236,9 +245,8 @@ public class UpdateCheck {
 					str.remove(f.getName());
 			for (String s : str) {
 				String url = URL_LIB + s;
-				String alt = ALT_RES + "jar/BCU_lib/" + s;
 				libs.add(new Downloader(new File("./BCU_lib/" + s), new File("./BCU_lib/.jar.temp"),
-						"downloading BCU library " + s, false, url, alt));
+						"downloading BCU library " + s, false, url));
 			}
 		}
 		return libs;
@@ -246,10 +254,12 @@ public class UpdateCheck {
 
 	public static UpdateJson checkUpdate() throws Exception {
 		JsonElement update = WebFileIO.read(URL_UPDATE);
-		if (update == null)
+
+		if (update == null) {
 			return null;
-		UpdateJson json = JsonDecoder.decode(update, UpdateJson.class);
-		return json;
+		}
+
+		return JsonDecoder.decode(update, UpdateJson.class);
 	}
 
 }

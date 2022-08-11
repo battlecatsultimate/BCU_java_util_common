@@ -1,7 +1,6 @@
 package common.util.stage;
 
 import common.battle.LineUp;
-import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCIdentifier;
@@ -12,11 +11,11 @@ import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
 import common.pack.PackData.UserPack;
-import common.pack.VerFixer.VerFixerException;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 @IndexCont(PackData.class)
@@ -56,33 +55,6 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			res.put(cg, lvr.res.get(cg).clone());
 	}
 
-	@Deprecated
-	public LvRestrict(UserPack mc, InStream is) throws VerFixerException {
-		int ver = getVer(is.nextString());
-		if (ver != 308)
-			throw new VerFixerException("LvRestrict requires 308, got " + ver);
-		name = is.nextString();
-		id = Identifier.parseInt(is.nextInt(), LvRestrict.class);
-		int[] tb = is.nextIntsB();
-		for (int i = 0; i < tb.length; i++)
-			all[i] = tb[i];
-		int[][] tbb = is.nextIntsBB();
-		for (int i = 0; i < tbb.length; i++)
-			for (int j = 0; j < tbb[i].length; j++)
-				rares[i][j] = tbb[i][j];
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			int cg = is.nextInt();
-			int[] vals = new int[6];
-			tb = is.nextIntsB();
-			for (int j = 0; j < tb.length; j++)
-				vals[j] = tb[j];
-			CharaGroup cgs = mc.groups.get(cg);
-			if (cgs != null)
-				res.put(cgs, vals);
-		}
-	}
-
 	private LvRestrict(LvRestrict lvr) {
 		for (CharaGroup cg : lvr.res.keySet())
 			res.put(cg, lvr.res.get(cg).clone());
@@ -117,10 +89,10 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null) {
-					int[] mlv = valid(f).getLvs();
-					int[] flv = lu.map.get(f.unit.id).getLvs();
-					for (int i = 0; i < 6; i++)
-						if (mlv[i] < flv[i])
+					ArrayList<Integer> mlv = valid(f).getLvs();
+					ArrayList<Integer> flv = lu.map.get(f.unit.id).getLvs();
+					for (int i = 0; i < Math.min(mlv.size(), flv.size()); i++)
+						if (mlv.get(i) < flv.get(i))
 							return false;
 				}
 		return true;
@@ -156,12 +128,12 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 				mod = true;
 			}
 		if (mod)
-			return new Level(f.regulateLv(null, lv));
+			return new Level(f.regulateLv(null, Level.LvList(lv)));
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], rares[f.unit.rarity][i]);
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], all[i]);
-		return new Level(f.regulateLv(null, lv));
+		return new Level(f.regulateLv(null, Level.LvList(lv)));
 	}
 
 	public void validate(LineUp lu) {

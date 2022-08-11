@@ -9,6 +9,7 @@ import common.util.Data;
 import common.pack.IndexContainer.Indexable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -17,7 +18,7 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     public static void addBCTraits() {
         //Reads traits from BC and implements it into the main pack
         PackData.DefPack data = UserProfile.getBCData();
-        String[] traitNames = {"Red", "Floating", "Black", "Metal", "Angel", "Alien", "Zombie", "Aku", "Relic", "White", "EVA", "Witch", "base", "cannon"};
+        String[] traitNames = {"Red", "Floating", "Black", "Metal", "Angel", "Alien", "Zombie", "Aku", "Relic", "White", "EVA", "Witch", "Baron", "Beast", "base", "cannon"};
         for (int i = 0; i < traitNames.length ; i++) {
             Trait t = new Trait(data.getNextID(Trait.class));
             t.BCTrait = true;
@@ -105,6 +106,9 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     @JsonDecoder.OnInjected
     public void onInjected() {
         icon = UserProfile.getUserPack(id.pack).source.readImage(Source.BasePath.TRAIT.toString(), id.id);
+        // icon = UserProfile.getUserPack(id.pack).source.readImage(Source.TRAITICON, id.id);
+        // TODO: check if above commented out code is necessary
+        others.removeIf(Objects::isNull);
     }
 
     @JsonClass.JCGetter

@@ -16,6 +16,7 @@ public class EStage extends BattleObj {
 	public final int[] num, rem;
 	public final double mul;
 	public final int star;
+	public final int[] killCounter;
 
 	private StageBasis b;
 
@@ -30,6 +31,14 @@ public class EStage extends BattleObj {
 			num[i] = datas[i].number;
 		lim = st.getLim(star);
 		mul = st.getCont().stars[star] * 0.01;
+
+		killCounter = new int[s.data.datas.length];
+
+		for(int i = 0; i < killCounter.length; i++) {
+			if(s.data.datas[i].castle_0 != 0) {
+				killCounter[i] = s.data.datas[i].kill_count;
+			}
+		}
 	}
 
 	/**
@@ -41,7 +50,8 @@ public class EStage extends BattleObj {
 
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
-			if (inHealth(data) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] == 0 && num[i] != -1) {
+
+			if (inHealth(data) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] == 0 && num[i] != -1 && killCounter[i] == 0) {
 				if(!s.trail && data.respawn_0 >= data.respawn_1)
 					rem[i] = data.respawn_0;
 				else
@@ -52,8 +62,15 @@ public class EStage extends BattleObj {
 					if (num[i] == 0)
 						num[i] = -1;
 				}
-				if (data.boss == 1 && !b.shock)
+
+				if (data.boss >= 1 && !b.shock)
 					b.shock = true;
+
+				if (CommonStatic.getConfig().shake && data.boss == 2 && b.shakeCoolDown[1] == 0) {
+					b.shake = SHAKE_MODE_BOSS;
+					b.shakeDuration = SHAKE_MODE_BOSS[SHAKE_DURATION];
+					b.shakeCoolDown[1] = SHAKE_MODE_BOSS[SHAKE_COOL_DOWN];
+				}
 
 				double multi = (data.multiple == 0 ? 100 : data.multiple) * mul * 0.01;
 				double mulatk = (data.multiple == 0 ? 100 : data.mult_atk) * mul * 0.01;
@@ -92,7 +109,7 @@ public class EStage extends BattleObj {
 			num[ind] = -1;
 			double multi = data.multiple * mul * 0.01;
 
-			if(sb.st.getCont().getCont().getSID().equals("000006") || sb.st.getCont().getCont().getSID().equals("000011"))
+			if(sb.st.trail)
 				multi = Integer.MAX_VALUE;
 
 			double mulatk = data.mult_atk * mul * 0.01;
@@ -106,7 +123,7 @@ public class EStage extends BattleObj {
 			}
 
 			AbEnemy e = Identifier.getOr(enemy, AbEnemy.class);
-			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, data.boss == 1 ? -2 : -1);
+			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, data.boss >= 1 ? -2 : -1);
 		}
 		return null;
 	}

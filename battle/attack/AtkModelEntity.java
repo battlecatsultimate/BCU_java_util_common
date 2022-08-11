@@ -1,5 +1,7 @@
 package common.battle.attack;
 
+import common.battle.data.AtkDataModel;
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
 import common.battle.entity.EAnimCont;
@@ -47,10 +49,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
-		atks = new int[raw.length + 2];
-		abis = new int[raw.length + 2];
-		act = new int[raw.length + 2];
-		acs = new BattleObj[raw.length + 2];
+		atks = new int[raw.length + 5];
+		abis = new int[raw.length + 5];
+		act = new int[raw.length + 5];
+		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
 			atks[i] = atks[i];
@@ -58,18 +60,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
 		}
-		if (data.getRevenge() != null) {
-			atks[raw.length] = (int) (data.getRevenge().atk * d0);
-			abis[raw.length] = 1;
-			acs[raw.length] = new BattleObj();
-			act[raw.length] = data.getRevenge().loopCount();
-		}
-		if (data.getResurrection() != null) {
-			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
-			abis[raw.length + 1] = 1;
-			acs[raw.length + 1] = new BattleObj();
-			act[raw.length + 1] = data.getResurrection().loopCount();
-		}
+		setExtraAtks(raw, d0);
 		sealed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < sealed.length; i++) {
 			sealed[i] = Proc.blank();
@@ -83,14 +74,14 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
-		atks = new int[raw.length + 2];
-		abis = new int[raw.length + 2];
-		act = new int[raw.length + 2];
-		acs = new BattleObj[raw.length + 2];
+		atks = new int[raw.length + 5];
+		abis = new int[raw.length + 5];
+		act = new int[raw.length + 5];
+		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
 
-			if (pc != null && lv != null)
+			if (pc != null && lv != null && lv.getLvs().size() == pc.max.size())
 				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getLvs()) * atks[i]) * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
 			else
 				atks[i] = (int) Math.round(atks[i] * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
@@ -98,23 +89,42 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
 		}
-		if (data.getRevenge() != null) {
-			atks[raw.length] = (int) (data.getRevenge().atk * d0);
-			abis[raw.length] = 1;
-			acs[raw.length] = new BattleObj();
-			act[raw.length] = data.getRevenge().loopCount();
-		}
-		if (data.getResurrection() != null) {
-			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
-			abis[raw.length + 1] = 1;
-			acs[raw.length + 1] = new BattleObj();
-			act[raw.length + 1] = data.getResurrection().loopCount();
-		}
+		setExtraAtks(raw, d0);
 		sealed = new Proc[data.getAtkCount()];
 		for (int i = 0; i < sealed.length; i++) {
 			sealed[i] = Proc.blank();
 			if(data.getAtkModel(i).getProc() != null)
 				sealed[i].MOVEWAVE.set(data.getAtkModel(i).getProc().MOVEWAVE);
+		}
+	}
+
+	public void setExtraAtks(int[][] raw, double d0) {
+		for(int i = 0; i <= 4; i++) {
+			AtkDataModel model;
+
+			switch (i) {
+				case 0:
+					model = data.getRevenge();
+					break;
+				case 1:
+					model = data.getResurrection();
+					break;
+				case 2:
+					model = data.getGouge();
+					break;
+				case 3:
+					model = data.getResurface();
+					break;
+				default:
+					model = data.getRevive();
+			}
+
+			if(model != null) {
+				atks[raw.length + i] = (int) (model.atk * d0);
+				abis[raw.length + i] = 1;
+				acs[raw.length + i] = new BattleObj();
+				act[raw.length + i] = model.loopCount();
+			}
 		}
 	}
 
@@ -152,7 +162,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
 		double[] ints = inRange(ind);
-		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind));
+		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind), ind);
 	}
 
 	/**
@@ -168,7 +178,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time);
+		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time, 0);
 	}
 
 	@Override
@@ -228,10 +238,17 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (data.getAtkModel(ind).getAltAbi() != 0)
 			e.altAbi(data.getAtkModel(ind).getAltAbi());
 		if (abis[ind] == 1) {
-			if (getProc(ind).TIME.prob != 0 && (getProc(ind).TIME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).TIME.prob))
-				b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind).TIME.time);
+			if (getProc(ind).TIME.prob != 0 && (getProc(ind).TIME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).TIME.prob)) {
+				if (getProc(ind).TIME.intensity > 0) {
+					b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind).TIME.time);
+					b.temp_inten = getProc(ind).TIME.intensity;
+				} else {
+					b.sn_temp_stop = Math.max(b.sn_temp_stop, getProc(ind).TIME.time);
+					b.temp_n_inten = (float)Math.abs(getProc(ind).TIME.intensity) / b.sn_temp_stop;
+				}
+			}
 			if (getProc(ind).THEME.prob != 0 && (getProc(ind).THEME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).THEME.prob))
-				b.changeTheme(getProc(ind).THEME.id, getProc(ind).THEME.time, getProc(ind).THEME.type);
+				b.changeTheme(getProc(ind).THEME);
 		}
 	}
 
@@ -242,7 +259,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return e.layer;
 	}
 
-	protected Proc getProc(int ind) {
+	public Proc getProc(int ind) {
 		if (e.status[P_SEAL][0] > 0 && ind < sealed.length)
 			return sealed[ind];
 		return data.getAtkModel(ind).getProc();
@@ -263,6 +280,9 @@ public abstract class AtkModelEntity extends AtkModelAb {
 						proc.SUMMON.set(sprc);
 				} else
 					proc.get(s0).set(getProc(ind).get(s0));
+
+		if (data instanceof CustomEntity)
+			for (int b : BCShareable) proc.getArr(b).set(getProc(ind).getArr(b));
 
 		if (proc.CRIT.exists() && proc.CRIT.mult == 0)
 			proc.CRIT.mult = 200;

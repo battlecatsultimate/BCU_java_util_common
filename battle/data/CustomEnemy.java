@@ -1,7 +1,6 @@
 package common.battle.data;
 
 import common.battle.Basis;
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -45,10 +44,6 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		return ce;
 	}
 
-	public void fillData(int ver, InStream is) {
-		zread(ver, is);
-	}
-
 	@Override
 	public int getDrop() {
 		return drop * 100;
@@ -67,9 +62,13 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	@Override
 	public Set<AbEnemy> getSummon() {
 		Set<AbEnemy> ans = new TreeSet<>();
-		for (AtkDataModel adm : atks)
-			if (adm.proc.SUMMON.prob > 0)
-				ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
+		if (common) {
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
+				ans.add(Identifier.getOr(rep.proc.SUMMON.id, AbEnemy.class));
+		} else
+			for (AtkDataModel adm : atks)
+				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
+					ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
 		return ans;
 	}
 
@@ -96,18 +95,5 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	@Override
 	public double getLimit() {
 		return limit;
-	}
-
-	private void zread(int val, InStream is) {
-		val = getVer(is.nextString());
-		if (val >= 400)
-			zread$000400(is);
-
-	}
-
-	private void zread$000400(InStream is) {
-		zreada(is);
-		star = is.nextByte();
-		drop = is.nextInt();
 	}
 }

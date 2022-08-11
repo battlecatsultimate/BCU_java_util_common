@@ -37,7 +37,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	public void alter(int m, int v) {
 		if (m == 0)
-			if (v < ent.length)
+			if (v < ent.length && v >= 0 && v != ind)
 				fa = ent[par = v];
 			else
 				fa = ent[par = 0];
@@ -129,8 +129,12 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			return hf;
 		else if (m == 14)
 			return vf;
+		else if (m == 50)
+			return extendX;
+		else if (m == 51)
+			return extendY;
 		else
-			;// TODO Printer.p("EPart", 74, "modification can be: " + m);
+			System.out.println("EPart modification can be: " + m);
 		return -1;
 	}
 
@@ -155,7 +159,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return ind;
 	}
 
-	protected void drawPart(FakeGraphics g, P base) {
+	public void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < CommonStatic.getConfig().deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
 		FakeTransform at = g.getTransform();
@@ -252,6 +256,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		extendX = args[13];
 		gsca = model.ints[0];
 		hf = vf = 1;
+		extendX = extendY = 0;
 	}
 
 	private P getSize() {

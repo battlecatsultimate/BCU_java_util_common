@@ -12,6 +12,8 @@ import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.lang.MultiLangData;
+import common.util.stage.info.DefStageInfo;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -28,6 +30,15 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		private final Queue<String> qs;
 
 		public int rand, time, lim;
+
+		public int waitTime = -1, clearLimit = -1, resetMode = -1;
+
+		public boolean hiddenUponClear = false;
+
+		public StageMapInfo(StageMap map) {
+			sm = map;
+			qs = null;
+		}
 
 		private StageMapInfo(StageMap map, FileData ad) {
 			sm = map;
@@ -50,7 +61,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 			int[] ints = CommonStatic.parseIntsN(line.split("//")[0]);
 			if (ints.length <= 4)
 				return;
-			s.info = new Stage.StageInfo(this, s, ints);
+			s.info = new DefStageInfo(this, s, ints);
 		}
 
 	}
@@ -71,14 +82,20 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	@JsonField(generic = Stage.class)
 	public final FixIndexMap<Stage> list = new FixIndexMap<>(Stage.class);
-	@JsonField
+
+	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
+	@JsonField(generic = MultiLangData.class)
+	public MultiLangData names = new MultiLangData();
+
 	@JsonField
-	public int price = 1, retyp, pllim, set, cast = -1;
+	public int price = 1, cast = -1;
 	@JsonField
 	public int[] stars = new int[] { 100 };
 
 	public int starMask = 0;
+
+
 
 	@JCConstructor
 	public StageMap() {
@@ -87,7 +104,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 	public StageMap(Identifier<StageMap> id) {
 		this.id = id;
-		name = "new stage map";
+		names.put("new stage map");
 
 	}
 
@@ -110,7 +127,9 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 	@Override
 	public StageMap copy(MapColc mc) {
 		StageMap sm = new StageMap(mc.getNextID());
-		sm.name = toString();
+		sm.names = names.copy();
+		sm.names.put(toString());
+
 		sm.stars = stars.clone();
 		for (Stage st : list)
 			sm.add(st.copy(sm));
@@ -137,9 +156,9 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return desp;
-		if (name.length() == 0)
+		String stName = names.toString();
+		if (stName.length() == 0)
 			return id + " (" + list.size() + ")";
-		return name;
+		return stName;
 	}
-
 }

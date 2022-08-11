@@ -27,4 +27,5 @@ public abstract class ContAb extends BattleObj {
 
 	public abstract void update();
 
+	public abstract boolean IMUTime();
 }

@@ -14,6 +14,7 @@ import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Queue;
 
 @JsonClass(read = JsonClass.RType.FILL)
@@ -24,7 +25,7 @@ public class PCoin extends Data {
 		for (String str : qs) {
 			String[] strs = str.trim().split(",");
 
-			if (strs.length == 67)
+			if (strs.length == 80)
 				new PCoin(strs);
 		}
 	}
@@ -33,7 +34,8 @@ public class PCoin extends Data {
 	public MaskUnit full = null;
 	public ArrayList<Trait> trait = new ArrayList<>();
 
-	public int[] max = new int[6];
+	@JsonField(block = true)
+	public final ArrayList<Integer> max = new ArrayList<>();
 	@JsonField(generic = int[].class)
 	public final ArrayList<int[]> info = new ArrayList<>();
 
@@ -46,44 +48,47 @@ public class PCoin extends Data {
 		int id = CommonStatic.parseIntN(strs[0]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
 
-		for (int i = 0; i < 5; i++) {
-			info.add(new int[13]);
-			for (int j = 0; j < 13; j++)
-				info.get(i)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
-			max[i + 1] = info.get(i)[1];
-			if (max[i + 1] == 0)
-				max[i + 1] = 1;
+		max.add(0);
+		for (int i = 0; i < 6; i++) {
+			if(!allZero(strs, 2 + i * 13)) {
+				info.add(new int[13]);
+				for (int j = 0; j < 13; j++)
+					info.get(info.size() - 1)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
+				max.add(info.get(info.size() - 1)[1]);
+				if (max.get(info.size()) == 0)
+					max.set(info.size(), 1);
+			}
 		}
+
 		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
 		((DataUnit)du).pcoin = this;
 		full = improve(max);
 	}
 
 	public void update() {
-		max = new int[1 + info.size()];
-		for (int i = 0; i < info.size(); i++)
-			max[i + 1] = info.get(i)[1];
+		while (max.size() - 1 < info.size())
+			max.add(info.get(max.size() - 1)[1]);
+
 		full = improve(max);
 	}
 
 	@SuppressWarnings("deprecation")
-	public MaskUnit improve(int[] lvs) {
+	public MaskUnit improve(ArrayList<Integer> lvs) {
 		MaskUnit ans = du.clone();
-		if (lvs.length < max.length)
-			System.arraycopy(max, 1, lvs, lvs.length, max.length - lvs.length);
+		for (int i = lvs.size(); i < max.size(); i++)
+			lvs.add(max.get(i));
+
 		for (int i = 0; i < info.size(); i++) {
-			if (du instanceof CustomUnit && max[i + 1] == 0)
-				continue;
 			if (info.get(i)[0] >= PC_CORRES.length) {
-				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
 			}
 			int[] type = PC_CORRES[info.get(i)[0]];
 			if (type[0] == -1) {
-				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]);
+				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
 			}
-			if (lvs[i + 1] == 0) {
+			if (lvs.get(i + 1) == 0) {
 				if (type[0] == PC_TRAIT) {
 					Trait types = UserProfile.getBCData().traits.get(type[1]);
 					ans.getTraits().remove(types);
@@ -101,7 +106,7 @@ public class PCoin extends Data {
 				for (int j = 0; j < 4; j++) {
 					int v0 = info.get(i)[2 + j * 2];
 					int v1 = info.get(i)[3 + j * 2];
-					modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+					modifs[j] = (v1 - v0) * (lvs.get(i + 1) - 1) / (maxlv - 1) + v0;
 				}
 			}
 			else
@@ -131,8 +136,12 @@ public class PCoin extends Data {
 				if (du instanceof DataUnit) {
 					if (type[1] == P_STRONG && modifs[0] != 0)
 						tar.set(0, 100 - tar.get(0));
-					if (type[1] == P_WEAK)
+					else if (type[1] == P_WEAK)
 						tar.set(2, 100 - tar.get(2));
+					else if (type[1] == P_BOUNTY)
+						tar.set(0, 100);
+					else if (type[1] == P_ATKBASE)
+						tar.set(0, 300);
 				} else if (!((CustomEntity)du).common && !(type[1] == P_STRONG && modifs[0] != 0)) {
 					for (AtkDataModel atk : ((CustomEntity)ans).atks) {
 						ProcItem atks = atk.proc.getArr(type[1]);
@@ -150,9 +159,9 @@ public class PCoin extends Data {
 				}
 			} else if (type[0] == PC_AB || type[0] == PC_BASE) {
 				if (du instanceof DataUnit)
-					BCImprove((DataUnit)ans,type,modifs);
+					Improve((DataUnit)ans,type,modifs);
 				else
-					diyImprove((CustomUnit)ans,type,modifs);
+					Improve((CustomUnit)ans,type,modifs);
 			} else if (type[0] == PC_IMU)
 				ans.getProc().getArr(type[1]).set(0, 100);
 			else if (type[0] == PC_TRAIT) {
@@ -164,7 +173,7 @@ public class PCoin extends Data {
 		return ans;
 	}
 
-	private void BCImprove(DataUnit ans, int[] type, int[] modifs) {
+	private void Improve(DataUnit ans, int[] type, int[] modifs) {
 		if (type[0] == PC_AB)
 			ans.abi |= type[1];
 		else {
@@ -184,7 +193,7 @@ public class PCoin extends Data {
 		}
 	}
 
-	private void diyImprove(CustomUnit ans, int[] type, int[] modifs) {
+	private void Improve(CustomUnit ans, int[] type, int[] modifs) {
 		if (type[0] == PC_AB)
 			ans.abi |= type[1];
 		else {
@@ -204,11 +213,11 @@ public class PCoin extends Data {
 		}
 	}
 
-	public double getAtkMultiplication(int[] lvs) {
+	public double getAtkMultiplication(ArrayList<Integer> lvs) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
-			if(lvs[i + 1] == 0)
+			if(lvs.get(i + 1) == 0)
 				continue;
 			int[] type = PC_CORRES[info.get(i)[0]];
 
@@ -222,7 +231,7 @@ public class PCoin extends Data {
 					for (int j = 0; j < 4; j++) {
 						int v0 = info.get(i)[2 + j * 2];
 						int v1 = info.get(i)[3 + j * 2];
-						modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+						modifs[j] = (v1 - v0) * (lvs.get(i + 1) - 1) / (maxlv - 1) + v0;
 					}
 				}
 				if (maxlv == 0)
@@ -236,11 +245,11 @@ public class PCoin extends Data {
 		return 1.0;
 	}
 
-	public double getHPMultiplication(int[] lvs) {
+	public double getHPMultiplication(ArrayList<Integer> lvs) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
-			if(lvs[i + 1] == 0)
+			if(lvs.get(i + 1) == 0)
 				continue;
 			int[] type = PC_CORRES[info.get(i)[0]];
 
@@ -254,7 +263,7 @@ public class PCoin extends Data {
 					for (int j = 0; j < 4; j++) {
 						int v0 = info.get(i)[2 + j * 2];
 						int v1 = info.get(i)[3 + j * 2];
-						modifs[j] = (v1 - v0) * (lvs[i + 1] - 1) / (maxlv - 1) + v0;
+						modifs[j] = (v1 - v0) * (lvs.get(i + 1) - 1) / (maxlv - 1) + v0;
 					}
 				}
 				if (maxlv == 0)
@@ -270,8 +279,18 @@ public class PCoin extends Data {
 	
 	@OnInjected
 	public void onInjected() {
-		max = new int[1 + info.size()];
-		for (int i = 0; i < info.size(); i++)
-			max[i + 1] = info.get(i)[1];
+		max.add(0);
+		for (int[] ints : info)
+			max.add(ints[1]);
+	}
+
+	private static boolean allZero(String[] data, int index) {
+		for(int i = index; i < index + 12; i++) {
+			if(!data[i].trim().equals("0")) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

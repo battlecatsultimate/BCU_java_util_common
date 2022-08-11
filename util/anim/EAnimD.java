@@ -13,9 +13,10 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
 	public int f = -1;
 
-	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim) {
+	public EAnimD(AnimI<?, T> ia, MaModel mm, MaAnim anim, T t) {
 		super(ia, mm);
 		ma = anim;
+		type = t;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -116,4 +117,13 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 		((EAnimD<?>) copy).setTime(f);
 	}
 
+	/**
+	 * make this animation a component of another, used in warp and kb
+	 */
+	public void paraTo(EAnimD<?> base) {
+		if (base == null)
+			ent[0].setPara(null);
+		else
+			ent[0].setPara(base.ent[1]);
+	}
 }

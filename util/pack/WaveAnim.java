@@ -32,7 +32,7 @@ public class WaveAnim extends AnimI<WaveAnim, WaveAnim.WaveType> {
 
 	@Override
 	public EAnimD<WaveType> getEAnim(WaveType t) {
-		return new EAnimD<>(this, mamodel, maanim);
+		return new EAnimD<>(this, mamodel, maanim, t);
 	}
 
 	@Override

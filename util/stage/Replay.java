@@ -1,40 +1,32 @@
 package common.util.stage;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.Treasure;
 import common.io.DataIO;
-import common.io.InStream;
 import common.io.PackLoader;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.JCConstructor;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
-import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonField.IOType;
 import common.io.json.JsonField;
+import common.io.json.JsonField.IOType;
 import common.pack.Context;
-import common.pack.PackData;
+import common.pack.Context.ErrType;
+import common.pack.Identifier;
 import common.pack.Source;
-import common.pack.PackData.UserPack;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
-import common.pack.Context.ErrType;
-import common.pack.Identifier;
 import common.util.Data;
-import common.util.stage.MapColc.DefMapColc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 @JsonClass
 @JsonClass.JCGeneric(ResourceLocation.class)
@@ -44,15 +36,8 @@ public class Replay extends Data {
 		return UserProfile.getRegister("Replay_local", Replay.class);
 	}
 
-	public static void getRecd(Stage stage, InStream is, String str) {
-		String sid = stage.getCont().getCont().getSID();
-		ResourceLocation rl = new ResourceLocation(".temp_" + sid, str);
-		stage.recd.add(getRecd(is, rl, stage));
-	}
-
-	@Deprecated
 	public static void read() {
-		File fold = CommonStatic.def.route("./replay/");
+		/* File fold = CommonStatic.def.route("./replay/");
 		if (fold.exists()) {
 			File[] fs = fold.listFiles();
 			for (File fi : fs) {
@@ -77,6 +62,7 @@ public class Replay extends Data {
 			e.printStackTrace();
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to remove folder : "+fold.getName());
 		}
+		*/
 		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.BasePath.REPLAY.toString());
 		if (f.exists())
 			for (File fi : f.listFiles())
@@ -118,69 +104,6 @@ public class Replay extends Data {
 		return null;
 	}
 
-	private static Replay getRecd(InStream is, ResourceLocation name, Stage st) {
-		int val = getVer(is.nextString());
-		if (val < 401)
-			return null;
-		long seed = is.nextLong();
-		int[] conf = is.nextIntsB();
-		int star = is.nextInt();
-		BasisLU lu = BasisLU.zread(is.subStream());
-		InStream action = is.subStream();
-		int pid = is.nextInt();
-		if (st == null)
-			if (pid == 0) {
-				int id = is.nextInt();
-				StageMap sm = DefMapColc.getMap(id / 1000);
-				st = sm.list.get(id % 1000);
-				if (st == null) {
-					return null;
-				}
-			} else {
-				st = zreads$000401(is, pid);
-			}
-		else {
-			is.nextString();
-			is.nextString();
-			is.nextString();
-		}
-		Replay ans = new Replay(lu, st.id, star, conf, seed, false);
-		int[] act = new int[action.nextInt()];
-		for (int i = 0; i < act.length; i++)
-			act[i] = action.nextInt();
-		ans.action = act;
-		ans.rl = name;
-		ans.write();
-		return ans;
-	}
-
-	private static Stage zreads$000401(InStream is, int pid) {
-		String mcn = is.nextString();
-		String smid = is.nextString();
-		String stid = is.nextString();
-		PackData pack = UserProfile.getPack(Data.hex(pid));
-		if (pid != 0 && pack == null) {
-			return null;
-		}
-		MapColc mc = null;
-		if (pid == 0)
-			mc = DefMapColc.getMap(mcn);
-		else
-			mc = ((UserPack) pack).mc;
-		StageMap sm = null;
-		for (StageMap map : mc.maps)
-			if (map.name.equals(smid))
-				sm = map;
-		if (sm == null) {
-			return null;
-		}
-		Stage st = null;
-		for (Stage s : sm.list)
-			if (s.name.equals(stid))
-				st = s;
-		return st;
-	}
-
 	@JsonClass.JCIdentifier
 	@JsonField
 	public ResourceLocation rl;
@@ -197,6 +120,7 @@ public class Replay extends Data {
 	@JsonField
 	public boolean buttonDelay = false;
 	public int[] action;
+	public HashMap<Integer, double[]> sniperCoords;
 	public boolean marked;// FIXME mark save
 
 	@JCConstructor
@@ -238,21 +162,22 @@ public class Replay extends Data {
 		Context.renameTo(src, dst);
 	}
 
-	public void rename(String str) {
+	public void rename(String str, Boolean putInMap) {
 		if (rl == null) {
 			rl = new ResourceLocation(ResourceLocation.LOCAL, str, Source.BasePath.REPLAY);
 			Workspace.validate(rl);
 			write();
-			getMap().put(rl.id, this);
+			if (putInMap)
+				getMap().put(rl.id, this);
 			return;
 		}
-		if (rl.pack.equals(ResourceLocation.LOCAL))
+		if (putInMap && rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().remove(rl.id);
 		File src = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
 		rl.id = str;
 		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
 		Workspace.validate(rl);
-		if (rl.pack.equals(ResourceLocation.LOCAL))
+		if (putInMap && rl.pack.equals(ResourceLocation.LOCAL))
 			getMap().put(rl.id, this);
 		if (!src.exists()) {
 			write();
@@ -306,4 +231,9 @@ public class Replay extends Data {
 		Data.err(() -> JsonDecoder.inject(e, Treasure.class, lu.t()));
 	}
 
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		if (sniperCoords == null)
+			sniperCoords = new HashMap<>();
+	}
 }

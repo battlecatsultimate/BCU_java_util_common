@@ -204,7 +204,7 @@ public class LineUp extends Data {
 	/**
 	 * set level record of an Unit
 	 */
-	public synchronized void setLv(Unit u, int[] lv) {
+	public synchronized void setLv(Unit u, ArrayList<Integer> lv) {
 		boolean sub = updating;
 		updating = true;
 
@@ -226,7 +226,7 @@ public class LineUp extends Data {
 	/**
 	 * set orb data of an Unit
 	 */
-	public synchronized void setOrb(Unit u, int[] lvs, int[][] orbs) {
+	public synchronized void setOrb(Unit u, ArrayList<Integer> lvs, int[][] orbs) {
 		// lvs must be generated before doing something with orbs
 		boolean sub = updating;
 		updating = true;
@@ -285,7 +285,10 @@ public class LineUp extends Data {
 		List<Combo> tcom = new ArrayList<>();
 		inc = new int[C_TOT];
 		loc = new int[5];
-		for (PackData p : UserProfile.getAllPacks())
+		for (PackData p : UserProfile.getAllPacks()) {
+			if (p instanceof PackData.UserPack && !((PackData.UserPack)p).useCombos)
+				continue;
+
 			for (Combo c : p.combos) {
 				boolean b = true;
 				for (int i = 0; i < c.forms.length; i++) {
@@ -321,6 +324,7 @@ public class LineUp extends Data {
 						}
 				}
 			}
+		}
 		for (int i = 0; i < coms.size(); i++)
 			if (!tcom.contains(coms.get(i))) {
 				coms.remove(i);
@@ -379,7 +383,7 @@ public class LineUp extends Data {
 				orbs = is.nextIntsBB();
 			}
 			if (u != null)
-				map.put(u.id, new Level(lv, orbs));
+				map.put(u.id, new Level(Level.LvList(lv), orbs));
 		}
 		arrange();
 	}

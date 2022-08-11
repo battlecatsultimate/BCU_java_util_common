@@ -28,8 +28,15 @@ public class DataAtk implements MaskAtk {
 	}
 
 	@Override
+	public boolean isOmni() {
+		return data.ldr[index] < 0;
+	}
+
+	@Override
 	public int getLongPoint() {
-		return data.lds + data.ldr;
+		if (index >= data.lds.length)
+			return data.lds[0] + data.ldr[0];
+		return data.lds[index] + data.ldr[index];
 	}
 
 	@Override
@@ -42,7 +49,9 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int getShortPoint() {
-		return data.lds;
+		if (index >= data.lds.length)
+			return data.lds[0];
+		return data.lds[index];
 	}
 
 	@Override

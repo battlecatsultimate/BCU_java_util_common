@@ -4,8 +4,10 @@ import common.CommonStatic;
 import common.pack.UserProfile;
 
 import java.io.File;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Queue;
+import java.util.TreeMap;
 
 public class VFile implements Comparable<VFile> {
 
@@ -13,7 +15,7 @@ public class VFile implements Comparable<VFile> {
 		return getBCFileTree().find(str);
 	}
 
-	public static final VFileRoot getBCFileTree() {
+	public static VFileRoot getBCFileTree() {
 		return UserProfile.getBCData().root;
 	}
 
@@ -86,6 +88,10 @@ public class VFile implements Comparable<VFile> {
 		return name.compareTo(o.name);
 	}
 
+	public boolean containsSubDire(String dir) {
+		return subs.containsKey(dir);
+	}
+
 	public int countSubDire() {
 		int ans = 0;
 		for (VFile f : subs.values())
@@ -100,17 +106,6 @@ public class VFile implements Comparable<VFile> {
 
 	public FileData getData() {
 		return data;
-	}
-
-	public List<VFile> getIf(Predicate<VFile> p) {
-		List<VFile> ans = new ArrayList<VFile>();
-		for (VFile v : list()) {
-			if (p.test(v))
-				ans.add(v);
-			if (v.subs != null)
-				ans.addAll(v.getIf(p));
-		}
-		return ans;
 	}
 
 	public String getName() {

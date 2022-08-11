@@ -22,6 +22,13 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 		moves = new int[0][];
 	}
 
+	public Part(int id, int modif) {
+		ints = new int[] { id, modif, -1, 0, 0 };
+		name = "";
+		n = 0;
+		moves = new int[0][];
+	}
+
 	protected Part(Queue<String> qs) {
 		String[] ss = qs.poll().trim().split(",");
 		for (int i = 0; i < 5; i++)

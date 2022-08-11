@@ -1,6 +1,5 @@
 package common.battle.data;
 
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
@@ -41,12 +40,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		alt = adm.alt;
 		move = adm.move;
 		proc = adm.proc == null ? Proc.blank() : adm.proc.clone();
-	}
-
-	protected AtkDataModel(CustomEntity ent, InStream is) {
-		ce = ent;
-		proc = Proc.blank();
-		zread("0.3.7", is);
 	}
 
 	protected AtkDataModel(CustomEntity ene, MaskEntity me, int i) {
@@ -148,30 +141,9 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		return ld0 > 0 || ld1 < 0;
 	}
 
+	@Override
 	public boolean isOmni() {
 		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0) || (ld0 < 0 && ld1 == 0);
-	}
-
-	private void zread(String ver, InStream is) {
-		int val = getVer(is.nextString());
-		if (val >= 404)
-			zread$000404(is);
-	}
-
-	private void zread$000404(InStream is) {
-		str = is.nextString();
-		atk = is.nextInt();
-		pre = is.nextInt();
-		ld0 = is.nextInt();
-		ld1 = is.nextInt();
-		targ = is.nextInt();
-		count = is.nextInt();
-		dire = is.nextInt();
-		alt = is.nextInt();
-		move = is.nextInt();
-		int bm = is.nextInt();
-		range = (bm & 1) > 0;
-		proc = Proc.load(is.nextIntsBB());
 	}
 
 }

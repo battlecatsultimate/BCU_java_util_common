@@ -1,9 +1,10 @@
 package common.battle.data;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public abstract class DefaultData extends DataEntity {
 
 	public Proc proc;
-	protected int lds, ldr;
+	protected int[] lds = new int[1], ldr = new int[1];
 	protected int atk, atk1, atk2, pre, pre1, pre2, abi0 = 1, abi1, abi2, tba;
 	protected DataAtk[] datks;
 
@@ -29,6 +30,11 @@ public abstract class DefaultData extends DataEntity {
 		if (ind >= getAtkCount() || datks == null || ind >= datks.length)
 			return null;
 		return datks[ind];
+	}
+
+	@Override
+	public MaskAtk[] getAtks() {
+		return datks;
 	}
 
 	@Override
@@ -58,12 +64,22 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public boolean isLD() {
-		return ldr > 0;
+		for(int i = 0; i < ldr.length; i++) {
+			if(ldr[i] <= 0)
+				return false;
+		}
+
+		return true;
 	}
 
 	@Override
 	public boolean isOmni() {
-		return ldr < 0;
+		for(int i = 0; i < ldr.length; i++) {
+			if(ldr[i] < 0)
+				return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -95,7 +111,7 @@ public abstract class DefaultData extends DataEntity {
 
 	@Override
 	public int touchBase() {
-		return lds > 0 ? lds : range;
+		return lds[0] > 0 ? lds[0] : range;
 	}
 
 	protected int getLongPre() {

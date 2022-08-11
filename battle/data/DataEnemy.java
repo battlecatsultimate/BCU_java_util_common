@@ -23,6 +23,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	public void fillData(String[] strs) {
 		//This function serves to gather BC enemy data and give them their stats accordingly, custom units don't really use this
 		int[] ints = new int[strs.length];
+
 		for (int i = 0; i < strs.length; i++)
 			ints[i] = Integer.parseInt(strs[i]);
 		hp = ints[0];
@@ -68,7 +69,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.CRIT.prob = ints[25];
 		int a = 0;
 		if (ints[26] == 1)
-			a |= AB_BASE;
+			proc.ATKBASE.mult = 300;
 		if(ints.length < 87 || ints[86] != 1) {
 			proc.WAVE.prob = ints[27];
 			proc.WAVE.lv = ints[28];
@@ -84,8 +85,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.STRONG.mult = ints[33];
 		proc.LETHAL.prob = ints[34];
 
-		lds = ints[35];
-		ldr = ints[36];
+		lds[0] = ints[35];
+		ldr[0] = ints[36];
 		if (ints[37] == 1)
 			proc.IMUWAVE.mult = 100;
 		if (ints[38] == 1)
@@ -145,6 +146,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.VOLC.dis_0 = ints[82] / 4;
 		proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
 		proc.VOLC.time = ints[84] * VOLC_ITV;
+		if (ints[85] == 1)
+			proc.IMUVOLC.mult = 100;
 		proc.DEMONSHIELD.hp = ints[87];
 		proc.DEMONSHIELD.regen = ints[88];
 		proc.DEATHSURGE.prob = ints[89];
@@ -154,6 +157,35 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 
 		if(ints[93] == 1)
 			traits.add(BCTraits.get(TRAIT_DEMON));
+
+		if(ints[94] == 1)
+			traits.add(BCTraits.get(TRAIT_BARON));
+
+		try {
+			if (getAtkCount() > 1) {
+				int lds0 = lds[0];
+				int ldr0 = ldr[0];
+				lds = new int[getAtkCount()];
+				ldr = new int[getAtkCount()];
+				lds[0] = lds0;
+				ldr[0] = ldr0;
+
+				for (int i = 1; i < getAtkCount(); i++) {
+					if (ints[95 + (i - 1) * 3] == 1) {
+						lds[i] = ints[95 + (i - 1) * 3 + 1];
+						ldr[i] = ints[95 + (i - 1) * 3 + 2];
+					} else {
+						lds[i] = lds0;
+						ldr[i] = ldr0;
+					}
+				}
+			}
+
+			if (ints[101] == 1)
+				traits.add(BCTraits.get(TRAIT_BEAST));
+		} catch (IndexOutOfBoundsException ignored) {
+
+		}
 
 		abi = a;
 

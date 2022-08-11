@@ -17,7 +17,7 @@ public class EEnemy extends Entity {
 	public final int mark;
 	public final double mult, mula;
 
-	public int hit;
+	public byte hit;
 
 	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, double magnif, double atkMagnif, int d0, int d1, int m) {
 		super(b, de, ea, atkMagnif, magnif);
@@ -25,10 +25,10 @@ public class EEnemy extends Entity {
 		mula = atkMagnif;
 		mark = m;
 		isBase = mark <= -1;
-		layer = d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
+		layer = d0 == d1 ? d0 : d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
 		traits = de.getTraits();
 
-		canBurrow = mark != 1;
+		canBurrow = mark < 1;
 	}
 
 	@Override
@@ -45,9 +45,7 @@ public class EEnemy extends Entity {
 	public void kill(boolean atk) {
 		super.kill(atk);
 		if (!basis.st.trail && !atk) {
-			double mul = basis.b.t().getDropMulti();
-			if (tempearn)
-				mul *= 2;
+			double mul = basis.b.t().getDropMulti() * (1 + (status[P_BOUNTY][0] / 100.0));
 			basis.money += mul * ((MaskEnemy) data).getDrop();
 		}
 	}
@@ -67,20 +65,24 @@ public class EEnemy extends Entity {
 				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)atk.attacker.data).getPack()))
 					sharedTraits.add(t);
 			}
-			if ((atk.abi & AB_GOOD) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_GOOD) != 0)
 				ans *= EUnit.OrbHandler.getOrbGood(atk, sharedTraits, basis.b.t());
-			if ((atk.abi & AB_MASSIVE) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVE) != 0)
 				ans *= EUnit.OrbHandler.getOrbMassive(atk, sharedTraits, basis.b.t());
 			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0)
 				ans *= basis.b.t().getMASSIVESATK(sharedTraits);
 		}
-		if (isBase && (atk.abi & AB_BASE) > 0)
-			ans *= 4;
+		if (isBase)
+			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (atk.abi & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKAtk();
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (atk.abi & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKAtk();
-		if (atk.canon == 5)
+		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (atk.abi & AB_BAKILL) > 0)
+			ans *= 1.6;
+		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BEAST)) && atk.getProc().BSTHUNT.type.active)
+			ans *= 2.5;
+		if (atk.canon == 16)
 			if ((touchable() & TCH_UG) > 0)
 				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND));
 			else
@@ -98,7 +100,7 @@ public class EEnemy extends Entity {
 		double ans;
 		double minPos = ((MaskEnemy) data).getLimit();
 
-		if (mark == 1)
+		if (mark >= 1)
 			ans = pos - (minPos + basis.boss_spawn); // guessed value compared to BC
 		else
 			ans = pos - minPos;
@@ -123,5 +125,17 @@ public class EEnemy extends Entity {
 		}
 
 		super.update();
+	}
+
+	@Override
+	public void postUpdate() {
+		super.postUpdate();
+
+		if (health > 0)
+			status[P_BOUNTY][0] = 0;
+	}
+
+	@Override
+	protected void onLastBreathe() {
 	}
 }

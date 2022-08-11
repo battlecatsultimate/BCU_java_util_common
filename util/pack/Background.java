@@ -18,8 +18,9 @@ import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.system.files.VFile;
 import common.util.Data;
-import common.util.anim.*;
-import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.anim.AnimI;
+import common.util.anim.EAnimD;
+import common.util.anim.ImgCut;
 
 import java.util.Queue;
 
@@ -45,134 +46,144 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		}
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
-		for (VFile vf : VFile.get("./org/img/bg/").list())
-			if (vf.getName().length() == 9) {
-				String q = qs.poll();
 
-				if(q == null)
-					continue;
+		String q;
 
-				int[] ints = CommonStatic.parseIntsN(q);
+		while((q = qs.poll()) != null) {
+			int[] ints = CommonStatic.parseIntsN(q);
 
-				Background bg = new Background(new VImg(vf), ints);
+			Background bg = new Background(ints);
 
-				switch (bg.id.id) {
-					case 2:
-					case 14:
-					case 26:
-					case 34:
-						bg.effect = Data.BG_EFFECT_STAR;
-						break;
-					case 33:
-					case 58:
-						bg.effect = Data.BG_EFFECT_RAIN;
-						break;
-					case 13:
-					case 15:
-					case 72:
-						bg.effect = Data.BG_EFFECT_BUBBLE;
-						break;
-					case 40:
-						bg.effect = Data.BG_EFFECT_FALLING_SNOW;
-						break;
-					case 3:
-						bg.effect = Data.BG_EFFECT_SNOW;
-						break;
-					case 27:
-						bg.effect = Data.BG_EFFECT_SNOWSTAR;
-						break;
-					case 46:
-					case 47:
-						bg.effect = Data.BG_EFFECT_BLIZZARD;
-						break;
-					case 55:
-						bg.effect = Data.BG_EFFECT_SHINING;
-						break;
-					case 81:
-					case 101:
-					case 123:
-					case 146:
-						bg.effect = Data.BG_EFFECT_BALLOON;
-						break;
-					case 41:
-					case 75:
-						bg.effect = Data.BG_EFFECT_ROCK;
-						break;
-				}
+			switch (bg.id.id) {
+				case 2:
+				case 14:
+				case 26:
+				case 34:
+					bg.effect = Data.BG_EFFECT_STAR;
+					break;
+				case 33:
+				case 58:
+					bg.effect = Data.BG_EFFECT_RAIN;
+					break;
+				case 13:
+				case 15:
+				case 72:
+					bg.effect = Data.BG_EFFECT_BUBBLE;
+					break;
+				case 40:
+					bg.effect = Data.BG_EFFECT_FALLING_SNOW;
+					break;
+				case 3:
+					bg.effect = Data.BG_EFFECT_SNOW;
+					break;
+				case 27:
+					bg.effect = Data.BG_EFFECT_SNOWSTAR;
+					break;
+				case 46:
+				case 47:
+					bg.effect = Data.BG_EFFECT_BLIZZARD;
+					break;
+				case 55:
+					bg.effect = Data.BG_EFFECT_SHINING;
+					break;
+				case 81:
+				case 101:
+				case 123:
+				case 146:
+					bg.effect = Data.BG_EFFECT_BALLOON;
+					break;
+				case 41:
+				case 75:
+					bg.effect = Data.BG_EFFECT_ROCK;
+					break;
+			}
 
-				switch (bg.id.id) {
-					case 13:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{0, 226, 255},
-								{255, 255, 255}
-						};
-						break;
-					case 15:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{0, 73, 173},
-								{66, 187, 255}
-						};
-						break;
-					case 19:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{160, 33, 32},
-								{240, 169, 54}
-						};
-						break;
-					case 46:
-					case 47:
-						bg.overlayAlpha = 67;
-						bg.overlay =  new int[][] {
-								{255, 255, 255},
-								{255, 255, 255}
-						};
-						break;
-					case 71:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{145, 45, 5},
-								{235, 160, 60}
-						};
-						break;
-					case 72:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{0, 35, 125},
-								{0, 0, 0}
-						};
-						break;
-					case 73:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{15, 30, 120},
-								{15, 30, 120}
-						};
-						break;
-					case 156:
-						bg.overlayAlpha = 51;
-						bg.overlay = new int[][] {
-								{255, 255, 255},
-								{255, 255, 255}
-						};
-						break;
-					case 167:
-						bg.overlayAlpha = 76;
-						bg.overlay = new int[][] {
-								{175, 104, 104},
-								{137, 104, 88}
-						};
-						break;
-					case 168:
-						bg.overlayAlpha = 76;
-						bg.overlay = new int[][] {
-								{49, 73, 97},
-								{68, 75, 77}
-						};
+			switch (bg.id.id) {
+				case 13:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{0, 226, 255},
+							{255, 255, 255}
+					};
+					break;
+				case 15:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{0, 73, 173},
+							{66, 187, 255}
+					};
+					break;
+				case 19:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{160, 33, 32},
+							{240, 169, 54}
+					};
+					break;
+				case 46:
+				case 47:
+					bg.overlayAlpha = 67;
+					bg.overlay =  new int[][] {
+							{255, 255, 255},
+							{255, 255, 255}
+					};
+					break;
+				case 71:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{145, 45, 5},
+							{235, 160, 60}
+					};
+					break;
+				case 72:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{0, 35, 125},
+							{0, 0, 0}
+					};
+					break;
+				case 73:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{15, 30, 120},
+							{15, 30, 120}
+					};
+					break;
+				case 156:
+					bg.overlayAlpha = 51;
+					bg.overlay = new int[][] {
+							{255, 255, 255},
+							{255, 255, 255}
+					};
+					break;
+				case 167:
+					bg.overlayAlpha = 76;
+					bg.overlay = new int[][] {
+							{175, 104, 104},
+							{137, 104, 88}
+					};
+					break;
+				case 168:
+					bg.overlayAlpha = 76;
+					bg.overlay = new int[][] {
+							{49, 73, 97},
+							{68, 75, 77}
+					};
+			}
+		}
+
+		for(int i = 0; i < UserProfile.getBCData().bgs.size(); i++) {
+			Background bg = UserProfile.getBCData().bgs.get(i);
+
+			if(bg.reference != -1) {
+				Background ref = UserProfile.getBCData().bgs.get(bg.reference);
+
+				if(ref.overlay != null) {
+					bg.overlay = ref.overlay.clone();
+					bg.overlayAlpha = ref.overlayAlpha;
 				}
 			}
+		}
 	}
 
 	@JsonClass.JCIdentifier
@@ -187,12 +198,13 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 	public int overlayAlpha;
 	@JsonField
 	public int[][] overlay;
+	@JsonField(block = true)
+	public int reference = -1;
 
 	public int ic;
 	@JsonField
 	public boolean top;
 
-	public BackgroundEffect[] efs = null;
 	public FakeImage[] parts = null;
 
 	private boolean loaded = false;
@@ -210,31 +222,44 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		top = true;
 	}
 
-	private Background(VImg vimg, int[] ints) {
-		int id = UserProfile.getBCData().bgs.size();
-		this.id = Identifier.parseInt(id, Background.class);
-		img = vimg;
+	private Background(int[] ints) {
+		int id = ints[0];
+		this.id = Identifier.rawParseInt(id, Background.class);
+
+		VImg image;
+
+		if(ints.length >= 16 && ints[15] != -1) {
+			reference = ints[15];
+			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(ints[15])+".png"));
+		} else {
+			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id)+".png"));
+		}
+
+		img = image;
+
 		top = ints[14] == 1 || ints[13] == 8;
 		ic = ints[13] == 8 ? 1 : ints[13];
+
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
-		UserProfile.getBCData().bgs.add(this);
 
-		if(ints.length == 19) {
-			overlayAlpha = ints[18];
+		UserProfile.getBCData().bgs.set(id, this);
+
+		if(ints.length == 20) {
+			overlayAlpha = ints[19];
 			overlay = new int[][] {
-					{ints[15], ints[16], ints[17]},
-					{ints[15], ints[16], ints[17]}
+					{ints[16], ints[17], ints[18]},
+					{ints[16], ints[17], ints[18]}
 			};
-		} else if(ints.length == 23) {
-			if(ints[18] != ints[22]) {
+		} else if(ints.length == 24) {
+			if(ints[19] != ints[23]) {
 				System.out.println("W/Background | Different overlay alpha value found! : A0 = "+ints[18]+" / A1 = "+ints[22]);
 			}
 
-			overlayAlpha = ints[18];
+			overlayAlpha = ints[19];
 			overlay = new int[][] {
-					{ints[15], ints[16], ints[17]},
-					{ints[19], ints[20], ints[21]}
+					{ints[16], ints[17], ints[18]},
+					{ints[20], ints[21], ints[22]}
 			};
 		}
 	}

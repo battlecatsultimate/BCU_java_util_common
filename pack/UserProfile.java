@@ -90,8 +90,6 @@ public class UserProfile {
 		UserProfile profile = profile();
 		if (str.equals(Identifier.DEF))
 			return profile.def;
-		if (profile.fixpending != null && profile.fixpending.containsKey(str))
-			return profile.fixpending.get(str).data;
 		if (profile.pending != null && profile.pending.containsKey(str))
 			return profile.pending.get(str);
 		if (profile.packmap.containsKey(str))
@@ -146,8 +144,6 @@ public class UserProfile {
 	 */
 	public static UserPack getUserPack(String str) {
 		UserProfile profile = profile();
-		if (profile.fixpending != null && profile.fixpending.containsKey(str))
-			return profile.fixpending.get(str).data;
 		if (profile.pending != null && profile.pending.containsKey(str))
 			return profile.pending.get(str);
 		if (profile.packmap.containsKey(str))
@@ -184,16 +180,9 @@ public class UserProfile {
 			profile.pending = new HashMap<>();
 		}
 
-		if (profile.fixpending == null) {
-			profile.fixpending = new HashMap<>();
-		}
-
-		CommonStatic.ctx.noticeErr(() -> VerFixer.fix(profile.fixpending), ErrType.FATAL,
-				"failed to convert old format");
-		profile.fixpending = null;
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
 		File workspace = CommonStatic.ctx.getWorkspaceFile(".");
-		if (packs.exists())
+		if (packs.exists()) {
 			for (File f : packs.listFiles())
 				if (f.getName().endsWith(".pack.bcuzip")) {
 					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
@@ -208,7 +197,9 @@ public class UserProfile {
 						}
 					}
 				}
-
+		} else {
+			packs.mkdir();
+		}
 		if (workspace.exists())
 			for (File f : workspace.listFiles())
 				if (f.isDirectory()) {
@@ -222,9 +213,9 @@ public class UserProfile {
 				}
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
 		int tot = queue.size();
-		int ind = 0;
 		while (queue.removeIf(profile::add))
-			prog.accept(1.0 * (ind++) / tot);
+			prog.accept((1.0 * (tot - queue.size())) / tot);
+
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 
@@ -239,7 +230,7 @@ public class UserProfile {
 			if (!profile.packmap.containsKey(dep))
 				missingDependencies.add(dep);
 		if (missingDependencies.size() > 0)
-			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.name + " (" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
+			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.names.toString() + " (" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
 	}
 
 	public static UserProfile profile() {
@@ -318,33 +309,47 @@ public class UserProfile {
 
 	public static void reloadExternalPacks() {
 		UserProfile profile = profile();
-		for (UserPack pack : getUserPacks()) {
-			if (pack.editable)
-				continue;
+		profile.packlist.removeIf(p -> {
+			if(!p.editable) {
+				p.unregister();
+				profile.packmap.remove(p.desc.id);
+			}
 
-			profile.packmap.remove(pack.desc.id);
-			profile.packlist.remove(pack);
-			profile.failed.remove(pack);
-			pack.unregister();
-		}
+			return !p.editable;
+		});
+
+		profile.failed.removeIf(p -> !p.editable);
+
+		profile.pending = new HashMap<>();
 
 		File packs = CommonStatic.ctx.getAuxFile("./packs");
-		if (packs.exists())
-			for (File f : packs.listFiles())
-				if (f.getName().endsWith(".pack.bcuzip")) {
-					UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
-							"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
+		if (packs.exists()) {
+			File[] fs = packs.listFiles();
 
-					if (pack != null) {
-						if (profile.packlist.contains(pack)) {
-							CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) pack.source).getPackFile().getName()
-									+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
-						} else {
-							profile.add(pack);
+			if(fs != null) {
+				for (File f : fs)
+					if (f.getName().endsWith(".pack.bcuzip")) {
+						UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
+								"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
+
+						if (pack != null) {
+							UserPack p = profile.pending.put(pack.desc.id, pack);
+
+							if (p != null) {
+								CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) p.source).getPackFile().getName()
+										+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
+							}
 						}
 					}
-				}
+			}
+		}
 
+		Set<UserPack> queue = new HashSet<>(profile.pending.values());
+
+		profile.packlist.addAll(profile.failed);
+		while (queue.removeIf(profile::add));
+
+		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 
 		for (PackData.UserPack pk : profile.packlist) {
@@ -378,7 +383,6 @@ public class UserProfile {
 
 	private final Map<String, Map<String, ?>> registers = new HashMap<>();
 
-	private Map<String, VerFixer> fixpending = new HashMap<>();
 	public Map<String, UserPack> pending = new HashMap<>();
 
 	private UserProfile() {
@@ -390,7 +394,9 @@ public class UserProfile {
 	 */
 	private boolean add(UserPack pack) {
 		packlist.add(pack);
-		if (!canAdd(pack))
+		ArrayList<String> deps = pack.editable ? pack.desc.dependency : pack.preGetDependencies();
+
+		if (!canAdd(deps))
 			return false;
 		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null))) {
 			failed.add(pack);
@@ -400,8 +406,8 @@ public class UserProfile {
 		return true;
 	}
 
-	private boolean canAdd(UserPack s) {
-		for (String dep : s.desc.dependency)
+	private boolean canAdd(ArrayList<String> deps) {
+		for (String dep : deps)
 			if (!packmap.containsKey(dep))
 				return false;
 		return true;

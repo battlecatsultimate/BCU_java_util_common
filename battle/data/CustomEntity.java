@@ -1,13 +1,11 @@
 package common.battle.data;
 
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
-import common.pack.Identifier;
 import common.util.Data;
-import common.util.pack.Soul;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import java.util.List;
 public abstract class CustomEntity extends DataEntity {
 
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rep, rev, res, cntr;
+	public AtkDataModel rep, rev, res, cntr, bur, resu, revi;
 
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
@@ -88,12 +86,25 @@ public abstract class CustomEntity extends DataEntity {
 			return rev;
 		if (ind == atks.length + 1)
 			return res;
+		if (ind == atks.length + 2)
+			return bur;
+		if (ind == atks.length + 3)
+			return resu;
+		if (ind == atks.length + 4)
+			return revi;
+
 		return null;
+	}
+
+	@Override
+	public MaskAtk[] getAtks() {
+		return atks;
 	}
 
 	public String getAvailable(String str) {
 		while (contains(str))
 			str += "'";
+
 		return str;
 	}
 
@@ -137,6 +148,21 @@ public abstract class CustomEntity extends DataEntity {
 	public AtkDataModel getCounter() { return cntr; }
 
 	@Override
+	public AtkDataModel getGouge() {
+		return bur;
+	}
+
+	@Override
+	public AtkDataModel getResurface() {
+		return resu;
+	}
+
+	@Override
+	public AtkDataModel getRevive() {
+		return revi;
+	}
+
+	@Override
 	public int getTBA() {
 		return tba;
 	}
@@ -153,11 +179,18 @@ public abstract class CustomEntity extends DataEntity {
 		range = de.getRange();
 		abi = de.getAbi();
 		loop = de.getAtkLoop();
-		traits = new ArrayList<>(de.getTraits());
+		traits = new ArrayList<>();
+		for(Trait t : de.getTraits()) {
+			if(!t.BCTrait)
+				traits.add(t);
+			else if(t.id.id != Data.TRAIT_EVA && t.id.id != Data.TRAIT_WITCH)
+				traits.add(t);
+		}
 		width = de.getWidth();
 		tba = de.getTBA();
 		touch = de.getTouch();
 		death = de.getDeathAnim();
+		will = de.getWill();
 		if (de instanceof CustomEntity) {
 			importData$1((CustomEntity) de);
 			return;
@@ -169,8 +202,11 @@ public abstract class CustomEntity extends DataEntity {
 		rep.proc = de.getRepAtk().getProc().clone();
 		int m = de.getAtkCount();
 		atks = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			atks[i] = new AtkDataModel(this, de, i);
+			for (int j : BCShareable)
+				atks[i].proc.getArr(j).set(de.getProc().getArr(j));
+		}
 	}
 
 	@Override
@@ -182,6 +218,12 @@ public abstract class CustomEntity extends DataEntity {
 			ans |= getRevenge().isLD();
 		if(getResurrection() != null)
 			ans |= getResurrection().isLD();
+		if(getGouge() != null)
+			ans |= getGouge().isLD();
+		if(getResurface() != null)
+			ans |= getResurface().isLD();
+		if(getRevive() != null)
+			ans |= getRevive().isLD();
 		return ans;
 	}
 
@@ -196,6 +238,12 @@ public abstract class CustomEntity extends DataEntity {
 			return rev.isLD();
 		if (ind == atks.length + 1)
 			return res.isLD();
+		if (ind == atks.length + 2)
+			return bur.isLD();
+		if (ind == atks.length + 3)
+			return resu.isLD();
+		if (ind == atks.length + 4)
+			return revi.isLD();
 		return atks[ind].isLD();
 	}
 
@@ -208,6 +256,12 @@ public abstract class CustomEntity extends DataEntity {
 			ans |= getRevenge().isOmni();
 		if(getResurrection() != null)
 			ans |= getResurrection().isOmni();
+		if(getGouge() != null)
+			ans |= getGouge().isOmni();
+		if(getResurface() != null)
+			ans |= getResurface().isOmni();
+		if(getRevive() != null)
+			ans |= getRevive().isOmni();
 		return ans;
 	}
 
@@ -222,6 +276,13 @@ public abstract class CustomEntity extends DataEntity {
 			return rev.isOmni();
 		if (ind == atks.length + 1)
 			return res.isOmni();
+		if (ind == atks.length + 2)
+			return bur.isOmni();
+		if (ind == atks.length + 3)
+			return resu.isOmni();
+		if (ind == atks.length + 4)
+			return revi.isOmni();
+
 		return atks[ind].isOmni();
 	}
 
@@ -244,12 +305,6 @@ public abstract class CustomEntity extends DataEntity {
 	@Override
 	public int touchBase() {
 		return base == 0 ? range : base;
-	}
-
-	protected void zreada(InStream is) {
-		int ver = getVer(is.nextString());
-		if (ver >= 404)
-			zreada$000404(is);
 	}
 
 	private boolean contains(String str) {
@@ -279,39 +334,14 @@ public abstract class CustomEntity extends DataEntity {
 		atks = new AtkDataModel[ce.atks.length];
 		for (int i = 0; i < atks.length; i++)
 			atks[i] = tnew.get(inds[i]);
-
 	}
 
-	private void zreada$000404(InStream is) {
-		hp = is.nextInt();
-		hb = is.nextInt();
-		speed = is.nextInt();
-		range = is.nextInt();
-		abi = is.nextInt();
-		type = is.nextInt();
-		width = is.nextInt();
-		int sh = is.nextInt();
-		tba = is.nextInt();
-		base = is.nextInt();
-		touch = is.nextInt();
-		loop = is.nextInt();
-		death = Identifier.parseInt(is.nextInt(), Soul.class);
-		common = is.nextInt() > 0;
-		rep = new AtkDataModel(this, is);
-		int m = is.nextInt();
-		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
-			set[i] = new AtkDataModel(this, is);
-		int n = is.nextInt();
-		atks = new AtkDataModel[n];
-		for (int i = 0; i < n; i++)
-			atks[i] = set[is.nextInt()];
-		int adi = is.nextInt();
-		if ((adi & 1) > 0)
-			rev = new AtkDataModel(this, is);
-		if ((adi & 2) > 0)
-			res = new AtkDataModel(this, is);
-
-		getProc().BARRIER.health = sh;
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		for (int i = 0; i < traits.size(); i++)
+			if (traits.get(i) == null) {
+				traits.remove(i);
+				i--;
+			}
 	}
 }

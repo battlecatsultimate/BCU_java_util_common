@@ -13,10 +13,8 @@ import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
 import common.util.pack.bgeffect.BackgroundEffect;
-import common.util.stage.CastleImg;
-import common.util.stage.EStage;
+import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
-import common.util.stage.Stage;
 import common.util.unit.*;
 
 import java.util.*;
@@ -28,6 +26,8 @@ public class StageBasis extends BattleObj {
 	public final Stage st;
 	public final EStage est;
 	public final ELineUp elu;
+	public final long[][] totalDamageTaken = new long[2][5];
+	public final long[][] totalDamageGiven = new long[2][5];
 	public final int[] nyc;
 	public final boolean[][] locks = new boolean[2][5];
 	public final AbEntity ebase, ubase;
@@ -52,12 +52,20 @@ public class StageBasis extends BattleObj {
 	public int buttonDelay = 0;
 	public int[] selectedUnit = {-1, -1};
 	public final double boss_spawn;
+	public final int[] shakeCoolDown = {0, 0};
 
-	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num;
+	public double siz;
+	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num, pos;
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
 	public boolean shock = false;
-	public int time, s_stop, temp_s_stop;
+	public int time, s_stop, temp_s_stop, inten, temp_inten;
+	public int sn_stop, sn_temp_stop;
+	public float n_inten, temp_n_inten;
+	public int[] shake;
+	public int shakeDuration;
+	public double shakeOffset;
+
 	public int respawnTime, unitRespawnTime;
 	public Background bg;
 	public BackgroundEffect bgEffect;
@@ -68,12 +76,13 @@ public class StageBasis extends BattleObj {
 	public double midH = -1, battleHeight = -1;
 	private final List<AttackAb> la = new ArrayList<>();
 	private boolean lethal = false;
-	private int themeTime;
+	public int themeTime;
 	private Identifier<Background> theme = null;
+	public Identifier<Music> mus = null;
 	private THEME.TYPE themeType;
 	private boolean bgEffectInitialized = false;
 
-	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
+	public StageBasis(BattleField bf, EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
 		b = bas;
 		r = new CopRand(seed);
 		nyc = bas.nyc;
@@ -84,7 +93,11 @@ public class StageBasis extends BattleObj {
 		bg = Identifier.getOr(st.bg, Background.class);
 		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
 		if (bg.effect != -1) {
-			bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
+			if(bg.effect == -bg.id.id && BackgroundEffect.mixture.containsKey(bg.id.id)) {
+				bgEffect = BackgroundEffect.mixture.get(bg.id.id);
+			} else if(bg.effect >= 0) {
+				bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
+			}
 		}
 		EEnemy ee = est.base(this);
 		if (ee != null) {
@@ -124,7 +137,7 @@ public class StageBasis extends BattleObj {
 		if ((conf[0] & 1) > 0)
 			work_lv = 8;
 		if ((conf[0] & 2) > 0)
-			sniper = new Sniper(this);
+			sniper = new Sniper(this, bf);
 		else
 			sniper = null;
 		upgradeCost = bas.t().getLvCost(work_lv);
@@ -162,10 +175,11 @@ public class StageBasis extends BattleObj {
 		return upgradeCost == -1 ? -1 : upgradeCost / 100;
 	}
 
-	public void changeTheme(Identifier<Background> id, int time, THEME.TYPE type) {
-		theme = id;
-		themeTime = time;
-		themeType = type;
+	public void changeTheme(THEME th) {
+		theme = th.id;
+		mus = th.mus;
+		themeTime = th.time;
+		themeType = th.type;
 	}
 
 	public void changeBG(Identifier<Background> id) {
@@ -177,7 +191,7 @@ public class StageBasis extends BattleObj {
 		if (ebase instanceof EEnemy && d == 1)
 			ans += ((EEnemy)ebase).data.getWill() + 1;
 		for (Entity ent : le) {
-			if (ent.dire == d)
+			if (ent.dire == d && !ent.dead)
 				ans += ent.data.getWill() + 1;
 		}
 		return ans;
@@ -186,7 +200,7 @@ public class StageBasis extends BattleObj {
 	public int entityCount(int d, int g) {
 		int ans = 0;
 		for (Entity ent : le)
-			if (ent.dire == d && ent.group == g)
+			if (ent.dire == d && ent.group == g && !ent.dead)
 				ans += ent.data.getWill() + 1;
 		return ans;
 	}
@@ -239,9 +253,33 @@ public class StageBasis extends BattleObj {
 		this.battleHeight = battleHeight;
 	}
 
+	public void notifyUnitDeath() {
+		double percentage = ebase.health * 100.0 / ebase.maxH;
+
+		for(int i = 0; i < est.killCounter.length; i++) {
+			SCDef.Line line = est.s.data.datas[i];
+
+			if(est.killCounter[i] == 0 || line.castle_0 == 0)
+				continue;
+
+			if(line.castle_0 == line.castle_1 && percentage <= line.castle_0) {
+				est.killCounter[i] -= 1;
+			} else if(line.castle_0 != line.castle_1 && percentage >= Math.min(line.castle_0, line.castle_1) && percentage <= Math.max(line.castle_0, line.castle_1)) {
+				est.killCounter[i] -= 1;
+			}
+		}
+	}
+
 	public void release() {
 		if(bg != null && bg.effect != -1) {
-			CommonStatic.getBCAssets().bgEffects.get(bg.effect).release();
+			if(bg.effect < 0) {
+				BackgroundEffect eff = BackgroundEffect.mixture.get(-bg.effect);
+
+				if(eff != null)
+					eff.release();
+			} else {
+				CommonStatic.getBCAssets().bgEffects.get(bg.effect).release();
+			}
 		}
 	}
 
@@ -299,9 +337,9 @@ public class StageBasis extends BattleObj {
 		if (!st.non_con && ubase.health <= 0) {
 			ubase.health = ubase.maxH;
 			if (getEBHP() <= st.mush)
-				CommonStatic.setBGM(st.mus1, st.loop1);
+				CommonStatic.setBGM(st.mus1);
 			else
-				CommonStatic.setBGM(st.mus0, st.loop0);
+				CommonStatic.setBGM(st.mus0);
 			money = Integer.MAX_VALUE;
 			while (work_lv < 8)
 				act_mon();
@@ -393,7 +431,7 @@ public class StageBasis extends BattleObj {
 			}
 			CommonStatic.setSE(SE_SPEND_SUC);
 			elu.get(i, j);
-			EUnit eu = f.getEntity(this);
+			EUnit eu = f.getEntity(this, new int[] {i, j});
 			eu.added(-1, st.len - 700);
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
@@ -431,6 +469,15 @@ public class StageBasis extends BattleObj {
 			return e.t == 0;
 		});
 
+		if (temp_inten > 0) {
+			inten++;
+			if (inten % temp_inten == 0) {
+				temp_s_stop = s_stop - 1;
+				s_stop = 0;
+				inten = 0;
+			}
+		}
+
 		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.preUpdate();
 			ebase.update();
@@ -447,7 +494,7 @@ public class StageBasis extends BattleObj {
 			if (respawnTime <= 0 && active && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
-					e.added(1, e.mark == 1 ? boss_spawn : 700.0);
+					e.added(1, e.mark >= 1 ? boss_spawn : 700.0);
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.layer));
 
@@ -474,7 +521,7 @@ public class StageBasis extends BattleObj {
 			if (active) {
 				cannon++;
 				maxMoney = b.t().getMaxMon(work_lv);
-				money += b.t().getMonInc(work_lv);
+				money += b.t().getMonInc(work_lv) * (b.getInc(C_M_INC) / 100 + 1);
 			}
 
 			if (active)
@@ -485,19 +532,31 @@ public class StageBasis extends BattleObj {
 				sniper.update();
 
 			tempe.forEach(EntCont::update);
+
+			if(shakeDuration <= 0) {
+				shake = null;
+				shakeOffset = 0;
+			}
+
+			if(shake != null) {
+				shakeOffset = getOffset();
+				shakeDuration--;
+			}
+
+			for(int i = 0; i < shakeCoolDown.length; i++)
+				if(shakeCoolDown[i] != 0)
+					shakeCoolDown[i] -= 1;
 		}
 
-		for (int i = 0; i < le.size(); i++)
-			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).preUpdate();
-
-		for (int i = 0; i < le.size(); i++)
-			if (s_stop == 0 || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).update();
+		if (temp_n_inten > 0)
+			n_inten += temp_n_inten;
+		updateEntities(s_stop == 0);
+		while (n_inten >= 1) {
+			updateEntities(false);
+			n_inten--;
+		}
 
 		if (s_stop == 0) {
-			tlw.forEach(ContAb::update);
-			lw.forEach(ContAb::update);
 			lea.forEach(EAnimCont::update);
 			ebaseSmoke.forEach(EAnimCont::update);
 			ubaseSmoke.forEach(EAnimCont::update);
@@ -564,7 +623,7 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0) {
-			le.removeIf(e -> e.anim.dead == 0);
+			le.removeIf(e -> e.anim.dead == 0 && e.summoned.isEmpty());
 			lw.removeIf(w -> !w.activate);
 			lea.removeIf(EAnimCont::done);
 			ebaseSmoke.removeIf(EAnimCont::done);
@@ -575,6 +634,18 @@ public class StageBasis extends BattleObj {
 			s_stop--;
 		s_stop = Math.max(s_stop, temp_s_stop);
 		temp_s_stop = 0;
+		if (s_stop == 0)
+			inten = temp_inten = 0;
+
+		if (sn_stop > 0)
+			sn_stop--;
+		sn_stop = Math.max(sn_stop, sn_temp_stop);
+		sn_temp_stop = 0;
+		if (sn_stop == 0) {
+			n_inten = 0;
+			temp_n_inten = 0;
+		}
+
 		cannon = Math.min(maxCannon, Math.max(0, cannon));
 		money = Math.min(maxMoney, Math.max(0, money));
 
@@ -602,6 +673,22 @@ public class StageBasis extends BattleObj {
 		}
 	}
 
+	private void updateEntities(boolean time) {
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).preUpdate();
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update();
+
+		for (int i = 0; i < tlw.size(); i++)
+			if (time || tlw.get(i).IMUTime())
+				tlw.get(i).update();
+		for (int i = 0; i < lw.size(); i++)
+			if (time || lw.get(i).IMUTime())
+				lw.get(i).update();
+	}
+
 	private void updateTheme() {
 		if (theme != null) {
 			bg = Identifier.getOr(theme, Background.class);
@@ -617,12 +704,21 @@ public class StageBasis extends BattleObj {
 		}
 		if (s_stop == 0 && themeTime > 0) {
 			themeTime--;
-			if (themeTime == 0)
+			if (themeTime == 0) {
 				if (getEBHP() < st.bgh)
 					theme = st.bg1;
 				else
 					theme = st.bg;
+
+				mus = null;
+			}
 		}
 	}
 
+	private double getOffset() {
+		if(shake == null)
+			return 0;
+
+		return (1 - 2 * ((shake[SHAKE_DURATION] - shakeDuration) % 2)) * (1.0 * (shake[SHAKE_END] - shake[SHAKE_INITIAL]) / (shake[SHAKE_DURATION] - 1) * (shake[SHAKE_DURATION] - shakeDuration) + shake[SHAKE_INITIAL]) / SHAKE_STABILIZER;
+	}
 }

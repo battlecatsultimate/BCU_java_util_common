@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
+import common.pack.Context;
 import common.util.anim.AnimCE;
 
 import java.io.*;
@@ -23,8 +24,10 @@ public class AnimGroup {
                 JsonObject elem = JsonParser.parseReader(new FileReader(json)).getAsJsonObject();
 
                 workspaceGroup.parseJson(elem);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
+                CommonStatic.ctx.printErr(Context.ErrType.CORRUPT, "Anim Group Data has been corrupted. New Group Data will be generated.");
                 e.printStackTrace();
+                workspaceGroup.resetGroup();
             }
         }
     }

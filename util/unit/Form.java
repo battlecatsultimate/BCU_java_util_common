@@ -21,6 +21,9 @@ import common.util.anim.AnimUD;
 import common.util.anim.EAnimU;
 import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
+import common.util.lang.MultiLangData;
+
+import java.util.ArrayList;
 
 @JCGeneric(Form.FormJson.class)
 @JsonClass(read = RType.FILL)
@@ -67,10 +70,16 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	@JsonField
 	public int fid;
 	public Orb orbs = null;
-	@JsonField
+
+	@JsonField(io = JsonField.IOType.R)
 	public String name = "";
-	@JsonField
+	@JsonField(generic = MultiLangData.class)
+	public MultiLangData names = new MultiLangData();
+
+	@JsonField(io = JsonField.IOType.R)
 	public String explanation = "<br><br><br>";
+	@JsonField(generic = MultiLangData.class)
+	public MultiLangData description = new MultiLangData("<br><br><br>");
 
 	@JCConstructor
 	public Form(Unit u) {
@@ -84,13 +93,14 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		unit = u;
 		uid = u.id;
 		fid = f;
-		name = str;
+		names.put(str);
 		anim = ac;
 		du = cu;
 		cu.pack = this;
 		orbs = new Orb(-1);
 	}
 
+	//Used for BC units
 	protected Form(Unit u, int f, String str, String data) {
 		unit = u;
 		uid = u.id;
@@ -103,12 +113,25 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		MaModel model = anim.loader.getMM();
 		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}
+	//Used for BC eggs
+	protected Form(Unit u, int f, int m, String str, String data) {
+		unit = u;
+		uid = u.id;
+		fid = f;
+		String nam = trio(m) + "_m";
+		anim = new AnimUD(str, nam, "edi" + nam + duo(fid) + ".png", "uni" + nam + duo(fid) + ".png");
+		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
+		String[] strs = data.split("//")[0].trim().split(",");
+		du = new DataUnit(this, unit, strs);
+		MaModel model = anim.loader.getMM();
+		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
+	}
 
 	@Override
 	public Form copy(Unit b) {
 		CustomUnit cu = new CustomUnit();
 		cu.importData(du);
-		return new Form(b, fid, name, anim, cu);
+		return new Form(b, fid, names.toString(), anim, cu);
 	}
 
 	public int getDefaultPrice(int sta) {
@@ -121,18 +144,9 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		return anim.getEAnim(t);
 	}
 
-	public String[] getExplanation() {
-		String[] exp = MultiLangCont.getStatic().FEXP.getCont(this);
-		if (exp != null)
-			return exp;
-		return new String[0];
-	}
-
 	public MaskUnit maxu() {
 		PCoin pc = du.getPCoin();
 		if (pc != null) {
-			if (pc.full == null)
-				pc.update();
 			return pc.full;
 		}
 		return du;
@@ -157,12 +171,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					form.tba += form.getPost() + 1;
 				}
 
-				if (UserProfile.isOlderPack(pack, "0.5.4.0") && form.getProc().SUMMON.prob > 0) {
-					form.getProc().SUMMON.form = 1;
-					form.getProc().SUMMON.mult = 1;
-					form.getProc().SUMMON.type.fix_buff = true;
-				}
-
 				if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
 					MaModel model = anim.loader.getMM();
 					form.limit = CommonStatic.customFormMinPos(model);
@@ -175,44 +183,85 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						proc.IMUMOVING.mult = 100;
 					if ((form.abi & (1 << 12)) != 0) //Poison Immunity
 						proc.IMUPOI.mult = 100;
-					form.abi = Data.reorderAbi(form.abi);
+					form.abi = Data.reorderAbi(form.abi, 0);
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
 					form.getProc().DMGCUT.reduction = 100;
 					form.getProc().POISON.type.ignoreMetal = true;
 				}
+
+				if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
+					names.put(name);
+					description.put(explanation);
+				}
+
+				if (UserProfile.isOlderPack(pack, "0.6.5.0")) {
+					Proc proc = form.getProc();
+
+					if ((form.abi & 16) > 0) //2x money
+						proc.BOUNTY.mult = 100;
+					if ((form.abi & 32) > 0) //base destroyer
+						proc.ATKBASE.mult = 300;
+					form.abi = Data.reorderAbi(form.abi, 1);
+				}
+				if (UserProfile.isOlderPack(pack, "0.6.6.0")) {
+					if (form.getProc().TIME.prob > 0)
+						form.getProc().TIME.intensity = form.getProc().TIME.time;
+
+					if (form.getProc().SUMMON.prob > 0) {
+						form.getProc().SUMMON.max_dis = form.getProc().SUMMON.dis;
+						form.getProc().SUMMON.min_layer = -1;
+						form.getProc().SUMMON.max_layer = -1;
+					}
+				}
+
+				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form == 0) {
+					form.getProc().SUMMON.form = 1;
+					form.getProc().SUMMON.mult = 1;
+					form.getProc().SUMMON.type.fix_buff = true;
+				}
 			}
 		}
+		if (form.getPCoin() != null)
+			form.pcoin.update();
 	}
 
-	public int[] getPrefLvs() {
-		int[] ans = new int[6];
+	public ArrayList<Integer> getPrefLvs() {
+		ArrayList<Integer> ans;
 		final PCoin pc = du instanceof CustomUnit ? du.getPCoin() : unit.forms.length >= 3 ? unit.forms[2].du.getPCoin() : null;
-		if (pc != null)
-			ans = pc.max.clone();
-		ans[0] = unit.getPrefLv();
+
+		if (pc != null) {
+			ans = new ArrayList<>(pc.max);
+			ans.set(0, unit.getPrefLv());
+		} else {
+			ans = new ArrayList<>();
+			ans.add(unit.getPrefLv());
+		}
+
 		return ans;
 	}
 
-	public int[] regulateLv(int[] mod, int[] lv) {
+	public ArrayList<Integer> regulateLv(int[] mod, ArrayList<Integer> lv) {
 		if (mod != null)
-			System.arraycopy(mod, 0, lv, 0, Math.min(mod.length, lv.length));
-		int[] maxs = new int[6];
+			for (int i = 0; i < Math.min(mod.length, lv.size()); i++)
+				lv.set(i, mod[i]);
+
+		int[] maxs = new int[lv.size()];
 		maxs[0] = unit.max + unit.maxp;
-		PCoin pc = unit.forms.length >= 3 || du instanceof CustomUnit ? du.getPCoin() : null;
+		PCoin pc = du.getPCoin();
 		if (pc != null) {
 			for (int i = 0; i < pc.info.size(); i++)
 				maxs[i + 1] = Math.max(1, pc.info.get(i)[1]);
 		}
-		for (int i = 0; i < lv.length; i++) {
-			if (lv[i] < 0)
-				lv[i] = 0;
-			if (lv[i] > maxs[i])
-				lv[i] = maxs[i];
+		for (int i = 0; i < lv.size(); i++) {
+			if (lv.get(i) < 0)
+				lv.set(i, 0);
+			if (lv.get(i) > maxs[i])
+				lv.set(i, maxs[i]);
 		}
-		if (lv[0] == 0)
-			lv[0] = 1;
+		if (lv.get(0) == 0)
+			lv.set(0, 1);
 		return lv;
 	}
 
@@ -222,17 +271,17 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
 			return base + desp;
-		if (name.length() > 0)
-			return base + name;
+
+		String nam = names.toString();
+		if (nam.length() > 0)
+			return base + nam;
 		return base;
 	}
 
-	public String descriptionGet() {
+	public String getExplaination() {
 		String[] desp = MultiLangCont.getDesc(this);
 		if (desp != null && desp[fid + 1].length() > 0)
 			return desp[fid + 1];
-		if (explanation.length() > 0)
-			return explanation;
-		return "";
+		return description.toString();
 	}
 }

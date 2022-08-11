@@ -1,17 +1,14 @@
 package common;
 
-import common.io.InStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Identifier;
-import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.anim.MaModel;
@@ -19,18 +16,18 @@ import common.util.pack.EffAnim.EffAnimStore;
 import common.util.pack.NyCastle;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.Music;
-import common.util.unit.Combo;
 import common.util.unit.UnitLevel;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Character.isDigit;
 
-@SuppressWarnings("DeprecatedIsStillUsed")
 public class CommonStatic {
 
 	public interface BattleConst {
@@ -48,10 +45,11 @@ public class CommonStatic {
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		public VImg[][] moneySign = new VImg[4][4]; //Money on, off/Cost on, off
 		/**
 		 * Use this if trait.icon is null
 		 */
-		public VImg dummyTrait; //TODO Implement dummy trait icon
+		public VImg dummyTrait;
 
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();
@@ -137,6 +135,31 @@ public class CommonStatic {
 		 * Enable 6f button delay on spawn
 		 */
 		public boolean buttonDelay = true;
+
+		/**
+		 * Color of background in viewer
+		 */
+		public int viewerColor = -1;
+
+		/**
+		 * Make BCU show ex stage continuation pop-up if true
+		 */
+		public boolean exContinuation = false;
+
+		/**
+		 * Make EX stage pop-up shown considering real chance
+		 */
+		public boolean realEx = false;
+
+		/**
+		 * Make stage name image displayed in battle
+		 */
+		public boolean stageName = true;
+
+		/**
+		 * Make battle shaken
+		 */
+		public boolean shake = true;
 	}
 
 	public interface EditLink {
@@ -153,32 +176,6 @@ public class CommonStatic {
 
 	}
 
-	@Deprecated
-	public interface ImgReader {
-
-		static File loadMusicFile(InStream is, ImgReader r, int pid, int mid) {
-			if (r == null || r.isNull())
-				r = CommonStatic.def.getMusicReader(pid, mid);
-			return r.readFile(is);
-		}
-
-		static VImg readImg(InStream is, ImgReader r) {
-			if (r != null && !r.isNull())
-				return r.readImgOptional(is.nextString());
-			return ImageBuilder.toVImg(is.nextBytesI());
-		}
-
-		default boolean isNull() {
-			return true;
-		}
-
-		File readFile(InStream is);
-
-		FakeImage readImg(String str);
-
-		VImg readImgOptional(String str);
-	}
-
 	public interface Itf {
 
 		/**
@@ -189,25 +186,13 @@ public class CommonStatic {
 		long getMusicLength(Music f);
 
 		@Deprecated
-		ImgReader getMusicReader(int pid, int mid);
-
-		@Deprecated
-		ImgReader getReader(File f);
-
-		@Deprecated
-		Source.AnimLoader loadAnim(InStream is, ImgReader r);
-
-		@Deprecated
-		InStream readBytes(File fi);
-
-		@Deprecated
 		File route(String path);
 
 		void setSE(int mus);
 
 		void setSE(Identifier<Music> mus);
 
-		void setBGM(Identifier<Music> mus, long loop);
+		void setBGM(Identifier<Music> mus);
 	}
 
 	public static class Lang {
@@ -216,8 +201,8 @@ public class CommonStatic {
 		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es", "it" };
 
 		@StaticPermitted
-		public static final int[][] pref = { { 0, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
-				{ 0, 3, 1, 2 }, { 5, 3, 1, 2 }, { 6, 3, 1, 2 }, { 0, 3, 1, 2 }, { 8, 3, 1, 2 }, { 9, 3, 1, 2 } };
+		public static final int[][] pref = { { 0, 6, 9, 8, 5, 7, 4, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
+				{ 4, 0, 3, 1, 2 }, { 5, 0, 4, 3, 1, 2 }, { 6, 9, 0, 7, 5, 4, 3, 1, 2 }, { 7, 0, 3, 1, 2, 4, 5, 6 }, { 8, 0, 6, 9, 5, 7, 4, 3, 1, 2 }, { 9, 0, 3, 1, 2, 5, 6, 7, 8, 4 } };
 
 	}
 
@@ -230,7 +215,11 @@ public class CommonStatic {
 	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger max = new BigInteger(String.valueOf(Integer.MAX_VALUE));
 	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigDecimal maxdbl = new BigDecimal(String.valueOf(Double.MAX_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
 	public static final BigInteger min = new BigInteger(String.valueOf(Integer.MIN_VALUE));
+	@StaticPermitted(StaticPermitted.Type.FINAL)
+	public static final BigDecimal mindbl = new BigDecimal(String.valueOf(Double.MIN_VALUE));
 
 	public static BCAuxAssets getBCAssets() {
 		return UserProfile.getStatic("BCAuxAssets", BCAuxAssets::new);
@@ -245,6 +234,20 @@ public class CommonStatic {
 			if (!Character.isDigit(str.charAt(i))) {
 				if(str.charAt(i) != '-' || i != 0)
 					return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean isDouble(String str) {
+		int dots = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				if((i == 0 && str.charAt(i) != '-') || str.charAt(i) != '.' || dots > 0)
+					return false;
+				else
+					dots++;
 			}
 		}
 
@@ -277,14 +280,14 @@ public class CommonStatic {
 
 	public static double[] parseDoublesN(String str) {
 		ArrayList<String> lstr = new ArrayList<>();
-		Matcher matcher = Pattern.compile("-?(((\\.|,)\\d+)|\\d+((\\.|,)\\d*)?)").matcher(str);
+		Matcher matcher = Pattern.compile("-?(([.|,]\\d+)|\\d+([.|,]\\d*)?)").matcher(str);
 
 		while (matcher.find())
 			lstr.add(matcher.group());
 
 		double[] result = new double[lstr.size()];
 		for (int i = 0; i < lstr.size(); i++)
-			result[i] = Double.parseDouble(lstr.get(i)); // TODO: safeParseDouble
+			result[i] = safeParseDouble(lstr.get(i));
 		return result;
 	}
 
@@ -324,6 +327,22 @@ public class CommonStatic {
 				return Integer.MIN_VALUE;
 			} else {
 				return Integer.parseInt(v);
+			}
+		} else {
+			throw new IllegalStateException("Value "+v+" isn't a number");
+		}
+	}
+
+	public static double safeParseDouble(String v) {
+		if(isDouble(v)) {
+			BigDecimal big = new BigDecimal(v);
+
+			if(big.compareTo(maxdbl) > 0) {
+				return Double.MAX_VALUE;
+			} else if(big.compareTo(mindbl) < 0) {
+				return Double.MIN_VALUE;
+			} else {
+				return Double.parseDouble(v);
 			}
 		} else {
 			throw new IllegalStateException("Value "+v+" isn't a number");
@@ -447,10 +466,9 @@ public class CommonStatic {
 	/**
 	 * play background music
 	 * @param music Music
-	 * @param loop looping time
 	 */
-	public static void setBGM(Identifier<Music> music, long loop) {
-		def.setBGM(music, loop);
+	public static void setBGM(Identifier<Music> music) {
+		def.setBGM(music);
 	}
 
 	public static String toArrayFormat(int... data) {

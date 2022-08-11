@@ -67,7 +67,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 	@Override
 	public Set<Enemy> getPossible() {
 		Set<Enemy> te = new TreeSet<>();
-		fillPossible(te, new TreeSet<EneRand>());
+		fillPossible(te, new TreeSet<>());
 		return te;
 	}
 

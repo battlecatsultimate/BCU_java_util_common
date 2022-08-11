@@ -67,6 +67,26 @@ public class MultiLangCont<I, T> extends Lang {
 		return null;
 	}
 
+	public static int getGrabbedLocale(Object o) {
+		if (o == null)
+			return -1;
+
+		if (o instanceof MapColc)
+			return getStatic().MCNAME.getSelectedLocale((MapColc) o);
+		if (o instanceof StageMap)
+			return getStatic().SMNAME.getSelectedLocale((StageMap) o);
+		if (o instanceof Stage)
+			return getStatic().STNAME.getSelectedLocale((Stage) o);
+		if (o instanceof Form)
+			return getStatic().FNAME.getSelectedLocale((Form) o);
+		if (o instanceof Enemy)
+			return getStatic().ENAME.getSelectedLocale((Enemy) o);
+		if (o instanceof Combo)
+			return getStatic().COMNAME.getSelectedLocale((Combo) o);
+
+		return -1;
+	}
+
 	public static String[] getDesc(Object o) {
 		if (o == null)
 			return null;
@@ -95,6 +115,17 @@ public class MultiLangCont<I, T> extends Lang {
 				return ans;
 		}
 		return null;
+	}
+
+	public int getSelectedLocale(I x) {
+		for(int i = 0; i < pref[CommonStatic.getConfig().lang].length; i++) {
+			T ans =  getSub(LOC_CODE[pref[CommonStatic.getConfig().lang][i]]).get(x);
+
+			if(ans != null)
+				return pref[CommonStatic.getConfig().lang][i];
+		}
+
+		return -1;
 	}
 
 	public void put(String loc, I x, T t) {

@@ -12,12 +12,19 @@ import common.system.files.VFile;
 import common.util.anim.ImgCut;
 import common.util.pack.Background;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public abstract class BackgroundEffect {
+    public static Map<Integer, MixedBGEffect> mixture = new HashMap<>();
     public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
-    public static final int[] jsonList = {102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172, 173, 174};
+    public static final int[] jsonList = {
+            102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172,
+            173, 174, 180, 181, 182, 183, 184, 1000, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011
+    };
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
@@ -65,11 +72,38 @@ public abstract class BackgroundEffect {
             int currentSize = asset.bgEffects.size();
 
             for(int i = 0; i < jsonList.length; i++) {
-                asset.bgEffects.add(new JsonBGEffect(BackgroundEffect.jsonList[i]));
+                asset.bgEffects.add(new JsonBGEffect(jsonList[i]));
 
-                UserProfile.getBCData().bgs.get(BackgroundEffect.jsonList[i]).effect = currentSize;
+                UserProfile.getBCData().bgs.getRaw(jsonList[i]).effect = currentSize;
 
                 currentSize++;
+            }
+
+            for(int i = 0; i < UserProfile.getBCData().bgs.size(); i++) {
+                Background bg = UserProfile.getBCData().bgs.get(i);
+
+                if(bg.reference != -1) {
+                    Background ref = UserProfile.getBCData().bgs.findByID(bg.reference);
+
+                    if(ref == null)
+                        continue;
+
+                    if(bg.effect == -1)
+                        bg.effect = ref.effect;
+                    else if(bg.effect >= 0 && ref.effect != -1) {
+                        if(ref.effect >= 0) {
+                            mixture.put(bg.id.id, new MixedBGEffect(asset.bgEffects.get(bg.effect), asset.bgEffects.get(ref.effect)));
+
+                            bg.effect = -bg.id.id;
+                        } else if(ref.effect == -ref.id.id && mixture.containsKey(ref.id.id)) {
+                            mixture.put(bg.id.id, new MixedBGEffect(asset.bgEffects.get(bg.effect), mixture.get(ref.id.id)));
+
+                            bg.effect = -bg.id.id;
+                        } else if(ref.id.id != -ref.id.id || !mixture.containsKey(ref.id.id)) {
+                            System.out.println("W/BackgroundEffect::read - Unhandled situation for background effect mixing -> Reference BG ID : "+ref.id.id+" | Mixture contains key : "+mixture.containsKey(ref.id.id));
+                        }
+                    }
+                }
             }
         }, Context.ErrType.FATAL, "Failed to read bg effect data");
     }

@@ -16,23 +16,23 @@ public interface FakeImage {
 		BG, EDI, UNI, RECOLOR, RECOLORED
 	}
 
-	public static FakeImage read(byte[] bs) {
-		return read((Supplier<InputStream>) () -> new ByteArrayInputStream(bs));
+	static FakeImage read(byte[] bs) {
+		return read(() -> new ByteArrayInputStream(bs));
 	}
 
-	public static FakeImage read(File f) {
+	static FakeImage read(File f) {
 		return Data.err(() -> ImageBuilder.builder.build(f));
 	}
 
-	public static FakeImage read(FileData fd) {
-		return read((Supplier<InputStream>) fd::getStream);
+	static FakeImage read(FileData fd) {
+		return read(fd::getStream);
 	}
 
-	public static FakeImage read(Supplier<InputStream> sup) {
+	static FakeImage read(Supplier<InputStream> sup) {
 		return Data.err(() -> ImageBuilder.builder.build(sup));
 	}
 
-	public static FakeImage read(VFile vf) {
+	static FakeImage read(VFile vf) {
 		return read(vf.getData());
 	}
 
@@ -62,4 +62,6 @@ public interface FakeImage {
 	void unload();
 
 	FakeImage cloneImage();
+
+	FakeGraphics getGraphics();
 }

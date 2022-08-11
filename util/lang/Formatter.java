@@ -86,7 +86,7 @@ public class Formatter {
 		}
 
 		private boolean eval() throws Exception {
-			for (int i = 0; i < MATCH.length; i++)
+			for (int i = 0; i < MATCH.length; i++) {
 				for (int j = p0; j < p1 - MATCH[i].length() + 1; j++)
 					if (test(i, j)) {
 						int fi0 = new IntExp(p0, j).eval();
@@ -100,10 +100,12 @@ public class Formatter {
 						if (i == 3)
 							return fi0 != fi1;
 						if (i == 4)
-							return fi0 > fi1;
+							return (fi1 & fi0) > 0;
 						if (i == 5)
-							return fi0 < fi1;
+							return fi0 > fi1;
+						return fi0 < fi1;
 					}
+			}
 			return (Boolean) new RefObj(p0, p1).eval();
 		}
 
@@ -163,9 +165,34 @@ public class Formatter {
 				return neg ^ new BoolExp(pre, ind - 1).eval();
 			}
 			int pre = ind;
-			while (ch != '&' && ch != '|' && ind < p1)
+			StringBuilder collect = new StringBuilder();
+
+			collect.append(ch);
+
+			while (ch != '&' && ch != '|' && ind < p1) {
 				ch = str.charAt(++ind);
+				collect.append(ch);
+
+				//Check if collected ch is int field
+				//If it's int field, then we can pass these two letters specially
+				if(ind < p1 && (str.charAt(ind) == '&' || str.charAt(ind) == '|') && test(collect.toString(), pre, ind)) {
+					ch = str.charAt(++ind);
+					collect.append(ch);
+				}
+			}
 			return neg ^ new BoolElem(pre, ind).eval();
+		}
+
+		private boolean test(String ch, int i, int j) {
+			//Method? Return false
+			if(ch.startsWith("_"))
+				return false;
+
+			try {
+				return new RefField(i, j).test(obj);
+			} catch (Exception ignored) {
+				return false;
+			}
 		}
 	}
 
@@ -302,11 +329,15 @@ public class Formatter {
 						stack.push(stack.pop() + nextElem());
 					else
 						stack.push(stack.pop() - nextElem());
+				} else if (ch == '&') {
+					stack.push(stack.pop() & nextElem());
+				} else if (ch == '|') {
+					stack.push(stack.pop() | nextElem());
 				} else
 					throw new Exception("unknown operator " + ch + " at " + (ind - 1));
 				prevOp = ch;
 			}
-			if (prevOp == '+' || prevOp == '-' && stack.size() >= 2) {
+			if ((prevOp == '+' || prevOp == '-') && stack.size() >= 2) {
 				int b = stack.pop();
 				int a = stack.pop();
 				if (prevOp == '+')
@@ -339,7 +370,7 @@ public class Formatter {
 			if (ch >= '0' && ch <= '9')
 				return neg * readNumber();
 			int pre = ind;
-			while (ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ind < p1)
+			while (ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ch != '&' && ch != '|' && ind < p1)
 				ch = str.charAt(++ind);
 			return neg * (Integer) new RefObj(pre, ind).eval();
 		}
@@ -392,6 +423,26 @@ public class Formatter {
 				if (CommonStatic.parseIntsN(name).length == 0)
 					throw new Exception("Unrecognized field: " + name);
 				return new IntExp(ind, p1).eval();
+			}
+		}
+
+		public boolean test(Object parent) {
+			if (parent == null)
+				if (str.charAt(p0) == '_')
+					parent = ctx;
+				else
+					parent = obj;
+
+			int ind = str.charAt(p0) == '_' ? p0 + 1 : p0;
+
+			String name = str.substring(ind, p1);
+
+			try {
+				parent.getClass().getField(name).get(parent);
+
+				return true;
+			} catch (NoSuchFieldException | IllegalAccessException nse) {
+				return false;
 			}
 		}
 	}
@@ -475,8 +526,9 @@ public class Formatter {
 
 		private Object eval() throws Exception {
 			Object obj = null;
-			for (RefElem e : list)
+			for (RefElem e : list) {
 				obj = e.eval(obj);
+			}
 			return obj;
 		}
 
@@ -554,7 +606,7 @@ public class Formatter {
 	}
 
 	@StaticPermitted
-	private static final String[] MATCH = { ">=", "<=", "==", "!=", ">", "<" };
+	private static final String[] MATCH = { ">=", "<=", "==", "!=", "#", ">", "<" };
 
 	public static String format(String pattern, Object obj, Object ctx) {
 		StringBuilder sb = new StringBuilder();

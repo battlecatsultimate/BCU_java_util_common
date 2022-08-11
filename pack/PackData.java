@@ -1,5 +1,6 @@
 package common.pack;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import common.CommonStatic;
 import common.battle.Treasure;
@@ -27,6 +28,7 @@ import common.util.Res;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimUD;
 import common.util.pack.*;
+import common.util.lang.MultiLangData;
 import common.util.pack.*;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleList.PackCasList;
@@ -36,13 +38,8 @@ import common.util.stage.MapColc.PackMapColc;
 import common.util.unit.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Set;
 import java.util.function.Consumer;
 
 @JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
@@ -171,14 +168,14 @@ public abstract class PackData implements IndexContainer {
 				int id = CommonStatic.parseIntN(str.substring(0, 3));
 				if (id == -1)
 					continue;
-				musics.set(id, new Music(Identifier.parseInt(id, Music.class), new FDFile(f)));
+				musics.set(id, new Music(Identifier.parseInt(id, Music.class), 0, new FDFile(f)));
 			}
 		}
 
 		private void loadSoul() {
 			String pre = "./org/battle/soul/";
 			String mid = "/battle_";
-			for (int i = 0; i < 16; i++) {
+			for (int i = 0; i < 18; i++) {
 				String path = pre + Data.trio(i) + mid;
 				AnimUD anim = new AnimUD(path, "soul_" + Data.trio(i), null, null);
 				Identifier<Soul> identifier = new Identifier<>(Identifier.DEF, Soul.class, i);
@@ -192,11 +189,20 @@ public abstract class PackData implements IndexContainer {
 		private void loadUnits(Consumer<Double> bar) {
 			int x = 0;
 			Collection<VFile> list = VFile.get("./org/unit").list();
+			Queue<String> qs = VFile.readLine("./org/data/unitbuy.csv");
 			for (VFile p : list) {
-				units.add(new Unit(p));
+				String[] strs = qs.poll().split(",");
+
+				Unit u = new Unit(p, new int[]{Integer.parseInt(strs[strs.length - 2]), Integer.parseInt(strs[strs.length - 1])});
+				u.rarity = Integer.parseInt(strs[13]);
+				u.max = Integer.parseInt(strs[50]);
+				u.maxp = Integer.parseInt(strs[51]);
+				u.info.fillBuy(strs);
+
+				units.add(u);
 				bar.accept(1.0 * (x++) / list.size());
 			}
-			Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
+			qs = VFile.readLine("./org/data/unitlevel.csv");
 			List<Unit> lu = units.getList();
 			FixIndexList<UnitLevel> l = unitLevels;
 			for (Unit u : lu) {
@@ -214,14 +220,6 @@ public abstract class PackData implements IndexContainer {
 				l.get(ind).units.add(u);
 			}
 			CommonStatic.getBCAssets().defLv = l.get(2);
-			qs = VFile.readLine("./org/data/unitbuy.csv");
-			for (Unit u : lu) {
-				String[] strs = qs.poll().split(",");
-				u.rarity = Integer.parseInt(strs[13]);
-				u.max = Integer.parseInt(strs[50]);
-				u.maxp = Integer.parseInt(strs[51]);
-				u.info.fillBuy(strs);
-			}
 		}
 
 	}
@@ -231,7 +229,12 @@ public abstract class PackData implements IndexContainer {
 		public String BCU_VERSION;
 		public String id;
 		public String author;
+
+		@JsonField(io = JsonField.IOType.R)
 		public String name;
+		@JsonField(generic = MultiLangData.class)
+		public MultiLangData names = new MultiLangData();
+
 		public String desc;
 		public String time;
 		public int version;
@@ -253,7 +256,7 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return name + " - " + id;
+			return names.toString() + " - " + id;
 		}
 
 		@Override
@@ -261,7 +264,7 @@ public abstract class PackData implements IndexContainer {
 			PackDesc desc = new PackDesc(id);
 
 			desc.author = author;
-			desc.name = name;
+			desc.names.put(names.toString());
 			desc.desc = this.desc;
 			desc.time = time;
 			desc.version = version;
@@ -269,6 +272,13 @@ public abstract class PackData implements IndexContainer {
 			desc.parentPassword = parentPassword == null ? null : parentPassword.clone();
 
 			return desc;
+		}
+
+		@JsonDecoder.OnInjected
+		public void onInjected() {
+			//Temporary value, may need to make a separate isOlderPack function later on
+			if (Data.getVer(BCU_VERSION) < Data.getVer("0.6.4.0"))
+				names.put(name);
 		}
 	}
 
@@ -290,6 +300,7 @@ public abstract class PackData implements IndexContainer {
 		public Source source;
 
 		public boolean editable;
+		public boolean useCombos = true;
 		public boolean loaded = false;
 
 		private JsonElement elem;
@@ -363,13 +374,24 @@ public abstract class PackData implements IndexContainer {
 
 		public void loadMusics() {
 			String[] path = source.listFile("./musics");
+
+			HashMap<Integer, Long> loopMap = new HashMap<>();
+			for (Music m : musics) {
+				if (m == null || m.id == null)
+					continue;
+
+				loopMap.put(m.id.id, m.loop);
+			}
+
 			musics.clear();
 			if (path != null)
 				for (String str : path)
 					if (str.length() == 7 && str.endsWith(".ogg")) {
 						Integer ind = Data.ignore(() -> Integer.parseInt(str.substring(0, 3)));
-						if (ind != null)
-							add(musics, ind, id -> new Music(id, source.getFileData("./musics/" + str)));
+						if (ind != null) {
+							long loop = loopMap.getOrDefault(ind, (long) 0);
+							add(musics, ind, id -> new Music(id, loop, source.getFileData("./musics/" + str)));
+						}
 					}
 			musics.reset();
 		}
@@ -382,11 +404,19 @@ public abstract class PackData implements IndexContainer {
 
 		@Override
 		public String toString() {
-			return desc.name == null || desc.name.isEmpty() ? desc.id : desc.name;
+			return desc.names == null || desc.names.toString().isEmpty() ? desc.id : desc.names.toString();
 		}
 
 		public void unregister() {
 			UserProfile.unregister(getSID());
+		}
+
+		public ArrayList<String> preGetDependencies() {
+			ArrayList<String> deps = new ArrayList<>();
+			JsonArray jarr = elem.getAsJsonObject().getAsJsonObject("desc").get("dependency").getAsJsonArray();
+			for (int i = 0; i < jarr.size(); i++)
+				deps.add(jarr.get(i).getAsString());
+			return deps;
 		}
 
 		public void load() throws Exception {

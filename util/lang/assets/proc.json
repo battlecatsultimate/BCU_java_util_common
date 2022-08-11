@@ -451,7 +451,7 @@
         "abbr_name": "time",
         "full_name": "Stop Time",
         "tooltip": "Unlike Stop, this ability freezes everything including waves, money gain, cat and enemy cool down, etc",
-        "format": "(prob)% chance to stop time for (_dispTime(time))",
+        "format": "(prob)% chance to [(intensity>0){stop}(intensity<0){speed up}] time for (_dispTime(time)), with a intensity of (_abs(intensity))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -460,6 +460,10 @@
             "time": {
                 "name": "duration",
                 "tooltip": null
+            },
+            "intensity": {
+                "name": "intensity",
+                "tooltip": "The power of the timestop. If the intensity is lower than the duration, there will be certain intervals where units will be able to move. Set to negative to speed up entities with time stop immunity"
             }
         }
     },
@@ -485,16 +489,17 @@
         "tooltip": null,
         "format": [
             "(prob)% chance to summon a [(!type.fix_buff){(_summonMagnification(mult))}(type.fix_buff){[(_isEnemy){(mult)%}(!_isEnemy){Lv(mult)}]}] (_entity(id)) after (_dispTime(time)), ",
-            "one summoned (dis) range away from ",
+            "one summoned (dis)[(max_dis!=dis){ ~ (max_dis)}] range away from ",
             "[(type.on_kill|type.on_hit){each target}",
             "(!type.on_hit&!type.on_kill){the summoner}] ",
             "[(type.on_hit){hit}",
             "(type.on_kill&!type.on_hit){killed}",
             "(!type.on_kill&!type.on_hit){on this attack}], ",
-            "[(type.same_health){Summoned entities will have the same health as this entity, }]",
+            "[(type.same_health){each entity will have the same hp as the summoner, }]",
+            "[(type.bond_hp){the summoner's hp will be bound with each summoned entity's hp, }]",
             "and is[(type.ignore_limit){n't}] restricted by the stage entity limit. ",
-            "Summoned entities will be in [(!type.random_layer){the same layer as this entity}",
-            "(type.random_layer){a random layer}]. ",
+            "Summoned entities will be in [(min_layer==max_layer){[(min_layer==-1){the same layer as this entity}(min_layer!=-1){layer (min_layer)}]}",
+            "(min_layer!=max_layer){a random layer between (min_layer) and (max_layer)}]. ",
             "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
             " animation[(type.anim_type==3){ and disable burrow for summoned entities}]."
         ],
@@ -508,12 +513,28 @@
                 "tooltip": null
             },
             "dis": {
-                "name": "distance",
-                "tooltip": "Distance from this entity by default, distance from the target if on hit or on kill is enabled"
+                "name": "min distance",
+                "tooltip": "Minimum distance from this entity by default, or from the target if on hit or on kill is enabled"
+            },
+            "max_dis": {
+                "name": "max distance",
+                "tooltip": "Max distance from this entity by default, or from the target if on hit or on kill is enabled"
             },
             "mult": {
                 "name": "buff",
                 "tooltip": "Buff of the summoned entity, relative to this entity by default, fixed buff if you enable fix buff"
+            },
+            "time": {
+                "name": "delay",
+                "tooltip": "delay of this summon"
+            },
+            "min_layer": {
+                "name": "min layer",
+                "tooltip": "lowest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
+            },
+            "max_layer": {
+                "name": "max layer",
+                "tooltip": "highest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
             },
             "type.anim_type": {
                 "name": "summon anim",
@@ -538,9 +559,9 @@
                 "name": "same health",
                 "tooltip": "Set the summoned entity to have the same health as this entity."
             },
-            "type.random_layer": {
-                "name": "random layer",
-                "tooltip": "By default, summoned entity will have the same layer as this entity. Enable this to make the layer randomized."
+            "type.bond_hp": {
+                "name": "Bond health",
+                "tooltip": "When activated, the summoner will receive all damage and procs the summoned entity receives"
             },
             "type.on_hit": {
                 "name": "on hit",
@@ -557,10 +578,6 @@
                     " Summon per target killed, distance origins are set to the targets' positions.",
                     " Multiple summon possible for ranged attack."
                 ]
-            },
-            "time": {
-                "name": "delay",
-                "tooltip": "delay of this summon"
             },
             "form": {
                 "name": "Form",
@@ -636,6 +653,10 @@
             },
             "id": {
                 "name": "BG ID",
+                "tooltip": null
+            },
+            "mus": {
+                "name": "BGM ID",
                 "tooltip": null
             },
             "type.kill": {
@@ -799,7 +820,7 @@
         "abbr_name": "surge",
         "full_name": "Surge",
         "tooltip": null,
-        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) (_left)Created within (dis_0) ~ (dis_1) range(_right)",
+        "format": "(prob)% chance to make a Lv (time/20) surge attack (_left)Lasts (_dispTime(time)), created within (dis_0) ~ (dis_1) range(_right)",
         "class": {
             "prob": {
                 "name": "chance",
@@ -1004,7 +1025,7 @@
         "abbr_name" : "M.Shield",
         "full_name" : "Mystic Shield",
         "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to (dmg)}(type.procs){ and ignore the attack's procs}]",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]}(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -1039,7 +1060,7 @@
         "format" : ["Barrier (_left)Barrier has [(type.magnif){(_shield(health))}(!type.magnif){(health)}] HP",
             "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
             "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
-            ],
+        ],
         "class" : {
             "health" : {
                 "name" : "Health",
@@ -1092,10 +1113,10 @@
         "full_name": "Counter Attack",
         "tooltip": "Deal damage back when attacked.",
         "format": ["(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back. ",
-                    "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks. }][(type.procType!=0){This counterattack will ",
-                    "[(type.procType==1|type.procType==3){have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. }]",
-                    "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
-                    "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
+            "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks. }][(type.procType!=0){This counterattack will ",
+            "[(type.procType==1|type.procType==3){have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. }]",
+            "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
+            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
         "class": {
             "prob": {
                 "name": "chance",
@@ -1151,6 +1172,74 @@
             },
             "dis_1": {
                 "name": "point far",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUCANNON": {
+        "abbr_name": "Imu.Cannon",
+        "full_name": "Cannon Immunity",
+        "tooltip": null,
+        "format": ["[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to ",
+            "[(type!=127){[(type&1>0){regular cannon waves[(type>2){, }]}",
+            "(type&2>0){slow beam[(type>4){, }]}",
+            "(type&4>0){thunderbolt[(type>8){, }]}",
+            "(type&8>0){waterblast[(type>16){, }]}",
+            "(type&16>0){holy blast[(type>32){, }]}",
+            "(type&32>0){breakerblast[(type>64){, and}]}",
+            "(type&64>0){curseblast}]}(type==127){cannon attacks}]",
+            "[(mult!=100){ (_left)[(mult>0){Reduces}(mult<0){Increases}] damage taken and procs by (_abs(mult))%(_right)}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "type": {
+                "name": "type",
+                "tooltip": "+1 for regular cannon immunity, +2 for slow beam immunity, +4 for thunderbolt immunity, +8 for waterblast immunity, +16 for holy blast immunity, +32 for breakerblast immunity, +64 for curseblast immunity"
+            }
+        }
+    },
+    "BOUNTY": {
+        "abbr_name": "2x Money",
+        "full_name": "Money Multiplier",
+        "tooltip": null,
+        "format": "[(mult>0){Extra Money}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "ATKBASE": {
+        "abbr_name": "Vs. Base",
+        "full_name": "Base Destroyer",
+        "tooltip": null,
+        "format": "[(mult>0){Base Destroyer}(mult<0){Bad at castle destruction}] (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "BSTHUNT": {
+        "abbr_name": "BST Kill",
+        "full_name": "Behemoth Slayer",
+        "tooltip": null,
+        "format": "Behemoth Slayer (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "class": {
+            "type.active": {
+                "name": "Stronger Vs. Behemoth",
+                "tooltip": null
+            },
+            "prob": {
+                "name": "dodge chance",
                 "tooltip": null
             },
             "time": {

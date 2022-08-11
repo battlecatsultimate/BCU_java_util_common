@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	private final Form form;
-	public int price, respawn, limit;
+	public int price, respawn, limit, touch = TCH_N;
 	private final int front;
 	private final int back;
 
@@ -70,9 +70,9 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		if (ints[32] == 1)
 			a |= AB_ONLY;
 		if (ints[33] == 1)
-			a |= AB_EARN;
+			proc.BOUNTY.mult = 100;
 		if (ints[34] == 1)
-			a |= AB_BASE;
+			proc.ATKBASE.mult = 300;
 		if(ints.length < 95 || ints[94] != 1) {
 			proc.WAVE.prob = ints[35];
 			proc.WAVE.lv = ints[36];
@@ -89,8 +89,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		proc.LETHAL.prob = ints[42];
 		if (ints[43] == 1)
 			a |= AB_METALIC;
-		lds = ints[44];
-		ldr = ints[45];
+		lds[0] = ints[44];
+		ldr[0] = ints[45];
 
 		if (ints[46] == 1)
 			proc.IMUWAVE.mult = 100;
@@ -155,7 +155,37 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			proc.SHIELDBREAK.prob = ints[95];
 			if (ints[96] == 1)
 				t |= TB_DEMON;
-		} catch (IndexOutOfBoundsException e) {
+			if (ints[97] == 1)
+				a |= AB_BAKILL;
+			if (ints[98] == 1) {
+				a |= AB_CKILL;
+				touch |= TCH_CORPSE;
+			}
+			if(getAtkCount() > 1) {
+				int lds0 = lds[0];
+				int ldr0 = ldr[0];
+				lds = new int[getAtkCount()];
+				ldr = new int[getAtkCount()];
+				lds[0] = lds0;
+				ldr[0] = ldr0;
+
+				for(int i = 1; i < getAtkCount(); i++) {
+					if(ints[99 + (i - 1) * 3] == 1) {
+						lds[i] = ints[99 + (i - 1) * 3 + 1];
+						ldr[i] = ints[99 + (i - 1) * 3 + 2];
+					} else {
+						lds[i] = lds0;
+						ldr[i] = ldr0;
+					}
+				}
+			}
+
+			if (ints[105] == 1) {
+				proc.BSTHUNT.type.active = true;
+				proc.BSTHUNT.prob = ints[106];
+				proc.BSTHUNT.time = ints[107];
+			}
+		} catch (IndexOutOfBoundsException ignored) {
 		}
 
 		traits = new ArrayList<>(Trait.convertType(t));
@@ -218,4 +248,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		return ans;
 	}
 
+	@Override
+	public int getTouch() {
+		return touch;
+	}
 }

@@ -1,6 +1,5 @@
 package common.battle.data;
 
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -35,10 +34,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 		back = 0;
 		front = 9;
 		death = new Identifier<>(Identifier.DEF, Soul.class, 0);
-	}
-
-	public void fillData(int ver, InStream is) {
-		zread(ver, is);
 	}
 
 	@Override
@@ -92,9 +87,12 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 			PCoin p = mu.getPCoin();
 			if (p != null) {
 				pcoin = new PCoin(this);
+				pcoin.max.add(0);
 				for (int[] i : p.info) {
 					int[] j = new int[13];
 					System.arraycopy(i, 0, j, 0, 13);
+					j[1] = Math.max(1, j[1]);
+
 					pcoin.info.add(j);
 				}
 			}
@@ -108,17 +106,5 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 		ans.pack = getPack();
 		ans.getPack().anim = getPack().anim;
 		return ans;
-	}
-
-	private void zread(int val, InStream is) {
-		val = getVer(is.nextString());
-		if (val >= 400)
-			zread$000400(is);
-	}
-
-	private void zread$000400(InStream is) {
-		zreada(is);
-		price = is.nextInt();
-		resp = is.nextInt();
 	}
 }

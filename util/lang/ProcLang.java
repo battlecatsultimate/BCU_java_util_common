@@ -146,10 +146,13 @@ public class ProcLang {
 
 		switch (CommonStatic.getConfig().lang) {
 			case 2:
-				f = CommonStatic.ctx.getLangFile("proc_kr.json");  //TODO blocker translations on KR json
+				f = CommonStatic.ctx.getLangFile("proc_kr.json");
 				break;
 			case 3:
 				f = CommonStatic.ctx.getLangFile("proc_jp.json");
+				break;
+			case 8:
+				f = CommonStatic.ctx.getLangFile("proc_es.json");
 				break;
 			default:
 				f = CommonStatic.ctx.getLangFile("proc.json");

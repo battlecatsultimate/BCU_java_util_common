@@ -6,7 +6,9 @@ import common.battle.entity.AbEntity;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
+import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.util.anim.ImgCut;
 
 public class Res extends ImgCore {
@@ -39,14 +41,24 @@ public class Res extends ImgCore {
 		}
 	}
 
+	public static void getLv(int lv, SymCoord coor) {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		int[] val = getLab(lv);
+		FakeImage[] input = new FakeImage[val.length];
+		for (int i = 0; i < val.length; i++)
+			input[i] = aux.num[3][val[i]].getImg();
+		coor.draw(input);
+	}
+
 	public static P getCost(int cost, boolean enable, SymCoord coor) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		if (cost == -1)
 			return coor.draw(aux.battle[0][3].getImg());
 		int[] val = getLab(cost);
-		FakeImage[] input = new FakeImage[val.length];
+		FakeImage[] input = new FakeImage[val.length + 1];
 		for (int i = 0; i < val.length; i++)
 			input[i] = aux.num[enable ? 3 : 4][val[i]].getImg();
+		input[input.length - 1] = aux.moneySign[enable ? 2 : 3][decideLocale()].getImg();
 		return coor.draw(input);
 	}
 
@@ -54,19 +66,31 @@ public class Res extends ImgCore {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		int[] val0 = getLab(mon);
 		int[] val1 = getLab(max);
-		FakeImage[] input = new FakeImage[val0.length + val1.length + 1];
+		FakeImage[] input = new FakeImage[val0.length + val1.length + 2];
 		for (int i = 0; i < val0.length; i++)
 			input[i] = aux.num[0][val0[i]].getImg();
 		input[val0.length] = aux.num[0][10].getImg();
 		for (int i = 0; i < val1.length; i++)
 			input[val0.length + i + 1] = aux.num[0][val1[i]].getImg();
+		input[input.length - 1] = aux.moneySign[0][decideLocale()].getImg();
 
 		return sym.draw(input);
 	}
 
 	public static P getWorkerLv(int lv, boolean enable, SymCoord coor) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
-		return coor.draw(aux.num[enable ? 1 : 2][10].getImg(), aux.num[enable ? 1 : 2][lv].getImg());
+
+		int[] val = getLab(lv);
+
+		FakeImage[] input = new FakeImage[val.length + 1];
+
+		input[0] = aux.num[enable ? 1 : 2][10].getImg();
+
+		for(int i = 1; i < input.length; i++) {
+			input[i] = aux.num[enable ? 1 : 2][val[i - 1]].getImg();
+		}
+
+		return coor.draw(input);
 	}
 
 	public static void readData() {
@@ -93,11 +117,8 @@ public class Res extends ImgCore {
 		for (VImg vs : aux.ico[1])
 			vs.setCut(aux.unicut);
 
-		ImgCut ic029 = ImgCut.newIns("./org/page/img029.imgcut");
-		VImg img029 = new VImg("./org/page/img029.png");
-		FakeImage[] parts = ic029.cut(img029.getImg());
-		aux.slot[1] = new VImg(parts[9]);
-		aux.slot[2] = new VImg(parts[10]);
+		aux.slot[1] = makeLineupIconFrame(true);
+		aux.slot[2] = makeLineupIconFrame(false);
 		aux.dummyTrait = new VImg("./org/page/Trait.png");
 		readAbiIcon();
 		readBattle();
@@ -140,6 +161,8 @@ public class Res extends ImgCore {
 		aux.icon[3][TRAIT_ZOMBIE] = new VImg(parts[83]);
 		aux.icon[3][TRAIT_RELIC] = new VImg(parts[84]);
 		aux.icon[3][TRAIT_DEMON] = new VImg(parts[85]);
+		aux.icon[3][TRAIT_WHITE] = new VImg(parts[86]);
+		aux.icon[3][TRAIT_BEAST] = new VImg("./org/page/icons/Beast.png");
 		aux.icon[0][ABI_EKILL] = new VImg(parts[110]);
 		aux.icon[2][ATK_OMNI] = new VImg(parts[112]);
 		aux.icon[1][P_IMUCURSE] = new VImg(parts[116]);
@@ -148,12 +171,13 @@ public class Res extends ImgCore {
 		aux.icon[1][P_STOP] = new VImg(parts[197]);
 		aux.icon[1][P_SLOW] = new VImg(parts[198]);
 		aux.icon[1][P_LETHAL] = new VImg(parts[199]);
-		aux.icon[0][ABI_BASE] = new VImg(parts[200]);
+		aux.icon[1][P_ATKBASE] = new VImg(parts[200]);
 		aux.icon[1][P_CRIT] = new VImg(parts[201]);
+		aux.icon[1][P_BSTHUNT] = new VImg(parts[302]);
 		aux.icon[0][ABI_ONLY] = new VImg(parts[202]);
 		aux.icon[0][ABI_GOOD] = new VImg(parts[203]);
 		aux.icon[0][ABI_RESIST] = new VImg(parts[204]);
-		aux.icon[0][ABI_EARN] = new VImg(parts[205]);
+		aux.icon[1][P_BOUNTY] = new VImg(parts[205]);
 		aux.icon[0][ABI_MASSIVE] = new VImg(parts[206]);
 		aux.icon[1][P_KB] = new VImg(parts[207]);
 		aux.icon[1][P_WAVE] = new VImg(parts[208]);
@@ -182,6 +206,8 @@ public class Res extends ImgCore {
 		aux.icon[1][P_CURSE] = new VImg(parts[289]);
 		aux.icon[1][P_MINIWAVE] = new VImg(parts[293]);
 		aux.icon[1][P_SHIELDBREAK] = new VImg(parts[296]);
+		aux.icon[0][ABI_BAKILL] = new VImg(parts[297]);
+		aux.icon[0][ABI_CKILL] = new VImg(parts[300]);
 		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
 		aux.icon[1][P_DEATHSURGE] = new VImg("./org/page/icons/DeathSurge.png");
 
@@ -192,6 +218,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/SpeedX.png");
 		aux.icon[1][P_BARRIER] = new VImg("./org/page/icons/Barrier.png");
 		aux.icon[1][P_COUNTER] = new VImg("./org/page/icons/Counter.png");
+		aux.icon[1][P_IMUCANNON] = new VImg("./org/page/icons/CannonX.png");
 
 		//These are used for talent edit page icons
 		aux.icon[4][PC2_HP] = new VImg(parts[120]);
@@ -221,7 +248,10 @@ public class Res extends ImgCore {
 		aux.icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		aux.icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
 		aux.icon[1][P_CRITI] = new VImg("./org/page/icons/CritX.png");
-		aux.icon[3][TRAIT_WHITE] = new VImg("./org/page/icons/White.png");
+		aux.icon[3][TRAIT_WITCH] = new VImg("./org/page/icons/Witch.png");
+		aux.icon[3][TRAIT_EVA] = new VImg("./org/page/icons/Eva.png");
+		aux.icon[3][TRAIT_BARON] = new VImg("./org/page/icons/Baron.png");
+		aux.icon[3][TRAIT_INFH] = new VImg("./org/page/icons/Base.png");
 		aux.icon[1][P_POIATK] = new VImg("./org/page/icons/BCPoison.png");
 		aux.icon[1][P_ARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
 		aux.icon[1][P_SPEED] = new VImg("./org/page/icons/Speed.png");
@@ -232,7 +262,7 @@ public class Res extends ImgCore {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		aux.battle[0] = new VImg[4];
 		aux.battle[1] = new VImg[22];
-		aux.battle[2] = new VImg[5];
+		aux.battle[2] = new VImg[9];
 		ImgCut ic001 = ImgCut.newIns("./org/page/img001.imgcut");
 		VImg img001 = new VImg("./org/page/img001.png");
 		FakeImage[] parts = ic001.cut(img001.getImg());
@@ -253,6 +283,17 @@ public class Res extends ImgCore {
 
 		for(int i = 0; i < aux.timer.length; i++)
 			aux.timer[i] = new VImg(parts[i + 83]);
+
+		ImgCut moneyCut = ImgCut.newIns("./org/page/moneySign.imgcut");
+		VImg moneyImg = new VImg("./org/page/moneySign.png");
+
+		parts = moneyCut.cut(moneyImg.getImg());
+
+		for(int i = 0; i < aux.moneySign.length; i++) {
+			for(int j = 0; j < aux.moneySign[0].length; j++) {
+				aux.moneySign[i][j] = new VImg(parts[i * 4 + j]);
+			}
+		}
 
 		ImgCut ic002 = ImgCut.newIns("./org/page/img002.imgcut");
 		VImg img002 = new VImg("./org/page/img002.png");
@@ -293,12 +334,53 @@ public class Res extends ImgCore {
 
 		aux.battle[1][20] = new VImg(parts[0]);
 		aux.battle[1][21] = new VImg(parts[1]);
-		aux.battle[2][0] = new VImg(parts[27]);
-		aux.battle[2][1] = new VImg(parts[29]);
-		aux.battle[2][2] = new VImg(parts[32]);
-		aux.battle[2][3] = new VImg(parts[33]);
-		aux.battle[2][4] = new VImg(parts[38]);
+
+		ImgCut icMap = ImgCut.newIns("./org/page/mapicon.imgcut");
+		VImg imgMap = new VImg("./org/page/mapicon.png");
+		parts = icMap.cut(imgMap.getImg());
+
+		aux.battle[2][0] = new VImg(parts[0]);
+		aux.battle[2][1] = new VImg(parts[2]);
+		aux.battle[2][2] = new VImg(parts[5]);
+		aux.battle[2][3] = new VImg(parts[6]);
+		aux.battle[2][4] = new VImg(parts[11]);
+		aux.battle[2][5] = new VImg(parts[16]);
+
+		for(int i = 6; i < 9; i++) {
+			aux.battle[2][i] = new VImg("./org/page/speedUp" + (i - 3) + ".png");
+		}
+
 		// money, lv, lv dark,cost,cost dark,hp, money light,time,point
 	}
 
+	private static VImg makeLineupIconFrame(boolean isMagenta) {
+		FakeImage fimg = ImageBuilder.builder.build(110, 85);
+		FakeGraphics g = fimg.getGraphics();
+
+		if(g != null) {
+			if(isMagenta) {
+				g.setColor(FakeGraphics.MAGENTA);
+			} else {
+				g.setColor(255, 255, 0);
+			}
+
+			g.fillRect(0, 0, 5, 85);
+			g.fillRect(105, 0, 5, 85);
+			g.fillRect(0, 0, 110, 5);
+			g.fillRect(0, 80, 110, 5);
+		}
+
+		return new VImg(fimg);
+	}
+
+	private static int decideLocale() {
+		switch (CommonStatic.getConfig().lang) {
+			case 1:
+			case 2:
+			case 3:
+				return CommonStatic.getConfig().lang;
+			default:
+				return 0;
+		}
+	}
 }

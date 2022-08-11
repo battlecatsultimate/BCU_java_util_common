@@ -7,7 +7,7 @@ public abstract class BattleField {
 	public StageBasis sb;
 
 	protected BattleField(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelay) {
-		sb = new StageBasis(stage, bas, ints, seed, buttonDelay);
+		sb = new StageBasis(this, stage, bas, ints, seed, buttonDelay);
 	}
 
 	protected BattleField(StageBasis bas) {
@@ -49,6 +49,8 @@ public abstract class BattleField {
 	protected boolean act_spawn(int i, int j, boolean boo) {
 		return sb.act_spawn(i, j, boo);
 	}
+
+	public abstract double[] sniperCoords(boolean put);
 
 	protected abstract void actions();
 

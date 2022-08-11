@@ -9,6 +9,8 @@ import common.util.Data;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimU;
 
+import java.util.ArrayList;
+
 public class EForm extends Data {
 
 	private final Form f;
@@ -16,15 +18,20 @@ public class EForm extends Data {
 
 	public final MaskUnit du;
 
-	public EForm(Form form, int... level) {
+	public EForm(Form form, int lv) {
+		f = form;
+		level = new Level();
+		level.setLv(lv);
+
+		du = form.du;
+	}
+	public EForm(Form form, ArrayList<Integer> level) {
 		f = form;
 		this.level = new Level(level);
 		PCoin pc = f.du.getPCoin();
-		if (pc != null) {
-			if (pc.full == null)
-				pc.update();
+		if (pc != null)
 			du = pc.improve(level);
-		} else
+		else
 			du = form.du;
 	}
 
@@ -32,36 +39,34 @@ public class EForm extends Data {
 		f = form;
 		this.level = level;
 		PCoin pc = f.du.getPCoin();
-		if (pc != null) {
-			if (pc.full == null)
-				pc.update();
+		if (pc != null)
 			du = pc.improve(level.getLvs());
-		} else
+		else
 			du = form.du;
 	}
 
-	public EUnit getEntity(StageBasis b) {
-		int lv = level.getLvs()[0];
+	public EUnit getEntity(StageBasis b, int[] index) {
+		int lv = level.getLv();
 
 		if(b.st.isAkuStage())
-			level.getLvs()[0] = getAkuStageLevel();
+			level.setLv(getAkuStageLevel());
 
-		double d = f.unit.lv.getMult(level.getLvs()[0]);
+		double d = f.unit.lv.getMult(level.getLv());
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
 
-		EUnit result = new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
+		EUnit result = new EUnit(b, du, walkAnim, d, du.getFront(), du.getBack(), level, f.du.getPCoin(), index);
 
-		level.getLvs()[0] = lv;
+		level.setLv(lv);
 
 		return result;
 	}
 
-	public EUnit invokeEntity(StageBasis b, int Lvl) {
+	public EUnit invokeEntity(StageBasis b, int Lvl, int minLayer, int maxLayer) {
 		double d = f.unit.lv.getMult(Lvl);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		return new EUnit(b, du, walkAnim, d, level, f.du.getPCoin());
+		return new EUnit(b, du, walkAnim, d, minLayer, maxLayer, level, f.du.getPCoin(), null);
 	}
 
 	public double getPrice(int sta) {
@@ -70,9 +75,9 @@ public class EForm extends Data {
 
 	private int getAkuStageLevel() {
 		if(CommonStatic.getConfig().levelLimit == 0)
-			return level.getLvs()[0];
+			return level.getLv();
 
-		int normal = level.getLvs()[0];
+		int normal = level.getLv();
 		int plus = 0;
 
 		if(normal > f.unit.max) {

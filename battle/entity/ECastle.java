@@ -10,6 +10,7 @@ import common.util.pack.EffAnim.DefEff;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class ECastle extends AbEntity {
@@ -22,7 +23,7 @@ public class ECastle extends AbEntity {
 	public int smokeX = -1;
 
 	public ECastle(StageBasis b) {
-		super(b.st.health);
+		super(b.st.trail ? Integer.MAX_VALUE : b.st.health);
 		sb = b;
 	}
 
@@ -34,6 +35,7 @@ public class ECastle extends AbEntity {
 	@Override
 	public void damaged(AttackAb atk) {
 		hit = 2;
+
 		if(atk.isLongAtk || atk instanceof AttackVolcano)
 			smoke = effas().A_WHITE_SMOKE.getEAnim(DefEff.DEF);
 		else
@@ -43,8 +45,8 @@ public class ECastle extends AbEntity {
 		smokeX = (int) (pos + 25 - sb.r.nextDouble() * -25);
 
 		int ans = atk.atk;
-		if ((atk.abi & AB_BASE) > 0)
-			ans *= 4;
+		ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
+
 		int satk = atk.getProc().SATK.mult;
 		if (satk > 0) {
 			ans *= (100 + satk) * 0.01;
@@ -60,11 +62,18 @@ public class ECastle extends AbEntity {
 		}
 		CommonStatic.setSE(SE_HIT_BASE);
 		health -= ans;
+
 		if (health > maxH)
 			health = maxH;
 
 		if (health <= 0)
 			health = 0;
+
+		if(dire == -1 && CommonStatic.getConfig().shake && sb.shakeCoolDown[0] == 0 && (sb.shake == null || !Arrays.equals(sb.shake, SHAKE_MODE_BOSS))) {
+			sb.shake = SHAKE_MODE_HIT;
+			sb.shakeDuration = SHAKE_MODE_HIT[SHAKE_DURATION];
+			sb.shakeCoolDown[0] = SHAKE_MODE_HIT[SHAKE_COOL_DOWN];
+		}
 	}
 
 	@Override

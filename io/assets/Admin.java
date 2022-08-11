@@ -52,7 +52,7 @@ public class Admin {
 
 		@Override
 		public InputStream getLangFile(String file) {
-			return Data.err(() -> new FileInputStream(new File("./assets/lang/en/" + file)));
+			return Data.err(() -> new FileInputStream("./assets/lang/en/" + file));
 		}
 
 		@Override
