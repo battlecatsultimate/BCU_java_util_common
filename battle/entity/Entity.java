@@ -21,6 +21,7 @@ import common.util.anim.*;
 import common.util.anim.AnimU.UType;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
+import common.util.pack.AbSoul;
 import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
@@ -592,7 +593,7 @@ public abstract class Entity extends AbEntity {
 				e.weaks.list.clear();
 				status[P_WEAK] = new int[PROC_WIDTH];
 
-				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(DemonSoul.DemonSoulType.DEF);
+				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.SOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
