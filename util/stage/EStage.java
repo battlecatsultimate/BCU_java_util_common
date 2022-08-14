@@ -87,13 +87,13 @@ public class EStage extends BattleObj {
 		b = sb;
 		Line[] datas = s.data.getSimple();
 		for (int i = 0; i < rem.length; i++) {
-			if (s.isBCstage && datas[i].castle_0 < 100)
+			rem[i] = datas[i].spawn_0;
+
+			if (Math.abs(datas[i].spawn_0) < Math.abs(datas[i].spawn_1))
+				rem[i] += (int) ((datas[i].spawn_1 - datas[i].spawn_0) * b.r.nextDouble());
+
+			if (s.isBCstage && datas[i].castle_0 < 100 && rem[i] > 0)
 				rem[i] = 0;
-			else {
-				rem[i] = datas[i].spawn_0;
-				if (Math.abs(datas[i].spawn_0) < Math.abs(datas[i].spawn_1))
-					rem[i] += (int) ((datas[i].spawn_1 - datas[i].spawn_0) * b.r.nextDouble());
-			}
 		}
 	}
 
