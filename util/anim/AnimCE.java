@@ -376,11 +376,13 @@ public class AnimCE extends AnimCI {
 	private void copyFrom(AnimD<?, ?> ori) {
 		loaded = true;
 		partial = true;
+
+		boolean isAnim = id.base.equals(Source.BasePath.ANIM);
 		imgcut = ori.imgcut.clone();
 		mamodel = ori.mamodel.clone();
 		if (mamodel.confs.length < 1)
 			mamodel.confs = new int[2][6];
-		if (id.base.equals(Source.BasePath.ANIM)) {
+		if (isAnim) {
 			anims = new MaAnim[7];
 			for (int i = 0; i < 7; i++)
 				if (i < ori.anims.length)
@@ -391,7 +393,7 @@ public class AnimCE extends AnimCI {
 			anims = new MaAnim[] { ori.anims.length > 0 ? ori.anims[0].clone() : new MaAnim() };
 		}
 		loader.setNum(ori.getNum().cloneImage());
-		types = AnimU.TYPE7;
+		types = isAnim ? AnimU.TYPE7 : AnimU.SOUL;
 		parts = imgcut.cut(ori.getNum());
 		if (ori instanceof AnimU<?>) {
 			AnimU<?> au = (AnimU<?>) ori;
