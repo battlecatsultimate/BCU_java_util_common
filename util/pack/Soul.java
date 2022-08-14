@@ -1,5 +1,7 @@
 package common.util.pack;
 
+import common.battle.data.AtkDataModel;
+import common.battle.data.DataAtk;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
@@ -25,6 +27,9 @@ public class Soul extends Animable<AnimU<?>, AnimU.UType> implements Indexable<P
 
 	@JsonField
 	public String name;
+
+//	@JsonField(gen = JsonField.GenType.GEN, usePool = true)
+//	public AtkDataModel[] attacks;
 
 	@JsonClass.JCConstructor
 	public Soul() {
