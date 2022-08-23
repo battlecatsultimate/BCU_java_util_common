@@ -10,22 +10,6 @@ import common.util.Data;
 @JsonClass(read = RType.FILL, noTag = NoTag.LOAD)
 public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataModel, CustomEntity> {
 
-	public enum AttackType {
-		ATTACK("attack"), REVENGE("revenge"), RESURRECT("resurrection"),
-		BURROW("burrow"), RESURFACE("resurface"), REVIVE("revive");
-
-		private final String name;
-
-		AttackType(String str) {
-			name = str;
-		}
-
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
-
 	@JsonField(block = true)
 	public final CustomEntity ce;
 	public String str = "";
