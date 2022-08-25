@@ -328,6 +328,7 @@ public class StageBasis extends BattleObj {
 	protected boolean act_sniper() {
 		if (sniper != null) {
 			sniper.enabled = !sniper.enabled;
+			sniper.cancel();
 			return true;
 		}
 		return false;
@@ -528,6 +529,7 @@ public class StageBasis extends BattleObj {
 				est.update();
 
 			canon.update();
+
 			if (sniper != null && active)
 				sniper.update();
 
