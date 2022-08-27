@@ -277,7 +277,6 @@ public class Data {
 				return false;
 			}
 
-			@Deprecated
 			public int get(int i) {
 				try {
 					Field f = getDeclaredFields()[i];
