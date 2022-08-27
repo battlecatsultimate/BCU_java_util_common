@@ -288,6 +288,17 @@ public class Data {
 				}
 			}
 
+			public String getFieldName(int i) {
+				try {
+					Field f = getDeclaredFields()[i];
+
+					return f.getName();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
 			public Field[] getDeclaredFields() {
 				return FieldOrder.getDeclaredFields(this.getClass());
 			}
