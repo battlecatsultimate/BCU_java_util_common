@@ -38,7 +38,7 @@ public class MultiLangCont<I, T> extends Lang {
 		}
 
 		public String getAnimName(AnimI.AnimType<?, ?> type) {
-			int lang = CommonStatic.getConfig().lang;
+			int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang));
 
 			if (!loaded_anim[lang]) {
 				loaded_anim[lang] = true;
@@ -110,7 +110,7 @@ public class MultiLangCont<I, T> extends Lang {
 	}
 
 	public T getCont(I x) {
-		int lang = CommonStatic.getConfig().lang;
+		int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang));
 
 		for (int i = 0; i < pref[lang].length; i++) {
 			T ans = getSub(LOC_CODE[pref[lang][i]]).get(x);
@@ -121,7 +121,7 @@ public class MultiLangCont<I, T> extends Lang {
 	}
 
 	public int getSelectedLocale(I x) {
-		int lang = CommonStatic.getConfig().lang;
+		int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang));
 
 		for(int i = 0; i < pref[lang].length; i++) {
 			T ans =  getSub(LOC_CODE[pref[lang][i]]).get(x);
