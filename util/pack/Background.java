@@ -254,6 +254,11 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 
+		if(id == 185) {
+			ic = 11;
+			cs[1][2] = 46;
+		}
+
 		UserProfile.getBCData().bgs.set(id, this);
 
 		if(ints.length == 20) {
