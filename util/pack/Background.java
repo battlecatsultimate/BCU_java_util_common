@@ -234,7 +234,14 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 		if(ints.length >= 16 && ints[15] != -1) {
 			reference = ints[15];
-			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(ints[15])+".png"));
+
+			if(id == 185) {
+				reference = -1;
+
+				image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id)+".png"));
+			} else {
+				image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(ints[15])+".png"));
+			}
 		} else {
 			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id)+".png"));
 		}
