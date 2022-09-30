@@ -2099,11 +2099,11 @@ public abstract class Entity extends AbEntity {
 	 * @return true if the unit can receive procs
 	 */
 	public boolean btargetable(AttackAb atk) {
-		if ((receive(1) || atk.dire == -1) && atk.matk.getATKTraits().isEmpty())
+		if ((receive(1) || atk.dire == 1) && atk.matk.getATKTraits().isEmpty())
 			return true; //Ignore traits if: Enemy Attacks Enemy, Enemy Attacks Unit, Unit Attacks Unit, and no traits are set for the attack
 		else if (receive(1) && (status[P_CURSE][0] > 0 || status[P_SEAL][0] > 0))
 			for (int j = 0; j < atk.trait.size(); j++)
-				if (data.getTraits().contains(atk.trait.get(j)))
+				if (data.getTraits().contains(atk.trait.get(j)) || (dire == -1 && atk.trait.get(j).others.contains(((MaskUnit)data).getPack())))
 					return true; //Cursed units lack traits, this "re-adds" them for enemies that consider traits debuff
 		return ctargetable(atk.trait, atk.attacker); //Go to normal if no specialties apply
 	}
