@@ -3,11 +3,7 @@ package common.util.unit;
 import common.CommonStatic;
 import common.battle.data.*;
 import common.io.json.JsonClass;
-import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGetter;
-import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonClass.RType;
+import common.io.json.JsonClass.*;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -24,7 +20,6 @@ import common.util.lang.MultiLangCont;
 import common.util.lang.MultiLangData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @JCGeneric(Form.FormJson.class)
 @JsonClass(read = RType.FILL)
