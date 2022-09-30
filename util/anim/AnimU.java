@@ -33,7 +33,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 		BURROW_UP(true);
 		private final boolean rotate;
 
-		private UType(boolean rotate) {
+		UType(boolean rotate) {
 			this.rotate = rotate;
 		}
 

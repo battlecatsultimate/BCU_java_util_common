@@ -143,10 +143,6 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return name;
 	}
 
-	public EPart getFa() {
-		return fa;
-	}
-
 	public MaModel getModel() {
 		return model;
 	}

@@ -101,6 +101,11 @@ public abstract class CustomEntity extends DataEntity {
 		return atks;
 	}
 
+	@Override
+	public AtkDataModel[] getSpAtks() {
+		return new AtkDataModel[]{rev, res, bur, resu, revi};
+	}
+
 	public String getAvailable(String str) {
 		while (contains(str))
 			str += "'";

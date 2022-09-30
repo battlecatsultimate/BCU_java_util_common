@@ -2,30 +2,8 @@ package common.io;
 
 import java.util.function.BiFunction;
 import common.pack.Context;
-import common.system.P;
 
 public strictfp abstract class DataIO {
-
-	protected static final byte BYTE = 1;
-	protected static final byte SHORT = 2;
-	protected static final byte INT = 3;
-	protected static final byte LONG = 4;
-	protected static final byte FLOAT = 5;
-	protected static final byte DOUBLE = 6;
-	protected static final byte BYTESI = 7;
-	protected static final byte INTSB = 8;
-	protected static final byte INTSI = 9;
-	protected static final byte STRING = 10;
-	protected static final byte BYTESB = 11;
-	protected static final byte INTSSBB = 12;
-	protected static final byte DOUBLESB = 13;
-	protected static final byte SUBS = 14;
-
-	public static void fromABP(byte[] b, int index, P n) {
-		fromShort(b, index, (short) (n.x * 10 + 2000));
-		index += 2;
-		fromShort(b, index, (short) (n.y * 10 + 2000));
-	}
 
 	/**
 	 * write a number n into a byte[] start from index

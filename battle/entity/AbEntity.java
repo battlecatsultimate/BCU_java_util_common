@@ -41,7 +41,9 @@ public abstract class AbEntity extends BattleObj {
 
 	public abstract void postUpdate();
 
-	public abstract boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly);
+	public abstract boolean targetable(Entity ent);
+
+	public abstract boolean ctargetable(ArrayList<Trait> t, Entity attacker);
 
 	public abstract int touchable();
 

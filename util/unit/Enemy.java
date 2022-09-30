@@ -2,6 +2,7 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.battle.StageBasis;
+import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEnemy;
 import common.battle.data.DataEnemy;
 import common.battle.data.MaskEnemy;
@@ -211,6 +212,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 					enemy.getProc().SUMMON.max_layer = -1;
 				}
 			}
+
 			if (enemy.getProc().SUMMON.prob > 0 && (enemy.getProc().SUMMON.id == null || !AbEnemy.class.isAssignableFrom(enemy.getProc().SUMMON.id.cls)))
 				enemy.getProc().SUMMON.form = 1; //There for imports
 		}

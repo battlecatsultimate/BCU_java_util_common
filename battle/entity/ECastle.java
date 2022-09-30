@@ -88,11 +88,13 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void postUpdate() {
-
 	}
 
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) { return true; }
+	public boolean targetable(Entity ent) { return true; }
+
+	@Override
+	public boolean ctargetable(ArrayList<Trait> t, Entity attacker) { return true; }
 
 	@Override
 	public int touchable() {

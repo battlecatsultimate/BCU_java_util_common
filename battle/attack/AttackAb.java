@@ -20,7 +20,7 @@ public abstract class AttackAb extends BattleObj {
 	public final MaskAtk matk;
 	public final Entity attacker;
 	public final int layer;
-	public final boolean isLongAtk, SPtr;
+	public final boolean isLongAtk;
 	public int duration;
 	public boolean excludeLastEdge = false, isCounter = false;
 
@@ -35,7 +35,7 @@ public abstract class AttackAb extends BattleObj {
 		dire = ent.getDire();
 		origin = this;
 		model = ent;
-		trait = tr;
+		trait = matk != null && matk.getATKTraits().size() > 0 ? matk.getATKTraits() : tr;
 		rawAtk = ATK;
 		atk = rawAtk;
 		proc = pro;
@@ -46,7 +46,6 @@ public abstract class AttackAb extends BattleObj {
 		this.matk = matk;
 		this.layer = layer;
 		this.isLongAtk = isLongAtk;
-		SPtr = matk != null && matk.getSPtrait();
 	}
 
 	protected AttackAb(Entity attacker, AttackAb a, double STA, double END, boolean isLongAtk) {
@@ -67,7 +66,6 @@ public abstract class AttackAb extends BattleObj {
 		this.matk = a.matk;
 		this.layer = a.layer;
 		this.isLongAtk = isLongAtk;
-		SPtr = a.SPtr;
 	}
 
 	/**

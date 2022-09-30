@@ -1546,9 +1546,9 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = getProc().IMUATK;
-		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false)) {
+		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.attacker.traits, atk.attacker)) {
 			if (status[P_IMUATK][0] == 0 && (imuatk.prob == 100 || basis.r.nextDouble() * 100 < imuatk.prob)) {
-				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
+				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.attacker.traits, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
@@ -1556,7 +1556,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.attacker.traits, atk.attacker)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);
 			if (dmgcut.type.procs)
 				proc = false;
@@ -1570,7 +1570,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.attacker.traits, atk.attacker)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.procs)
 				proc = false;
@@ -1747,7 +1747,7 @@ public abstract class Entity extends AbEntity {
 
 	private void processProcs(AttackAb atk) {
 		// process proc part
-		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
+		if (!btargetable(atk))
 			return;
 
 		if (atk.getProc().POIATK.mult > 0) {
@@ -2078,14 +2078,42 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
+	 * A quicker ctargetable with less mess, used only for targetOnly
+	 * @param ent The unit's trait list
+	 */
+	public boolean targetable(Entity ent) {
+		if (isBase) return true;
+		boolean antiTrait = targetTraited(ent.traits);
+
+		for (int j = 0; j < ent.traits.size(); j++) {
+			Trait tr = ent.traits.get(j);
+			if (traits.contains(tr) || (antiTrait && tr.targetType) ||
+					(ent.dire == -1 && tr.others.contains(((MaskUnit)ent.data).getPack())) || (dire == -1 && tr.others.contains(((MaskUnit)data).getPack())))
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * A more dedicate ctargetable used solely for active procs
+	 * @param atk The attack in question
+	 * @return true if the unit can receive procs
+	 */
+	public boolean btargetable(AttackAb atk) {
+		if ((receive(1) || atk.dire == dire) && atk.matk.getATKTraits().isEmpty())
+			return true; //Ignore traits if: Enemy Attacks Enemy, Enemy Attacks Unit, Unit Attacks Unit, and no traits are set for the attack
+		else if (receive(1) && (status[P_CURSE][0] > 0 || status[P_SEAL][0] > 0))
+			for (int j = 0; j < atk.trait.size(); j++)
+				if (data.getTraits().contains(atk.trait.get(j)))
+					return true; //Cursed units lack traits, this "re-adds" them for enemies that consider traits debuff
+		return ctargetable(atk.trait, atk.attacker); //Go to normal if no specialties apply
+	}
+	/**
 	 * can be targeted by units that have traits in common with the entity they're attacking
 	 * @param t The attack's trait list
 	 * @param attacker The Entity attacking.
-	 * @param targetOnly Used if this function is called as part of a "Target Only" call
 	 */
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) {
-		if (targetOnly && isBase) return true;
+	public boolean ctargetable(ArrayList<Trait> t, Entity attacker) {
 		if (attacker != null) {
 			if (attacker.dire == -1 && attacker.traits.size() > 0) {
 				for (int i = 0; i < traits.size(); i++) {
@@ -2505,7 +2533,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
 			for (int i = 0; i < le.size(); i++)
-				if (le.get(i).ctargetable(traits, this, true))
+				if (le.get(i).targetable(this))
 					touchEnemy = true;
 		}
 	}

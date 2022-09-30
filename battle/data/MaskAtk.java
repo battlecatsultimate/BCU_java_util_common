@@ -3,6 +3,9 @@ package common.battle.data;
 import common.util.BattleStatic;
 import common.util.Data;
 import common.util.Data.Proc;
+import common.util.unit.Trait;
+
+import java.util.ArrayList;
 
 public interface MaskAtk extends BattleStatic {
 
@@ -22,7 +25,7 @@ public interface MaskAtk extends BattleStatic {
 		return 0;
 	}
 
-	boolean getSPtrait();
+	ArrayList<Trait> getATKTraits();
 
 	Proc getProc();
 

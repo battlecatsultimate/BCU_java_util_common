@@ -35,6 +35,10 @@ public interface MaskEntity extends BattleStatic {
 
 	MaskAtk[] getAtks();
 
+	default AtkDataModel[] getSpAtks() {
+		return null;
+	}
+
 	Identifier<Soul> getDeathAnim();
 
 	ArrayList<Trait> getTraits();
