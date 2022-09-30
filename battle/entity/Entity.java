@@ -2099,7 +2099,7 @@ public abstract class Entity extends AbEntity {
 	 * @return true if the unit can receive procs
 	 */
 	public boolean btargetable(AttackAb atk) {
-		if ((receive(1) || atk.dire == dire) && atk.matk.getATKTraits().isEmpty())
+		if ((receive(1) || atk.dire == -1) && atk.matk.getATKTraits().isEmpty())
 			return true; //Ignore traits if: Enemy Attacks Enemy, Enemy Attacks Unit, Unit Attacks Unit, and no traits are set for the attack
 		else if (receive(1) && (status[P_CURSE][0] > 0 || status[P_SEAL][0] > 0))
 			for (int j = 0; j < atk.trait.size(); j++)

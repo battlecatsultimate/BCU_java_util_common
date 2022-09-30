@@ -48,7 +48,7 @@ public class DataAtk implements MaskAtk {
 	}
 
 	@Override
-	public ArrayList<Trait> getATKTraits() { return new ArrayList<>(data.traits); }
+	public ArrayList<Trait> getATKTraits() { return new ArrayList<>(); }
 
 	@Override
 	public int getShortPoint() {

@@ -3,7 +3,6 @@ package common.battle.data;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
-import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.system.BasedCopable;
@@ -153,13 +152,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	@Override
 	public boolean isOmni() {
 		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0) || (ld0 < 0 && ld1 == 0);
-	}
-
-	@JsonDecoder.OnInjected
-	public void onInjected() {
-		if ((ce instanceof CustomEnemy && ((specialTrait && dire == 1) || (!specialTrait && dire == -1))) || (ce instanceof CustomUnit && specialTrait && dire == -1))
-			traits.addAll(ce.traits);
-		specialTrait = false;
 	}
 
 }

@@ -2,10 +2,7 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.battle.StageBasis;
-import common.battle.data.AtkDataModel;
-import common.battle.data.CustomEnemy;
-import common.battle.data.DataEnemy;
-import common.battle.data.MaskEnemy;
+import common.battle.data.*;
 import common.battle.entity.EEnemy;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
@@ -210,6 +207,22 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 					enemy.getProc().SUMMON.max_dis = enemy.getProc().SUMMON.dis;
 					enemy.getProc().SUMMON.min_layer = -1;
 					enemy.getProc().SUMMON.max_layer = -1;
+				}
+			}
+			if (UserProfile.isOlderPack(pack, "0.6.8.0")) {
+				for (MaskAtk ma : enemy.getAtks()) {
+					AtkDataModel adm = (AtkDataModel)ma;
+					if ((adm.specialTrait && adm.dire == 1) || (!adm.specialTrait && adm.dire == -1))
+						adm.traits.addAll(enemy.traits);
+					adm.specialTrait = false;
+				}
+				for (AtkDataModel adm : enemy.getSpAtks()) {
+					if (adm == null)
+						continue;
+
+					if ((adm.specialTrait && adm.dire == 1) || (!adm.specialTrait && adm.dire == -1))
+						adm.traits.addAll(enemy.traits);
+					adm.specialTrait = false;
 				}
 			}
 

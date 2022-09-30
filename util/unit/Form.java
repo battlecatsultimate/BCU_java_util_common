@@ -24,6 +24,7 @@ import common.util.lang.MultiLangCont;
 import common.util.lang.MultiLangData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @JCGeneric(Form.FormJson.class)
 @JsonClass(read = RType.FILL)
@@ -213,6 +214,22 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						form.getProc().SUMMON.max_dis = form.getProc().SUMMON.dis;
 						form.getProc().SUMMON.min_layer = -1;
 						form.getProc().SUMMON.max_layer = -1;
+					}
+				}
+				if (UserProfile.isOlderPack(pack, "0.6.8.0")) {
+					for (MaskAtk ma : form.getAtks()) {
+						AtkDataModel adm = (AtkDataModel)ma;
+						if (adm.specialTrait && adm.dire == -1)
+							adm.traits.addAll(form.traits);
+						adm.specialTrait = false;
+					}
+					for (AtkDataModel adm : form.getSpAtks()) {
+						if (adm == null)
+							continue;
+
+						if (adm.specialTrait && adm.dire == -1)
+							adm.traits.addAll(form.traits);
+						adm.specialTrait = false;
 					}
 				}
 
