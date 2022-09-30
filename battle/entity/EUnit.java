@@ -130,32 +130,34 @@ public class EUnit extends Entity {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
+
+		ArrayList<Trait> trs = atk.attacker == null ? atk.trait : atk.attacker.traits;
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
-			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
+			ArrayList<Trait> sharedTraits = new ArrayList<>(trs);
 			sharedTraits.retainAll(traits);
 			boolean isAntiTraited = targetTraited(traits);
-			for (Trait t : atk.trait) {
+			for (Trait t : trs) {
 				if (t.BCTrait || sharedTraits.contains(t))
 					continue;
 				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)data).getPack()))
 					sharedTraits.add(t);
 			}
 			if ((getAbi() & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+				ans *= basis.b.t().getGOODDEF(trs, sharedTraits, ((MaskUnit)data).getOrb(), level);
 			if ((getAbi() & AB_RESIST) != 0)
-				ans *= basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+				ans *= basis.b.t().getRESISTDEF(trs, sharedTraits, ((MaskUnit)data).getOrb(), level);
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans *= basis.b.t().getRESISTSDEF(sharedTraits);
 		}
-		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
+		if (trs.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKDef();
-		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
+		if (trs.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
 			ans *= basis.b.t().getEKDef();
 		if (isBase)
 			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
-		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (getAbi() & AB_BAKILL) > 0)
+		if (trs.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (getAbi() & AB_BAKILL) > 0)
 			ans *= 0.7;
-		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
+		if (trs.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
 			ans *= 0.6; //Not sure
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 

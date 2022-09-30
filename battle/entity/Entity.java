@@ -1545,10 +1545,11 @@ public abstract class Entity extends AbEntity {
 
 		tokens.add(atk);
 
+		ArrayList<Trait> trs = atk.attacker == null ? atk.trait : atk.attacker.traits;
 		Proc.PT imuatk = getProc().IMUATK;
-		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.attacker.traits, atk.attacker)) {
+		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(trs, atk.attacker)) {
 			if (status[P_IMUATK][0] == 0 && (imuatk.prob == 100 || basis.r.nextDouble() * 100 < imuatk.prob)) {
-				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.attacker.traits, atk.dire, -1)));
+				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(trs, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
@@ -1556,7 +1557,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.attacker.traits, atk.attacker)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(trs, atk.attacker)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);
 			if (dmgcut.type.procs)
 				proc = false;
@@ -1570,7 +1571,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.attacker.traits, atk.attacker)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(trs, atk.attacker)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.procs)
 				proc = false;
