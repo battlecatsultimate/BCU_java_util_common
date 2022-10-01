@@ -59,7 +59,7 @@ public class EEnemy extends Entity {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 			sharedTraits.retainAll(traits);
 			boolean isAntiTraited = targetTraited(atk.trait);
-			for (Trait t : atk.trait) {
+			for (Trait t : traits) {
 				if (t.BCTrait || sharedTraits.contains(t))
 					continue;
 				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)atk.attacker.data).getPack()))
