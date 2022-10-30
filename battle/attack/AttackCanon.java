@@ -15,7 +15,7 @@ public class AttackCanon extends AttackSimple {
 		if (canon == 16)
 			touch = TCH_UG | TCH_N | TCH_CORPSE;
 		if (canon == 32)
-			touch = TCH_CORPSE;
+			touch = TCH_N | TCH_CORPSE;
 	}
 
 }
