@@ -77,6 +77,9 @@ public class Formatter {
 			return "" + (int) (hp * magnification[0]);
 		}
 
+		public String waveRange(int lv) {
+			return df.format((isEnemy ? 467.25 : 332.5) + 200 * (lv - 1));
+		}
 	}
 
 	private class BoolElem extends Comp {

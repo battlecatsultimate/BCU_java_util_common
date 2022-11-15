@@ -277,7 +277,6 @@ public class Data {
 				return false;
 			}
 
-			@Deprecated
 			public int get(int i) {
 				try {
 					Field f = getDeclaredFields()[i];
@@ -285,6 +284,17 @@ public class Data {
 				} catch (Exception e) {
 					e.printStackTrace();
 					return 0;
+				}
+			}
+
+			public String getFieldName(int i) {
+				try {
+					Field f = getDeclaredFields()[i];
+
+					return f.getName();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
 				}
 			}
 

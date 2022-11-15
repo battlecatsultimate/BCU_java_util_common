@@ -13,7 +13,9 @@ public class AttackCanon extends AttackSimple {
 		excludeLastEdge = c.id == 6;
 		waveType |= WT_CANN;
 		if (canon == 16)
-			touch = TCH_UG | TCH_N;
+			touch = TCH_UG | TCH_N | TCH_CORPSE;
+		if (canon == 32)
+			touch = TCH_N | TCH_CORPSE;
 	}
 
 }

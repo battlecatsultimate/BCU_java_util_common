@@ -12,8 +12,7 @@ import common.system.files.VFile;
 import common.util.anim.ImgCut;
 import common.util.pack.Background;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
@@ -21,10 +20,7 @@ public abstract class BackgroundEffect {
     public static Map<Integer, MixedBGEffect> mixture = new HashMap<>();
     public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
-    public static final int[] jsonList = {
-            102, 103, 110, 117, 121, 128, 132, 137, 141, 142, 145, 148, 153, 154, 155, 157, 158, 159, 164, 166, 172,
-            173, 174, 180, 181, 182, 183, 184, 1000, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011
-    };
+    public static final List<Integer> jsonList = new ArrayList<>();
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
@@ -69,12 +65,31 @@ public abstract class BackgroundEffect {
         asset.bgEffects.add(new RockBGEffect());
 
         CommonStatic.ctx.noticeErr(() -> {
+            VFile vf = VFile.get("./org/data/");
+
+            if(vf != null) {
+                Collection<VFile> fileList = vf.list();
+
+                if(fileList != null) {
+                    for(VFile file : fileList) {
+                        if(file == null)
+                            continue;
+
+                        if(file.name.matches("bg\\d+\\.json") && file.getData().size() != 0) {
+                            jsonList.add(CommonStatic.parseIntN(file.name));
+                        }
+                    }
+                }
+            }
+
+            jsonList.sort(Integer::compareTo);
+
             int currentSize = asset.bgEffects.size();
 
-            for(int i = 0; i < jsonList.length; i++) {
-                asset.bgEffects.add(new JsonBGEffect(jsonList[i]));
+            for (Integer id : jsonList) {
+                asset.bgEffects.add(new JsonBGEffect(id));
 
-                UserProfile.getBCData().bgs.getRaw(jsonList[i]).effect = currentSize;
+                UserProfile.getBCData().bgs.getRaw(id).effect = currentSize;
 
                 currentSize++;
             }

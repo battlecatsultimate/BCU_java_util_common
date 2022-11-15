@@ -52,6 +52,10 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		while((q = qs.poll()) != null) {
 			int[] ints = CommonStatic.parseIntsN(q);
 
+			if((ints.length < 16 || ints[15] == -1) && VFile.get("./org/img/bg/bg" + Data.trio(ints[0]) + ".png") == null) {
+				continue;
+			}
+
 			Background bg = new Background(ints);
 
 			switch (bg.id.id) {
@@ -230,7 +234,14 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 		if(ints.length >= 16 && ints[15] != -1) {
 			reference = ints[15];
-			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(ints[15])+".png"));
+
+			if(id == 185) {
+				reference = -1;
+
+				image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id)+".png"));
+			} else {
+				image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(ints[15])+".png"));
+			}
 		} else {
 			image = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id)+".png"));
 		}
@@ -242,6 +253,11 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
+
+		if(id == 185) {
+			ic = 11;
+			cs[1][2] = 46;
+		}
 
 		UserProfile.getBCData().bgs.set(id, this);
 

@@ -58,6 +58,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("H", 25);
 			idmap.put("CA", 27);
 			idmap.put("Q", 31);
+			idmap.put("L", 32);
 
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
@@ -366,11 +367,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 			for (VFile s : stage) {
 				String str = s.getName();
-				int len = str.length();
 				int id0, id1;
+
+				String[] segments = str.replaceAll("stage[A-Z]+", "").replace(".csv", "").split("_");
+
 				try {
-					id0 = Integer.parseInt(str.substring(len - 10, len - 7));
-					id1 = Integer.parseInt(str.substring(len - 6, len - 4));
+					id0 = Integer.parseInt(segments[0]);
+					id1 = Integer.parseInt(segments[1]);
 				} catch (Exception e) {
 					e.printStackTrace();
 					continue;

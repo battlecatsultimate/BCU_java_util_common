@@ -189,4 +189,10 @@ public class Sniper extends AtkModelAb {
 		atka.ent[6].alter(10, 900);
 		anim.ent[6].alter(10, 900);
 	}
+
+	public void cancel() {
+		atkTime = 0;
+		preTime = 0;
+		bulletX = 0;
+	}
 }

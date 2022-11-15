@@ -174,8 +174,25 @@ public abstract class PackData implements IndexContainer {
 
 		private void loadSoul() {
 			String pre = "./org/battle/soul/";
+
+			int soulNumber = 0;
+
+			VFile soulFolder = VFile.get(pre);
+
+			if(soulFolder == null)
+				return;
+
+			for(VFile vf : soulFolder.list()) {
+				if(vf == null)
+					continue;
+
+				if(vf.getData() == null && vf.name.matches("\\d{3}")) {
+					soulNumber = Math.max(soulNumber, CommonStatic.safeParseInt(vf.name));
+				}
+			}
+
 			String mid = "/battle_";
-			for (int i = 0; i < 18; i++) {
+			for (int i = 0; i < soulNumber + 1; i++) {
 				String path = pre + Data.trio(i) + mid;
 				AnimUD anim = new AnimUD(path, "soul_" + Data.trio(i), null, null);
 				Identifier<Soul> identifier = new Identifier<>(Identifier.DEF, Soul.class, i);
