@@ -34,6 +34,7 @@ public class DefStageInfo implements StageInfo {
     public float[] exChances;
     public int diff = -1, exChance = -1, exMapID = -1, exStageIDMin = -1, exStageIDMax = -1;
     public boolean exConnection = false;
+    public int maxMaterial = -1;
 
     public DefStageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
         map = info;

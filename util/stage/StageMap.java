@@ -33,6 +33,9 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 		public int waitTime = -1, clearLimit = -1, resetMode = -1;
 
+		public int[] materialDrop;
+		public double[] multiplier;
+
 		public boolean hiddenUponClear = false;
 
 		public StageMapInfo(StageMap map) {
@@ -64,6 +67,27 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 			s.info = new DefStageInfo(this, s, ints);
 		}
 
+		protected void injectMaterialDrop(String[] value) {
+			materialDrop = new int[9];
+
+			for(int i = 0; i < materialDrop.length; i++) {
+				materialDrop[i] = CommonStatic.safeParseInt(value[13 + i]);
+			}
+
+			multiplier = new double[4];
+
+			for(int i = 0; i < multiplier.length; i++) {
+				multiplier[i] = Double.parseDouble(value[1 + i]);
+			}
+
+			for(int i = 0; i < sm.list.size(); i++) {
+				Stage s = sm.list.get(i);
+
+				if(s.info instanceof DefStageInfo) {
+					((DefStageInfo) s.info).maxMaterial = CommonStatic.safeParseInt(value[5 + i]);
+				}
+			}
+		}
 	}
 
 	@ContGetter

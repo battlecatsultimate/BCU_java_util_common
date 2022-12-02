@@ -226,6 +226,30 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					groupLine = qs.poll();
 				}
 			}
+
+			qs = VFile.readLine("./org/data/DropItem.csv");
+
+			qs.poll();
+
+			String dropLine = qs.poll();
+
+			while(dropLine != null && !dropLine.isEmpty()) {
+				String[] dropData = dropLine.split(",");
+
+				if(dropData.length != 22) {
+					dropLine = qs.poll();
+
+					continue;
+				}
+
+				int mapID = CommonStatic.safeParseInt(dropData[0]);
+
+				StageMap sm = getMap(mapID);
+
+				if(sm != null && sm.info != null) {
+					sm.info.injectMaterialDrop(dropData);
+				}
+			}
 		}
 
 		public final int id;
