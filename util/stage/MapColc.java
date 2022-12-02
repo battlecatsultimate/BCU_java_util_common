@@ -249,6 +249,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				if(sm != null && sm.info != null) {
 					sm.info.injectMaterialDrop(dropData);
 				}
+
+				dropLine = qs.poll();
 			}
 		}
 
