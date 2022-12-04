@@ -219,18 +219,16 @@ public class UserProfile {
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 
-		for (PackData.UserPack pk : profile.packlist) {
+		for (PackData.UserPack pk : queue)
 			checkMissingParents(pk);
-		}
 	}
 
 	public static void checkMissingParents(UserPack pk) {
-		List<String> missingDependencies = new ArrayList<>();
-		for (String dep : pk.desc.dependency)
-			if (!profile.packmap.containsKey(dep))
-				missingDependencies.add(dep);
-		if (missingDependencies.size() > 0)
-			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.names.toString() + " (" + pk.desc.id + ") requires parent packs you don't have, which are: " + missingDependencies);
+		ArrayList<String> deps = pk.preGetDependencies();
+		deps.removeIf(profile.packmap::containsKey);
+		if (deps.size() > 0)
+			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.names.toString() + " (" + pk.desc.id + ")"
+							+ " requires parent packs you don't have, which are: " + deps);
 	}
 
 	public static UserProfile profile() {
@@ -352,7 +350,7 @@ public class UserProfile {
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
 
-		for (PackData.UserPack pk : profile.packlist) {
+		for (PackData.UserPack pk : queue) {
 			checkMissingParents(pk);
 		}
 	}
@@ -367,7 +365,7 @@ public class UserProfile {
 
 	/**
 	 * Unregister object from registers
-	 * 
+	 *
 	 * @param id ID of registered object
 	 */
 	public static void unregister(String id) {
@@ -398,11 +396,12 @@ public class UserProfile {
 
 		if (!canAdd(deps))
 			return false;
-		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null))) {
+
+		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null)))
 			failed.add(pack);
-			return true;
-		}
-		packmap.put(pack.desc.id, pack);
+		else
+			packmap.put(pack.desc.id, pack);
+
 		return true;
 	}
 
