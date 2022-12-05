@@ -106,7 +106,7 @@ public abstract class Source {
 			if (pack.equals(LOCAL))
 				return Replay.getMap().get(id);
 			Source s = UserProfile.getUserPack(pack).source;
-			String path = "./" + BasePath.REPLAY.toString() + "/" + id + ".replay";
+			String path = "./" + BasePath.REPLAY + "/" + id + ".replay";
 			return Data.err(() -> Replay.read(s.getFileData(path).getStream()));
 		}
 
@@ -122,6 +122,9 @@ public abstract class Source {
 			if (this.pack.equals(LOCAL) && zip instanceof ZipSource) {
 				this.pack = ((ZipSource) zip).id;
 				this.id = "_mapped_" + this.id;
+				this.base = BasePath.ANIM;
+			} else if(zip instanceof Workspace && !this.pack.equals(LOCAL) && this.base == null) {
+				this.base = BasePath.ANIM;
 			}
 		}
 
