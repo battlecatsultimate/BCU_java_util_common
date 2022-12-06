@@ -18,6 +18,7 @@ import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.*;
 import common.util.pack.Background;
+import common.util.pack.Soul;
 import common.util.stage.CastleImg;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
@@ -67,6 +68,7 @@ public abstract class Source {
 		@JsonField
 		public String pack, id;
 
+		@JsonField
 		public BasePath base;
 
 		@JsonClass.JCConstructor
@@ -122,9 +124,6 @@ public abstract class Source {
 			if (this.pack.equals(LOCAL) && zip instanceof ZipSource) {
 				this.pack = ((ZipSource) zip).id;
 				this.id = "_mapped_" + this.id;
-				this.base = BasePath.ANIM;
-			} else if(zip instanceof Workspace && !this.pack.equals(LOCAL) && this.base == null) {
-				this.base = BasePath.ANIM;
 			}
 		}
 
@@ -276,7 +275,7 @@ public abstract class Source {
 		}
 
 		private void write(String type, Consumer<PrintStream> con) throws IOException {
-			File f = CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/" + id.base + "/" + id.id + "/" + type);
+			File f = CommonStatic.ctx.getWorkspaceFile(id.getPath() + "/" + type);
 			Context.check(f);
 			PrintStream ps = new PrintStream(f, StandardCharsets.UTF_8.toString());
 			con.accept(ps);
@@ -284,7 +283,7 @@ public abstract class Source {
 		}
 
 		private void write(String type, FakeImage img) throws IOException {
-			File f = CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/" + id.base + "/" + id.id + "/" + type);
+			File f = CommonStatic.ctx.getWorkspaceFile(id.getPath() + "/" + type);
 			Context.check(f);
 			Context.check(FakeImage.write(img, "PNG", f), "save", f);
 		}
@@ -350,7 +349,7 @@ public abstract class Source {
 		public static void validate(ResourceLocation rl) {
 			String id = rl.id;
 			int num = 0;
-			while (CommonStatic.ctx.getWorkspaceFile("./" + rl.pack + "/" + rl.base + "/" + rl.id).exists())
+			while (CommonStatic.ctx.getWorkspaceFile(rl.getPath()).exists())
 				rl.id = id + "_" + (num++);
 		}
 
@@ -447,6 +446,24 @@ public abstract class Source {
 					if (anim.id.pack.startsWith(".temp_"))
 						anim.id.pack = anim.id.pack.substring(6);
 				}
+			for (Soul s : pack.souls) {
+				AnimCE anim = (AnimCE) s.anim;
+				if (anim.id.pack.equals(ResourceLocation.LOCAL)) {
+					if(!anims.contains(anim)) {
+						anims.add(anim);
+					} else {
+						anim.id.pack = ResourceLocation.LOCAL;
+						anim.id.id = anim.id.id.replaceAll("^_mapped_", "");
+					}
+
+					new SourceAnimSaver(new ResourceLocation(pack.getSID(), "_mapped_"+anim.id.id, anim.id.base), anim).saveAll();
+
+					anim.id.pack = pack.getSID();
+					anim.id.id = "_mapped_"+anim.id.id;
+				}
+				if (anim.id.pack.startsWith(".temp_"))
+					anim.id.pack = anim.id.pack.substring(6);
+			}
 			for (StageMap sm : pack.mc.maps)
 				for (Stage st : sm.list)
 					for (Replay rep : st.recd)
@@ -631,7 +648,7 @@ public abstract class Source {
 
 	}
 
-	public static enum BasePath {
+	public enum BasePath {
 		ANIM("animations"),
 		BG("backgrounds"),
 		CASTLE("castles"),
