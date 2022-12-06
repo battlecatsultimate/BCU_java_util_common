@@ -212,9 +212,13 @@ public class UserProfile {
 						profile.pending.put(pack.desc.id, pack);
 				}
 		Set<UserPack> queue = new HashSet<>(profile.pending.values());
-		int tot = queue.size();
-		while (queue.removeIf(profile::add))
-			prog.accept((1.0 * (tot - queue.size())) / tot);
+		if (prog == null) {
+			while (queue.removeIf(profile::add));
+		} else {
+			int tot = queue.size();
+			while (queue.removeIf(profile::add))
+				prog.accept((1.0 * (tot - queue.size())) / tot);
+		}
 
 		profile.pending = null;
 		profile.packlist.addAll(profile.failed);
@@ -228,7 +232,8 @@ public class UserProfile {
 		deps.removeIf(profile.packmap::containsKey);
 		if (deps.size() > 0)
 			CommonStatic.ctx.printErr(ErrType.WARN, pk.desc.names.toString() + " (" + pk.desc.id + ")"
-							+ " requires parent packs you don't have, which are: " + deps);
+					+ " requires parent packs you don't have. The IDs for them are: "
+					+ String.join(", ", deps));
 	}
 
 	public static UserProfile profile() {
@@ -318,41 +323,7 @@ public class UserProfile {
 
 		profile.failed.removeIf(p -> !p.editable);
 
-		profile.pending = new HashMap<>();
-
-		File packs = CommonStatic.ctx.getAuxFile("./packs");
-		if (packs.exists()) {
-			File[] fs = packs.listFiles();
-
-			if(fs != null) {
-				for (File f : fs)
-					if (f.getName().endsWith(".pack.bcuzip")) {
-						UserPack pack = CommonStatic.ctx.noticeErr(() -> readZipPack(f), ErrType.WARN,
-								"failed to load external pack " + f, () -> setStatic(CURRENT_PACK, null));
-
-						if (pack != null) {
-							UserPack p = profile.pending.put(pack.desc.id, pack);
-
-							if (p != null) {
-								CommonStatic.ctx.printErr(ErrType.WARN, ((ZipSource) p.source).getPackFile().getName()
-										+ " has same ID with " + ((ZipSource) pack.source).getPackFile().getName());
-							}
-						}
-					}
-			}
-		}
-
-		Set<UserPack> queue = new HashSet<>(profile.pending.values());
-
-		profile.packlist.addAll(profile.failed);
-		while (queue.removeIf(profile::add));
-
-		profile.pending = null;
-		profile.packlist.addAll(profile.failed);
-
-		for (PackData.UserPack pk : queue) {
-			checkMissingParents(pk);
-		}
+		loadPacks(null);
 	}
 
 	public static void unloadPack(UserPack pack) {
