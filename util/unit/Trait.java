@@ -106,8 +106,6 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
     @JsonDecoder.OnInjected
     public void onInjected() {
         icon = UserProfile.getUserPack(id.pack).source.readImage(Source.BasePath.TRAIT.toString(), id.id);
-        // icon = UserProfile.getUserPack(id.pack).source.readImage(Source.TRAITICON, id.id);
-        // TODO: check if above commented out code is necessary
         others.removeIf(Objects::isNull);
     }
 
