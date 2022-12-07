@@ -1,9 +1,11 @@
 package common.pack;
 
+import com.sun.xml.internal.rngom.parse.host.Base;
 import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.assets.Admin.StaticPermitted;
+import common.io.assets.AssetLoader;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
@@ -121,10 +123,18 @@ public abstract class Source {
 		public void onInjectSource() {
 			Object zip = UserProfile.getStatic(UserProfile.CURRENT_PACK, () -> null);
 
+			if (zip == null) // FIXME Check if replays of external packs aren't null
+				return;
+
 			if (this.pack.equals(LOCAL) && zip instanceof ZipSource) {
 				this.pack = ((ZipSource) zip).id;
 				this.id = "_mapped_" + this.id;
 			}
+
+			UserPack pack = (UserPack) UserPack.getPack(zip instanceof Workspace ? ((Workspace) zip).id : this.pack);
+
+			if (UserProfile.isOlderPack(pack, "0.6.9.1"))
+				this.base = BasePath.ANIM;
 		}
 
 	}
