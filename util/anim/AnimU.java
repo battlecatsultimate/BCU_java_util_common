@@ -104,6 +104,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 			partial();
 		} catch (Exception e) {
 			e.printStackTrace();
+			loaded = false;
 		}
 	}
 
@@ -115,11 +116,16 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 	public void partial() {
 		if (!partial) {
-			partial = true;
-			imgcut = loader.getIC();
-			mamodel = loader.getMM();
-			anims = loader.getMA();
-			types = anims.length == 1 ? SOUL : anims.length == 4 ? TYPE4 : anims.length == 5 ? TYPE5 : TYPE7;
+			try {
+				partial = true;
+				imgcut = loader.getIC();
+				mamodel = loader.getMM();
+				anims = loader.getMA();
+				types = anims.length == 1 ? SOUL : anims.length == 4 ? TYPE4 : anims.length == 5 ? TYPE5 : TYPE7;
+			} catch (Exception e) {
+				e.printStackTrace();
+				partial = false;
+			}
 		}
 	}
 
