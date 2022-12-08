@@ -1,11 +1,9 @@
 package common.pack;
 
-import com.sun.xml.internal.rngom.parse.host.Base;
 import common.CommonStatic;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.assets.AssetLoader;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
@@ -32,9 +30,11 @@ import common.util.unit.Unit;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Random;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public abstract class Source {
 
