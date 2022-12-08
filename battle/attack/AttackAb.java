@@ -54,7 +54,7 @@ public abstract class AttackAb extends BattleObj {
 		dire = a.dire;
 		origin = a.origin;
 		model = a.model;
-		rawAtk = a.atk;
+		rawAtk = a.rawAtk;
 		atk = rawAtk;
 		abi = a.abi;
 		trait = a.trait;

@@ -125,10 +125,7 @@ public class AtkModelUnit extends AtkModelEntity {
 		proc.getArr(P_BSTHUNT).set(e.getProc().getArr(P_BSTHUNT));
 
 		extraAtk(ind);
-		if (e.status[P_WEAK][0] > 0)
-			atk = atk * e.status[P_WEAK][1] / 100;
-		if (e.status[P_STRONG][0] != 0)
-			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;
+
 		return atk;
 	}
 

@@ -96,6 +96,19 @@ public class AttackSimple extends AttackAb {
 	@Override
 	public void excuse() {
 		process();
+
+		//At this point, attacker must not be null if attack is sent from entity
+		//Thus we keep real "raw" attack, and change value such as weaken/strengthen here
+		if(attacker != null) {
+			if(attacker.status[P_WEAK][0] != 0) {
+				atk = rawAtk * attacker.status[P_WEAK][1] / 100;
+			}
+
+			if(attacker.status[P_STRONG][0] != 0) {
+				atk = rawAtk * attacker.status[P_STRONG][0] / 100;
+			}
+		}
+
 		int layer = model.getLayer();
 		if (proc.MOVEWAVE.exists()) {
 			MOVEWAVE mw = proc.MOVEWAVE;
