@@ -63,7 +63,7 @@ public class Replay extends Data {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "Failed to remove folder : "+fold.getName());
 		}
 		*/
-		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.BasePath.REPLAY.toString());
+		File f = CommonStatic.ctx.getWorkspaceFile("./_local/" + Source.BasePath.REPLAY);
 		if (f.exists())
 			for (File fi : f.listFiles())
 				if (fi.getName().endsWith(".replay"))
@@ -160,6 +160,7 @@ public class Replay extends Data {
 		Workspace.validate(rl);
 		File dst = CommonStatic.ctx.getWorkspaceFile(rl.getPath() + ".replay");
 		Context.renameTo(src, dst);
+		write();
 	}
 
 	public void rename(String str, Boolean putInMap) {
