@@ -100,15 +100,15 @@ public class SBCtrl extends BattleField {
 				}
 			}
 		} else {
-			for(int i = 0; i < 2; i++) {
-				for(int j = 0; j < 5; j++) {
-					if(sb.locks[i][j]) {
-						act_spawn(i, j, false);
-
-						rec |= 1 << (i * 5 + j + 13);
-					}
-				}
-			}
+//			for(int i = 0; i < 2; i++) {
+//				for(int j = 0; j < 5; j++) {
+//					if(sb.locks[i][j]) {
+//						act_spawn(i, j, false);
+//
+//						rec |= 1 << (i * 5 + j + 13);
+//					}
+//				}
+//			}
 
 			for (int j = 0; j < 5; j++) {
 				boolean b0 = keys.pressed(sb.frontLineup, j);
