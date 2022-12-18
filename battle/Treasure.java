@@ -490,7 +490,7 @@ public class Treasure extends Data {
 		System.arraycopy(MT, 0, trea, 0, T_TOT);
 		fruit[T_RED] = fruit[T_BLACK] = fruit[T_FLOAT] = fruit[T_ANGEL] = 300;
 		fruit[T_METAL] = fruit[T_ZOMBIE] = fruit[T_ALIEN] = 300;
-		bslv[0] = 20;
+		bslv[0] = 30;
 		for (int i = 1; i < BASE_TOT; i++)
 			bslv[i] = curveData.get(i).max;
 		gods[0] = gods[1] = gods[2] = 100;
