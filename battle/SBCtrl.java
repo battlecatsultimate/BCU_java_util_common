@@ -100,16 +100,6 @@ public class SBCtrl extends BattleField {
 				}
 			}
 		} else {
-			for(int i = 0; i < 2; i++) {
-				for(int j = 0; j < 5; j++) {
-					if(sb.locks[i][j]) {
-						act_spawn(i, j, false);
-
-						rec |= 1 << (i * 5 + j + 13);
-					}
-				}
-			}
-
 			for (int j = 0; j < 5; j++) {
 				boolean b0 = keys.pressed(sb.frontLineup, j);
 				boolean b1 = action.contains(sb.frontLineup * 5 + j);
@@ -123,9 +113,13 @@ public class SBCtrl extends BattleField {
 						rec |= 1 << (sb.frontLineup * 5 + j + 3);
 						action.remove((Object) (sb.frontLineup * 5 + j));
 					}
-				if (act_spawn(sb.frontLineup, j, b0 || b1) && (b0 || b1))
-					rec |= 1 << (sb.frontLineup * 5 + j + 13);
+				for (int i = 0; i < 2; i++) {
+					int row = (i + sb.frontLineup) % 2; // check front row first, then back row
+					if (act_spawn(row, j, b0 || b1) && (b0 || b1))
+						rec |= 1 << (row * 5 + j + 13);
+				}
 			}
+
 		}
 
 		action.clear();
