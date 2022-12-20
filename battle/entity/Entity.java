@@ -2247,7 +2247,7 @@ public abstract class Entity extends AbEntity {
 		else if (crit > 0)
 			ans *= 0.01 * crit;
 		else if (crit < 0)
-			ans = (int) Math.ceil(maxH * 0.0001);
+			ans = (int) Math.ceil(health * 0.001);
 		return ans;
 	}
 
