@@ -44,6 +44,30 @@ public class PCoin extends Data {
 		((CustomUnit)du).pcoin = this;
 	}
 
+	public PCoin(String[] strs, MaskUnit du) {
+		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
+
+		max.add(0);
+
+		for (int i = 0; i < 6; i++) {
+			if(!allZero(strs, 2 + i * 13)) {
+				info.add(new int[13]);
+
+				for (int j = 0; j < 13; j++)
+					info.get(info.size() - 1)[j] = CommonStatic.parseIntN(strs[2 + i * 13 + j]);
+
+				max.add(info.get(info.size() - 1)[1]);
+
+				if (max.get(info.size()) == 0)
+					max.set(info.size(), 1);
+			}
+		}
+
+		this.du = du;
+
+		full = improve(max);
+	}
+
 	private PCoin(String[] strs) {
 		int id = CommonStatic.parseIntN(strs[0]);
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
