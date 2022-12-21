@@ -21,7 +21,7 @@ public abstract class CustomEntity extends DataEntity {
 	public AtkDataModel[] atks;
 
 	public int tba, base, touch = TCH_N;
-	public boolean common = true;
+	public boolean common = true, kbBounce = true, bossBounce = true;
 
 	/**
 	 * This field is used to filter all the procs of units if common is false,

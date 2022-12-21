@@ -4,10 +4,7 @@ import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.*;
-import common.battle.data.AtkDataModel;
-import common.battle.data.MaskEntity;
-import common.battle.data.MaskUnit;
-import common.battle.data.PCoin;
+import common.battle.data.*;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -119,11 +116,14 @@ public abstract class Entity extends AbEntity {
 				soul.draw(gra, p, siz);
 				return;
 			}
+
 			FakeTransform at = gra.getTransform();
+
 			if (corpse != null) {
 				corpse.paraTo(back);
 				corpse.draw(gra, p, siz);
 			}
+
 			if (corpse == null || status[P_REVIVE][1] < REVIVE_SHOW_TIME) {
 				if (corpse != null) {
 					gra.setTransform(at);
@@ -134,13 +134,27 @@ public abstract class Entity extends AbEntity {
 				return;
 			}
 
-			anim.paraTo(back);
+			if(e.data instanceof CustomEntity) {
+				if(e.kb.kbType == INT_HB && ((CustomEntity) e.data).kbBounce)
+					anim.paraTo(back);
+				else if(e.kb.kbType == INT_SW && ((CustomEntity) e.data).bossBounce)
+					anim.paraTo(back);
+				else if(e.kb.kbType != INT_HB && e.kb.kbType != INT_SW)
+					anim.paraTo(back);
+			} else {
+				anim.paraTo(back);
+			}
+
 			if (e.kbTime == 0 || e.kb.kbType != INT_WARP)
 				anim.draw(gra, p, siz);
+
 			anim.paraTo(null);
+
 			gra.setTransform(at);
+
 			if (CommonStatic.getConfig().ref)
 				e.drawAxis(gra, p, siz);
+
 			gra.delete(at);
 		}
 
