@@ -131,7 +131,7 @@ public class Stage extends Data
 			minSpawn = Integer.parseInt(strs[2]);
 			maxSpawn = Integer.parseInt(strs[3]);
 			bg = Identifier.rawParseInt(Integer.parseInt(strs[4]), Background.class);
-			max = Integer.parseInt(strs[5]);
+			max = Math.min(50, Integer.parseInt(strs[5]));
 			timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
 			if(timeLimit != 0)
 				health = Integer.MAX_VALUE;
