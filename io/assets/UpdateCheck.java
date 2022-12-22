@@ -1,9 +1,6 @@
 package common.io.assets;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +22,6 @@ import common.pack.Context.ErrType;
 import common.pack.UserProfile;
 import common.io.json.JsonClass.NoTag;
 import common.util.Data;
-import org.apache.commons.codec.digest.DigestUtils;
 
 public class UpdateCheck {
 
@@ -216,6 +212,27 @@ public class UpdateCheck {
 			return new Downloader(fonts, temp, "Stage Name Fonts", false, URL_FONT);
 		}
 		return null;
+	}
+
+	public static List<Downloader> checkNewMusic(int count) {
+		boolean[] exi = new boolean[count];
+		File music = CommonStatic.ctx.getAssetFile("./music/");
+		if (music.exists())
+			for (File m : music.listFiles())
+				if (m.getName().length() == 7 && m.getName().endsWith(".ogg")) {
+					Integer id = Data.ignore(() -> Integer.parseInt(m.getName().substring(0, 3)));
+					if (id != null)
+						exi[id] = id < count && id >= 0;
+				}
+		List<Downloader> ans = new ArrayList<>();
+		for (int i = 0; i < count; i++)
+			if (!exi[i]) {
+				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
+				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
+				String url = URL_MUSIC + Data.trio(i) + ".ogg";
+				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url));
+			}
+		return ans;
 	}
 
 	public static Context.SupExc<List<Downloader>> checkMusic(int count) {

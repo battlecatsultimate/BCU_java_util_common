@@ -163,6 +163,10 @@ public class CommonStatic {
 		 * Make battle shaken
 		 */
 		public boolean shake = true;
+		/**
+		 * Replace old music when updated
+		 */
+		public boolean updateOldMusic = true;
 	}
 
 	public interface EditLink {
