@@ -45,6 +45,7 @@ public class ECastle extends AbEntity {
 		smokeX = (int) (pos + 25 - sb.r.nextDouble() * -25);
 
 		int ans = atk.atk;
+		System.out.println(atk.atk);
 		ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
 
 		int satk = atk.getProc().SATK.mult;
