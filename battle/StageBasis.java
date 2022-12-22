@@ -378,7 +378,7 @@ public class StageBasis extends BattleObj {
 		return true;
 	}
 
-	protected boolean act_spawn(int i, int j, boolean boo) {
+	protected boolean act_spawn(int i, int j, boolean manual) {
 		if (buttonDelay > 0)
 			return false;
 
@@ -386,7 +386,7 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 
-		if(buttonDelayOn && boo && selectedUnit[0] == -1) {
+		if(buttonDelayOn && manual && selectedUnit[0] == -1) {
 			if(elu.price[i][j] != -1 || b.lu.fs[i][j] == null) {
 				if (lineupChanging)
 					return false;
@@ -403,7 +403,7 @@ public class StageBasis extends BattleObj {
 			return false;
 
 		if (elu.cool[i][j] > 0) {
-			if(boo) {
+			if(manual) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 			}
 
@@ -413,16 +413,15 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 		if (elu.price[i][j] > money) {
-			if(boo) {
+			if(manual) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
 			}
 			return false;
 		}
-		if (locks[i][j] || boo) {
+		if (locks[i][j] || manual) {
 			if (entityCount(-1) >= max_num - b.lu.efs[i][j].du.getWill()) {
-				if(boo) {
+				if (manual)
 					CommonStatic.setSE(SE_SPEND_FAIL);
-				}
 
 				return false;
 			}
