@@ -12,7 +12,8 @@
     "BURROW_DOWN": "버로우 다운",
     "ENTER": "입장",
     "ATK": "공격",
-    "WALK": "이동"
+    "WALK": "이동",
+    "SOUL": "영혼"
   },
   "VolcEff": {
     "DURING": "진행",
