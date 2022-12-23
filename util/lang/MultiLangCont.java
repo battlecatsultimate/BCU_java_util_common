@@ -26,7 +26,7 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
 		public final MultiLangCont<Combo, String> COMNAME = new MultiLangCont<>();
 		public final MultiLangCont<Form, String[]> FEXP = new MultiLangCont<>();
-		public final MultiLangCont<Unit.UnitInfo, String[]> CFEXP = new MultiLangCont<>();
+		public final MultiLangCont<Unit.UnitInfo, String> CFEXP = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
 
 		protected final MultiLangCont<AnimI.AnimType<?, ?>, String> ANIMNAME = new MultiLangCont<>();

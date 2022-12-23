@@ -56,11 +56,8 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 			return evo != null;
 		}
 
-		public String[] getCatfruitExplanation() {
-			String[] exp = MultiLangCont.getStatic().CFEXP.getCont(this);
-			if (exp != null)
-				return exp;
-			return new String[0];
+		public String getCatfruitExplanation() {
+			return MultiLangCont.getStatic().CFEXP.getCont(this);
 		}
 
 	}
