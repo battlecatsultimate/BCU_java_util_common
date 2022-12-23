@@ -118,6 +118,9 @@ public class Res extends ImgCore {
 		for (VImg vs : aux.ico[1])
 			vs.setCut(aux.unicut);
 
+		for (int i : GATYA)
+			aux.gatyaitem.put(i, new VImg("./org/page/catfruit/gatyaitemD_" + i + "_f.png"));
+
 		aux.slot[1] = makeLineupIconFrame(true);
 		aux.slot[2] = makeLineupIconFrame(false);
 		aux.dummyTrait = new VImg("./org/page/Trait.png");
