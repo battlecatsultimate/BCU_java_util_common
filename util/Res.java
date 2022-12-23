@@ -121,6 +121,11 @@ public class Res extends ImgCore {
 		for (int i : GATYA)
 			aux.gatyaitem.put(i, new VImg("./org/page/catfruit/gatyaitemD_" + i + "_f.png"));
 
+		ImgCut xp = new ImgCut();
+		xp.cuts = new int[][] { { 28, 44, 72, 40 } }; // TODO may need to un-hardcode this
+		aux.XP = new VImg("./org/page/catfruit/xp.png");
+		aux.XP.setCut(xp);
+
 		aux.slot[1] = makeLineupIconFrame(true);
 		aux.slot[2] = makeLineupIconFrame(false);
 		aux.dummyTrait = new VImg("./org/page/Trait.png");
