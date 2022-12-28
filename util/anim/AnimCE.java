@@ -308,7 +308,7 @@ public class AnimCE extends AnimCI {
 
 	public void autosave() {
 		if (loaded && !isSaved())
-			new SourceAnimSaver(new ResourceLocation("_autosave", id.id), this).saveData();
+			new SourceAnimSaver(new ResourceLocation("_autosave", id.id, id.base), this).saveData();
 	}
 
 	public void save() {
