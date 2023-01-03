@@ -284,4 +284,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			return desp[fid + 1];
 		return description.toString();
 	}
+
+	public boolean hasEvolveCost() {
+		return unit.info.hasEvolveCost() && fid == 2;
+	}
 }

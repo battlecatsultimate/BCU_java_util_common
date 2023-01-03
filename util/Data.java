@@ -1493,6 +1493,8 @@ public class Data {
 	public static final double[] ORB_STR_ATK_MULTI = {0.06, 0.12, 0.18, 0.24, 0.3};
 	public static final double[] ORB_MASSIVE_MULTI = {0.1, 0.2, 0.3, 0.4, 0.5};
 	public static final int[] ORB_RESISTANT_MULTI = {5, 10, 15, 20, 25};
+	public static final int[] GATYA = { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164, 167,
+			168, 169, 170, 171, 179, 180, 181, 182, 183, 184};
 
 	public static final int MUSIC_DELAY = 2344; //Music change delay with milliseconds accuracy
 
