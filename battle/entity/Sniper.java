@@ -20,6 +20,7 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> anim = effas().A_SNIPER.getEAnim(SniperEff.IDLE);
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
+	private Entity target;
 	public boolean enabled = true, canDo = true;
 	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
 	public final BattleField bf; //Used for replay pos/siz gathering
@@ -75,13 +76,14 @@ public class Sniper extends AtkModelAb {
 		int sniperX = (Cx - scrollPos) / 10 + 203;
 		int sniperY = (int) (Math.sin(Math.PI / 30 * b.time) * 10) + Cy / 10 - 369;
 
-		double theta = Math.toDegrees(Math.atan2(sniperY - Uy / 10 - 4 * layer + 58, sniperX - (Ux - scrollPos) / 10));
+		int Uy10 = Uy / 10;
+		int UyScroll = (Ux - scrollPos) / 10;
+		double theta = Math.toDegrees(Math.atan2(sniperY - Uy10 - 4 * layer + 58, sniperX - UyScroll));
 
-		if(bulletX == 0) {
+		if(preTime == 0 && bulletX == 0) {
 			bulletAngle = theta;
 		}
 
-		//Formula is different, only for visual
 		targetAngle = theta;
 	}
 
@@ -94,20 +96,27 @@ public class Sniper extends AtkModelAb {
 			coolTime--;
 
 		if (coolTime == 0 && enabled && pos > 0 && canDo) {
-			coolTime = SNIPER_CD;
-			preTime = SNIPER_PRE;
-			atkTime = atka.len();
-			atka.setup();
-			anim.setup();
+			if(Math.abs(targetAngle - cannonAngle) < 1) {
+				coolTime = SNIPER_CD;
+				preTime = SNIPER_PRE;
+				atkTime = atka.len();
+				atka.setup();
+				anim.setup();
+			} else {
+				coolTime++;
+			}
 		}
 
 		// find enemy pos
-		pos = -1;
-		for (Entity e : b.le)
-			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0) {
-				pos = e.pos;
-				layer = e.layer;
-			}
+		if(preTime == 0 && bulletX == 0) {
+			pos = -1;
+			for (Entity e : b.le)
+				if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0) {
+					target = e;
+					pos = e.pos;
+					layer = e.layer;
+				}
+		}
 
 		getAngle();
 
@@ -136,7 +145,10 @@ public class Sniper extends AtkModelAb {
 				CTrait.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
 				AttackAb a = new AttackSimple(null, this, atk, CTrait, 0, proc, 0, getPos(), false, null, -1, true, 1);
 				a.canon = -1;
-				b.getAttack(a);
+
+				if(target != null && (target.touchable() & TCH_N) > 0) {
+					target.damaged(a);
+				}
 
 				bulletX = 0;
 
