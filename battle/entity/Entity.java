@@ -2195,8 +2195,10 @@ public abstract class Entity extends AbEntity {
 		boolean nstop = status[P_STOP][0] == 0;
 		canBurrow |= atkm.loop < data.getAtkLoop() - 1;
 
+		boolean canAct = kbTime == 0 && anim.anim.type != UType.ENTER;
+
 		// do move check if available, move if possible
-		if (kbTime == 0 && !acted && atkm.atkTime == 0 && status[P_REVIVE][1] == 0 && anim.anim.type != UType.ENTER) {
+		if (canAct && !acted && atkm.atkTime == 0 && status[P_REVIVE][1] == 0) {
 			checkTouch();
 
 			if (!touch && nstop) {
@@ -2216,8 +2218,10 @@ public abstract class Entity extends AbEntity {
 		if (nstop && canBurrow)
 			updateBurrow();
 
+		boolean canAttack = !isBase || !(data.getSpeed() == 0 && data.allAtk() == 0);
+
 		// update wait and attack state
-		if (kbTime == 0 && anim.anim.type != UType.ENTER) {
+		if (canAct && canAttack) {
 			boolean binatk = waitTime + atkm.atkTime == 0;
 			binatk &= touchEnemy && atkm.loop != 0 && nstop;
 
@@ -2229,6 +2233,7 @@ public abstract class Entity extends AbEntity {
 			if ((waitTime >= 0 || !touchEnemy) && touch && atkm.atkTime == 0 && !(isBase && health <= 0))
 				anim.setAnim(UType.IDLE, true);
 		}
+
 		if (waitTime > 0)
 			waitTime--;
 
