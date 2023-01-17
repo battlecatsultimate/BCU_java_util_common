@@ -3,6 +3,7 @@ package common.pack;
 import common.io.Backup;
 import common.io.PackLoader.ZipDesc.FileDesc;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +71,9 @@ public interface Context {
 	File getWorkspaceFile(String relativePath);
 
 	File getBackupFile(String string);
+
+	@Nonnull
+	File getBCUFolder();
 
 	String getAuthor();
 

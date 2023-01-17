@@ -294,7 +294,7 @@ public class UpdateCheck {
 	}
 
 	public static List<Downloader> checkPCLibs(UpdateJson json) throws Exception {
-		File lib = new File("./BCU_lib");
+		File lib = new File(CommonStatic.ctx.getBCUFolder(), "./BCU_lib");
 		List<Downloader> libs = new ArrayList<>();
 		if (json != null) {
 			Set<String> str = new HashSet<>();
@@ -304,7 +304,7 @@ public class UpdateCheck {
 					str.remove(f.getName());
 			for (String s : str) {
 				String url = URL_LIB + s;
-				libs.add(new Downloader(new File("./BCU_lib/" + s), new File("./BCU_lib/.jar.temp"),
+				libs.add(new Downloader(new File(CommonStatic.ctx.getBCUFolder(), "./BCU_lib/" + s), new File(CommonStatic.ctx.getBCUFolder(), "./BCU_lib/.jar.temp"),
 						"downloading BCU library " + s, false, url));
 			}
 		}

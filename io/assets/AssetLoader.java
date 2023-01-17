@@ -104,7 +104,7 @@ public class AssetLoader {
 			CommonStatic.ctx.noticeErr(e, ErrType.FATAL, "failed to read asset");
 		}
 		try {
-			File folder = new File("./assets/custom");
+			File folder = new File(CommonStatic.ctx.getBCUFolder(), "./assets/custom");
 			if (folder.exists()) {
 				VFileRoot vr = new VFileRoot(".");
 				add(vr, folder);

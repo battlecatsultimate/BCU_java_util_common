@@ -11,6 +11,7 @@ import common.pack.Context;
 import common.pack.PackData.PackDesc;
 import common.pack.UserProfile;
 import common.util.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,6 +69,12 @@ public class Admin {
 		@Override
 		public File getBackupFile(String string) {
 			return new File("./backups/"+string);
+		}
+
+		@NotNull
+		@Override
+		public File getBCUFolder() {
+			return new File("./");
 		}
 
 		@Override
