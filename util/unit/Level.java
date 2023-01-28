@@ -21,24 +21,36 @@ public class Level implements BattleStatic, LevelInterface {
 
 	public static Level lvList(Unit u, int[] arr, int[][] orbs) {
 		int talentNumber = 0;
+		PCoin coin = null;
 
 		for(Form f : u.forms) {
 			PCoin pc = f.du.getPCoin();
 
-			if(pc != null) {
-				talentNumber = Math.max(talentNumber, pc.max.length);
+			if(pc != null && talentNumber < pc.max.length) {
+				talentNumber = pc.max.length;
+				coin = pc;
 			}
 		}
 
 		Level lv = new Level(talentNumber);
 
-		lv.level = Math.max(1, Math.min(arr[0], u.max));
-		lv.plusLevel = Math.max(0, Math.min(arr[1], u.maxp));
+		if (arr.length > 0) {
+			lv.level = Math.max(1, Math.min(arr[0], u.max));
+		}
 
-		int[] talents = new int[arr.length - 2];
-		System.arraycopy(arr, 2, talents, 0, arr.length - 2);
+		if(arr.length > 1) {
+			lv.plusLevel = Math.max(0, Math.min(arr[1], u.maxp));
+		}
 
-		lv.talents = talents;
+		if(coin != null) {
+			int[] talents = new int[coin.max.length];
+
+			if(arr.length > 2) {
+				System.arraycopy(arr, 2, talents, 0, arr.length - 2);
+			}
+
+			lv.setTalents(talents);
+		}
 
 		lv.orbs = orbs;
 
