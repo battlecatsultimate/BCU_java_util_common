@@ -255,15 +255,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					}
 				}
 
-				System.out.println("Talent info : \n");
-
-				for(int i = 0; i < pc.info.size(); i++) {
-					System.out.println(Arrays.toString(pc.info.get(i)));
-				}
-
-				System.out.println("Max talent : " + Arrays.toString(maxTalents));
-				System.out.println("Talent array : " + Arrays.toString(t));
-
 				target.setTalents(t);
 			}
 		} else {
