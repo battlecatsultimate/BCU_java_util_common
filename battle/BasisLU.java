@@ -13,6 +13,7 @@ import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Unit;
 
+import java.util.Arrays;
 import java.util.List;
 
 @JsonClass
@@ -93,11 +94,14 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	}
 
 	public void performRealisticLeveling() {
-		if(CommonStatic.getConfig().realLevel)
+		if(!CommonStatic.getConfig().realLevel)
 			return;
 
 		for(Form[] fs : lu.fs) {
 			for(int i = 0; i < fs.length; i++) {
+				if(fs[i] == null)
+					continue;
+
 				Level lv = lu.getLv(fs[i]);
 
 				if(lv == null) {
@@ -107,7 +111,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 				if(fs[i].unit.info.hasEvolveCost() && lv.getLv() + lv.getPlusLv() < 30 && fs[i].fid == 2) {
 					fs[i] = fs[i].unit.forms[1];
 				} else if(!fs[i].unit.info.hasEvolveCost() && lv.getLv() + lv.getPlusLv() < 20 && fs[i].fid == 2) {
-					fs[i] = fs[i].unit.forms[2];
+					fs[i] = fs[i].unit.forms[1];
 				} else if(fs[i].fid == 2 && fs[i].du.getPCoin() != null) {
 					int[] talents = lv.getTalents();
 					PCoin pc = fs[i].du.getPCoin();
@@ -131,6 +135,8 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 				}
 			}
 		}
+
+		lu.renew();
 	}
 
 	/**
