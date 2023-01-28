@@ -99,7 +99,7 @@ public class Orb extends Data {
 
 				String[] strs = line.trim().split(",");
 
-				if (strs.length != 2) {
+				if (strs.length != 2 && strs.length != 4) {
 					continue;
 				}
 
@@ -118,7 +118,11 @@ public class Orb extends Data {
 					continue;
 				}
 
-				f.orbs = new Orb(slots);
+				if(strs.length == 2) {
+					f.orbs = new Orb(slots);
+				} else {
+					f.orbs = new Orb(slots, new int[] { CommonStatic.parseIntN(strs[2]), CommonStatic.parseIntN(strs[3]) });
+				}
 			}
 
 			String pre = "./org/page/orb/equipment_";
@@ -158,9 +162,31 @@ public class Orb extends Data {
 	}
 
 	private final int slots;
+	private final int[] limit;
 
 	public Orb(int slots) {
 		this.slots = slots;
+
+		if(slots == -1)
+			this.limit = null;
+		else
+			this.limit = new int[slots];
+	}
+
+	public Orb(int slots, int[] limit) {
+		this.slots = slots;
+
+		if(slots != limit.length) {
+			System.out.println("W/Orb - Desynced number of slot and level limit data : " + slots + " -> " + Arrays.toString(limit));
+
+			int[] temp = new int[slots];
+
+			System.arraycopy(limit, 0, temp, 0, temp.length);
+
+			this.limit = temp;
+		} else {
+			this.limit = limit;
+		}
 	}
 
 	public int getAtk(int grade, MaskAtk atk) {
@@ -173,5 +199,9 @@ public class Orb extends Data {
 
 	public int getSlots() {
 		return slots;
+	}
+
+	public int[] getLimits() {
+		return limit;
 	}
 }

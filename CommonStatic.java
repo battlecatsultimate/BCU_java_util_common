@@ -166,10 +166,16 @@ public class CommonStatic {
 		 * Make battle shaken
 		 */
 		public boolean shake = true;
+
 		/**
 		 * Replace old music when updated
 		 */
 		public boolean updateOldMusic = true;
+
+		/**
+		 * Perform realistic BC levelings
+		 */
+		public boolean realLevel = false;
 	}
 
 	public interface EditLink {
