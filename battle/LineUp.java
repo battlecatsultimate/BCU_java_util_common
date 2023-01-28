@@ -1,7 +1,6 @@
 package common.battle;
 
 import common.CommonStatic;
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 @JsonClass
 public class LineUp extends Data {
 
@@ -39,23 +39,16 @@ public class LineUp extends Data {
 	}
 
 	/**
-	 * read a LineUp object from data
-	 */
-	protected LineUp(int ver, InStream is) {
-		zread(ver, is);
-		renew();
-	}
-
-	/**
 	 * clone a LineUp object
 	 */
 	protected LineUp(LineUp ref) {
 		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 5; j++)
-				fs[i][j] = ref.fs[i][j];
+			System.arraycopy(ref.fs[i], 0, fs[i], 0, 5);
+
 		for (Entry<Identifier<Unit>, Level> e : ref.map.entrySet()) {
 			map.put(e.getKey(), e.getValue().clone());
 		}
+
 		renew();
 	}
 
@@ -89,7 +82,8 @@ public class LineUp extends Data {
 	 */
 	public synchronized Level getLv(Form u) {
 		if (!map.containsKey(u.unit.id))
-			setLv(u.unit, u.getPrefLvs());
+			setLv(u.unit, u.unit.getPrefLvs());
+
 		return map.get(u.unit.id);
 	}
 
@@ -204,7 +198,7 @@ public class LineUp extends Data {
 	/**
 	 * set level record of an Unit
 	 */
-	public synchronized void setLv(Unit u, ArrayList<Integer> lv) {
+	public synchronized void setLv(Unit u, Level lv) {
 		boolean sub = updating;
 		updating = true;
 
@@ -213,33 +207,40 @@ public class LineUp extends Data {
 		if (l != null) {
 			l.setLvs(lv);
 		} else {
-			l = new Level(lv);
+			l = lv.clone();
 
 			map.put(u.id, l);
 		}
 
 		if (!sub)
 			renewEForm();
+
 		updating &= sub;
 	}
 
 	/**
 	 * set orb data of an Unit
 	 */
-	public synchronized void setOrb(Unit u, ArrayList<Integer> lvs, int[][] orbs) {
+	public synchronized void setOrb(Unit u, Level lv, int[][] orbs) {
 		// lvs must be generated before doing something with orbs
 		boolean sub = updating;
 		updating = true;
+
 		Level l = map.get(u.id);
+
 		if (l != null) {
-			l.setLvs(lvs);
 			l.setOrbs(orbs);
 		} else {
-			l = new Level(lvs, orbs);
+			l = lv.clone();
+
+			l.setOrbs(orbs);
+
 			map.put(u.id, l);
 		}
+
 		if (!sub)
 			renewEForm();
+
 		updating &= sub;
 	}
 
@@ -248,19 +249,23 @@ public class LineUp extends Data {
 	 */
 	public boolean willRem(Combo c) {
 		int free = 0;
+
 		for (int i = 0; i < 5; i++)
 			if (fs[0][i] == null)
 				free++;
 			else if (loc[i] == 0) {
 				boolean b = true;
+
 				for (Form is : c.forms)
 					if (fs[0][i].unit == is.unit) {
 						b = false;
+
 						break;
 					}
 				if (b)
 					free++;
 			}
+
 		return free < occupance(c);
 	}
 
@@ -330,6 +335,7 @@ public class LineUp extends Data {
 				coms.remove(i);
 				i--;
 			}
+
 		for (int i = 0; i < tcom.size(); i++)
 			if (!coms.contains(tcom.get(i)))
 				coms.add(tcom.get(i));
@@ -353,38 +359,6 @@ public class LineUp extends Data {
 				if (u == null || u.forms[f] == null)
 					setFS(null, i);
 			}
-		arrange();
-	}
-
-	/**
-	 * read data from file, support multiple version
-	 */
-	private void zread(int ver, InStream is) {
-		int val = getVer(is.nextString());
-		if (val >= 400)
-			zread$000400(is);
-	}
-
-	private void zread$000400(InStream is) {
-		int n = is.nextInt();
-		for (int i = 0; i < n; i++) {
-			int uid = is.nextInt();
-			int fid = is.nextInt();
-			setFS(Identifier.parseInt(uid, Unit.class).get().forms[fid], i);
-		}
-		int m = is.nextInt();
-		for (int i = 0; i < m; i++) {
-			int uid = is.nextInt();
-			int[] lv = is.nextIntsB();
-			Unit u = Identifier.getOr(Identifier.parseInt(uid, Unit.class), Unit.class);
-			int[][] orbs = null;
-			int existing = is.nextInt();
-			if (existing == 1) {
-				orbs = is.nextIntsBB();
-			}
-			if (u != null)
-				map.put(u.id, new Level(Level.LvList(lv), orbs));
-		}
 		arrange();
 	}
 

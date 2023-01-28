@@ -1,6 +1,5 @@
 package common.battle;
 
-import common.io.InStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
@@ -16,13 +15,6 @@ import java.util.List;
 @JsonClass
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
-	public static BasisLU zread(InStream is) {
-		int ver = getVer(is.nextString());
-		if (ver >= 308)
-			return zread$000308(is);
-		return zread$000307(is);
-	}
-
 	private static int[] getRandom(int n) {
 		int[] ans = new int[n];
 		int a = 0;
@@ -33,22 +25,6 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 			a |= 1 << x;
 			ans[i] = x;
 		}
-		return ans;
-	}
-
-	private static BasisLU zread$000307(InStream is) {
-		String name = is.nextString();
-		BasisLU ans = new BasisLU(307, is);
-		ans.nyc = is.nextIntsB();
-		ans.name = name;
-		return ans;
-	}
-
-	private static BasisLU zread$000308(InStream is) {
-		String name = is.nextString();
-		BasisLU ans = new BasisLU(308, is);
-		ans.nyc = is.nextIntsB();
-		ans.name = name;
 		return ans;
 	}
 
@@ -83,11 +59,6 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		name = str;
 		lu = line;
 		nyc = ints;
-	}
-
-	private BasisLU(int ver, InStream is) {
-		lu = new LineUp(ver, ver >= 308 ? is.subStream() : is);
-		t = new Treasure(this, ver, is);
 	}
 
 	@Override

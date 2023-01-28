@@ -1214,7 +1214,8 @@ public class Data {
 	public static final byte PC2_COST = 3;
 	public static final byte PC2_CD = 4;
 	public static final byte PC2_HB = 5;
-	public static final byte PC2_TOT = 6;
+	public static final byte PC2_TBA = 6;
+	public static final byte PC2_TOT = 7;
 	// -1 for None
 	// 0 for Proc
 	// 1 for Ability
@@ -1282,7 +1283,8 @@ public class Data {
 			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Aku
 			{ 0, P_SHIELDBREAK }, //58 : shield piercing
 			{ 1, AB_CKILL }, //59 : corpse killer
-			{ 0, P_CURSE } //60 : curse
+			{ 0, P_CURSE }, //60 : curse
+			{ 2, PC2_TBA } //61 : tba
 	};
 
 	// foot icon index used in battle

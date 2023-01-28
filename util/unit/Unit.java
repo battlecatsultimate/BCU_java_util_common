@@ -2,6 +2,7 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
+import common.battle.data.PCoin;
 import common.io.json.FieldOrder;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCGeneric;
@@ -160,8 +161,48 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 		return id;
 	}
 
-	public int getPrefLv() {
-		return Math.min(CommonStatic.getConfig().prefLevel, max) + Math.min((rarity < 2 && maxp > 0 ? (int)((CommonStatic.getConfig().prefLevel - 1) / 49.0 * maxp) : 0),maxp);
+	public Level getPrefLvs() {
+		int maxTalent = 0;
+		PCoin pc = null;
+
+		for(Form f : forms) {
+			PCoin coin = f.du.getPCoin();
+
+			if(coin != null && coin.max.length > maxTalent) {
+				maxTalent = coin.max.length;
+				pc = coin;
+
+			}
+		}
+
+		Level lv;
+
+		if (pc != null) {
+			lv = new Level(maxTalent);
+		} else {
+			lv = new Level(0);
+		}
+
+		lv.setLevel(getPreferredLevel());
+		lv.setPlusLevel(getPreferredPlusLevel());
+
+		if (pc != null) {
+			int[] talents = new int[pc.max.length];
+
+			System.arraycopy(pc.max, 0, talents, 0, talents.length);
+
+			lv.setTalents(talents);
+		}
+
+		return lv;
+	}
+
+	public int getPreferredLevel() {
+		return Math.min(CommonStatic.getConfig().prefLevel, max);
+	}
+
+	public int getPreferredPlusLevel() {
+		return Math.min((rarity < 2 && maxp > 0 ? (int)((CommonStatic.getConfig().prefLevel - 1) / 49.0 * maxp) : 0),maxp);
 	}
 
 	@Override

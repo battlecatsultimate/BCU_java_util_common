@@ -20,7 +20,7 @@ public class Orb extends Data {
 
 	public static final int[] orbTrait = {
 			Data.TRAIT_RED, Data.TRAIT_FLOAT, Data.TRAIT_BLACK, Data.TRAIT_METAL, Data.TRAIT_ANGEL, Data.TRAIT_ALIEN,
-			Data.TRAIT_ZOMBIE, Data.TRAIT_RELIC, Data.TRAIT_WHITE
+			Data.TRAIT_ZOMBIE, Data.TRAIT_RELIC, Data.TRAIT_WHITE, Data.TRAIT_EVA, Data.TRAIT_WITCH, Data.TRAIT_DEMON
 	};
 
 	public static void read() {
@@ -152,15 +152,6 @@ public class Orb extends Data {
 		for(int i = 0; i < orbTrait.length; i++) {
 			if(orbTrait[i] == trait)
 				return 1 << i;
-		}
-
-		return -1;
-	}
-
-	public static int orbToTrait(int orb) {
-		for (int t : orbTrait) {
-			if ((1 << t) == orb)
-				return t;
 		}
 
 		return -1;
