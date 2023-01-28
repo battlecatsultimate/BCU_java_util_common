@@ -5,6 +5,7 @@ import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
@@ -15,7 +16,6 @@ import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 @IndexCont(PackData.class)
@@ -24,12 +24,12 @@ import java.util.TreeMap;
 public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> {
 
 	@StaticPermitted
-	public static final int[] MAX = new int[] { 120, 10, 10, 10, 10, 10 };
+	public static final int[] MAX = new int[] { 50, 70, 10, 10, 10, 10, 10 };
 
 	@JsonField(generic = { CharaGroup.class, int[].class }, alias = Identifier.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
-	public int[][] rares = new int[RARITY_TOT][6];
-	public int[] all = new int[6];
+	public int[][] rares = new int[RARITY_TOT][7];
+	public int[] all = new int[7];
 	@JCIdentifier
 	public Identifier<LvRestrict> id;
 	public String name = "";
@@ -89,10 +89,17 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null) {
-					ArrayList<Integer> mlv = valid(f).getLvs();
-					ArrayList<Integer> flv = lu.map.get(f.unit.id).getLvs();
-					for (int i = 0; i < Math.min(mlv.size(), flv.size()); i++)
-						if (mlv.get(i) < flv.get(i))
+					Level mlv = valid(f);
+					Level flv = lu.map.get(f.unit.id);
+
+					if (mlv.getLv() < flv.getLv() || mlv.getPlusLv() < flv.getPlusLv())
+						return false;
+
+					int[] mt = mlv.getTalents();
+					int[] ft = flv.getTalents();
+
+					for (int i = 0; i < Math.min(mt.length, ft.length); i++)
+						if (mt[i] < ft[i])
 							return false;
 				}
 		return true;
@@ -128,12 +135,12 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 				mod = true;
 			}
 		if (mod)
-			return new Level(f.regulateLv(null, Level.LvList(lv)));
+			return f.regulateLv(null, Level.lvList(f.unit, lv, null));
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], rares[f.unit.rarity][i]);
 		for (int i = 0; i < 6; i++)
 			lv[i] = Math.min(lv[i], all[i]);
-		return new Level(f.regulateLv(null, Level.LvList(lv)));
+		return f.regulateLv(null, Level.lvList(f.unit, lv, null));
 	}
 
 	public void validate(LineUp lu) {
@@ -144,4 +151,45 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		lu.renew();
 	}
 
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		res.replaceAll((k, v) -> {
+			if(v == null)
+				return MAX.clone();
+
+			if(v.length == 6) {
+				int[] l = new int[7];
+
+				l[0] = v[0];
+
+				System.arraycopy(v, 1, l, 2, l.length - 2);
+
+				return l;
+			}
+
+			return v;
+		});
+
+		for(int i = 0; i < rares.length; i++) {
+			if (rares[i].length == 6) {
+				int[] l = new int[7];
+
+				l[0] = rares[i][0];
+
+				System.arraycopy(rares[i], 1, l, 2, l.length - 2);
+
+				rares[i] = l;
+			}
+		}
+
+		if (all.length == 6) {
+			int[] l = new int[7];
+
+			l[0] = all[0];
+
+			System.arraycopy(all, 1, l, 2, l.length - 2);
+
+			all = l;
+		}
+	}
 }

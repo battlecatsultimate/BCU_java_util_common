@@ -1458,8 +1458,8 @@ public abstract class Entity extends AbEntity {
 	}
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double lvMagnif, double tAtk, double tHP, PCoin pc, Level lv) {
-		super((pc != null && lv != null && lv.getLvs().size() == pc.max.size()) ?
-				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getLvs()))) :
+		super((pc != null && lv != null && lv.getTalents().length == pc.max.length) ?
+				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv))) :
 				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
 		);
 		basis = b;

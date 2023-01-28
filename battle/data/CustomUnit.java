@@ -77,20 +77,28 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 	@Override
 	public void importData(MaskEntity de) {
 		super.importData(de);
+
 		if (de instanceof MaskUnit) {
 			MaskUnit mu = (MaskUnit) de;
+
 			price = mu.getPrice();
 			resp = mu.getRespawn();
 			back = Math.min(mu.getBack(), mu.getFront());
 			front = Math.max(mu.getBack(), mu.getFront());
 			limit = mu.getLimit();
+
 			PCoin p = mu.getPCoin();
+
 			if (p != null) {
 				pcoin = new PCoin(this);
-				pcoin.max.add(0);
+
 				for (int[] i : p.info) {
-					int[] j = new int[13];
-					System.arraycopy(i, 0, j, 0, 13);
+					int[] j = new int[14];
+
+					System. arraycopy(i, 0, j, 0, 12);
+
+					j[13] = -1;
+
 					j[1] = Math.max(1, j[1]);
 
 					pcoin.info.add(j);

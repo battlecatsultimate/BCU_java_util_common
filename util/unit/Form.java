@@ -3,11 +3,7 @@ package common.util.unit;
 import common.CommonStatic;
 import common.battle.data.*;
 import common.io.json.JsonClass;
-import common.io.json.JsonClass.JCConstructor;
-import common.io.json.JsonClass.JCGeneric;
-import common.io.json.JsonClass.JCGetter;
-import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonClass.RType;
+import common.io.json.JsonClass.*;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
 import common.pack.Identifier;
@@ -23,7 +19,8 @@ import common.util.anim.MaModel;
 import common.util.lang.MultiLangCont;
 import common.util.lang.MultiLangData;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
+import java.util.Arrays;
 
 @JCGeneric(Form.FormJson.class)
 @JsonClass(read = RType.FILL)
@@ -227,42 +224,61 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			form.pcoin.update();
 	}
 
-	public ArrayList<Integer> getPrefLvs() {
-		ArrayList<Integer> ans;
-		final PCoin pc = du instanceof CustomUnit ? du.getPCoin() : unit.forms.length >= 3 ? unit.forms[2].du.getPCoin() : null;
+	/**
+	 * Validate level values in {@code target} {@link common.util.unit.Level}
+	 * @param src {@code Level} that will be put into {@code target} {@code Level}. Can be null
+	 * @param target {@code Level} that will be validated
+	 * @return Validated {@code target} {@code Level} will be returned
+	 */
+	public Level regulateLv(@Nullable Level src, Level target) {
+		if(src != null) {
+			target.setLevel(Math.max(1, Math.min(src.getLv(), unit.max)));
+			target.setPlusLevel(Math.max(0, Math.min(src.getPlusLv(), unit.maxp)));
 
-		if (pc != null) {
-			ans = new ArrayList<>(pc.max);
-			ans.set(0, unit.getPrefLv());
+			PCoin pc = du.getPCoin();
+
+			if (pc != null) {
+				int[] maxTalents = new int[pc.info.size()];
+
+				for (int i = 0; i < pc.info.size(); i++)
+					maxTalents[i] = Math.max(1, pc.info.get(i)[1]);
+
+				int[] t = new int[maxTalents.length];
+
+				for (int i = 0; i < Math.min(maxTalents.length, src.getTalents().length); i++) {
+					t[i] = Math.min(maxTalents[i], Math.max(0, src.getTalents()[i]));
+				}
+
+				if (src.getTalents().length < target.getTalents().length) {
+					for (int i = src.getTalents().length; i < Math.min(maxTalents.length, target.getTalents().length); i++) {
+						t[i] = Math.min(maxTalents[i], Math.min(0, target.getTalents()[i]));
+					}
+				}
+
+				target.setTalents(t);
+			}
 		} else {
-			ans = new ArrayList<>();
-			ans.add(unit.getPrefLv());
+			target.setLevel(Math.max(1, Math.min(unit.max, target.getLv())));
+			target.setPlusLevel(Math.max(0, Math.min(unit.maxp, target.getPlusLv())));
+
+			PCoin pc = du.getPCoin();
+
+			if (pc != null) {
+				int[] maxTalents = new int[pc.info.size()];
+				int[] t = new int[pc.info.size()];
+
+				for (int i = 0; i < pc.info.size(); i++)
+					maxTalents[i] = Math.max(1, pc.info.get(i)[1]);
+
+				for (int i = 0; i < Math.min(maxTalents.length, target.getTalents().length); i++) {
+					t[i] = Math.min(maxTalents[i], Math.max(0, target.getTalents()[i]));
+				}
+
+				target.setTalents(t);
+			}
 		}
 
-		return ans;
-	}
-
-	public ArrayList<Integer> regulateLv(int[] mod, ArrayList<Integer> lv) {
-		if (mod != null)
-			for (int i = 0; i < Math.min(mod.length, lv.size()); i++)
-				lv.set(i, mod[i]);
-
-		int[] maxs = new int[lv.size()];
-		maxs[0] = unit.max + unit.maxp;
-		PCoin pc = du.getPCoin();
-		if (pc != null) {
-			for (int i = 0; i < pc.info.size(); i++)
-				maxs[i + 1] = Math.max(1, pc.info.get(i)[1]);
-		}
-		for (int i = 0; i < lv.size(); i++) {
-			if (lv.get(i) < 0)
-				lv.set(i, 0);
-			if (lv.get(i) > maxs[i])
-				lv.set(i, maxs[i]);
-		}
-		if (lv.get(0) == 0)
-			lv.set(0, 1);
-		return lv;
+		return target;
 	}
 
 	@Override

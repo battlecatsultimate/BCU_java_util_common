@@ -309,7 +309,7 @@ public class CommonStatic {
 		int t = -1;
 		for (int i = 0; i < str.length(); i++)
 			if (t == -1) {
-				if (isDigit(str.charAt(i)) || str.charAt(i) == '-' || str.charAt(i) == '+')
+				if (isDigit(str.charAt(i)) || str.charAt(i) == '-')
 					t = i;
 			} else if (!isDigit(str.charAt(i))) {
 				lstr.add(str.substring(t, i));
