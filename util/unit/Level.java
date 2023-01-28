@@ -134,8 +134,6 @@ public class Level implements BattleStatic, LevelInterface {
 	}
 
 	public void setLvs(Level lv) {
-		System.out.println("Setting level : " + lv);
-
 		level = Math.max(1, lv.level);
 		plusLevel = lv.plusLevel;
 
@@ -148,8 +146,6 @@ public class Level implements BattleStatic, LevelInterface {
 		if (lv.orbs != null) {
 			orbs = lv.orbs.clone();
 		}
-
-		System.out.println("Setting result : " + this);
 	}
 
 	public void setOrbs(int[][] orb) {
