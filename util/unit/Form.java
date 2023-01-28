@@ -268,7 +268,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 			}
 		} else {
 			target.setLevel(Math.max(1, Math.min(unit.max, target.getLv())));
-			target.setLevel(Math.max(0, Math.min(unit.maxp, target.getPlusLv())));
+			target.setPlusLevel(Math.max(0, Math.min(unit.maxp, target.getPlusLv())));
 
 			PCoin pc = du.getPCoin();
 
