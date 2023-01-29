@@ -39,10 +39,14 @@ public class Orb extends Data {
 				int value = 0;
 
 				for (int i = 0; i < strs.length; i++) {
+					if(strs.length != orbTrait.length)
+						continue;
+
 					int t = CommonStatic.parseIntN(strs[i]);
 
-					if (t == 1)
-						value |= 1 << i;
+					if (t == 1) {
+						value |= 1 << orbTrait[i];
+					}
 				}
 
 				aux.DATA.put(key, value);
