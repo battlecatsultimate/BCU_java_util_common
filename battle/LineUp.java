@@ -230,6 +230,7 @@ public class LineUp extends Data {
 		Level l = map.get(u.id);
 
 		if (l != null) {
+			l.setLvs(lv);
 			l.setOrbs(orbs);
 		} else {
 			l = lv.clone();
