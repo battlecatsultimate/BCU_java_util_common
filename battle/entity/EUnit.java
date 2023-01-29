@@ -15,6 +15,7 @@ import common.util.unit.Level;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class EUnit extends Entity {
@@ -194,9 +195,23 @@ public class EUnit extends Entity {
 		for (int[] line : level.getOrbs()) {
 			if (line.length == 0)
 				continue;
-			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] != Data.ORB_ATK || !trait.contains(orbType))
+			if (line[ORB_TYPE] != Data.ORB_ATK)
+				continue;
+
+			List<Trait> orbType = Trait.convertOrb(line[ORB_TRAIT]);
+
+			boolean orbValid = false;
+
+			for(int i = 0; i < orbType.size(); i++) {
+				if (trait.contains(orbType.get(i))) {
+					orbValid = true;
+
+					break;
+				}
+			}
+
+			if (!orbValid)
 				continue;
 
 			ans += orb.getAtk(line[ORB_GRADE], matk);
@@ -214,11 +229,22 @@ public class EUnit extends Entity {
 		int ans = atk;
 
 		for (int[] line : level.getOrbs()) {
-			if (line.length == 0)
+			if (line.length == 0 || line[ORB_TYPE] != Data.ORB_RES)
 				continue;
-			Trait orbType = Trait.convertType(line[ORB_TRAIT]).get(0);
 
-			if (line[ORB_TYPE] != Data.ORB_RES || !trait.contains(orbType))
+			List<Trait> orbType = Trait.convertOrb(line[ORB_TRAIT]);
+
+			boolean orbValid = false;
+
+			for(int i = 0; i < orbType.size(); i++) {
+				if (trait.contains(orbType.get(i))) {
+					orbValid = true;
+
+					break;
+				}
+			}
+
+			if (!orbValid)
 				continue;
 
 			ans = orb.getRes(line[ORB_GRADE], ans);
@@ -243,10 +269,15 @@ public class EUnit extends Entity {
 					continue;
 
 				if (levelOrbs[i][ORB_TYPE] == ORB_MASSIVE) {
-					Trait orbType = Trait.convertType(levelOrbs[i][ORB_TRAIT]).get(0);
+					List<Trait> orbType = Trait.convertOrb(levelOrbs[i][ORB_TRAIT]);
 
-					if (eTraits.contains(orbType))
-						ini += ORB_MASSIVE_MULTI[levelOrbs[i][ORB_GRADE]];
+					for(int j = 0; j < orbType.size(); j++) {
+						if (eTraits.contains(orbType.get(j))) {
+							ini += ORB_MASSIVE_MULTI[levelOrbs[i][ORB_GRADE]];
+
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -275,9 +306,14 @@ public class EUnit extends Entity {
 						continue;
 
 				if (levelOrbs[i][ORB_TYPE] == ORB_STRONG) {
-					Trait orbType = Trait.convertType(levelOrbs[i][ORB_TRAIT]).get(0);
-					if (eTraits.contains(orbType)) {
-						ini += ORB_STR_ATK_MULTI[levelOrbs[i][ORB_GRADE]];
+					List<Trait> orbType = Trait.convertOrb(levelOrbs[i][ORB_TRAIT]);
+
+					for(int j = 0; j < orbType.size(); j++) {
+						if (eTraits.contains(orbType.get(j))) {
+							ini += ORB_STR_ATK_MULTI[levelOrbs[i][ORB_GRADE]];
+
+							break;
+						}
 					}
 				}
 			}

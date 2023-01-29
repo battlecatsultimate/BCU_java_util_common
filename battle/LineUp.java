@@ -1,6 +1,7 @@
 package common.battle;
 
 import common.CommonStatic;
+import common.battle.data.PCoin;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
 import common.io.json.JsonField;
@@ -80,11 +81,11 @@ public class LineUp extends Data {
 	/**
 	 * get level of an Unit, if no date recorded, record default one
 	 */
-	public synchronized Level getLv(Form u) {
-		if (!map.containsKey(u.unit.id))
-			setLv(u.unit, u.unit.getPrefLvs());
+	public synchronized Level getLv(Form f) {
+		if (!map.containsKey(f.unit.id))
+			setLv(f.unit, f.unit.getPrefLvs());
 
-		return map.get(u.unit.id);
+		return validateLevel(f, map.get(f.unit.id));
 	}
 
 	/**
@@ -229,6 +230,7 @@ public class LineUp extends Data {
 		Level l = map.get(u.id);
 
 		if (l != null) {
+			l.setLvs(lv);
 			l.setOrbs(orbs);
 		} else {
 			l = lv.clone();
@@ -362,4 +364,39 @@ public class LineUp extends Data {
 		arrange();
 	}
 
+	private Level validateLevel(Form f, Level lv) {
+		Unit u = f.unit;
+
+		int maxTalent = 0;
+		PCoin pc = null;
+
+		for(Form form : u.forms) {
+			if(form.du.getPCoin() != null && form.du.getPCoin().max.length > maxTalent) {
+				pc = form.du.getPCoin();
+				maxTalent = pc.max.length;
+			}
+		}
+
+		lv.setLevel(Math.max(1, Math.min(u.max, lv.getLv())));
+		lv.setPlusLevel(Math.max(0, Math.min(u.maxp, lv.getPlusLv())));
+
+		if(pc != null) {
+			int[] max = pc.max;
+
+			if(lv.getTalents().length < max.length) {
+				int[] talents = new int[max.length];
+
+				for(int i = 0; i < lv.getTalents().length; i++) {
+					talents[i] = lv.getTalents()[i];
+				}
+
+				if (max.length - lv.getTalents().length >= 0)
+					System.arraycopy(max, lv.getTalents().length, talents, lv.getTalents().length, max.length - lv.getTalents().length);
+
+				lv.setTalents(talents);
+			}
+		}
+
+		return lv;
+	}
 }
