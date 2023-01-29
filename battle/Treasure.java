@@ -303,9 +303,15 @@ public class Treasure extends Data {
 					continue;
 
 				if (orbs[i][ORB_TYPE] == ORB_STRONG) {
-					Trait orbType = Trait.convertType(orbs[i][ORB_TRAIT]).get(0);
-					if (eTraits.contains(orbType))
-						ini *= 1 - ORB_STR_DEF_MULTI[orbs[i][ORB_GRADE]] / 100.0;
+					List<Trait> orbType = Trait.convertOrb(orbs[i][ORB_TRAIT]);
+
+					for(int j = 0; j < orbType.size(); j++) {
+						if(eTraits.contains(orbType.get(j))) {
+							ini *= 1 - ORB_STR_DEF_MULTI[orbs[i][ORB_GRADE]] / 100.0;
+
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -357,9 +363,15 @@ public class Treasure extends Data {
 					continue;
 
 				if (orbs[i][ORB_TYPE] == ORB_RESISTANT) {
-					Trait orbType = Trait.convertType(orbs[i][ORB_TRAIT]).get(0);
-					if (eTraits.contains(orbType))
-						ini *= 1 - ORB_RESISTANT_MULTI[orbs[i][ORB_GRADE]] / 100.0;
+					List<Trait> orbType = Trait.convertOrb(orbs[i][ORB_TRAIT]);
+
+					for(int j = 0; j < orbType.size(); j++) {
+						if(eTraits.contains(orbType.get(j))) {
+							ini *= 1 - ORB_RESISTANT_MULTI[orbs[i][ORB_GRADE]] / 100.0;
+
+							break;
+						}
+					}
 				}
 			}
 		}
