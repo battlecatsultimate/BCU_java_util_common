@@ -213,6 +213,18 @@ public abstract class PackData implements IndexContainer {
 				u.maxp = Integer.parseInt(strs[51]);
 				u.info.fillBuy(strs);
 
+				int tf =  Integer.parseInt(strs[20]);
+
+				if (tf != -1) {
+					u.info.tfLevel = tf;
+				} else {
+					tf = Integer.parseInt(strs[25]);
+
+					if (tf != -1) {
+						u.info.tfLevel = tf;
+					}
+				}
+
 				units.add(u);
 				bar.accept(1.0 * (x++) / list.size());
 			}

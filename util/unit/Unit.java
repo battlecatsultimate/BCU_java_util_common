@@ -36,7 +36,7 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 
 		public int[][] evo;
 		public int[] price = new int[10];
-		public int xp, type;
+		public int xp, type, tfLevel = -1;
 
 		public void fillBuy(String[] strs) {
 			for (int i = 0; i < 10; i++)

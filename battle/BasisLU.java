@@ -108,9 +108,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 					throw new IllegalStateException("Battle started without initializing level of form in lineup");
 				}
 
-				if(fs[i].unit.info.hasEvolveCost() && lv.getLv() + lv.getPlusLv() < 30 && fs[i].fid == 2) {
-					fs[i] = fs[i].unit.forms[1];
-				} else if(!fs[i].unit.info.hasEvolveCost() && lv.getLv() + lv.getPlusLv() < 20 && fs[i].fid == 2) {
+				if(fs[i].unit.info.tfLevel != -1 && lv.getLv() + lv.getPlusLv() < fs[i].unit.info.tfLevel && fs[i].fid == 2) {
 					fs[i] = fs[i].unit.forms[1];
 				} else if(fs[i].fid == 2 && fs[i].du.getPCoin() != null) {
 					int[] talents = lv.getTalents();
