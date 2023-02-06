@@ -10,7 +10,6 @@ import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
-import common.util.unit.Level;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
 
@@ -335,42 +334,6 @@ public class PCoin extends Data {
 						modifs[j] = info.get(i)[3 + j * 2];
 
 				return 1 + modifs[0] * 0.01;
-			}
-		}
-
-		return 1.0;
-	}
-
-	public double getTBAMultiplication(int[] talents) {
-		for(int i = 0; i < info.size(); i++) {
-			if(info.get(i)[0] >= PC_CORRES.length)
-				continue;
-
-			if(talents[i] == 0)
-				continue;
-
-			int[] type = PC_CORRES[info.get(i)[0]];
-
-			if(type[0] == -1)
-				continue;
-
-			if(type[0] == PC_BASE && type[1] == PC2_TBA) {
-				int maxlv = info.get(i)[1];
-				int[] modifs = new int[4];
-
-				if(maxlv > 1) {
-					for(int j = 0; j < 4; j++) {
-						int v0 = info.get(i)[2 + j * 2];
-						int v1 = info.get(i)[3 + j * 2];
-						modifs[j] = (v1 - v0) * (talents[i] - 1) / (maxlv - 1) + v0;
-					}
-				}
-
-				if(maxlv == 0)
-					for (int j = 0; j < 4; j++)
-						modifs[j] = info.get(i)[3 + j * 2];
-
-				return 1 - modifs[0] * 0.01;
 			}
 		}
 
