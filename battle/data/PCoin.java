@@ -273,7 +273,7 @@ public class PCoin extends Data {
 		}
 	}
 
-	public double getAtkMultiplication(Level lv) {
+	public double getAtkMultiplication(int[] talents) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
@@ -309,12 +309,10 @@ public class PCoin extends Data {
 		return 1.0;
 	}
 
-	public double getHPMultiplication(Level lv) {
+	public double getHPMultiplication(int[] talents) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
-
-			int[] talents = lv.getTalents();
 
 			if(talents[i] == 0)
 				continue;
@@ -345,12 +343,10 @@ public class PCoin extends Data {
 		return 1.0;
 	}
 
-	public double getTBAMultiplication(Level lv) {
+	public double getTBAMultiplication(int[] talents) {
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
-
-			int[] talents = lv.getTalents();
 
 			if(talents[i] == 0)
 				continue;
@@ -375,8 +371,6 @@ public class PCoin extends Data {
 				if(maxlv == 0)
 					for (int j = 0; j < 4; j++)
 						modifs[j] = info.get(i)[3 + j * 2];
-
-				System.out.println(1 - modifs[0] * 0.01);
 
 				return 1 - modifs[0] * 0.01;
 			}
