@@ -278,8 +278,6 @@ public class PCoin extends Data {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
 
-			int[] talents = lv.getTalents();
-
 			if(talents[i] == 0)
 				continue;
 
