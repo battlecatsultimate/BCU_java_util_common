@@ -82,7 +82,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
 
 			if (pc != null && lv != null && lv.getTalents().length == pc.max.length)
-				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv) * atks[i]) * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
+				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getTalents()) * atks[i]) * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
 			else
 				atks[i] = (int) Math.round(atks[i] * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
 			abis[i] = raw[i][2];
