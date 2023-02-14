@@ -924,18 +924,18 @@ public class Data {
 
 	// trait bit filter
 	public static final int TB_RED = 1;
-	public static final byte TB_FLOAT = 2;
-	public static final byte TB_BLACK = 4;
-	public static final byte TB_METAL = 8;
-	public static final byte TB_ANGEL = 16;
-	public static final byte TB_ALIEN = 32;
-	public static final byte TB_ZOMBIE = 64;
-	public static final short TB_RELIC = 128;
-	public static final short TB_WHITE = 256;
-	public static final short TB_EVA = 512;
-	public static final short TB_WITCH = 1024;
-	public static final short TB_INFH = 2048;
-	public static final short TB_DEMON = 4096;
+	public static final int TB_FLOAT = 2;
+	public static final int TB_BLACK = 4;
+	public static final int TB_METAL = 8;
+	public static final int TB_ANGEL = 16;
+	public static final int TB_ALIEN = 32;
+	public static final int TB_ZOMBIE = 64;
+	public static final int TB_RELIC = 128;
+	public static final int TB_WHITE = 256;
+	public static final int TB_EVA = 512;
+	public static final int TB_WITCH = 1024;
+	public static final int TB_INFH = 2048;
+	public static final int TB_DEMON = 4096;
 
 	// trait index
 	public static final byte TRAIT_RED = 0;
