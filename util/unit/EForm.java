@@ -38,7 +38,7 @@ public class EForm extends Data {
 		int lv = level.getLv() + level.getPlusLv();
 
 		if(b.st.isAkuStage())
-			level.setLevel(getAkuStageLevel());
+			getAkuStageLevel(level);
 
 		double d = f.unit.lv.getMult(level.getLv() + level.getPlusLv());
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
@@ -62,15 +62,11 @@ public class EForm extends Data {
 		return du.getPrice() * (1 + sta * 0.5);
 	}
 
-	private int getAkuStageLevel() {
+	private void getAkuStageLevel(Level level) {
 		if(CommonStatic.getConfig().levelLimit == 0)
-			return level.getLv() + level.getPlusLv();
+			return;
 
-		int normal = level.getLv();
-		int plus = level.getPlusLv();
-
-		normal = Math.min(normal, CommonStatic.getConfig().levelLimit);
-
-		return CommonStatic.getConfig().plus ? normal + plus : normal;
+		level.setLevel(Math.min(level.getLv(), CommonStatic.getConfig().levelLimit));
+		level.setPlusLevel(CommonStatic.getConfig().plus ? level.getPlusLv() : 0);
 	}
 }
