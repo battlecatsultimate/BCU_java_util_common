@@ -35,8 +35,6 @@ public class EForm extends Data {
 	}
 
 	public EUnit getEntity(StageBasis b, int[] index) {
-		int lv = level.getLv() + level.getPlusLv();
-
 		if(b.st.isAkuStage())
 			getAkuStageLevel(level);
 
@@ -44,11 +42,7 @@ public class EForm extends Data {
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
 
-		EUnit result = new EUnit(b, du, walkAnim, d, du.getFront(), du.getBack(), level, f.du.getPCoin(), index);
-
-		level.setLevel(lv);
-
-		return result;
+		return new EUnit(b, du, walkAnim, d, du.getFront(), du.getBack(), level, f.du.getPCoin(), index);
 	}
 
 	public EUnit invokeEntity(StageBasis b, int Lvl, int minLayer, int maxLayer) {
