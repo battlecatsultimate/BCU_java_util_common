@@ -2218,6 +2218,8 @@ public abstract class Entity extends AbEntity {
 		if (nstop && canBurrow)
 			updateBurrow();
 
+		canAct &= kbTime == 0;
+
 		boolean canAttack = !isBase || !(data.getSpeed() == 0 && data.allAtk() == 0);
 
 		// update wait and attack state
