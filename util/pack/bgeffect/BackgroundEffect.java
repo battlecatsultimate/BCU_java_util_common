@@ -9,9 +9,11 @@ import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
+import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.pack.Background;
 
+import java.io.IOException;
 import java.util.*;
 
 @JsonClass.JCGeneric(Identifier.class)
@@ -21,6 +23,7 @@ public abstract class BackgroundEffect {
     public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
     public static final List<Integer> jsonList = new ArrayList<>();
+    protected static final List<Integer> postProcess = new ArrayList<>();
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
@@ -87,12 +90,23 @@ public abstract class BackgroundEffect {
             int currentSize = asset.bgEffects.size();
 
             for (Integer id : jsonList) {
-                asset.bgEffects.add(new JsonBGEffect(id));
+                asset.bgEffects.add(new JsonBGEffect(id, true));
 
                 UserProfile.getBCData().bgs.getRaw(id).effect = currentSize;
 
                 currentSize++;
             }
+
+            asset.bgEffects.replaceAll(a -> {
+                if(!(a instanceof JsonBGEffect) || !((JsonBGEffect) a).postNeed)
+                    return a;
+
+                try {
+                    return new JsonBGEffect(((JsonBGEffect) a).id, true);
+                } catch (IOException ignored) {
+                    return a;
+                }
+            });
 
             for(int i = 0; i < UserProfile.getBCData().bgs.size(); i++) {
                 Background bg = UserProfile.getBCData().bgs.get(i);
@@ -118,6 +132,10 @@ public abstract class BackgroundEffect {
                             System.out.println("W/BackgroundEffect::read - Unhandled situation for background effect mixing -> Reference BG ID : "+ref.id.id+" | Mixture contains key : "+mixture.containsKey(ref.id.id));
                         }
                     }
+                } else if(bg.id.id == 197) {
+                    mixture.put(bg.id.id, new MixedBGEffect(asset.bgEffects.get(bg.effect), asset.bgEffects.get(Data.BG_EFFECT_SNOW)));
+
+                    bg.effect = -bg.id.id;
                 }
             }
         }, Context.ErrType.FATAL, "Failed to read bg effect data");

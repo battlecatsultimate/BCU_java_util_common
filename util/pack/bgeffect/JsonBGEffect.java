@@ -18,14 +18,19 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class JsonBGEffect extends BackgroundEffect {
-    private final int id;
+    protected final int id;
     private final List<BGEffectHandler> handlers = new ArrayList<>();
 
-    public JsonBGEffect(int bgID) throws IOException {
+    protected boolean postNeed = false;
+
+    public JsonBGEffect(int bgID, boolean post) throws IOException {
         id = bgID;
+
         String jsonName = "bg"+ Data.trio(id)+".json";
 
         VFile vf = VFile.get("./org/data/"+jsonName);
@@ -34,30 +39,69 @@ public class JsonBGEffect extends BackgroundEffect {
             throw new FileNotFoundException("Such json file not found : ./org/data/"+jsonName);
         }
 
-        Reader r = new InputStreamReader(vf.getData().getStream(), StandardCharsets.UTF_8);
+        try {
+            Reader r = new InputStreamReader(vf.getData().getStream(), StandardCharsets.UTF_8);
 
-        JsonElement elem = JsonParser.parseReader(r);
+            JsonElement elem = JsonParser.parseReader(r);
 
-        r.close();
+            r.close();
 
-        JsonObject obj = elem.getAsJsonObject();
+            JsonObject obj = elem.getAsJsonObject();
 
-        if(obj.has("data")) {
-            JsonArray arr = obj.getAsJsonArray("data");
+            if(obj.has("data")) {
+                JsonArray arr = obj.getAsJsonArray("data");
 
-            for(int i = 0; i < arr.size(); i++) {
-                BGEffectSegment segment = new BGEffectSegment(arr.get(i).getAsJsonObject(), jsonName, id);
-                handlers.add(new BGEffectHandler(segment, id));
+                for(int i = 0; i < arr.size(); i++) {
+                    BGEffectSegment segment = new BGEffectSegment(arr.get(i).getAsJsonObject(), jsonName, id);
+                    handlers.add(new BGEffectHandler(segment, id));
+                }
+            } else if (obj.has("id")) {
+                if(post) {
+                    int efID = obj.get("id").getAsInt();
+
+                    ArrayList<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects;
+
+                    for (BackgroundEffect bge : effs)
+                        if (bge instanceof JsonBGEffect && ((JsonBGEffect)bge).id == efID) {
+                            handlers.addAll(((JsonBGEffect)bge).handlers);
+                            break;
+                        }
+                } else {
+                    BackgroundEffect.postProcess.add(bgID);
+                    postNeed = true;
+                }
             }
-        } else if (obj.has("id")) {
-            int efID = obj.get("id").getAsInt();
+        } catch (Exception ignored) {
+            Pattern idExtractor = Pattern.compile("\\{(\\s+)?\"id\"(\\s+)?:(\\s+)?\\d+(\\s+)?}");
 
-            ArrayList<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects;
-            for (BackgroundEffect bge : effs)
-                if (bge instanceof JsonBGEffect && ((JsonBGEffect)bge).id == efID) {
-                    handlers.addAll(((JsonBGEffect)bge).handlers);
+            Matcher matcher = idExtractor.matcher(new String(vf.getData().getBytes()));
+
+            while(matcher.find()) {
+                if(post) {
+                    String group = matcher.group();
+
+                    JsonElement elem = JsonParser.parseString(group);
+
+                    JsonObject obj = elem.getAsJsonObject();
+
+                    if(obj.has("id")) {
+                        int efID = obj.get("id").getAsInt();
+
+                        ArrayList<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects;
+
+                        for (BackgroundEffect bge : effs)
+                            if (bge instanceof JsonBGEffect && ((JsonBGEffect)bge).id == efID) {
+                                handlers.addAll(((JsonBGEffect)bge).handlers);
+                                break;
+                            }
+                    } else {
+                        throw new IllegalStateException("Unhandled bg effect found for " + jsonName);
+                    }
+                } else {
+                    postNeed = true;
                     break;
                 }
+            }
         }
     }
 
