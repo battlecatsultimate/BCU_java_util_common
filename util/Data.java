@@ -227,7 +227,7 @@ public class Data {
 						if (f.getType() == int.class)
 							f.set(this, 0);
 						else if (IntType.class.isAssignableFrom(f.getType()))
-							f.set(this, (f.getType().newInstance()));
+							f.set(this, (f.getType().getDeclaredConstructor().newInstance()));
 						else if (f.getType() == Identifier.class)
 							f.set(this, null);
 						else
@@ -661,9 +661,9 @@ public class Data {
 					fs[i].setAccessible(true);
 
 					if(i < data.length) {
-						fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).load(data[i]));
+						fs[i].set(ans, ((ProcItem) fs[i].getType().getDeclaredConstructor().newInstance()).load(data[i]));
 					} else {
-						fs[i].set(ans, ((ProcItem) fs[i].getType().newInstance()).clear());
+						fs[i].set(ans, ((ProcItem) fs[i].getType().getDeclaredConstructor().newInstance()).clear());
 					}
 				}
 			} catch (Exception e) {
@@ -1284,7 +1284,8 @@ public class Data {
 			{ 0, P_SHIELDBREAK }, //58 : shield piercing
 			{ 1, AB_CKILL }, //59 : corpse killer
 			{ 0, P_CURSE }, //60 : curse
-			{ 2, PC2_TBA } //61 : tba
+			{ 2, PC2_TBA }, //61 : tba
+			{ 0, P_MINIWAVE } //62 : mini-wave
 	};
 
 	// foot icon index used in battle
