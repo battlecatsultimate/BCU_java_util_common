@@ -90,12 +90,14 @@ public abstract class BackgroundEffect {
             int currentSize = asset.bgEffects.size();
 
             for (Integer id : jsonList) {
-                asset.bgEffects.add(new JsonBGEffect(id, true));
+                asset.bgEffects.add(new JsonBGEffect(id, false));
 
                 UserProfile.getBCData().bgs.getRaw(id).effect = currentSize;
 
                 currentSize++;
             }
+
+            System.out.println(postProcess);
 
             asset.bgEffects.replaceAll(a -> {
                 if(!(a instanceof JsonBGEffect) || !((JsonBGEffect) a).postNeed)
