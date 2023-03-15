@@ -79,6 +79,15 @@ public class PCoin extends Data {
 
 				for (int j = 0; j < 14; j++)
 					info.get(info.size() - 1)[j] = CommonStatic.parseIntN(strs[2 + i * 14 + j]);
+
+				int[] data = info.get(info.size() - 1);
+
+				if(data[0] >= 0 && data[0] < PC_CORRES.length && PC_CORRES[data[0]][1] == P_MINIWAVE) {
+					if(data[6] == 0 && data[7] == 0) {
+						data[6] = 20;
+						data[7] = 20;
+					}
+				}
 			}
 		}
 
