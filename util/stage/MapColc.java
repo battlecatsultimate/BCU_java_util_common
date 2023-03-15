@@ -237,7 +237,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			while(dropLine != null && !dropLine.isEmpty()) {
 				String[] dropData = dropLine.split(",");
 
-				if(dropData.length != 22) {
+				if(dropData.length != 22 && dropData.length != 30) {
 					dropLine = qs.poll();
 
 					continue;

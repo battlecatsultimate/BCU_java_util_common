@@ -68,7 +68,9 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		}
 
 		protected void injectMaterialDrop(String[] value) {
-			materialDrop = new int[9];
+			int materialNumber = value.length - 13;
+
+			materialDrop = new int[materialNumber];
 
 			for(int i = 0; i < materialDrop.length; i++) {
 				materialDrop[i] = CommonStatic.safeParseInt(value[13 + i]);
