@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("ForLoopReplaceableByForEach")
 public class JsonBGEffect extends BackgroundEffect {
     protected final int id;
     private final List<BGEffectHandler> handlers = new ArrayList<>();
@@ -67,7 +66,6 @@ public class JsonBGEffect extends BackgroundEffect {
                             break;
                         }
                 } else {
-                    BackgroundEffect.postProcess.add(bgID);
                     postNeed = true;
                 }
             }

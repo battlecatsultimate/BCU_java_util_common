@@ -23,7 +23,6 @@ public abstract class BackgroundEffect {
     public static int BGHeight = 512;
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
     public static final List<Integer> jsonList = new ArrayList<>();
-    protected static final List<Integer> postProcess = new ArrayList<>();
 
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
@@ -96,8 +95,6 @@ public abstract class BackgroundEffect {
 
                 currentSize++;
             }
-
-            System.out.println(postProcess);
 
             asset.bgEffects.replaceAll(a -> {
                 if(!(a instanceof JsonBGEffect) || !((JsonBGEffect) a).postNeed)
