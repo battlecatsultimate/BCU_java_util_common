@@ -124,7 +124,7 @@ public class StageBasis extends BattleObj {
 		work_lv = 1 + bas.getInc(C_M_LV);
 		money = bas.getInc(C_M_INI) * 100;
 		cannon = maxCannon * bas.getInc(C_C_INI) / 100;
-		canon = new Cannon(this, nyc[0]);
+		canon = new Cannon(this, nyc[0], nyc[1], nyc[2]);
 		conf = ints;
 
 		if(st.minSpawn <= 0 || st.maxSpawn <= 0)

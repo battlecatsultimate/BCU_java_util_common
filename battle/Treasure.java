@@ -22,119 +22,159 @@ import java.util.*;
 @JsonClass(read = RType.FILL)
 public class Treasure extends Data {
 	public static void readCannonCurveData() {
-		VFile vf = VFile.get("./org/data/CC_AllParts_growth.csv");
+		String[] targetFiles = {
+				"CC_AllParts_growth.csv",
+				"CC_BaseParts_growth.csv",
+				"CC_DecoParts_growth.csv"
+		};
 
-		if(vf != null) {
-			Queue<String> q = vf.getData().readLine();
+		for(int i = 0; i < targetFiles.length; i++) {
+			VFile vf = VFile.get("./org/data/" + targetFiles[i]);
 
-			q.poll();
+			if(vf != null) {
+				Map<Integer, CannonLevelCurve> target;
+				CannonLevelCurve.PART part;
 
-			Map<Integer, Map<Integer, ArrayList<ArrayList<Integer>>>> initCurve = new HashMap<>();
-			Map<Integer, Integer> maxLevels = new HashMap<>();
-			Map<Integer, Integer> previousMaxLevel = new HashMap<>();
+				switch (i) {
+					case 0:
+						target = curveData;
+						part = CannonLevelCurve.PART.CANNON;
 
-			int previousType = -1;
+						break;
+					case 1:
+						target = baseData;
+						part = CannonLevelCurve.PART.BASE;
 
-			String line;
-
-			while((line = q.poll()) != null) {
-				int[] data = CommonStatic.parseIntsN(line);
-
-				int id = data[0];
-
-				//Skip analyzing data about normal cannon
-				if(id == 0)
-					continue;
-
-				Map<Integer, ArrayList<ArrayList<Integer>>> curveData;
-
-				if(initCurve.containsKey(id)) {
-					curveData = initCurve.get(id);
-				} else {
-					curveData = new HashMap<>();
+						break;
+					default:
+						target = decorationData;
+						part = CannonLevelCurve.PART.DECORATION;
 				}
 
-				int type = data[1];
-
-				if(type != previousType)
-					previousMaxLevel.clear();
-
-				ArrayList<ArrayList<Integer>> curves;
-
-				if(curveData.containsKey(type)) {
-					curves = curveData.get(type);
-				} else {
-					curves = new ArrayList<>();
-
-					curves.add(new ArrayList<>());
-					curves.add(new ArrayList<>());
-				}
-
-				int maxLevel = data[2];
-
-				if(!maxLevels.containsKey(id) || maxLevels.get(id) < maxLevel) {
-					maxLevels.put(id, maxLevel);
-				}
-
-				int difference;
-
-				if(previousMaxLevel.containsKey(id)) {
-					difference = maxLevel - previousMaxLevel.get(id);
-				} else {
-					difference = maxLevel;
-				}
-
-				int min = data[3];
-				int max = data[4];
-
-				double segment = (max - min) * 1.0 / (difference / 10.0);
-
-				int mn;
-				int mx;
-
-				for(int i = 0; i < difference; i += 10) {
-					mn = min + (int) (segment * i);
-					mx = min + (int) (segment * (i + 1));
-
-					curves.get(0).add(mn);
-					curves.get(1).add(mx);
-				}
-
-				curveData.put(type, curves);
-
-				initCurve.put(id, curveData);
-
-				previousMaxLevel.put(id, maxLevel);
-				previousType = type;
-			}
-
-			for(int id : initCurve.keySet()) {
-				Map<Integer, ArrayList<ArrayList<Integer>>> curveData = initCurve.get(id);
-
-				Map<Integer, int[][]> filteredData = new HashMap<>();
-
-				for(int type : curveData.keySet()) {
-					ArrayList<ArrayList<Integer>> curves = curveData.get(type);
-
-					int[][] filteredCurves = new int[2][];
-
-					filteredCurves[0] = Ints.toArray(curves.get(0));
-					filteredCurves[1] = Ints.toArray(curves.get(1));
-
-					filteredData.put(type, filteredCurves);
-				}
-
-				Treasure.curveData.put(id, new CannonLevelCurve(filteredData, maxLevels.get(id)));
+				injectData(vf, target, part);
+			} else {
+				System.out.println("W/Treasure::readCannonCurveData - No such file called ./org/data/" + targetFiles[i] + " in VFile");
 			}
 		}
 	}
 
+	private static void injectData(VFile vf, Map<Integer, CannonLevelCurve> target, CannonLevelCurve.PART part) {
+		Queue<String> q = vf.getData().readLine();
+
+		q.poll();
+
+		Map<Integer, Map<Integer, ArrayList<ArrayList<Integer>>>> initCurve = new HashMap<>();
+		Map<Integer, Integer> maxLevels = new HashMap<>();
+		Map<Integer, Integer> previousMaxLevel = new HashMap<>();
+
+		int previousType = -1;
+
+		String line;
+
+		while((line = q.poll()) != null) {
+			int[] data = CommonStatic.parseIntsN(line);
+
+			int id = data[0];
+
+			//Skip analyzing data about normal cannon
+			if(id == 0)
+				continue;
+
+			Map<Integer, ArrayList<ArrayList<Integer>>> curveData;
+
+			if(initCurve.containsKey(id)) {
+				curveData = initCurve.get(id);
+			} else {
+				curveData = new HashMap<>();
+			}
+
+			int type = data[1];
+
+			if(type != previousType)
+				previousMaxLevel.clear();
+
+			ArrayList<ArrayList<Integer>> curves;
+
+			if(curveData.containsKey(type)) {
+				curves = curveData.get(type);
+			} else {
+				curves = new ArrayList<>();
+
+				curves.add(new ArrayList<>());
+				curves.add(new ArrayList<>());
+			}
+
+			int maxLevel = data[2];
+
+			if(!maxLevels.containsKey(id) || maxLevels.get(id) < maxLevel) {
+				maxLevels.put(id, maxLevel);
+			}
+
+			int difference;
+
+			if(previousMaxLevel.containsKey(id)) {
+				difference = maxLevel - previousMaxLevel.get(id);
+			} else {
+				difference = maxLevel;
+			}
+
+			int min = data[3];
+			int max = data[4];
+
+			double segment = (max - min) * 1.0 / (difference / 10.0);
+
+			int mn;
+			int mx;
+
+			for(int i = 0; i < difference; i += 10) {
+				mn = min + (int) (segment * i / 10);
+				mx = min + (int) (segment * (i / 10 + 1));
+
+				curves.get(0).add(mn);
+				curves.get(1).add(mx);
+			}
+
+			curveData.put(type, curves);
+
+			initCurve.put(id, curveData);
+
+			previousMaxLevel.put(id, maxLevel);
+			previousType = type;
+		}
+
+		for(int id : initCurve.keySet()) {
+			Map<Integer, ArrayList<ArrayList<Integer>>> curveData = initCurve.get(id);
+
+			Map<Integer, int[][]> filteredData = new HashMap<>();
+
+			for(int type : curveData.keySet()) {
+				ArrayList<ArrayList<Integer>> curves = curveData.get(type);
+
+				int[][] filteredCurves = new int[2][];
+
+				filteredCurves[0] = Ints.toArray(curves.get(0));
+				filteredCurves[1] = Ints.toArray(curves.get(1));
+
+				filteredData.put(type, filteredCurves);
+			}
+
+			target.put(id, new CannonLevelCurve(filteredData, maxLevels.get(id), part));
+		}
+	}
+
 	public static final Map<Integer, CannonLevelCurve> curveData = new HashMap<>();
+	public static final Map<Integer, CannonLevelCurve> baseData = new HashMap<>();
+	public static final Map<Integer, CannonLevelCurve> decorationData = new HashMap<>();
 
 	public final Basis b;
 
 	@JsonField(gen = GenType.FILL)
-	public int[] tech = new int[LV_TOT], trea = new int[T_TOT], bslv = new int[BASE_TOT], fruit = new int[7],
+	public int[] tech = new int[LV_TOT],
+			trea = new int[T_TOT],
+			bslv = new int[BASE_TOT],
+			base = new int[DECO_BASE_TOT],
+			deco = new int[DECO_BASE_TOT],
+			fruit = new int[7],
 			gods = new int[3];
 
 	@JsonField
@@ -168,6 +208,8 @@ public class Treasure extends Data {
 		alien = t.alien;
 		star = t.star;
 		bslv = t.bslv.clone();
+		base = t.base.clone();
+		deco = t.deco.clone();
 	}
 
 	/**
@@ -216,6 +258,81 @@ public class Treasure extends Data {
 		System.out.println("Warning : Unknown ID : "+ id);
 
 		return 0;
+	}
+
+	public double getBaseMagnification(int id, List<Trait> traits) {
+		double ans = 1.0;
+
+		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
+
+		int trait;
+		int traitData;
+
+		switch (id) {
+			case DECO_BASE_SLOW:
+				trait = TRAIT_FLOAT;
+				traitData = BASE_FLOAT;
+
+				break;
+			case DECO_BASE_WALL:
+				trait = TRAIT_BLACK;
+				traitData = BASE_BLACK;
+
+				break;
+			case DECO_BASE_STOP:
+				trait = TRAIT_ANGEL;
+				traitData = BASE_ANGEL;
+
+				break;
+			case DECO_BASE_WATER:
+				trait = TRAIT_RED;
+				traitData = BASE_RED;
+
+				break;
+			case DECO_BASE_GROUND:
+				trait = TRAIT_ZOMBIE;
+				traitData = BASE_ZOMBIE;
+
+				break;
+			case DECO_BASE_BARRIER:
+				trait = TRAIT_ALIEN;
+				traitData = BASE_ALIEN;
+
+				break;
+			case DECO_BASE_CURSE:
+				trait = TRAIT_RELIC;
+				traitData = BASE_RELIC;
+
+				break;
+			default:
+				return ans;
+		}
+
+		if(traits.contains(BCTraits.get(trait))) {
+			CannonLevelCurve clc = baseData.get(id);
+
+			if(clc == null)
+				return ans;
+
+			if(base[id - 1] == 0)
+				return ans;
+
+			ans = clc.applyFormula(traitData, base[id - 1]);
+		}
+
+		return ans;
+	}
+
+	public double getDecorationMagnification(int id, int type) {
+		if(deco[id - 1] == 0)
+			return 1.0;
+
+		CannonLevelCurve clc = decorationData.get(id);
+
+		if(clc == null)
+			return 1.0;
+
+		return clc.applyFormula(type, deco[id - 1]);
 	}
 
 	/**
@@ -503,8 +620,11 @@ public class Treasure extends Data {
 		fruit[T_RED] = fruit[T_BLACK] = fruit[T_FLOAT] = fruit[T_ANGEL] = 300;
 		fruit[T_METAL] = fruit[T_ZOMBIE] = fruit[T_ALIEN] = 300;
 		bslv[0] = 30;
-		for (int i = 1; i < BASE_TOT; i++)
+		for (int i = 1; i < BASE_TOT; i++) {
 			bslv[i] = curveData.get(i).max;
+			base[i - 1] = baseData.get(i).max;
+			deco[i - 1] = decorationData.get(i).max;
+		}
 		gods[0] = gods[1] = gods[2] = 100;
 		alien = 600;
 		star = 1500;

@@ -163,6 +163,10 @@ public class EUnit extends Entity {
 		// Perform orb
 		ans = getOrbRes(atk.trait, ans);
 
+		if(basis.canon.base > 0) {
+			ans = (int) (ans * basis.b.t().getBaseMagnification(basis.canon.base, atk.trait));
+		}
+
 		return ans;
 	}
 

@@ -1536,6 +1536,10 @@ public abstract class Entity extends AbEntity {
 				return;
 			else
 				dmg = dmg * (100 - getProc().IMUWAVE.mult) / 100;
+
+			if(dire == - 1 && basis.canon.deco == DECO_BASE_WALL) {
+				dmg = (int) (dmg * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WAVE));
+			}
 		}
 
 		if ((atk.waveType & WT_MOVE) > 0) {
@@ -1554,6 +1558,12 @@ public abstract class Entity extends AbEntity {
 				return;
 			else
 				dmg = dmg * (100 - getProc().IMUVOLC.mult) / 100;
+
+			if(dire == - 1 && basis.canon.deco == DECO_BASE_WATER) {
+				dmg = (int) (dmg * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_SURGE));
+			}
+
+			System.out.println(dmg);
 		}
 
 		tokens.add(atk);
@@ -1769,6 +1779,13 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 			} else {
 				double poiDmg = atk.getProc().POIATK.mult * (100 - rst) / 10000.0;
+
+				if(basis.canon.deco == DECO_BASE_BARRIER) {
+					poiDmg *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_TOXIC);
+				}
+
+				System.out.println(poiDmg);
+
 				damage += maxH * poiDmg;
 				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
 				basis.lea.sort(Comparator.comparingInt(e -> e.layer));
@@ -1793,6 +1810,12 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_STOP);
 			} else
 				anim.getEff(INV);
+
+			if(dire == - 1 && basis.canon.deco == DECO_BASE_STOP) {
+				status[P_STOP][0] = (int) (status[P_STOP][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_FREEZE));
+			}
+
+			System.out.println(status[P_STOP][0]);
 		}
 		if (atk.getProc().SLOW.time != 0 || atk.getProc().SLOW.prob > 0) {
 			int val = (int) (atk.getProc().SLOW.time * time);
@@ -1806,6 +1829,10 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_SLOW);
 			} else
 				anim.getEff(INV);
+
+			if(dire == -1 && basis.canon.deco == DECO_BASE_SLOW) {
+				status[P_SLOW][0] = (int) (status[P_SLOW][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_SLOW));
+			}
 		}
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
@@ -1816,6 +1843,12 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_WEAK);
 			} else
 				anim.getEff(INV);
+
+			if(dire == - 1 && basis.canon.deco == DECO_BASE_GROUND) {
+				status[P_WEAK][0] = (int) (status[P_WEAK][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WEAK));
+			}
+
+			System.out.println(status[P_WEAK][0]);
 		}
 		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
@@ -1829,6 +1862,12 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_CURSE);
 			} else
 				anim.getEff(INV);
+
+			if(dire == - 1 && basis.canon.deco == DECO_BASE_CURSE) {
+				status[P_CURSE][0] = (int) (status[P_CURSE][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_CURSE));
+			}
+
+			System.out.println(status[P_CURSE][0]);
 		}
 		if (atk.getProc().KB.dis != 0) {
 			int rst = getProc().IMUKB.mult;

@@ -1419,6 +1419,16 @@ public class Data {
 	public static final byte BASE_CURSE = 7;
 	public static final int BASE_TOT = 8;
 
+	// decoration/base level
+	public static final int DECO_BASE_SLOW = 1;
+	public static final int DECO_BASE_WALL = 2;
+	public static final int DECO_BASE_STOP = 3;
+	public static final int DECO_BASE_WATER = 4;
+	public static final int DECO_BASE_GROUND = 5;
+	public static final int DECO_BASE_BARRIER = 6;
+	public static final int DECO_BASE_CURSE = 7;
+	public static final int DECO_BASE_TOT = 7;
+
 	// base type
 	public static final byte BASE_ATK_MAGNIFICATION = 0;
 	public static final byte BASE_SLOW_TIME = 1;
@@ -1434,7 +1444,21 @@ public class Data {
 	//Figure out type 11
 	public static final byte BASE_CURSE_TIME = 12;
 
+	public static final byte BASE_FLOAT = 1;
+	public static final byte BASE_BLACK = 2;
+	public static final byte BASE_ANGEL = 4;
+	public static final byte BASE_RED = 0;
+	public static final byte BASE_ZOMBIE = 6;
+	public static final byte BASE_ALIEN = 5;
+	public static final byte BASE_RELIC = 7;
 
+	public static final byte DECO_SLOW = 0;
+	public static final byte DECO_WAVE = 1;
+	public static final byte DECO_FREEZE = 2;
+	public static final byte DECO_SURGE = 3;
+	public static final byte DECO_WEAK = 4;
+	public static final byte DECO_TOXIC = 5;
+	public static final byte DECO_CURSE = 6;
 
 	// touchable ID
 	public static final byte TCH_N = 1;

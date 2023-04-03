@@ -2,19 +2,28 @@ package common.battle;
 
 import common.util.Data;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class CannonLevelCurve extends Data  {
+    public enum PART {
+        CANNON,
+        BASE,
+        DECORATION
+    }
+
     private static final byte MIN_VALUE = 0;
     private static final byte MAX_VALUE = 1;
 
     public final int max;
+    private final PART part;
 
     private final Map<Integer, int[][]> curveMap;
 
-    public CannonLevelCurve(Map<Integer, int[][]> curveMap, int max) {
+    public CannonLevelCurve(Map<Integer, int[][]> curveMap, int max, PART part) {
         this.curveMap = curveMap;
         this.max = max;
+        this.part = part;
     }
 
     public double applyFormula(int type, int level) {
@@ -40,23 +49,29 @@ public class CannonLevelCurve extends Data  {
             double v;
 
             if(index == 0) {
-                minLevel = 1;
+                minLevel = part == PART.CANNON ? 1 : 0;
                 v = min + (max - min) * (level - minLevel) / 9.0;
             } else {
                 minLevel = index * 10;
                 v = min + (max - min) * (level - minLevel) / 10.0;
             }
 
-            switch (type) {
-                case BASE_RANGE:
-                    return (int) v / 4.0;
-                case BASE_HEALTH_PERCENTAGE:
-                    return v / 10.0;
-                case BASE_HOLY_ATK_SURFACE:
-                case BASE_HOLY_ATK_UNDERGROUND:
-                    return v / 1000.0;
-                default:
-                    return v;
+            switch (part) {
+                case CANNON:
+                    switch (type) {
+                        case BASE_RANGE:
+                            return (int) v / 4.0;
+                        case BASE_HEALTH_PERCENTAGE:
+                            return v / 10.0;
+                        case BASE_HOLY_ATK_SURFACE:
+                        case BASE_HOLY_ATK_UNDERGROUND:
+                            return v / 1000.0;
+                        default:
+                            return v;
+                    }
+                case BASE:
+                case DECORATION:
+                    return 1.0 - v / 10000.0;
             }
         }
 

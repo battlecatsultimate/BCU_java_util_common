@@ -23,16 +23,18 @@ import java.util.Comparator;
 
 public class Cannon extends AtkModelAb {
 
-	public final int id;
+	public final int id, base, deco;
 	private EAnimD<?> anim, atka, exta;
 	private int preTime = 0;
 	private EUnit wall = null;
 	public double pos;
 	private int duration = 0;
 
-	public Cannon(StageBasis sb, int type) {
+	public Cannon(StageBasis sb, int type, int deco, int base) {
 		super(sb);
 		id = type;
+		this.base = base;
+		this.deco = deco;
 	}
 
 	/**
