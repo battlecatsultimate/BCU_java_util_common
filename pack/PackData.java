@@ -217,12 +217,13 @@ public abstract class PackData implements IndexContainer {
 
 				if (tf != -1) {
 					u.info.tfLevel = tf;
-				} else {
-					tf = Integer.parseInt(strs[25]);
+				}
 
-					if (tf != -1) {
-						u.info.tfLevel = tf;
-					}
+				//TF cost takes higher priority, replace even though previous value wasn't -1
+				tf = Integer.parseInt(strs[25]);
+
+				if (tf != -1) {
+					u.info.tfLevel = tf;
 				}
 
 				units.add(u);

@@ -1,5 +1,7 @@
 package common.battle;
 
+import java.util.List;
+
 import common.CommonStatic;
 import common.battle.data.PCoin;
 import common.io.json.JsonClass;
@@ -12,9 +14,6 @@ import common.util.BattleStatic;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Unit;
-
-import java.util.Arrays;
-import java.util.List;
 
 @JsonClass
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
@@ -108,8 +107,12 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 					throw new IllegalStateException("Battle started without initializing level of form in lineup");
 				}
 
-				if(fs[i].unit.info.tfLevel != -1 && lv.getLv() + lv.getPlusLv() < fs[i].unit.info.tfLevel && fs[i].fid == 2) {
-					fs[i] = fs[i].unit.forms[1];
+				if(lv.getLv() + lv.getPlusLv() < (fs[i].unit.info.tfLevel == -1 ? 20 : fs[i].unit.info.tfLevel) && fs[i].fid == 2) {
+					if(lv.getLv() + lv.getPlusLv() < 10) {
+						fs[i] = fs[i].unit.forms[0];
+					} else {
+						fs[i] = fs[i].unit.forms[1];
+					}
 				} else if(fs[i].fid == 2 && fs[i].du.getPCoin() != null) {
 					int[] talents = lv.getTalents();
 					PCoin pc = fs[i].du.getPCoin();
