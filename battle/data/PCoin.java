@@ -103,7 +103,9 @@ public class PCoin extends Data {
 	}
 
 	public void update() {
-		if (max.length < info.size()) {
+		// Apparently, if max is null, since we will update full var anyway
+		// we can just re-generate whole array
+		if (max == null || max.length < info.size()) {
 			max = new int[info.size()];
 
 			for (int i = 0; i < info.size(); i++) {
