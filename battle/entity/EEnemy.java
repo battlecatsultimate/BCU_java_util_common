@@ -3,6 +3,7 @@ package common.battle.entity;
 import common.battle.StageBasis;
 import common.battle.attack.AtkModelUnit;
 import common.battle.attack.AttackAb;
+import common.battle.attack.AttackVolcano;
 import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
@@ -54,6 +55,9 @@ public class EEnemy extends Entity {
 	protected int getDamage(AttackAb atk, int ans) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
+		}
+		if (atk instanceof AttackVolcano && atk.waveType == WT_MIVC) {
+			ans = (int) ((double) ans * atk.getProc().MINIVOLC.mult / 100.0);
 		}
 		if (atk.model instanceof AtkModelUnit && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);

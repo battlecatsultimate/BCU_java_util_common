@@ -21,7 +21,13 @@ public class ContVolcano extends ContAb {
 
 	protected ContVolcano(AttackVolcano v, double p, int lay, int alive, int ind) {
 		super(v.model.b, p, lay);
-		anim = (v.dire == 1 ? effas().A_E_VOLC : effas().A_VOLC).getEAnim(VolcEff.START);
+
+		if(v.waveType == WT_VOLC) {
+			anim = (v.dire == 1 ? effas().A_E_VOLC : effas().A_VOLC).getEAnim(VolcEff.START);
+		} else {
+			anim = (v.dire == 1 ? effas().A_E_MINIVOLC : effas().A_MINIVOLC).getEAnim(VolcEff.START);
+		}
+
 		this.v = v;
 		aliveTime = alive;
 		defProc = v.getProc().clone();

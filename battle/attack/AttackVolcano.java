@@ -13,12 +13,12 @@ public class AttackVolcano extends AttackAb {
 
 	protected final List<Entity> vcapt = new ArrayList<>();
 
-	public AttackVolcano(Entity e, AttackSimple a, double sta, double end) {
+	public AttackVolcano(Entity e, AttackSimple a, double sta, double end, int vt) {
 		super(e, a, sta, end, false);
 		isCounter = a.isCounter;
 		this.sta = sta;
 		this.end = end;
-		this.waveType = WT_VOLC;
+		this.waveType = vt;
 	}
 
 	@Override

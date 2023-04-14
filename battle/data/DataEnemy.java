@@ -142,10 +142,18 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.IMUATK.time = ints[78];
 		proc.POIATK.prob = ints[79];
 		proc.POIATK.mult = ints[80];
-		proc.VOLC.prob = ints[81];
-		proc.VOLC.dis_0 = ints[82] / 4;
-		proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
-		proc.VOLC.time = ints[84] * VOLC_ITV;
+		if (ints.length >= 103 && ints[102] == 1) {
+			proc.MINIVOLC.prob = ints[81];
+			proc.MINIVOLC.dis_0 = ints[82] / 4;
+			proc.MINIVOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
+			proc.MINIVOLC.time = ints[84] * VOLC_ITV;
+			proc.MINIVOLC.mult = 20;
+		} else {
+			proc.VOLC.prob = ints[81];
+			proc.VOLC.dis_0 = ints[82] / 4;
+			proc.VOLC.dis_1 = ints[83] / 4 + proc.VOLC.dis_0;
+			proc.VOLC.time = ints[84] * VOLC_ITV;
+		}
 		if (ints[85] == 1)
 			proc.IMUVOLC.mult = 100;
 		proc.DEMONSHIELD.hp = ints[87];

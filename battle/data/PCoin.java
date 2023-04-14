@@ -188,6 +188,9 @@ public class PCoin extends Data {
 						tar.set(2, Math.max(modifs[1], modifs[2]));
 						tar.set(3, modifs[3]);
 					}
+				} else if (type[1] == P_BSTHUNT) {
+					tar.set(1, modifs[0]);
+					tar.set(2, modifs[1]);
 				} else
 					for (int j = 0; j < 4; j++)
 						if (modifs[j] > 0)

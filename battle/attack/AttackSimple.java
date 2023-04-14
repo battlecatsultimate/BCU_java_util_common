@@ -4,6 +4,7 @@ import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
 import common.battle.entity.Sniper;
+import common.util.Data;
 import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
 import common.util.unit.Trait;
@@ -156,7 +157,25 @@ public class AttackSimple extends AttackAb {
 			double sta = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 			double end = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-			ContVolcano volcano = new ContVolcano(new AttackVolcano(attacker, this, sta, end), p0, layer, volc.time, ind);
+			ContVolcano volcano = new ContVolcano(new AttackVolcano(attacker, this, sta, end, Data.WT_VOLC), p0, layer, volc.time, ind);
+
+			if(attacker != null) {
+				attacker.summoned.add(volcano);
+			}
+		}
+
+		if (capt.size() > 0 && proc.MINIVOLC.exists()) {
+			int dire = model.getDire();
+			Proc.MINIVOLC volc = proc.MINIVOLC;
+			int addp = volc.dis_0 + (int) (model.b.r.nextDouble() * (volc.dis_1 - volc.dis_0));
+
+			System.out.println(volc.dis_0 + " | " + volc.dis_1 + " => " + addp);
+
+			double p0 = model.getPos() + dire * addp;
+			double sta = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
+			double end = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
+
+			ContVolcano volcano = new ContVolcano(new AttackVolcano(attacker, this, sta, end, Data.WT_MIVC), p0, layer, volc.time, ind);
 
 			if(attacker != null) {
 				attacker.summoned.add(volcano);

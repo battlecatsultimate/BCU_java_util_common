@@ -2,10 +2,7 @@ package common.battle.entity;
 
 import common.battle.StageBasis;
 import common.battle.Treasure;
-import common.battle.attack.AtkModelEnemy;
-import common.battle.attack.AtkModelUnit;
-import common.battle.attack.AttackAb;
-import common.battle.attack.AttackWave;
+import common.battle.attack.*;
 import common.battle.data.*;
 import common.pack.UserProfile;
 import common.util.BattleObj;
@@ -130,6 +127,9 @@ public class EUnit extends Entity {
 	protected int getDamage(AttackAb atk, int ans) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
+		}
+		if (atk instanceof AttackVolcano && atk.waveType == WT_MIVC) {
+			ans = (int) ((double) ans * atk.getProc().MINIVOLC.mult / 100.0);
 		}
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);

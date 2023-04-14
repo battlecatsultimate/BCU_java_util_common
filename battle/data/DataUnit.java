@@ -142,10 +142,18 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			proc.SATK.mult = ints[83];
 			proc.IMUATK.prob = ints[84];
 			proc.IMUATK.time = ints[85];
-			proc.VOLC.prob = ints[86];
-			proc.VOLC.dis_0 = ints[87] / 4;
-			proc.VOLC.dis_1 = ints[88] / 4 + proc.VOLC.dis_0;
-			proc.VOLC.time = ints[89] * VOLC_ITV;
+			if (ints.length >= 109 && ints[108] == 1) {
+				proc.MINIVOLC.prob = ints[86];
+				proc.MINIVOLC.dis_0 = ints[87] / 4;
+				proc.MINIVOLC.dis_1 = ints[88] / 4 + proc.MINIVOLC.dis_0;
+				proc.MINIVOLC.time = ints[89] * VOLC_ITV;
+				proc.MINIVOLC.mult = 20;
+			} else {
+				proc.VOLC.prob = ints[86];
+				proc.VOLC.dis_0 = ints[87] / 4;
+				proc.VOLC.dis_1 = ints[88] / 4 + proc.VOLC.dis_0;
+				proc.VOLC.time = ints[89] * VOLC_ITV;
+			}
 			if (ints[90] == 1)
 				proc.IMUPOIATK.mult = 100;
 			if (ints[91] == 1)

@@ -641,6 +641,20 @@ public class Data {
 			public int time;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class MINIVOLC extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int dis_0;
+			@Order(2)
+			public int dis_1;
+			@Order(3)
+			public int time;
+			@Order(4)
+			public int mult;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -782,6 +796,8 @@ public class Data {
 		public final MULT ATKBASE = new MULT();
 		@Order(54)
 		public final BSTHUNT BSTHUNT = new BSTHUNT(); //Unsure what does the 1st param of beast killer do, so this is temporary
+		@Order(55)
+		public final MINIVOLC MINIVOLC = new MINIVOLC();
 
 		@Override
 		public Proc clone() {
@@ -1129,7 +1145,8 @@ public class Data {
 	public static final int P_BOUNTY = 52;
 	public static final int P_ATKBASE = 53;
 	public static final int P_BSTHUNT = 54; //Beast Killer
-	public static final byte PROC_TOT = 55;// 53
+	public static final int P_MINIVOLC = 55;
+	public static final byte PROC_TOT = 56;// 53
 	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1188,6 +1205,7 @@ public class Data {
 			false, //2x money
 			false, //base destroyer
 			true, //beast hunter
+			true //mini surge
 	};
 
 	/**
@@ -1207,6 +1225,7 @@ public class Data {
 	public static final byte WT_CANN = 2;
 	public static final byte WT_VOLC = 4;
 	public static final byte WT_MINI = 8;
+	public static final byte WT_MIVC = 9;
 	public static final byte PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
 	public static final byte PC2_HP = 0;
 	public static final byte PC2_ATK = 1;
@@ -1285,7 +1304,9 @@ public class Data {
 			{ 1, AB_CKILL }, //59 : corpse killer
 			{ 0, P_CURSE }, //60 : curse
 			{ 2, PC2_TBA }, //61 : tba
-			{ 0, P_MINIWAVE } //62 : mini-wave
+			{ 0, P_MINIWAVE }, //62 : mini-wave
+			{ 1, AB_BAKILL }, //63 : baron killer
+			{ 0, P_BSTHUNT }
 	};
 
 	// foot icon index used in battle

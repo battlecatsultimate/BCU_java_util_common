@@ -178,7 +178,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-		new ContVolcano(new AttackVolcano(e, as, sta, end), p0, e.layer, ds.time, 0);
+		new ContVolcano(new AttackVolcano(e, as, sta, end, Data.WT_VOLC), p0, e.layer, ds.time, 0);
 	}
 
 	@Override
@@ -266,8 +266,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected void setProc(int ind, Proc proc) {
-		String[] par = { "CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
-				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "MINIWAVE", "SHIELDBREAK" };
+		String[] par = {
+				"CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
+				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "MINIWAVE", "SHIELDBREAK",
+				"MINIVOLC"
+		};
 
 		for (String s0 : par)
 			if (getProc(ind).get(s0).perform(b.r))
@@ -296,6 +299,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		}
 		if (proc.MINIWAVE.exists() && proc.MINIWAVE.multi == 0)
 			proc.MINIWAVE.multi = 20;
+		if (proc.MINIVOLC.exists() && proc.MINIVOLC.mult == 0)
+			proc.MINIVOLC.mult = 20;
 	}
 
 	protected abstract void summon(SUMMON sprc, Entity ent, Object acs, int resist);

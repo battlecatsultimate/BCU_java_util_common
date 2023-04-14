@@ -24,7 +24,7 @@ public abstract class AttackAb extends BattleObj {
 	public int duration;
 	public boolean excludeLastEdge = false, isCounter = false;
 
-	public int touch = TCH_N, dire, canon = -2, waveType = 0;
+	public int touch = TCH_N, dire, canon = -2, waveType = 0, volcType = 0;
 
 	protected final Proc proc;
 	protected final List<AbEntity> capt = new ArrayList<>();
