@@ -168,9 +168,6 @@ public class AttackSimple extends AttackAb {
 			int dire = model.getDire();
 			Proc.MINIVOLC volc = proc.MINIVOLC;
 			int addp = volc.dis_0 + (int) (model.b.r.nextDouble() * (volc.dis_1 - volc.dis_0));
-
-			System.out.println(volc.dis_0 + " | " + volc.dis_1 + " => " + addp);
-
 			double p0 = model.getPos() + dire * addp;
 			double sta = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 			double end = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);

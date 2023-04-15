@@ -1225,7 +1225,7 @@ public class Data {
 	public static final byte WT_CANN = 2;
 	public static final byte WT_VOLC = 4;
 	public static final byte WT_MINI = 8;
-	public static final byte WT_MIVC = 9;
+	public static final byte WT_MIVC = 16;
 	public static final byte PC_P = 0, PC_AB = 1, PC_BASE = 2, PC_IMU = 3, PC_TRAIT = 4;
 	public static final byte PC2_HP = 0;
 	public static final byte PC2_ATK = 1;

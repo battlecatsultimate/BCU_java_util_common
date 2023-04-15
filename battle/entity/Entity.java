@@ -1551,7 +1551,7 @@ public abstract class Entity extends AbEntity {
 				dmg = dmg * (100 - getProc().IMUMOVING.mult) / 100;
 		}
 
-		if ((atk.waveType & WT_VOLC) > 0) {
+		if ((atk.waveType & (WT_VOLC | WT_MIVC)) > 0) {
 			if (getProc().IMUVOLC.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUVOLC.mult == 100)
@@ -1562,8 +1562,6 @@ public abstract class Entity extends AbEntity {
 			if(dire == - 1 && basis.canon.deco == DECO_BASE_WATER) {
 				dmg = (int) (dmg * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_SURGE));
 			}
-
-			System.out.println(dmg);
 		}
 
 		tokens.add(atk);
