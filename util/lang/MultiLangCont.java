@@ -44,6 +44,7 @@ public class MultiLangCont<I, T> extends Lang {
 				loaded_anim[lang] = true;
 				AnimTypeLocale.read();
 			}
+
 			return ANIMNAME.getCont(type);
 		}
 
@@ -65,6 +66,27 @@ public class MultiLangCont<I, T> extends Lang {
 			return getStatic().ENAME.getCont((Enemy) o);
 		if (o instanceof Combo)
 			return getStatic().COMNAME.getCont((Combo) o);
+
+		return null;
+	}
+
+	public static String get(Object o, int lang) {
+		if(o == null)
+			return null;
+
+		if (o instanceof MapColc)
+			return getStatic().MCNAME.getCont((MapColc) o, lang);
+		if (o instanceof StageMap)
+			return getStatic().SMNAME.getCont((StageMap) o, lang);
+		if (o instanceof Stage)
+			return getStatic().STNAME.getCont((Stage) o, lang);
+		if (o instanceof Form)
+			return getStatic().FNAME.getCont((Form) o, lang);
+		if (o instanceof Enemy)
+			return getStatic().ENAME.getCont((Enemy) o, lang);
+		if (o instanceof Combo)
+			return getStatic().COMNAME.getCont((Combo) o, lang);
+		
 		return null;
 	}
 
@@ -96,6 +118,7 @@ public class MultiLangCont<I, T> extends Lang {
 			return getStatic().FEXP.getCont((Form) o);
 		if (o instanceof Enemy)
 			return getStatic().EEXP.getCont((Enemy) o);
+
 		return null;
 	}
 
@@ -117,7 +140,14 @@ public class MultiLangCont<I, T> extends Lang {
 			if (ans != null)
 				return ans;
 		}
+		
 		return null;
+	}
+
+	public T getCont(I x, int lang) {
+		int l = Math.max(0, Math.min(pref.length, lang));
+
+		for (int i = 0; i < )
 	}
 
 	public int getSelectedLocale(I x) {
