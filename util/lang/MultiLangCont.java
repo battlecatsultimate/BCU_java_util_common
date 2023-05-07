@@ -147,7 +147,14 @@ public class MultiLangCont<I, T> extends Lang {
 	public T getCont(I x, int lang) {
 		int l = Math.max(0, Math.min(pref.length, lang));
 
-		for (int i = 0; i < )
+		for (int i = 0; i < pref[l].length; i++) {
+			T ans = getSub(LOC_CODE[pref[l][i]]).get(x);
+
+			if (ans != null)
+				return ans;
+		}
+
+		return null;
 	}
 
 	public int getSelectedLocale(I x) {
