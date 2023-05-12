@@ -1,13 +1,16 @@
 package common.util.lang;
 
 import common.CommonStatic;
+import common.battle.Treasure;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
 import common.pack.Context.ErrType;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.pack.Background;
+import common.util.unit.Trait;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,9 +18,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Function;
 
 public class Formatter {
-
 	@JsonClass
 	public static class Context {
 
@@ -34,6 +37,10 @@ public class Formatter {
 		public final boolean useSecond;
         @JsonField
         public final double[] magnification;
+		@JsonField
+		public final boolean treasure;
+		private final Function<List<Trait>, Double> treasureFunction;
+		private final List<Trait> traits;
 
 		public DecimalFormat df = new DecimalFormat("#.##");
 
@@ -41,6 +48,19 @@ public class Formatter {
 			isEnemy = ene;
 			useSecond = sec;
 			magnification = magnif;
+			treasure = false;
+			traits = null;
+			treasureFunction = null;
+		}
+
+		//The reason of passing function is because of bot. If you want to use this constructor later, use Treasure normally
+		public Context(boolean ene, boolean sec, double[] magnif, boolean trea, List<Trait> tr, Function<List<Trait>, Double> t) {
+			isEnemy = ene;
+			useSecond = sec;
+			magnification = magnif;
+			treasure = trea;
+			traits = tr;
+			treasureFunction = t;
 		}
 
 		public String abs(int v) {
@@ -55,6 +75,21 @@ public class Formatter {
 			if (useSecond)
 				return toSecond(time) + "s";
 			return time + "f";
+		}
+
+		public String dispFruit(int time) {
+			if(!treasure || treasureFunction == null || traits == null)
+				return dispTime(time);
+
+			int fruitTime = (int) Math.round(time * treasureFunction.apply(traits));
+
+			if(fruitTime == time)
+				return dispTime(time);
+
+			if (useSecond)
+				return toSecond(time) + "s <" + toSecond(fruitTime) + "s>";
+
+			return time + "f <" + fruitTime + "f>";
 		}
 
 		public String entity(Identifier<?> id) {
