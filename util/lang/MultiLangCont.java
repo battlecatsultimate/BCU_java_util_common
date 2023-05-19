@@ -22,6 +22,8 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<StageMap, String> SMNAME = new MultiLangCont<>();
 		public final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
 		public final MultiLangCont<Integer, String> RWNAME = new MultiLangCont<>();
+		public final MultiLangCont<Integer, String> RWSTNAME = new MultiLangCont<>();
+		public final MultiLangCont<Integer, String> RWSVNAME = new MultiLangCont<>();
 		public final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
 		public final MultiLangCont<Combo, String> COMNAME = new MultiLangCont<>();
@@ -124,6 +126,42 @@ public class MultiLangCont<I, T> extends Lang {
 
 	public static MultiLangStatics getStatic() {
 		return UserProfile.getStatic("MultiLangStatics", MultiLangStatics::new);
+	}
+
+	public static String getStageDrop(int id) {
+		String trial = getStatic().RWSTNAME.getCont(id);
+
+		if(trial == null || trial.isEmpty())
+			trial = getStatic().RWNAME.getCont(id);
+
+		return trial;
+	}
+
+	public static String getStageDrop(int id, int lang) {
+		String trial = getStatic().RWSTNAME.getCont(id, lang);
+
+		if(trial == null || trial.isEmpty())
+			trial = getStatic().RWNAME.getCont(id, lang);
+
+		return trial;
+	}
+
+	public static String getServerDrop(int id) {
+		String trial = getStatic().RWSVNAME.getCont(id);
+
+		if(trial == null || trial.isEmpty())
+			trial = getStatic().RWNAME.getCont(id);
+
+		return trial;
+	}
+
+	public static String getServerDrop(int id, int lang) {
+		String trial = getStatic().RWSVNAME.getCont(id, lang);
+
+		if(trial == null || trial.isEmpty())
+			trial = getStatic().RWNAME.getCont(id, lang);
+
+		return trial;
 	}
 
 	private final Map<String, HashMap<I, T>> map = new TreeMap<>();

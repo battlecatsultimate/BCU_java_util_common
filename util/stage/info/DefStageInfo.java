@@ -188,7 +188,7 @@ public class DefStageInfo implements StageInfo {
             ans.append("<br> time scores: count: ").append(time.length).append("<br>");
             ans.append("<table><tr><th>score</th><th>item name</th><th>number</th></tr>");
             for (int[] tm : time)
-                ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(MultiLangCont.getStatic().RWNAME.getCont(tm[1])).append("</td><td>").append(tm[2]).append("</td><tr>");
+                ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(MultiLangCont.getStageDrop(tm[1])).append("</td><td>").append(tm[2]).append("</td><tr>");
             ans.append("</table>");
         }
         return ans.toString();
@@ -241,7 +241,7 @@ public class DefStageInfo implements StageInfo {
             else
                 chance = chances.get(i) + "%";
 
-            String reward = MultiLangCont.getStatic().RWNAME.getCont(drop[i][1]);
+            String reward = MultiLangCont.getServerDrop(drop[i][1]);
 
             if(reward == null || reward.isEmpty())
                 reward = "Reward " + drop[i][1];
