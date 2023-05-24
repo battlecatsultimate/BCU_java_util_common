@@ -131,6 +131,8 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			return vf;
 		else if (m == 50)
 			return extendX;
+		else if (m == 51)
+			return extendX;
 		else if (m == 52)
 			return extendY;
 		else
