@@ -1558,8 +1558,6 @@ public abstract class Entity extends AbEntity {
 				AttackVolcano volc = (AttackVolcano) atk;
 
 				if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
-
-
 					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF), this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint));
 
 					volc.handler.surgeSummoned.add(this);

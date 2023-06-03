@@ -35,7 +35,13 @@ public class SurgeSummoner extends EAnimCont {
                 double s = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
                 double e = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-                ContVolcano volcano = new ContVolcano(new AttackVolcano(summoner, summoner.aam.getAttack(0), s, e, type), p0, summoner.layer, time, 0);
+                AttackVolcano volcanoAttack = new AttackVolcano(summoner, summoner.aam.getAttack(0), s, e, type);
+
+                if ((type & WT_MIVC) > 0) {
+                    volcanoAttack.getProc().MINIVOLC.mult = 20;
+                }
+
+                ContVolcano volcano = new ContVolcano(volcanoAttack, p0, summoner.layer, time, 0);
 
                 summoner.summoned.add(volcano);
             }
