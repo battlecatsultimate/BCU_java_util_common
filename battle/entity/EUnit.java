@@ -158,7 +158,6 @@ public class EUnit extends Entity {
 			ans *= 0.7;
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
 			ans *= 0.6; //Not sure
-		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 
 		// Perform orb
 		ans = getOrbRes(atk.trait, ans);
@@ -167,6 +166,8 @@ public class EUnit extends Entity {
 			ans = (int) (ans * basis.b.t().getBaseMagnification(basis.canon.base, atk.trait));
 		}
 
+
+		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
 		return ans;
 	}
 
