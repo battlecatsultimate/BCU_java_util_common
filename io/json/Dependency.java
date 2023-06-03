@@ -5,6 +5,7 @@ import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonException.Type;
 import common.pack.Identifier;
+import common.pack.Source;
 import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
@@ -37,6 +38,8 @@ public class Dependency {
 			if (obj instanceof String)
 				return;
 			if (obj instanceof Class)
+				return;
+			if (obj instanceof Source.BasePath)
 				return;
 			if (obj instanceof Identifier) {
 				set.add((Identifier<?>) obj);
