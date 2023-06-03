@@ -178,7 +178,7 @@ public class PCoin extends Data {
 			if (type[0] == PC_P) {
 				ProcItem tar = ans.getProc().getArr(type[1]);
 
-				if (type[1] == P_VOLC) {
+				if (type[1] == P_VOLC || type[1] == P_MINIVOLC) {
 					if (du instanceof DataUnit) {
 						tar.set(0, modifs[0]);
 						tar.set(1, modifs[2] / 4);
@@ -193,10 +193,13 @@ public class PCoin extends Data {
 				} else if (type[1] == P_BSTHUNT) {
 					tar.set(1, modifs[0]);
 					tar.set(2, modifs[1]);
-				} else
-					for (int j = 0; j < 4; j++)
-						if (modifs[j] > 0)
+				} else {
+					for (int j = 0; j < 4; j++) {
+						if (modifs[j] > 0) {
 							tar.set(j, tar.get(j) + modifs[j]);
+						}
+					}
+				}
 
 				if (du instanceof DataUnit) {
 					if (type[1] == P_STRONG && modifs[0] != 0)

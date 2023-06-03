@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttackVolcano extends AttackAb {
-
+	public ContVolcano handler;
 	protected boolean attacked = false;
-	private byte volcTime = VOLC_ITV;
-
 	protected final List<Entity> vcapt = new ArrayList<>();
 
-	public AttackVolcano(Entity e, AttackSimple a, double sta, double end, int vt) {
+	private byte volcTime = VOLC_ITV;
+
+	public AttackVolcano(Entity e, AttackAb a, double sta, double end, int vt) {
 		super(e, a, sta, end, false);
 		isCounter = a.isCounter;
 		this.sta = sta;

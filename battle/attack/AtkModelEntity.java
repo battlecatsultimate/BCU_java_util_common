@@ -178,7 +178,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
 		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
-		new ContVolcano(new AttackVolcano(e, as, sta, end, Data.WT_VOLC), p0, e.layer, ds.time, 0);
+		new ContVolcano(new AttackVolcano(e, as, sta, end, Data.WT_VOLC), p0, e.layer, ds.time, ds.dis_0, ds.dis_1, 0);
 	}
 
 	@Override

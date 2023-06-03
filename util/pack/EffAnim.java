@@ -238,6 +238,10 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<VolcEff> A_MINIVOLC;
 		@Order(74)
 		public EffAnim<VolcEff> A_E_MINIVOLC;
+		@Order(75)
+		public EffAnim<DefEff> A_COUNTERSURGE;
+		@Order(76)
+		public EffAnim<DefEff> A_E_COUNTERSURGE;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -454,6 +458,11 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		vmv = new VImg("./org/battle/s16/skill016.png");
 		icmv = ImgCut.newIns("./org/battle/s16/skill016.imgcut");
 		effas.A_E_MINIVOLC = new EffAnim<>("./org/battle/s16/skill_smallvolcano_e", vmv, icmv, VolcEff.values());
+		ImgCut iccs = ImgCut.newIns("./org/battle/s17/skill017.imgcut");
+		VImg vcs = new VImg("./org/battle/s17/skill017.png");
+		effas.A_COUNTERSURGE = new EffAnim<>("./org/battle/s17/skill_demonsummon", vcs, iccs, DefEff.values());
+		effas.A_COUNTERSURGE.rev = true;
+		effas.A_E_COUNTERSURGE = new EffAnim<>("./org/battle/s17/skill_demonsummon", vcs, iccs, DefEff.values());
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {

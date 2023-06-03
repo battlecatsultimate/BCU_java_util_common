@@ -2,13 +2,22 @@ package common.battle.attack;
 
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
+import common.battle.entity.AbEntity;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeTransform;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.VolcEff;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContVolcano extends ContAb {
+	public final List<AbEntity> surgeSummoned = new ArrayList<>();
+
+	public final int time, startPoint, endPoint;
+	public final boolean reflected;
+
 	protected final EAnimD<VolcEff> anim;
 	protected final AttackVolcano v;
 	private final Proc defProc;
@@ -19,7 +28,8 @@ public class ContVolcano extends ContAb {
 	private final int ind;
 	private final boolean[] performed = new boolean[4]; // [0,1] - check if curse/seal rng has passed, [2,3] - check if unit process needs to be updated
 
-	protected ContVolcano(AttackVolcano v, double p, int lay, int alive, int ind) {
+	//For counter surge
+	public ContVolcano(AttackVolcano v, double p, int lay, int alive, int ind) {
 		super(v.model.b, p, lay);
 
 		if(v.waveType == WT_VOLC) {
@@ -29,9 +39,54 @@ public class ContVolcano extends ContAb {
 		}
 
 		this.v = v;
+		this.v.handler = this;
+
 		aliveTime = alive;
+
+		time = aliveTime;
+
+		this.startPoint = 0;
+		this.endPoint = 0;
+
 		defProc = v.getProc().clone();
+
 		this.ind = ind;
+
+		this.reflected = true;
+
+		CommonStatic.setSE(SE_VOLC_START);
+
+		performed[0] = performed[2] = v.attacker.status[P_CURSE][0] == 0;
+		performed[1] = performed[3] = v.attacker.status[P_SEAL][0] == 0;
+
+		update();
+	}
+
+	protected ContVolcano(AttackVolcano v, double p, int lay, int alive, int startPoint, int endPoint, int ind) {
+		super(v.model.b, p, lay);
+
+		if(v.waveType == WT_VOLC) {
+			anim = (v.dire == 1 ? effas().A_E_VOLC : effas().A_VOLC).getEAnim(VolcEff.START);
+		} else {
+			anim = (v.dire == 1 ? effas().A_E_MINIVOLC : effas().A_MINIVOLC).getEAnim(VolcEff.START);
+		}
+
+		this.v = v;
+		this.v.handler = this;
+
+		aliveTime = alive;
+
+		time = aliveTime;
+
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
+
+		defProc = v.getProc().clone();
+
+		this.ind = ind;
+
+		this.reflected = false;
+
 		CommonStatic.setSE(SE_VOLC_START);
 
 		performed[0] = performed[2] = v.attacker.status[P_CURSE][0] == 0;

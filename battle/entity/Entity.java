@@ -657,7 +657,6 @@ public abstract class Entity extends AbEntity {
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 
 					if (soul != null && dead == 0 && adm.pre >= soul.len() && !e.dead) {
-						System.out.println("##");
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 					}
 				}
@@ -1562,6 +1561,18 @@ public abstract class Entity extends AbEntity {
 			if(dire == - 1 && basis.canon.deco == DECO_BASE_WATER) {
 				dmg = (int) (dmg * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_SURGE));
 			}
+
+			if((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
+				AttackVolcano volc = (AttackVolcano) atk;
+
+				if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
+
+
+					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF), this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint));
+
+					volc.handler.surgeSummoned.add(this);
+				}
+			}
 		}
 
 		tokens.add(atk);
@@ -1782,8 +1793,6 @@ public abstract class Entity extends AbEntity {
 					poiDmg *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_TOXIC);
 				}
 
-				System.out.println(poiDmg);
-
 				damage += maxH * poiDmg;
 				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
 				basis.lea.sort(Comparator.comparingInt(e -> e.layer));
@@ -1812,8 +1821,6 @@ public abstract class Entity extends AbEntity {
 			if(dire == - 1 && basis.canon.deco == DECO_BASE_STOP) {
 				status[P_STOP][0] = (int) (status[P_STOP][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_FREEZE));
 			}
-
-			System.out.println(status[P_STOP][0]);
 		}
 		if (atk.getProc().SLOW.time != 0 || atk.getProc().SLOW.prob > 0) {
 			int val = (int) (atk.getProc().SLOW.time * time);
@@ -1845,8 +1852,6 @@ public abstract class Entity extends AbEntity {
 			if(dire == - 1 && basis.canon.deco == DECO_BASE_GROUND) {
 				status[P_WEAK][0] = (int) (status[P_WEAK][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WEAK));
 			}
-
-			System.out.println(status[P_WEAK][0]);
 		}
 		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
@@ -1864,8 +1869,6 @@ public abstract class Entity extends AbEntity {
 			if(dire == - 1 && basis.canon.deco == DECO_BASE_CURSE) {
 				status[P_CURSE][0] = (int) (status[P_CURSE][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_CURSE));
 			}
-
-			System.out.println(status[P_CURSE][0]);
 		}
 		if (atk.getProc().KB.dis != 0) {
 			int rst = getProc().IMUKB.mult;

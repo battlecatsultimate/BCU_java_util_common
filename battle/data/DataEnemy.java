@@ -191,6 +191,9 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 
 			if (ints[101] == 1)
 				traits.add(BCTraits.get(TRAIT_BEAST));
+
+			if (ints[103] == 1)
+				a |= AB_CSUR;
 		} catch (IndexOutOfBoundsException ignored) {
 
 		}

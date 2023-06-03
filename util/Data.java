@@ -929,6 +929,7 @@ public class Data {
 	public static final short SE_SHIELD_REGEN = 138;
 	public static final short SE_SHIELD_BREAKER = 137;
 	public static final short SE_DEATH_SURGE = 143;
+	public static final short SE_COUNTER_SURGE = 159;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -1032,6 +1033,7 @@ public class Data {
 	public static final int AB_MASSIVES = 1 << 16;
 	public static final int AB_BAKILL = 1 << 17;
 	public static final int AB_CKILL = 1 << 18;
+	public static final int AB_CSUR = 1 << 19;
 
 	// abi index
 	public static final byte ABI_GOOD = 0;
@@ -1053,7 +1055,8 @@ public class Data {
 	public static final byte ABI_MASSIVES = 16;
 	public static final byte ABI_BAKILL = 17;
 	public static final byte ABI_CKILL = 18;
-	public static final byte ABI_TOT = 19;// 20 currently
+	public static final byte ABI_CSUR = 19;
+	public static final byte ABI_TOT = 20;// 20 currently
 
 	// proc index
 	public static final int P_KB = 0;
@@ -1306,7 +1309,8 @@ public class Data {
 			{ 2, PC2_TBA }, //61 : tba
 			{ 0, P_MINIWAVE }, //62 : mini-wave
 			{ 1, AB_BAKILL }, //63 : baron killer
-			{ 0, P_BSTHUNT }
+			{ 0, P_BSTHUNT }, //64 : beheoth hunter
+			{ 0, P_MINIVOLC } //65 : Mini surge
 	};
 
 	// foot icon index used in battle
@@ -1587,6 +1591,8 @@ public class Data {
 	public static final int SHAKE_END = 2;
 	public static final int SHAKE_COOL_DOWN = 3;
 	public static final double SHAKE_STABILIZER = 2.5;
+	public static final int COUNTER_SURGE_FORESWING = 50;
+	public static final int COUNTER_SURGE_SOUND = 18;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s" };
 
