@@ -1535,10 +1535,6 @@ public abstract class Entity extends AbEntity {
 				return;
 			else
 				dmg = dmg * (100 - getProc().IMUWAVE.mult) / 100;
-
-			if(dire == - 1 && basis.canon.deco == DECO_BASE_WALL) {
-				dmg = (int) (dmg * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WAVE));
-			}
 		}
 
 		if ((atk.waveType & WT_MOVE) > 0) {
@@ -1557,10 +1553,6 @@ public abstract class Entity extends AbEntity {
 				return;
 			else
 				dmg = dmg * (100 - getProc().IMUVOLC.mult) / 100;
-
-			if(dire == - 1 && basis.canon.deco == DECO_BASE_WATER) {
-				dmg = (int) (dmg * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_SURGE));
-			}
 
 			if((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
 				AttackVolcano volc = (AttackVolcano) atk;

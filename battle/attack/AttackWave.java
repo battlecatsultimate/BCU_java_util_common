@@ -2,6 +2,7 @@ package common.battle.attack;
 
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
+import common.util.Data;
 
 import java.util.HashSet;
 import java.util.List;
@@ -69,6 +70,10 @@ public class AttackWave extends AttackAb {
 
 			if(attacker.status[P_STRONG][0] != 0) {
 				atk += rawAtk * attacker.status[P_STRONG][0] / 100;
+			}
+
+			if (attacker.dire == -1 && attacker.basis.canon.deco == DECO_BASE_WALL) {
+				atk = (int) (atk * attacker.basis.b.t().getDecorationMagnification(attacker.basis.canon.deco, Data.DECO_WAVE));
 			}
 		}
 

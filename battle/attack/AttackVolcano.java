@@ -2,6 +2,7 @@ package common.battle.attack;
 
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
+import common.util.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,10 @@ public class AttackVolcano extends AttackAb {
 
 			if(attacker.status[P_STRONG][0] != 0) {
 				atk += rawAtk * attacker.status[P_STRONG][0] / 100;
+			}
+
+			if(attacker.dire == -1 && attacker.basis.canon.deco == DECO_BASE_WATER) {
+				atk = (int) (atk * attacker.basis.b.t().getDecorationMagnification(attacker.basis.canon.deco, Data.DECO_SURGE));
 			}
 		}
 
