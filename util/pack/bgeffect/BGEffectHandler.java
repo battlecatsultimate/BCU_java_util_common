@@ -220,7 +220,9 @@ public class BGEffectHandler {
                 sy *= s;
             }
 
-            if(segment.scaleX != null) {
+            if (segment.startScaleX != null) {
+                sx *= segment.startScaleX.getRangeD(w);
+            } else if(segment.scaleX != null) {
                 sx *= segment.scaleX.getRangeD(w);
             }
 

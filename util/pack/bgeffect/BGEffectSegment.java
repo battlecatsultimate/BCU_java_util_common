@@ -19,7 +19,7 @@ public class BGEffectSegment {
 
     public static List<String> tags = Arrays.asList(
             "name", "model", "file", "count", "x", "y", "startX", "startY", "z", "angle", "scale", "scaleX", "scaleY",
-            "startFrame", "frame", "wait", "lifeTime", "startScale", "v", "vx", "vy", "startV", "startVx", "startVy",
+            "startScaleX", "startFrame", "frame", "wait", "lifeTime", "startScale", "v", "vx", "vy", "startV", "startVx", "startVy",
             "moveAngle", "alpha", "destroyLeft", "destroyTop", "destroyRight", "destroyBottom", "angularV", "startWait",
             "equallySpaced"
     );
@@ -54,6 +54,11 @@ public class BGEffectSegment {
      * The Size of the component to draw. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
     public BattleRange<Double> scale;
+    /**
+     * The start Size of the component along x-axis. If there is a maximum value, the value will be a random number between the minimum and maximum value.
+     */
+    public BattleRange<Double> startScaleX;
+
     public BattleRange<Double> scaleX;
     public BattleRange<Double> scaleY;
     /**
@@ -250,6 +255,12 @@ public class BGEffectSegment {
             scale = readRangedJsonObjectD(elem, "scale");
         } else {
             scale = null;
+        }
+
+        if (elem.has("startScaleX")) {
+            startScaleX = readRangedJsonObjectD(elem, "startScaleX");
+        } else {
+            startScaleX = null;
         }
 
         if(elem.has("scaleX")) {
