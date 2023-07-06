@@ -1208,7 +1208,7 @@ public class Data {
 			false, //2x money
 			false, //base destroyer
 			true, //beast hunter
-			true //mini surge
+			false //mini surge
 	};
 
 	/**
