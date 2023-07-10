@@ -253,6 +253,41 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 				dropLine = qs.poll();
 			}
+
+			qs = VFile.readLine("./org/data/LockSkipData.csv");
+
+			String skipLine = qs.poll();
+
+			while(skipLine != null && !skipLine.isEmpty()) {
+				String[] skipData = skipLine.split(",");
+
+				if (skipData.length != 3 || !CommonStatic.isInteger(skipData[1])) {
+					skipLine = qs.poll();
+
+					continue;
+				}
+
+				int mapID = CommonStatic.safeParseInt(skipData[1]);
+				boolean wholeCollection = CommonStatic.safeParseInt(skipData[0]) == 0;
+
+				if (wholeCollection) {
+					MapColc mc = get(Data.hex(mapID / 1000));
+
+					for (StageMap map : mc.maps) {
+						if (map != null && map.info != null) {
+							map.info.cantUseGoldCPU = true;
+						}
+					}
+				} else {
+					StageMap sm = getMap(mapID);
+
+					if (sm != null && sm.info != null) {
+						sm.info.cantUseGoldCPU = true;
+					}
+				}
+
+				skipLine = qs.poll();
+			}
 		}
 
 		public final int id;

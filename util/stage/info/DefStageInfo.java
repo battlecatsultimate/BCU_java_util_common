@@ -126,6 +126,10 @@ public class DefStageInfo implements StageInfo {
                     .append(st.getCont().info.clearLimit);
         }
 
+        if (st.getCont().info.cantUseGoldCPU) {
+            ans.append("<br> You can't use gold CPU in this stage");
+        }
+
         ans.append("<br><br> EX stage existing : ")
                 .append(exConnection || (exStages != null && exChances != null));
 
