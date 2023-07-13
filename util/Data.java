@@ -953,6 +953,19 @@ public class Data {
 	public static final int TB_WITCH = 1024;
 	public static final int TB_INFH = 2048;
 	public static final int TB_DEMON = 4096;
+	// talent trait bit
+	public static final int TB_RED_T = 1;
+	public static final int TB_FLOAT_T = 2;
+	public static final int TB_BLACK_T = 4;
+	public static final int TB_METAL_T = 8;
+	public static final int TB_ANGEL_T = 16;
+	public static final int TB_ALIEN_T = 32;
+	public static final int TB_ZOMBIE_T = 64;
+	public static final int TB_RELIC_T = 128;
+	public static final int TB_WHITE_T = 256;
+	public static final int TB_EVA_T = 512;
+	public static final int TB_WITCH_T = 1024;
+	public static final int TB_DEMON_T = 2048;
 
 	// trait index
 	public static final byte TRAIT_RED = 0;

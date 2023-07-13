@@ -71,7 +71,7 @@ public class PCoin extends Data {
 
 	private PCoin(String[] strs) {
 		int id = CommonStatic.parseIntN(strs[0]);
-		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
+		trait = Trait.convertTalentType(CommonStatic.parseIntN(strs[1]));
 
 		for (int i = 0; i < 8; i++) {
 			if(!strs[2 + i * 14].equals("0")) {
