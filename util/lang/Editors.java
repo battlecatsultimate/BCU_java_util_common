@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 public class Editors {
 
@@ -225,11 +224,17 @@ public class Editors {
 			if (item instanceof Proc.IMUAD)
 				setComponentVisibility(this, item.exists(), 2);
 			else if (!(item instanceof Proc.IMU)) {
-				Editors.Editor base = list[0];
-				if (base.field.getInt() > 0)
-					setComponentVisibility(this, item.exists(), IntStream.range(0, list.length).toArray());
-				else
+				ArrayList<Integer> visFields = new ArrayList<>();
+				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+				for (int i = 1; i < list.length; i++) {
+					if (edi.EditorVisible(list[i]))
+						visFields.add(i);
+				}
+
+				if (visFields.size() == list.length - 1)
 					setComponentVisibility(this, item.exists(), 1);
+				if (visFields.size() > 0)
+					setComponentVisibility(this, item.exists(), Ints.toArray(visFields));
 			}
 		}
 
