@@ -126,9 +126,7 @@ public class PCoin extends Data {
 			temp = new int[max.length];
 
 			System.arraycopy(talents, 0, temp, 0, talents.length);
-
-			if (max.length > talents.length)
-				System.arraycopy(max, talents.length, temp, talents.length, max.length - talents.length);
+			System.arraycopy(max, talents.length, temp, talents.length, max.length - talents.length);
 		} else {
 			temp = talents.clone();
 		}
@@ -158,8 +156,9 @@ public class PCoin extends Data {
 
 			//Targettings that come with a talent, such as Hyper Mr's
 			if (this.trait.size() > 0)
-				if (!ans.getTraits().contains(this.trait.get(0)))
-					ans.getTraits().add(this.trait.get(0));
+				for (Trait t : this.trait)
+					if (!ans.getTraits().contains(t))
+						ans.getTraits().add(t);
 
 			int maxlv = info.get(i)[1];
 
