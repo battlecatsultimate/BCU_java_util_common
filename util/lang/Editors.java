@@ -1,6 +1,5 @@
 package common.util.lang;
 
-import com.google.common.primitives.Ints;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -10,10 +9,8 @@ import common.util.lang.LocaleCenter.Displayable;
 import common.util.lang.ProcLang.ItemLang;
 import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
-import page.info.edit.SwingEditor;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -227,8 +224,9 @@ public class Editors {
 				setComponentVisibility(this, item.exists(), 2);
 			else if (!(item instanceof Proc.IMU)) {
 				Editors.Editor base = list[0];
-				if ((base instanceof SwingEditor.BoolEditor && base.field.getBoolean())
-				|| (base instanceof SwingEditor.IntEditor && base.field.getInt() > 0))
+
+				//TODO Implement field checker
+				if (base.field.getBoolean() || base.field.getInt() > 0)
 					setComponentVisibility(this, item.exists(), IntStream.range(0, list.length).toArray());
 				else
 					setComponentVisibility(this, item.exists(), 1);
