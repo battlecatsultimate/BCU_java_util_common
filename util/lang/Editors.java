@@ -225,8 +225,10 @@ public class Editors {
 			else if (!(item instanceof Proc.IMU)) {
 				Editors.Editor base = list[0];
 
-				//TODO Implement field checker
-				if (base.field.getBoolean() || base.field.getInt() > 0)
+				if (
+					(base.field.f0.getDeclaringClass() == boolean.class && base.field.getBoolean()) ||
+					(base.field.f0.getDeclaringClass() == int.class && base.field.getInt() > 0)
+				)
 					setComponentVisibility(this, item.exists(), IntStream.range(0, list.length).toArray());
 				else
 					setComponentVisibility(this, item.exists(), 1);
