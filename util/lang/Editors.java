@@ -539,7 +539,7 @@ public class Editors {
 
 		map().put("CRITI", imu);
 		map_t().put("CRITI", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.CRITI.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.CRITI.mult);
@@ -669,7 +669,7 @@ public class Editors {
 
 		map().put("IMUSTOP", imu);
 		map_t().put("IMUSTOP", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSTOP.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSTOP.mult);
@@ -679,7 +679,7 @@ public class Editors {
 
 		map().put("IMUSLOW", imu);
 		map_t().put("IMUSLOW", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSLOW.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSLOW.mult);
@@ -693,7 +693,7 @@ public class Editors {
 
 		map().put("IMUWARP", imu);
 		map_t().put("IMUWARP", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUWARP.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUWARP.mult);
@@ -703,7 +703,7 @@ public class Editors {
 
 		map().put("IMUCURSE", imu);
 		map_t().put("IMUCURSE", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUCURSE.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUCURSE.mult);
@@ -713,7 +713,7 @@ public class Editors {
 
 		map().put("IMUPOIATK", imu);
 		map_t().put("IMUPOIATK", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUPOIATK.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUPOIATK.mult);
@@ -725,7 +725,7 @@ public class Editors {
 
 		map().put("IMUSUMMON", imu);
 		map_t().put("IMUSUMMON", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSUMMON.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSUMMON.mult);
@@ -735,7 +735,7 @@ public class Editors {
 
 		map().put("IMUSEAL", imu);
 		map_t().put("IMUSEAL", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
-			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			t.max = Math.max(t.max, 1);
 			Proc p = u.getAllProc();
 			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSEAL.mult);
 			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSEAL.mult);
