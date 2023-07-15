@@ -58,12 +58,7 @@ public class PCoin extends Data {
 			}
 		}
 
-		max = new int[info.size()];
-
-		for (int i = 0; i < info.size(); i++) {
-			max[i] = Math.max(1, info.get(i)[1]);
-		}
-
+		max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
 		this.du = du;
 
 		full = improve(max);
@@ -91,27 +86,17 @@ public class PCoin extends Data {
 			}
 		}
 
-		max = new int[info.size()];
-
-		for (int i = 0; i < info.size(); i++) {
-			max[i] = Math.max(1, info.get(i)[1]);
-		}
-
+		max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
 		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
-		((DataUnit)du).pcoin = this;
+		((DataUnit) du).pcoin = this;
 		full = improve(max);
 	}
 
 	public void update() {
 		// Apparently, if max is null, since we will update full var anyway
 		// we can just re-generate whole array
-		if (max == null || max.length < info.size()) {
-			max = new int[info.size()];
-
-			for (int i = 0; i < info.size(); i++) {
-				max[i] = Math.max(1, info.get(i)[1]);
-			}
-		}
+		if (max == null || max.length < info.size())
+			max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
 
 		full = improve(max);
 	}
