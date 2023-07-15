@@ -715,7 +715,7 @@ public class Data {
 				for (int i = 0; i < fs.length; i++) {
 					fs[i].setAccessible(true);
 
-					if(i < data.length) {
+					if (i < data.length) {
 						fs[i].set(ans, ((ProcItem) fs[i].getType().getDeclaredConstructor().newInstance()).load(data[i]));
 					} else {
 						fs[i].set(ans, ((ProcItem) fs[i].getType().getDeclaredConstructor().newInstance()).clear());
@@ -1341,8 +1341,8 @@ public class Data {
 			{ 4, TRAIT_ZOMBIE, 0 }, // 39: targeting zombie
 			{ 4, TRAIT_RELIC, 0 }, // 40: targeting relic
 			{ 4, TRAIT_WHITE, 0 }, // 41: targeting white
-			{ -1, 0 }, // 42:
-			{ -1, 0 }, // 43:
+			{ 4, TRAIT_WITCH, 0 }, // 42: targeting witch
+			{ 4, TRAIT_EVA }, // 43: targeting eva
 			{ 3, P_IMUWEAK }, // 44: immune to weak
 			{ 3, P_IMUSTOP }, // 45: immune to freeze
 			{ 3, P_IMUSLOW }, // 46: immune to slow
