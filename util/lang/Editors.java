@@ -1,5 +1,6 @@
 package common.util.lang;
 
+import common.battle.data.CustomUnit;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -14,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -120,14 +122,11 @@ public class Editors {
 
 	}
 
-	public static class EditControl<T> {
-
+	public abstract static class AbEditControl<T> {
 		public final Class<T> cls;
-		private final Consumer<T> regulator;
 
-		public EditControl(Class<T> cls, Consumer<T> func) {
+		public AbEditControl(Class<T> cls) {
 			this.cls = cls;
-			regulator = func;
 		}
 
 		public EdiField getField(String f) {
@@ -150,10 +149,35 @@ public class Editors {
 				par.callback.run();
 		}
 
+		protected abstract void regulate(T obj);
+	}
+
+	public static class EditControlT<T> extends AbEditControl<T> {
+		private final Function<CustomUnit, Consumer<T>> regulator;
+		public CustomUnit cu;
+
+		public EditControlT(Class<T> cls, Function<CustomUnit, Consumer<T>> func) {
+			super(cls);
+			regulator = func;
+		}
+
+		@Override
+		protected void regulate(T obj) {
+			regulator.apply(cu).accept(obj);
+		}
+	}
+
+	public static class EditControl<T> extends AbEditControl<T> {
+		private final Consumer<T> regulator;
+
+		public EditControl(Class<T> cls, Consumer<T> func) {
+			super(cls);
+			regulator = func;
+		}
+
 		protected void regulate(T obj) {
 			regulator.accept(obj);
 		}
-
 	}
 
 	public static abstract class Editor {
@@ -254,9 +278,9 @@ public class Editors {
 	}
 
 	static {
-		EditControl<Proc.PROB> prob = new EditControl<>(Proc.PROB.class, (t) -> t.prob = MathUtil.clip(t.prob, 0, 100));
+		EditControl<Proc.PROB> prob = new EditControl<>(Proc.PROB.class, t -> t.prob = MathUtil.clip(t.prob, 0, 100));
 
-		EditControl<Proc.PT> pt = new EditControl<>(Proc.PT.class, (t) -> {
+		EditControl<Proc.PT> pt = new EditControl<>(Proc.PT.class, t -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0)
 				t.time = 0;
@@ -264,12 +288,12 @@ public class Editors {
 				t.time = 1;
 		});
 
-		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
+		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, t -> {
 			t.mult = Math.min(t.mult, 100);
 			t.block = Math.min(t.block, 100);
 		});
 
-		EditControl<Proc.IMUAD> imuad = new EditControl<>(Proc.IMUAD.class, (t) -> {
+		EditControl<Proc.IMUAD> imuad = new EditControl<>(Proc.IMUAD.class, t -> {
 			t.mult = Math.min(t.mult, 100);
 			t.block = Math.min(t.block, 100);
 			if (t.mult != 0 || t.block != 0)
@@ -293,8 +317,24 @@ public class Editors {
 		}));
 
 		map().put("STOP", pt);
+		map_t().put("STOP", new EditControlT<>(Proc.PT_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.STOP.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.STOP.prob);
+			t.time_0 = Math.max(t.time_0, 1);
+			t.time_1 = Math.max(t.time_1, t.time_0 + 1);
+		}));
 
 		map().put("SLOW", pt);
+		map_t().put("SLOW", new EditControlT<>(Proc.PT_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.SLOW.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.SLOW.prob);
+			t.time_0 = Math.max(t.time_0, 1);
+			t.time_1 = Math.max(t.time_1, t.time_0 + 1);
+		}));
 
 		map().put("CRIT", new EditControl<>(Proc.PM.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -321,6 +361,12 @@ public class Editors {
 		}));
 
 		map().put("BREAK", prob);
+		map_t().put("BREAK", new EditControlT<>(Proc.PROB_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.BREAK.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.BREAK.prob);
+		}));
 
 		map().put("WARP", new EditControl<>(Proc.PTD.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -330,6 +376,14 @@ public class Editors {
 		}));
 
 		map().put("CURSE", pt);
+		map_t().put("CURSE", new EditControlT<>(Proc.PT_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.CURSE.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.CURSE.prob);
+			t.time_0 = Math.max(t.time_0, 1);
+			t.time_1 = Math.max(t.time_1, t.time_0 + 1);
+		}));
 
 		map().put("STRONG", new EditControl<>(Proc.STRONG.class, (t) -> {
 			t.health = MathUtil.clip(t.health, 0, 99);
@@ -338,6 +392,12 @@ public class Editors {
 		}));
 
 		map().put("LETHAL", prob);
+		map_t().put("LETHAL", new EditControlT<>(Proc.PROB_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.LETHAL.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.LETHAL.prob);
+		}));
 
 		map().put("BURROW", new EditControl<>(Proc.BURROW.class, (t) -> {
 			t.count = Math.max(t.count, -1);
@@ -478,6 +538,14 @@ public class Editors {
 		map().put("BOSS", prob);
 
 		map().put("CRITI", imu);
+		map_t().put("CRITI", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.CRITI.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.CRITI.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.CRITI.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.CRITI.block);
+		}));
 
 		map().put("SATK", new EditControl<>(Proc.PM.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -506,6 +574,14 @@ public class Editors {
 		}));
 
 		map().put("IMUATK", pt);
+		map_t().put("IMUATK", new EditControlT<>(Proc.PT_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.IMUATK.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.IMUATK.prob);
+			t.time_0 = Math.max(t.time_0, 1);
+			t.time_1 = Math.max(t.time_1, t.time_0 + 1);
+		}));
 
 		map().put("DMGCUT", new EditControl<>(Proc.DMGCUT.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -582,26 +658,90 @@ public class Editors {
 		}));
 
 		map().put("IMUKB", imu);
+		map_t().put("IMUKB", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1);
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUKB.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUKB.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUKB.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUKB.block);
+		}));
 
 		map().put("IMUSTOP", imu);
+		map_t().put("IMUSTOP", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSTOP.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSTOP.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUSTOP.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUSTOP.block);
+		}));
 
 		map().put("IMUSLOW", imu);
+		map_t().put("IMUSLOW", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSLOW.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSLOW.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUSLOW.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUSLOW.block);
+		}));
 
 		map().put("IMUWAVE", wavei);
 
 		map().put("IMUWEAK", imuad);
 
 		map().put("IMUWARP", imu);
+		map_t().put("IMUWARP", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUWARP.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUWARP.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUWARP.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUWARP.block);
+		}));
 
 		map().put("IMUCURSE", imu);
+		map_t().put("IMUCURSE", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUCURSE.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUCURSE.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUCURSE.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUCURSE.block);
+		}));
 
 		map().put("IMUPOIATK", imu);
+		map_t().put("IMUPOIATK", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUPOIATK.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUPOIATK.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUPOIATK.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUPOIATK.block);
+		}));
 
 		map().put("IMUVOLC", wavei);
 
 		map().put("IMUSUMMON", imu);
+		map_t().put("IMUSUMMON", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSUMMON.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSUMMON.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUSUMMON.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUSUMMON.block);
+		}));
 
 		map().put("IMUSEAL", imu);
+		map_t().put("IMUSEAL", new EditControlT<>(Proc.IMU_T.class, u -> t -> {
+			t.max = Math.max(t.max, 1); // if mult is -30, cap should be 130
+			Proc p = u.getAllProc();
+			t.mult_0 = MathUtil.clip(t.mult_0, 1, 100 - p.IMUSEAL.mult);
+			t.mult_1 = MathUtil.clip(t.mult_1, t.mult_0, 100 - p.IMUSEAL.mult);
+			t.block_0 = MathUtil.clip(t.block_0, 1, 100 - p.IMUSEAL.block);
+			t.block_1 = MathUtil.clip(t.block_1, t.block_0, 100 - p.IMUSEAL.block);
+		}));
 
 		map().put("IMUMOVING", wavei);
 
@@ -641,6 +781,12 @@ public class Editors {
 		}));
 
 		map().put("SHIELDBREAK", prob);
+		map_t().put("SHIELDBREAK", new EditControlT<>(Proc.PROB_T.class, u -> t -> {
+			Proc p = u.getAllProc();
+			t.max = Math.max(t.max, 1);
+			t.prob_0 = MathUtil.clip(t.prob_0, 1, 100 - p.SHIELDBREAK.prob);
+			t.prob_1 = MathUtil.clip(t.prob_1, t.prob_0, 100 - p.SHIELDBREAK.prob);
+		}));
 
 		map().put("DEATHSURGE", new EditControl<>(Proc.VOLC.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -707,4 +853,8 @@ public class Editors {
 		return UserProfile.getRegister("Editor_EditControl", EditControl.class);
 	}
 
+	@SuppressWarnings("rawtypes")
+	private static Map<String, EditControlT> map_t() {
+		return UserProfile.getRegister("Editor_EditControlTalent", EditControlT.class);
+	}
 }
