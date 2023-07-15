@@ -4,12 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.FieldOrder;
+import common.io.json.*;
 import common.io.json.FieldOrder.Order;
-import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
@@ -51,20 +48,6 @@ public class Data {
 			public int mult;
 			@Order(1)
 			public int block;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class IMU_T extends ProcItem {
-			@Order(0)
-			public int max;
-			@Order(1)
-			public int mult_0;
-			@Order(2)
-			public int mult_1;
-			@Order(3)
-			public int block_0;
-			@Order(4)
-			public int block_1;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -231,16 +214,6 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
-		public static class PROB_T extends ProcItem {
-			@Order(0)
-			public int max;
-			@Order(1)
-			public int prob_0;
-			@Order(2)
-			public int prob_1;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
 		public static class MULT extends ProcItem {
 			@Order(0)
 			public int mult;
@@ -403,20 +376,6 @@ public class Data {
 			public int prob;
 			@Order(1)
 			public int time;
-		}
-
-		@JsonClass(noTag = NoTag.LOAD)
-		public static class PT_T extends ProcItem {
-			@Order(0)
-			public int max;
-			@Order(1)
-			public int prob_0;
-			@Order(2)
-			public int prob_1;
-			@Order(3)
-			public int time_0;
-			@Order(4)
-			public int time_1;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
