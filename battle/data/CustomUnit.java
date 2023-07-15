@@ -6,6 +6,7 @@ import common.pack.Identifier;
 import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
+import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
 
@@ -93,14 +94,9 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 				pcoin = new PCoin(this);
 
 				for (int[] i : p.info) {
-					int[] j = new int[14];
-
-					System. arraycopy(i, 0, j, 0, 12);
-
-					j[13] = -1;
-
+					int[] j = i.clone();
 					j[1] = Math.max(1, j[1]);
-
+					j[13] = MathUtil.clip(j[13], 0, 1);
 					pcoin.info.add(j);
 				}
 			}
