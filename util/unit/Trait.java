@@ -105,6 +105,36 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         return traits;
     }
 
+    public static ArrayList<Trait> convertTalentType(int type) {
+        ArrayList<Trait> traits = new ArrayList<>();
+        PackData.DefPack data = UserProfile.getBCData();
+        if ((type & TB_RED_T) != 0)
+            traits.add(data.traits.get(TRAIT_RED));
+        if ((type & TB_FLOAT_T) != 0)
+            traits.add(data.traits.get(TRAIT_FLOAT));
+        if ((type & TB_BLACK_T) != 0)
+            traits.add(data.traits.get(TRAIT_BLACK));
+        if ((type & TB_METAL_T) != 0)
+            traits.add(data.traits.get(TRAIT_METAL));
+        if ((type & TB_ANGEL_T) != 0)
+            traits.add(data.traits.get(TRAIT_ANGEL));
+        if ((type & TB_ALIEN_T) != 0)
+            traits.add(data.traits.get(TRAIT_ALIEN));
+        if ((type & TB_ZOMBIE_T) != 0)
+            traits.add(data.traits.get(TRAIT_ZOMBIE));
+        if ((type & TB_RELIC_T) != 0)
+            traits.add(data.traits.get(TRAIT_RELIC));
+        if ((type & TB_DEMON_T) != 0)
+            traits.add(data.traits.get(TRAIT_DEMON));
+        if ((type & TB_WHITE_T) != 0)
+            traits.add(data.traits.get(TRAIT_WHITE));
+        if ((type & TB_EVA_T) != 0)
+            traits.add(data.traits.get(TRAIT_EVA));
+        if ((type & TB_WITCH_T) != 0)
+            traits.add(data.traits.get(TRAIT_WITCH));
+        return traits;
+    }
+
     public static List<Trait> convertOrb(int mask) {
         List<Trait> ans = new ArrayList<>();
         PackData.DefPack data = UserProfile.getBCData();

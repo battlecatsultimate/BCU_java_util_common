@@ -1,6 +1,5 @@
 package common.util.lang;
 
-import com.google.common.primitives.Ints;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -12,11 +11,11 @@ import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class Editors {
 
@@ -224,17 +223,15 @@ public class Editors {
 			if (item instanceof Proc.IMUAD)
 				setComponentVisibility(this, item.exists(), 2);
 			else if (!(item instanceof Proc.IMU)) {
-				ArrayList<Integer> visFields = new ArrayList<>();
-				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
-				for (int i = 1; i < list.length; i++) {
-					if (edi.EditorVisible(list[i]))
-						visFields.add(i);
-				}
+				Editors.Editor base = list[0];
 
-				if (visFields.size() == list.length - 1)
+				if (
+					(base.field.f0.getDeclaringClass() == boolean.class && base.field.getBoolean()) ||
+					(base.field.f0.getDeclaringClass() == int.class && base.field.getInt() > 0)
+				)
+					setComponentVisibility(this, item.exists(), IntStream.range(0, list.length).toArray());
+				else
 					setComponentVisibility(this, item.exists(), 1);
-				if (visFields.size() > 0)
-					setComponentVisibility(this, item.exists(), Ints.toArray(visFields));
 			}
 		}
 

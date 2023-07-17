@@ -46,24 +46,21 @@ public class PCoin extends Data {
 		((CustomUnit)du).pcoin = this;
 	}
 
-	public PCoin(String[] strs, MaskUnit du) {
+	public PCoin(String[] strs, MaskUnit du) { // leaving reminder that this is unused at least in PC ver.
 		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
 
 		for (int i = 0; i < 8; i++) {
 			if(talentExist(strs, 2 + i * 14)) {
 				info.add(new int[14]);
 
-				for (int j = 0; j < 14; j++)
-					info.get(info.size() - 1)[j] = CommonStatic.parseIntN(strs[2 + i * 14 + j]);
+				for (int j = 0; j < 14; j++) {
+					int v = CommonStatic.parseIntN(strs[2 + i * 14 + j]);
+					info.get(info.size() - 1)[j] = v;
+				}
 			}
 		}
 
-		max = new int[info.size()];
-
-		for (int i = 0; i < info.size(); i++) {
-			max[i] = Math.max(1, info.get(i)[1]);
-		}
-
+		max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
 		this.du = du;
 
 		full = improve(max);
@@ -71,47 +68,34 @@ public class PCoin extends Data {
 
 	private PCoin(String[] strs) {
 		int id = CommonStatic.parseIntN(strs[0]);
-		trait = Trait.convertType(CommonStatic.parseIntN(strs[1]));
+		trait = Trait.convertTalentType(CommonStatic.parseIntN(strs[1]));
 
 		for (int i = 0; i < 8; i++) {
 			if(!strs[2 + i * 14].equals("0")) {
-				info.add(new int[14]);
-
+				int[] data = new int[14];
 				for (int j = 0; j < 14; j++)
-					info.get(info.size() - 1)[j] = CommonStatic.parseIntN(strs[2 + i * 14 + j]);
-
-				int[] data = info.get(info.size() - 1);
-
+					data[j] = CommonStatic.parseIntN(strs[2 + i * 14 + j]);
 				if(data[0] >= 0 && data[0] < PC_CORRES.length && PC_CORRES[data[0]][1] == P_MINIWAVE) {
 					if(data[6] == 0 && data[7] == 0) {
 						data[6] = 20;
 						data[7] = 20;
 					}
 				}
+				info.add(data);
 			}
 		}
 
-		max = new int[info.size()];
-
-		for (int i = 0; i < info.size(); i++) {
-			max[i] = Math.max(1, info.get(i)[1]);
-		}
-
+		max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
 		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
-		((DataUnit)du).pcoin = this;
+		((DataUnit) du).pcoin = this;
 		full = improve(max);
 	}
 
 	public void update() {
 		// Apparently, if max is null, since we will update full var anyway
 		// we can just re-generate whole array
-		if (max == null || max.length < info.size()) {
-			max = new int[info.size()];
-
-			for (int i = 0; i < info.size(); i++) {
-				max[i] = Math.max(1, info.get(i)[1]);
-			}
-		}
+		if (max == null || max.length < info.size())
+			max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
 
 		full = improve(max);
 	}
@@ -126,9 +110,7 @@ public class PCoin extends Data {
 			temp = new int[max.length];
 
 			System.arraycopy(talents, 0, temp, 0, talents.length);
-
-			if (max.length > talents.length)
-				System.arraycopy(max, talents.length, temp, talents.length, max.length - talents.length);
+			System.arraycopy(max, talents.length, temp, talents.length, max.length - talents.length);
 		} else {
 			temp = talents.clone();
 		}
@@ -136,13 +118,13 @@ public class PCoin extends Data {
 		talents = temp;
 
 		for (int i = 0; i < info.size(); i++) {
-			if (info.get(i)[0] >= PC_CORRES.length) {
+			int[] data = info.get(i);
+			if (data[0] >= PC_CORRES.length) {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
 			}
 
-			int[] type = PC_CORRES[info.get(i)[0]];
-
+			int[] type = PC_CORRES[data[0]];
 			if (type[0] == -1) {
 				CommonStatic.ctx.printErr(ErrType.NEW, "new PCoin ability not yet handled by BCU: " + info.get(i)[0] + "\nText ID is " + info.get(i)[10]+"\nData is "+Arrays.toString(info.get(i)));
 				continue;
@@ -157,23 +139,24 @@ public class PCoin extends Data {
 			}
 
 			//Targettings that come with a talent, such as Hyper Mr's
-			if (this.trait.size() > 0)
-				if (!ans.getTraits().contains(this.trait.get(0)))
-					ans.getTraits().add(this.trait.get(0));
+			if (data[12] > 0 && this.trait.size() > 0 && talents[i] > 0)
+				for (Trait t : this.trait)
+					if (!ans.getTraits().contains(t))
+						ans.getTraits().add(t);
 
-			int maxlv = info.get(i)[1];
+			int maxlv = data[1];
 
 			int[] modifs = new int[4];
 
 			if (maxlv > 1) {
 				for (int j = 0; j < 4; j++) {
-					int v0 = info.get(i)[2 + j * 2];
-					int v1 = info.get(i)[3 + j * 2];
+					int v0 = data[2 + j * 2];
+					int v1 = data[3 + j * 2];
 					modifs[j] = (v1 - v0) * (talents[i] - 1) / (maxlv - 1) + v0;
 				}
 			} else
 				for (int j = 0; j < 4; j++)
-					modifs[j] = info.get(i)[3 + j * 2];
+					modifs[j] = data[3 + j * 2];
 
 			if (type[0] == PC_P) {
 				ProcItem tar = ans.getProc().getArr(type[1]);
