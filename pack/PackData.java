@@ -56,6 +56,7 @@ public abstract class PackData implements IndexContainer {
 		}
 
 		public void load(Consumer<String> progress, Consumer<Double> bar) {
+			int a = 0/0;
 			progress.accept("loading basic images");
 			Res.readData();
 			Trait.addBCTraits();
