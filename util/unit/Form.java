@@ -20,7 +20,6 @@ import common.util.lang.MultiLangCont;
 import common.util.lang.MultiLangData;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 @JCGeneric(Form.FormJson.class)
 @JsonClass(read = RType.FILL)
@@ -213,7 +212,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					}
 				}
 
-				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form == 0) {
+				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form <= 0) {
 					form.getProc().SUMMON.form = 1;
 					form.getProc().SUMMON.mult = 1;
 					form.getProc().SUMMON.type.fix_buff = true;
