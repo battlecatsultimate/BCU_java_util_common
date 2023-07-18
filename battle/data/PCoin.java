@@ -12,6 +12,7 @@ import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
+import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,6 +101,47 @@ public class PCoin extends Data {
 		full = improve(max);
 	}
 
+	public void verify() { // TODO: surge
+		boolean custom = du instanceof CustomUnit;
+
+		for (int[] data : info) {
+			Proc proc = du.getAllProc();
+			data[1] = Math.max(data[1], 1);
+			int type = Data.PC_CORRES[data[0]][1];
+			switch (data[0]) {
+				case 0:
+					break;
+				case 10:
+					data[2] = MathUtil.clip(data[2], 0, 99 - proc.getArr(type).get(0));
+					data[3] = MathUtil.clip(data[3], data[2], 99 - proc.getArr(type).get(0));
+					data[4] = Math.max(data[4], 0);
+					data[5] = Math.max(data[5], data[4]);
+					break;
+				case 25: case 26: case 31: case 32:
+					data[2] = Math.max(data[2], 0);
+					data[3] = Math.max(data[3], data[2]);
+					break;
+				case 64:
+					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(1));
+					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(1));
+					data[4] = Math.max(data[4], 0);
+					data[5] = Math.max(data[5], data[4]);
+					break;
+				case 62: case 1:
+					data[6] = Math.max(data[6], 0);
+					data[7] = Math.max(data[7], data[6]);
+				case 2: case 3: case 9: case 17: case 50: case 51: case 56: case 60: case 65:
+					data[4] = Math.max(data[4], 0);
+					data[5] = Math.max(data[5], data[4]);
+				case 8: case 11: case 13: case 15: case 18: case 19: case 20: case 21: case 22: case 24: case 30:
+				case 52: case 54: case 58:
+					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(0));
+					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(0));
+					break;
+			}
+		}
+	}
+
 	@SuppressWarnings("deprecation")
 	public MaskUnit improve(int[] talents) {
 		MaskUnit ans = du.clone();
@@ -171,7 +213,7 @@ public class PCoin extends Data {
 						if (type[1] == P_MINIVOLC) {
 							tar.set(4, 20);
 						}
-					} else {
+					} else { // TODO: increase core version to change how custom talents handle surge
 						tar.set(0, modifs[0]);
 						tar.set(1, Math.min(modifs[1], modifs[2]));
 						tar.set(2, Math.max(modifs[1], modifs[2]));
