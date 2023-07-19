@@ -322,10 +322,10 @@ public class Editors {
 
 		map().put("BREAK", prob);
 
-		map().put("WARP", new EditControl<>(Proc.PTD.class, (t) -> {
+		map().put("WARP", new EditControl<>(Proc.WARP.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
-				t.dis = t.time = 0;
+				t.dis_0 = t.dis_1 = t.time = 0;
 			}
 		}));
 

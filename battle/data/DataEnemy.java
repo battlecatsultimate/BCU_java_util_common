@@ -126,7 +126,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		proc.BARRIER.health = ints[64];
 		proc.WARP.prob = ints[65];
 		proc.WARP.time = ints[66];
-		proc.WARP.dis = ints[67] / 4;
+		proc.WARP.dis_0 = ints[67] / 4;
+		proc.WARP.dis_1 = ints[68] / 4;
 		star = ints[69];
 		if (ints[71] == 1)
 			//EVA

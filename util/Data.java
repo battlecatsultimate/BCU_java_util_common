@@ -4,9 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.*;
+import common.io.json.FieldOrder;
 import common.io.json.FieldOrder.Order;
+import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
+import common.io.json.JsonDecoder;
+import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
@@ -388,6 +391,17 @@ public class Data {
 			public int dis;
 		}
 
+		public static class WARP extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int dis_0;
+			@Order(3)
+			public int dis_1;
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class TIME extends ProcItem {
 			@Order(0)
@@ -709,7 +723,7 @@ public class Data {
 		@Order(10)
 		public final PROB SHIELDBREAK = new PROB();
 		@Order(11)
-		public final PTD WARP = new PTD();
+		public final WARP WARP = new WARP();
 		@Order(12)
 		public final PT CURSE = new PT();
 		@Order(13)
@@ -1257,73 +1271,73 @@ public class Data {
 	// 2 for Base stat
 	// 3 for Immune
 	// 4 for Trait
-	public static final int[][] PC_CORRES = new int[][] { // NP value table
-			{ -1, 0 }, // 0:
-			{ 0, P_WEAK }, // 1: weak, reversed health or relic-weak
-			{ 0, P_STOP }, // 2: stop
-			{ 0, P_SLOW }, // 3: slow
-			{ 1, AB_ONLY, 0 }, // 4:
-			{ 1, AB_GOOD, 0 }, // 5:
-			{ 1, AB_RESIST, 0 }, // 6:
-			{ 1, AB_MASSIVE, 0 }, // 7:
-			{ 0, P_KB }, // 8: kb
-			{ 0, P_WARP, 0 }, // 9:
-			{ 0, P_STRONG }, // 10: berserker, reversed health
-			{ 0, P_LETHAL }, // 11: lethal
-			{ 0, P_ATKBASE, 0 }, // 12: Base Destroyer
-			{ 0, P_CRIT }, // 13: crit
-			{ 1, AB_ZKILL }, // 14: zkill
-			{ 0, P_BREAK }, // 15: break
-			{ 0, P_BOUNTY }, // 16: 2x income
-			{ 0, P_WAVE }, // 17: wave
-			{ 0, P_IMUWEAK }, // 18: res weak
-			{ 0, P_IMUSTOP }, // 19: res stop
-			{ 0, P_IMUSLOW }, // 20: res slow
-			{ 0, P_IMUKB }, // 21: res kb
-			{ 0, P_IMUWAVE }, // 22: res wave
-			{ 1, AB_WAVES, 0 }, // 23: waveblock
-			{ 0, P_IMUWARP, 0 }, // 24: res warp
-			{ 2, PC2_COST }, // 25: reduce cost
-			{ 2, PC2_CD }, // 26: reduce cooldown
-			{ 2, PC2_SPEED }, // 27: inc speed
-			{ 2, PC2_HB }, // 28: inc knockbacks
-			{ 3, P_IMUCURSE }, // 29: imu curse
-			{ 0, P_IMUCURSE }, // 30: res curse
-			{ 2, PC2_ATK }, // 31: inc ATK
-			{ 2, PC2_HP }, // 32: inc HP
-			{ 4, TRAIT_RED, 0 }, // 33: targeting red
-			{ 4, TRAIT_FLOAT, 0 }, // 34: targeting floating
-			{ 4, TRAIT_BLACK, 0 }, // 35: targeting black
-			{ 4, TRAIT_METAL, 0 }, // 36: targeting metal
-			{ 4, TRAIT_ANGEL, 0 }, // 37: targeting angel
-			{ 4, TRAIT_ALIEN, 0 }, // 38: targeting alien
-			{ 4, TRAIT_ZOMBIE, 0 }, // 39: targeting zombie
-			{ 4, TRAIT_RELIC, 0 }, // 40: targeting relic
-			{ 4, TRAIT_WHITE, 0 }, // 41: targeting white
-			{ 4, TRAIT_WITCH, 0 }, // 42: targeting witch
-			{ 4, TRAIT_EVA }, // 43: targeting eva
-			{ 3, P_IMUWEAK }, // 44: immune to weak
-			{ 3, P_IMUSTOP }, // 45: immune to freeze
-			{ 3, P_IMUSLOW }, // 46: immune to slow
-			{ 3, P_IMUKB }, // 47: immune to kb
-			{ 3, P_IMUWAVE }, // 48: immune to wave
-			{ 3, P_IMUWARP }, // 49: immune to warp
-			{ 0, P_SATK }, // 50: savage blow
-			{ 0, P_IMUATK }, // 51: immune to attack
-			{ 0, P_IMUPOIATK }, // 52: resist to poison ?
-			{ 3, P_IMUPOIATK }, // 53: immune to poison
-			{ 0, P_IMUVOLC }, // 54: resist to surge ?
-			{ 3, P_IMUVOLC }, // 55: immune to surge
-			{ 0, P_VOLC }, // 56: surge, level up to chance up
-			{ 4, TRAIT_DEMON, 0 }, // 57: Targetting Aku
-			{ 0, P_SHIELDBREAK }, //58 : shield piercing
-			{ 1, AB_CKILL }, //59 : corpse killer
-			{ 0, P_CURSE }, //60 : curse
-			{ 2, PC2_TBA }, //61 : tba
-			{ 0, P_MINIWAVE }, //62 : mini-wave
-			{ 1, AB_BAKILL }, //63 : baron killer
-			{ 0, P_BSTHUNT }, //64 : beheoth hunter
-			{ 0, P_MINIVOLC } //65 : Mini surge
+	public static final int[][] PC_CORRES = new int[][] { // NP value table { type, proc, mod count, connect to other proc }
+			{ -1, 0, 0 }, // 0:
+			{ 0, P_WEAK, 3, -1 }, // 1: weak, reversed health or relic-weak
+			{ 0, P_STOP, 2, -1 }, // 2: stop
+			{ 0, P_SLOW, 2, -1 }, // 3: slow
+			{ 1, AB_ONLY, 0, -1 }, // 4: target only
+			{ 1, AB_GOOD, 0, -1 }, // 5: strong against
+			{ 1, AB_RESIST, 0, -1 }, // 6: resistant
+			{ 1, AB_MASSIVE, 0, -1 }, // 7: massive damage
+			{ 0, P_KB, 1, -1 }, // 8: kb
+			{ 0, P_WARP, 4, -1 }, // 9:
+			{ 0, P_STRONG, 2, -1 }, // 10: berserker, reversed health
+			{ 0, P_LETHAL, 1, -1 }, // 11: lethal
+			{ 0, P_ATKBASE, 0, -1 }, // 12: Base Destroyer
+			{ 0, P_CRIT, 1, -1 }, // 13: crit
+			{ 1, AB_ZKILL, 0, -1 }, // 14: zkill
+			{ 0, P_BREAK, 1, -1 }, // 15: break
+			{ 0, P_BOUNTY, 0, -1 }, // 16: 2x income
+			{ 0, P_WAVE, 1, -1 }, // 17: wave
+			{ 0, P_IMUWEAK, 1, -1 }, // 18: res weak
+			{ 0, P_IMUSTOP, 1, -1 }, // 19: res stop
+			{ 0, P_IMUSLOW, 1, -1 }, // 20: res slow
+			{ 0, P_IMUKB, 1, -1 }, // 21: res kb
+			{ 0, P_IMUWAVE, 1, -1 }, // 22: res wave
+			{ 1, AB_WAVES, 0, -1 }, // 23: waveblock
+			{ 0, P_IMUWARP, 1, -1 }, // 24: res warp
+			{ 2, PC2_COST, 1, -1 }, // 25: reduce cost
+			{ 2, PC2_CD, 1, -1 }, // 26: reduce cooldown
+			{ 2, PC2_SPEED, 1, -1 }, // 27: inc speed
+			{ 2, PC2_HB, 1, -1 }, // 28: inc knockbacks
+			{ 3, P_IMUCURSE, 0, 30 }, // 29: imu curse
+			{ 0, P_IMUCURSE, 1, -1 }, // 30: res curse
+			{ 2, PC2_ATK, 1, -1 }, // 31: inc ATK
+			{ 2, PC2_HP, 1, -1 }, // 32: inc HP
+			{ 4, TRAIT_RED, 0, -1 }, // 33: targeting red
+			{ 4, TRAIT_FLOAT, 0, -1 }, // 34: targeting floating
+			{ 4, TRAIT_BLACK, 0, -1 }, // 35: targeting black
+			{ 4, TRAIT_METAL, 0, -1 }, // 36: targeting metal
+			{ 4, TRAIT_ANGEL, 0, -1 }, // 37: targeting angel
+			{ 4, TRAIT_ALIEN, 0, -1 }, // 38: targeting alien
+			{ 4, TRAIT_ZOMBIE, 0, -1 }, // 39: targeting zombie
+			{ 4, TRAIT_RELIC, 0, -1 }, // 40: targeting relic
+			{ 4, TRAIT_WHITE, 0, -1 }, // 41: targeting white
+			{ 4, TRAIT_WITCH, 0, -1 }, // 42: targeting witch
+			{ 4, TRAIT_EVA, 0, -1 }, // 43: targeting eva
+			{ 3, P_IMUWEAK, 0, 18 }, // 44: immune to weak
+			{ 3, P_IMUSTOP, 0, 19 }, // 45: immune to freeze
+			{ 3, P_IMUSLOW, 0, 20 }, // 46: immune to slow
+			{ 3, P_IMUKB, 0, 21 }, // 47: immune to kb
+			{ 3, P_IMUWAVE, 0, 22 }, // 48: immune to wave
+			{ 3, P_IMUWARP, 0, 24 }, // 49: immune to warp
+			{ 0, P_SATK, 2, -1 }, // 50: savage blow
+			{ 0, P_IMUATK, 2, -1 }, // 51: immune to attack
+			{ 0, P_IMUPOIATK, 1, -1 }, // 52: resist to poison ?
+			{ 3, P_IMUPOIATK, 0, 52 }, // 53: immune to poison
+			{ 0, P_IMUVOLC, 1, -1 }, // 54: resist to surge ?
+			{ 3, P_IMUVOLC, 0, 55 }, // 55: immune to surge
+			{ 0, P_VOLC, 4, -1 }, // 56: surge, level up to chance up
+			{ 4, TRAIT_DEMON, 0, -1 }, // 57: Targetting Aku
+			{ 0, P_SHIELDBREAK, 1, -1 }, //58 : shield piercing
+			{ 1, AB_CKILL, 0, -1 }, //59 : corpse killer
+			{ 0, P_CURSE, 2, -1 }, //60 : curse
+			{ 2, PC2_TBA, 1, -1 }, //61 : tba
+			{ 0, P_MINIWAVE, 3, -1 }, //62 : mini-wave
+			{ 1, AB_BAKILL, 0, -1 }, //63 : baron killer
+			{ 0, P_BSTHUNT, 2, -1 }, //64 : beheoth hunter
+			{ 0, P_MINIVOLC, 4, -1 } //65 : Mini surge
 	};
 
 	// foot icon index used in battle
