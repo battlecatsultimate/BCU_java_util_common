@@ -2,6 +2,7 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.battle.StageBasis;
+import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEnemy;
 import common.battle.data.DataEnemy;
 import common.battle.data.MaskEnemy;
@@ -28,7 +29,10 @@ import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
@@ -150,10 +154,10 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 
 	@OnInjected
 	public void onInjected() {
-		CustomEnemy enemy = (CustomEnemy) de;
-		enemy.pack = this;
-
 		if(getCont() instanceof PackData.UserPack) {
+			CustomEnemy enemy = (CustomEnemy) de;
+			enemy.pack = this;
+			Proc proc = enemy.getProc();
 			PackData.UserPack pack = (PackData.UserPack) getCont();
 
 			if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
@@ -170,9 +174,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
-				enemy.getProc().BARRIER.health = enemy.shield;
+				proc.BARRIER.health = enemy.shield;
 				enemy.traits = Trait.convertType(enemy.type);
-				Proc proc = enemy.getProc();
 				if ((enemy.abi & (1 << 18)) != 0) //Seal Immunity
 					proc.IMUSEAL.mult = 100;
 				if ((enemy.abi & (1 << 7)) != 0) //Moving atk Immunity
@@ -183,10 +186,10 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
-				enemy.getProc().DMGCUT.reduction = 100;
-				enemy.getProc().DMGCUT.type.traitIgnore = true;
-				enemy.getProc().DMGCAP.type.traitIgnore = true;
-				enemy.getProc().POISON.type.ignoreMetal = true;
+				proc.DMGCUT.reduction = 100;
+				proc.DMGCUT.type.traitIgnore = true;
+				proc.DMGCAP.type.traitIgnore = true;
+				proc.POISON.type.ignoreMetal = true;
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
@@ -195,24 +198,40 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			}
 
 			if (UserProfile.isOlderPack(pack, "0.6.5.0")) {
-				Proc proc = enemy.getProc();
-
 				if ((enemy.abi & 32) > 0) //base destroyer
 					proc.ATKBASE.mult = 300;
 				enemy.abi = Data.reorderAbi(enemy.abi, 1);
 			}
-			if (UserProfile.isOlderPack(pack, "0.6.6.0")) {
-				if (enemy.getProc().TIME.prob > 0)
-					enemy.getProc().TIME.intensity = enemy.getProc().TIME.time;
 
-				if (enemy.getProc().SUMMON.prob > 0) {
-					enemy.getProc().SUMMON.max_dis = enemy.getProc().SUMMON.dis;
-					enemy.getProc().SUMMON.min_layer = -1;
-					enemy.getProc().SUMMON.max_layer = -1;
+			if (UserProfile.isOlderPack(pack, "0.6.6.0")) {
+				if (proc.TIME.prob > 0)
+					proc.TIME.intensity = proc.TIME.time;
+
+				if (proc.SUMMON.prob > 0) {
+					proc.SUMMON.max_dis = proc.SUMMON.dis;
+					proc.SUMMON.min_layer = -1;
+					proc.SUMMON.max_layer = -1;
 				}
 			}
-			if (enemy.getProc().SUMMON.prob > 0 && (enemy.getProc().SUMMON.id == null || !AbEnemy.class.isAssignableFrom(enemy.getProc().SUMMON.id.cls)))
-				enemy.getProc().SUMMON.form = 1; //There for imports
+
+			if (proc.SUMMON.prob > 0 && (proc.SUMMON.id == null || !AbEnemy.class.isAssignableFrom(proc.SUMMON.id.cls)))
+				proc.SUMMON.form = 1;
+
+			for (AtkDataModel adm : enemy.atks) // TODO: atkdatamodel.onInject cannot reliably get userpack at this time; this is done so procs properly apply on ALL attacks
+				adm.inject(pack);
+			enemy.rep.inject(pack);
+			if (enemy.rev != null)
+				enemy.rev.inject(pack);
+			if (enemy.res != null)
+				enemy.res.inject(pack);
+			if (enemy.cntr != null)
+				enemy.cntr.inject(pack);
+			if (enemy.bur != null)
+				enemy.bur.inject(pack);
+			if (enemy.resu != null)
+				enemy.resu.inject(pack);
+			if (enemy.revi != null)
+				enemy.revi.inject(pack);
 		}
 	}
 

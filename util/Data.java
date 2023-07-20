@@ -4,12 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
-import common.io.json.FieldOrder;
+import common.io.json.*;
 import common.io.json.FieldOrder.Order;
-import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonEncoder;
 import common.pack.Context.ErrType;
 import common.pack.Context.RunExc;
 import common.pack.Context.SupExc;
@@ -391,12 +388,14 @@ public class Data {
 			public int dis;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class WARP extends ProcItem {
 			@Order(0)
 			public int prob;
 			@Order(1)
 			public int time;
 			@Order(2)
+			@JsonField(tag = "dis") // TODO: would like this to not be how it is but eh, until i find a better way
 			public int dis_0;
 			@Order(3)
 			public int dis_1;

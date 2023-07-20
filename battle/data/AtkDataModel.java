@@ -4,6 +4,8 @@ import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonField;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.system.BasedCopable;
 import common.util.Data;
 
@@ -146,4 +148,8 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0) || (ld0 < 0 && ld1 == 0);
 	}
 
+	public void inject(PackData.UserPack pack) {
+		if (UserProfile.isOlderPack(pack, "0.7.4.1") && proc.WARP.prob > 0)
+			proc.WARP.dis_1 = proc.WARP.dis_0;
+	}
 }
