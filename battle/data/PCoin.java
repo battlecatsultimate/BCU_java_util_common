@@ -35,6 +35,7 @@ public class PCoin extends Data {
 
 	private final MaskUnit du;
 	public MaskUnit full = null;
+	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> trait = new ArrayList<>();
 
 	@JsonField(block = true)
