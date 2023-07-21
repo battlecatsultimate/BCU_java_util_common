@@ -217,7 +217,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			if (proc.SUMMON.prob > 0 && (proc.SUMMON.id == null || !AbEnemy.class.isAssignableFrom(proc.SUMMON.id.cls)))
 				proc.SUMMON.form = 1;
 
-			for (AtkDataModel adm : enemy.atks) // TODO: atkdatamodel.onInject cannot reliably get userpack at this time; this is done so procs properly apply on ALL attacks
+			for (AtkDataModel adm : enemy.atks)
 				adm.inject(pack);
 			enemy.rep.inject(pack);
 			if (enemy.rev != null)

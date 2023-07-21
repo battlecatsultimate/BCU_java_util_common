@@ -148,7 +148,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		return ld0 * ld1 < 0 || (ld0 == 0 && ld1 > 0) || (ld0 < 0 && ld1 == 0);
 	}
 
-	public void inject(PackData.UserPack pack) {
+	public void inject(PackData.UserPack pack) { // // TODO: atkdatamodel.onInject cannot reliably get userpack at this time; this is done so procs properly apply on ALL attacks
 		if (UserProfile.isOlderPack(pack, "0.7.4.1") && proc.WARP.prob > 0)
 			proc.WARP.dis_1 = proc.WARP.dis_0;
 	}

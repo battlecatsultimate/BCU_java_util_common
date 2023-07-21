@@ -1270,8 +1270,9 @@ public class Data {
 	// 2 for Base stat
 	// 3 for Immune
 	// 4 for Trait
+	// TODO: fix copying immunity talent
 	public static final int[][] PC_CORRES = new int[][] { // NP value table { type, proc, mod count, connect to other proc }
-			{ -1, 0, 0 }, // 0:
+			{ -1, 0, 0, -1 }, // 0:
 			{ 0, P_WEAK, 3, -1 }, // 1: weak, reversed health or relic-weak
 			{ 0, P_STOP, 2, -1 }, // 2: stop
 			{ 0, P_SLOW, 2, -1 }, // 3: slow
@@ -1280,7 +1281,7 @@ public class Data {
 			{ 1, AB_RESIST, 0, -1 }, // 6: resistant
 			{ 1, AB_MASSIVE, 0, -1 }, // 7: massive damage
 			{ 0, P_KB, 1, -1 }, // 8: kb
-			{ 0, P_WARP, 4, -1 }, // 9:
+			{ 0, P_WARP, 4, -1 }, // 9: warp
 			{ 0, P_STRONG, 2, -1 }, // 10: berserker, reversed health
 			{ 0, P_LETHAL, 1, -1 }, // 11: lethal
 			{ 0, P_ATKBASE, 0, -1 }, // 12: Base Destroyer

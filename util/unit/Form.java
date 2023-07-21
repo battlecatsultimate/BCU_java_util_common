@@ -211,12 +211,31 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 						form.getProc().SUMMON.max_layer = -1;
 					}
 				}
+				if (UserProfile.isOlderPack(pack, "0.7.4.1") && form.pcoin != null) {
+					form.pcoin.info.forEach(i -> i[12] = -1);
+				}
 
 				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form <= 0) {
 					form.getProc().SUMMON.form = 1;
 					form.getProc().SUMMON.mult = 1;
 					form.getProc().SUMMON.type.fix_buff = true;
 				}
+
+				for (AtkDataModel adm : form.atks)
+					adm.inject(pack);
+				form.rep.inject(pack);
+				if (form.rev != null)
+					form.rev.inject(pack);
+				if (form.res != null)
+					form.res.inject(pack);
+				if (form.cntr != null)
+					form.cntr.inject(pack);
+				if (form.bur != null)
+					form.bur.inject(pack);
+				if (form.resu != null)
+					form.resu.inject(pack);
+				if (form.revi != null)
+					form.revi.inject(pack);
 			}
 		}
 		if (form.getPCoin() != null)
