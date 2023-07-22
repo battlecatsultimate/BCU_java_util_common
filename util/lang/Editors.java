@@ -547,6 +547,18 @@ public class Editors {
 			}
 		}));
 
+		map().put("MINIVOLC", new EditControl<>(Proc.MINIVOLC.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.dis_0 = t.dis_1 = t.time = t.mult = 0;
+			} else {
+				t.time = Math.max(1, t.time / Data.VOLC_ITV) * Data.VOLC_ITV;
+
+				if(t.mult == 0)
+					t.mult = 20;
+			}
+		}));
+
 		map().put("ARMOR", new EditControl<>(Proc.ARMOR.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 			if (t.prob == 0) {
