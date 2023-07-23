@@ -1702,7 +1702,7 @@ public abstract class Entity extends AbEntity {
 
 					if (counter.type.procType == 1 || counter.type.procType == 3)
 						for (String s0 : par)
-							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE")) || (s0.equals("MINIVOLC")) {
+							if (s0.equals("VOLC") || s0.equals("WAVE") || s0.equals("MINIWAVE") || s0.equals("MINIVOLC")) {
 								if (isWave && counter.type.counterWave == 2)
 									reflectProc.get(s0).set(atk.getProc().get(s0));
 							} else
