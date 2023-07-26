@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 public class WebFileIO {
 
-	public static final int BUFFER = 1 << 12, SMOOTH = 1 << 16, FAST = 1 << 18, MAX = 1 << 20;
+	public static final int BUFFER = 1 << 12, CHUNK = 1 << 20, MAX = 1 << 20;
 
 	@StaticPermitted(StaticPermitted.Type.TEMP)
 	private static HttpTransport transport;
@@ -39,16 +39,16 @@ public class WebFileIO {
 	}
 
 	public static void download(String url, File file) throws Exception {
-		download(FAST, url, file, null, false);
+		download(CHUNK, url, file, null, false);
 	}
 
 	public static void download(String url, File file, Consumer<Double> c, boolean direct) throws Exception {
-		download(SMOOTH, url, file, c, direct);
+		download(CHUNK, url, file, c, direct);
 	}
 
 	public static JsonElement read(String url) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		impl(FAST, url, out, null, 5000);
+		impl(CHUNK, url, out, null, 5000);
 		return JsonParser.parseReader(
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
@@ -90,7 +90,7 @@ public class WebFileIO {
 			request.setEncoding(null);
 		});
 
-		if(size == FAST) {
+		if(size == CHUNK) {
 			downloader.setDirectDownloadEnabled(false);
 		}
 
