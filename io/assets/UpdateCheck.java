@@ -1,27 +1,20 @@
 package common.io.assets;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import com.google.gson.JsonElement;
-
 import common.CommonStatic;
 import common.io.WebFileIO;
 import common.io.assets.UpdateCheck.UpdateJson.AssetJson;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonDecoder;
 import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.UserProfile;
-import common.io.json.JsonClass.NoTag;
 import common.util.Data;
+
+import java.io.File;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class UpdateCheck {
 
@@ -149,7 +142,7 @@ public class UpdateCheck {
 			req.removeIf(id -> local.contains("asset_" + id));
 		}
 		if (json == null && req.size() > 0)
-			throw new Exception("missing required libraries: " + req + ", internet connection required");
+			throw new Exception("internet connection required: missing required libraries: " + req);
 		List<Downloader> set = new ArrayList<>();
 		if (json == null)
 			return set;
