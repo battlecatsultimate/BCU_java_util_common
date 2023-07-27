@@ -150,8 +150,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	@OnInjected
 	public void onInjected() {
-		CustomUnit form = (CustomUnit) du;
-		form.pack = this;
+		CustomUnit data = (CustomUnit) du;
+		data.pack = this;
 
 		if((unit != null || uid != null)) {
 			Unit u = unit == null ? uid.get() : unit;
@@ -160,31 +160,31 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
 
 				if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
-					form.type = Data.reorderTrait(form.type);
+					data.type = Data.reorderTrait(data.type);
 				}
 
-				if (UserProfile.isOlderPack(pack, "0.5.2.0") && form.tba != 0) {
-					form.tba += form.getPost() + 1;
+				if (UserProfile.isOlderPack(pack, "0.5.2.0") && data.tba != 0) {
+					data.tba += data.getPost() + 1;
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
 					MaModel model = anim.loader.getMM();
-					form.limit = CommonStatic.customFormMinPos(model);
-					form.getProc().BARRIER.health = form.shield;
-					form.traits = Trait.convertType(form.type);
-					Proc proc = form.getProc();
-					if ((form.abi & (1 << 18)) != 0) //Seal Immunity
+					data.limit = CommonStatic.customFormMinPos(model);
+					data.getProc().BARRIER.health = data.shield;
+					data.traits = Trait.convertType(data.type);
+					Proc proc = data.getProc();
+					if ((data.abi & (1 << 18)) != 0) //Seal Immunity
 						proc.IMUSEAL.mult = 100;
-					if ((form.abi & (1 << 7)) != 0) //Moving atk Immunity
+					if ((data.abi & (1 << 7)) != 0) //Moving atk Immunity
 						proc.IMUMOVING.mult = 100;
-					if ((form.abi & (1 << 12)) != 0) //Poison Immunity
+					if ((data.abi & (1 << 12)) != 0) //Poison Immunity
 						proc.IMUPOI.mult = 100;
-					form.abi = Data.reorderAbi(form.abi, 0);
+					data.abi = Data.reorderAbi(data.abi, 0);
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
-					form.getProc().DMGCUT.reduction = 100;
-					form.getProc().POISON.type.ignoreMetal = true;
+					data.getProc().DMGCUT.reduction = 100;
+					data.getProc().POISON.type.ignoreMetal = true;
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
@@ -193,53 +193,55 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.5.0")) {
-					Proc proc = form.getProc();
+					Proc proc = data.getProc();
 
-					if ((form.abi & 16) > 0) //2x money
+					if ((data.abi & 16) > 0) //2x money
 						proc.BOUNTY.mult = 100;
-					if ((form.abi & 32) > 0) //base destroyer
+					if ((data.abi & 32) > 0) //base destroyer
 						proc.ATKBASE.mult = 300;
-					form.abi = Data.reorderAbi(form.abi, 1);
+					data.abi = Data.reorderAbi(data.abi, 1);
 				}
 				if (UserProfile.isOlderPack(pack, "0.6.6.0")) {
-					if (form.getProc().TIME.prob > 0)
-						form.getProc().TIME.intensity = form.getProc().TIME.time;
+					if (data.getProc().TIME.prob > 0)
+						data.getProc().TIME.intensity = data.getProc().TIME.time;
 
-					if (form.getProc().SUMMON.prob > 0) {
-						form.getProc().SUMMON.max_dis = form.getProc().SUMMON.dis;
-						form.getProc().SUMMON.min_layer = -1;
-						form.getProc().SUMMON.max_layer = -1;
+					if (data.getProc().SUMMON.prob > 0) {
+						data.getProc().SUMMON.max_dis = data.getProc().SUMMON.dis;
+						data.getProc().SUMMON.min_layer = -1;
+						data.getProc().SUMMON.max_layer = -1;
 					}
 				}
-				if (UserProfile.isOlderPack(pack, "0.7.4.1") && form.pcoin != null) {
-					form.pcoin.info.forEach(i -> i[12] = -1);
+				if (UserProfile.isOlderPack(pack, "0.7.4.1") && data.pcoin != null) {
+					data.pcoin.info.forEach(i -> i[12] = -1);
 				}
 
-				if (form.getProc().SUMMON.prob > 0 && form.getProc().SUMMON.form <= 0) {
-					form.getProc().SUMMON.form = 1;
-					form.getProc().SUMMON.mult = 1;
-					form.getProc().SUMMON.type.fix_buff = true;
+				if (data.getProc().SUMMON.prob > 0 && data.getProc().SUMMON.form <= 0) {
+					data.getProc().SUMMON.form = 1;
+					data.getProc().SUMMON.mult = 1;
+					data.getProc().SUMMON.type.fix_buff = true;
 				}
 
-				for (AtkDataModel adm : form.atks)
+				for (AtkDataModel adm : data.atks)
 					adm.inject(pack);
-				form.rep.inject(pack);
-				if (form.rev != null)
-					form.rev.inject(pack);
-				if (form.res != null)
-					form.res.inject(pack);
-				if (form.cntr != null)
-					form.cntr.inject(pack);
-				if (form.bur != null)
-					form.bur.inject(pack);
-				if (form.resu != null)
-					form.resu.inject(pack);
-				if (form.revi != null)
-					form.revi.inject(pack);
+				data.rep.inject(pack);
+				if (data.rev != null)
+					data.rev.inject(pack);
+				if (data.res != null)
+					data.res.inject(pack);
+				if (data.cntr != null)
+					data.cntr.inject(pack);
+				if (data.bur != null)
+					data.bur.inject(pack);
+				if (data.resu != null)
+					data.resu.inject(pack);
+				if (data.revi != null)
+					data.revi.inject(pack);
 			}
 		}
-		if (form.getPCoin() != null)
-			form.pcoin.update();
+		if (data.getPCoin() != null) {
+			data.pcoin.verify();
+			data.pcoin.update();
+		}
 	}
 
 	/**
