@@ -575,8 +575,7 @@ public class Treasure extends Data {
 	 * get money increase rate
 	 */
 	protected int getMonInc(int lv) {
-		double output = (0.15 + 0.1 * tech[LV_WORK]) * (1 + (lv - 1) * 0.1) + trea[T_WORK] * 0.01;
-		return (int) Math.round(output * 100);
+		return (int) ((15 + 10 * tech[LV_WORK]) * (1 + (lv - 1) * 0.1) + trea[T_WORK]);
 	}
 
 	/**
