@@ -15,7 +15,9 @@ import common.util.pack.EffAnim.DefEff;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
-import common.util.unit.*;
+import common.util.unit.EForm;
+import common.util.unit.EneRand;
+import common.util.unit.Form;
 
 import java.util.*;
 
@@ -90,15 +92,8 @@ public class StageBasis extends BattleObj {
 		st = est.s;
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
-		bg = Identifier.getOr(st.bg, Background.class);
 		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
-		if (bg.effect != -1) {
-			if(bg.effect == -bg.id.id && BackgroundEffect.mixture.containsKey(bg.id.id)) {
-				bgEffect = BackgroundEffect.mixture.get(bg.id.id);
-			} else if(bg.effect >= 0) {
-				bgEffect = CommonStatic.getBCAssets().bgEffects.get(bg.effect);
-			}
-		}
+		setBackground(st.bg);
 		EEnemy ee = est.base(this);
 		if (ee != null) {
 			ebase = ee;
@@ -692,7 +687,7 @@ public class StageBasis extends BattleObj {
 
 	private void updateTheme() {
 		if (theme != null) {
-			bg = Identifier.getOr(theme, Background.class);
+			setBackground(theme);
 			if (themeType != null && themeType.kill) {
 				le.removeIf(e -> (e.getAbi() & AB_THEMEI) == 0);
 				lw.clear();
@@ -721,5 +716,21 @@ public class StageBasis extends BattleObj {
 			return 0;
 
 		return (1 - 2 * ((shake[SHAKE_DURATION] - shakeDuration) % 2)) * (1.0 * (shake[SHAKE_END] - shake[SHAKE_INITIAL]) / (shake[SHAKE_DURATION] - 1) * (shake[SHAKE_DURATION] - shakeDuration) + shake[SHAKE_INITIAL]) / SHAKE_STABILIZER;
+	}
+
+	private void setBackground(Identifier<Background> id) {
+		Background newBg = Identifier.getOr(id, Background.class);
+		if (bg != null && bg.id.equals(newBg.id))
+			return;
+		if ((bg != null && bg.effect != newBg.effect) || (bg == null && newBg.effect != -1)) {
+			bgEffectInitialized = false;
+			if (newBg.effect == -1)
+				bgEffect = null;
+			else if (newBg.effect == -newBg.id.id && BackgroundEffect.mixture.containsKey(newBg.id.id))
+				bgEffect = BackgroundEffect.mixture.get(newBg.id.id);
+			else if (newBg.effect >= 0)
+				bgEffect = CommonStatic.getBCAssets().bgEffects.get(newBg.effect);
+		}
+		bg = newBg;
 	}
 }
