@@ -1793,8 +1793,6 @@ public abstract class Entity extends AbEntity {
 		double f = getFruit(atk.trait, atk.dire, 1);
 		double time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2 / 3;
 		double dist = 1 + f * 0.1;
-		if (atk.trait.contains(BCTraits.get(BCTraits.size() - 1)) || atk.canon != -2)
-			dist = time = 1;
 		if (atk.getProc().STOP.time != 0 || atk.getProc().STOP.prob > 0) {
 			int val = (int) (atk.getProc().STOP.time * time);
 			int rst = getProc().IMUSTOP.mult;
