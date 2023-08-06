@@ -45,18 +45,13 @@ public class AttackVolcano extends AttackAb {
 			volcTime--;
 		}
 
-		if(attacker != null) {
-			if(attacker.status[P_WEAK][0] != 0) {
-				atk = rawAtk * attacker.status[P_WEAK][1] / 100;
-			}
-
-			if(attacker.status[P_STRONG][0] != 0) {
+		if (attacker != null) {
+			if (attacker.status[P_STRONG][0] != 0)
 				atk += rawAtk * attacker.status[P_STRONG][0] / 100;
-			}
-
-			if(attacker.dire == -1 && attacker.basis.canon.deco == DECO_BASE_WATER) {
+			if (attacker.status[P_WEAK][0] != 0)
+				atk = rawAtk * attacker.status[P_WEAK][1] / 100;
+			if (attacker.dire == -1 && attacker.basis.canon.deco == DECO_BASE_WATER)
 				atk = (int) (atk * attacker.basis.b.t().getDecorationMagnification(attacker.basis.canon.deco, Data.DECO_SURGE));
-			}
 		}
 
 		for (AbEntity e : capt) {

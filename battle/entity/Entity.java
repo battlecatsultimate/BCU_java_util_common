@@ -1736,11 +1736,10 @@ public abstract class Entity extends AbEntity {
 							}
 						}
 					}
-					if (e.status[P_WEAK][0] > 0)
-						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
 					if (e.status[P_STRONG][0] != 0)
 						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
-
+					if (e.status[P_WEAK][0] > 0)
+						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
 					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
 					if (counter.type.areaAttack)
 						as.capture();
