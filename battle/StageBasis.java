@@ -408,9 +408,8 @@ public class StageBasis extends BattleObj {
 			return false;
 		}
 		if (elu.price[i][j] > money) {
-			if(manual) {
+			if (manual)
 				CommonStatic.setSE(SE_SPEND_FAIL);
-			}
 			return false;
 		}
 		if (locks[i][j] || manual) {
@@ -451,9 +450,16 @@ public class StageBasis extends BattleObj {
 	 */
 	protected void update() {
 		boolean active = ebase.health > 0 && ubase.health > 0;
-		if(midH != -1 && bgEffect != null && !bgEffectInitialized) {
+
+		if (midH != -1 && bgEffect != null && !bgEffectInitialized) {
 			bgEffect.initialize(st.len, battleHeight, midH, bg);
 			bgEffectInitialized = true;
+		}
+
+		if (buttonDelay > 0 && --buttonDelay == 0) {
+			act_spawn(selectedUnit[0], selectedUnit[1], true);
+			selectedUnit[0] = -1;
+			selectedUnit[1] = -1;
 		}
 
 		tempe.removeIf(e -> {
@@ -654,17 +660,6 @@ public class StageBasis extends BattleObj {
 				lineupChanging = false;
 			} else if(changeFrame == changeDivision-1) {
 				frontLineup = 1 - frontLineup;
-			}
-		}
-
-		if(buttonDelay > 0) {
-			buttonDelay--;
-
-			if(buttonDelay == 0) {
-				act_spawn(selectedUnit[0], selectedUnit[1], true);
-
-				selectedUnit[0] = -1;
-				selectedUnit[1] = -1;
 			}
 		}
 	}
