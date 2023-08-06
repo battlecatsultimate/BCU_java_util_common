@@ -103,7 +103,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 
 	@Override
 	public String toString() {
-		return id.toString() + " - " + getName();
+		return Data.trio(id.id) + " - " + getName();
 	}
 
 	@Override
