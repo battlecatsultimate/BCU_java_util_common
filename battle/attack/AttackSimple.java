@@ -102,9 +102,9 @@ public class AttackSimple extends AttackAb {
 		//Thus we keep real "raw" attack, and change value such as weaken/strengthen here
 		if (attacker != null) {
 			if (attacker.status[P_STRONG][0] != 0)
-				atk += rawAtk * attacker.status[P_STRONG][0] / 100;
+				atk += atk * attacker.status[P_STRONG][0] / 100;
 			if (attacker.status[P_WEAK][0] != 0)
-				atk = rawAtk * attacker.status[P_WEAK][1] / 100;
+				atk = atk * attacker.status[P_WEAK][1] / 100;
 		}
 
 		int layer = model.getLayer();
