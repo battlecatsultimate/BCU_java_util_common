@@ -110,6 +110,7 @@ public class Sniper extends AtkModelAb {
 		// find enemy pos
 		if(preTime == 0 && bulletX == 0) {
 			pos = -1;
+
 			for (Entity e : b.le)
 				if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0) {
 					target = e;
@@ -118,7 +119,9 @@ public class Sniper extends AtkModelAb {
 				}
 		}
 
-		getAngle();
+		if (enabled) {
+			getAngle();
+		}
 
 		if (preTime > 0) {
 			preTime--;
