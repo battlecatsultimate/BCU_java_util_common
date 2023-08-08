@@ -64,6 +64,16 @@ public class Sniper extends AtkModelAb {
 	}
 
 	private void getAngle() {
+		if (pos == -1) {
+			if(preTime == 0 && bulletX == 0) {
+				bulletAngle = 0;
+			}
+
+			targetAngle = 0;
+
+			return;
+		}
+
 		int Cx = b.st.len * 4 - 3200;
 		int Cy = 4400;
 
