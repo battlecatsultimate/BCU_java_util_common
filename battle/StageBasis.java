@@ -427,6 +427,11 @@ public class StageBasis extends BattleObj {
 			elu.get(i, j);
 			EUnit eu = f.getEntity(this, new int[] {i, j});
 			eu.added(-1, st.len - 700);
+
+			eu.preUpdate();
+			eu.update();
+			eu.postUpdate();
+
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 			money -= elu.price[i][j];
@@ -494,8 +499,14 @@ public class StageBasis extends BattleObj {
 			int allow = st.max - entityCount(1);
 			if (respawnTime <= 0 && active && allow > 0) {
 				EEnemy e = est.allow();
+
 				if (e != null) {
 					e.added(1, e.mark >= 1 ? boss_spawn : 700.0);
+
+					e.preUpdate();
+					e.update();
+					e.postUpdate();
+
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.layer));
 
