@@ -1555,7 +1555,7 @@ public class Data {
 	public static final byte[] NYPRE = new byte[] { 18, 2, -1, 28, 37, 18, 10, 2 };// not sure, 10f for bblast
 	public static final short[] NYRAN = new short[] { 710, 600, -1, 500, 500, 710, 100, 600 };// not sure
 	public static final short SNIPER_CD = 300;// not sure
-	public static final byte SNIPER_PRE = 8;// not sure
+	public static final byte SNIPER_PRE = 10;// not sure
 	public static final float SNIPER_POS = 442.5f;
 	public static final byte REVIVE_SHOW_TIME = 16;
 
