@@ -1778,9 +1778,8 @@ public abstract class Entity extends AbEntity {
 			} else {
 				double poiDmg = atk.getProc().POIATK.mult * (100 - rst) / 10000.0;
 
-				if(basis.canon.deco == DECO_BASE_BARRIER) {
+				if (dire == -1 && basis.canon.deco == DECO_BASE_BARRIER)
 					poiDmg *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_TOXIC);
-				}
 
 				damage += maxH * poiDmg;
 				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
