@@ -102,20 +102,8 @@ public class Sniper extends AtkModelAb {
 			canDo = false;
 		}
 
-		if (enabled && coolTime > 0)
+		if (enabled && coolTime > 0 && preTime == 0 && atkTime == 0)
 			coolTime--;
-
-		if (coolTime == 0 && enabled && pos > 0 && canDo) {
-			if(Math.abs(targetAngle - cannonAngle) < 1) {
-				coolTime = SNIPER_CD;
-				preTime = SNIPER_PRE;
-				atkTime = atka.len();
-				atka.setup();
-				anim.setup();
-			} else {
-				coolTime++;
-			}
-		}
 
 		// find enemy pos
 		if(preTime == 0) {
@@ -133,8 +121,41 @@ public class Sniper extends AtkModelAb {
 			getAngle();
 		}
 
+		if(bulletX > 0) {
+			cannonAngle = targetAngle;
+		} else {
+			if(cannonAngle != targetAngle) {
+				if(cannonAngle < targetAngle) {
+					cannonAngle += 1;
+
+					if(cannonAngle > targetAngle) {
+						cannonAngle = targetAngle;
+					}
+				} else {
+					cannonAngle -= 1;
+
+					if(cannonAngle < targetAngle) {
+						cannonAngle = targetAngle;
+					}
+				}
+			}
+		}
+
+		if (coolTime == 0 && enabled && pos > 0 && canDo) {
+			if(Math.abs(targetAngle - cannonAngle) < 1) {
+				coolTime = SNIPER_CD + 1;
+				preTime = SNIPER_PRE;
+				atkTime = atka.len();
+				atka.setup();
+				anim.setup();
+			} else {
+				coolTime++;
+			}
+		}
+
 		if (preTime > 0) {
 			preTime--;
+
 			if (preTime == 0) {
 				//fire bullet
 				bulletX = b.ubase.pos + SNIPER_POS + 375 * Math.cos(Math.toRadians((int) bulletAngle));
@@ -175,26 +196,6 @@ public class Sniper extends AtkModelAb {
 			atka.update(false);
 		} else {
 			anim.update(true);
-		}
-
-		if(bulletX > 0) {
-			cannonAngle = targetAngle;
-		} else {
-			if(cannonAngle != targetAngle) {
-				if(cannonAngle < targetAngle) {
-					cannonAngle += 1;
-
-					if(cannonAngle > targetAngle) {
-						cannonAngle = targetAngle;
-					}
-				} else {
-					cannonAngle -= 1;
-
-					if(cannonAngle < targetAngle) {
-						cannonAngle = targetAngle;
-					}
-				}
-			}
 		}
 
 		if(bulletX > 0) {
