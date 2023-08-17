@@ -1533,8 +1533,8 @@ public class Data {
 	public static final byte[] KB_TIME = new byte[] { 11, 23, 47, 11, -1 };
 	public static final short[] KB_DIS = new short[] { 165, 345, 705, 55, -1 };
 
-	public static final byte W_E_INI = -33;
-	public static final byte W_U_INI = -67;
+	public static final double W_E_INI = -32.75;
+	public static final double W_U_INI = -67.5;
 	public static final short W_PROG = 200;
 	public static final short W_E_WID = 500;
 	public static final short W_U_WID = 400;
