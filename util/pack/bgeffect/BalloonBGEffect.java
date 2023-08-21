@@ -1,5 +1,6 @@
 package common.util.pack.bgeffect;
 
+import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -19,7 +20,7 @@ public class BalloonBGEffect extends BackgroundEffect {
 
     private final List<P> balloonPosition = new ArrayList<>();
     private final List<Boolean> isBigBalloon = new ArrayList<>();
-    private final List<Byte> speed = new ArrayList<>();
+    private final List<Float> speed = new ArrayList<>();
     private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
@@ -114,7 +115,12 @@ public class BalloonBGEffect extends BackgroundEffect {
 
             balloonPosition.add(P.newP(r.nextInt(w + battleOffset + 2 * revertP(bw)) - revertP(bw), r.nextInt(BGHeight) * 3));
             isBigBalloon.add(isBig);
-            speed.add((byte) Data.BG_EFFECT_BALLOON_SPEED);
+
+            if (CommonStatic.getConfig().performanceMode) {
+                speed.add(Data.BG_EFFECT_BALLOON_SPEED / 2f);
+            } else {
+                speed.add(Data.BG_EFFECT_BALLOON_SPEED * 1f);
+            }
         }
     }
 }

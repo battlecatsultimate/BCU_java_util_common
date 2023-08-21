@@ -105,6 +105,11 @@ public class RainBGEffect extends BackgroundEffect {
     }
 
     @Override
+    public void updateAnimation(int w, double h, double midH) {
+        //Do nothing
+    }
+
+    @Override
     public void initialize(int w, double h, double midH, Background bg) {
 
     }

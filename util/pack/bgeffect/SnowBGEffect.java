@@ -1,5 +1,6 @@
 package common.util.pack.bgeffect;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -20,7 +21,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
     private final List<P> snowPosition = new ArrayList<>();
     private final List<P> initPos = new ArrayList<>();
-    private final List<Byte> speed = new ArrayList<>();
+    private final List<Float> speed = new ArrayList<>();
     private final List<Double> slope = new ArrayList<>();
     private final Random r = new Random();
 
@@ -82,7 +83,11 @@ public class SnowBGEffect extends BackgroundEffect{
                 double angle = Math.toRadians(r.nextInt(75));
 
                 //-0.5angle + 1 is stabilizer
-                speed.set(capture.get(i), (byte) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+                if (CommonStatic.getConfig().performanceMode) {
+                    speed.set(capture.get(i), (float) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)) / 2f);
+                } else {
+                    speed.set(capture.get(i), (float) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+                }
                 slope.set(capture.get(i), Math.tan(-angle));
             }
         }
@@ -108,7 +113,12 @@ public class SnowBGEffect extends BackgroundEffect{
             double angle = Math.toRadians(r.nextInt(75));
 
             //-0.5angle + 1 is stabilizer
-            speed.add((byte) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+            if (CommonStatic.getConfig().performanceMode) {
+                speed.add((float) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)) / 2f);
+            } else {
+                speed.add((float) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
+            }
+
             slope.add(Math.tan(-angle));
         }
     }

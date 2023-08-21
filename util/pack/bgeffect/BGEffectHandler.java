@@ -1,5 +1,6 @@
 package common.util.pack.bgeffect;
 
+import common.CommonStatic;
 import common.pack.UserProfile;
 import common.system.BattleRange;
 import common.system.P;
@@ -341,16 +342,30 @@ public class BGEffectHandler {
                 } else {
                     animation.get(i).update(false);
 
-                    if(v != null && moveAngle != null) {
-                        position[i].x += v[i] * Math.cos(moveAngle[i]);
-                        position[i].y += v[i] * Math.sin(moveAngle[i]);
-                    } else if(velocity != null) {
-                        position[i].x += velocity[i].x;
-                        position[i].y += velocity[i].y;
-                    }
+                    if (CommonStatic.getConfig().performanceMode) {
+                        if(v != null && moveAngle != null) {
+                            position[i].x += v[i] * Math.cos(moveAngle[i]) / 2.0;
+                            position[i].y += v[i] * Math.sin(moveAngle[i]) / 2.0;
+                        } else if(velocity != null) {
+                            position[i].x += velocity[i].x / 2.0;
+                            position[i].y += velocity[i].y / 2.0;
+                        }
 
-                    if(angleVelocity != null) {
-                        angle[i] += angleVelocity[i];
+                        if(angleVelocity != null) {
+                            angle[i] += angleVelocity[i] / 2.0;
+                        }
+                    } else {
+                        if(v != null && moveAngle != null) {
+                            position[i].x += v[i] * Math.cos(moveAngle[i]);
+                            position[i].y += v[i] * Math.sin(moveAngle[i]);
+                        } else if(velocity != null) {
+                            position[i].x += velocity[i].x;
+                            position[i].y += velocity[i].y;
+                        }
+
+                        if(angleVelocity != null) {
+                            angle[i] += angleVelocity[i];
+                        }
                     }
 
                     if(lifeTime != null) {
@@ -391,6 +406,40 @@ public class BGEffectHandler {
                         reInitialize(ind, w, h, midH, time);
                     } else {
                         reInitialize(ind, w, h, midH, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    public void updateAnimation() {
+        for(int i = 0; i < count; i++) {
+            if (wait == null || wait[i] == 0) {
+                animation.get(i).update(false);
+
+                if (CommonStatic.getConfig().performanceMode) {
+                    if(v != null && moveAngle != null) {
+                        position[i].x += v[i] * Math.cos(moveAngle[i]) / 2.0;
+                        position[i].y += v[i] * Math.sin(moveAngle[i]) / 2.0;
+                    } else if(velocity != null) {
+                        position[i].x += velocity[i].x / 2.0;
+                        position[i].y += velocity[i].y / 2.0;
+                    }
+
+                    if(angleVelocity != null) {
+                        angle[i] += angleVelocity[i] / 2.0;
+                    }
+                } else {
+                    if(v != null && moveAngle != null) {
+                        position[i].x += v[i] * Math.cos(moveAngle[i]);
+                        position[i].y += v[i] * Math.sin(moveAngle[i]);
+                    } else if(velocity != null) {
+                        position[i].x += velocity[i].x;
+                        position[i].y += velocity[i].y;
+                    }
+
+                    if(angleVelocity != null) {
+                        angle[i] += angleVelocity[i];
                     }
                 }
             }

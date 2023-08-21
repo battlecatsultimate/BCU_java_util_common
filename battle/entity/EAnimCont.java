@@ -41,5 +41,4 @@ public class EAnimCont extends BattleObj {
 	public void update() {
 		anim.update(false);
 	}
-
 }

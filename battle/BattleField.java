@@ -5,6 +5,7 @@ import common.util.stage.EStage;
 public abstract class BattleField {
 
 	public StageBasis sb;
+	private boolean battleUpdate = true;
 
 	protected BattleField(EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelay) {
 		sb = new StageBasis(this, stage, bas, ints, seed, buttonDelay);
@@ -15,9 +16,17 @@ public abstract class BattleField {
 	}
 
 	public void update() {
-		sb.time++;
-		actions();
-		sb.update();
+		if (battleUpdate) {
+			battleUpdate = false;
+
+			sb.time++;
+			actions();
+			sb.update();
+		} else {
+			battleUpdate = true;
+
+			sb.updateAnimation();
+		}
 	}
 
 	protected boolean act_can() {

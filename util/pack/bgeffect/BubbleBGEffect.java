@@ -1,5 +1,6 @@
 package common.util.pack.bgeffect;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -60,7 +61,11 @@ public class BubbleBGEffect extends BackgroundEffect {
             if(bubblePosition.get(i).y < -bh) {
                 capture.add(i);
             } else {
-                bubblePosition.get(i).y -= (BGHeight * 3.0 + bh) / Data.BG_EFFECT_BUBBLE_TIME;
+                if (CommonStatic.getConfig().performanceMode) {
+                    bubblePosition.get(i).y -= (BGHeight * 3.0 + bh) / Data.BG_EFFECT_BUBBLE_TIME / 2.0;
+                } else {
+                    bubblePosition.get(i).y -= (BGHeight * 3.0 + bh) / Data.BG_EFFECT_BUBBLE_TIME;
+                }
             }
         }
 
