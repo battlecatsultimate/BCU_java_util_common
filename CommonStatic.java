@@ -176,6 +176,11 @@ public class CommonStatic {
 		 * Perform realistic BC levelings
 		 */
 		public boolean realLevel = false;
+
+		/**
+		 * 60 fps mode if this is true
+		 */
+		public boolean performanceMode = true;
 	}
 
 	public interface EditLink {

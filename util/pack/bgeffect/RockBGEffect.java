@@ -1,5 +1,6 @@
 package common.util.pack.bgeffect;
 
+import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -122,7 +123,13 @@ public class RockBGEffect extends BackgroundEffect {
                 angle.set(capture.get(i), r.nextDouble() * Math.PI);
                 layer.set(capture.get(i), l);
                 size.set(capture.get(i), siz);
-                speed.set(capture.get(i), Data.BG_EFFECT_ROCK_SPEED[l] - r.nextDouble() * 0.5);
+
+                if (CommonStatic.getConfig().performanceMode) {
+                    speed.set(capture.get(i), (Data.BG_EFFECT_ROCK_SPEED[l] - r.nextDouble() * 0.5) / 2.0);
+                } else {
+                    speed.set(capture.get(i), Data.BG_EFFECT_ROCK_SPEED[l] - r.nextDouble() * 0.5);
+                }
+
                 opacity.set(capture.get(i), l == 0 ? 0 : 255);
             }
         }
@@ -172,7 +179,13 @@ public class RockBGEffect extends BackgroundEffect {
             int rw = (int) ((isR ? rock.getWidth() : segment.getWidth()) * siz);
 
             rockPosition.add(P.newP(r.nextInt(w + battleOffset + 2 * rw) - rw, r.nextInt(l == 0 ? 1020 + Data.BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET : BGHeight * 3)));
-            speed.add(Data.BG_EFFECT_ROCK_SPEED[l] - r.nextDouble() * 0.5);
+
+            if (CommonStatic.getConfig().performanceMode) {
+                speed.add((Data.BG_EFFECT_ROCK_SPEED[l] - r.nextDouble() * 0.5) / 2.0);
+            } else {
+                speed.add(Data.BG_EFFECT_ROCK_SPEED[l] - r.nextDouble() * 0.5);
+            }
+
             isRock.add(isR);
             angle.add(r.nextDouble() * Math.PI);
             layer.add(l);

@@ -253,6 +253,24 @@ public class Cannon extends AtkModelAb {
         }
     }
 
+    public void updateAnimation() {
+        if (anim != null) {
+            if (id == 7) {
+                if (anim.ind() < 32) {
+                    anim.update(false);
+                } else {
+                    anim = null;
+                }
+            } else {
+                anim.update(false);
+            }
+        }
+        if (atka != null)
+            atka.update(false);
+        if (exta != null)
+            exta.update(false);
+    }
+
     private double getBreakerSpawnPoint(double pos, double range) {
         return pos + Math.ceil(range * 4 / 5) / 4.0;
     }

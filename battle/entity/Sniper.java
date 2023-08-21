@@ -139,6 +139,8 @@ public class Sniper extends AtkModelAb {
 				//fire bullet
 				bulletX = b.ubase.pos + SNIPER_POS + 375 * Math.cos(Math.toRadians((int) bulletAngle));
 
+				System.out.println(bulletX);
+
 				atka.ent[6].alter(12, 1000);
 				anim.ent[6].alter(12, 1000);
 			}
@@ -146,6 +148,8 @@ public class Sniper extends AtkModelAb {
 
 		if (bulletX != 0 && bulletX > pos) {
 			bulletX = (int) (bulletX * 4 - 1500 * Math.cos(Math.toRadians((int) bulletAngle))) / 4.0;
+
+			System.out.println(bulletX);
 
 			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
 			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
@@ -195,6 +199,31 @@ public class Sniper extends AtkModelAb {
 					}
 				}
 			}
+		}
+
+		if(bulletX > 0) {
+			anim.ent[6].alter(12, 1000);
+			anim.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
+		} else {
+			anim.ent[5].alter(11, (int) Math.round(cannonAngle * 10));
+		}
+
+		atka.ent[5].alter(11, (int) Math.round(bulletAngle * 10));
+
+		anim.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+		atka.ent[1].alter(5, - (int) Math.round((989.5 / 1.5 - 25 * Math.sin(Math.PI * b.time / 30) - height) * CommonStatic.BattleConst.ratio));
+
+		atka.ent[6].alter(9, 900);
+		anim.ent[6].alter(9, 900);
+		atka.ent[6].alter(10, 900);
+		anim.ent[6].alter(10, 900);
+	}
+
+	public void updateAnimation() {
+		if (atkTime > 0) {
+			atka.update(false);
+		} else {
+			anim.update(true);
 		}
 
 		if(bulletX > 0) {

@@ -675,6 +675,40 @@ public class StageBasis extends BattleObj {
 		}
 	}
 
+	protected void updateAnimation() {
+		boolean active = ebase.health > 0 && ubase.health > 0;
+
+		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
+			ebase.updateAnimation();
+		}
+
+		if (s_stop == 0) {
+			if(bgEffect != null)
+				bgEffect.updateAnimation(st.len, battleHeight, midH);
+
+			ubase.updateAnimation();
+
+			if (sniper != null && active)
+				sniper.updateAnimation();
+		}
+
+		if (temp_n_inten > 0)
+			n_inten += temp_n_inten;
+
+		updateEntitiesAnimation(s_stop == 0);
+
+		while (n_inten >= 1) {
+			updateEntitiesAnimation(false);
+			n_inten--;
+		}
+
+		if (s_stop == 0) {
+			lea.forEach(EAnimCont::update);
+			ebaseSmoke.forEach(EAnimCont::update);
+			ubaseSmoke.forEach(EAnimCont::update);
+		}
+	}
+
 	private void updateEntities(boolean time) {
 		for (int i = 0; i < le.size(); i++)
 			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
@@ -689,6 +723,20 @@ public class StageBasis extends BattleObj {
 		for (int i = 0; i < lw.size(); i++)
 			if (time || lw.get(i).IMUTime())
 				lw.get(i).update();
+	}
+
+	private void updateEntitiesAnimation(boolean time) {
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).updateAnimation();
+
+		for (int i = 0; i < tlw.size(); i++)
+			if (time || tlw.get(i).IMUTime())
+				tlw.get(i).updateAnimation();
+
+		for (int i = 0; i < lw.size(); i++)
+			if (time || lw.get(i).IMUTime())
+				lw.get(i).updateAnimation();
 	}
 
 	private void updateTheme() {

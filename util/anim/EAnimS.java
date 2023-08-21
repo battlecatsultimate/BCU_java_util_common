@@ -29,7 +29,7 @@ public class EAnimS extends EAnimI {
 	}
 
 	@Override
-	public int ind() {
+	public float ind() {
 		return 0;
 	}
 
@@ -39,7 +39,7 @@ public class EAnimS extends EAnimI {
 	}
 
 	@Override
-	public void setTime(int value) {
+	public void setTime(float value) {
 	}
 
 	@Override

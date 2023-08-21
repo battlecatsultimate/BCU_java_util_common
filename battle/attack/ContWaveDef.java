@@ -69,6 +69,12 @@ public class ContWaveDef extends ContWaveAb {
 	}
 
 	@Override
+	public void updateAnimation() {
+		if (t >= 0)
+			anim.update(false);
+	}
+
+	@Override
 	protected void nextWave() {
 		int dire = atk.model.getDire();
 		double np = pos + W_PROG * dire;

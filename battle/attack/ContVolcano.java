@@ -126,6 +126,11 @@ public class ContVolcano extends ContAb {
 		}
 	}
 
+	@Override
+	public void updateAnimation() {
+		anim.update(false);
+	}
+
 	private void updateProc() {
 		if (v.attacker.anim.dead == 0) {
 			if (v.attacker.status[P_CURSE][0] > 0)

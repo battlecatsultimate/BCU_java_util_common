@@ -71,6 +71,11 @@ public class ContExtend extends ContAb {
     }
 
     @Override
+    public void updateAnimation() {
+
+    }
+
+    @Override
     public boolean IMUTime() {
         return (atk.attacker.getAbi() & AB_TIMEI) != 0;
     }

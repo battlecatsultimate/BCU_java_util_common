@@ -48,4 +48,6 @@ public abstract class AbEntity extends BattleObj {
 	public abstract void preUpdate();
 
 	public abstract void update();
+
+	public abstract void updateAnimation();
 }

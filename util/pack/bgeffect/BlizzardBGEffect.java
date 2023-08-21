@@ -1,5 +1,6 @@
 package common.util.pack.bgeffect;
 
+import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -23,7 +24,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
     private final List<Double> slope = new ArrayList<>();
     private final List<Double> angle = new ArrayList<>();
     private final List<Byte> size = new ArrayList<>();
-    private final List<Byte> speed = new ArrayList<>();
+    private final List<Float> speed = new ArrayList<>();
     private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
@@ -87,7 +88,11 @@ public class BlizzardBGEffect extends BackgroundEffect {
                 initPos.get(capture.get(i)).x = x;
                 initPos.get(capture.get(i)).y = y;
 
-                speed.set(capture.get(i), (byte) (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)));
+                if (CommonStatic.getConfig().performanceMode) {
+                    speed.set(capture.get(i), (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) / 2f);
+                } else {
+                    speed.set(capture.get(i), (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) * 1f);
+                }
 
                 double a = Math.toRadians(60 - r.nextInt(15));
 
@@ -121,7 +126,12 @@ public class BlizzardBGEffect extends BackgroundEffect {
 
             blizzardPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));
-            speed.add((byte) (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)));
+
+            if (CommonStatic.getConfig().performanceMode) {
+                speed.add((Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) / 2f);
+            } else {
+                speed.add((Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) * 1f);
+            }
 
             double a = Math.toRadians(60 - r.nextInt(15));
 

@@ -2270,9 +2270,14 @@ public abstract class Entity extends AbEntity {
 		if (atkm.atkTime > 0 && nstop)
 			atkm.updateAttack();
 
+		updateAnimation();
+		bondTree.update();
+	}
+
+	@Override
+	public void updateAnimation() {
 		//update animation
 		anim.update();
-		bondTree.update();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {

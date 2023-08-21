@@ -12,7 +12,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 	public int[] ints = new int[5];
 	public String name;
 	public int n, max, off, fir;
-	public int frame, vd;// for editor only
+	public float frame, vd;// for editor only
 	public int[][] moves;
 
 	public Part() {
@@ -117,18 +117,25 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 		validate();
 	}
 
-	protected void update(int f, EPart[] es) {
+	protected void update(float f, EPart[] es) {
 		frame = f;
-		for (int i = 0; i < n; i++)
-			if (frame == moves[i][0])
+
+		for (int i = 0; i < n; i++) {
+			if (frame == moves[i][0]) {
 				es[ints[0]].alter(ints[1], vd = moves[i][1]);
-			else if (i < n - 1 && frame > moves[i][0] && frame < moves[i + 1][0]) {
+			} else if (i < n - 1 && frame > moves[i][0] && frame < moves[i + 1][0]) {
 				if (ints[1] > 1) {
 					int f0 = moves[i][0];
 					int v0 = moves[i][1];
 					int f1 = moves[i + 1][0];
 					int v1 = moves[i + 1][1];
-					double ti = 1.0 * (frame - f0) / (f1 - f0);
+					float realFrame = frame;
+
+					if (f1 - f0 == 1) {
+						realFrame = (int) frame;
+					}
+
+					double ti = 1.0 * (realFrame - f0) / (f1 - f0);
 					if (moves[i][2] == 1 || ints[1] == 13 || ints[1] == 14)
 						ti = 0;
 					else if (moves[i][2] == 0)
@@ -139,7 +146,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 						else
 							ti = Math.sqrt(1 - Math.pow(1 - ti, -moves[i][3]));
 					else if (moves[i][2] == 3) {
-						vd = ease3(i, frame);
+						vd = ease3(i, realFrame);
 						es[ints[0]].alter(ints[1], vd);
 						break;
 					} else if (moves[i][2] == 4)
@@ -160,10 +167,12 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 
 					es[ints[0]].alter(ints[1], vd);
 					break;
-				} else if(ints[1] == 0) {
+				} else if (ints[1] == 0) {
 					es[ints[0]].alter(ints[1], moves[i][1]);
 				}
 			}
+		}
+
 		if (n > 0 && frame > moves[n - 1][0])
 			ensureLast(es);
 	}
@@ -190,7 +199,7 @@ public class Part extends Data implements Cloneable, Comparable<Part> {
 		}
 	}
 
-	private int ease3(int i, int frame) {
+	private int ease3(int i, float frame) {
 		int low = i;
 		int high = i;
 		for (int j = i - 1; j >= 0; j--)
