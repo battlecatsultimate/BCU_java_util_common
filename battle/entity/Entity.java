@@ -674,6 +674,31 @@ public abstract class Entity extends AbEntity {
 			e.dead = dead == 0;
 		}
 
+		private void updateAnimation() {
+			for (int i = 0; i < effs.length; i++)
+				if (effs[i] != null)
+					effs[i].update(false);
+
+			boolean checkKB = e.kb.kbType != INT_SW && e.kb.kbType != INT_WARP;
+
+			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || checkKB))
+				anim.update(false);
+			if (back != null)
+				back.update(false);
+			if (dead > 0) {
+				soul.update(false);
+			}
+
+			if(smoke != null) {
+				if(smoke.done()) {
+					smoke = null;
+					smokeLayer = -1;
+					smokeX = -1;
+				} else {
+					smoke.update(false);
+				}
+			}
+		}
 	}
 
 	private static class AtkManager extends BattleObj {
@@ -2277,7 +2302,7 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public void updateAnimation() {
 		//update animation
-		anim.update();
+		anim.updateAnimation();
 	}
 
 	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
