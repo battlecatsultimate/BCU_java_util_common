@@ -20,6 +20,8 @@ public class Limit extends Data implements BattleStatic {
 
 			if(mid == 22000) {
 				mid = 3015;
+			} else if (mid == 22001) {
+				mid = 3016;
 			}
 
 			StageMap map = DefMapColc.getMap(mid);
