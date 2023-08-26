@@ -4,10 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
 import common.io.PackLoader.ZipDesc.FileDesc;
-import common.io.assets.MultiStream;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.assets.AssetLoader.AssetHeader;
 import common.io.assets.AssetLoader.AssetHeader.AssetEntry;
+import common.io.assets.MultiStream;
 import common.io.assets.MultiStream.ByteStream;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
@@ -21,7 +21,6 @@ import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.PackData;
 import common.system.fake.FakeImage;
-import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFileRoot;
 import common.util.Data;
@@ -33,7 +32,10 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
 import java.util.function.Consumer;
 
 @StaticPermitted
@@ -74,7 +76,6 @@ public class PackLoader {
 
 			private File file; // writing only
 			private ZipDesc pack; // reading only
-			private FDByte data; // preload reading only
 
 			public FileDesc(FileSaver parent, String path, File f) {
 				this.path = path;
@@ -92,7 +93,7 @@ public class PackLoader {
 
 			@Override
 			public FakeImage getImg() {
-				return data != null ? data.getImg() : FakeImage.read(this);
+				return FakeImage.read(this);
 			}
 
 			@Override
@@ -102,7 +103,7 @@ public class PackLoader {
 
 			@Override
 			public Queue<String> readLine() {
-				return data != null ? data.readLine() : FileData.super.readLine();
+				return FileData.super.readLine();
 			}
 
 			@Override
@@ -134,7 +135,9 @@ public class PackLoader {
 		}
 
 		public void delete() {
-			loader.file.delete();
+			if (!loader.file.delete()) {
+				System.out.println("Failed to delete file : " + loader.file.getAbsolutePath());
+			}
 		}
 
 		public File getZipFile() {
@@ -163,7 +166,12 @@ public class PackLoader {
 
 		public void unzip(PatchFile func, Consumer<Double> prog) throws Exception {
 			InputStream fis = new FileInputStream(loader.file);
-			fis.skip(offset);
+			long skippedBytes = fis.skip(offset);
+
+			if (skippedBytes != offset) {
+				System.out.println("W/PackLoader::unzip - Failed to skip bytes : Skipped bytes = " + skippedBytes + " | Targeted skipped bytes = " + offset);
+			}
+
 			int x = 0;
 			for (FileDesc fd : files) {
 				int n = regulate(fd.size) / PASSWORD;
@@ -200,8 +208,7 @@ public class PackLoader {
 
 			byte[] res = new byte[data.length - pad];
 
-			if (res.length >= 0)
-				System.arraycopy(data, 0, res, 0, res.length);
+			System.arraycopy(data, 0, res, 0, res.length);
 
 			return res;
 		}
@@ -209,10 +216,7 @@ public class PackLoader {
 		private void load(Consumer<Double> con) throws Exception {
 			int i = 0;
 			for (FileDesc fd : files) {
-				if (loader.context.getPreload(this).preload(fd))
-					fd.data = new FDByte(loader.decode(fd.size));
-				else
-					loader.fis.skip(regulate(fd.size));
+				loader.fis.skip(regulate(fd.size));
 				con.accept(1.0 * (i++) / files.length);
 			}
 		}
