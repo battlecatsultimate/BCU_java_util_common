@@ -178,9 +178,14 @@ public class CommonStatic {
 		public boolean realLevel = false;
 
 		/**
-		 * 60 fps mode if this is true
+		 * 60 fps mode if this is true for animation
 		 */
-		public boolean performanceMode = true;
+		public boolean performanceModeAnimation = false;
+
+		/**
+		 * 60 fps mode if this is true for battle
+		 */
+		public boolean performanceModeBattle = false;
 	}
 
 	public interface EditLink {

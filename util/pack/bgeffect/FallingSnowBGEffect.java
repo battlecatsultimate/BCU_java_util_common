@@ -68,7 +68,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
                 snowPosition.get(capture.get(i)).x = r.nextDouble() * (w + battleOffset + sw * siz) - sw * siz;
                 snowPosition.get(capture.get(i)).y = -sh * siz;
 
-                if (CommonStatic.getConfig().performanceMode) {
+                if (CommonStatic.getConfig().performanceModeBattle) {
                     speed.set(capture.get(i), (Data.BG_EFFECT_FALLING_SNOW_SPEED - r.nextDouble() * 1.5) / 2.0);
                 } else {
                     speed.set(capture.get(i), Data.BG_EFFECT_FALLING_SNOW_SPEED - r.nextDouble() * 1.5);
@@ -94,7 +94,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
         for(int i = 0; i < number; i++) {
             snowPosition.add(P.newP(r.nextInt(w + battleOffset + sw) - sw, r.nextInt(BGHeight * 3 + sh)));
 
-            if (CommonStatic.getConfig().performanceMode) {
+            if (CommonStatic.getConfig().performanceModeBattle) {
                 speed.add((Data.BG_EFFECT_FALLING_SNOW_SPEED - r.nextDouble() * 1.5) / 2.0);
             } else {
                 speed.add(Data.BG_EFFECT_FALLING_SNOW_SPEED - r.nextDouble() * 1.5);

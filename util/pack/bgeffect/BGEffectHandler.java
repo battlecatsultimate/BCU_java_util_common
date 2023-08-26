@@ -342,7 +342,7 @@ public class BGEffectHandler {
                 } else {
                     animation.get(i).update(false);
 
-                    if (CommonStatic.getConfig().performanceMode) {
+                    if (CommonStatic.getConfig().performanceModeBattle) {
                         if(v != null && moveAngle != null) {
                             position[i].x += v[i] * Math.cos(moveAngle[i]) / 2.0;
                             position[i].y += v[i] * Math.sin(moveAngle[i]) / 2.0;
@@ -417,7 +417,7 @@ public class BGEffectHandler {
             if (wait == null || wait[i] == 0) {
                 animation.get(i).update(false);
 
-                if (CommonStatic.getConfig().performanceMode) {
+                if (CommonStatic.getConfig().performanceModeBattle) {
                     if(v != null && moveAngle != null) {
                         position[i].x += v[i] * Math.cos(moveAngle[i]) / 2.0;
                         position[i].y += v[i] * Math.sin(moveAngle[i]) / 2.0;

@@ -116,7 +116,7 @@ public class BalloonBGEffect extends BackgroundEffect {
             balloonPosition.add(P.newP(r.nextInt(w + battleOffset + 2 * revertP(bw)) - revertP(bw), r.nextInt(BGHeight) * 3));
             isBigBalloon.add(isBig);
 
-            if (CommonStatic.getConfig().performanceMode) {
+            if (CommonStatic.getConfig().performanceModeBattle) {
                 speed.add(Data.BG_EFFECT_BALLOON_SPEED / 2f);
             } else {
                 speed.add(Data.BG_EFFECT_BALLOON_SPEED * 1f);

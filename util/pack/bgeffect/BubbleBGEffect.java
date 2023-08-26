@@ -61,7 +61,7 @@ public class BubbleBGEffect extends BackgroundEffect {
             if(bubblePosition.get(i).y < -bh) {
                 capture.add(i);
             } else {
-                if (CommonStatic.getConfig().performanceMode) {
+                if (CommonStatic.getConfig().performanceModeBattle) {
                     bubblePosition.get(i).y -= (BGHeight * 3.0 + bh) / Data.BG_EFFECT_BUBBLE_TIME / 2.0;
                 } else {
                     bubblePosition.get(i).y -= (BGHeight * 3.0 + bh) / Data.BG_EFFECT_BUBBLE_TIME;

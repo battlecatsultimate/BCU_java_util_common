@@ -107,11 +107,11 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 
 	@Override
 	public void update(boolean rotate) {
-		if (CommonStatic.getConfig().performanceMode) {
+		if (CommonStatic.getConfig().performanceModeAnimation) {
 			if (f == -1) {
 				f++;
 			} else {
-				f += 0.5;
+				f += 0.5f;
 			}
 		} else {
 			f++;

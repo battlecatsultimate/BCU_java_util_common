@@ -17,7 +17,7 @@ public abstract class BattleField {
 	}
 
 	public void update() {
-		if (!CommonStatic.getConfig().performanceMode || battleUpdate) {
+		if (!CommonStatic.getConfig().performanceModeBattle || battleUpdate) {
 			battleUpdate = false;
 
 			sb.time++;

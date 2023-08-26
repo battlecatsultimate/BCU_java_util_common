@@ -88,7 +88,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
                 initPos.get(capture.get(i)).x = x;
                 initPos.get(capture.get(i)).y = y;
 
-                if (CommonStatic.getConfig().performanceMode) {
+                if (CommonStatic.getConfig().performanceModeBattle) {
                     speed.set(capture.get(i), (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) / 2f);
                 } else {
                     speed.set(capture.get(i), (Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) * 1f);
@@ -127,7 +127,7 @@ public class BlizzardBGEffect extends BackgroundEffect {
             blizzardPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));
 
-            if (CommonStatic.getConfig().performanceMode) {
+            if (CommonStatic.getConfig().performanceModeBattle) {
                 speed.add((Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) / 2f);
             } else {
                 speed.add((Data.BG_EFFECT_BLIZZARD_SPEED - r.nextInt(5)) * 1f);
