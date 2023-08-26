@@ -2295,7 +2295,7 @@ public abstract class Entity extends AbEntity {
 		if (atkm.atkTime > 0 && nstop)
 			atkm.updateAttack();
 
-		updateAnimation();
+		anim.update();
 		bondTree.update();
 	}
 
