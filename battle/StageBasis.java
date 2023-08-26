@@ -687,6 +687,7 @@ public class StageBasis extends BattleObj {
 				bgEffect.updateAnimation(st.len, battleHeight, midH);
 
 			ubase.updateAnimation();
+			canon.updateAnimation();
 
 			if (sniper != null && active)
 				sniper.updateAnimation();
