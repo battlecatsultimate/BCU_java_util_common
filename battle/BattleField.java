@@ -1,5 +1,6 @@
 package common.battle;
 
+import common.CommonStatic;
 import common.util.stage.EStage;
 
 public abstract class BattleField {
@@ -16,7 +17,7 @@ public abstract class BattleField {
 	}
 
 	public void update() {
-		if (battleUpdate) {
+		if (!CommonStatic.getConfig().performanceMode || battleUpdate) {
 			battleUpdate = false;
 
 			sb.time++;
