@@ -361,6 +361,23 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		loaded = true;
 	}
 
+	public void unload() {
+		if (!loaded)
+			return;
+
+		img.unload();
+		img = null;
+
+		for(int i = 0; i < parts.length; i++) {
+			parts[i].unload();
+			parts[i] = null;
+		}
+
+		parts = null;
+
+		loaded = false;
+	}
+
 	public void forceLoad() {
 		img.mark(Marker.BG);
 		BCAuxAssets aux = CommonStatic.getBCAssets();

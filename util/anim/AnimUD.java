@@ -91,6 +91,16 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 				num.unload();
 				num = null;
 			}
+
+			if (edi != null) {
+				edi.unload();
+				edi = null;
+			}
+
+			if (uni != null) {
+				uni.unload();
+				uni = null;
+			}
 		}
 
 		private MaAnim[] filterValidAnims(MaAnim[] original) {
