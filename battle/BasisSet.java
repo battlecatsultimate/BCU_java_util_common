@@ -150,6 +150,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 			ans.add("list", JsonEncoder.encode(arr));
 			ans.addProperty("current", cur);
 			w.write(ans.toString());
+			w.flush();
 			w.close();
 			Context.delete(target);
 			temp.renameTo(target);

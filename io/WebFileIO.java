@@ -71,6 +71,7 @@ public class WebFileIO {
 			if ((ava = is.available()) > 0)
 				prog.accept(1.0 * count / ava);
 		}
+		out.flush();
 		out.close();
 	}
 
@@ -101,6 +102,7 @@ public class WebFileIO {
 			downloader.setProgressListener(new Progress(c));
 		}
 		downloader.download(gurl, out);
+		out.flush();
 		out.close();
 	}
 

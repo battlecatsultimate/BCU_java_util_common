@@ -173,6 +173,7 @@ public class AssetLoader {
 					if(!efile.getName().endsWith("custom.asset.bcuzip"))
 						Context.delete(efile);
 				}
+				fos.flush();
 				fos.close();
 				Context.delete(target);
 				dst.renameTo(target);

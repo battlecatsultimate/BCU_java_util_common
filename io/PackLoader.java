@@ -190,6 +190,7 @@ public class PackLoader {
 
 					fos.write(ans);
 				}
+				fos.flush();
 				fos.close();
 				prog.accept(1.0 * (x++) / files.length);
 			}
@@ -397,6 +398,7 @@ public class PackLoader {
 			fos.write(len);
 			save(encrypt(key), bytedesc, true);
 			desc.save(this, prog);
+			fos.flush();
 			fos.close();
 		}
 
@@ -424,6 +426,7 @@ public class PackLoader {
 			fos.write(len);
 			save(encrypt(key), bytedesc, true);
 			desc.save(this, prog);
+			fos.flush();
 			fos.close();
 		}
 

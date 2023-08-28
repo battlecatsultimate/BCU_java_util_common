@@ -9,6 +9,7 @@ import common.util.anim.AnimCE;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 public class AnimGroup {
@@ -45,8 +46,9 @@ public class AnimGroup {
 
             JsonObject obj = workspaceGroup.parseAnimGroup();
 
-            OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(json), StandardCharsets.UTF_8);
+            OutputStreamWriter fw = new OutputStreamWriter(Files.newOutputStream(json.toPath()), StandardCharsets.UTF_8);
             fw.write(obj.toString());
+            fw.flush();
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
