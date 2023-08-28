@@ -29,7 +29,7 @@ public class EAnimD<T extends Enum<T> & AnimI.AnimType<?, T>> extends EAnimI {
 	}
 
 	public boolean done() {
-		return f == ma.max;
+		return f >= ma.max;
 	}
 
 	@Override
