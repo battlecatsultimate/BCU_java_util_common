@@ -155,6 +155,10 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 	@SuppressWarnings("unchecked")
 	public T get() {
 		IndexContainer cont = getCont();
+
+		if (cont == null)
+			return null;
+
 		return (T) cont.getList(cls, (r, l) -> r == null ? l.getRaw(id) : r, null);
 	}
 
