@@ -79,7 +79,7 @@ public class MultiLangData extends Data {
                 String temp = dat.get(i);
 
                 if(temp != null)
-                    return Lang.pref[lang][i];
+                    return i;
             }
         }
 
