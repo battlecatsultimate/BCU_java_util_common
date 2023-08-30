@@ -39,8 +39,6 @@ public abstract class ImageBuilder<T> {
 
 	public abstract FakeImage build(T o);
 
-	public abstract FakeImage build(T o, int offsetX, int offsetY);
-
 	public abstract FakeImage build(int w, int h);
 
 	public final FakeImage build(VFile vf) throws IOException {
