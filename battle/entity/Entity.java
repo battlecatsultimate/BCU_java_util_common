@@ -302,7 +302,7 @@ public abstract class Entity extends AbEntity {
 				EffAnim<WarpEff> ea = effas().A_W;
 				int ind = status[P_WARP][2];
 				WarpEff pa = ind == 0 ? WarpEff.ENTER : WarpEff.EXIT;
-				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim, e.dire));
+				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim, e.dire, (e.getAbi() & AB_TIMEI) != 0));
 				e.basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 				CommonStatic.setSE(ind == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
 				status[P_WARP][ind] = ea.len(pa);
