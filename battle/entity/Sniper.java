@@ -139,8 +139,6 @@ public class Sniper extends AtkModelAb {
 				//fire bullet
 				bulletX = b.ubase.pos + SNIPER_POS + 375 * Math.cos(Math.toRadians((int) bulletAngle));
 
-				System.out.println(bulletX);
-
 				atka.ent[6].alter(12, 1000);
 				anim.ent[6].alter(12, 1000);
 			}
@@ -148,8 +146,6 @@ public class Sniper extends AtkModelAb {
 
 		if (bulletX != 0 && bulletX > pos) {
 			bulletX = (int) (bulletX * 4 - 1500 * Math.cos(Math.toRadians((int) bulletAngle))) / 4.0;
-
-			System.out.println(bulletX);
 
 			atka.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
 			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
