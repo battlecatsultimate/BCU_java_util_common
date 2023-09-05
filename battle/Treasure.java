@@ -549,10 +549,11 @@ public class Treasure extends Data {
 		else
 			base -= 3 * trea[T_RECH] - 450;
 
-		base -= (int) (base * b.getInc(C_C_SPE) / 100.0);
-		base = Math.max(950, base + map * 450);
+		base += map * 450;
 
-		return base;
+		base -= (int) (base * b.getInc(C_C_SPE) / 100.0);
+
+		return Math.max(950, base);
 	}
 
 	/**
