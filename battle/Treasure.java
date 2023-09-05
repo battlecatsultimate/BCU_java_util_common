@@ -543,12 +543,15 @@ public class Treasure extends Data {
 	 */
 	protected int CanonTime(int map) {
 		int base = 1500 + 50 * (tech[LV_CATK] - tech[LV_RECH]);
+
 		if (trea[T_RECH] <= 300)
 			base -= (int) (1.5 * trea[T_RECH]);
 		else
 			base -= 3 * trea[T_RECH] - 450;
-		base -= b.getInc(C_C_SPE);
+
+		base -= (int) (base * b.getInc(C_C_SPE) / 100.0);
 		base = Math.max(950, base + map * 450);
+
 		return base;
 	}
 

@@ -43,8 +43,6 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 				continue;
 			for (int j = 0; j < 5; j++) {
 				aux.values[i][j] = Integer.parseInt(strs[j]);
-				if (i == C_C_SPE)
-					aux.values[i][j] = (aux.values[i][j] - 10) * 15;
 			}
 		}
 		qs = VFile.readLine("./org/data/NyancomboFilter.tsv");
