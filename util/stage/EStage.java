@@ -13,7 +13,7 @@ public class EStage extends BattleObj {
 
 	public final Stage s;
 	public final Limit lim;
-	public final int[] num, rem;
+	public final int[] num, rem, first;
 	public final double mul;
 	public final int star;
 	public final int[] killCounter;
@@ -27,6 +27,7 @@ public class EStage extends BattleObj {
 		Line[] datas = s.data.getSimple();
 		rem = new int[datas.length];
 		num = new int[datas.length];
+		first = new int[datas.length];
 		for (int i = 0; i < rem.length; i++)
 			num[i] = datas[i].number;
 		lim = st.getLim(star);
@@ -51,7 +52,7 @@ public class EStage extends BattleObj {
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
 
-			if (inHealth(data) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] <= 1 && rem[i] >= 0 && num[i] != -1 && killCounter[i] == 0) {
+			if (inHealth(data, i) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] <= 1 && rem[i] >= 0 && num[i] != -1 && killCounter[i] == 0) {
 				if(!s.trail && data.respawn_0 >= data.respawn_1)
 					rem[i] = data.respawn_0;
 				else
@@ -135,27 +136,41 @@ public class EStage extends BattleObj {
 	public boolean hasBoss() {
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
+
 			if (data.boss == 1 && num[i] > 0)
 				return true;
 		}
+
 		return false;
 	}
 
 	public void update() {
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
-			if (inHealth(data) && rem[i] < 0)
+
+			if (inHealth(data, i) && rem[i] < 0)
 				rem[i] *= -1;
+
 			if (rem[i] > 0)
 				rem[i]--;
 		}
 	}
 
-	private boolean inHealth(Line line) {
+	private boolean inHealth(Line line, int index) {
 		int c0 = !s.trail ? Math.min(line.castle_0, 100) : line.castle_0;
 		int c1 = line.castle_1;
-		double d = !s.trail ? b.getEBHP() : b.ebase.maxH - b.ebase.health;
-		return c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
+
+		double d = !s.trail ? b.getEBHP() : (b.ebase.maxH - b.ebase.health);
+
+		boolean inRange = c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
+
+		if (b.ebase instanceof EEnemy && inRange && first[index] == 0) {
+			first[index] = -1;
+
+			return false;
+		}
+
+		return inRange;
 	}
 
 }
