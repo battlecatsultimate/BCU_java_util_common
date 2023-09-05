@@ -102,12 +102,13 @@ public class Sniper extends AtkModelAb {
 			canDo = false;
 		}
 
-		if (enabled && coolTime > 0)
+		if (enabled && coolTime > 0 && preTime == 0 && atkTime == 0) {
 			coolTime--;
+		}
 
 		if (coolTime == 0 && enabled && pos > 0 && canDo) {
 			if(Math.abs(targetAngle - cannonAngle) < 1) {
-				coolTime = SNIPER_CD;
+				coolTime = SNIPER_CD + 1;
 				preTime = SNIPER_PRE;
 				atkTime = atka.len();
 				atka.setup();
