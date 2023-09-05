@@ -53,7 +53,7 @@ public class EStage extends BattleObj {
 			Line data = s.data.getSimple(i);
 
 			if (inHealth(data, i) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] <= 1 && rem[i] >= 0 && num[i] != -1 && killCounter[i] == 0) {
-				if(!s.trail && data.respawn_0 >= data.respawn_1)
+				if(data.respawn_0 >= data.respawn_1)
 					rem[i] = data.respawn_0;
 				else
 					rem[i] = data.respawn_0 + (int) (b.r.nextDouble() * (data.respawn_1 - data.respawn_0));
@@ -76,8 +76,11 @@ public class EStage extends BattleObj {
 
 				double multi = (data.multiple == 0 ? 100 : data.multiple) * mul * 0.01;
 				double mulatk = (data.multiple == 0 ? 100 : data.mult_atk) * mul * 0.01;
+
 				AbEnemy e = Identifier.getOr(data.enemy, AbEnemy.class);
+
 				EEnemy ee = e.getEntity(b, data, multi, mulatk, data.layer_0, data.layer_1, data.boss);
+
 				ee.group = data.group;
 				return ee;
 			}
@@ -94,7 +97,7 @@ public class EStage extends BattleObj {
 			if (Math.abs(datas[i].spawn_0) < Math.abs(datas[i].spawn_1))
 				rem[i] += (int) ((datas[i].spawn_1 - datas[i].spawn_0) * b.r.nextDouble());
 
-			if (s.isBCstage && datas[i].castle_0 < 100 && rem[i] > 0)
+			if (s.isBCstage && datas[i].castle_0 < 100 && rem[i] > 0 && !s.trail)
 				rem[i] = 0;
 		}
 	}
@@ -164,7 +167,7 @@ public class EStage extends BattleObj {
 
 		boolean inRange = c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
 
-		if (b.ebase instanceof EEnemy && inRange && first[index] == 0) {
+		if (b.ebase instanceof EEnemy && inRange && first[index] == 0 && !s.trail) {
 			first[index] = -1;
 
 			return false;
