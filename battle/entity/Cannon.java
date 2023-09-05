@@ -148,7 +148,7 @@ public class Cannon extends AtkModelAb {
                         pos = e.pos;
                 pos -= NYRAN[id] / 2.0;
             } else if (id == 2 || id == 6) {
-                pos = b.ebase.pos;
+                pos = Math.max(800.0, b.ebase.pos);
                 for (Entity e : b.le)
                     if (e.dire == 1 && e.pos > pos && (e.touchable() & (TCH_N | TCH_KB | TCH_CORPSE | TCH_SOUL)) != 0)
                         pos = e.pos;
