@@ -46,7 +46,7 @@ public class AtkModelUnit extends AtkModelEntity {
 				if (conf.same_health && ent.health <= 0)
 					return;
 				int time = proc.time;
-				if (b.entityCount(-1) < b.max_num - u.forms[proc.form - 1].du.getWill() || conf.ignore_limit) {
+				if (b.entityCount(-1) < b.max_num - u.forms[Math.max(0, proc.form - 1)].du.getWill() || conf.ignore_limit) {
 					int lvl = proc.mult + ((EUnit) e).lvl;
 					if (conf.fix_buff)
 						lvl = proc.mult;
