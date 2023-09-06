@@ -63,6 +63,8 @@ public class AttackWave extends AttackAb {
 	public void excuse() {
 		process();
 
+		atk = rawAtk;
+
 		if (attacker != null) {
 			if (attacker.status[P_STRONG][0] != 0)
 				atk += atk * attacker.status[P_STRONG][0] / 100;
