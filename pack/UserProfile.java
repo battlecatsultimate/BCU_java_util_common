@@ -372,7 +372,7 @@ public class UserProfile {
 		if (!CommonStatic.ctx.noticeErr(() -> {
 			pack.load();
 
-			if (!pack.validate()) {
+			if (pack.source instanceof ZipSource && !pack.validate()) {
 				throw new BCUException("This pack contains invalid animation data");
 			}
 		}, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null))) {
