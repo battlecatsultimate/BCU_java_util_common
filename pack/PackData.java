@@ -24,6 +24,7 @@ import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import common.util.Data;
 import common.util.Res;
+import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
 import common.util.pack.*;
 import common.util.lang.MultiLangData;
@@ -476,7 +477,7 @@ public abstract class PackData implements IndexContainer {
 					if (form == null)
 						continue;
 
-					if (form.anim == null || !form.anim.canLoadAll())
+					if (form.anim == null || form.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.ENTITY))
 						return false;
 				}
 			}
@@ -486,7 +487,7 @@ public abstract class PackData implements IndexContainer {
 				if (enemy == null)
 					continue;
 
-				if (enemy.anim == null || !enemy.anim.canLoadAll())
+				if (enemy.anim == null || enemy.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.ENTITY))
 					return false;
 			}
 
@@ -495,7 +496,7 @@ public abstract class PackData implements IndexContainer {
 				if (soul == null)
 					continue;
 
-				if (soul.anim == null || !soul.anim.canLoadAll())
+				if (soul.anim == null || soul.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.SOUL))
 					return false;
 			}
 

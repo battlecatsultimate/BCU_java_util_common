@@ -104,8 +104,8 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 		}
 
 		@Override
-		public boolean validate() {
-			return loader.validate();
+		public boolean validate(AnimationType type) {
+			return loader.validate(type);
 		}
 	}
 
@@ -133,8 +133,8 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 	}
 
 	@Override
-	public boolean canLoadAll() {
-		return loader.validate();
+	public boolean cantLoadAll(ImageKeeper.AnimationType type) {
+		return !loader.validate(type);
 	}
 
 	@Override

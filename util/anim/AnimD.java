@@ -51,7 +51,7 @@ public abstract class AnimD<A extends AnimD<A, T>, T extends Enum<T> & AnimI.Ani
 	@Override
 	public abstract void load();
 
-	public abstract boolean canLoadAll();
+	public abstract boolean cantLoadAll(AnimU.ImageKeeper.AnimationType type);
 
 	@Override
 	public final String[] names() {

@@ -12,8 +12,8 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 	private final String name;
 
 	@Override
-	public boolean canLoadAll() {
-		return loader.validate();
+	public boolean cantLoadAll(ImageKeeper.AnimationType type) {
+		return !loader.validate(type);
 	}
 
 	static class DefImgLoader implements AnimU.ImageKeeper {
@@ -109,7 +109,7 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 		}
 
 		@Override
-		public boolean validate() {
+		public boolean validate(AnimationType type) {
 			// This is for BC animations, if validate is false, just let program crash rather
 			return true;
 		}

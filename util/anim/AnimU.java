@@ -11,6 +11,10 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 	}
 
 	public interface ImageKeeper {
+		enum AnimationType {
+			SOUL,
+			ENTITY
+		}
 
 		VImg getEdi();
 
@@ -26,7 +30,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 		void unload();
 
-		boolean validate();
+		boolean validate(AnimationType type);
 	}
 
 	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {

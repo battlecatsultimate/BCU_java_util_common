@@ -46,8 +46,8 @@ public class BGEffectAnim extends AnimD<BGEffectAnim, BGEffectAnim.BGEffType> {
     }
 
     @Override
-    public boolean canLoadAll() {
+    public boolean cantLoadAll(AnimU.ImageKeeper.AnimationType type) {
         // Background effect animation is part of BC animation, there must not be failure
-        return true;
+        return false;
     }
 }

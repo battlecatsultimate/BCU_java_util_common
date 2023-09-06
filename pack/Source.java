@@ -55,9 +55,12 @@ public abstract class Source {
 
 		/**
 		 * Validate if animation loader can load data without any error
+		 *
+		 * @param type Type of this animation. For example, soul animation won't need deploy icon
+		 *
 		 * @return Whether loader contains any corrupted data or not
 		 */
-		boolean validate();
+		boolean validate(AnimU.ImageKeeper.AnimationType type);
 	}
 
 	public interface SourceLoader {
@@ -220,11 +223,13 @@ public abstract class Source {
 		}
 
 		@Override
-		public boolean validate() {
-			FileData uni = loader.loadFile(id.base, id, UNI);
+		public boolean validate(AnimU.ImageKeeper.AnimationType type) {
+			if (type == AnimU.ImageKeeper.AnimationType.ENTITY) {
+				FileData uni = loader.loadFile(id.base, id, UNI);
 
-			if (uni == null)
-				return false;
+				if (uni == null)
+					return false;
+			}
 
 			FileData num = loader.loadFile(id.base, id, SP);
 
