@@ -103,6 +103,10 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 			}
 		}
 
+		@Override
+		public boolean validate() {
+			return loader.validate();
+		}
 	}
 
 	@JsonClass.JCIdentifier
@@ -126,6 +130,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 			CommonStatic.def.save(false, true);
 		}
 		validate();
+	}
+
+	@Override
+	public boolean canLoadAll() {
+		return loader.validate();
 	}
 
 	@Override

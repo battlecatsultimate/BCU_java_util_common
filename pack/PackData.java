@@ -466,6 +466,41 @@ public abstract class PackData implements IndexContainer {
 			}
 		}
 
+		public boolean validate() {
+			//Check if any units contain corrupted animation
+			for(Unit unit : units) {
+				if (unit == null)
+					continue;
+
+				for(Form form : unit.forms) {
+					if (form == null)
+						continue;
+
+					if (form.anim == null || !form.anim.canLoadAll())
+						return false;
+				}
+			}
+
+			//Check if any enemies contain corrupted animation
+			for(Enemy enemy : enemies) {
+				if (enemy == null)
+					continue;
+
+				if (enemy.anim == null || !enemy.anim.canLoadAll())
+					return false;
+			}
+
+			//Check if any souls contain corrupted animation
+			for (Soul soul : souls) {
+				if (soul == null)
+					continue;
+
+				if (soul.anim == null || !soul.anim.canLoadAll())
+					return false;
+			}
+
+			return true;
+		}
 	}
 
 	@ContGetter

@@ -51,6 +51,8 @@ public abstract class AnimD<A extends AnimD<A, T>, T extends Enum<T> & AnimI.Ani
 	@Override
 	public abstract void load();
 
+	public abstract boolean canLoadAll();
+
 	@Override
 	public final String[] names() {
 		check();

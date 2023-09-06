@@ -3,6 +3,7 @@ package common.pack;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
+import common.io.BCUException;
 import common.io.PackLoader;
 import common.io.PackLoader.ZipDesc;
 import common.io.assets.Admin.StaticPermitted;
@@ -368,10 +369,17 @@ public class UserProfile {
 		if (!canAdd(deps))
 			return false;
 
-		if (!CommonStatic.ctx.noticeErr(pack::load, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null)))
+		if (!CommonStatic.ctx.noticeErr(() -> {
+			pack.load();
+
+			if (!pack.validate()) {
+				throw new BCUException("This pack contains invalid animation data");
+			}
+		}, ErrType.WARN, "failed to load pack " + pack.desc, () -> setStatic(CURRENT_PACK, null))) {
 			failed.add(pack);
-		else
+		} else {
 			packmap.put(pack.desc.id, pack);
+		}
 
 		return true;
 	}

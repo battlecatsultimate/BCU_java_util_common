@@ -52,6 +52,12 @@ public abstract class Source {
 		int getStatus();
 
 		VImg getUni();
+
+		/**
+		 * Validate if animation loader can load data without any error
+		 * @return Whether loader contains any corrupted data or not
+		 */
+		boolean validate();
 	}
 
 	public interface SourceLoader {
@@ -213,6 +219,34 @@ public abstract class Source {
 			return new VImg(FakeImage.read(uni));
 		}
 
+		@Override
+		public boolean validate() {
+			FileData uni = loader.loadFile(id.base, id, UNI);
+
+			if (uni == null)
+				return false;
+
+			FileData num = loader.loadFile(id.base, id, SP);
+
+			if (num == null)
+				return false;
+
+			FileData cut = loader.loadFile(id.base, id, IC);
+
+			if (cut == null)
+				return false;
+
+			FileData mod = loader.loadFile(id.base, id, MM);
+
+			if (mod == null)
+				return false;
+
+			for (int i = 0; i < getBaseMA().length; i++)
+				if(loader.loadFile(id.base, id, getBaseMA()[i]) == null)
+					return false;
+
+			return true;
+		}
 	}
 
 	public static class SourceAnimSaver {

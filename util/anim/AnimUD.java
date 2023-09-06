@@ -11,6 +11,11 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
 	private final String name;
 
+	@Override
+	public boolean canLoadAll() {
+		return loader.validate();
+	}
+
 	static class DefImgLoader implements AnimU.ImageKeeper {
 
 		private final String spath;
@@ -101,6 +106,12 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 				uni.unload();
 				uni = null;
 			}
+		}
+
+		@Override
+		public boolean validate() {
+			// This is for BC animations, if validate is false, just let program crash rather
+			return true;
 		}
 
 		private MaAnim[] filterValidAnims(MaAnim[] original) {

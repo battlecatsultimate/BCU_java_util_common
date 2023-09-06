@@ -26,6 +26,7 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 
 		void unload();
 
+		boolean validate();
 	}
 
 	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {

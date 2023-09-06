@@ -45,6 +45,7 @@ public class CommonStatic {
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		public VImg emptyEdi = null;
 
 		public Map<Integer, VImg> gatyaitem = new HashMap<>();
 		public VImg XP;
