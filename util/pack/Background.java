@@ -355,6 +355,25 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
 		if(loaded)
 			return;
 
+		if (img == null) {
+			PackData pack = getCont();
+
+			if (pack == null)
+				return;
+
+			if (pack instanceof PackData.DefPack) {
+				if (reference == -1) {
+					img = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(id.id)+".png"));
+				} else {
+					img = new VImg(VFile.get("./org/img/bg/bg"+Data.trio(reference)+".png"));
+				}
+			} else if (pack instanceof PackData.UserPack) {
+				img = ((PackData.UserPack) getCont()).source.readImage(Source.BasePath.BG.toString(), id.id);
+			} else {
+				return;
+			}
+		}
+
 		img.mark(Marker.BG);
 		BCAuxAssets aux = CommonStatic.getBCAssets();
 		parts = aux.iclist.get(ic).cut(img.getImg());
