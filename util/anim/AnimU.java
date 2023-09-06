@@ -13,7 +13,8 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 	public interface ImageKeeper {
 		enum AnimationType {
 			SOUL,
-			ENTITY
+			ENEMY,
+			UNIT
 		}
 
 		VImg getEdi();

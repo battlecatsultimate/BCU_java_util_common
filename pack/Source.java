@@ -224,7 +224,7 @@ public abstract class Source {
 
 		@Override
 		public boolean validate(AnimU.ImageKeeper.AnimationType type) {
-			if (type == AnimU.ImageKeeper.AnimationType.ENTITY) {
+			if (type == AnimU.ImageKeeper.AnimationType.UNIT) {
 				FileData uni = loader.loadFile(id.base, id, UNI);
 
 				if (uni == null)

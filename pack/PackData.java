@@ -477,7 +477,7 @@ public abstract class PackData implements IndexContainer {
 					if (form == null)
 						continue;
 
-					if (form.anim == null || form.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.ENTITY))
+					if (form.anim == null || form.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.UNIT))
 						return false;
 				}
 			}
@@ -487,7 +487,7 @@ public abstract class PackData implements IndexContainer {
 				if (enemy == null)
 					continue;
 
-				if (enemy.anim == null || enemy.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.ENTITY))
+				if (enemy.anim == null || enemy.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.ENEMY))
 					return false;
 			}
 
