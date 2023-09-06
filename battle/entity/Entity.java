@@ -1852,17 +1852,20 @@ public abstract class Entity extends AbEntity {
 		}
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
+
 			int rst = checkAIImmunity(atk.getProc().WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0;
+
 			val = val * (100 - rst) / 100;
+
+			if(dire == -1 && basis.canon.deco == DECO_BASE_GROUND) {
+				val *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WEAK);
+			}
+
 			if (rst < 100) {
 				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
 				anim.getEff(P_WEAK);
 			} else
 				anim.getEff(INV);
-
-			if(dire == - 1 && basis.canon.deco == DECO_BASE_GROUND) {
-				status[P_WEAK][0] = (int) (status[P_WEAK][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WEAK));
-			}
 		}
 		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
