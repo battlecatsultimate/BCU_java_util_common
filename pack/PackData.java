@@ -34,7 +34,7 @@ import common.util.stage.CastleList.PackCasList;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.unit.*;
-import javafx.util.Pair;
+import kotlin.Pair;
 
 import java.io.File;
 import java.util.*;
@@ -508,8 +508,8 @@ public abstract class PackData implements IndexContainer {
 		 * Collect invalid animation data
 		 *
 		 * @return Returns collected data of animation<br>
-		 * {@link Pair}'s {@linkplain Pair#getKey() key} will be container of animation. It can be form, enemy, or soul<br>
-		 * {@link Pair}'s {@linkplain Pair#getValue() value} will be list of corrupted animation file name, being {@link List}&lt;String&gt;<br>
+		 * {@link Pair}'s {@linkplain Pair#getFirst() key} will be container of animation. It can be form, enemy, or soul<br>
+		 * {@link Pair}'s {@linkplain Pair#getSecond() value} will be list of corrupted animation file name, being {@link List}&lt;String&gt;<br>
 		 * If pair's value is empty, it means animation itself was null
 		 */
 		public List<Pair<Object, List<String>>> collectInvalidAnimation() {
