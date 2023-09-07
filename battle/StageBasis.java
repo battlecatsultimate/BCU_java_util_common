@@ -513,10 +513,6 @@ public class StageBasis extends BattleObj {
 				if (e != null) {
 					e.added(1, e.mark >= 1 ? boss_spawn : 700.0);
 
-					e.preUpdate();
-					e.update();
-					e.postUpdate();
-
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.layer));
 
