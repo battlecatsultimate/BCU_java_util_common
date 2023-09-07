@@ -232,14 +232,19 @@ public class StageBasis extends BattleObj {
 	public List<AbEntity> inRange(int touch, int dire, double d0, double d1, boolean excludeLastEdge) {
 		double start = Math.min(d0, d1);
 		double end = Math.max(d0, d1);
+
 		List<AbEntity> ans = new ArrayList<>();
+
 		if (dire == 0)
 			return ans;
-		for (int i = 0; i < le.size(); i++)
-			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0 &&
-				le.get(i).pos >= start && (excludeLastEdge ? le.get(i).pos < end : le.get(i).pos <= end))
+
+		for (int i = 0; i < le.size(); i++) {
+			if (le.get(i).dire * dire == -1 && (le.get(i).touchable() & touch) > 0 && le.get(i).pos >= start && (excludeLastEdge ? le.get(i).pos < end : le.get(i).pos <= end))
 				ans.add(le.get(i));
+		}
+
 		AbEntity b = dire == 1 ? ubase : ebase;
+
 		if ((b.touchable() & touch) > 0 && (b.pos - d0) * (b.pos - d1) <= 0)
 			ans.add(b);
 
@@ -422,18 +427,20 @@ public class StageBasis extends BattleObj {
 
 				return false;
 			}
+
 			EForm f = b.lu.efs[i][j];
+
 			if (f == null) {
 				return false;
 			}
-			CommonStatic.setSE(SE_SPEND_SUC);
-			elu.get(i, j);
-			EUnit eu = f.getEntity(this, new int[] {i, j});
-			eu.added(-1, st.len - 700);
 
-			eu.preUpdate();
-			eu.update();
-			eu.postUpdate();
+			CommonStatic.setSE(SE_SPEND_SUC);
+
+			elu.get(i, j);
+
+			EUnit eu = f.getEntity(this, new int[] {i, j});
+
+			eu.added(-1, st.len - 700);
 
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
@@ -566,9 +573,12 @@ public class StageBasis extends BattleObj {
 
 		if (temp_n_inten > 0)
 			n_inten += temp_n_inten;
+
 		updateEntities(s_stop == 0);
+
 		while (n_inten >= 1) {
 			updateEntities(false);
+
 			n_inten--;
 		}
 
@@ -736,6 +746,7 @@ public class StageBasis extends BattleObj {
 		for (int i = 0; i < le.size(); i++)
 			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).preUpdate();
+
 		for (int i = 0; i < le.size(); i++)
 			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
@@ -743,6 +754,7 @@ public class StageBasis extends BattleObj {
 		for (int i = 0; i < tlw.size(); i++)
 			if (time || tlw.get(i).IMUTime())
 				tlw.get(i).update();
+
 		for (int i = 0; i < lw.size(); i++)
 			if (time || lw.get(i).IMUTime())
 				lw.get(i).update();

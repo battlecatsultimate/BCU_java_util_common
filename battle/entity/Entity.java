@@ -2259,6 +2259,7 @@ public abstract class Entity extends AbEntity {
 			if (!touch && nstop) {
 				if (health > 0)
 					anim.setAnim(UType.WALK, true);
+
 				updateMove(-1, 0);
 			}
 		}
