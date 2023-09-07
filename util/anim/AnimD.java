@@ -2,6 +2,8 @@ package common.util.anim;
 
 import common.system.fake.FakeImage;
 
+import java.util.List;
+
 public abstract class AnimD<A extends AnimD<A, T>, T extends Enum<T> & AnimI.AnimType<A, T>> extends AnimI<A, T> {
 
 	public ImgCut imgcut;
@@ -52,6 +54,8 @@ public abstract class AnimD<A extends AnimD<A, T>, T extends Enum<T> & AnimI.Ani
 	public abstract void load();
 
 	public abstract boolean cantLoadAll(AnimU.ImageKeeper.AnimationType type);
+
+	public abstract List<String> collectInvalidAnimation(AnimU.ImageKeeper.AnimationType type);
 
 	@Override
 	public final String[] names() {

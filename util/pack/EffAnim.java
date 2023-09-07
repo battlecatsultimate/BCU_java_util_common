@@ -10,6 +10,8 @@ import common.util.Data;
 import common.util.anim.*;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAnim<T>, T> {
@@ -630,6 +632,12 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 	public boolean cantLoadAll(AnimU.ImageKeeper.AnimationType type) {
 		// Effect animation is part of BC animation, there must not be failure
 		return false;
+	}
+
+	@Override
+	public List<String> collectInvalidAnimation(AnimU.ImageKeeper.AnimationType type) {
+		// Effect animation is part of BC animation, there must not be failure
+		return new ArrayList<>();
 	}
 
 	@Override

@@ -28,10 +28,7 @@ import common.util.unit.Unit;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class Source {
@@ -61,6 +58,8 @@ public abstract class Source {
 		 * @return Whether loader contains any corrupted data or not
 		 */
 		boolean validate(AnimU.ImageKeeper.AnimationType type);
+
+		List<String> collectInvalidAnimation(AnimU.ImageKeeper.AnimationType type);
 	}
 
 	public interface SourceLoader {
@@ -251,6 +250,39 @@ public abstract class Source {
 					return false;
 
 			return true;
+		}
+
+		@Override
+		public List<String> collectInvalidAnimation(AnimU.ImageKeeper.AnimationType type) {
+			List<String> result = new ArrayList<>();
+
+			if (type == AnimU.ImageKeeper.AnimationType.UNIT) {
+				FileData uni = loader.loadFile(id.base, id, UNI);
+
+				if (uni == null)
+					result.add(UNI);
+			}
+
+			FileData num = loader.loadFile(id.base, id, SP);
+
+			if (num == null)
+				result.add(SP);
+
+			FileData cut = loader.loadFile(id.base, id, IC);
+
+			if (cut == null)
+				result.add(IC);
+
+			FileData mod = loader.loadFile(id.base, id, MM);
+
+			if (mod == null)
+				result.add(MM);
+
+			for (int i = 0; i < getBaseMA().length; i++)
+				if(loader.loadFile(id.base, id, getBaseMA()[i]) == null)
+					result.add(getBaseMA()[i]);
+
+			return result;
 		}
 	}
 

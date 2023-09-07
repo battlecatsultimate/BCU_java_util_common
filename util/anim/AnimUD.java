@@ -7,6 +7,9 @@ import common.system.fake.FakeImage.Marker;
 import common.system.files.FileData;
 import common.system.files.VFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
 	private final String name;
@@ -14,6 +17,11 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 	@Override
 	public boolean cantLoadAll(ImageKeeper.AnimationType type) {
 		return !loader.validate(type);
+	}
+
+	@Override
+	public List<String> collectInvalidAnimation(ImageKeeper.AnimationType type) {
+		return loader.collectInvalidAnimation(type);
 	}
 
 	static class DefImgLoader implements AnimU.ImageKeeper {
@@ -112,6 +120,12 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 		public boolean validate(AnimationType type) {
 			// This is for BC animations, if validate is false, just let program crash rather
 			return true;
+		}
+
+		@Override
+		public List<String> collectInvalidAnimation(AnimationType type) {
+			// This is for BC animations, if it contains invalid animation, just let program crash rather
+			return new ArrayList<>();
 		}
 
 		private MaAnim[] filterValidAnims(MaAnim[] original) {

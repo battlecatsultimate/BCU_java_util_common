@@ -4,6 +4,8 @@ import common.io.assets.Admin.StaticPermitted;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 
+import java.util.List;
+
 public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>, AnimU.UType> {
 
 	public interface EditableType {
@@ -32,6 +34,8 @@ public abstract class AnimU<T extends AnimU.ImageKeeper> extends AnimD<AnimU<?>,
 		void unload();
 
 		boolean validate(AnimationType type);
+
+		List<String> collectInvalidAnimation(AnimationType type);
 	}
 
 	public enum UType implements AnimI.AnimType<AnimU<?>, UType>, EditableType {

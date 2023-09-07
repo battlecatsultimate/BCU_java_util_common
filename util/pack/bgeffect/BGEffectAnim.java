@@ -4,6 +4,9 @@ import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BGEffectAnim extends AnimD<BGEffectAnim, BGEffectAnim.BGEffType> {
 
     private final String imgcutName, mamodelName, maanimName;
@@ -49,5 +52,11 @@ public class BGEffectAnim extends AnimD<BGEffectAnim, BGEffectAnim.BGEffType> {
     public boolean cantLoadAll(AnimU.ImageKeeper.AnimationType type) {
         // Background effect animation is part of BC animation, there must not be failure
         return false;
+    }
+
+    @Override
+    public List<String> collectInvalidAnimation(AnimU.ImageKeeper.AnimationType type) {
+        // Background effect animation is part of BC animation, there must not be failure
+        return new ArrayList<>();
     }
 }

@@ -8,6 +8,8 @@ import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 
+import java.util.List;
+
 @JsonClass.JCGeneric(ResourceLocation.class)
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
@@ -107,6 +109,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 		public boolean validate(AnimationType type) {
 			return loader.validate(type);
 		}
+
+		@Override
+		public List<String> collectInvalidAnimation(AnimationType type) {
+			return loader.collectInvalidAnimation(type);
+		}
 	}
 
 	@JsonClass.JCIdentifier
@@ -135,6 +142,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 	@Override
 	public boolean cantLoadAll(ImageKeeper.AnimationType type) {
 		return !loader.validate(type);
+	}
+
+	@Override
+	public List<String> collectInvalidAnimation(ImageKeeper.AnimationType type) {
+		return loader.collectInvalidAnimation(type);
 	}
 
 	@Override

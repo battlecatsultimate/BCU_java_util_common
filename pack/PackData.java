@@ -26,14 +26,15 @@ import common.util.Data;
 import common.util.Res;
 import common.util.anim.AnimU;
 import common.util.anim.AnimUD;
-import common.util.pack.*;
 import common.util.lang.MultiLangData;
+import common.util.pack.*;
 import common.util.pack.bgeffect.BackgroundEffect;
-import common.util.stage.CastleList.PackCasList;
 import common.util.stage.*;
+import common.util.stage.CastleList.PackCasList;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.MapColc.PackMapColc;
 import common.util.unit.*;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.util.*;
@@ -501,6 +502,76 @@ public abstract class PackData implements IndexContainer {
 			}
 
 			return true;
+		}
+
+		/**
+		 * Collect invalid animation data
+		 *
+		 * @return Returns collected data of animation<br>
+		 * {@link Pair}'s {@linkplain Pair#getKey() key} will be container of animation. It can be form, enemy, or soul<br>
+		 * {@link Pair}'s {@linkplain Pair#getValue() value} will be list of corrupted animation file name, being {@link List}&lt;String&gt;<br>
+		 * If pair's value is empty, it means animation itself was null
+		 */
+		public List<Pair<Object, List<String>>> collectInvalidAnimation() {
+			List<Pair<Object, List<String>>> result = new ArrayList<>();
+
+			//Check if any units contain corrupted animation
+			for(Unit unit : units) {
+				if (unit == null)
+					continue;
+
+				for(Form form : unit.forms) {
+					if (form == null)
+						continue;
+
+					if (form.anim == null || form.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.UNIT)) {
+						List<String> value;
+
+						if (form.anim == null)
+							value = new ArrayList<>();
+						else
+							value = form.anim.collectInvalidAnimation(AnimU.ImageKeeper.AnimationType.UNIT);
+
+						result.add(new Pair<>(form, value));
+					}
+				}
+			}
+
+			//Check if any enemies contain corrupted animation
+			for(Enemy enemy : enemies) {
+				if (enemy == null)
+					continue;
+
+				if (enemy.anim == null || enemy.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.ENEMY)) {
+					List<String> value;
+
+					if (enemy.anim == null)
+						value = new ArrayList<>();
+					else
+						value = enemy.anim.collectInvalidAnimation(AnimU.ImageKeeper.AnimationType.ENEMY);
+
+					result.add(new Pair<>(enemy, value));
+				}
+			}
+
+			//Check if any souls contain corrupted animation
+			for (Soul soul : souls) {
+				if (soul == null)
+					continue;
+
+				if (soul.anim == null || soul.anim.cantLoadAll(AnimU.ImageKeeper.AnimationType.SOUL)) {
+					List<String> value;
+
+					if (soul.anim == null)
+						value = new ArrayList<>();
+					else
+						value = soul.anim.collectInvalidAnimation(AnimU.ImageKeeper.AnimationType.SOUL);
+
+					result.add(new Pair<>(soul, value));
+				}
+			}
+
+			return result;
 		}
 	}
 
