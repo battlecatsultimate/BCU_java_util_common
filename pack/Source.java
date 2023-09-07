@@ -152,6 +152,7 @@ public abstract class Source {
 		public static final String MM = "mamodel.txt";
 		public static final String[] MA_ENTITY = { "maanim_walk.txt", "maanim_idle.txt", "maanim_attack.txt", "maanim_kb.txt",
 				"maanim_burrow_down.txt", "maanim_burrow_move.txt", "maanim_burrow_up.txt" };
+		public static final String[] MA_ESSENTIAL = { "maanim_walk.txt", "maanim_idle.txt", "maanim_attack.txt", "maanim_kb.txt" };
 		public static final String[] MA_SOUL = { "maanim_soul.txt" };
 		public static final String SP = "sprite.png";
 		public static final String EDI = "icon_display.png";
@@ -168,6 +169,13 @@ public abstract class Source {
 		private String[] getBaseMA() {
 			if (id.base.equals(BasePath.ANIM))
 				return MA_ENTITY;
+			else
+				return MA_SOUL;
+		}
+
+		private String[] getValidateMA() {
+			if (id.base.equals(BasePath.ANIM))
+				return MA_ESSENTIAL;
 			else
 				return MA_SOUL;
 		}
@@ -245,8 +253,8 @@ public abstract class Source {
 			if (mod == null)
 				return false;
 
-			for (int i = 0; i < getBaseMA().length; i++)
-				if(loader.loadFile(id.base, id, getBaseMA()[i]) == null)
+			for (int i = 0; i < getValidateMA().length; i++)
+				if(loader.loadFile(id.base, id, getValidateMA()[i]) == null)
 					return false;
 
 			return true;
@@ -278,9 +286,9 @@ public abstract class Source {
 			if (mod == null)
 				result.add(MM);
 
-			for (int i = 0; i < getBaseMA().length; i++)
-				if(loader.loadFile(id.base, id, getBaseMA()[i]) == null)
-					result.add(getBaseMA()[i]);
+			for (int i = 0; i < getValidateMA().length; i++)
+				if(loader.loadFile(id.base, id, getValidateMA()[i]) == null)
+					result.add(getValidateMA()[i]);
 
 			return result;
 		}
@@ -470,6 +478,17 @@ public abstract class Source {
 			File f = CommonStatic.ctx.getWorkspaceFile(path);
 			if (!f.exists())
 				return null;
+
+			try {
+				File realFile = new File(f.getCanonicalPath()).getParentFile();
+
+				if (realFile != null && !realFile.getName().equals(id.id)) {
+					return null;
+				}
+			} catch (Exception ignored) {
+
+			}
+
 			return new FDFile(f);
 		}
 
