@@ -358,7 +358,7 @@ public class LineUp extends Data {
 				Identifier<Unit> id = getFS(i).uid;
 				int f = getFS(i).fid;
 				Unit u = Identifier.get(id);
-				if (u == null || u.forms[f] == null)
+				if (u == null || f >= u.forms.length || u.forms[f] == null)
 					setFS(null, i);
 			}
 		arrange();
