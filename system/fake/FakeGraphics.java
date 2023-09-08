@@ -5,7 +5,7 @@ public interface FakeGraphics {
 	int RED = 0, YELLOW = 1, BLACK = 2, MAGENTA = 3, BLUE = 4, CYAN = 5, WHITE = 6;
 	int DEF = 0, TRANS = 1, BLEND = 2, GRAY = 3;
 
-	void colRect(int x, int y, int w, int h, int r, int g, int b, int a);
+	void colRect(float x, float y, float w, float h, int r, int g, int b, int a);
 
 	default void delete(FakeTransform at) {
 
@@ -15,25 +15,25 @@ public interface FakeGraphics {
 
 	void drawImage(FakeImage bimg, float x, float y, float d, float e);
 
-	void drawLine(int i, int j, int x, int y);
+	void drawLine(float i, float j, float x, float y);
 
-	void drawOval(int i, int j, int k, int l);
+	void drawOval(float i, float j, float k, float l);
 
-	void drawRect(int x, int y, int x2, int y2);
+	void drawRect(float x, float y, float w, float h);
 
-	void fillOval(int i, int j, int k, int l);
+	void fillOval(float i, float j, float k, float l);
 
-	void fillRect(int x, int y, int w, int h);
+	void fillRect(float x, float y, float w, float h);
 
 	FakeTransform getTransform();
 
-	void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f);
+	void gradRect(float x, float y, float w, float h, float a, float b, int[] c, float d, float e, int[] f);
 
-	void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f);
+	void gradRectAlpha(float x, float y, float w, float h, float a, float b, int al, int[] c, float d, float e, int al2, int[] f);
 
 	void rotate(float d);
 
-	void scale(int hf, int vf);
+	void scale(float hf, float vf);
 
 	void setColor(int c);
 
