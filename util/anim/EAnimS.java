@@ -11,7 +11,7 @@ public class EAnimS extends EAnimI {
 	}
 
 	@Override
-	public void draw(FakeGraphics g, P ori, double siz) {
+	public void draw(FakeGraphics g, P ori, float siz) {
 		set(g);
 		g.translate(ori.x, ori.y);
 		if (CommonStatic.getConfig().ref && !CommonStatic.getConfig().battle) {

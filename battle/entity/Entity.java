@@ -109,7 +109,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * draw this entity
 		 */
-		public void draw(FakeGraphics gra, P p, double siz) {
+		public void draw(FakeGraphics gra, P p, float siz) {
 			if (dead > 0) {
 				//100 is guessed value comparing from BC
 				p.y -= 100 * siz;
@@ -161,7 +161,7 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * draw the effect icons
 		 */
-		public void drawEff(FakeGraphics g, P p, double siz) {
+		public void drawEff(FakeGraphics g, P p, float siz) {
 			if (dead != -1)
 				return;
 			if (status[P_WARP][2] != 0)
@@ -169,9 +169,9 @@ public abstract class Entity extends AbEntity {
 
 			FakeTransform at = g.getTransform();
 			int EWID = 36;
-			double x = p.x;
+			float x = p.x;
 			if (effs[eftp] != null) {
-				effs[eftp].draw(g, p, siz * 0.75);
+				effs[eftp].draw(g, p, siz * 0.75f);
 			}
 
 			for(int i = 0; i < effs.length; i++) {
@@ -188,10 +188,10 @@ public abstract class Entity extends AbEntity {
 				if (eae == null)
 					continue;
 
-				double offset = 0.0;
+				float offset = 0f;
 
 				g.setTransform(at);
-				eae.draw(g, new P(x, p.y+offset), siz * 0.75);
+				eae.draw(g, new P(x, p.y+offset), siz * 0.75f);
 				x -= EWID * e.dire * siz;
 			}
 
@@ -206,11 +206,11 @@ public abstract class Entity extends AbEntity {
 					if(eae == null)
 						continue;
 
-					double offset = -25.0 * siz;
+					float offset = -25f * siz;
 
 					g.setTransform(at);
 
-					eae.draw(g, new P(x, p.y + offset), siz * 0.75);
+					eae.draw(g, new P(x, p.y + offset), siz * 0.75f);
 				}
 			}
 
@@ -623,7 +623,7 @@ public abstract class Entity extends AbEntity {
 			if (anim.type == UType.ATK)
 				setAnim(UType.WALK, false);
 			if (anim.type == UType.HB) {
-				e.interrupt(0, 0.0);
+				e.interrupt(0, 0f);
 				setAnim(UType.WALK, false);
 			}
 		}
@@ -771,7 +771,7 @@ public abstract class Entity extends AbEntity {
 					int atk0 = preID;
 					while (++preID < multi && pres[preID] == 0)
 						;
-					tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
+					tempAtk = (int) (atk0 + e.basis.r.nextFloat() * (preID - atk0));
 					e.basis.getAttack(e.aam.getAttack(tempAtk));
 					if (preID < multi) {
 						preTime = pres[preID];
@@ -801,21 +801,21 @@ public abstract class Entity extends AbEntity {
 		/**
 		 * remaining distance to KB
 		 */
-		private double kbDis;
+		private float kbDis;
 
 		/**
 		 * temp field to store wanted KB length
 		 */
-		private double tempKBdist;
+		private float tempKBdist;
 
 		/**
 		 * temp field to store wanted KB type
 		 */
 		private int tempKBtype = -1;
 
-		private double initPos;
-		private double kbDuration;
-		private double time = 1;
+		private float initPos;
+		private float kbDuration;
+		private float time = 1;
 
 		private KBManager(Entity ent) {
 			e = ent;
@@ -828,7 +828,7 @@ public abstract class Entity extends AbEntity {
 			int t = tempKBtype;
 			if (t == -1)
 				return;
-			double d = tempKBdist;
+			float d = tempKBdist;
 			tempKBtype = -1;
 			e.clearState();
 			kbType = t;
@@ -841,12 +841,12 @@ public abstract class Entity extends AbEntity {
 			e.anim.update();
 		}
 
-		private double easeOut(double time, double start, double end, double duration, double dire) {
+		private float easeOut(float time, float start, float end, float duration, float dire) {
 			time /= duration;
 			return -end * time * (time - 2) * dire + start;
 		}
 
-		private void interrupt(int t, double d) {
+		private void interrupt(int t, float d) {
 			if (t == INT_ASS && (e.getAbi() & AB_SNIPERI) > 0) {
 				e.anim.getEff(INV);
 				return;
@@ -862,11 +862,11 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		private void kbmove(double mov) {
+		private void kbmove(float mov) {
 			if (mov < 0)
 				e.updateMove(-mov, -mov);
 			else {
-				double lim = e.getLim();
+				float lim = e.getLim();
 				e.pos -= Math.min(mov, lim) * e.dire;
 			}
 		}
@@ -916,7 +916,7 @@ public abstract class Entity extends AbEntity {
 					e.preKill();
 			} else {
 				if (kbType != INT_WARP && kbType != INT_KB) {
-					double mov = kbDis / e.kbTime;
+					float mov = kbDis / e.kbTime;
 					kbDis -= mov;
 					kbmove(mov);
 				} else if (kbType == INT_KB) {
@@ -924,7 +924,7 @@ public abstract class Entity extends AbEntity {
 						kbDuration = e.kbTime;
 					}
 
-					double mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
+					float mov = easeOut(time, initPos, kbDis, kbDuration, -e.dire) - e.pos;
 					mov *= -e.dire;
 
 					kbmove(mov);
@@ -1034,7 +1034,7 @@ public abstract class Entity extends AbEntity {
 			}
 			e.status[P_WEAK][0] = max;
 
-			double ov = e.status[P_WEAK][1];
+			float ov = e.status[P_WEAK][1];
 
 			e.status[P_WEAK][1] = val;
 
@@ -1226,8 +1226,8 @@ public abstract class Entity extends AbEntity {
 				if (lm.get(i) == e)
 					continue;
 				Entity em = ((Entity) lm.get(i));
-				double d0 = em.pos + em.getProc().REVIVE.dis_0;
-				double d1 = em.pos + em.getProc().REVIVE.dis_1;
+				float d0 = em.pos + em.getProc().REVIVE.dis_0;
+				float d1 = em.pos + em.getProc().REVIVE.dis_1;
 				if ((d0 - e.pos) * (d1 - e.pos) > 0)
 					continue;
 				if (em.kb.kbType == INT_WARP)
@@ -1397,7 +1397,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * remaining burrow distance
 	 */
-	private double bdist;
+	private float bdist;
 
 	/**
 	 * poison proc processor
@@ -1452,14 +1452,14 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * Used for regenerating shield considering enemy's magnification
 	 */
-	private final double shieldMagnification;
+	private final float shieldMagnification;
 
 	/**
 	 * Whether onLastBreathe is called or not
 	 */
 	private boolean killCounted = false;
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double atkMagnif, double hpMagnif) {
+	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, float atkMagnif, float hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
 		basis = b;
 		data = de;
@@ -1481,7 +1481,7 @@ public abstract class Entity extends AbEntity {
 		shieldMagnification = hpMagnif;
 	}
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double lvMagnif, double tAtk, double tHP, PCoin pc, Level lv) {
+	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, float lvMagnif, float tAtk, float tHP, PCoin pc, Level lv) {
 		super((pc != null && lv != null && lv.getTalents().length == pc.max.length) ?
 				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getTalents()))) :
 				(int) ((1 + b.b.getInc(Data.C_DEF) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
@@ -1543,7 +1543,7 @@ public abstract class Entity extends AbEntity {
 							atk.getProc().STOP.time = atk.getProc().STOP.time * (100 - cRes.mult) / 100;
 							break;
 						case 32:
-							if (cRes.mult > 0 && basis.r.nextDouble() * 100 < cRes.mult)
+							if (cRes.mult > 0 && basis.r.nextFloat() * 100 < cRes.mult)
 								atk.getProc().BREAK.clear();
 							atk.getProc().KB.time = atk.getProc().KB.time * (100 - cRes.mult) / 100;
 							break;
@@ -1594,7 +1594,7 @@ public abstract class Entity extends AbEntity {
 
 		Proc.PT imuatk = getProc().IMUATK;
 		if (imuatk.prob > 0 && (atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false)) {
-			if (status[P_IMUATK][0] == 0 && (imuatk.prob == 100 || basis.r.nextDouble() * 100 < imuatk.prob)) {
+			if (status[P_IMUATK][0] == 0 && (imuatk.prob == 100 || basis.r.nextFloat() * 100 < imuatk.prob)) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
 			}
@@ -1603,7 +1603,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
-		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextDouble() * 100 < dmgcut.prob)) {
+		if (dmgcut.prob > 0 && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg < status[P_DMGCUT][0] && dmg > 0 && (dmgcut.prob == 100 || basis.r.nextFloat() * 100 < dmgcut.prob)) {
 			anim.getEff(P_DMGCUT);
 			if (dmgcut.type.procs)
 				proc = false;
@@ -1617,7 +1617,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
-		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextDouble() * 100 < dmgcap.prob)) {
+		if (dmgcap.prob > 0 && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0] && (dmgcap.prob == 100 || basis.r.nextFloat() * 100 < dmgcap.prob)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.procs)
 				proc = false;
@@ -1677,14 +1677,14 @@ public abstract class Entity extends AbEntity {
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75f));
 			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_CRIT);
 		}
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().SATK.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75.0));
+			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75f));
 			basis.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_SATK);
 		}
@@ -1708,17 +1708,17 @@ public abstract class Entity extends AbEntity {
 		else
 			anim.smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
 
-		anim.smokeLayer = (int) (layer + 3 - basis.r.nextDouble() * -6);
-		anim.smokeX = (int) (pos + 25 - basis.r.nextDouble() * -50);
+		anim.smokeLayer = (int) (layer + 3 - basis.r.nextFloat() * -6);
+		anim.smokeX = (int) (pos + 25 - basis.r.nextFloat() * -50);
 
 		bondTree.damaged(atk, dmg, proc);
 		final int FDmg = dmg;
 		atk.notifyEntity(e -> {
 			Proc.COUNTER counter = getProc().COUNTER;
-			if ((counter.prob == 100 || basis.r.nextDouble() * 100 < counter.prob) && e.dire != dire && (e.touchable() & getTouch()) > 0) {
+			if ((counter.prob == 100 || basis.r.nextFloat() * 100 < counter.prob) && e.dire != dire && (e.touchable() & getTouch()) > 0) {
 				boolean isWave = (atk.waveType & WT_WAVE) > 0 || (atk.waveType & WT_MINI) > 0 || (atk.waveType & WT_MOVE) > 0 || (atk.waveType & WT_VOLC) > 0;
 				if (!isWave || counter.type.counterWave != 0) {
-					double[] ds = counter.minRange != 0 || counter.maxRange != 0 ? new double[]{pos + counter.minRange, pos + counter.maxRange} : aam.touchRange();
+					float[] ds = counter.minRange != 0 || counter.maxRange != 0 ? new float[]{pos + counter.minRange, pos + counter.maxRange} : aam.touchRange();
 					int reflectAtk = FDmg;
 
 					Proc reflectProc = Proc.blank();
@@ -1801,7 +1801,7 @@ public abstract class Entity extends AbEntity {
 			if (rst == 100) {
 				anim.getEff(INV);
 			} else {
-				double poiDmg = atk.getProc().POIATK.mult * (100 - rst) / 10000.0;
+				float poiDmg = atk.getProc().POIATK.mult * (100 - rst) / 10000f;
 
 				if (dire == -1 && basis.canon.deco == DECO_BASE_BARRIER)
 					poiDmg *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_TOXIC);
@@ -1813,9 +1813,9 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		double f = getFruit(atk.trait, atk.dire, 1);
-		double time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2 / 3;
-		double dist = 1 + f * 0.1;
+		float f = getFruit(atk.trait, atk.dire, 1);
+		float time = atk instanceof AttackCanon ? 1 : 1 + f * 0.2f / 3;
+		float dist = 1 + f * 0.1f;
 		if (atk.getProc().STOP.time != 0 || atk.getProc().STOP.prob > 0) {
 			int val = (int) (atk.getProc().STOP.time * time);
 			int rst = getProc().IMUSTOP.mult;
@@ -1901,7 +1901,7 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().WARP.exists())
 			if (getProc().IMUWARP.mult < 100) {
 				Data.Proc.WARP warp = atk.getProc().WARP;
-				interrupt(INT_WARP, warp.dis_0 + (int) (basis.r.nextDouble() * (warp.dis_1 - warp.dis_0)));
+				interrupt(INT_WARP, warp.dis_0 + (int) (basis.r.nextFloat() * (warp.dis_1 - warp.dis_0)));
 				EffAnim<WarpEff> e = effas().A_W;
 				int len = e.len(WarpEff.ENTER) + e.len(WarpEff.EXIT);
 				int val = atk.getProc().WARP.time;
@@ -1931,7 +1931,7 @@ public abstract class Entity extends AbEntity {
 				POISON ws = (POISON) atk.getProc().POISON.clone();
 				ws.time = ws.time * (100 - res) / 100;
 				if (atk.atk != 0 && ws.type.modifAffected)
-					ws.damage *= (double) getDamage(atk, atk.atk) / atk.atk;
+					ws.damage *= (float) getDamage(atk, atk.atk) / atk.atk;
 
 				pois.add(ws);
 				anim.getEff(P_POISON);
@@ -2011,7 +2011,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * receive an interrupt
 	 */
-	public void interrupt(int t, double d) {
+	public void interrupt(int t, float d) {
 		if(isBase && health <= 0)
 			return;
 
@@ -2073,7 +2073,7 @@ public abstract class Entity extends AbEntity {
 		}
 		// lethal strike
 		if (getProc().LETHAL.prob > 0 && health <= 0) {
-			boolean b = getProc().LETHAL.prob == 100 || basis.r.nextDouble() * 100 < getProc().LETHAL.prob;
+			boolean b = getProc().LETHAL.prob == 100 || basis.r.nextFloat() * 100 < getProc().LETHAL.prob;
 			if (status[P_LETHAL][0] == 0 && b) {
 				health = 1;
 				anim.getEff(P_LETHAL);
@@ -2346,7 +2346,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * get max distance to go back
 	 */
-	protected abstract double getLim();
+	protected abstract float getLim();
 
 	protected abstract int traitType();
 
@@ -2356,12 +2356,12 @@ public abstract class Entity extends AbEntity {
 	 * extmov: distance try to add to this movement return false when movement reach
 	 * endpoint
 	 */
-	protected boolean updateMove(double maxl, double extmov) {
+	protected boolean updateMove(float maxl, float extmov) {
 		if (moved)
 			canBurrow = true;
 		moved = true;
 
-		double mov = status[P_SLOW][0] > 0 ? 0.25 : data.getSpeed() * 0.5;
+		float mov = status[P_SLOW][0] > 0 ? 0.25f : data.getSpeed() * 0.5f;
 
 		if (status[P_SPEED][0] > 0 && status[P_SLOW][0] <= 0) {
 			if (status[P_SPEED][2] == 0) {
@@ -2369,7 +2369,7 @@ public abstract class Entity extends AbEntity {
 			} else if (status[P_SPEED][2] == 1) {
 				mov = mov * (100 + status[P_SPEED][1]) / 100;
 			} else if (status[P_SPEED][2] == 2) {
-				mov = status[P_SPEED][1] * 0.5;
+				mov = status[P_SPEED][1] * 0.5f;
 			}
 		}
 
@@ -2414,18 +2414,18 @@ public abstract class Entity extends AbEntity {
 		}
 	}
 
-	private void drawAxis(FakeGraphics gra, P p, double siz) {
+	private void drawAxis(FakeGraphics gra, P p, float siz) {
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleConst.ratio;
-		double poa = p.x - pos * rat * siz;
+		float rat = BattleConst.ratio;
+		float poa = p.x - pos * rat * siz;
 		int py = (int) p.y;
 		int h = (int) (640 * rat * siz);
 		gra.setColor(FakeGraphics.RED);
 		for (int i = 0; i < data.getAtkCount(); i++) {
-			double[] ds = aam.inRange(i);
-			double d0 = Math.min(ds[0], ds[1]);
-			double ra = Math.abs(ds[0] - ds[1]);
+			float[] ds = aam.inRange(i);
+			float d0 = Math.min(ds[0], ds[1]);
+			float ra = Math.abs(ds[0] - ds[1]);
 			int x = (int) (d0 * rat * siz + poa);
 			int y = (int) (p.y + 100 * i * rat * siz);
 			int w = (int) (ra * rat * siz);
@@ -2449,7 +2449,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * get the extra proc time due to fruits, for EEnemy only
 	 */
-	private double getFruit(ArrayList<Trait> trait, int dire, int e) {
+	private float getFruit(ArrayList<Trait> trait, int dire, int e) {
 		if (!receive(dire) || receive(e))
 			return 0;
 		ArrayList<Trait> sharedTraits = new ArrayList<>(trait);
@@ -2485,7 +2485,7 @@ public abstract class Entity extends AbEntity {
 	 */
 	private void updateBurrow() {
 		if (!acted && kbTime == 0 && touch && status[P_BURROW][0] != 0) {
-			double bpos = basis.getBase(dire).pos;
+			float bpos = basis.getBase(dire).pos;
 			boolean ntbs = (bpos - pos) * dire > data.touchBase();
 			if (ntbs) {
 				// setup burrow state
@@ -2508,7 +2508,7 @@ public abstract class Entity extends AbEntity {
 		}
 		if (!acted && kbTime == -3) {
 			// move underground
-			double oripos = pos;
+			float oripos = pos;
 			updateMove(0, 0);
 			bdist -= (pos - oripos) * dire;
 			if (bdist < 0 || (basis.getBase(dire).pos - pos) * dire - data.touchBase() <= 0) {
@@ -2568,11 +2568,11 @@ public abstract class Entity extends AbEntity {
 	 */
 	public void checkTouch() {
 		touch = true;
-		double[] ds = aam.touchRange();
+		float[] ds = aam.touchRange();
 		List<AbEntity> le = basis.inRange(getTouch(), dire, ds[0], ds[1], false);
 		boolean blds;
 		if (data.isLD() || data.isOmni()) {
-			double bpos = basis.getBase(dire).pos;
+			float bpos = basis.getBase(dire).pos;
 			blds = (bpos - pos) * dire > data.touchBase();
 			if (blds)
 				le.remove(basis.getBase(dire));

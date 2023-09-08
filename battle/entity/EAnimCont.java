@@ -7,19 +7,19 @@ import common.util.anim.EAnimD;
 
 public class EAnimCont extends BattleObj {
 
-	public final double pos;
+	public final float pos;
 	public final int layer;
 	private final EAnimD<?> anim;
-	public final double offsetY;
+	public final float offsetY;
 
-	public EAnimCont(double p, int lay, EAnimD<?> ead) {
+	public EAnimCont(float p, int lay, EAnimD<?> ead) {
 		pos = p;
 		layer = lay;
 		anim = ead;
-		offsetY = 0.0;
+		offsetY = 0f;
 	}
 
-	public EAnimCont(double p, int lay, EAnimD<?> ead, double offsetY) {
+	public EAnimCont(float p, int lay, EAnimD<?> ead, float offsetY) {
 		pos = p;
 		layer = lay;
 		anim = ead;
@@ -33,7 +33,7 @@ public class EAnimCont extends BattleObj {
 		return anim.done();
 	}
 
-	public void draw(FakeGraphics gra, P p, double psiz) {
+	public void draw(FakeGraphics gra, P p, float psiz) {
 		p.y += offsetY * psiz;
 		anim.draw(gra, p, psiz);
 	}

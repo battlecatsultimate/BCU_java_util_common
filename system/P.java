@@ -15,7 +15,7 @@ public strictfp class P extends BattleObj {
 		stack.add(p);
 	}
 
-	public static synchronized P newP(double x, double y) {
+	public static synchronized P newP(float x, float y) {
 		if (!stack.isEmpty()) {
 			P p = stack.pollFirst();
 
@@ -41,8 +41,8 @@ public strictfp class P extends BattleObj {
 		return new P(p.x, p.y);
 	}
 
-	public static P polar(double r, double t) {
-		return new P(r * Math.cos(t), r * Math.sin(t));
+	public static P polar(float r, float t) {
+		return new P((float) (r * Math.cos(t)), (float) (r * Math.sin(t)));
 	}
 
 	public static float reg(float cx) {
@@ -53,22 +53,22 @@ public strictfp class P extends BattleObj {
 		return cx;
 	}
 
-	public double x, y;
+	public float x, y;
 
-	public P(double X, double Y) {
+	public P(float X, float Y) {
 		x = X;
 		y = Y;
 	}
 
-	public double abs() {
+	public float abs() {
 		return dis(new P(0, 0));
 	}
 
-	public double atan2() {
-		return Math.atan2(y, x);
+	public float atan2() {
+		return (float) Math.atan2(y, x);
 	}
 
-	public double atan2(P p) {
+	public float atan2(P p) {
 		return sf(p).atan2();
 	}
 
@@ -76,12 +76,12 @@ public strictfp class P extends BattleObj {
 		return new P(x, y);
 	}
 
-	public double crossP(P p) {
+	public float crossP(P p) {
 		return x * p.y - y * p.x;
 	}
 
-	public double dis(P p) {
-		return Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2));
+	public float dis(P p) {
+		return (float) Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2));
 	}
 
 	public P divide(P p) {
@@ -90,7 +90,7 @@ public strictfp class P extends BattleObj {
 		return this;
 	}
 
-	public double dotP(P p) {
+	public float dotP(P p) {
 		return x * p.x + y * p.y;
 	}
 
@@ -120,24 +120,24 @@ public strictfp class P extends BattleObj {
 		return ans;
 	}
 
-	public P middle(P p, double per) {
+	public P middle(P p, float per) {
 		return copy().plus(sf(p), per);
 	}
 
-	public P middleC(P p, double per) {
-		return copy().plus(sf(p), (1 - Math.cos(Math.PI * per)) / 2);
+	public P middleC(P p, float per) {
+		return copy().plus(sf(p), (float) ((1 - Math.cos(Math.PI * per)) / 2));
 	}
 
-	public boolean moveOut(P v, P b2, double r) {
+	public boolean moveOut(P v, P b2, float r) {
 		return moveOut(v, new P(0, 0), b2, r);
 	}
 
-	public boolean moveOut(P v, P b1, P b2, double r) {
+	public boolean moveOut(P v, P b1, P b2, float r) {
 		return x + r < b1.x && v.x <= 0 || y + r < b1.y && v.y <= 0 || x - r > b2.x && v.x >= 0
 				|| y - r > b2.y && v.y >= 0;
 	}
 
-	public boolean out(int[] rect, double sca, double r) {
+	public boolean out(int[] rect, float sca, float r) {
 		P p0 = new P(rect[0], rect[1]);
 		P p1 = new P(rect[2], rect[3]).plus(p0);
 		p0.times(sca);
@@ -145,15 +145,15 @@ public strictfp class P extends BattleObj {
 		return out(p0, p1, r);
 	}
 
-	public boolean out(P b2, double r) {
+	public boolean out(P b2, float r) {
 		return out(new P(0, 0), b2, r);
 	}
 
-	public boolean out(P b1, P b2, double r) {
+	public boolean out(P b1, P b2, float r) {
 		return x + r < b1.x || y + r < b1.y || x - r > b2.x || y - r > b2.y;
 	}
 
-	public P plus(double px, double py) {
+	public P plus(float px, float py) {
 		x += px;
 		y += py;
 		return this;
@@ -165,7 +165,7 @@ public strictfp class P extends BattleObj {
 		return this;
 	}
 
-	public P plus(P p, double n) {
+	public P plus(P p, float n) {
 		x += p.x * n;
 		y += p.y * n;
 		return this;
@@ -179,11 +179,11 @@ public strictfp class P extends BattleObj {
 		return this;
 	}
 
-	public P rotate(double t) {
-		return setTo(x * Math.cos(t) - y * Math.sin(t), y * Math.cos(t) + x * Math.sin(t));
+	public P rotate(float t) {
+		return setTo((float) (x * Math.cos(t) - y * Math.sin(t)), (float) (y * Math.cos(t) + x * Math.sin(t)));
 	}
 
-	public P setTo(double tx, double ty) {
+	public P setTo(float tx, float ty) {
 		x = tx;
 		y = ty;
 		return this;
@@ -204,13 +204,13 @@ public strictfp class P extends BattleObj {
 		return new P(p.x - x, p.y - y);
 	}
 
-	public P times(double d) {
+	public P times(float d) {
 		x *= d;
 		y *= d;
 		return this;
 	}
 
-	public P times(double hf, double vf) {
+	public P times(float hf, float vf) {
 		x *= hf;
 		y *= vf;
 		return this;

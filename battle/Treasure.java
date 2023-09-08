@@ -121,7 +121,7 @@ public class Treasure extends Data {
 			int min = data[3];
 			int max = data[4];
 
-			double segment = (max - min) * 1.0 / (difference / 10.0);
+			float segment = (max - min) * 1f / (difference / 10f);
 
 			int mn;
 			int mx;
@@ -215,15 +215,15 @@ public class Treasure extends Data {
 	/**
 	 * get multiplication of non-starred alien
 	 */
-	public double getAlienMulti() {
-		return 7 - alien * 0.01;
+	public float getAlienMulti() {
+		return 7 - alien * 0.01f;
 	}
 
 	/**
 	 * get cat attack multiplication
 	 */
-	public double getAtkMulti() {
-		return 1 + trea[T_ATK] * 0.005;
+	public float getAtkMulti() {
+		return 1 + trea[T_ATK] * 0.005f;
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class Treasure extends Data {
 		return base * (100 + b.getInc(C_C_ATK)) / 100;
 	}
 
-	public double getCannonMagnification(int id, int type) {
+	public float getCannonMagnification(int id, int type) {
 		if(curveData.containsKey(id)) {
 			CannonLevelCurve levelCurve = curveData.get(id);
 
@@ -260,8 +260,8 @@ public class Treasure extends Data {
 		return 0;
 	}
 
-	public double getBaseMagnification(int id, List<Trait> traits) {
-		double ans = 1.0;
+	public float getBaseMagnification(int id, List<Trait> traits) {
+		float ans = 1f;
 
 		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 
@@ -323,14 +323,14 @@ public class Treasure extends Data {
 		return ans;
 	}
 
-	public double getDecorationMagnification(int id, int type) {
+	public float getDecorationMagnification(int id, int type) {
 		if(deco[id - 1] == 0)
-			return 1.0;
+			return 1f;
 
 		CannonLevelCurve clc = decorationData.get(id);
 
 		if(clc == null)
-			return 1.0;
+			return 1f;
 
 		return clc.applyFormula(type, deco[id - 1]);
 	}
@@ -338,29 +338,29 @@ public class Treasure extends Data {
 	/**
 	 * get cat health multiplication
 	 */
-	public double getDefMulti() {
-		return 1 + trea[T_DEF] * 0.005;
+	public float getDefMulti() {
+		return 1 + trea[T_DEF] * 0.005f;
 	}
 
 	/**
 	 * get accounting multiplication
 	 */
-	public double getDropMulti() {
-		return (0.95 + 0.05 * tech[LV_ACC] + 0.005 * trea[T_ACC]) * (1 + b.getInc(C_MEAR) * 0.01);
+	public float getDropMulti() {
+		return (0.95f + 0.05f * tech[LV_ACC] + 0.005f * trea[T_ACC]) * (1 + b.getInc(C_MEAR) * 0.01f);
 	}
 
 	/**
 	 * get EVA kill ability attack multiplication
 	 */
-	public double getEKAtk() {
-		return 0.05 * (100 + b.getInc(C_EKILL));
+	public float getEKAtk() {
+		return 0.05f * (100 + b.getInc(C_EKILL));
 	}
 
 	/**
 	 * get EVA kill ability reduce damage multiplication
 	 */
-	public double getEKDef() {
-		return 20.0 / (100 + b.getInc(C_EKILL));
+	public float getEKDef() {
+		return 20f / (100 + b.getInc(C_EKILL));
 	}
 
 	/**
@@ -368,8 +368,8 @@ public class Treasure extends Data {
 	 * max treasure & level should lead to -264f recharge
 	 */
 	public int getFinRes(int ori) {
-		double research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3;
-		double deduction = research + Math.floor(research * b.getInc(C_RESP) / 100);
+		float research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3f;
+		float deduction = research + (float) Math.floor(research * b.getInc(C_RESP) / 100);
 		return (int) Math.max(60, ori - deduction);
 	}
 
@@ -377,8 +377,8 @@ public class Treasure extends Data {
 	 * get reverse cat cool down time
 	 */
 	public int getRevRes(int res) {
-		double research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3;
-		double addition = research + Math.floor(research * b.getInc(C_RESP) / 100);
+		float research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3f;
+		float addition = research + (float) Math.floor(research * b.getInc(C_RESP) / 100);
 		return (int) Math.max(60, res + addition);
 
 	}
@@ -386,8 +386,8 @@ public class Treasure extends Data {
 	/**
 	 * get maximum fruit of certain trait bitmask
 	 */
-	public double getFruit(ArrayList<Trait> types) {
-		double ans = 0;
+	public float getFruit(ArrayList<Trait> types) {
+		float ans = 0;
 		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 		if (types.contains(BCTraits.get(Data.TRAIT_RED)))
 			ans = Math.max(ans, fruit[T_RED]);
@@ -403,14 +403,14 @@ public class Treasure extends Data {
 			ans = Math.max(ans, fruit[T_ALIEN]);
 		if (types.contains(BCTraits.get(Data.TRAIT_ZOMBIE)))
 			ans = Math.max(ans, fruit[T_ZOMBIE]);
-		return ans * 0.01;
+		return ans * 0.01f;
 	}
 
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public double getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
-		double ini = traits.isEmpty() ? 1 : 0.5 - 0.1 / 3 * getFruit(traits);
+	public float getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
+		float ini = traits.isEmpty() ? 1 : 0.5f - 0.1f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
 			int[][] orbs = level.getOrbs();
@@ -436,7 +436,7 @@ public class Treasure extends Data {
 		if (ini == 1)
 			return ini;
 
-		double com = 1 - b.getInc(C_GOOD) * 0.01;
+		float com = 1 - b.getInc(C_GOOD) * 0.01f;
 
 		return ini * com;
 	}
@@ -444,33 +444,33 @@ public class Treasure extends Data {
 	/**
 	 * get attack multiplication from super massive damage ability
 	 */
-	public double getMASSIVESATK(ArrayList<Trait> traits) {
-		return 5 + 1.0 / 3 * getFruit(traits);
+	public float getMASSIVESATK(ArrayList<Trait> traits) {
+		return 5 + 1f / 3 * getFruit(traits);
 	}
 
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public double getMASSIVEATK(ArrayList<Trait> traits) {
-		double ini = 3 + 1.0 / 3 * getFruit(traits);
-		double combo = (1 - (b.getInc(C_MASSIVE) * 0.01));
+	public float getMASSIVEATK(ArrayList<Trait> traits) {
+		float ini = 3 + 1f / 3 * getFruit(traits);
+		float combo = (1 - (b.getInc(C_MASSIVE) * 0.01f));
 		return ini * combo;
 	}
 
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public double getGOODATK(ArrayList<Trait> traits) {
-		double ini = 1.5 + 0.3 / 3 * getFruit(traits);
-		double combo = 1 - (b.getInc(C_GOOD) * 0.01);
+	public float getGOODATK(ArrayList<Trait> traits) {
+		float ini = 1.5f + 0.3f / 3 * getFruit(traits);
+		float combo = 1 - (b.getInc(C_GOOD) * 0.01f);
 		return ini * combo;
 	}
 
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public double getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
-		double ini = traits.isEmpty() ? 1 : 0.25 - 0.05 / 3 * getFruit(traits);
+	public float getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
+		float ini = traits.isEmpty() ? 1 : 0.25f - 0.05f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
 			int[][] orbs = level.getOrbs();
@@ -496,46 +496,46 @@ public class Treasure extends Data {
 		if (ini == 1)
 			return ini;
 
-		double com = 1 - b.getInc(C_RESIST) * 0.01;
+		float com = 1 - b.getInc(C_RESIST) * 0.01f;
 		return ini * com;
 	}
 
 	/**
 	 * get damage reduce multiplication from super resistant ability
 	 */
-	public double getRESISTSDEF(ArrayList<Trait> traits) {
-		return 1.0 / 6 - 1.0 / 126 * getFruit(traits);
+	public float getRESISTSDEF(ArrayList<Trait> traits) {
+		return 1f / 6 - 1f / 126 * getFruit(traits);
 	}
 
 	/**
 	 * get multiplication of starred enemy
 	 */
-	public double getStarMulti(int st) {
+	public float getStarMulti(int st) {
 		if (st == 1)
-			return 16 - star * 0.01;
+			return 16 - star * 0.01f;
 		else
-			return 11 - 0.1 * gods[st - 2];
+			return 11 - 0.1f * gods[st - 2];
 	}
 
 	/**
 	 * get witch kill ability attack multiplication
 	 */
-	public double getWKAtk() {
-		return 0.05 * (100 + b.getInc(C_WKILL));
+	public float getWKAtk() {
+		return 0.05f * (100 + b.getInc(C_WKILL));
 	}
 
 	/**
 	 * get witch kill ability reduce damage multiplication
 	 */
-	public double getWKDef() {
-		return 10.0 / (100 + b.getInc(C_WKILL));
+	public float getWKDef() {
+		return 10f / (100 + b.getInc(C_WKILL));
 	}
 
-	public double getXPMult() {
+	public float getXPMult() {
 		int txp1 = trea[T_XP1];
 		int txp2 = trea[T_XP2];
-		double tm = txp1 * 0.005 + txp2 * 0.0025;
-		return 0.95 + tech[LV_XP] * 0.05 + tm;
+		float tm = txp1 * 0.005f + txp2 * 0.0025f;
+		return 0.95f + tech[LV_XP] * 0.05f + tm;
 	}
 
 	/**

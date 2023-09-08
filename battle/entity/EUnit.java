@@ -36,7 +36,7 @@ public class EUnit extends Entity {
 			return 0;
 		}
 
-		protected static double getOrbMassive(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
+		protected static float getOrbMassive(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
 			if(atk.origin.model instanceof AtkModelUnit) {
 				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(atk.trait, traits, t);
 			}
@@ -44,7 +44,7 @@ public class EUnit extends Entity {
 			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbMassive(atk.trait, traits, t);
 		}
 
-		protected static double getOrbGood(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
+		protected static float getOrbGood(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
 			if(atk.origin.model instanceof AtkModelUnit) {
 				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(atk.trait, traits, t);
 			}
@@ -58,9 +58,9 @@ public class EUnit extends Entity {
 
 	protected final Level level;
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0, int layer0, int layer1, Level level, PCoin pc, int[] index) {
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc, int[] index) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
-		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextDouble() * (layer1 - layer0 + 1));
+		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextFloat() * (layer1 - layer0 + 1));
 		traits = de.getTraits();
 		lvl = level.getLv() + level.getPlusLv();
 		this.index = index;
@@ -69,9 +69,9 @@ public class EUnit extends Entity {
 	}
 
 	//used for waterblast
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, double d0) {
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), null, null);
-		layer = de.getFront() + (int) (b.r.nextDouble() * (de.getBack() - de.getFront() + 1));
+		layer = de.getFront() + (int) (b.r.nextFloat() * (de.getBack() - de.getFront() + 1));
 		traits = de.getTraits();
 		this.index = null;
 
@@ -101,7 +101,7 @@ public class EUnit extends Entity {
 		if (atk.trait.contains(BCTraits.get(TRAIT_BEAST))) {
 			Proc.BSTHUNT beastDodge = getProc().BSTHUNT;
 			if (beastDodge.prob > 0 && (atk.dire != dire)) {
-				if (status[P_BSTHUNT][0] == 0 && (beastDodge.prob == 100 || basis.r.nextDouble() * 100 < beastDodge.prob)) {
+				if (status[P_BSTHUNT][0] == 0 && (beastDodge.prob == 100 || basis.r.nextFloat() * 100 < beastDodge.prob)) {
 					status[P_BSTHUNT][0] = beastDodge.time;
 					anim.getEff(P_IMUATK);
 				}
@@ -128,10 +128,10 @@ public class EUnit extends Entity {
 	@Override
 	protected int getDamage(AttackAb atk, int ans) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
-			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
+			ans = (int) ((float) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk instanceof AttackVolcano && atk.waveType == WT_MIVC) {
-			ans = (int) ((double) ans * atk.getProc().MINIVOLC.mult / 100.0);
+			ans = (int) ((float) ans * atk.getProc().MINIVOLC.mult / 100.0);
 		}
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
@@ -174,7 +174,7 @@ public class EUnit extends Entity {
 	}
 
 	@Override
-	protected double getLim() {
+	protected float getLim() {
 		return Math.max(0, basis.st.len - pos - ((MaskUnit) data).getLimit());
 	}
 
@@ -184,7 +184,7 @@ public class EUnit extends Entity {
 	}
 
 	@Override
-	protected boolean updateMove(double maxl, double extmov) {
+	protected boolean updateMove(float maxl, float extmov) {
 		if (status[P_SLOW][0] == 0)
 			extmov += data.getSpeed() * basis.b.getInc(C_SPE) / 200.0;
 		return super.updateMove(maxl, extmov);
@@ -260,11 +260,11 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private double getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
-		double ini = 1;
+	private float getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+		float ini = 1;
 
 		if (!traits.isEmpty())
-			ini = 3 + 1.0 / 3 * t.getFruit(traits);
+			ini = 3 + 1f / 3 * t.getFruit(traits);
 
 		Orb orbs = ((MaskUnit)data).getOrb();
 
@@ -292,16 +292,16 @@ public class EUnit extends Entity {
 		if (ini == 1)
 			return ini;
 
-		double com = 1 + t.b.getInc(C_MASSIVE) * 0.01;
+		float com = 1 + t.b.getInc(C_MASSIVE) * 0.01f;
 
 		return ini * com;
 	}
 
-	private double getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
-		double ini = 1;
+	private float getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+		float ini = 1;
 
 		if (!traits.isEmpty())
-			ini = 1.5 * (1 + 0.2 / 3 * t.getFruit(traits));
+			ini = 1.5f * (1 + 0.2f / 3 * t.getFruit(traits));
 
 		Orb orbs = ((MaskUnit)data).getOrb();
 
@@ -329,7 +329,7 @@ public class EUnit extends Entity {
 		if (ini == 1)
 			return ini;
 
-		double com = 1 + t.b.getInc(C_GOOD) * 0.01;
+		float com = 1 + t.b.getInc(C_GOOD) * 0.01f;
 		return ini * com;
 	}
 

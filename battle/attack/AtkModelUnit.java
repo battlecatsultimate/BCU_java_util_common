@@ -20,7 +20,7 @@ public class AtkModelUnit extends AtkModelEntity {
 	private final BasisLU bas;
 	private final Proc[] buffed;
 
-	protected AtkModelUnit(Entity ent, double d0, double d1, PCoin pcoin, Level lv) {
+	protected AtkModelUnit(Entity ent, float d0, float d1, PCoin pcoin, Level lv) {
 		super(ent, d0, d1, pcoin, lv);
 		bas = ent.basis.b;
 		buffed = new Proc[data.getAtkCount()];
@@ -53,8 +53,8 @@ public class AtkModelUnit extends AtkModelEntity {
 					lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
 					lvl *= (100.0 - resist) / 100;
 
-					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextDouble() * (proc.max_dis - proc.dis + 1));
-					double up = ent.pos + getDire() * dis;
+					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));
+					float up = ent.pos + getDire() * dis;
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
 						minlayer = maxlayer = e.layer;
@@ -77,10 +77,10 @@ public class AtkModelUnit extends AtkModelEntity {
 				int time = proc.time;
 				int allow = b.st.data.allow(b, ene);
 				if (allow >= 0 || conf.ignore_limit) {
-					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextDouble() * (proc.max_dis - proc.dis + 1));
-					double ep = ent.pos + getDire() * dis;
-					double mula = proc.mult * 0.01;
-					double mult = proc.mult * 0.01;
+					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));
+					float ep = ent.pos + getDire() * dis;
+					float mula = proc.mult * 0.01f;
+					float mult = proc.mult * 0.01f;
 
 					mula *= (100.0 - resist) / 100;
 					mult *= (100.0 - resist) / 100;

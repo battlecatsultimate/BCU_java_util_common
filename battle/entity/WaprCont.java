@@ -15,7 +15,7 @@ public class WaprCont extends EAnimCont {
 	public final int dire;
 	public final boolean timeImmune;
 
-	public WaprCont(double p, WarpEff pa, int layer, EAnimU a, int dire, boolean timeImmune) {
+	public WaprCont(float p, WarpEff pa, int layer, EAnimU a, int dire, boolean timeImmune) {
 		super(p, layer, effas().A_W.getEAnim(pa));
 		type = pa;
 		ent = a;
@@ -25,7 +25,7 @@ public class WaprCont extends EAnimCont {
 	}
 
 	@Override
-	public void draw(FakeGraphics gra, P p, double psiz) {
+	public void draw(FakeGraphics gra, P p, float psiz) {
 		FakeTransform at = gra.getTransform();
 		p.y -= 275 * psiz;
 		super.draw(gra, p, psiz);

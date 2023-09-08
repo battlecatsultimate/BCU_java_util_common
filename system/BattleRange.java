@@ -8,9 +8,9 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class BattleRange<T extends Number> {
-    public static final double battleRatio = 0.2;
-    public static final double battleHeightOffset = 1020.0 / battleRatio;
-    public static final double battleOffset = 400 / battleRatio;
+    public static final float battleRatio = 0.2f;
+    public static final float battleHeightOffset = 1020f / battleRatio;
+    public static final float battleOffset = 400f / battleRatio;
     private final Random r = new Random();
 
     public enum SNAP {
@@ -107,136 +107,136 @@ public class BattleRange<T extends Number> {
         return mi + nextFlexibleInt(r, mi, ma);
     }
 
-    public double getRangeD(int len) {
-        double mi;
+    public float getRangeF(int len) {
+        float mi;
 
         if(minSnap != null) {
             switch (minSnap) {
                 case LEFT:
-                    mi = -battleOffset + min.doubleValue();
+                    mi = -battleOffset + min.floatValue();
                     break;
                 case RIGHT:
-                    mi = len + battleOffset + min.doubleValue();
+                    mi = len + battleOffset + min.floatValue();
                     break;
                 case BOTTOM:
-                    mi = battleHeightOffset + min.doubleValue();
+                    mi = battleHeightOffset + min.floatValue();
                     break;
                 case SECOND:
-                    mi = min.doubleValue() / 30.0;
+                    mi = min.floatValue() / 30f;
                     break;
                 case PERCENT:
-                    mi = min.doubleValue() / 100.0;
+                    mi = min.floatValue() / 100f;
                     break;
                 default:
-                    mi = min.doubleValue();
+                    mi = min.floatValue();
             }
         } else {
-            mi = min.doubleValue();
+            mi = min.floatValue();
         }
 
-        double ma;
+        float ma;
 
         if(maxSnap != null) {
             switch (maxSnap) {
                 case LEFT:
-                    ma = -battleOffset + max.doubleValue();
+                    ma = -battleOffset + max.floatValue();
                     break;
                 case RIGHT:
-                    ma = len + battleOffset + max.doubleValue();
+                    ma = len + battleOffset + max.floatValue();
                     break;
                 case BOTTOM:
-                    ma = battleHeightOffset + max.doubleValue();
+                    ma = battleHeightOffset + max.floatValue();
                     break;
                 case SECOND:
-                    ma = max.doubleValue() / 30.0;
+                    ma = max.floatValue() / 30f;
                     break;
                 case PERCENT:
-                    ma = max.doubleValue() / 100.0;
+                    ma = max.floatValue() / 100f;
                     break;
                 default:
-                    ma = max.doubleValue();
+                    ma = max.floatValue();
             }
         } else {
-            ma = max.doubleValue();
+            ma = max.floatValue();
         }
 
         if(mi == ma) {
             return mi;
         }
 
-        return mi + r.nextDouble() * (ma - mi);
+        return mi + r.nextFloat() * (ma - mi);
     }
 
-    public double getRangeX(int len) {
-        double mi;
+    public float getRangeX(int len) {
+        float mi;
 
         if(minSnap != null) {
             if(minSnap == SNAP.LEFT) {
-                mi = min.doubleValue();
+                mi = min.floatValue();
             } else if(minSnap == SNAP.RIGHT) {
-                mi = (len * CommonStatic.BattleConst.ratio / battleRatio) + battleOffset + min.doubleValue();
+                mi = (len * CommonStatic.BattleConst.ratio / battleRatio) + battleOffset + min.floatValue();
             } else {
-                mi = battleOffset / 2.0 + min.doubleValue();
+                mi = battleOffset / 2f + min.floatValue();
             }
         } else {
-            mi = battleOffset / 2.0 + min.doubleValue();
+            mi = battleOffset / 2f + min.floatValue();
         }
 
-        double ma;
+        float ma;
 
         if(maxSnap != null) {
             if(maxSnap == SNAP.LEFT) {
-                ma = max.doubleValue();
+                ma = max.floatValue();
             } else if(maxSnap == SNAP.RIGHT) {
-                ma = max.doubleValue() + (len * CommonStatic.BattleConst.ratio / battleRatio) + battleOffset;
+                ma = max.floatValue() + (len * CommonStatic.BattleConst.ratio / battleRatio) + battleOffset;
             } else {
-                ma = battleOffset / 2.0 + max.doubleValue();
+                ma = battleOffset / 2f + max.floatValue();
             }
         } else {
-            ma = battleOffset / 2.0 + max.doubleValue();
+            ma = battleOffset / 2f + max.floatValue();
         }
 
         if(mi == ma) {
             return mi;
         }
 
-        return mi + r.nextDouble() * (ma - mi);
+        return mi + r.nextFloat() * (ma - mi);
     }
 
-    public double getRangeY(double height, double midH) {
-        double mi;
+    public float getRangeY(float height, float midH) {
+        float mi;
 
         if(minSnap != null) {
             if(minSnap == SNAP.TOP) {
-                mi = min.doubleValue() + (BackgroundEffect.BGHeight * 3 - height + midH) / battleRatio;
+                mi = min.floatValue() + (BackgroundEffect.BGHeight * 3 - height + midH) / battleRatio;
             } else if(minSnap == SNAP.BOTTOM) {
-                mi = min.doubleValue() + (BackgroundEffect.BGHeight * 3 + midH) / battleRatio;
+                mi = min.floatValue() + (BackgroundEffect.BGHeight * 3 + midH) / battleRatio;
             } else {
-                mi = min.doubleValue();
+                mi = min.floatValue();
             }
         } else {
-            mi = battleHeightOffset + min.doubleValue();
+            mi = battleHeightOffset + min.floatValue();
         }
 
-        double ma;
+        float ma;
 
         if(maxSnap != null) {
             if(maxSnap == SNAP.TOP) {
-                ma = max.doubleValue() + (BackgroundEffect.BGHeight * 3 - height + midH) / battleRatio;
+                ma = max.floatValue() + (BackgroundEffect.BGHeight * 3 - height + midH) / battleRatio;
             } else if(maxSnap == SNAP.BOTTOM) {
-                ma = max.doubleValue() + (BackgroundEffect.BGHeight * 3 + midH) / battleRatio;
+                ma = max.floatValue() + (BackgroundEffect.BGHeight * 3 + midH) / battleRatio;
             } else {
-                ma = max.doubleValue();
+                ma = max.floatValue();
             }
         } else {
-            ma = battleHeightOffset + max.doubleValue();
+            ma = battleHeightOffset + max.floatValue();
         }
 
         if(mi == ma) {
             return mi;
         }
 
-        return mi + r.nextDouble() * (ma - mi);
+        return mi + r.nextFloat() * (ma - mi);
     }
 
     public int getPureRangeI() {

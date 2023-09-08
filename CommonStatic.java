@@ -32,7 +32,7 @@ public class CommonStatic {
 
 	public interface BattleConst {
 
-		double ratio = 768.0 / 2400.0;// r = p/u
+		float ratio = 768f / 2400f;// r = p/u
 
 	}
 
@@ -313,6 +313,18 @@ public class CommonStatic {
 		return ans;
 	}
 
+	public static float parseFloatN(String str) {
+		float ans;
+
+		try {
+			ans = parseFloatsN(str)[0];
+		} catch (Exception e) {
+			ans = -1f;
+		}
+
+		return ans;
+	}
+
 	public static double[] parseDoublesN(String str) {
 		ArrayList<String> lstr = new ArrayList<>();
 		Matcher matcher = Pattern.compile("-?(([.|,]\\d+)|\\d+([.|,]\\d*)?)").matcher(str);
@@ -323,6 +335,21 @@ public class CommonStatic {
 		double[] result = new double[lstr.size()];
 		for (int i = 0; i < lstr.size(); i++)
 			result[i] = safeParseDouble(lstr.get(i));
+		return result;
+	}
+
+	public static float[] parseFloatsN(String str) {
+		ArrayList<String> lstr = new ArrayList<>();
+		Matcher matcher = Pattern.compile("-?(([.|,]\\d+)|\\d+([.|,]\\d*)?)").matcher(str);
+
+		while (matcher.find())
+			lstr.add(matcher.group());
+
+		float[] result = new float[lstr.size()];
+
+		for (int i = 0; i < lstr.size(); i++)
+			result[i] = safeParseFloat(lstr.get(i));
+
 		return result;
 	}
 
@@ -378,6 +405,22 @@ public class CommonStatic {
 				return Double.MIN_VALUE;
 			} else {
 				return Double.parseDouble(v);
+			}
+		} else {
+			throw new IllegalStateException("Value "+v+" isn't a number");
+		}
+	}
+
+	public static float safeParseFloat(String v) {
+		if(isDouble(v)) {
+			BigDecimal big = new BigDecimal(v);
+
+			if(big.compareTo(maxdbl) > 0) {
+				return Float.MAX_VALUE;
+			} else if(big.compareTo(mindbl) < 0) {
+				return Float.MIN_VALUE;
+			} else {
+				return Float.parseFloat(v);
 			}
 		} else {
 			throw new IllegalStateException("Value "+v+" isn't a number");
@@ -523,19 +566,19 @@ public class CommonStatic {
 	/**
 	 * Gets the minimum position value for a data enemy.
 	 */
-	public static double dataEnemyMinPos(MaModel model) {
+	public static float dataEnemyMinPos(MaModel model) {
 		int y = model.confs[0][2];
-		double z = (double) model.parts[0][8] / model.ints[0];
-		return 2.5 * Math.floor(y * z);
+		float z = (float) model.parts[0][8] / model.ints[0];
+		return 2.5f * (float) Math.floor(y * z);
 	}
 
 	/**
 	 * Gets the minimum position value for a custom enemy.
 	 */
-	public static double customEnemyMinPos(MaModel model) {
+	public static float customEnemyMinPos(MaModel model) {
 		int y = -model.parts[0][6];
-		double z = (double) model.parts[0][8] / model.ints[0];
-		return 2.5 * Math.floor(y * z);
+		float z = (float) model.parts[0][8] / model.ints[0];
+		return 2.5f * (float) Math.floor(y * z);
 	}
 
 	/**
@@ -555,7 +598,7 @@ public class CommonStatic {
 	/**
 	 * Gets the boss spawn point for a castle.
 	 */
-	public static double bossSpawnPoint(int y, int z) {
-		return (int) (3200 + y * z / 10 + Math.round(0.25 * Math.round(3.6 * z))) / 4.0;
+	public static float bossSpawnPoint(int y, int z) {
+		return (3200 + (float) (y * z / 10) + Math.round(0.25f * Math.round(3.6f * z))) / 4f;
 	}
 }

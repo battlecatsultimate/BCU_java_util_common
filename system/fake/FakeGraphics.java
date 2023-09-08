@@ -11,9 +11,9 @@ public interface FakeGraphics {
 
 	}
 
-	void drawImage(FakeImage bimg, double x, double y);
+	void drawImage(FakeImage bimg, float x, float y);
 
-	void drawImage(FakeImage bimg, double x, double y, double d, double e);
+	void drawImage(FakeImage bimg, float x, float y, float d, float e);
 
 	void drawLine(int i, int j, int x, int y);
 
@@ -31,7 +31,7 @@ public interface FakeGraphics {
 
 	void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f);
 
-	void rotate(double d);
+	void rotate(float d);
 
 	void scale(int hf, int vf);
 
@@ -45,6 +45,6 @@ public interface FakeGraphics {
 
 	void setTransform(FakeTransform at);
 
-	void translate(double x, double y);
+	void translate(float x, float y);
 
 }

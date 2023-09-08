@@ -19,7 +19,7 @@ public class EAnimU extends EAnimD<AnimU.UType> {
 	}
 
 	@Override
-	public void draw(FakeGraphics g, P ori, double siz) {
+	public void draw(FakeGraphics g, P ori, float siz) {
 		if (f == -1) {
 			f = 0;
 			setup();

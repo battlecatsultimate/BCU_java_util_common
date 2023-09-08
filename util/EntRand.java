@@ -46,7 +46,7 @@ public abstract class EntRand<X> extends Data {
 		for (EREnt<X> e : list)
 			tot += e.share;
 		if (tot > 0) {
-			int r = (int) (sb.r.nextDouble() * tot);
+			int r = (int) (sb.r.nextFloat() * tot);
 			for (EREnt<X> ent : list) {
 				r -= ent.share;
 				if (r < 0)

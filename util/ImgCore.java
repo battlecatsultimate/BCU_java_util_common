@@ -25,8 +25,8 @@ public class ImgCore extends Data {
 			g.setRenderingHint(i, CommonStatic.getConfig().ints[i]);
 	}
 
-	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, int glow,
-			double extendX, double extendY) {
+	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, float opa, int glow,
+			float extendX, float extendY) {
 		boolean glowSupport = (glow >= 1 && glow <= 3) || glow == -1;
 		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5) {
 			if (glowSupport)
@@ -42,11 +42,11 @@ public class ImgCore extends Data {
 		if (extendX == 0 && extendY == 0)
 			drawImage(g, bimg, -piv.x, -piv.y, sc.x, sc.y);
 		else {
-			double x = -piv.x;
-			double y = -piv.y;
+			float x = -piv.x;
+			float y = -piv.y;
 
-			double oldExtendY = extendY;
-			double oldExtendX = extendX;
+			float oldExtendY = extendY;
+			float oldExtendX = extendX;
 
 			if(extendY == 0) {
 				while (extendX > 1) {
@@ -55,7 +55,7 @@ public class ImgCore extends Data {
 					extendX--;
 				}
 			} else {
-				double extendXBackup = extendX;
+				float extendXBackup = extendX;
 
 				while(extendY > 1) {
 					if(extendX == 0) {
@@ -117,8 +117,7 @@ public class ImgCore extends Data {
 		g.setComposite(FakeGraphics.DEF, 0, 0);
 	}
 
-	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, double opa, boolean glow,
-			double extendX, double extendY) {
+	protected static void drawRandom(FakeGraphics g, FakeImage[] bimg, P piv, P sc, float opa, boolean glow, float extendX, float extendY) {
 		if (opa < CommonStatic.getConfig().fullOpa * 0.01 - 1e-5)
 			if (!glow)
 				g.setComposite(FakeGraphics.TRANS, (int) (opa * 256), 0);
@@ -131,7 +130,7 @@ public class ImgCore extends Data {
 		if (extendX == 0)
 			drawImage(g, bimg[0], -piv.x, -piv.y, sc.x, sc.y);
 		else {
-			double x = -piv.x;
+			float x = -piv.x;
 			int i = 0;
 			while (extendX > 1) {
 				int data;
@@ -180,7 +179,7 @@ public class ImgCore extends Data {
 		g.drawRect(x - 40, y - 40, sx + 80, sy + 80);
 	}
 
-	private static void drawImage(FakeGraphics g, FakeImage bimg, double x, double y, double w, double h) {
+	private static void drawImage(FakeGraphics g, FakeImage bimg, float x, float y, float w, float h) {
 		int ix = (int) Math.round(x);
 		int iy = (int) Math.round(y);
 		int iw = (int) Math.round(w);

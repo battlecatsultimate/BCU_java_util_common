@@ -14,7 +14,7 @@ public class ContWaveCanon extends ContWaveAb {
 
 	private final int canid;
 
-	public ContWaveCanon(AttackWave a, double p, int id) {
+	public ContWaveCanon(AttackWave a, float p, int id) {
 		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, true);
 		canid = id;
 		soundEffect = SE_CANNON[canid][1];
@@ -29,7 +29,7 @@ public class ContWaveCanon extends ContWaveAb {
 		}
 	}
 
-	public ContWaveCanon(AttackWave a, double p, int id, int maxTime, Set<ContWaveAb> waves) {
+	public ContWaveCanon(AttackWave a, float p, int id, int maxTime, Set<ContWaveAb> waves) {
 		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, false);
 		canid = id;
 		soundEffect = SE_CANNON[canid][1];
@@ -45,7 +45,7 @@ public class ContWaveCanon extends ContWaveAb {
 	}
 
 	@Override
-	public void draw(FakeGraphics gra, P p, double psiz) {
+	public void draw(FakeGraphics gra, P p, float psiz) {
 		if (t < 0)
 			return;
 		drawAxis(gra, p, psiz);
@@ -57,8 +57,8 @@ public class ContWaveCanon extends ContWaveAb {
 		anim.draw(gra, p.plus(pus, -psiz), psiz * 2);
 	}
 
-	public double getSize() {
-		return 2.5;
+	public float getSize() {
+		return 2.5f;
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class ContWaveCanon extends ContWaveAb {
 
 	@Override
 	protected void nextWave() {
-		double np = pos - 405;
+		float np = pos - 405;
 		new ContWaveCanon(new AttackWave(atk.attacker, atk, np, NYRAN[canid]), np, canid, maxt - t, waves);
 	}
 

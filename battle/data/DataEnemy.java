@@ -13,7 +13,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	private final Enemy enemy;
 
 	private int earn, star;
-	public double limit;
+	public float limit;
 
 	public DataEnemy(Enemy e) {
 		enemy = e;
@@ -224,7 +224,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	}
 
 	@Override
-	public double multi(Basis b) {
+	public float multi(Basis b) {
 		if (star > 0)
 			return b.t().getStarMulti(star);
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_ALIEN)))
@@ -233,7 +233,7 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 	}
 
 	@Override
-	public double getLimit() {
+	public float getLimit() {
 		return limit;
 	}
 }

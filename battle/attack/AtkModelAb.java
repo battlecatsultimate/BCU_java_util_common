@@ -25,7 +25,7 @@ public abstract class AtkModelAb extends BattleObj {
 	/**
 	 * get the position of the entity
 	 */
-	public abstract double getPos();
+	public abstract float getPos();
 
 	/**
 	 * invoke when damage calculation is finished

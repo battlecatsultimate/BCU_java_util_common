@@ -15,7 +15,7 @@ public class ContExtend extends ContAb {
     /**
      * conf: range, move, itrv, tot, rept,layer
      */
-    public ContExtend(AttackSimple as, double p, int... conf) {
+    public ContExtend(AttackSimple as, float p, int... conf) {
         super(as.model.b, p, conf[5]);
         move = conf[1];
         itv = conf[2];
@@ -28,17 +28,17 @@ public class ContExtend extends ContAb {
     }
 
     @Override
-    public void draw(FakeGraphics gra, P p, double siz) {
+    public void draw(FakeGraphics gra, P p, float siz) {
         if (!CommonStatic.getConfig().ref)
             return;
 
         // after this is the drawing of hit boxes
         siz *= 1.25;
-        double rat = BattleConst.ratio;
+        float rat = BattleConst.ratio;
         int h = (int) (640 * rat * siz);
         gra.setColor(FakeGraphics.MAGENTA);
-        double d0 = Math.min(start, end);
-        double ra = Math.abs(start) + Math.abs(end);
+        float d0 = Math.min(start, end);
+        float ra = Math.abs(start) + Math.abs(end);
         int x = (int) (d0 * rat * siz + p.x);
         int y = (int) p.y;
         int w = (int) -(ra * rat * siz);

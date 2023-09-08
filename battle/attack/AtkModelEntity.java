@@ -23,7 +23,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	 * @param d0 Level multiplication for EUnit, Magnification for EEnemy
 	 * @return returns AtkModelEntity with specified magnification values
 	 */
-	public static AtkModelEntity getEnemyAtk(Entity e, double d0) {
+	public static AtkModelEntity getEnemyAtk(Entity e, float d0) {
 		if (e instanceof EEnemy) {
 			EEnemy ee = (EEnemy) e;
 			return new AtkModelEnemy(ee, d0);
@@ -31,7 +31,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		return null;
 	}
 
-	public static AtkModelEntity getUnitAtk(Entity e, double treasure, double level, PCoin pcoin, Level lv) {
+	public static AtkModelEntity getUnitAtk(Entity e, float treasure, float level, PCoin pcoin, Level lv) {
 		if(!(e instanceof EUnit))
 			return null;
 
@@ -44,7 +44,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	protected final BattleObj[] acs;
 	private final Proc[] sealed;
 
-	protected AtkModelEntity(Entity ent, double d0, double d1) {
+	protected AtkModelEntity(Entity ent, float d0, float d1) {
 		super(ent.basis);
 		e = ent;
 		data = e.data;
@@ -69,7 +69,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		}
 	}
 
-	protected AtkModelEntity(Entity ent, double d0, double d1, PCoin pc, Level lv) {
+	protected AtkModelEntity(Entity ent, float d0, float d1, PCoin pc, Level lv) {
 		super(ent.basis);
 		e = ent;
 		data = e.data;
@@ -98,7 +98,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		}
 	}
 
-	public void setExtraAtks(int[][] raw, double d0) {
+	public void setExtraAtks(int[][] raw, float d0) {
 		for(int i = 0; i <= 4; i++) {
 			AtkDataModel model;
 
@@ -161,7 +161,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		act[ind]--;
 		Proc proc = Proc.blank();
 		int atk = getAttack(ind, proc);
-		double[] ints = inRange(ind);
+		float[] ints = inRange(ind);
 		return new AttackSimple(e, this, atk, e.traits, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind), e.layer, data.isLD(ind) || data.isOmni(ind), ind);
 	}
 
@@ -173,10 +173,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		int atk = getAttack(0, p);
 		AttackSimple as = new AttackSimple(e, this, atk, e.traits, getAbi(), p, 0, 0, e.data.getAtkModel(0), 0, false);
 		Proc.VOLC ds = e.getProc().DEATHSURGE;
-		int addp = ds.dis_0 + (int) (b.r.nextDouble() * (ds.dis_1 - ds.dis_0));
-		double p0 = getPos() + getDire() * addp;
-		double sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
-		double end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
+		int addp = ds.dis_0 + (int) (b.r.nextFloat() * (ds.dis_1 - ds.dis_0));
+		float p0 = getPos() + getDire() * addp;
+		float sta = p0 + (getDire() == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
+		float end = p0 - (getDire() == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
 		new ContVolcano(new AttackVolcano(e, as, sta, end, Data.WT_VOLC), p0, e.layer, ds.time, ds.dis_0, ds.dis_1, 0);
 	}
@@ -187,16 +187,16 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	@Override
-	public double getPos() {
+	public float getPos() {
 		return e.pos;
 	}
 
 	/**
 	 * get the attack box for nth attack
 	 */
-	public double[] inRange(int ind) {
+	public float[] inRange(int ind) {
 		int dire = e.dire;
-		double d0, d1;
+		float d0, d1;
 		d0 = d1 = e.pos;
 		if (!data.isLD(ind) && !data.isOmni(ind)) {
 			d0 += data.getRange() * dire;
@@ -205,7 +205,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			d0 += data.getAtkModel(ind).getShortPoint() * dire;
 			d1 += data.getAtkModel(ind).getLongPoint() * dire;
 		}
-		return new double[] { d0, d1 };
+		return new float[] { d0, d1 };
 	}
 
 	@Override
@@ -223,13 +223,13 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	/**
 	 * get the collide box bound
 	 */
-	public double[] touchRange() {
+	public float[] touchRange() {
 		int dire = e.dire;
-		double d0, d1;
+		float d0, d1;
 		d0 = d1 = e.pos;
 		d0 += data.getRange() * dire;
 		d1 -= data.getWidth() * dire;
-		return new double[] { d0, d1 };
+		return new float[] { d0, d1 };
 	}
 
 	protected void extraAtk(int ind) {
@@ -238,7 +238,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (data.getAtkModel(ind).getAltAbi() != 0)
 			e.altAbi(data.getAtkModel(ind).getAltAbi());
 		if (abis[ind] == 1) {
-			if (getProc(ind).TIME.prob != 0 && (getProc(ind).TIME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).TIME.prob)) {
+			if (getProc(ind).TIME.prob != 0 && (getProc(ind).TIME.prob == 100 || b.r.nextFloat() * 100 < getProc(ind).TIME.prob)) {
 				if (getProc(ind).TIME.intensity > 0) {
 					b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind).TIME.time);
 					b.temp_inten = getProc(ind).TIME.intensity;
@@ -247,7 +247,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 					b.temp_n_inten = (float)Math.abs(getProc(ind).TIME.intensity) / b.sn_temp_stop;
 				}
 			}
-			if (getProc(ind).THEME.prob != 0 && (getProc(ind).THEME.prob == 100 || b.r.nextDouble() * 100 < getProc(ind).THEME.prob))
+			if (getProc(ind).THEME.prob != 0 && (getProc(ind).THEME.prob == 100 || b.r.nextFloat() * 100 < getProc(ind).THEME.prob))
 				b.changeTheme(getProc(ind).THEME);
 		}
 	}

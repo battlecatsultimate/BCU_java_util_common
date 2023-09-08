@@ -33,7 +33,7 @@ public class Sniper extends AtkModelAb {
 	/**
 	 * base part of animation
 	 */
-	public void drawBase(FakeGraphics gra, P ori, double siz) {
+	public void drawBase(FakeGraphics gra, P ori, float siz) {
 		height = ori.y;
 
 		anim.ent[1].alter(9, 1500);
@@ -59,7 +59,7 @@ public class Sniper extends AtkModelAb {
 	}
 
 	@Override
-	public double getPos() {
+	public float getPos() {
 		return b.ubase.pos + SNIPER_POS;
 	}
 

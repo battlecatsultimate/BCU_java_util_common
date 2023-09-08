@@ -14,7 +14,7 @@ public class AttackVolcano extends AttackAb {
 
 	private byte volcTime = VOLC_ITV;
 
-	public AttackVolcano(Entity e, AttackAb a, double sta, double end, int vt) {
+	public AttackVolcano(Entity e, AttackAb a, float sta, float end, int vt) {
 		super(e, a, sta, end, false);
 		isCounter = a.isCounter;
 		this.sta = sta;

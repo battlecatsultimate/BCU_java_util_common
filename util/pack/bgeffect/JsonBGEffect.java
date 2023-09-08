@@ -70,7 +70,7 @@ public class JsonBGEffect extends BackgroundEffect {
                 }
             }
         } catch (Exception ignored) {
-            Pattern idExtractor = Pattern.compile("\\{(\\s+)?\"id\"(\\s+)?:(\\s+)?\\d+(\\s+)?\\}");
+            Pattern idExtractor = Pattern.compile("\\{(\\s+)?\"id\"(\\s+)?:(\\s+)?\\d+(\\s+)?}");
 
             Matcher matcher = idExtractor.matcher(new String(vf.getData().getBytes()));
 
@@ -111,35 +111,35 @@ public class JsonBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void preDraw(FakeGraphics g, P rect, float siz, float midH) {
         for(int i = 0; i < handlers.size(); i++) {
             handlers.get(i).preDraw(g, rect, siz);
         }
     }
 
     @Override
-    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         for(int i = 0; i < handlers.size(); i++) {
             handlers.get(i).postDraw(g, rect, siz);
         }
     }
 
     @Override
-    public void update(int w, double h, double midH) {
+    public void update(int w, float h, float midH) {
         for(int i = 0; i < handlers.size(); i++) {
             handlers.get(i).update(w, h, midH);
         }
     }
 
     @Override
-    public void updateAnimation(int w, double h, double midH) {
+    public void updateAnimation(int w, float h, float midH) {
         for(int i = 0; i < handlers.size(); i++) {
             handlers.get(i).updateAnimation();
         }
     }
 
     @Override
-    public void initialize(int w, double h, double midH, Background bg) {
+    public void initialize(int w, float h, float midH, Background bg) {
         for(int i = 0; i < handlers.size(); i++) {
             handlers.get(i).initialize(w, h, midH);
         }

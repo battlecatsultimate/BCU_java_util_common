@@ -13,7 +13,7 @@ import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class SnowBGEffect extends BackgroundEffect{
-    private final double maxSlope = Math.tan(Math.toRadians(75));
+    private final float maxSlope = (float) Math.tan(Math.toRadians(75));
     private final FakeImage snow;
 
     private final int sw;
@@ -22,7 +22,7 @@ public class SnowBGEffect extends BackgroundEffect{
     private final List<P> snowPosition = new ArrayList<>();
     private final List<P> initPos = new ArrayList<>();
     private final List<Float> speed = new ArrayList<>();
-    private final List<Double> slope = new ArrayList<>();
+    private final List<Float> slope = new ArrayList<>();
     private final Random r = new Random();
 
     private final List<Integer> capture = new ArrayList<>();
@@ -40,12 +40,12 @@ public class SnowBGEffect extends BackgroundEffect{
     }
 
     @Override
-    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void preDraw(FakeGraphics g, P rect, float siz, float midH) {
 
     }
 
     @Override
-    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         g.setComposite(FakeGraphics.TRANS, 127, 0);
 
         for(int i = 0; i < snowPosition.size(); i++) {
@@ -56,7 +56,7 @@ public class SnowBGEffect extends BackgroundEffect{
     }
 
     @Override
-    public void update(int w, double h, double midH) {
+    public void update(int w, float h, float midH) {
         capture.clear();
 
         for(int i = 0; i < snowPosition.size(); i++) {
@@ -71,8 +71,8 @@ public class SnowBGEffect extends BackgroundEffect{
 
         if(!capture.isEmpty()) {
             for(int i = 0; i < capture.size(); i++) {
-                double x = r.nextInt(w + sw + battleOffset);
-                double y = -sh;
+                float x = r.nextInt(w + sw + battleOffset);
+                float y = -sh;
 
                 snowPosition.get(capture.get(i)).x = x;
                 snowPosition.get(capture.get(i)).y = y;
@@ -80,7 +80,7 @@ public class SnowBGEffect extends BackgroundEffect{
                 initPos.get(capture.get(i)).y = y;
 
                 //0 ~ 75
-                double angle = Math.toRadians(r.nextInt(75));
+                float angle = (float) Math.toRadians(r.nextInt(75));
 
                 //-0.5angle + 1 is stabilizer
                 if (CommonStatic.getConfig().performanceModeBattle) {
@@ -88,13 +88,13 @@ public class SnowBGEffect extends BackgroundEffect{
                 } else {
                     speed.set(capture.get(i), (float) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
                 }
-                slope.set(capture.get(i), Math.tan(-angle));
+                slope.set(capture.get(i), (float) Math.tan(-angle));
             }
         }
     }
 
     @Override
-    public void initialize(int w, double h, double midH, Background bg) {
+    public void initialize(int w, float h, float midH, Background bg) {
         for(int i = 0; i < snowPosition.size(); i++) {
             P.delete(snowPosition.get(i));
         }
@@ -104,13 +104,13 @@ public class SnowBGEffect extends BackgroundEffect{
         int number = w / 200;
 
         for(int i = 0; i < number; i++) {
-            double x = r.nextInt(w + sw + battleOffset);
-            double y = r.nextInt(1510 + sh);
+            float x = r.nextInt(w + sw + battleOffset);
+            float y = r.nextInt(1510 + sh);
             snowPosition.add(P.newP(x, y));
             initPos.add(P.newP(x, y));
 
             //0~75
-            double angle = Math.toRadians(r.nextInt(75));
+            float angle = (float) Math.toRadians(r.nextInt(75));
 
             //-0.5angle + 1 is stabilizer
             if (CommonStatic.getConfig().performanceModeBattle) {
@@ -119,7 +119,7 @@ public class SnowBGEffect extends BackgroundEffect{
                 speed.add((float) ((Data.BG_EFFECT_SNOW_SPEED - r.nextInt(Data.BG_EFFECT_SNOW_SPEED - 3)) * (-0.75 * angle / maxSlope + 1)));
             }
 
-            slope.add(Math.tan(-angle));
+            slope.add((float) Math.tan(-angle));
         }
     }
 }

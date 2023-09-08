@@ -41,8 +41,8 @@ public class ECastle extends AbEntity {
 		else
 			smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
 
-		smokeLayer = (int) (atk.layer + 3 - sb.r.nextDouble() * -6);
-		smokeX = (int) (pos + 25 - sb.r.nextDouble() * -25);
+		smokeLayer = (int) (atk.layer + 3 - sb.r.nextFloat() * -6);
+		smokeX = (int) (pos + 25 - sb.r.nextFloat() * -25);
 
 		int ans = atk.atk;
 		ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
@@ -50,13 +50,13 @@ public class ECastle extends AbEntity {
 		int satk = atk.getProc().SATK.mult;
 		if (satk > 0) {
 			ans *= (100 + satk) * 0.01;
-			sb.lea.add(new EAnimCont(pos, 9, effas().A_SATK.getEAnim(DefEff.DEF), -75.0));
+			sb.lea.add(new EAnimCont(pos, 9, effas().A_SATK.getEAnim(DefEff.DEF), -75f));
 			sb.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_SATK);
 		}
 		if (atk.getProc().CRIT.mult > 0) {
 			ans *= 0.01 * atk.getProc().CRIT.mult;
-			sb.lea.add(new EAnimCont(pos, 9, effas().A_CRIT.getEAnim(DefEff.DEF), -75.0));
+			sb.lea.add(new EAnimCont(pos, 9, effas().A_CRIT.getEAnim(DefEff.DEF), -75f));
 			sb.lea.sort(Comparator.comparingInt(e -> e.layer));
 			CommonStatic.setSE(SE_CRIT);
 		}

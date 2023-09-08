@@ -49,7 +49,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 	}
 
 	@Override
-	public EEnemy getEntity(StageBasis sb, Object obj, double mul, double mul2, int d0, int d1, int m) {
+	public EEnemy getEntity(StageBasis sb, Object obj, float mul, float mul2, int d0, int d1, int m) {
 		sb.rege.add(this);
 		return get(getSelection(sb, obj), sb, obj, mul, mul2, d0, d1, m);
 	}
@@ -84,7 +84,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 			zread$000400(is);
 	}
 
-	private EEnemy get(EREnt<Identifier<AbEnemy>> x, StageBasis sb, Object obj, double mul, double mul2, int d0, int d1,
+	private EEnemy get(EREnt<Identifier<AbEnemy>> x, StageBasis sb, Object obj, float mul, float mul2, int d0, int d1,
 			int m) {
 		return Identifier.getOr(x.ent, AbEnemy.class).getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0,
 				d1, m);

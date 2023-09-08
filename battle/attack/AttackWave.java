@@ -12,7 +12,7 @@ public class AttackWave extends AttackAb {
 
 	protected final Set<Entity> incl;
 
-	public AttackWave(Entity e, AttackSimple a, double p0, double wid, int wt) {
+	public AttackWave(Entity e, AttackSimple a, float p0, float wid, int wt) {
 		super(e, a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = wt;
 		isCounter = a.isCounter;
@@ -23,7 +23,7 @@ public class AttackWave extends AttackAb {
 			proc.WAVE.lv--;
 	}
 
-	public AttackWave(Entity e, AttackWave a, double p0, double wid) {
+	public AttackWave(Entity e, AttackWave a, float p0, float wid) {
 		super(e, a, p0 - wid / 2, p0 + wid / 2, false);
 		waveType = a.waveType;
 		isCounter = a.isCounter;
@@ -34,7 +34,7 @@ public class AttackWave extends AttackAb {
 			proc.WAVE.lv--;
 	}
 
-	public AttackWave(Entity e, AttackWave a, double pos, double start, double end) {
+	public AttackWave(Entity e, AttackWave a, float pos, float start, float end) {
 		super(e, a, pos - start, pos + end, false);
 		waveType = a.waveType;
 		isCounter = a.isCounter;

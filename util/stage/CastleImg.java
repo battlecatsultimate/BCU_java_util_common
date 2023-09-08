@@ -24,7 +24,7 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 	@JsonField
 	public Identifier<CastleImg> id;
 	@JsonField
-	public double boss_spawn = 0;
+	public float boss_spawn = 0;
 	public VImg img;
 
 	public static void loadBossSpawns() {
@@ -92,10 +92,14 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 	@OnInjected
 	public void onInjected() {
 		PackData.UserPack pack = UserProfile.getUserPack(id.pack);
+
+		if (pack == null)
+			return;
+
 		img = pack.source.readImage(Source.BasePath.CASTLE.toString(), id.id);
 
 		if (UserProfile.isOlderPack(pack, "0.5.6.0")) {
-			boss_spawn = 828.5;
+			boss_spawn = 828.5f;
 		}
 	}
 

@@ -47,7 +47,7 @@ public abstract class EAnimI extends BattleObj {
 		return a;
 	}
 
-	public abstract void draw(FakeGraphics g, P ori, double siz);
+	public abstract void draw(FakeGraphics g, P ori, float siz);
 
 	public abstract float ind();
 

@@ -10,7 +10,7 @@ public class SurgeSummoner extends EAnimCont {
     private final int time, sta, end, type;
     private int surge = COUNTER_SURGE_FORESWING, sound = COUNTER_SURGE_SOUND;
 
-    public SurgeSummoner(double p, int lay, EAnimD<?> ead, Entity summoner, int time, int type, int sta, int end) {
+    public SurgeSummoner(float p, int lay, EAnimD<?> ead, Entity summoner, int time, int type, int sta, int end) {
         super(p, lay, ead);
 
         this.summoner = summoner;
@@ -30,10 +30,10 @@ public class SurgeSummoner extends EAnimCont {
             if (surge == 0) {
                 //Shoot surge
                 int dire = summoner.dire;
-                int addp = sta + (int) (summoner.basis.r.nextDouble() * (end - sta));
-                double p0 = summoner.pos + dire * addp;
-                double s = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
-                double e = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
+                int addp = sta + (int) (summoner.basis.r.nextFloat() * (end - sta));
+                float p0 = summoner.pos + dire * addp;
+                float s = p0 + (dire == 1 ? W_VOLC_PIERCE : W_VOLC_INNER);
+                float e = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
                 AttackVolcano volcanoAttack = new AttackVolcano(summoner, summoner.aam.getAttack(0), s, e, type);
 

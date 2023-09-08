@@ -19,7 +19,7 @@ public abstract class ContWaveAb extends ContAb {
 	protected int maxt;
 	protected boolean tempAtk;
 
-	protected ContWaveAb(AttackWave a, double p, EAnimD<?> ead, int layer, boolean delay) {
+	protected ContWaveAb(AttackWave a, float p, EAnimD<?> ead, int layer, boolean delay) {
 		super(a.model.b, p, layer);
 		atk = a;
 		anim = ead;
@@ -29,7 +29,7 @@ public abstract class ContWaveAb extends ContAb {
 	}
 
 	@Override
-	public void draw(FakeGraphics gra, P p, double siz) {
+	public void draw(FakeGraphics gra, P p, float siz) {
 		if (t < 0)
 			return;
 		FakeTransform at = gra.getTransform();
@@ -46,17 +46,17 @@ public abstract class ContWaveAb extends ContAb {
 		waves.forEach(w -> w.activate = false);
 	}
 
-	protected void drawAxis(FakeGraphics gra, P p, double siz) {
+	protected void drawAxis(FakeGraphics gra, P p, float siz) {
 		if (!CommonStatic.getConfig().ref)
 			return;
 
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleConst.ratio;
+		float rat = BattleConst.ratio;
 		int h = (int) (640 * rat * siz);
 		gra.setColor(FakeGraphics.MAGENTA);
-		double d0 = Math.min(atk.sta, atk.end);
-		double ra = Math.abs(atk.sta - atk.end);
+		float d0 = Math.min(atk.sta, atk.end);
+		float ra = Math.abs(atk.sta - atk.end);
 		int x = (int) ((d0 - pos) * rat * siz + p.x);
 		int y = (int) p.y;
 		int w = (int) (ra * rat * siz);

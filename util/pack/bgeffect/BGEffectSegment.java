@@ -53,18 +53,18 @@ public class BGEffectSegment {
     /**
      * The Size of the component to draw. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public BattleRange<Double> scale;
+    public BattleRange<Float> scale;
     /**
      * The start Size of the component along x-axis. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public BattleRange<Double> startScaleX;
+    public BattleRange<Float> startScaleX;
 
-    public BattleRange<Double> scaleX;
-    public BattleRange<Double> scaleY;
+    public BattleRange<Float> scaleX;
+    public BattleRange<Float> scaleY;
     /**
      * The Angle of the component to draw. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public BattleRange<Double> angle;
+    public BattleRange<Float> angle;
     /**
      * Frame this component will start to appear.
      */
@@ -84,16 +84,16 @@ public class BGEffectSegment {
     /**
      * The speed this component will rotate. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public BattleRange<Double> angleVelocity;
+    public BattleRange<Float> angleVelocity;
     /**
      * Component's velocity.
      */
-    public final BattleRange<Double> velocity;
+    public final BattleRange<Float> velocity;
     /**
      * The speed this component will move. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Double> velocityX;
-    public final BattleRange<Double> velocityY;
+    public final BattleRange<Float> velocityX;
+    public final BattleRange<Float> velocityY;
     /**
      * If the component goes beyond these values' direction, it will be destroyed.
      */
@@ -101,7 +101,7 @@ public class BGEffectSegment {
     /**
      * The size this component when made. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Double> startScale;
+    public final BattleRange<Float> startScale;
     /**
      * Initial X position. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
@@ -113,15 +113,15 @@ public class BGEffectSegment {
     /**
      * Initial X velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Double> startVelocityX;
+    public final BattleRange<Float> startVelocityX;
     /**
      * Initial Y velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Double> startVelocityY;
+    public final BattleRange<Float> startVelocityY;
     /**
      * Initial velocity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
-    public final BattleRange<Double> startVelocity;
+    public final BattleRange<Float> startVelocity;
     /**
      * The component will be destroyed if it stays on the field longer than this time.
      */
@@ -129,7 +129,7 @@ public class BGEffectSegment {
     /**
      * ???
      */
-    public final BattleRange<Double> moveAngle;
+    public final BattleRange<Float> moveAngle;
     /**
      * Component's opacity. If there is a maximum value, the value will be a random number between the minimum and maximum value.
      */
@@ -246,7 +246,7 @@ public class BGEffectSegment {
         }
 
         if(elem.has("angle")) {
-            angle = readRangedJsonObjectD(elem, "angle", Math::toRadians);
+            angle = readRangedJsonObjectD(elem, "angle", d -> (float) Math.toRadians(d));
         } else {
             angle = null;
         }
@@ -316,31 +316,31 @@ public class BGEffectSegment {
         }
 
         if(elem.has("v")) {
-            velocity = readRangedJsonObjectD(elem, "v", d -> d * 4.0);
+            velocity = readRangedJsonObjectD(elem, "v", d -> d * 4f);
         } else {
             velocity = null;
         }
 
         if(elem.has("vx")) {
-            velocityX = readRangedJsonObjectD(elem, "vx", d -> d * 4.0);
+            velocityX = readRangedJsonObjectD(elem, "vx", d -> d * 4f);
         } else {
             velocityX = null;
         }
 
         if(elem.has("vy")) {
-            velocityY = readRangedJsonObjectD(elem, "vy", d -> d * 4.0);
+            velocityY = readRangedJsonObjectD(elem, "vy", d -> d * 4f);
         } else {
             velocityY = null;
         }
 
         if(elem.has("startV")) {
-            startVelocity = readRangedJsonObjectD(elem, "startV", d -> d * 4.0);
+            startVelocity = readRangedJsonObjectD(elem, "startV", d -> d * 4f);
         } else {
             startVelocity = null;
         }
 
         if(elem.has("startVx")) {
-            startVelocityX = readRangedJsonObjectD(elem, "startVx", d -> d * 4.0);
+            startVelocityX = readRangedJsonObjectD(elem, "startVx", d -> d * 4f);
 
             if(elem.getAsJsonObject("startVx").has("randGroup")) {
                 System.out.println("W/BGEffectSegment | "+json+" / Random group found in start velocity x -> startVx : "+elem.getAsJsonObject("startVx").get("randGroup").getAsString());
@@ -350,7 +350,7 @@ public class BGEffectSegment {
         }
 
         if(elem.has("startVy")) {
-            startVelocityY = readRangedJsonObjectD(elem, "startVy", d -> d * 4.0);
+            startVelocityY = readRangedJsonObjectD(elem, "startVy", d -> d * 4f);
 
             if(elem.getAsJsonObject("startVy").has("randGroup")) {
                 System.out.println("W/BGEffectSegment | "+json+" / Random group found in start velocity y -> startVy : "+elem.getAsJsonObject("startVy").get("randGroup").getAsString());
@@ -360,14 +360,14 @@ public class BGEffectSegment {
         }
 
         if(elem.has("moveAngle")) {
-            moveAngle = readRangedJsonObjectD(elem, "moveAngle", Math::toRadians);
+            moveAngle = readRangedJsonObjectD(elem, "moveAngle", d -> (float) Math.toRadians(d));
 
             if(velocity == null) {
                 System.out.println("W/BGEffectSegment | "+json+" / Non-defined velocity data found while moveAngle is defined -> vx == null : "+(velocityX == null)+" | vy == null : "+(velocityY == null));
             }
         } else {
             if(velocity != null) {
-                moveAngle = new BattleRange<>(0.0, null, 0.0, null);
+                moveAngle = new BattleRange<>(0f, null, 0f, null);
             } else {
                 moveAngle = null;
             }
@@ -404,7 +404,7 @@ public class BGEffectSegment {
         }
 
         if(elem.has("angularV")) {
-            angleVelocity = readRangedJsonObjectD(elem, "angularV", Math::toRadians);
+            angleVelocity = readRangedJsonObjectD(elem, "angularV", d -> (float) Math.toRadians(d));
         } else {
             angleVelocity = null;
         }
@@ -577,19 +577,19 @@ public class BGEffectSegment {
         return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 
-    private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword) {
+    private BattleRange<Float> readRangedJsonObjectD(JsonObject obj, String mainKeyword) {
         JsonObject xObject = obj.getAsJsonObject(mainKeyword);
 
-        double min;
+        float min;
         BattleRange.SNAP minSnap;
-        double max;
+        float max;
         BattleRange.SNAP maxSnap;
 
         if(xObject.has("min") && xObject.has("max")) {
             if (xObject.has("min")) {
                 JsonObject xMinObject = xObject.getAsJsonObject("min");
 
-                min = xMinObject.get("value").getAsDouble();
+                min = xMinObject.get("value").getAsFloat();
 
                 if (xMinObject.has("base")) {
                     minSnap = getSnap(xMinObject.get("base").getAsString());
@@ -604,7 +604,7 @@ public class BGEffectSegment {
             if (xObject.has("max")) {
                 JsonObject xMaxObject = xObject.getAsJsonObject("max");
 
-                max = xMaxObject.get("value").getAsDouble();
+                max = xMaxObject.get("value").getAsFloat();
 
                 if (xMaxObject.has("base")) {
                     maxSnap = getSnap(xMaxObject.get("base").getAsString());
@@ -616,7 +616,7 @@ public class BGEffectSegment {
                 maxSnap = null;
             }
         } else if(xObject.has("value")) {
-            min = max = xObject.get("value").getAsDouble();
+            min = max = xObject.get("value").getAsFloat();
 
             if(xObject.has("base")) {
                 minSnap = maxSnap = getSnap(xObject.get("base").getAsString());
@@ -630,12 +630,12 @@ public class BGEffectSegment {
         return new BattleRange<>(min, minSnap, max, maxSnap);
     }
 
-    private BattleRange<Double> readRangedJsonObjectD(JsonObject obj, String mainKeyword, Function<Integer, Double> func) {
+    private BattleRange<Float> readRangedJsonObjectD(JsonObject obj, String mainKeyword, Function<Integer, Float> func) {
         JsonObject xObject = obj.getAsJsonObject(mainKeyword);
 
-        double min;
+        float min;
         BattleRange.SNAP minSnap;
-        double max;
+        float max;
         BattleRange.SNAP maxSnap;
 
         if(xObject.has("min") && xObject.has("max")) {

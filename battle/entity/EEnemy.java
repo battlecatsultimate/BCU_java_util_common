@@ -20,13 +20,13 @@ public class EEnemy extends Entity {
 
 	public byte hit;
 
-	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, double magnif, double atkMagnif, int d0, int d1, int m) {
+	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, float magnif, float atkMagnif, int d0, int d1, int m) {
 		super(b, de, ea, atkMagnif, magnif);
 		mult = magnif;
 		mula = atkMagnif;
 		mark = m;
 		isBase = mark <= -1;
-		layer = d0 == d1 ? d0 : d0 + (int) (b.r.nextDouble() * (d1 - d0 + 1));
+		layer = d0 == d1 ? d0 : d0 + (int) (b.r.nextFloat() * (d1 - d0 + 1));
 		traits = de.getTraits();
 
 		canBurrow = mark < 1;
@@ -46,7 +46,7 @@ public class EEnemy extends Entity {
 	public void kill(boolean atk) {
 		super.kill(atk);
 		if (!basis.st.trail && !atk) {
-			double mul = basis.b.t().getDropMulti() * (1 + (status[P_BOUNTY][0] / 100.0));
+			float mul = basis.b.t().getDropMulti() * (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money += mul * ((MaskEnemy) data).getDrop();
 		}
 	}
@@ -54,10 +54,10 @@ public class EEnemy extends Entity {
 	@Override
 	protected int getDamage(AttackAb atk, int ans) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
-			ans = (int) ((double) ans * atk.getProc().MINIWAVE.multi / 100.0);
+			ans = (int) ((float) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
 		if (atk instanceof AttackVolcano && atk.waveType == WT_MIVC) {
-			ans = (int) ((double) ans * atk.getProc().MINIVOLC.mult / 100.0);
+			ans = (int) ((float) ans * atk.getProc().MINIVOLC.mult / 100.0);
 		}
 		if (atk.model instanceof AtkModelUnit && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
@@ -100,9 +100,9 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	protected double getLim() {
-		double ans;
-		double minPos = ((MaskEnemy) data).getLimit();
+	protected float getLim() {
+		float ans;
+		float minPos = ((MaskEnemy) data).getLimit();
 
 		if (mark >= 1)
 			ans = pos - (minPos + basis.boss_spawn); // guessed value compared to BC

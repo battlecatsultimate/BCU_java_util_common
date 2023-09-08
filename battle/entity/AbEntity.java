@@ -20,7 +20,7 @@ public abstract class AbEntity extends BattleObj {
 	/**
 	 * Current Position of this Entity
 	 */
-	public double pos;
+	public float pos;
 
 	protected AbEntity(int h) {
 		if (h <= 0)
@@ -28,7 +28,7 @@ public abstract class AbEntity extends BattleObj {
 		health = maxH = h;
 	}
 
-	public void added(int d, double p) {
+	public void added(int d, float p) {
 		pos = p;
 		dire = d;
 	}

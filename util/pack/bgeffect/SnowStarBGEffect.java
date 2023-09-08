@@ -14,23 +14,23 @@ public class SnowStarBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void preDraw(FakeGraphics g, P rect, float siz, float midH) {
         CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).preDraw(g, rect, siz, midH);
     }
 
     @Override
-    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).postDraw(g, rect, siz, midH);
     }
 
     @Override
-    public void update(int w, double h, double midH) {
+    public void update(int w, float h, float midH) {
         CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).update(w, h, midH);
         CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).update(w, h, midH);
     }
 
     @Override
-    public void initialize(int w, double h, double midH, Background bg) {
+    public void initialize(int w, float h, float midH, Background bg) {
         CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_STAR).initialize(w, h, midH, bg);
         CommonStatic.getBCAssets().bgEffects.get(Data.BG_EFFECT_SNOW).initialize(w, h, midH, bg);
     }

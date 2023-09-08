@@ -20,7 +20,7 @@ public interface MaskEnemy extends MaskEntity {
 		return new TreeSet<>();
 	}
 
-	double multi(Basis b);
+	float multi(Basis b);
 
-	double getLimit();
+	float getLimit();
 }

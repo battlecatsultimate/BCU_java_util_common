@@ -325,7 +325,7 @@ public class Data {
 						return false;
 					if (prob == 100)
 						return true;
-					return r.nextDouble() * 100 < prob;
+					return r.nextFloat() * 100 < prob;
 				} catch (Exception e) {
 					return exists();
 				}
@@ -1533,8 +1533,8 @@ public class Data {
 	public static final byte[] KB_TIME = new byte[] { 11, 23, 47, 11, -1 };
 	public static final short[] KB_DIS = new short[] { 165, 345, 705, 55, -1 };
 
-	public static final double W_E_INI = -32.75;
-	public static final double W_U_INI = -67.5;
+	public static final float W_E_INI = -32.75f;
+	public static final float W_U_INI = -67.5f;
 	public static final short W_PROG = 200;
 	public static final short W_E_WID = 500;
 	public static final short W_U_WID = 400;
@@ -1569,8 +1569,8 @@ public class Data {
 	public static final int[] ORB_ATK_MULTI = { 100, 200, 300, 400, 500 }; // Atk orb multiplication
 	public static final int[] ORB_RES_MULTI = { 4, 8, 12, 16, 20 }; // Resist orb multiplication
 	public static final int[] ORB_STR_DEF_MULTI = {2, 4, 6, 8, 10};
-	public static final double[] ORB_STR_ATK_MULTI = {0.06, 0.12, 0.18, 0.24, 0.3};
-	public static final double[] ORB_MASSIVE_MULTI = {0.1, 0.2, 0.3, 0.4, 0.5};
+	public static final float[] ORB_STR_ATK_MULTI = {0.06f, 0.12f, 0.18f, 0.24f, 0.3f};
+	public static final float[] ORB_MASSIVE_MULTI = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f};
 	public static final int[] ORB_RESISTANT_MULTI = {5, 10, 15, 20, 25};
 	public static final int[] GATYA = { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164, 167,
 			168, 169, 170, 171, 179, 180, 181, 182, 183, 184};
@@ -1599,15 +1599,15 @@ public class Data {
 	public static final int BG_EFFECT_BUBBLE_FACTOR = 32;
 	public static final int BG_EFFECT_BUBBLE_STABILIZER = 7;
 	public static final int BG_EFFECT_SNOW_SPEED = 8;
-	public static final double[] BG_EFFECT_BLIZZARD_SIZE = {1.0, 1.5, 2.0};
+	public static final float[] BG_EFFECT_BLIZZARD_SIZE = {1f, 1.5f, 2f};
 	public static final int BG_EFFECT_BLIZZARD_SPEED = 40;
 	public static final int BG_EFFECT_FALLING_SNOW_SPEED = 3;
-	public static final double BG_EFFECT_FALLING_SNOW_SIZE = 2.0;
+	public static final float BG_EFFECT_FALLING_SNOW_SIZE = 2f;
 	public static final int BG_EFFECT_SHINING_TIME = 8;
 	public static final int BG_EFFECT_BALLOON_SPEED = 1;
 	public static final int BG_EFFECT_BALLOON_FACTOR = 32;
 	public static final int BG_EFFECT_BALLOON_STABILIZER = 25;
-	public static final double[] BG_EFFECT_ROCK_SIZE = {1.0, 2.25};
+	public static final float[] BG_EFFECT_ROCK_SIZE = {1f, 2.25f};
 	public static final int[] BG_EFFECT_ROCK_SPEED = {1, 3};
 	public static final int BG_EFFECT_ROCK_BEHIND_SPAWN_OFFSET = 190;
 
@@ -1617,7 +1617,7 @@ public class Data {
 	public static final int SHAKE_INITIAL = 1;
 	public static final int SHAKE_END = 2;
 	public static final int SHAKE_COOL_DOWN = 3;
-	public static final double SHAKE_STABILIZER = 2.5;
+	public static final float SHAKE_STABILIZER = 2.5f;
 	public static final int COUNTER_SURGE_FORESWING = 50;
 	public static final int COUNTER_SURGE_SOUND = 18;
 

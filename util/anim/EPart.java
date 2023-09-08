@@ -69,9 +69,9 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 8)
 			gsca = v;
 		else if (m == 9)
-			sca.x = 1.0 * args[8] * v / model.ints[0];
+			sca.x = 1f * args[8] * v / model.ints[0];
 		else if (m == 10)
-			sca.y = 1.0 * args[9] * v / model.ints[0];
+			sca.y = 1f * args[9] * v / model.ints[0];
 		else if (m == 11)
 			angle = args[10] + v;
 		else if (m == 12)
@@ -175,10 +175,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
 		if (extType == 0)
-			drawImg(g, bimg, tpiv, sc, opa(), glow, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+			drawImg(g, bimg, tpiv, sc, opa(), glow, extendX / model.ints[0], extendY / model.ints[0]);
 		else if (extType == 1)
 			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
-					glow == 1, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+					glow == 1, extendX / model.ints[0], extendY / model.ints[0]);
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);
@@ -204,10 +204,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P sc = P.newP(w, h).times(p0).times(base);
 		P.delete(p0);
 		if (extType == 0)
-			drawImg(g, bimg, tpiv, sc, opa() * opacity / 255.0, glow, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+			drawImg(g, bimg, tpiv, sc, opa() * opacity / 255f, glow, extendX / model.ints[0], extendY / model.ints[0]);
 		else if (extType == 1)
 			drawRandom(g, new FakeImage[] { a.parts(3), a.parts(4), a.parts(5), a.parts(6) }, tpiv, sc, opa(),
-					glow == 1, 1.0 * extendX / model.ints[0], 1.0 * extendY / model.ints[0]);
+					glow == 1, extendX / model.ints[0], extendY / model.ints[0]);
 		P.delete(tpiv);
 		P.delete(sc);
 		g.setTransform(at);
@@ -263,7 +263,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	}
 
 	private P getSize() {
-		double mi = 1.0 / model.ints[0];
+		float mi = 1f / model.ints[0];
 		if (fa == null)
 			return P.newP(sca).times(gsca * mi * mi);
 		return fa.getSize().times(sca).times(gsca * mi * mi);
@@ -271,7 +271,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	private P getBaseSize(boolean parent) {
 		if(model.confs.length > 0) {
-			double mi = 1.0 / model.ints[0];
+			float mi = 1f / model.ints[0];
 
 			if(parent) {
 				if(fa != null) {
@@ -291,16 +291,16 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 				}
 			}
 		} else {
-			return P.newP(1.0, 1.0);
+			return P.newP(1f, 1f);
 		}
 	}
 
-	public double opa() {
+	public float opa() {
 		if (opacity == 0)
 			return 0;
 		if (fa != null)
 			return fa.opa() * opacity / model.ints[2];
-		return 1.0 * opacity / model.ints[2];
+		return opacity / model.ints[2];
 	}
 
 	private void transform(FakeGraphics g, P sizer) {
@@ -335,7 +335,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			P.delete(p);
 		}
 		if (angle != 0)
-			g.rotate(Math.PI * 2 * angle / model.ints[1]);
+			g.rotate((float) (Math.PI * 2 * angle / model.ints[1]));
 
 		P.delete(tpos);
 

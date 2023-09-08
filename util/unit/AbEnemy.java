@@ -18,7 +18,7 @@ public interface AbEnemy extends Comparable<AbEnemy>, Indexable<PackData, AbEnem
 		return getID().compareTo(e.getID());
 	}
 
-	EEnemy getEntity(StageBasis sb, Object obj, double mul, double mul1, int d0, int d1, int m);
+	EEnemy getEntity(StageBasis sb, Object obj, float mul, float mul1, int d0, int d1, int m);
 
 	VImg getIcon();
 

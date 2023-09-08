@@ -28,7 +28,7 @@ public class BGEffectSpacer {
         }
     }
 
-    public void drawWithSpacer(FakeGraphics g, P rect, double siz, BGEffectHandler handler, int index) {
+    public void drawWithSpacer(FakeGraphics g, P rect, float siz, BGEffectHandler handler, int index) {
         FakeTransform at = g.getTransform();
 
         EAnimD<BGEffectAnim.BGEffType> anim = handler.animation.get(index);
@@ -48,7 +48,7 @@ public class BGEffectSpacer {
 
             g.rotate(handler.angle[index]);
 
-            anim.drawBGEffect(g, BGEffectHandler.origin, siz * 0.8, handler.opacity[index], handler.size[index].x, handler.size[index].y);
+            anim.drawBGEffect(g, BGEffectHandler.origin, siz * 0.8f, handler.opacity[index], handler.size[index].x, handler.size[index].y);
 
             g.setTransform(at);
         }
@@ -62,7 +62,7 @@ public class BGEffectSpacer {
      * @param siz Size of battle
      * @return Converted pixel
      */
-    private int convertP(double p, double siz) {
+    private int convertP(float p, float siz) {
         return (int) (p * BattleRange.battleRatio * siz);
     }
 }

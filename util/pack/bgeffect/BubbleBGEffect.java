@@ -37,16 +37,16 @@ public class BubbleBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void preDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void preDraw(FakeGraphics g, P rect, float siz, float midH) {
 
     }
 
     @Override
-    public void postDraw(FakeGraphics g, P rect, double siz, double midH) {
+    public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         for(int i = 0; i < bubblePosition.size(); i++) {
             g.drawImage(
                     bubble,
-                    convertP(bubblePosition.get(i).x + Data.BG_EFFECT_BUBBLE_FACTOR * Math.sin(differentiator.get(i) + bubblePosition.get(i).y / Data.BG_EFFECT_BUBBLE_STABILIZER), siz) + (int) rect.x,
+                    convertP((float) (bubblePosition.get(i).x + Data.BG_EFFECT_BUBBLE_FACTOR * Math.sin(differentiator.get(i) + bubblePosition.get(i).y / Data.BG_EFFECT_BUBBLE_STABILIZER)), siz) + (int) rect.x,
                     (int) (bubblePosition.get(i).y * siz - rect.y + midH * siz),
                     bw * siz, bh * siz
             );
@@ -54,7 +54,7 @@ public class BubbleBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void update(int w, double h, double midH) {
+    public void update(int w, float h, float midH) {
         capture.clear();
 
         for(int i = 0; i < bubblePosition.size(); i++) {
@@ -80,7 +80,7 @@ public class BubbleBGEffect extends BackgroundEffect {
     }
 
     @Override
-    public void initialize(int w, double h, double midH, Background bg) {
+    public void initialize(int w, float h, float midH, Background bg) {
         for(int i = 0; i < bubblePosition.size(); i++) {
             P.delete(bubblePosition.get(i));
         }
@@ -91,7 +91,7 @@ public class BubbleBGEffect extends BackgroundEffect {
         int number = w / 200 - (r.nextInt(w) / 1000);
 
         for(int i = 0; i < number; i++) {
-            bubblePosition.add(P.newP(r.nextInt(w + battleOffset), r.nextDouble() * (BGHeight * 3.0 + bh)));
+            bubblePosition.add(P.newP(r.nextInt(w + battleOffset), r.nextFloat() * (BGHeight * 3f + bh)));
             differentiator.add((byte) (3 - r.nextInt(6)));
         }
     }
