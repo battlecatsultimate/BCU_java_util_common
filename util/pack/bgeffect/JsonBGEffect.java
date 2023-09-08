@@ -70,7 +70,7 @@ public class JsonBGEffect extends BackgroundEffect {
                 }
             }
         } catch (Exception ignored) {
-            Pattern idExtractor = Pattern.compile("\\{(\\s+)?\"id\"(\\s+)?:(\\s+)?\\d+(\\s+)?}");
+            Pattern idExtractor = Pattern.compile("\\{(\\s+)?\"id\"(\\s+)?:(\\s+)?\\d+(\\s+)?\\}");
 
             Matcher matcher = idExtractor.matcher(new String(vf.getData().getBytes()));
 
