@@ -148,6 +148,12 @@ public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Com
 	}
 
 	public boolean equals(Identifier<T> o) {
+		if (pack == null || o.pack == null)
+			return false;
+
+		if (cls == null || o.cls == null)
+			return false;
+
 		return pack.equals(o.pack) && id == o.id && o.cls == cls;
 	}
 
