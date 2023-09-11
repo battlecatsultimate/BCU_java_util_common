@@ -93,7 +93,15 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 		public VImg getUni() {
 			if (uni != null)
 				return uni;
-			return funi == null ? CommonStatic.getBCAssets().slot[0] : (uni = new VImg(funi).mark(Marker.UNI));
+
+			if (funi == null) {
+				return CommonStatic.getBCAssets().slot[0];
+			} else {
+				uni = new VImg(funi).mark(Marker.UNI);
+				uni.setCut(CommonStatic.getBCAssets().unicut);
+
+				return uni;
+			}
 		}
 
 		@Override
