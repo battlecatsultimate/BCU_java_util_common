@@ -1,6 +1,7 @@
 package common.system.files;
 
 import common.CommonStatic;
+import common.io.assets.AssetLoader;
 import common.pack.UserProfile;
 
 import java.io.File;
@@ -12,6 +13,16 @@ import java.util.TreeMap;
 public class VFile implements Comparable<VFile> {
 
 	public static VFile get(String str) {
+		VFile trial = getBCFileTree().find(str);
+
+		if (trial == null) {
+			//Are we sure? Let's just re-load whole path
+			AssetLoader.load(p -> {});
+		} else {
+			return trial;
+		}
+
+		//Once reload is done, try to get path again
 		return getBCFileTree().find(str);
 	}
 
