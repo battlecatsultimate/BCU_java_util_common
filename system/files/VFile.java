@@ -15,7 +15,7 @@ public class VFile implements Comparable<VFile> {
 	public static VFile get(String str) {
 		VFile trial = getBCFileTree().find(str);
 
-		if (trial == null) {
+		if (trial == null && getBCFileTree().list().isEmpty()) {
 			//Are we sure? Let's just re-load whole path
 			AssetLoader.load(p -> {});
 		} else {

@@ -49,5 +49,4 @@ public class VFileRoot extends VFile {
 		}
 		return this;
 	}
-
 }
