@@ -65,7 +65,7 @@ public class UnitLevel implements Indexable<PackData, UnitLevel> {
 
 	public float getMult(int lv) {
 		int dec = lv;
-		float d = 0.8f;
+		float d = 1f - lvs[0] * 0.01f;
 
 		for (int mul : lvs) {
 			if (dec >= 10) {
