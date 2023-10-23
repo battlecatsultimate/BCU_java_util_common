@@ -27,12 +27,16 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 		@Override
 		public VImg getEdi() {
-			if (ediLoaded)
+			if (ediLoaded && edi.getImg().bimg() != null && edi.getImg().isValid())
 				return edi;
+
 			ediLoaded = true;
+
 			edi = loader.getEdi();
+
 			if (edi != null)
 				edi.mark(Marker.EDI);
+
 			return edi;
 		}
 
@@ -59,6 +63,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 		public FakeImage getNum() {
 			if (num != null && num.bimg() != null && num.isValid())
 				return num;
+
 			return num = loader.getNum();
 		}
 
@@ -68,9 +73,11 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 		@Override
 		public VImg getUni() {
-			if (uni != null)
+			if (uni != null && uni.getImg().bimg() != null && uni.getImg().isValid())
 				return uni;
+
 			uni = loader.getUni();
+
 			if (uni != null)
 				uni.mark(Marker.UNI);
 			else

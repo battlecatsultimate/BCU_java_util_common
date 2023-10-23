@@ -41,8 +41,9 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
 		@Override
 		public VImg getEdi() {
-			if (edi != null)
+			if (edi != null && edi.getImg().bimg() != null && edi.getImg().isValid())
 				return edi;
+
 			return fedi == null ? null : (edi = new VImg(fedi).mark(Marker.EDI));
 		}
 
@@ -82,16 +83,19 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 
 		@Override
 		public FakeImage getNum() {
-			if (num != null)
+			if (num != null && num.bimg() != null && num.isValid())
 				return num;
+
 			FileData fd = dnum == null ? (dnum = fnum.getData()) : dnum;
+
 			num = fd.getImg();
+
 			return num;
 		}
 
 		@Override
 		public VImg getUni() {
-			if (uni != null)
+			if (uni != null && uni.getImg().bimg() != null && uni.getImg().isValid())
 				return uni;
 
 			if (funi == null) {
