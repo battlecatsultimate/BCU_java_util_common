@@ -10,7 +10,7 @@ import java.util.List;
 public class BGEffectAnim extends AnimD<BGEffectAnim, BGEffectAnim.BGEffType> {
 
     private final String imgcutName, mamodelName, maanimName;
-    private final VImg img;
+    private VImg img;
 
     /**
      * Animation class for BG effect
@@ -34,6 +34,9 @@ public class BGEffectAnim extends AnimD<BGEffectAnim, BGEffectAnim.BGEffType> {
 
     @Override
     public FakeImage getNum() {
+        if (img.getImg().bimg() == null || !img.getImg().isValid())
+            img = new VImg(str);
+
         return img.getImg();
     }
 
@@ -43,6 +46,7 @@ public class BGEffectAnim extends AnimD<BGEffectAnim, BGEffectAnim.BGEffType> {
         mamodel = MaModel.newIns(mamodelName);
         anims = new MaAnim[] { MaAnim.newIns(maanimName) };
         types = BGEffType.values();
+        img = new VImg(str);
         parts = imgcut.cut(img.getImg());
 
         loaded = true;

@@ -48,8 +48,6 @@ public class BGEffectHandler {
     private int[] wait;
     private boolean[] startWaitDone;
 
-    private boolean animLoaded = false;
-
     private final List<Integer> capture = new ArrayList<>();
     private final Random r = new Random();
 
@@ -84,12 +82,8 @@ public class BGEffectHandler {
     }
 
     public void check() {
-        if(!animLoaded) {
-            for(int i = 0; i < anims.length; i++) {
-                anims[i].load();
-            }
-
-            animLoaded = true;
+        for(int i = 0; i < anims.length; i++) {
+            anims[i].check();
         }
     }
 
@@ -606,6 +600,10 @@ public class BGEffectHandler {
 
     public void release() {
         animation.clear();
+
+        for (int i = 0; i < anims.length; i++) {
+            anims[i].unload();
+        }
 
         count = 0;
     }
