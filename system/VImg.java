@@ -34,6 +34,9 @@ public class VImg extends ImgCore {
 	}
 
 	public synchronized void check() {
+		if (bimg != null && !bimg.isValid())
+			loaded = false;
+
 		if (!loaded)
 			load();
 	}
