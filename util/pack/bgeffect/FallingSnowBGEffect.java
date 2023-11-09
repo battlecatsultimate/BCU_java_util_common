@@ -2,8 +2,8 @@ package common.util.pack.bgeffect;
 
 import common.CommonStatic;
 import common.system.P;
+import common.system.VImg;
 import common.system.fake.FakeGraphics;
-import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.pack.Background;
 
@@ -13,7 +13,7 @@ import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class FallingSnowBGEffect extends BackgroundEffect {
-    private final FakeImage snow;
+    private final VImg snow;
 
     private final int sw;
     private final int sh;
@@ -25,16 +25,16 @@ public class FallingSnowBGEffect extends BackgroundEffect {
 
     private final List<Integer> capture = new ArrayList<>();
 
-    public FallingSnowBGEffect(FakeImage snow) {
+    public FallingSnowBGEffect(VImg snow) {
         this.snow = snow;
 
-        sw = this.snow.getWidth();
-        sh = this.snow.getHeight();
+        sw = this.snow.getImg().getWidth();
+        sh = this.snow.getImg().getHeight();
     }
 
     @Override
     public void check() {
-        snow.bimg();
+        snow.check();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class FallingSnowBGEffect extends BackgroundEffect {
     @Override
     public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         for(int i = 0; i < snowPosition.size(); i++) {
-            g.drawImage(snow, convertP(snowPosition.get(i).x, siz) + (int) rect.x, (int) (snowPosition.get(i).y * siz - rect.y + midH * siz), sw * size.get(i) * siz, sh * size.get(i) * siz);
+            g.drawImage(snow.getImg(), convertP(snowPosition.get(i).x, siz) + (int) rect.x, (int) (snowPosition.get(i).y * siz - rect.y + midH * siz), sw * size.get(i) * siz, sh * size.get(i) * siz);
         }
     }
 

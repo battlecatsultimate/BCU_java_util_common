@@ -1,10 +1,12 @@
 package common.util.pack.bgeffect;
 
 import common.system.P;
+import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
 import common.util.Data;
+import common.util.anim.ImgCut;
 import common.util.pack.Background;
 
 import java.util.ArrayList;
@@ -13,8 +15,11 @@ import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class RainBGEffect extends BackgroundEffect {
-    private final FakeImage rain;
-    private final FakeImage splash;
+    private final VImg sprite;
+    private final ImgCut imgCut;
+
+    private FakeImage rain;
+    private FakeImage splash;
 
     private final int rw;
     private final int rh;
@@ -25,9 +30,14 @@ public class RainBGEffect extends BackgroundEffect {
     private final List<P> splashPosition = new ArrayList<>();
     private final Random r = new Random();
 
-    public RainBGEffect(FakeImage rain, FakeImage splash) {
-        this.rain = rain;
-        this.splash = splash;
+    public RainBGEffect(VImg sprite, ImgCut imgCut) {
+        this.sprite = sprite;
+        this.imgCut = imgCut;
+
+        FakeImage[] cutImages = imgCut.cut(sprite.getImg());
+
+        this.rain = cutImages[29];
+        this.splash = cutImages[28];
 
         rw = this.rain.getWidth();
         rh = this.rain.getHeight();
@@ -38,8 +48,12 @@ public class RainBGEffect extends BackgroundEffect {
 
     @Override
     public void check() {
-        rain.bimg();
-        splash.bimg();
+        if (!rain.isValid() || !splash.isValid()) {
+            FakeImage[] cutImages = imgCut.cut(sprite.getImg());
+
+            rain = cutImages[29];
+            splash = cutImages[28];
+        }
     }
 
     @Override

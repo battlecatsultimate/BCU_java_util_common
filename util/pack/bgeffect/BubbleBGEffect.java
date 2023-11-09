@@ -2,8 +2,8 @@ package common.util.pack.bgeffect;
 
 import common.CommonStatic;
 import common.system.P;
+import common.system.VImg;
 import common.system.fake.FakeGraphics;
-import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.pack.Background;
 
@@ -13,7 +13,7 @@ import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class BubbleBGEffect extends BackgroundEffect {
-    private final FakeImage bubble;
+    private final VImg bubble;
 
     private final int bw;
     private final int bh;
@@ -24,16 +24,16 @@ public class BubbleBGEffect extends BackgroundEffect {
 
     private final List<Integer> capture = new ArrayList<>();
 
-    public BubbleBGEffect(FakeImage bubble) {
+    public BubbleBGEffect(VImg bubble) {
         this.bubble = bubble;
 
-        bw = (int) (this.bubble.getWidth() * 1.8);
-        bh = (int) (this.bubble.getHeight() * 1.8);
+        bw = (int) (this.bubble.getImg().getWidth() * 1.8);
+        bh = (int) (this.bubble.getImg().getHeight() * 1.8);
     }
 
     @Override
     public void check() {
-        bubble.bimg();
+        bubble.check();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BubbleBGEffect extends BackgroundEffect {
     public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         for(int i = 0; i < bubblePosition.size(); i++) {
             g.drawImage(
-                    bubble,
+                    bubble.getImg(),
                     convertP((float) (bubblePosition.get(i).x + Data.BG_EFFECT_BUBBLE_FACTOR * Math.sin(differentiator.get(i) + bubblePosition.get(i).y / Data.BG_EFFECT_BUBBLE_STABILIZER)), siz) + (int) rect.x,
                     (int) (bubblePosition.get(i).y * siz - rect.y + midH * siz),
                     bw * siz, bh * siz

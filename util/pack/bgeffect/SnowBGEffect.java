@@ -2,8 +2,8 @@ package common.util.pack.bgeffect;
 
 import common.CommonStatic;
 import common.system.P;
+import common.system.VImg;
 import common.system.fake.FakeGraphics;
-import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.pack.Background;
 
@@ -14,7 +14,7 @@ import java.util.Random;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class SnowBGEffect extends BackgroundEffect{
     private final float maxSlope = (float) Math.tan(Math.toRadians(75));
-    private final FakeImage snow;
+    private final VImg snow;
 
     private final int sw;
     private final int sh;
@@ -27,16 +27,16 @@ public class SnowBGEffect extends BackgroundEffect{
 
     private final List<Integer> capture = new ArrayList<>();
 
-    public SnowBGEffect(FakeImage snow) {
+    public SnowBGEffect(VImg snow) {
         this.snow = snow;
 
-        this.sw = (int) (snow.getWidth() * 1.8);
-        this.sh = (int) (snow.getHeight() * 1.8);
+        this.sw = (int) (snow.getImg().getWidth() * 1.8);
+        this.sh = (int) (snow.getImg().getHeight() * 1.8);
     }
 
     @Override
     public void check() {
-        snow.bimg();
+        snow.check();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SnowBGEffect extends BackgroundEffect{
         g.setComposite(FakeGraphics.TRANS, 127, 0);
 
         for(int i = 0; i < snowPosition.size(); i++) {
-            g.drawImage(snow, convertP(snowPosition.get(i).x, siz) + (int) rect.x, (int) (snowPosition.get(i).y * siz - rect.y + midH * siz), sw * siz, sh * siz);
+            g.drawImage(snow.getImg(), convertP(snowPosition.get(i).x, siz) + (int) rect.x, (int) (snowPosition.get(i).y * siz - rect.y + midH * siz), sw * siz, sh * siz);
         }
 
         g.setComposite(FakeGraphics.DEF, 255, 0);

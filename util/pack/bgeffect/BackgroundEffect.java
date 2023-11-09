@@ -6,8 +6,8 @@ import common.pack.Context;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
+import common.system.VImg;
 import common.system.fake.FakeGraphics;
-import common.system.fake.FakeImage;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.ImgCut;
@@ -29,36 +29,17 @@ public abstract class BackgroundEffect {
 
         asset.bgEffects.add(new StarBackgroundEffect());
 
-        VFile rainFile = VFile.get("./org/battle/a/000_a.png");
+        asset.bgEffects.add(new RainBGEffect(new VImg("./org/battle/a/000_a.png"), ImgCut.newIns("./org/battle/a/000_a.imgcut")));
 
-        FakeImage rainImage = rainFile.getData().getImg();
-        ImgCut rainCut = ImgCut.newIns("./org/battle/a/000_a.imgcut");
+        asset.bgEffects.add(new BubbleBGEffect(new VImg("./org/img/bgEffect/bubble02.png")));
 
-        FakeImage[] images = rainCut.cut(rainImage);
+        asset.bgEffects.add(new FallingSnowBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
 
-        asset.bgEffects.add(new RainBGEffect(images[29], images[28]));
-
-        VFile bubbleFile = VFile.get("./org/img/bgEffect/bubble02.png");
-
-        FakeImage bubbleImage = bubbleFile.getData().getImg();
-
-        asset.bgEffects.add(new BubbleBGEffect(bubbleImage));
-
-        VFile secondBubbleFile = VFile.get("./org/img/bgEffect/bubble03_bg040.png");
-
-        FakeImage secondBubbleImage = secondBubbleFile.getData().getImg();
-
-        asset.bgEffects.add(new FallingSnowBGEffect(secondBubbleImage));
-
-        VFile snowFile = VFile.get("./org/img/bgEffect/img021.png");
-
-        FakeImage snowImage = snowFile.getData().getImg();
-
-        asset.bgEffects.add(new SnowBGEffect(snowImage));
+        asset.bgEffects.add(new SnowBGEffect(new VImg("./org/img/bgEffect/img021.png")));
 
         asset.bgEffects.add(new SnowStarBGEffect());
 
-        asset.bgEffects.add(new BlizzardBGEffect(secondBubbleImage));
+        asset.bgEffects.add(new BlizzardBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
 
         asset.bgEffects.add(new ShiningBGEffect());
 
