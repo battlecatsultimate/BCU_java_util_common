@@ -2,6 +2,7 @@ package common.battle.data;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 import common.util.unit.Trait;
@@ -192,6 +193,10 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 				proc.BSTHUNT.type.active = true;
 				proc.BSTHUNT.prob = ints[106];
 				proc.BSTHUNT.time = ints[107];
+			}
+
+			if (ints[109] == 1) {
+				a |= Data.AB_CSUR;
 			}
 		} catch (IndexOutOfBoundsException ignored) {
 		}

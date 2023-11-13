@@ -28,8 +28,21 @@ public class PCoin extends Data {
 		for (String str : qs) {
 			String[] strs = str.trim().split(",");
 
-			if (strs.length == 114)
-				new PCoin(strs);
+			if (strs.length == 114) {
+				int[] data = CommonStatic.parseIntsN(str);
+
+				Unit u = Identifier.parseInt(data[0], Unit.class).get();
+
+				if (u != null) {
+					if (u.forms.length > 2) {
+						new PCoin(data, u.forms[2].du);
+					}
+
+					if (u.forms.length > 3) {
+						new PCoin(data, u.forms[3].du);
+					}
+				}
+			}
 		}
 	}
 
@@ -68,15 +81,14 @@ public class PCoin extends Data {
 		full = improve(max);
 	}
 
-	private PCoin(String[] strs) {
-		int id = CommonStatic.parseIntN(strs[0]);
-		trait = Trait.convertTalentType(CommonStatic.parseIntN(strs[1]));
+	private PCoin(int[] strs, MaskUnit du) {
+		trait = Trait.convertTalentType(strs[1]);
 
 		for (int i = 0; i < 8; i++) {
-			if(!strs[2 + i * 14].equals("0")) {
+			if(strs[2 + i * 14] != 0) {
 				int[] data = new int[14];
 				for (int j = 0; j < 14; j++)
-					data[j] = CommonStatic.parseIntN(strs[2 + i * 14 + j]);
+					data[j] = strs[2 + i * 14 + j];
 				if(data[0] >= 0 && data[0] < PC_CORRES.length && PC_CORRES[data[0]][1] == P_MINIWAVE) {
 					if(data[6] == 0 && data[7] == 0) {
 						data[6] = 20;
@@ -88,7 +100,7 @@ public class PCoin extends Data {
 		}
 
 		max = info.stream().mapToInt(i -> Math.max(1, i[1])).toArray();
-		du = Identifier.parseInt(id, Unit.class).get().forms[2].du;
+		this.du = du;
 		((DataUnit) du).pcoin = this;
 		full = improve(max);
 	}

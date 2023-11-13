@@ -27,7 +27,7 @@ public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
 		@Override
 		public VImg getEdi() {
-			if (ediLoaded && edi.getImg().bimg() != null && edi.getImg().isValid())
+			if (ediLoaded && edi != null && edi.getImg().bimg() != null && edi.getImg().isValid())
 				return edi;
 
 			ediLoaded = true;

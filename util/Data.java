@@ -1621,7 +1621,7 @@ public class Data {
 	public static final int COUNTER_SURGE_FORESWING = 50;
 	public static final int COUNTER_SURGE_SOUND = 18;
 
-	public static final String[] SUFX = new String[] { "f", "c", "s" };
+	public static final String[] SUFX = new String[] { "f", "c", "s", "u" };
 
 	public static EffAnimStore effas() {
 		return CommonStatic.getBCAssets().effas;

@@ -324,4 +324,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public boolean hasEvolveCost() {
 		return unit.info.hasEvolveCost() && fid == 2;
 	}
+
+	public boolean hasZeroForm() {
+		return unit.info.hasZeroForm() && fid == 3;
+	}
 }

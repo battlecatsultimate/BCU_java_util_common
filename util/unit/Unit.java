@@ -35,15 +35,17 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	public static class UnitInfo {
 
 		public int[][] evo;
+		public int[][] zeroEvo;
 		public int[] price = new int[10];
-		public int xp, type, tfLevel = -1;
+		public int xp, zeroXp, type, tfLevel = -1, zeroLevel = -1;
 
 		public void fillBuy(String[] strs) {
 			for (int i = 0; i < 10; i++)
 				price[i] = Integer.parseInt(strs[2 + i]);
+
 			type = Integer.parseInt(strs[12]);
-			int et = Integer.parseInt(strs[23]);
-			if (et >= 15000 && et < 17000) {
+
+			if (Integer.parseInt(strs[25]) != -1) {
 				evo = new int[5][2];
 				xp = Integer.parseInt(strs[27]);
 				for (int i = 0; i < 5; i++) {
@@ -51,10 +53,24 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 					evo[i][1] = Integer.parseInt(strs[29 + i * 2]);
 				}
 			}
+
+			if (Integer.parseInt(strs[26]) != -1) {
+				zeroEvo = new int[5][2];
+				zeroXp = Integer.parseInt(strs[38]);
+
+				for (int i = 0; i < 5; i++) {
+					zeroEvo[i][0] = Integer.parseInt(strs[39 + i * 2]);
+					zeroEvo[i][1] = Integer.parseInt(strs[40 + i * 2]);
+				}
+			}
 		}
 
 		public boolean hasEvolveCost() {
 			return evo != null;
+		}
+
+		public boolean hasZeroForm() {
+			return zeroEvo != null;
 		}
 
 		public String getCatfruitExplanation() {
