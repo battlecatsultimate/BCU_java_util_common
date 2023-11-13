@@ -67,16 +67,25 @@ public class AttackSimple extends AttackAb {
 		if (!range) {
 			if (capt.size() == 0)
 				return;
+
 			List<AbEntity> ents = new ArrayList<>();
 			ents.add(capt.get(0));
-			float dis = Math.abs(pos - ents.get(0).pos);
-			for (AbEntity e : capt)
-				if (Math.abs(pos - e.pos) < dis - 0.1) {
+
+			double dis = Math.abs(pos - ents.get(0).pos);
+
+			for (AbEntity e: capt) {
+				double targetDis = Math.abs(pos - e.pos);
+
+				if (targetDis < dis) {
 					ents.clear();
 					ents.add(e);
-					dis = Math.abs(pos - e.pos);
-				} else if (Math.abs(pos - e.pos) < dis + 0.1)
+
+					dis = targetDis;
+				} else if (targetDis == dis) {
 					ents.add(e);
+				}
+			}
+
 			capt.clear();
 			int r = (int) (model.b.r.nextFloat() * ents.size());
 			capt.add(ents.get(r));
@@ -84,7 +93,7 @@ public class AttackSimple extends AttackAb {
 	}
 
 	/**
-	 * Method to manually add an unit to an attack for counters.
+	 * Method to manually add a unit to an attack for counters.
 	 */
 	public boolean counterEntity(Entity ce) {
 		isCounter = true;
