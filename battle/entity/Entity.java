@@ -1578,16 +1578,6 @@ public abstract class Entity extends AbEntity {
 				return;
 			else
 				dmg = dmg * (100 - getProc().IMUVOLC.mult) / 100;
-
-			if((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
-				AttackVolcano volc = (AttackVolcano) atk;
-
-				if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
-					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF), this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint));
-
-					volc.handler.surgeSummoned.add(this);
-				}
-			}
 		}
 
 		tokens.add(atk);
@@ -1691,6 +1681,18 @@ public abstract class Entity extends AbEntity {
 
 		if (!shieldContinue)
 			return;
+
+		if ((atk.waveType & (WT_VOLC | WT_MIVC)) > 0) {
+			if((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
+				AttackVolcano volc = (AttackVolcano) atk;
+
+				if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
+					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF), this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint));
+
+					volc.handler.surgeSummoned.add(this);
+				}
+			}
+		}
 
 		CommonStatic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
