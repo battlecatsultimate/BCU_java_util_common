@@ -77,6 +77,9 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 			return MultiLangCont.getStatic().CFEXP.getCont(this);
 		}
 
+		public String getUltraFormEvolveExplanation() {
+			return MultiLangCont.getStatic().UFEXP.getCont(this);
+		}
 	}
 
 	@JsonField
