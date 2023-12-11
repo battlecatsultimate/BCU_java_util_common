@@ -1323,7 +1323,7 @@ public class Data {
 			{ 3, P_IMUWAVE, 0, 22 }, // 48: immune to wave
 			{ 3, P_IMUWARP, 0, 24 }, // 49: immune to warp
 			{ 0, P_SATK, 2, -1 }, // 50: savage blow
-			{ 0, P_IMUATK, 2, -1 }, // 51: immune to attack
+			{ 0, P_IMUATK, 2, -1 }, // 51: dodge attack
 			{ 0, P_IMUPOIATK, 1, -1 }, // 52: resist to poison ?
 			{ 3, P_IMUPOIATK, 0, 52 }, // 53: immune to poison
 			{ 0, P_IMUVOLC, 1, -1 }, // 54: resist to surge ?
