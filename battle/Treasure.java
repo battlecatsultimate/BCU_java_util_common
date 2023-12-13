@@ -260,7 +260,7 @@ public class Treasure extends Data {
 		return 0;
 	}
 
-	public float getBaseMagnification(int id, List<Trait> traits) {
+	public float getBaseMagnification(int id, List<Trait> traits, boolean raw) {
 		float ans = 1f;
 
 		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
@@ -308,31 +308,34 @@ public class Treasure extends Data {
 				return ans;
 		}
 
-		if(traits.contains(BCTraits.get(trait))) {
+		if (traits.contains(BCTraits.get(trait))) {
 			CannonLevelCurve clc = baseData.get(id);
-
-			if(clc == null)
+			if (clc == null || base[id - 1] == 0)
 				return ans;
 
-			if(base[id - 1] == 0)
-				return ans;
-
-			ans = clc.applyFormula(traitData, base[id - 1]);
+			ans = raw ? clc.applyFormulaRaw(traitData, base[id - 1]) : clc.applyFormula(traitData, base[id - 1]);
 		}
 
 		return ans;
 	}
 
-	public float getDecorationMagnification(int id, int type) {
+	public float getBaseMagnification(int id, List<Trait> traits) { // TODO: deprecate (maybe)
+		return getBaseMagnification(id, traits, false);
+	}
+
+	public float getDecorationMagnification(int id, int type, boolean raw) {
 		if(deco[id - 1] == 0)
 			return 1f;
 
 		CannonLevelCurve clc = decorationData.get(id);
-
-		if(clc == null)
+		if (clc == null)
 			return 1f;
 
-		return clc.applyFormula(type, deco[id - 1]);
+		return raw ? clc.applyFormulaRaw(type, deco[id - 1]) : clc.applyFormula(type, deco[id - 1]);
+	}
+
+	public float getDecorationMagnification(int id, int type) { // TODO: deprecate (maybe)
+		return getDecorationMagnification(id, type, false);
 	}
 
 	/**
