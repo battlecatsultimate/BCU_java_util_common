@@ -1289,7 +1289,7 @@ public class Data {
 			{ 1, AB_ZKILL, 0, -1 }, // 14: zkill
 			{ 0, P_BREAK, 1, -1 }, // 15: break
 			{ 0, P_BOUNTY, 0, -1 }, // 16: 2x income
-			{ 0, P_WAVE, 1, -1 }, // 17: wave
+			{ 0, P_WAVE, 2, -1 }, // 17: wave
 			{ 0, P_IMUWEAK, 1, -1 }, // 18: res weak
 			{ 0, P_IMUSTOP, 1, -1 }, // 19: res stop
 			{ 0, P_IMUSLOW, 1, -1 }, // 20: res slow
