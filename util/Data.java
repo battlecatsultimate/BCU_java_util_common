@@ -668,6 +668,12 @@ public class Data {
 			public int mult;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class SPIRIT extends ProcItem {
+			@Order(0)
+			public Identifier<?> id;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -811,6 +817,8 @@ public class Data {
 		public final BSTHUNT BSTHUNT = new BSTHUNT(); //Unsure what does the 1st param of beast killer do, so this is temporary
 		@Order(55)
 		public final MINIVOLC MINIVOLC = new MINIVOLC();
+		@Order(56)
+		public final SPIRIT SPIRIT = new SPIRIT();
 
 		@Override
 		public Proc clone() {
@@ -995,8 +1003,9 @@ public class Data {
 	public static final byte TRAIT_WITCH = 11;
 	public static final byte TRAIT_BARON = 12;
 	public static final byte TRAIT_BEAST = 13;
-	public static final byte TRAIT_INFH = 14;
-	public static final byte TRAIT_TOT = 15;
+	public static final byte TRAIT_SAGE = 14;
+	public static final byte TRAIT_INFH = 15;
+	public static final byte TRAIT_TOT = 16;
 
 	// treasure
 	public static final byte T_RED = 0;
@@ -1060,6 +1069,7 @@ public class Data {
 	public static final int AB_BAKILL = 1 << 17;
 	public static final int AB_CKILL = 1 << 18;
 	public static final int AB_CSUR = 1 << 19;
+	public static final int AB_SKILL = 1 << 20;
 
 	// abi index
 	public static final byte ABI_GOOD = 0;
@@ -1082,7 +1092,8 @@ public class Data {
 	public static final byte ABI_BAKILL = 17;
 	public static final byte ABI_CKILL = 18;
 	public static final byte ABI_CSUR = 19;
-	public static final byte ABI_TOT = 20;// 20 currently
+	public static final byte ABI_SKILL = 20;
+	public static final byte ABI_TOT = 21;// 20 currently
 
 	// proc index
 	public static final int P_KB = 0;
@@ -1175,7 +1186,8 @@ public class Data {
 	public static final int P_ATKBASE = 53;
 	public static final int P_BSTHUNT = 54; //Beast Killer
 	public static final int P_MINIVOLC = 55;
-	public static final byte PROC_TOT = 56;// 53
+	public static final int P_SPIRIT = 56;
+	public static final byte PROC_TOT = 57;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1620,6 +1632,11 @@ public class Data {
 	public static final float SHAKE_STABILIZER = 2.5f;
 	public static final int COUNTER_SURGE_FORESWING = 50;
 	public static final int COUNTER_SURGE_SOUND = 18;
+	public static final int SPIRIT_SUMMON_RANGE = 150;
+	public static final float SPIRIT_SUMMON_RESIST = 0.7f;
+	public static final float SUPER_SAGE_RESIST = 0.7f;
+	public static final float SUPER_SAGE_HUNTER_ATTACK = 1.2f;
+	public static final float SUPER_SAGE_HUNTER_HP = 0.5f;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s", "u" };
 

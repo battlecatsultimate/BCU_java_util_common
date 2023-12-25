@@ -2,7 +2,6 @@ package common.battle.data;
 
 import common.CommonStatic;
 import common.pack.Identifier;
-import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 import common.util.unit.Trait;
@@ -196,7 +195,15 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 			}
 
 			if (ints[109] == 1) {
-				a |= Data.AB_CSUR;
+				a |= AB_CSUR;
+			}
+
+			if (ints[110] != -1) {
+				proc.SPIRIT.id = Identifier.parseInt(ints[110], Unit.class);
+			}
+
+			if (ints[111] == 1) {
+				a |= AB_SKILL;
 			}
 		} catch (IndexOutOfBoundsException ignored) {
 		}
