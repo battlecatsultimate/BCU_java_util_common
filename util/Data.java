@@ -267,6 +267,9 @@ public class Data {
 
 							if (((Integer) o) != 0)
 								return true;
+						} else if (f.getType() == Identifier.class) {
+							if (f.get(this) != null)
+								return true;
 						} else {
 							if (((IntType) f.get(this)).toInt() > 0)
 								return true;
@@ -951,6 +954,7 @@ public class Data {
 	public static final short SE_SHIELD_BREAKER = 137;
 	public static final short SE_DEATH_SURGE = 143;
 	public static final short SE_COUNTER_SURGE = 159;
+	public static final short SE_SPIRIT_SUMMON = 162;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -1111,8 +1115,8 @@ public class Data {
 	public static final int P_CURSE = 12;
 	public static final int P_SEAL = 13;
 	/**
-	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time
-	 *
+	 * 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time<br>
+	 * <br>
 	 * +0: direct, +1: warp, +2:burrow, +4:disregard limit, +8: fix buff, +16: same
 	 * health, +32: diff layer, +64 on hit, +128 on kill
 	 */
@@ -1246,7 +1250,8 @@ public class Data {
 			false, //2x money
 			false, //base destroyer
 			true, //beast hunter
-			false //mini surge
+			false, //mini surge
+			true //spirit summon
 	};
 
 	/**
@@ -1349,7 +1354,8 @@ public class Data {
 			{ 0, P_MINIWAVE, 3, -1 }, //62 : mini-wave
 			{ 1, AB_BAKILL, 0, -1 }, //63 : baron killer
 			{ 0, P_BSTHUNT, 2, -1 }, //64 : beheoth hunter
-			{ 0, P_MINIVOLC, 4, -1 } //65 : Mini surge
+			{ 0, P_MINIVOLC, 4, -1 }, //65 : Mini surge
+			{ 1, AB_SKILL, 0, -1 }, //66 : super sage hunter
 	};
 
 	// foot icon index used in battle
@@ -1633,10 +1639,11 @@ public class Data {
 	public static final int COUNTER_SURGE_FORESWING = 50;
 	public static final int COUNTER_SURGE_SOUND = 18;
 	public static final int SPIRIT_SUMMON_RANGE = 150;
-	public static final float SPIRIT_SUMMON_RESIST = 0.7f;
 	public static final float SUPER_SAGE_RESIST = 0.7f;
+	public static final String[] SUPER_SAGE_RESIST_TYPE = { "IMUWEAK", "IMUSTOP", "IMUSLOW", "IMUCURSE", "IMUKB" };
 	public static final float SUPER_SAGE_HUNTER_ATTACK = 1.2f;
 	public static final float SUPER_SAGE_HUNTER_HP = 0.5f;
+	public static final float SUPER_SAGE_HUNTER_RESIST = 0.7f;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s", "u" };
 

@@ -172,6 +172,7 @@ public class Res extends ImgCore {
 		aux.icon[3][TRAIT_DEMON] = new VImg(parts[85]);
 		aux.icon[3][TRAIT_WHITE] = new VImg(parts[86]);
 		aux.icon[3][TRAIT_BEAST] = new VImg("./org/page/icons/Beast.png");
+		aux.icon[3][TRAIT_SAGE] = new VImg("./org/page/icons/SuperSage.png");
 		aux.icon[0][ABI_EKILL] = new VImg(parts[110]);
 		aux.icon[2][ATK_OMNI] = new VImg(parts[112]);
 		aux.icon[1][P_IMUCURSE] = new VImg(parts[116]);
@@ -219,6 +220,8 @@ public class Res extends ImgCore {
 		aux.icon[0][ABI_CKILL] = new VImg(parts[300]);
 		aux.icon[1][P_MINIVOLC] = new VImg(parts[310]);
 		aux.icon[0][ABI_CSUR] = new VImg(parts[315]);
+		aux.icon[1][P_SPIRIT] = new VImg(parts[317]);
+		aux.icon[0][ABI_SKILL] = new VImg(parts[319]);
 		aux.icon[1][P_DEMONSHIELD] = new VImg("./org/page/icons/DemonShield.png");
 		aux.icon[1][P_DEATHSURGE] = new VImg("./org/page/icons/DeathSurge.png");
 

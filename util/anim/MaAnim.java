@@ -7,6 +7,7 @@ import common.system.files.VFile;
 import common.util.BattleStatic;
 import common.util.Data;
 
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.util.Queue;
 
@@ -39,14 +40,26 @@ public class MaAnim extends Data implements BattleStatic {
 		parts = new Part[0];
 	}
 
-	public MaAnim(Queue<String> qs) {
-		qs.poll();
-		qs.poll();
-		n = Integer.parseInt(qs.poll().trim());
-		parts = new Part[n];
-		for (int i = 0; i < n; i++)
-			parts[i] = new Part(qs);
-		validate();
+	public MaAnim(@Nullable Queue<String> qs) {
+		if (qs != null) {
+			qs.poll();
+			qs.poll();
+
+			n = Integer.parseInt(qs.poll().trim());
+
+			parts = new Part[n];
+
+			for (int i = 0; i < n; i++)
+				parts[i] = new Part(qs);
+
+			validate();
+		} else {
+			n = 0;
+
+			parts = new Part[n];
+
+			validate();
+		}
 	}
 
 	private MaAnim(MaAnim ma) {

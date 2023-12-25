@@ -50,7 +50,16 @@ public class VFile implements Comparable<VFile> {
 	}
 
 	public static Queue<String> readLine(String str) {
-		return get(str).getData().readLine();
+		VFile file = get(str);
+
+		if (file != null) {
+			FileData data = get(str).getData();
+
+			if (data != null)
+				return data.readLine();
+		}
+
+		return null;
 	}
 
 	public String name;

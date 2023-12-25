@@ -100,6 +100,7 @@ public class EUnit extends Entity {
 	public void damaged(AttackAb atk) {
 		if (atk.trait.contains(BCTraits.get(TRAIT_BEAST))) {
 			Proc.BSTHUNT beastDodge = getProc().BSTHUNT;
+
 			if (beastDodge.prob > 0 && (atk.dire != dire)) {
 				if (status[P_BSTHUNT][0] == 0 && (beastDodge.prob == 100 || basis.r.nextFloat() * 100 < beastDodge.prob)) {
 					status[P_BSTHUNT][0] = beastDodge.time;
@@ -126,40 +127,77 @@ public class EUnit extends Entity {
 	}
 
 	@Override
+	public float getResistValue(AttackAb atk, String procName, int procResist) {
+		float ans = 1f - procResist / 100f;
+
+		boolean canBeApplied = false;
+
+		for (int i = 0; i < SUPER_SAGE_RESIST_TYPE.length; i++) {
+			if (procName.equals(SUPER_SAGE_RESIST_TYPE[i])) {
+				canBeApplied = true;
+
+				break;
+			}
+		}
+
+		if (atk.trait.contains(BCTraits.get(TRAIT_SAGE)) && canBeApplied && (getAbi() & AB_SKILL) != 0) {
+			ans *= (1f - SUPER_SAGE_HUNTER_RESIST);
+		}
+
+		return ans;
+	}
+
+	@Override
 	protected int getDamage(AttackAb atk, int ans) {
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI) {
 			ans = (int) ((float) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		}
+
 		if (atk instanceof AttackVolcano && atk.waveType == WT_MIVC) {
 			ans = (int) ((float) ans * atk.getProc().MINIVOLC.mult / 100.0);
 		}
+
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
+
 			sharedTraits.retainAll(traits);
+
 			boolean isAntiTraited = targetTraited(atk.trait);
+
 			for (Trait t : traits) {
 				if (t.BCTrait || sharedTraits.contains(t))
 					continue;
 				if ((t.targetType && isAntiTraited) || t.others.contains(((MaskUnit)data).getPack()))
 					sharedTraits.add(t);
 			}
+
 			if ((getAbi() & AB_GOOD) != 0)
-				ans *= basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level));
+
 			if ((getAbi() & AB_RESIST) != 0)
-				ans *= basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level);
+				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level));
+
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
-				ans *= basis.b.t().getRESISTSDEF(sharedTraits);
+				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
 		}
+
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
-			ans *= basis.b.t().getWKDef();
+			ans = (int) (ans * basis.b.t().getWKDef());
+
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
-			ans *= basis.b.t().getEKDef();
+			ans = (int) (ans * basis.b.t().getEKDef());
+
 		if (isBase)
-			ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
+			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
+
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (getAbi() & AB_BAKILL) > 0)
-			ans *= 0.7;
+			ans = (int) (ans * 0.7);
+
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.type.active)
-			ans *= 0.6; //Not sure
+			ans = (int) (ans * 0.6);
+
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_SAGE)) && (getAbi() & AB_SKILL) > 0)
+			ans = (int) (ans * SUPER_SAGE_HUNTER_HP);
 
 		// Perform orb
 		ans = getOrbRes(atk.trait, ans);
@@ -168,8 +206,8 @@ public class EUnit extends Entity {
 			ans = (int) (ans * basis.b.t().getBaseMagnification(basis.canon.base, atk.trait));
 		}
 
-
 		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
+
 		return ans;
 	}
 
@@ -186,7 +224,7 @@ public class EUnit extends Entity {
 	@Override
 	protected boolean updateMove(float maxl, float extmov) {
 		if (status[P_SLOW][0] == 0)
-			extmov += data.getSpeed() * basis.b.getInc(C_SPE) / 200.0;
+			extmov = (float) (extmov + data.getSpeed() * basis.b.getInc(C_SPE) / 200.0);
 		return super.updateMove(maxl, extmov);
 	}
 

@@ -144,7 +144,8 @@ public class AnimUD extends AnimU<AnimUD.DefImgLoader> {
 			int end = 0;
 
 			for (int i = 0; i < original.length; i++) {
-				if (original[i] != null && original[i].n != 0)
+				// walk/attack/wait/hb must be kept no matter what
+				if ((original[i] != null && original[i].n != 0) || i < 4)
 					end = i;
 			}
 
