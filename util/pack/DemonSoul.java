@@ -3,10 +3,7 @@ package common.util.pack;
 import common.pack.Identifier;
 import common.pack.IndexContainer;
 import common.pack.PackData;
-import common.system.VImg;
-import common.system.fake.FakeImage;
-import common.util.Data;
-import common.util.anim.*;
+import common.util.anim.AnimU;
 
 @IndexContainer.IndexCont(PackData.class)
 public class DemonSoul extends AbSoul implements IndexContainer.Indexable<PackData, DemonSoul> {

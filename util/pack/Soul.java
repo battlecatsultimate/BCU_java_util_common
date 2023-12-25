@@ -1,14 +1,14 @@
 package common.util.pack;
 
 import common.io.json.JsonClass;
-import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
 import common.util.Animable;
-import common.util.anim.*;
+import common.util.anim.AnimU;
+import common.util.anim.EAnimI;
 import common.util.stage.Music;
 
 @JsonClass

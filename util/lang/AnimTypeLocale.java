@@ -1,25 +1,23 @@
 package common.util.lang;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import common.CommonStatic;
+import common.io.assets.Admin.StaticPermitted;
+import common.util.anim.AnimI;
+import common.util.anim.AnimU.UType;
+import common.util.pack.Background.BGWvType;
+import common.util.pack.EffAnim;
+import common.util.pack.NyCastle.NyType;
+import common.util.pack.WaveAnim.WaveType;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import common.CommonStatic;
-import common.io.assets.Admin.StaticPermitted;
-import common.util.anim.AnimI;
-import common.util.anim.AnimU;
-import common.util.anim.AnimU.UType;
-import common.util.pack.Background.BGWvType;
-import common.util.pack.EffAnim;
-import common.util.pack.NyCastle.NyType;
-import common.util.pack.WaveAnim.WaveType;
 
 public class AnimTypeLocale {
 
