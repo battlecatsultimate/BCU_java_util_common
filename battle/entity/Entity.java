@@ -1910,7 +1910,7 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
 			int val = (int) (atk.getProc().CURSE.time * time);
 
-			float rst = getProc().IMUCURSE.mult;
+			float rst = getResistValue(atk, "IMUCURSE", getProc().IMUCURSE.mult);
 
 			if (rst < 100) {
 				val = (int) (val * rst);
