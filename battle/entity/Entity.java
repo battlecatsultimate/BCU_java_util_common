@@ -1846,7 +1846,7 @@ public abstract class Entity extends AbEntity {
 			int val = (int) (atk.getProc().STOP.time * time);
 			float rst = getResistValue(atk, "IMUSTOP", getProc().IMUSTOP.mult);
 
-			if (rst < 100) {
+			if (rst < 1f) {
 				val = (int) (val * rst);
 
 				if (val < 0)
@@ -1867,7 +1867,7 @@ public abstract class Entity extends AbEntity {
 			int val = (int) (atk.getProc().SLOW.time * time);
 			float rst = getResistValue(atk, "IMUSLOW", getProc().IMUSLOW.mult);
 
-			if (rst < 100) {
+			if (rst < 1f) {
 				val = (int) (val * rst);
 
 				if (val < 0)
@@ -1899,7 +1899,7 @@ public abstract class Entity extends AbEntity {
 				val = (int) (val * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WEAK));
 			}
 
-			if (rst < 100) {
+			if (rst < 1f) {
 				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
 
 				anim.getEff(P_WEAK);
@@ -1912,7 +1912,7 @@ public abstract class Entity extends AbEntity {
 
 			float rst = getResistValue(atk, "IMUCURSE", getProc().IMUCURSE.mult);
 
-			if (rst < 100) {
+			if (rst < 1f) {
 				val = (int) (val * rst);
 
 				if (val < 0)
@@ -1932,7 +1932,7 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().KB.dis != 0) {
 			float rst = getResistValue(atk, "IMUKB", getProc().IMUKB.mult);
 
-			if (rst < 100) {
+			if (rst < 1f) {
 				status[P_KB][0] = atk.getProc().KB.time;
 
 				interrupt(P_KB, atk.getProc().KB.dis * dist * rst);
