@@ -50,6 +50,7 @@ public class CommonStatic {
 		public Map<Integer, VImg> gatyaitem = new HashMap<>();
 		public VImg XP;
 		public VImg[][] moneySign = new VImg[4][4]; //Money on, off/Cost on, off
+		public VImg[] spiritSummon = new VImg[4];
 		/**
 		 * Use this if trait.icon is null
 		 */

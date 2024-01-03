@@ -233,8 +233,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected void extraAtk(int ind) {
-		if (data.getAtkModel(ind).getMove() != 0)
+		if (data.getAtkModel(ind).getMove() != 0) {
 			e.pos += data.getAtkModel(ind).getMove() * e.dire;
+			e.lastPosition = e.pos;
+		}
 		if (data.getAtkModel(ind).getAltAbi() != 0)
 			e.altAbi(data.getAtkModel(ind).getAltAbi());
 		if (abis[ind] == 1) {

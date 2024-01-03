@@ -58,7 +58,9 @@ public class EUnit extends Entity {
 
 	protected final Level level;
 
-	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc, int[] index) {
+	public final boolean isSpirit;
+
+	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc, int[] index, boolean isSpirit) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
 		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextFloat() * (layer1 - layer0 + 1));
 		traits = de.getTraits();
@@ -66,6 +68,8 @@ public class EUnit extends Entity {
 		this.index = index;
 
 		this.level = level;
+
+		this.isSpirit = isSpirit;
 	}
 
 	//used for waterblast
@@ -78,6 +82,7 @@ public class EUnit extends Entity {
 		lvl = 1;
 		health = maxH = (int) (health * b.b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100.0);
 		level = null;
+		isSpirit = false;
 	}
 
 	@Override
@@ -93,11 +98,32 @@ public class EUnit extends Entity {
 	@Override
 	public void update() {
 		super.update();
+
 		traits = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getTraits() : new ArrayList<>();
+
+		if (isSpirit && atkm.atkTime == 0) {
+			kill(KillMode.SPIRIT);
+		}
+	}
+
+	@Override
+	public void added(int d, float p) {
+		super.added(d, p);
+
+		if (isSpirit) {
+			atkm.setUp();
+		}
 	}
 
 	@Override
 	public void damaged(AttackAb atk) {
+		if (isSpirit) {
+			status[P_IMUATK][0] = Integer.MAX_VALUE;
+			anim.getEff(P_IMUATK);
+
+			return;
+		}
+
 		if (atk.trait.contains(BCTraits.get(TRAIT_BEAST))) {
 			Proc.BSTHUNT beastDodge = getProc().BSTHUNT;
 
@@ -225,6 +251,7 @@ public class EUnit extends Entity {
 	protected boolean updateMove(float maxl, float extmov) {
 		if (status[P_SLOW][0] == 0)
 			extmov = (float) (extmov + data.getSpeed() * basis.b.getInc(C_SPE) / 200.0);
+
 		return super.updateMove(maxl, extmov);
 	}
 

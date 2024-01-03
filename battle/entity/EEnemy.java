@@ -43,10 +43,10 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	public void kill(boolean atk) {
+	public void kill(KillMode atk) {
 		super.kill(atk);
 
-		if (!basis.st.trail && !atk) {
+		if (!basis.st.trail && atk == KillMode.NORMAL) {
 			float mul = basis.b.t().getDropMulti() * (1 + (status[P_BOUNTY][0] / 100f));
 
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());

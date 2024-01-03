@@ -31,6 +31,11 @@ import java.util.*;
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public abstract class Entity extends AbEntity {
+	public enum KillMode {
+		NORMAL,
+		SELF_DESTRUCT,
+		SPIRIT
+	}
 
 	/**
 	 * Obtains BC's traits
@@ -701,12 +706,12 @@ public abstract class Entity extends AbEntity {
 		}
 	}
 
-	private static class AtkManager extends BattleObj {
+	protected static class AtkManager extends BattleObj {
 
 		/**
 		 * atk FSM time
 		 */
-		private int atkTime;
+		protected int atkTime;
 
 		/**
 		 * attack times remain
@@ -749,7 +754,7 @@ public abstract class Entity extends AbEntity {
 			loop = e.data.getAtkLoop();
 		}
 
-		private void setUp() {
+		protected void setUp() {
 			atkTime = e.data.getAnimLen();
 			preID = 0;
 			preTime = pres[0] - 1;
@@ -887,7 +892,8 @@ public abstract class Entity extends AbEntity {
 				}
 
 				if ((e.getAbi() & AB_GLASS) > 0 && e.atkm.atkTime == 0 && e.atkm.loop == 0) {
-					e.kill(true);
+					e.kill(KillMode.SELF_DESTRUCT);
+
 					return;
 				}
 
@@ -1293,7 +1299,7 @@ public abstract class Entity extends AbEntity {
 
 	public final AnimManager anim;
 
-	private final AtkManager atkm;
+	protected final AtkManager atkm;
 
 	private final ZombX zx = new ZombX(this);
 
@@ -2089,7 +2095,7 @@ public abstract class Entity extends AbEntity {
 	 * @param atk if this is true, it means it dies because of self-destruct,
 	 * and entity will not drop money because of this
 	 */
-	public void kill(boolean atk) {
+	public void kill(KillMode atk) {
 		if (kbTime == -1)
 			return;
 		kbTime = -1;
@@ -2151,7 +2157,7 @@ public abstract class Entity extends AbEntity {
 		kb.doInterrupt();
 
 		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
-			kill(true);
+			kill(KillMode.SELF_DESTRUCT);
 
 		// update ZKill
 		zx.postUpdate();
@@ -2444,6 +2450,9 @@ public abstract class Entity extends AbEntity {
 
 		pos += mov * dire;
 
+		if (kbTime == 0)
+			lastPosition = pos;
+
 		return maxl > mov;
 	}
 
@@ -2530,7 +2539,7 @@ public abstract class Entity extends AbEntity {
 		if (zx.prekill())
 			return;
 
-		kill(false);
+		kill(KillMode.NORMAL);
 	}
 
 	/**

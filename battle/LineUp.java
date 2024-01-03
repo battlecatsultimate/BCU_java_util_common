@@ -12,6 +12,7 @@ import common.util.Data;
 import common.util.unit.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -26,6 +27,7 @@ public class LineUp extends Data {
 	@JsonField(alias = Form.FormJson.class)
 	public final Form[][] fs = new Form[2][5];
 	public final EForm[][] efs = new EForm[2][5];
+	public final EForm[][] spirits = new EForm[2][5];
 	public int[] inc = new int[C_TOT], loc = new int[5];
 
 	public List<Combo> coms = new ArrayList<>();
@@ -346,10 +348,29 @@ public class LineUp extends Data {
 	private void renewEForm() {
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++)
-				if (fs[i][j] == null)
+				if (fs[i][j] == null) {
 					efs[i][j] = null;
-				else
+					spirits[i][j] = null;
+				} else {
 					efs[i][j] = new EForm(fs[i][j], getLv(fs[i][j]));
+
+					if (fs[i][j].du.getProc().SPIRIT.exists()) {
+						Unit u = Identifier.getOr(fs[i][j].du.getProc().SPIRIT.id, Unit.class);
+
+						Form spiritForm = u.forms[0];
+
+                        Level spiritLevel = getLv(fs[i][j]).clone();
+
+						spiritLevel.setLevel(Math.min(u.max, spiritLevel.getLv() + spiritLevel.getPlusLv()));
+						spiritLevel.setPlusLevel(0);
+
+						spiritLevel.setOrbs(null);
+
+                        Arrays.fill(spiritLevel.getTalents(), 0);
+
+						spirits[i][j] = new EForm(spiritForm, spiritLevel);
+                    }
+				}
 	}
 
 	private void validate() {

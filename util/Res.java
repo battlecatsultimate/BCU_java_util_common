@@ -325,6 +325,7 @@ public class Res extends ImgCore {
 		//jp fire
 		aux.battle[1][12] = new VImg(parts[9]);
 		aux.battle[1][13] = new VImg(parts[10]);
+		aux.spiritSummon[3] = new VImg(parts[53]);
 
 		ic002 = ImgCut.newIns("./org/page/img002_en.imgcut");
 		img002 = new VImg("./org/page/img002_en.png");
@@ -333,6 +334,12 @@ public class Res extends ImgCore {
 		aux.battle[1][14] = new VImg(parts[9]);
 		aux.battle[1][15] = new VImg(parts[10]);
 
+		if (parts.length >= 54) {
+			aux.spiritSummon[0] = new VImg(parts[53]);
+		} else {
+			aux.spiritSummon[0] = aux.spiritSummon[3];
+		}
+
 		ic002 = ImgCut.newIns("./org/page/img002_ko.imgcut");
 		img002 = new VImg("./org/page/img002_ko.png");
 		parts = ic002.cut(img002.getImg());
@@ -340,12 +347,24 @@ public class Res extends ImgCore {
 		aux.battle[1][16] = new VImg(parts[9]);
 		aux.battle[1][17] = new VImg(parts[10]);
 
+		if (parts.length >= 54) {
+			aux.spiritSummon[2] = new VImg(parts[53]);
+		} else {
+			aux.spiritSummon[2] = aux.spiritSummon[3];
+		}
+
 		ic002 = ImgCut.newIns("./org/page/img002_tw.imgcut");
 		img002 = new VImg("./org/page/img002_tw.png");
 		parts = ic002.cut(img002.getImg());
 		//tw fire
 		aux.battle[1][18] = new VImg(parts[9]);
 		aux.battle[1][19] = new VImg(parts[10]);
+
+		if (parts.length >= 54) {
+			aux.spiritSummon[1] = new VImg(parts[53]);
+		} else {
+			aux.spiritSummon[1] = aux.spiritSummon[3];
+		}
 
 		aux.battle[1][20] = new VImg(parts[0]);
 		aux.battle[1][21] = new VImg(parts[1]);
@@ -388,7 +407,7 @@ public class Res extends ImgCore {
 		return new VImg(fimg);
 	}
 
-	private static int decideLocale() {
+	public static int decideLocale() {
 		switch (CommonStatic.getConfig().lang) {
 			case 1:
 			case 2:

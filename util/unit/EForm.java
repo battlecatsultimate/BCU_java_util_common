@@ -34,7 +34,7 @@ public class EForm extends Data {
 			du = form.du;
 	}
 
-	public EUnit getEntity(StageBasis b, int[] index) {
+	public EUnit getEntity(StageBasis b, int[] index, boolean isSpirit) {
 		if(b.st.isAkuStage())
 			getAkuStageLevel(level);
 
@@ -42,14 +42,14 @@ public class EForm extends Data {
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
 
-		return new EUnit(b, du, walkAnim, d, du.getFront(), du.getBack(), level, f.du.getPCoin(), index);
+		return new EUnit(b, du, walkAnim, d, du.getFront(), du.getBack(), level, f.du.getPCoin(), index, isSpirit);
 	}
 
 	public EUnit invokeEntity(StageBasis b, int Lvl, int minLayer, int maxLayer) {
 		float d = f.unit.lv.getMult(Lvl);
 		EAnimU walkAnim = f.getEAnim(AnimU.UType.WALK);
 		walkAnim.setTime(0);
-		return new EUnit(b, du, walkAnim, d, minLayer, maxLayer, level, f.du.getPCoin(), null);
+		return new EUnit(b, du, walkAnim, d, minLayer, maxLayer, level, f.du.getPCoin(), null, false);
 	}
 
 	public float getPrice(int sta) {

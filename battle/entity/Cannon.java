@@ -173,7 +173,7 @@ public class Cannon extends AtkModelAb {
         if (id == 2) {
             // wall canon
             if (wall != null)
-                wall.kill(true);
+                wall.kill(Entity.KillMode.SELF_DESTRUCT);
             wall = null;
             return;
         }

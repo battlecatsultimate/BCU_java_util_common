@@ -27,24 +27,25 @@ public class ELineUp extends BattleObj {
 	}
 
 	/**
-	 * reset cool down time of an unit
+	 * reset cooldown of a unit
 	 */
 	protected void get(int i, int j) {
 		cool[i][j] = maxC[i][j];
 	}
 
 	/**
-	 * count down the cool down time
+	 * count down the cooldown
 	 */
 	protected void update() {
 		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 5; j++)
+			for (int j = 0; j < 5; j++) {
 				if (cool[i][j] > 0) {
 					cool[i][j]--;
 
-					if(cool[i][j] == 0)
+					if (cool[i][j] == 0)
 						CommonStatic.setSE(SE_SPEND_REF);
 				}
+			}
 	}
 
 }

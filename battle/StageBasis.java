@@ -84,6 +84,23 @@ public class StageBasis extends BattleObj {
 	private THEME.TYPE themeType;
 	private boolean bgEffectInitialized = false;
 
+	public final int[][] spiritCooldown = new int[2][5];
+	/**
+	 * Flag for whether summoner has been summoned or not
+	 */
+	public final boolean[][] summonerSummoned = new boolean[2][5];
+	/**
+	 * Flag for whether spirit has been summoned or not
+	 */
+	public final boolean[][] spiritSummoned = new boolean[2][5];
+	/**
+	 * Summoner entity that has been spawned in the battle. Used for spirit summon positioning
+	 */
+	public final Entity[][] summoner = new Entity[2][5];
+
+	public final int[][] spiritEmphasizeCount = new int[2][5];
+	public final int[][] spiritEmphasizeStartTime = new int[2][5];
+
 	public StageBasis(BattleField bf, EStage stage, BasisLU bas, int[] ints, long seed, boolean buttonDelayOn) {
 		b = bas;
 		r = new CopRand(seed);
@@ -352,6 +369,7 @@ public class StageBasis extends BattleObj {
 			for (Entity e : le)
 				if (e.dire == 1) {
 					e.pos = ebase.pos;
+					e.lastPosition = ebase.pos;
 					e.cont();
 				}
 			for(int[] c : elu.cool)
@@ -395,6 +413,7 @@ public class StageBasis extends BattleObj {
 					return false;
 
 				buttonDelay = 6;
+
 				selectedUnit[0] = i;
 				selectedUnit[1] = j;
 
@@ -405,32 +424,75 @@ public class StageBasis extends BattleObj {
 		if (unitRespawnTime > 0)
 			return false;
 
-		if (elu.cool[i][j] > 0) {
-			if(manual) {
+		EForm f = b.lu.efs[i][j];
+
+		if (f == null) {
+			return false;
+		}
+
+		if (manual && f.du.getProc().SPIRIT.exists() && summonerSummoned[i][j] && summoner[i][j].anim.dead < 0 && !spiritSummoned[i][j]) {
+			if (spiritCooldown[i][j] > 0) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
+
+				return false;
 			}
 
-			return false;
-		}
-		if (elu.price[i][j] == -1) {
-			return false;
-		}
-		if (elu.price[i][j] > money) {
-			if (manual)
+			f = b.lu.spirits[i][j];
+
+			if (f == null)
+				return false;
+
+			if (entityCount(-1) >= max_num - f.du.getWill()) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
-			return false;
-		}
-		if (locks[i][j] || manual) {
-			if (entityCount(-1) >= max_num - b.lu.efs[i][j].du.getWill()) {
+
+				return false;
+			}
+
+			CommonStatic.setSE(SE_SPIRIT_SUMMON);
+
+			EUnit su = f.getEntity(this, null, true);
+
+			su.added(-1, Math.min(ubase.pos, summoner[i][j].lastPosition + SPIRIT_SUMMON_RANGE));
+
+			le.add(su);
+			le.sort(Comparator.comparingInt(e -> e.layer));
+
+			spiritSummoned[i][j] = true;
+
+			unitRespawnTime = 1;
+
+			return true;
+		} else if (locks[i][j] || manual) {
+			if (entityCount(-1) >= max_num - f.du.getWill()) {
 				if (manual)
 					CommonStatic.setSE(SE_SPEND_FAIL);
 
 				return false;
 			}
 
-			EForm f = b.lu.efs[i][j];
+			if (elu.cool[i][j] > 0) {
+				if(manual) {
+					CommonStatic.setSE(SE_SPEND_FAIL);
+				}
 
-			if (f == null) {
+				return false;
+			}
+
+			if (elu.price[i][j] == -1) {
+				return false;
+			}
+
+			if (elu.price[i][j] > money) {
+				if (manual)
+					CommonStatic.setSE(SE_SPEND_FAIL);
+
+				return false;
+			}
+
+			if (f.du.getProc().SPIRIT.exists() && summonerSummoned[i][j] && summoner[i][j] != null) {
+				if (manual)
+					CommonStatic.setSE(SE_SPEND_FAIL);
+
 				return false;
 			}
 
@@ -438,16 +500,26 @@ public class StageBasis extends BattleObj {
 
 			elu.get(i, j);
 
-			EUnit eu = f.getEntity(this, new int[] {i, j});
+			EUnit eu = f.getEntity(this, new int[] {i, j}, false);
 
 			eu.added(-1, st.len - 700);
 
+			if (f.du.getProc().SPIRIT.exists()) {
+				summonerSummoned[i][j] = true;
+				spiritCooldown[i][j] = SPIRIT_SUMMON_DELAY;
+				summoner[i][j] = eu;
+			}
+
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
+
 			money -= elu.price[i][j];
+
 			unitRespawnTime = 1;
+
 			return true;
 		}
+
 		return false;
 	}
 
@@ -459,7 +531,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	/**
-	 * process actions and add enemies from stage first then update each entities
+	 * process actions and add enemies from stage first then update each entity
 	 * and receive attacks then excuse attacks and do post update then delete dead
 	 * entities
 	 */
@@ -533,6 +605,24 @@ public class StageBasis extends BattleObj {
 				respawnTime--;
 
 			elu.update();
+
+			for (int i = 0; i < spiritCooldown.length; i++) {
+				for (int j = 0; j < spiritCooldown[i].length; j++) {
+					if (spiritEmphasizeCount[i][j] > 0 && (time - spiritEmphasizeStartTime[i][j]) % 4 == 0) {
+						spiritEmphasizeCount[i][j]--;
+					}
+
+					if (spiritCooldown[i][j] > 0) {
+						spiritCooldown[i][j]--;
+
+						if (spiritCooldown[i][j] == 0) {
+							spiritEmphasizeStartTime[i][j] = time;
+							spiritEmphasizeCount[i][j] = 10;
+						}
+					}
+				}
+			}
+
 			if(cannon == maxCannon -1) {
 				CommonStatic.setSE(SE_CANNON_CHARGE);
 			}
@@ -612,7 +702,7 @@ public class StageBasis extends BattleObj {
 			if (ebase.health <= 0) {
 				for (Entity entity : le)
 					if (entity.dire == 1)
-						entity.kill(false);
+						entity.kill(Entity.KillMode.NORMAL);
 
 				if(ebaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ebase.pos + 50 - 500 * r.irDouble());
@@ -625,7 +715,7 @@ public class StageBasis extends BattleObj {
 			if (ubase.health <= 0) {
 				for (int i = 0; i < le.size(); i++)
 					if (le.get(i).dire == -1)
-						le.get(i).kill(false);
+						le.get(i).kill(Entity.KillMode.NORMAL);
 
 				if(ubaseSmoke.size() <= 7 && time % 2 == 0) {
 					int x = (int) (ubase.pos - 50 + 500 * r.irDouble());
@@ -642,7 +732,7 @@ public class StageBasis extends BattleObj {
 
 		if (shock) {
 			for (Entity entity : le) {
-				if (entity.dire == -1 && (entity.touchable() & TCH_N) > 0) {
+				if (entity.dire == -1 && (entity.touchable() & TCH_N) > 0 && (!(entity instanceof EUnit) || !((EUnit) entity).isSpirit)) {
 					entity.interrupt(INT_SW, KB_DIS[INT_SW]);
 					entity.postUpdate();
 				}
@@ -654,7 +744,25 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0) {
-			le.removeIf(e -> e.anim.dead == 0 && e.summoned.isEmpty());
+			le.removeIf(e -> {
+				boolean dead = e.anim.dead == 0 && e.summoned.isEmpty();
+
+				if (dead && e instanceof EUnit && e.getProc().SPIRIT.exists()) {
+					for (int i = 0; i < 2; i++) {
+						for (int j = 0; j < 5; j++) {
+							if (e == summoner[i][j]) {
+								summoner[i][j] = null;
+								summonerSummoned[i][j] = false;
+								spiritSummoned[i][j] = false;
+
+								break;
+							}
+						}
+					}
+				}
+
+				return dead;
+			});
 			lw.removeIf(w -> !w.activate);
 			lea.removeIf(EAnimCont::done);
 			ebaseSmoke.removeIf(EAnimCont::done);
