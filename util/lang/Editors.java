@@ -681,6 +681,8 @@ public class Editors {
 				t.time = 0;
 			}
 		}));
+
+		map().put("SPIRIT", new EditControl<>(Proc.SPIRIT.class, (t) -> {}));
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
