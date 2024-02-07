@@ -86,13 +86,15 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 				int time = proc.time;
 
-				if (proc.form - 1 < 0 || proc.form - 1 >= u.forms.length)
+				if (u.forms.length == 0)
 					return;
 
-				if (b.entityCount(-1) < b.max_num - u.forms[proc.form - 1].du.getWill() || conf.ignore_limit) {
+				int form = Math.max(0, Math.min(proc.form - 1, u.forms.length - 1));
+
+				if (b.entityCount(-1) < b.max_num - u.forms[form].du.getWill() || conf.ignore_limit) {
 					int lvl = proc.mult;
 					lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
-					lvl *= (100.0 - resist) / 100;
+					lvl = (int) (lvl * (100.0 - resist) / 100);
 
 					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));
 					float up = ent.pos + getDire() * dis;
@@ -100,7 +102,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
 						minlayer = maxlayer = e.layer;
 
-					EForm ef = new EForm(u.forms[Math.max(proc.form - 1, 0)], lvl);
+					EForm ef = new EForm(u.forms[form], lvl);
 					EUnit eu = ef.invokeEntity(b, lvl, minlayer, maxlayer);
 					if (conf.same_health)
 						eu.health = e.health;
