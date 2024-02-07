@@ -80,9 +80,15 @@ public class AtkModelEnemy extends AtkModelEntity {
 			} else {
 				Unit u = Identifier.getOr(proc.id, Unit.class);
 				SUMMON.TYPE conf = proc.type;
+
 				if (conf.same_health && ent.health <= 0)
 					return;
+
 				int time = proc.time;
+
+				if (proc.form - 1 < 0 || proc.form - 1 >= u.forms.length)
+					return;
+
 				if (b.entityCount(-1) < b.max_num - u.forms[proc.form - 1].du.getWill() || conf.ignore_limit) {
 					int lvl = proc.mult;
 					lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
