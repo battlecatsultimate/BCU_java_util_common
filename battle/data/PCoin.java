@@ -140,6 +140,10 @@ public class PCoin extends Data {
 					data[4] = Math.max(data[4], 0);
 					data[5] = Math.max(data[5], data[4]);
 					break;
+				case 61:
+					data[2] = MathUtil.clip(data[2], 0, 100);
+					data[3] = MathUtil.clip(data[3], data[2], 100);
+                    break;
 				case 25: case 26: case 31: case 32:
 					data[2] = Math.max(data[2], 0);
 					data[3] = Math.max(data[3], data[2]);
