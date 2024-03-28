@@ -428,7 +428,7 @@ public class PCoin extends Data {
 
 	private static boolean talentExist(String[] data, int index) {
 		for(int i = index; i < index + 14; i++) {
-			if(!data[i].trim().equals("0")) {
+			if(!data[i].trim().equals("0") && !data[i].trim().equals("-1")) {
 				return true;
 			}
 		}
