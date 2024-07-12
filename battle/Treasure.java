@@ -233,10 +233,7 @@ public class Treasure extends Data {
 		int t = tech[LV_BASE];
 		int base = t < 6 ? t * 1000 : t < 8 ? 5000 + (t - 5) * 2000 : 9000 + (t - 7) * 3000;
 		base += trea[T_BASE] * 70;
-		if (bslv[0] > 10)
-			base += 36000 + 4000 * (bslv[0] - 10);
-		else
-			base += 3600 * bslv[0];
+		base += (bslv[0] - 1) * 4000;
 		return base * (100 + b.getInc(C_BASE)) / 100;
 	}
 

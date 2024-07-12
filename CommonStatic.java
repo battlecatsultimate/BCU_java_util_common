@@ -568,38 +568,39 @@ public class CommonStatic {
 	 * Gets the minimum position value for a data enemy.
 	 */
 	public static float dataEnemyMinPos(MaModel model) {
-		int y = model.confs[0][2];
-		float z = (float) model.parts[0][8] / model.ints[0];
-		return 2.5f * (float) Math.floor(y * z);
+		int x = ((model.confs[0][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 2.5f * x;
 	}
 
 	/**
 	 * Gets the minimum position value for a custom enemy.
 	 */
 	public static float customEnemyMinPos(MaModel model) {
-		int y = -model.parts[0][6];
-		float z = (float) model.parts[0][8] / model.ints[0];
-		return 2.5f * (float) Math.floor(y * z);
+		int x = ((model.confs[0][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 2.5f * x;
 	}
 
 	/**
 	 * Gets the minimum position value for a data cat unit.
 	 */
 	public static int dataFormMinPos(MaModel model) {
-		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+		int x = ((model.confs[1][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 5 * x;
 	}
 
 	/**
 	 * Gets the minimum position value for a custom cat unit.
 	 */
 	public static int customFormMinPos(MaModel model) {
-		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.parts[0][6] - 1));
+		int x = ((model.confs[1][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 5 * x;
 	}
 
 	/**
 	 * Gets the boss spawn point for a castle.
+	 * Basically 3200 + yx/10 + 0.9*z but the 0.9*z part appears to use a quirky rounding
 	 */
 	public static float bossSpawnPoint(int y, int z) {
-		return (3200 + (float) (y * z / 10) + Math.round(0.25f * Math.round(3.6f * z))) / 4f;
+		return (float) (3200 + (y * z / 10) + (9 * z + 8 * z % 10) / 10) / 4f;
 	}
 }

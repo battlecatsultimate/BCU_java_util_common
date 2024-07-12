@@ -58,6 +58,8 @@ public class EStage extends BattleObj {
 				else
 					rem[i] = data.respawn_0 + (int) (b.r.nextFloat() * (data.respawn_1 - data.respawn_0));
 
+				rem[i]++;
+
 				if (num[i] > 0) {
 					num[i]--;
 

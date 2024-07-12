@@ -14,14 +14,16 @@ public class ContWaveCanon extends ContWaveAb {
 
 	private final int canid;
 
+	// used only by normal and zombie cannon
 	public ContWaveCanon(AttackWave a, float p, int id) {
-		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, true);
+		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, -3);
 		canid = id;
 		soundEffect = SE_CANNON[canid][1];
 
 		waves = new HashSet<>();
 		waves.add(this);
-		maxt = (W_TIME + 1) * (a.proc.WAVE.lv + 1) + (anim.len() - (W_TIME + 3));
+		// hitframe offset + (waves attack period) * (number of waves - 1) + ending linger
+		maxt = 3 + (W_TIME + 1) * (a.proc.WAVE.lv + 1 - 1) + 4;
 
 		if (id != 0) {
 			anim.setTime(1);
@@ -30,7 +32,7 @@ public class ContWaveCanon extends ContWaveAb {
 	}
 
 	public ContWaveCanon(AttackWave a, float p, int id, int maxTime, Set<ContWaveAb> waves) {
-		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, false);
+		super(a, p, CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK), 9, 0);
 		canid = id;
 		soundEffect = SE_CANNON[canid][1];
 
@@ -102,7 +104,7 @@ public class ContWaveCanon extends ContWaveAb {
 
 	@Override
 	protected void nextWave() {
-		float np = pos - 405;
+		float np = pos - NYRAN[canid];
 		new ContWaveCanon(new AttackWave(atk.attacker, atk, np, NYRAN[canid]), np, canid, maxt - t, waves);
 	}
 

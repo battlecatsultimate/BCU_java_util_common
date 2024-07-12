@@ -38,11 +38,10 @@ public class AttackVolcano extends AttackAb {
 	public void excuse() {
 		process();
 
+		volcTime--;
 		if (volcTime == 0) {
 			volcTime = VOLC_ITV;
 			vcapt.clear();
-		} else {
-			volcTime--;
 		}
 
 		atk = rawAtk;

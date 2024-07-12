@@ -143,12 +143,7 @@ public class StageBasis extends BattleObj {
 		canon = new Cannon(this, nyc[0], nyc[1], nyc[2]);
 		conf = ints;
 
-		if(st.minSpawn <= 0 || st.maxSpawn <= 0)
-			respawnTime = 1;
-		else if(st.minSpawn == st.maxSpawn)
-			respawnTime = st.minSpawn;
-		else
-			respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextDouble());
+		respawnTime = 0;
 
 		if ((conf[0] & 1) > 0)
 			work_lv = 8;
@@ -177,7 +172,7 @@ public class StageBasis extends BattleObj {
 	 * returns visual money.
 	 */
 	public int getMoney() {
-		return (int) Math.floor(money / 100.0);
+		return money / 100;
 	}
 
 	/**
@@ -456,7 +451,10 @@ public class StageBasis extends BattleObj {
 
 			EUnit su = f.getEntity(this, null, true);
 
-			su.added(-1, Math.min(ubase.pos, summoner[i][j].lastPosition + SPIRIT_SUMMON_RANGE));
+			// summoner.pos and not summoner.lastPosition
+			// actions are processed before the update so it's automatic for the spirit to spawn relative to the summoner last pos
+			// 800 + range and not ebase.pos + range because it doesn't respond to entity enemy base
+			su.added(-1, Math.max(800 + su.data.getRange(), Math.min(summoner[i][j].pos + SPIRIT_SUMMON_RANGE, ubase.pos)));
 
 			le.add(su);
 			le.sort(Comparator.comparingInt(e -> e.layer));
@@ -534,6 +532,118 @@ public class StageBasis extends BattleObj {
 			er.updateCopy((StageBasis) hardCopy(this), hardCopy(er.map.get(this)));
 	}
 
+	// -------------------- DEV_ONLY -------------------- //
+	private final int[][] transcription = {
+			{ 215,0},
+			{ 613,11},
+			{1029,2},
+			{ 947,0},
+			{1214,1},
+			{1251,9},
+			{ 537,2},
+			{ 623,1},
+			{ 848,4},
+			{ 670,2},
+			{1425,6},
+			{ 884,2},
+			{1318,9},
+			{ 720,3},
+			{ 201,1},
+			{ 238,0},
+			{ 428,1},
+			{ 407,2},
+			{ 796,4},
+			{ 264,1},
+			{ 798,5},
+			{ 724,3},
+			{ 397,2},
+			{1181,10},
+			{2221,11},
+			{1494,2},
+			{1317,1},
+			{1391,4},
+			{1234,9},
+			{ 898,1},
+			{ 850,2},
+			{ 863,3},
+			{ 825,6},
+			{ 540,0},
+			{ 899,4},
+			{ 328,0},
+			{ 553,1},
+			{ 498,2},
+			{1260,0},
+			{1259,8},
+			{ 494,1},
+			{2929,5},
+			{2512,9},
+			{1556,4},
+			{1463,3},
+			{ 931,6},
+			{ 401,0},
+			{ 489,1},
+			{ 746,2},
+			{ 685,0},
+			{ 725,1},
+			{1799,5},
+			{1280,6},
+			{ 778,4},
+			{1322,7},
+			{ 779,5},
+			{ 104,10},
+			{ 802,4},
+			{ 536,2},
+			{ 570,1},
+			{ 630,0},
+			{ 833,3},
+			{ 449,1},
+			{ 755,2},
+			{ 869,4},
+			{ 976,5},
+			{ 647,2},
+			{1176,3},
+			{1084,4},
+			{1095,0},
+			{1209,9},
+			{ 349,1},
+			{ 704,2},
+			{ 520,0},
+			{ 764,5},
+			{ 719,2},
+			{1946,4},
+			{1389,3},
+			{1046,6},
+			{ 741,2},
+			{2606,1},
+			{2652,7},
+			{1757,9},
+			{ 992,5},
+			{ 772,4},
+			{ 798,6},
+			{ 679,10},
+			{1727,8},
+			{ 894,3},
+			{ 986,5},
+			{1067,6},
+			{ 754,5},
+			{ 452,1},
+			{ 383,2},
+			{ 816,5},
+			{1224,6},
+			{1040,5},
+			{1491,5},
+			{2304,5},
+			{3499,2},
+			{3295,1},
+			{3450,0},
+			{3863,1},
+			{3998,2},
+			{3807,9},
+			{3429,1}
+	};
+	private int tranIdx = 0;
+	// -------------------- DEV_ONLY -------------------- //
+
 	/**
 	 * process actions and add enemies from stage first then update each entity
 	 * and receive attacks then excuse attacks and do post update then delete dead
@@ -546,6 +656,26 @@ public class StageBasis extends BattleObj {
 			bgEffect.initialize(st.len, battleHeight, midH, bg);
 			bgEffectInitialized = true;
 		}
+
+		// -------------------- DEV_ONLY -------------------- //
+		if(true) {
+			if (time == 1)
+				tranIdx = 0;
+			if (tranIdx < transcription.length) {
+				if (money / 100 == transcription[tranIdx][0]) {
+					if(transcription[tranIdx][1] < 10) {
+						act_spawn(transcription[tranIdx][1] / 5, transcription[tranIdx][1] % 5, true);
+					} else {
+						if(transcription[tranIdx][1] == 10)
+							act_can();
+						else
+							act_mon();
+					}
+					tranIdx++;
+				}
+			}
+		}
+		// -------------------- DEV_ONLY -------------------- //
 
 		if (buttonDelay > 0 && --buttonDelay == 0) {
 			act_spawn(selectedUnit[0], selectedUnit[1], true);
@@ -571,16 +701,16 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
-			ebase.preUpdate();
-			ebase.update();
+			//ebase.update();
+			//ebase.update2();
 		}
 
 		if (s_stop == 0) {
 			if(bgEffect != null)
 				bgEffect.update(st.len, battleHeight, midH);
 
-			ubase.preUpdate();
-			ubase.update();
+			//ubase.update();
+			//ubase.update2();
 
 			int allow = st.max - entityCount(1);
 			if (respawnTime <= 0 && active && allow > 0) {
@@ -641,7 +771,8 @@ public class StageBasis extends BattleObj {
 			if (active)
 				est.update();
 
-			canon.update();
+			// Cannon should be updated after entities
+			// canon.update();
 
 			if (sniper != null && active)
 				sniper.update();
@@ -673,6 +804,8 @@ public class StageBasis extends BattleObj {
 
 			n_inten--;
 		}
+
+		canon.update();
 
 		if (s_stop == 0) {
 			lea.forEach(EAnimCont::update);
@@ -852,14 +985,24 @@ public class StageBasis extends BattleObj {
 		}
 	}
 
-	private void updateEntities(boolean time) {
-		for (int i = 0; i < le.size(); i++)
-			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).preUpdate();
+	/*
+	private void updateEntitiesOld(boolean time) {
 
+		le.sort(Comparator.comparingInt(e -> e.dire));
+
+		ebase.update();
+		ubase.update();
 		for (int i = 0; i < le.size(); i++)
 			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
+
+		ebase.update2();
+		ubase.update2();
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update2();
+
+		le.sort(Comparator.comparingInt(e -> e.layer));
 
 		for (int i = 0; i < tlw.size(); i++)
 			if (time || tlw.get(i).IMUTime())
@@ -868,6 +1011,47 @@ public class StageBasis extends BattleObj {
 		for (int i = 0; i < lw.size(); i++)
 			if (time || lw.get(i).IMUTime())
 				lw.get(i).update();
+	}
+	 */
+
+	private void updateEntities(boolean time) {
+
+		for (int i = 0; i < tlw.size(); i++)
+			if (time || tlw.get(i).IMUTime())
+				tlw.get(i).update();
+
+		for (int i = 0; i < lw.size(); i++)
+			if (time || lw.get(i).IMUTime())
+				lw.get(i).update();
+
+		le.sort(Comparator.comparingInt(e -> e.dire));
+
+		ebase.update();
+		ubase.update();
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update();
+
+		for (int i = 0; i < le.size(); i++) {
+			if (le.get(i).dire == 1) continue;
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update2();
+		}
+
+		la.forEach(AttackAb::capture);
+		la.forEach(AttackAb::excuse);
+		la.removeIf(a -> a.duration <= 0);
+
+		ebase.update2();
+		ubase.update2();
+		for (int i = 0; i < le.size(); i++) {
+			if (le.get(i).dire == -1) continue;
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update2();
+		}
+
+		le.sort(Comparator.comparingInt(e -> e.layer));
+
 	}
 
 	private void updateEntitiesAnimation(boolean time) {

@@ -21,7 +21,7 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	private Entity target;
-	public boolean enabled = true, canDo = true;
+	public boolean enabled = true;
 	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
 	public final BattleField bf; //Used for replay pos/siz gathering
 
@@ -98,20 +98,21 @@ public class Sniper extends AtkModelAb {
 	}
 
 	public void update() {
-		if (canDo && b.ubase.health <= 0) {
-			canDo = false;
+		if (!enabled || b.ubase.health <= 0) {
+			return;
 		}
 
-		if (enabled && coolTime > 0 && preTime == 0 && atkTime == 0) {
+		if (coolTime > 0 && preTime == 0 && atkTime == 0) {
 			coolTime--;
 		}
 
-		if (coolTime == 0 && enabled && pos > 0 && canDo) {
+		if (coolTime == 0 && pos > 0) {
 			if(Math.abs(targetAngle - cannonAngle) < 1) {
 				coolTime = SNIPER_CD + 1;
 				preTime = SNIPER_PRE;
 				atkTime = atka.len();
 				atka.setup();
+				atka.update(false);
 				anim.setup();
 			} else {
 				coolTime++;

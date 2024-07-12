@@ -60,15 +60,12 @@ public class CannonLevelCurve extends Data {
         int min = curve[MIN_VALUE][index];
         int max = curve[MAX_VALUE][index];
 
-        int minLevel;
         float v;
 
-        if (index == 0) {
-            minLevel = part == PART.CANNON ? 1 : 0;
-            v = min + (max - min) * (level - minLevel) / 9f;
+        if (level <= 10 && part == PART.CANNON) {
+            v = min + (max - min) * (level - 1) / 9f;
         } else {
-            minLevel = index * 10;
-            v = min + (max - min) * (level - minLevel) / 10f;
+            v = min + (max - min) * (level % 10) / 10f;
         }
 
         return v;
