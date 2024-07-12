@@ -658,7 +658,7 @@ public class StageBasis extends BattleObj {
 		}
 
 		// -------------------- DEV_ONLY -------------------- //
-		if(true) {
+		if(false) {
 			if (time == 1)
 				tranIdx = 0;
 			if (tranIdx < transcription.length) {
