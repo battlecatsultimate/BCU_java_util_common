@@ -52,9 +52,9 @@ public class ContWaveDef extends ContWaveAb {
 		if (!activate)
 			return;
 		if (t == (isMini ? W_MINI_TIME - 1 : W_TIME)) {
-			if (isMini && atk.proc.MINIWAVE.lv > 0)
+			if (isMini && atk.proc.MINIWAVE.lv != 0)
 				nextWave();
-			else if (!isMini && atk.getProc().WAVE.lv > 0)
+			else if (!isMini && atk.getProc().WAVE.lv != 0)
 				nextWave();
 		}
 		if (t == attack) {
@@ -77,7 +77,12 @@ public class ContWaveDef extends ContWaveAb {
 	@Override
 	protected void nextWave() {
 		int dire = atk.model.getDire();
-		float np = pos + W_PROG * dire;
+		float np = 0;
+		if(atk.proc.WAVE.lv < 0) {
+			np = pos - W_PROG * dire;
+		} else {
+			np = pos + W_PROG * dire;
+		}
 		int wid = dire == 1 ? W_E_WID : W_U_WID;
 		new ContWaveDef(new AttackWave(atk.attacker, atk, np, wid), np, layer, false, waves);
 	}

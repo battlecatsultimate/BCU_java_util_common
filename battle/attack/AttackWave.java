@@ -17,10 +17,20 @@ public class AttackWave extends AttackAb {
 		waveType = wt;
 		isCounter = a.isCounter;
 		incl = new HashSet<>();
-		if(waveType == WT_MINI)
-			proc.MINIWAVE.lv--;
-		else
-			proc.WAVE.lv--;
+		if (waveType == WT_MINI) {
+			if (proc.MINIWAVE.lv > 0) {
+				proc.MINIWAVE.lv--;
+			} else {
+				proc.MINIWAVE.lv++;
+			}
+		}
+		else {
+			if (proc.WAVE.lv > 0) {
+				proc.WAVE.lv--;
+			} else {
+				proc.WAVE.lv++;
+			}
+		}
 	}
 
 	public AttackWave(Entity e, AttackWave a, float p0, float wid) {
@@ -28,10 +38,20 @@ public class AttackWave extends AttackAb {
 		waveType = a.waveType;
 		isCounter = a.isCounter;
 		incl = a.incl;
-		if(waveType == WT_MINI)
-			proc.MINIWAVE.lv--;
-		else
-			proc.WAVE.lv--;
+		if (waveType == WT_MINI) {
+			if (proc.MINIWAVE.lv > 0) {
+				proc.MINIWAVE.lv--;
+			} else {
+				proc.MINIWAVE.lv++;
+			}
+		}
+		else {
+			if (proc.WAVE.lv > 0) {
+				proc.WAVE.lv--;
+			} else {
+				proc.WAVE.lv++;
+			}
+		}
 	}
 
 	public AttackWave(Entity e, AttackWave a, float pos, float start, float end) {
@@ -39,10 +59,20 @@ public class AttackWave extends AttackAb {
 		waveType = a.waveType;
 		isCounter = a.isCounter;
 		incl = a.incl;
-		if(waveType == WT_MINI)
-			proc.MINIWAVE.lv--;
-		else
-			proc.WAVE.lv--;
+		if (waveType == WT_MINI) {
+			if (proc.MINIWAVE.lv > 0) {
+				proc.MINIWAVE.lv--;
+			} else {
+				proc.MINIWAVE.lv++;
+			}
+		}
+		else {
+			if (proc.WAVE.lv > 0) {
+				proc.WAVE.lv--;
+			} else {
+				proc.WAVE.lv++;
+			}
+		}
 	}
 
 	@Override

@@ -79,7 +79,7 @@
         "abbr_name": "wave",
         "full_name": "Wave",
         "tooltip": null,
-        "format": "(prob)% chance to create a Lv.(lv) wave attack",
+        "format": "(prob)% chance to create a Lv.(_abs(lv)) [(lv<0){inverted }]wave attack",
         "class": {
             "prob": {
                 "name": "chance",
@@ -87,7 +87,7 @@
             },
             "lv": {
                 "name": "level",
-                "tooltip": null
+                "tooltip": "Set to negative for an inverted wave that moves from end to start point"
             }
         }
     },
@@ -983,7 +983,7 @@
         "abbr_name" : "mini-wave",
         "full_name" : "Mini-Wave",
         "tooltip" : "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
-        "format" : "(prob)% chance to create a lv.(lv) mini-wave [(multi!=20){(_left)Gives target (multi)% of activator's damage(_right)}]",
+        "format" : "(prob)% chance to create a Lv.(_abs(lv)) [(lv<0){inverted }]mini-wave [(multi!=20){(_left)Gives target (multi)% of activator's damage(_right)}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -991,7 +991,7 @@
             },
             "lv" : {
                 "name" : "level",
-                "tooltip" : null
+                "tooltip" : "Set to negative for an inverted mini-wave that moves from end to start point"
             },
             "multi" : {
                 "name" : "multi",

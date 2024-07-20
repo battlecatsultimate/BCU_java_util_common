@@ -306,7 +306,7 @@ public class Editors {
 
 		map().put("WAVE", new EditControl<>(Proc.WAVE.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
-			t.lv = MathUtil.clip(t.lv, 1, 20);
+			t.lv = t.lv != 0 ? t.lv : 1;
 			if (t.prob == 0)
 				t.lv = 0;
 		}));
@@ -586,7 +586,7 @@ public class Editors {
 				t.lv = 0;
 				t.multi = 0;
 			} else {
-				t.lv = MathUtil.clip(t.lv, 1, 20);
+				t.lv = MathUtil.clip(t.lv, 1, 20);;
 
 				if(t.multi == 0)
 					t.multi = 20;

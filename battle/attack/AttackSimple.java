@@ -133,6 +133,12 @@ public class AttackSimple extends AttackAb {
 			int wid = dire == 1 ? W_E_WID : W_U_WID;
 			float addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2f;
 			float p0 = model.getPos() + dire * addp;
+
+			if (proc.WAVE.lv < 0 && model.getDire() != 0) {
+				int corrLv = proc.WAVE.lv * -1;
+				p0 += (((200 * (corrLv))/2f) + ((addp - 100f))) * dire;
+			}
+
 			// generate a wave when hits somebody
 
 			ContWaveDef wave = new ContWaveDef(new AttackWave(attacker, this, p0, wid, WT_WAVE), p0, layer, true);
