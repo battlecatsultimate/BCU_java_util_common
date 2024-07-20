@@ -76,7 +76,7 @@ public class Stage extends Data
 		len = 3000;
 		health = 60000;
 		max = 8;
-		names.put("Stage " + (getCont().list.size() + 1));
+		names.put("stage " + getCont().list.size());
 		lim = new Limit();
 		data = new SCDef(0);
 	}
@@ -86,7 +86,7 @@ public class Stage extends Data
 		len = 3000;
 		health = 60000;
 		max = 8;
-		names.put("Stage " + (sm.list.size() + 1));
+		names.put("stage " + sm.list.size());
 		lim = new Limit();
 		data = new SCDef(0);
 	}
