@@ -157,7 +157,7 @@ public class AttackSimple extends AttackAb {
 			float addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2f;
 			float p0 = model.getPos() + dire * addp;
 
-			if (proc.WAVE.lv < 0 && model.getDire() != 0) {
+			if (proc.WAVE.lv < 0) {
 				int corrLv = proc.WAVE.lv * -1;
 				p0 += (((200 * (corrLv))/2f) + ((addp - 100f))) * dire;
 			}
