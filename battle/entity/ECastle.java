@@ -6,12 +6,12 @@ import common.battle.StageBasis;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackVolcano;
 import common.util.anim.EAnimD;
+import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class ECastle extends AbEntity {
 
@@ -19,21 +19,35 @@ public class ECastle extends AbEntity {
 	public int hit = 0;
 
 	public EAnimD<DefEff> smoke;
+	public EAnimD<EffAnim.GuardEff> guard;
 	public int smokeLayer = -1;
 	public int smokeX = -1;
+	public boolean isEnemy;
 
 	public ECastle(StageBasis b) {
-		super(b.st.trail ? Integer.MAX_VALUE : b.st.health);
+		super(b.st.trail ? Integer.MAX_VALUE
+				: b.st.getCont().getCont().getSID().equals("000003") ? b.st.health * (b.est.star + 1) // might be bodged but EoC is the only sm with stars
+				: b.st.health);
 		sb = b;
+		isEnemy = true;
 	}
 
-	public ECastle(StageBasis xb, BasisLU b) {
-		super(b.t().getBaseHealth());
-		sb = xb;
+	public ECastle(StageBasis b, BasisLU lu) {
+		super(lu.t().getBaseHealth(b.isBanned(C_BASE)));
+		sb = b;
+		isEnemy = false;
 	}
 
 	@Override
 	public void damaged(AttackAb atk) {
+		if (isEnemy && sb.activeGuard == 1) {
+			if (guard != null)
+				return;
+			EffAnim<EffAnim.GuardEff> eff = effas().A_E_GUARD;
+			guard = eff.getEAnim(EffAnim.GuardEff.NONE);
+			CommonStatic.setSE(SE_BARRIER_NON);
+			return;
+		}
 		hit = 2;
 
 		if(atk.isLongAtk || atk instanceof AttackVolcano)
@@ -51,13 +65,13 @@ public class ECastle extends AbEntity {
 		if (satk > 0) {
 			ans *= (100 + satk) * 0.01;
 			sb.lea.add(new EAnimCont(pos, 9, effas().A_SATK.getEAnim(DefEff.DEF), -75f));
-			sb.lea.sort(Comparator.comparingInt(e -> e.layer));
+			sb.leaSort = true;
 			CommonStatic.setSE(SE_SATK);
 		}
 		if (atk.getProc().CRIT.mult > 0) {
 			ans *= 0.01 * atk.getProc().CRIT.mult;
 			sb.lea.add(new EAnimCont(pos, 9, effas().A_CRIT.getEAnim(DefEff.DEF), -75f));
-			sb.lea.sort(Comparator.comparingInt(e -> e.layer));
+			sb.leaSort = true;
 			CommonStatic.setSE(SE_CRIT);
 		}
 		CommonStatic.setSE(SE_HIT_BASE);
@@ -101,15 +115,7 @@ public class ECastle extends AbEntity {
 
 	@Override
 	public void update() {
-		if(smoke != null) {
-			if(smoke.done()) {
-				smoke = null;
-				smokeLayer = -1;
-				smokeX = -1;
-			} else {
-				smoke.update(false);
-			}
-		}
+		updateAnimation();
 
 		if (hit > 0)
 			hit--;
@@ -127,11 +133,22 @@ public class ECastle extends AbEntity {
 				smoke.update(false);
 			}
 		}
+		if (guard != null) {
+			if (guard.done())
+				guard = null;
+			else
+				guard.update(false);
+		}
 	}
 
 	@Override
-	public void preUpdate() {
+	public void update2() {
 
 	}
 
+	public void guardBreak() {
+		EffAnim<EffAnim.GuardEff> eff = effas().A_E_GUARD;
+		guard = eff.getEAnim(EffAnim.GuardEff.BREAK);
+		CommonStatic.setSE(SE_BARRIER_ABI);
+	}
 }

@@ -29,10 +29,14 @@ public class AtkModelUnit extends AtkModelEntity {
 				buffed[i] = Proc.blank();
 			else
 				buffed[i] = data.getAtkModel(i).getProc().clone();
-			buffed[i].STOP.time = (buffed[i].STOP.time * (100 + bas.getInc(C_STOP))) / 100;
-			buffed[i].SLOW.time = (buffed[i].SLOW.time * (100 + bas.getInc(C_SLOW))) / 100;
-			buffed[i].WEAK.time = (buffed[i].WEAK.time * (100 + bas.getInc(C_WEAK))) / 100;
-			if (buffed[i].CRIT.prob > 0)
+
+			if (!ent.basis.isBanned(C_STOP))
+				buffed[i].STOP.time = (buffed[i].STOP.time * (100 + bas.getInc(C_STOP))) / 100;
+			if (!ent.basis.isBanned(C_SLOW))
+				buffed[i].SLOW.time = (buffed[i].SLOW.time * (100 + bas.getInc(C_SLOW))) / 100;
+			if (!ent.basis.isBanned(C_WEAK))
+				buffed[i].WEAK.time = (buffed[i].WEAK.time * (100 + bas.getInc(C_WEAK))) / 100;
+			if (buffed[i].CRIT.prob > 0 && !ent.basis.isBanned(C_CRIT))
 				buffed[i].CRIT.prob += bas.getInc(C_CRIT);
 		}
 	}
@@ -114,11 +118,11 @@ public class AtkModelUnit extends AtkModelEntity {
 
 	@Override
 	protected int getAttack(int ind, Proc proc) {
-
 		int atk = atks[ind];
 		if (abis[ind] == 1) {
 			setProc(ind, proc);
-			proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB)) / 100;
+			if (!e.basis.isBanned(C_KB))
+				proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB)) / 100;
 		}
 		if (e.data instanceof DataUnit)
 			for (int j : BCShareable) proc.getArr(j).set(e.getProc().getArr(j));

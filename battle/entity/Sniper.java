@@ -21,7 +21,7 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	private Entity target;
-	public boolean enabled = true, canDo = true;
+	public boolean enabled = true;
 	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
 	public final BattleField bf; //Used for replay pos/siz gathering
 
@@ -98,20 +98,21 @@ public class Sniper extends AtkModelAb {
 	}
 
 	public void update() {
-		if (canDo && b.ubase.health <= 0) {
-			canDo = false;
+		if (!enabled || b.ubase.health <= 0) {
+			return;
 		}
 
-		if (enabled && coolTime > 0 && preTime == 0 && atkTime == 0) {
+		if (coolTime > 0 && preTime == 0 && atkTime == 0) {
 			coolTime--;
 		}
 
-		if (coolTime == 0 && enabled && pos > 0 && canDo) {
+		if (coolTime == 0 && pos > 0) {
 			if(Math.abs(targetAngle - cannonAngle) < 1) {
 				coolTime = SNIPER_CD + 1;
 				preTime = SNIPER_PRE;
 				atkTime = atka.len();
 				atka.setup();
+				atka.update(false);
 				anim.setup();
 			} else {
 				coolTime++;
@@ -152,7 +153,7 @@ public class Sniper extends AtkModelAb {
 			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
 
 			if (bulletX <= pos) {
-				int atk = b.b.t().getBaseHealth() / 20;
+				int atk = b.b.t().getBaseHealth(target.basis.isBanned(C_BASE)) / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;
 				ArrayList<Trait> CTrait = new ArrayList<>();

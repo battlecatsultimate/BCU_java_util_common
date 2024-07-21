@@ -22,7 +22,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -115,7 +114,7 @@ public class CommonStatic {
 		 */
 		public int levelLimit = 0;
 		// Lang
-		public int lang;
+		public Lang.Locale lang = Lang.Locale.EN;
 		/**
 		 * Restoration target backup file, null means none
 		 */
@@ -224,17 +223,62 @@ public class CommonStatic {
 	}
 
 	public static class Lang {
+		public enum Locale {
+			EN("en"),
+			ZH("zh"),
+			KR("kr"),
+			JP("jp"),
+			RU("ru"),
+			DE("de"),
+			FR("fr"),
+			ES("es"),
+			IT("it"),
+			TH("th");
 
-		@StaticPermitted
-		public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es", "it", "th" };
+			public final String code;
 
+			Locale(String localeCode) {
+				code = localeCode;
+			}
+
+			@Override
+			public String toString() {
+				return code;
+			}
+		}
+
+		/**
+		 * List of priorities that each language will display
+		 */
 		@StaticPermitted
-		public static final int[][] pref = {
-				{ 0, 6, 9, 8, 5, 7, 4, 3, 1, 2 }, { 1, 3, 0, 2 }, { 2, 3, 0, 1 }, { 3, 0, 1, 2 },
-				{ 4, 0, 3, 1, 2 }, { 5, 0, 4, 3, 1, 2 }, { 6, 9, 0, 7, 5, 4, 3, 1, 2 }, { 7, 0, 3, 1, 2, 4, 5, 6 },
-				{ 8, 0, 6, 9, 5, 7, 4, 3, 1, 2 }, { 9, 0, 3, 1, 2, 5, 6, 7, 8, 4 }, { 10, 0, 3, 1, 2 }
+		public static final Locale[][] pref = {
+				{ Locale.EN, Locale.FR, Locale.IT, Locale.ES, Locale.DE, Locale.RU, Locale.JP, Locale.ZH, Locale.KR },
+				{ Locale.ZH, Locale.JP, Locale.EN, Locale.KR },
+				{ Locale.KR, Locale.JP, Locale.EN, Locale.ZH},
+				{ Locale.JP, Locale.EN, Locale.ZH, Locale.KR },
+				{ Locale.RU, Locale.EN, Locale.JP, Locale.ZH, Locale.KR },
+				{ Locale.DE, Locale.EN, Locale.JP, Locale.ZH, Locale.KR },
+				{ Locale.FR, Locale.EN, Locale.JP, Locale.ZH, Locale.KR },
+				{ Locale.ES, Locale.EN, Locale.JP, Locale.ZH, Locale.KR },
+				{ Locale.IT, Locale.EN, Locale.JP, Locale.ZH, Locale.KR },
+				{ Locale.TH, Locale.EN, Locale.JP, Locale.ZH, Locale.KR }
 		};
 
+		/**
+		 * List of languages that are supported by Ponos
+		 */
+		@StaticPermitted
+		public static final CommonStatic.Lang.Locale[] supportedLanguage = {
+				CommonStatic.Lang.Locale.EN,
+				CommonStatic.Lang.Locale.ZH,
+				CommonStatic.Lang.Locale.JP,
+				CommonStatic.Lang.Locale.KR,
+				CommonStatic.Lang.Locale.DE,
+				CommonStatic.Lang.Locale.FR,
+				CommonStatic.Lang.Locale.ES,
+				CommonStatic.Lang.Locale.IT,
+				CommonStatic.Lang.Locale.TH
+		};
 	}
 
 	@StaticPermitted(StaticPermitted.Type.ENV)
@@ -568,38 +612,39 @@ public class CommonStatic {
 	 * Gets the minimum position value for a data enemy.
 	 */
 	public static float dataEnemyMinPos(MaModel model) {
-		int y = model.confs[0][2];
-		float z = (float) model.parts[0][8] / model.ints[0];
-		return 2.5f * (float) Math.floor(y * z);
+		int x = ((model.confs[0][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 2.5f * x;
 	}
 
 	/**
 	 * Gets the minimum position value for a custom enemy.
 	 */
 	public static float customEnemyMinPos(MaModel model) {
-		int y = -model.parts[0][6];
-		float z = (float) model.parts[0][8] / model.ints[0];
-		return 2.5f * (float) Math.floor(y * z);
+		int x = ((model.confs[0][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 2.5f * x;
 	}
 
 	/**
 	 * Gets the minimum position value for a data cat unit.
 	 */
 	public static int dataFormMinPos(MaModel model) {
-		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.confs[1][2] - 1));
+		int x = ((model.confs[1][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 5 * x;
 	}
 
 	/**
 	 * Gets the minimum position value for a custom cat unit.
 	 */
 	public static int customFormMinPos(MaModel model) {
-		return (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * model.parts[0][6] - 1));
+		int x = ((model.confs[1][2] - model.parts[0][6]) * model.parts[0][8]) / model.ints[0];
+		return 5 * x;
 	}
 
 	/**
 	 * Gets the boss spawn point for a castle.
+	 * Basically 3200 + yx/10 + 0.9*z but the 0.9*z part appears to use a quirky rounding
 	 */
 	public static float bossSpawnPoint(int y, int z) {
-		return (3200 + (float) (y * z / 10) + Math.round(0.25f * Math.round(3.6f * z))) / 4f;
+		return (float) (3200 + (y * z / 10) + (9 * z + 8 * z % 10) / 10) / 4f;
 	}
 }

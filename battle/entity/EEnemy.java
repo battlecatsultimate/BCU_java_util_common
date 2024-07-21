@@ -8,6 +8,7 @@ import common.battle.attack.AttackWave;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
+import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.unit.Trait;
 
@@ -29,7 +30,7 @@ public class EEnemy extends Entity {
 		layer = d0 == d1 ? d0 : d0 + (int) (b.r.nextFloat() * (d1 - d0 + 1));
 		traits = de.getTraits();
 
-		canBurrow = mark < 1;
+		skipSpawnBurrow = mark >= 1;
 	}
 
 	@Override
@@ -46,9 +47,8 @@ public class EEnemy extends Entity {
 	public void kill(KillMode atk) {
 		super.kill(atk);
 
-		if (!basis.st.trail && atk == KillMode.NORMAL) {
-			float mul = basis.b.t().getDropMulti() * (1 + (status[P_BOUNTY][0] / 100f));
-
+		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
+			float mul = basis.b.t().getDropMulti(basis.isBanned(Data.C_MEAR)) * (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
 		}
 	}
@@ -63,7 +63,7 @@ public class EEnemy extends Entity {
 			ans = (int) ((float) ans * atk.getProc().MINIVOLC.mult / 100.0);
 		}
 
-		if (atk.model instanceof AtkModelUnit && status[P_CURSE][0] == 0) {
+		if (atk.model instanceof AtkModelUnit && ((AtkModelUnit) atk.model).e.status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 
 			sharedTraits.retainAll(traits);
@@ -92,10 +92,10 @@ public class EEnemy extends Entity {
 			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
 
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (atk.abi & AB_WKILL) > 0)
-			ans = (int) (ans * basis.b.t().getWKAtk());
+			ans = (int) (ans * basis.b.t().getWKAtk(basis.isBanned(Data.C_WKILL)));
 
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (atk.abi & AB_EKILL) > 0)
-			ans = (int) (ans * basis.b.t().getEKAtk());
+			ans = (int) (ans * basis.b.t().getEKAtk(basis.isBanned(Data.C_EKILL)));
 
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BARON)) && (atk.abi & AB_BAKILL) > 0)
 			ans = (int) (ans * 1.6);

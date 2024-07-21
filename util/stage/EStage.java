@@ -52,11 +52,13 @@ public class EStage extends BattleObj {
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
 
-			if (inHealth(data, i) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] <= 1 && rem[i] >= 0 && num[i] != -1 && killCounter[i] == 0) {
+			if (inHealth(data, i, true) && s.data.allow(b, data.group, Identifier.getOr(data.enemy, AbEnemy.class)) && rem[i] <= 1 && rem[i] >= 0 && num[i] != -1 && killCounter[i] == 0) {
 				if(data.respawn_0 >= data.respawn_1)
 					rem[i] = data.respawn_0;
 				else
 					rem[i] = data.respawn_0 + (int) (b.r.nextFloat() * (data.respawn_1 - data.respawn_0));
+
+				rem[i]++;
 
 				if (num[i] > 0) {
 					num[i]--;
@@ -136,11 +138,11 @@ public class EStage extends BattleObj {
 	/**
 	 * return true if there is still boss in the base
 	 */
-	public boolean hasBoss() {
+	public boolean hasBoss(boolean checkHP, boolean considerEBase) {
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
 
-			if (data.boss == 1 && num[i] > 0)
+			if (data.boss >= 1 && num[i] > 0 && (!checkHP || inHealth(data, i, considerEBase)))
 				return true;
 		}
 
@@ -151,7 +153,7 @@ public class EStage extends BattleObj {
 		for (int i = 0; i < rem.length; i++) {
 			Line data = s.data.getSimple(i);
 
-			if (inHealth(data, i) && rem[i] < 0)
+			if (inHealth(data, i, true) && rem[i] < 0)
 				rem[i] *= -1;
 
 			if (rem[i] > 0)
@@ -159,17 +161,15 @@ public class EStage extends BattleObj {
 		}
 	}
 
-	private boolean inHealth(Line line, int index) {
+	private boolean inHealth(Line line, int index, boolean considerEBase) {
 		int c0 = !s.trail ? Math.min(line.castle_0, 100) : line.castle_0;
 		int c1 = line.castle_1;
 
 		float d = !s.trail ? b.getEBHP() : (b.ebase.maxH - b.ebase.health);
 
 		boolean inRange = c0 >= c1 ? (s.trail ? d >= c0 : d <= c0) : (d > c0 && d <= c1);
-
-		if (b.ebase instanceof EEnemy && inRange && first[index] == 0 && !s.trail) {
+		if (considerEBase && inRange && b.ebase instanceof EEnemy && first[index] == 0 && !s.trail) {
 			first[index] = -1;
-
 			return false;
 		}
 

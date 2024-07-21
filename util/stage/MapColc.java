@@ -1,5 +1,9 @@
 package common.util.stage;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
 import common.io.json.JsonClass;
@@ -15,6 +19,7 @@ import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.stage.info.CustomStageInfo;
 import common.util.stage.info.DefStageInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -60,6 +65,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("Q", 31);
 			idmap.put("L", 33);
 			idmap.put("ND", 34);
+			idmap.put("SR", 36);
 
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
@@ -67,13 +73,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			if (f == null)
 				return;
 			for (VFile fi : f.list()) {
-				if (fi.getName().equals("CH"))
-					continue;
-				if (fi.getName().equals("D"))
-					continue;
-				if (fi.getName().equals("DM"))
-					continue;
-				List<VFile> list = new ArrayList<>(fi.list());
+                switch (fi.getName()) {
+                    case "CH":
+                    case "D":
+                    case "DM":
+                        continue;
+                }
+                List<VFile> list = new ArrayList<>(fi.list());
 				VFile map = list.get(0);
 				List<VFile> stage = new ArrayList<>();
 				for (int i = 1; i < list.size(); i++) {
@@ -288,6 +294,117 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 				skipLine = qs.poll();
 			}
+
+			VFile ruleFile = VFile.get("./org/data/SpecialRulesMap.json");
+			VFile ruleOptionFile = VFile.get("./org/data/SpecialRulesMapOption.json");
+
+			String specialRules = new String(ruleFile.getData().getBytes());
+			String specialRulesOption = new String(ruleOptionFile.getData().getBytes());
+
+			JsonElement ruleElement = JsonParser.parseString(specialRules);
+			JsonElement ruleOptionElement = JsonParser.parseString(specialRulesOption);
+
+			if (ruleElement.isJsonObject() && ruleOptionElement.isJsonObject()) {
+				JsonObject rule = ruleElement.getAsJsonObject();
+				JsonObject ruleOption = ruleOptionElement.getAsJsonObject();
+
+				Map<Integer, List<Integer>> bannedComboData = new HashMap<>();
+
+				JsonObject ruleList = ruleOption.getAsJsonObject("RuleType");
+
+				for (String key : ruleList.keySet()) {
+					JsonElement comboData = ruleList.get(key);
+
+					int ruleID = CommonStatic.parseIntN(key);
+
+					JsonArray comboArray = comboData.getAsJsonObject().getAsJsonArray("InvalidNyancomboID");
+
+					List<Integer> bannedCombo = new ArrayList<>();
+
+					for (JsonElement element : comboArray) {
+						if (!element.isJsonPrimitive())
+							continue;
+
+						bannedCombo.add(element.getAsInt());
+					}
+
+					bannedComboData.put(ruleID, bannedCombo);
+				}
+
+				JsonObject mapIDs = rule.getAsJsonObject("MapID");
+
+				for (String id : mapIDs.keySet()) {
+					JsonObject ruleData = mapIDs.getAsJsonObject(id);
+					int mapID = CommonStatic.safeParseInt(id);
+
+					StageMap map = getMap(mapID);
+
+					if (map == null)
+						continue;
+
+					JsonObject ruleTypes = ruleData.getAsJsonObject("RuleType");
+
+					for (String key : ruleTypes.keySet()) {
+						int ruleID = CommonStatic.parseIntN(key);
+						JsonObject parameterData = ruleTypes.getAsJsonObject(key);
+
+						JsonArray parameter = parameterData.getAsJsonArray("Parameters");
+
+						switch (ruleID) {
+							case 0:
+								if (!parameter.isEmpty()) {
+									if (parameter.size() != 1)
+										System.out.printf("W/MapColc::read - Unknown parameter data found for rule type %d : %s%n", ruleID, parameter);
+
+									int maxMoney = parameter.get(0).getAsInt();
+
+									List<Integer> bannedCombo = bannedComboData.compute(ruleID, (k, v) -> {
+										if (v == null) {
+											System.out.printf("W/MapColc::read - Unknown banned cat combo data found for rule type %d%n", ruleID);
+
+											return new ArrayList<>();
+										} else {
+											return v;
+										}
+									});
+
+									if (map.stageLimit == null) {
+										map.stageLimit = new StageLimit(maxMoney, 0, bannedCombo);
+									} else {
+										map.stageLimit.maxMoney = maxMoney;
+										map.stageLimit.bannedCatCombo.addAll(bannedCombo);
+									}
+								}
+
+								break;
+							case 1:
+								if (!parameter.isEmpty()) {
+									if (parameter.size() != 1)
+										System.out.printf("W/MapColc::read - Unknown parameter data found for rule type %d : %s%n", ruleID, parameter);
+
+									int globalCooldown = parameter.get(0).getAsInt();
+
+									List<Integer> bannedCombo = bannedComboData.compute(ruleID, (k, v) -> {
+										if (v == null) {
+											System.out.printf("W/MapColc::read - Unknown banned cat combo data found for rule type %d%n", ruleID);
+
+											return new ArrayList<>();
+										} else {
+											return v;
+										}
+									});
+
+									if (map.stageLimit == null) {
+										map.stageLimit = new StageLimit(0, globalCooldown, bannedCombo);
+									} else {
+										map.stageLimit.globalCooldown = globalCooldown;
+										map.stageLimit.bannedCatCombo.addAll(bannedCombo);
+									}
+								}
+						}
+					}
+				}
+			}
 		}
 
 		public final int id;
@@ -455,7 +572,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 		@Override
 		public String toString() {
 			String desp = MultiLangCont.get(this);
-			if (desp != null && desp.length() > 0)
+			if (desp != null && !desp.isEmpty())
 				return desp + " (" + maps.size() + ")";
 			return name + " (" + maps.size() + ")";
 		}
@@ -516,6 +633,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			return imc != null;
 		}
 
+		@NotNull
 		@Override
 		public Iterator<Stage> iterator() {
 			return this;

@@ -1,19 +1,18 @@
 package common.battle;
 
-import java.util.List;
-
 import common.CommonStatic;
 import common.battle.data.PCoin;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
-import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.Copable;
 import common.util.BattleStatic;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Unit;
+
+import java.util.List;
 
 @JsonClass
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
@@ -78,7 +77,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
 		List<Unit> list = UserProfile.getBCData().units.getList();
-		list.remove(Identifier.parseInt(339, Unit.class).get());
+		list.removeIf(u -> u.forms.length == 1);
 		for (Form[] fs : ans.lu.fs)
 			for (Form f : fs)
 				if (f != null)

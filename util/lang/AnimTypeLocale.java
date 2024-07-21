@@ -45,14 +45,14 @@ public class AnimTypeLocale {
 	}
 
 	public static void read() {
-		String loc = CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang];
+		CommonStatic.Lang.Locale loc = CommonStatic.getConfig().lang;
 		InputStream f;
 
 		switch (CommonStatic.getConfig().lang) {
-			case 2:
+			case KR:
 				f = CommonStatic.ctx.getLangFile("animation_type_kr.json");
 				break;
-			case 3:
+			case JP:
 				f = CommonStatic.ctx.getLangFile("animation_type_jp.json");
 				break;
 			default:

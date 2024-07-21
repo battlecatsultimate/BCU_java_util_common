@@ -11,18 +11,18 @@ public class CannonLevelCurve extends Data {
         DECORATION
     }
 
-    private static final byte MIN_VALUE = 0;
-    private static final byte MAX_VALUE = 1;
-
-    public final int max;
     private final PART part;
 
     private final Map<Integer, int[][]> curveMap;
 
-    public CannonLevelCurve(Map<Integer, int[][]> curveMap, int max, PART part) {
+    public CannonLevelCurve(Map<Integer, int[][]> curveMap, PART part) {
         this.curveMap = curveMap;
-        this.max = max;
         this.part = part;
+    }
+
+    public int getMax() {
+        int[][] map = curveMap.values().iterator().next();
+        return map[map.length - 1][0];
     }
 
     public float applyFormula(int type, int level) {
@@ -31,7 +31,7 @@ public class CannonLevelCurve extends Data {
             case CANNON:
                 switch (type) {
                     case BASE_RANGE:
-                        return (int) v / 4f;
+                        return v / 4f;
                     case BASE_HEALTH_PERCENTAGE:
                         return v / 10f;
                     case BASE_HOLY_ATK_SURFACE:
@@ -48,29 +48,21 @@ public class CannonLevelCurve extends Data {
         }
     }
 
-    public float applyFormulaRaw(int type, int level) {
-        if (level <= 0 || !curveMap.containsKey(type)) {
-            System.out.println("Warning : Invalid level " + level);
+    public int applyFormulaRaw(int type, int level) {
+        if (!curveMap.containsKey(type)) {
+            System.out.println("Warning : Invalid type " + type);
             return 0;
         }
 
         int[][] curve = curveMap.get(type);
-        int index = Math.min((level - 1) / 10, curve[0].length - 1);
 
-        int min = curve[MIN_VALUE][index];
-        int max = curve[MAX_VALUE][index];
+        // clip level between 0 and max allowed
+        level = Math.max(0, Math.min(level, curve[curve.length - 1][0]));
 
-        int minLevel;
-        float v;
-
-        if (index == 0) {
-            minLevel = part == PART.CANNON ? 1 : 0;
-            v = min + (max - min) * (level - minLevel) / 9f;
-        } else {
-            minLevel = index * 10;
-            v = min + (max - min) * (level - minLevel) / 10f;
-        }
-
-        return v;
+        int i = 0;
+        int prevThreshold = 1;
+        while(level > curve[i][0])
+            prevThreshold = curve[i++][0];
+        return curve[i][1] + (curve[i][2] - curve[i][1]) * (level - prevThreshold) / (curve[i][0] - prevThreshold);
     }
 }

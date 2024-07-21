@@ -130,13 +130,14 @@ public class PCoin extends Data {
 				case 0:
 					break;
 				case 56: case 65:
-					data[2] = MathUtil.clip(data[2], 0, 99 - proc.getArr(type).get(0));
-					data[3] = MathUtil.clip(data[3], data[2], 99 - proc.getArr(type).get(0));
+					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(0));
+					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(0));
 					data[8] = Math.max(1, data[8] / Data.VOLC_ITV) * Data.VOLC_ITV;
 					data[9] = Math.max(Math.max(1, data[9] / Data.VOLC_ITV) * Data.VOLC_ITV, data[8]);
+					break;
 				case 10:
-					data[2] = MathUtil.clip(data[2], 0, 99 - proc.getArr(type).get(0));
-					data[3] = MathUtil.clip(data[3], data[2], 99 - proc.getArr(type).get(0));
+					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(0));
+					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(0));
 					data[4] = Math.max(data[4], 0);
 					data[5] = Math.max(data[5], data[4]);
 					break;
@@ -208,13 +209,12 @@ public class PCoin extends Data {
 			}
 
 			//Targettings that come with a talent, such as Hyper Mr's
-			if (data[12] > 0 && this.trait.size() > 0 && talents[i] > 0)
+			if (data[12] > 0 && !this.trait.isEmpty() && talents[i] > 0)
 				for (Trait t : this.trait)
 					if (!ans.getTraits().contains(t))
 						ans.getTraits().add(t);
 
 			int maxlv = data[1];
-
 			int[] modifs = new int[4];
 
 			if (maxlv > 1) {
@@ -240,11 +240,11 @@ public class PCoin extends Data {
 						if (type[1] == P_MINIVOLC) {
 							tar.set(4, 20);
 						}
-					} else { // TODO: increase core version to change how custom talents handle surge
-						tar.set(0, modifs[0]);
-						tar.set(1, Math.min(modifs[1], modifs[2]));
-						tar.set(2, Math.max(modifs[1], modifs[2]));
-						tar.set(3, modifs[3]);
+					} else {
+						tar.set(0, tar.get(0) + modifs[0]);
+						tar.set(1, tar.get(1) + Math.min(modifs[1], modifs[2]));
+						tar.set(2, tar.get(2) + Math.max(modifs[1], modifs[2]));
+						tar.set(3, tar.get(3) + modifs[3]);
 					}
 				} else if (type[1] == P_BSTHUNT) {
 					tar.set(1, modifs[0]);

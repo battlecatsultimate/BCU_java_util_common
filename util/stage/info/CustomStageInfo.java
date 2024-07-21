@@ -43,24 +43,7 @@ public class CustomStageInfo implements StageInfo {
     }
 
     @Override
-    public String getHTML() {
-        if (stages.size() == 0)
-            return null;
-        StringBuilder ans = new StringBuilder("<html><table><tr><th>List of Followup Stages:</th></tr>");
-        for (int i = 0; i < stages.size(); i++)
-            ans.append("<tr><td>")
-                    .append(stages.get(i).getCont().toString())
-                    .append(" - ")
-                    .append(stages.get(i).toString())
-                    .append("</td><td>")
-                    .append(df.format(chances.get(i)))
-                    .append("%</td></tr>");
-
-        return ans.toString();
-    }
-
-    @Override
-    public boolean exConnection() {
+    public boolean hasExConnection() {
         return false;
     }
 
@@ -76,6 +59,51 @@ public class CustomStageInfo implements StageInfo {
             FChances[i] = chances.get(i);
 
         return FChances;
+    }
+
+    @Override
+    public int getExChance() {
+        return 0;
+    }
+
+    @Override
+    public int getExMapId() {
+        return 0;
+    }
+
+    @Override
+    public int getExStageIdMin() {
+        return 0;
+    }
+
+    @Override
+    public int getExStageIdMax() {
+        return 0;
+    }
+
+    @Override
+    public Stage getStage() {
+        return st;
+    }
+
+    @Override
+    public int getEnergy() {
+        return 0;
+    }
+
+    @Override
+    public int getXp() {
+        return 0;
+    }
+
+    @Override
+    public int[][] getDrop() {
+        return null;
+    }
+
+    @Override
+    public int[][] getTime() {
+        return null;
     }
 
     public void remove(Stage s) {

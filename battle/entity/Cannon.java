@@ -141,7 +141,7 @@ public class Cannon extends AtkModelAb {
             exta.update(false);
 
         if (anim == null && atka == null && exta == null) {
-            if (id > 2 && id < 5) {
+            if (id == 3 || id == 4) {
                 pos = b.ubase.pos;
                 for (Entity e : b.le)
                     if (e.dire == -1 && e.pos < pos && (e.touchable() & (TCH_N | TCH_KB)) != 0)
@@ -159,12 +159,12 @@ public class Cannon extends AtkModelAb {
             // wall canon
             Form f = Identifier.parseInt(339, Unit.class).get().forms[0];
             EAnimU enter = f.getEAnim(UType.ENTER);
-            enter.setTime(0);
+            enter.setTime(1);
             wall = new EUnit(b, f.du, enter, 1);
             b.le.add(wall);
             b.le.sort(Comparator.comparingInt(e -> e.layer));
-            wall.added(-1, (int) (pos + 100)); // guessed distance from enemy compared from BC
-            preTime = (int) b.b.t().getCannonMagnification(id, Data.BASE_WALL_ALIVE_TIME) + enter.len();
+            wall.added(-1, (int) (pos + 100)); // guessed distance from enemy compared from BC // update: checked with GG, correct
+            preTime = (int) b.b.t().getCannonMagnification(id, Data.BASE_WALL_ALIVE_TIME) + enter.len() - 1;
         }
 
         if (preTime == 0 || --preTime != 0)
@@ -181,63 +181,74 @@ public class Cannon extends AtkModelAb {
         Proc proc = Proc.blank();
         ArrayList<Trait> traits = new ArrayList<>();
 
+        /**
+         * Cannons can be grouped into 2 main type: waved and localized
+         * waved: basic, slow, zombie, curse
+         * localized: wall, freeze, water, blast
+         *
+         * NYRAN for localized cannons represents directly the aoe of the cannon
+         * NYRAN for waved cannons has 2 different meanings:
+         *       - basic and zombie cannons use NYRAN for the aoe of each single wave
+         *             NYRAN is then also used for wave-0 offset
+         *       - slow and curse cannons use NYRAN for wave-0 offset
+         *             spe is indeed used for the aoe of their single wave
+         */
         if (id == 0) {
             // basic canon
             traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
             proc.SNIPER.prob = 1;
             float wid = NYRAN[0];
-            float p = b.ubase.pos - wid / 2 + 100;
-            int atk = b.b.t().getCanonAtk();
+            float p = (float) (b.ubase.pos - 332.5 + wid / 2);
+            int atk = b.b.t().getCanonAtk(b.isBanned(Data.C_C_ATK));
             AttackCanon eatk = new AttackCanon(this, atk, traits, 0, proc, 0, 0, 1);
             new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
         } else if (id == 1) {
             // slow canon
             traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
-            proc.SLOW.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_SLOW_TIME) * (100 + b.b.getInc(C_SLOW)) / 100);
-            int wid = NYRAN[1];
-            int spe = 137;
+            proc.SLOW.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_SLOW_TIME) * (100 + (b.isBanned(C_SLOW) ? 0 : b.b.getInc(C_SLOW))) / 100);
+            float wid = NYRAN[1];
+            int spe = 150;
             float p = b.ubase.pos - wid / 2f + spe;
             AttackCanon eatk = new AttackCanon(this, 0, traits, 0, proc, 0, 0, 1);
-            new ContExtend(eatk, p, wid, spe, 1, 31, 0, 9);
+            new ContExtend(eatk, p, wid, spe, 1, 32, 0, 9);
         } else if (id == 3) {
             // freeze canon
             traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
-            duration = 1;
-            proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + b.b.getInc(C_STOP)) / 100.0);
-            int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
-            int rad = NYRAN[3] / 2;
+            duration = 11;
+            proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + (b.isBanned(C_STOP) ? 0 : b.b.getInc(C_STOP))) / 100.0);
+            int atk = (int) (b.b.t().getCanonAtk(b.isBanned(Data.C_C_ATK)) * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
+            float rad = NYRAN[3] / 2;
             b.getAttack(new AttackCanon(this, atk, traits, 0, proc, pos - rad, pos + rad, duration));
         } else if (id == 4) {
             // water canon
             traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
-            duration = 1;
+            duration = 11;
             proc.CRIT.mult = -(int) (b.b.t().getCannonMagnification(id, Data.BASE_HEALTH_PERCENTAGE));
-            int rad = NYRAN[4] / 2;
+            float rad = NYRAN[4] / 2;
             b.getAttack(new AttackCanon(this, 1, new ArrayList<>(), 0, proc, pos - rad, pos + rad, duration));
         } else if (id == 5) {
             // zombie canon
             traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
-            float wid = NYRAN[5];
-            proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + b.b.getInc(C_STOP)) / 100);
+            proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + (b.isBanned(C_STOP) ? 0 : b.b.getInc(C_STOP))) / 100);
             proc.SNIPER.prob = 1;
-            float p = b.ubase.pos - wid / 2 + 100;
             traits.set(0, UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
+            float wid = NYRAN[5];
+            float p = (float) (b.ubase.pos - 332.5 + wid / 2);
             AttackCanon eatk = new AttackCanon(this, 0, traits, AB_ONLY | AB_ZKILL | AB_CKILL, proc, 0, 0, 1);
             new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
         } else if (id == 6) {
-            // barrier canon
-            // guessed hit box time
+            // blast canon
             traits.addAll(UserProfile.getAll(Identifier.DEF, Trait.class));
             duration = 11;
             proc.BREAK.prob = 1;
             proc.KB.dis = KB_DIS[INT_KB];
             proc.KB.time = KB_TIME[INT_KB];
-            int atk = (int) (b.b.t().getCanonAtk() * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
+            int atk = (int) (b.b.t().getCanonAtk(b.isBanned(Data.C_C_ATK)) * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
             float rad = b.b.t().getCannonMagnification(id, Data.BASE_RANGE);
             float newPos = getBreakerSpawnPoint(pos, rad);
-            b.getAttack(new AttackCanon(this, atk, traits, AB_CKILL, proc, newPos - rad, newPos - 1, duration));
+            b.getAttack(new AttackCanon(this, atk, traits, AB_CKILL, proc, newPos - rad, newPos, duration));
 
             atka = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.ATK);
             exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
@@ -245,11 +256,11 @@ public class Cannon extends AtkModelAb {
             // curse cannon
             traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             proc.CURSE.time = (int) b.b.t().getCannonMagnification(id, Data.BASE_CURSE_TIME);
-            int wid = NYRAN[7];
-            int spe = 137;
+            float wid = NYRAN[7];
+            int spe = 150;
             float p = b.ubase.pos - wid / 2f + spe;
             AttackCanon eatk = new AttackCanon(this, 0, traits, 0, proc, 0, 0, 1);
-            new ContExtend(eatk, p, wid, spe, 1, 31, 0, 9);
+            new ContExtend(eatk, p, wid, spe, 1, 32, 0, 9);
         }
     }
 

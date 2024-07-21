@@ -1,6 +1,5 @@
 package common.battle;
 
-import com.google.common.primitives.Ints;
 import common.CommonStatic;
 import common.battle.data.Orb;
 import common.io.InStream;
@@ -60,106 +59,26 @@ public class Treasure extends Data {
 
 	private static void injectData(VFile vf, Map<Integer, CannonLevelCurve> target, CannonLevelCurve.PART part) {
 		Queue<String> q = vf.getData().readLine();
-
 		q.poll();
+		Map<Integer, Map<Integer, int[][]>> initCurve = new HashMap<>();
 
-		Map<Integer, Map<Integer, ArrayList<ArrayList<Integer>>>> initCurve = new HashMap<>();
-		Map<Integer, Integer> maxLevels = new HashMap<>();
-		Map<Integer, Integer> previousMaxLevel = new HashMap<>();
-
-		int previousType = -1;
-
-		String line;
-
-		while((line = q.poll()) != null) {
+		for (String line : q) {
 			int[] data = CommonStatic.parseIntsN(line);
-
 			int id = data[0];
-
-			//Skip analyzing data about normal cannon
-			if(id == 0)
+			if (id == 0)
 				continue;
+			Map<Integer, int[][]> currentCurve = initCurve.containsKey(id) ? initCurve.get(id) : new HashMap<>();
+			int[][] curves = currentCurve.containsKey(data[1]) ? currentCurve.get(data[1]) : new int[0][4];
+			int[][] targetCurves = new int[curves.length + 1][4];
+            System.arraycopy(curves, 0, targetCurves, 0, curves.length);
+			targetCurves[curves.length] = new int[] { data[2], data[3], data[4], data[5] };
 
-			Map<Integer, ArrayList<ArrayList<Integer>>> curveData;
-
-			if(initCurve.containsKey(id)) {
-				curveData = initCurve.get(id);
-			} else {
-				curveData = new HashMap<>();
-			}
-
-			int type = data[1];
-
-			if(type != previousType)
-				previousMaxLevel.clear();
-
-			ArrayList<ArrayList<Integer>> curves;
-
-			if(curveData.containsKey(type)) {
-				curves = curveData.get(type);
-			} else {
-				curves = new ArrayList<>();
-
-				curves.add(new ArrayList<>());
-				curves.add(new ArrayList<>());
-			}
-
-			int maxLevel = data[2];
-
-			if(!maxLevels.containsKey(id) || maxLevels.get(id) < maxLevel) {
-				maxLevels.put(id, maxLevel);
-			}
-
-			int difference;
-
-			if(previousMaxLevel.containsKey(id)) {
-				difference = maxLevel - previousMaxLevel.get(id);
-			} else {
-				difference = maxLevel;
-			}
-
-			int min = data[3];
-			int max = data[4];
-
-			float segment = (max - min) * 1f / (difference / 10f);
-
-			int mn;
-			int mx;
-
-			for(int i = 0; i < difference; i += 10) {
-				mn = min + (int) (segment * i / 10);
-				mx = min + (int) (segment * (i / 10 + 1));
-
-				curves.get(0).add(mn);
-				curves.get(1).add(mx);
-			}
-
-			curveData.put(type, curves);
-
-			initCurve.put(id, curveData);
-
-			previousMaxLevel.put(id, maxLevel);
-			previousType = type;
+			currentCurve.put(data[1], targetCurves);
+			initCurve.put(id, currentCurve);
 		}
 
-		for(int id : initCurve.keySet()) {
-			Map<Integer, ArrayList<ArrayList<Integer>>> curveData = initCurve.get(id);
-
-			Map<Integer, int[][]> filteredData = new HashMap<>();
-
-			for(int type : curveData.keySet()) {
-				ArrayList<ArrayList<Integer>> curves = curveData.get(type);
-
-				int[][] filteredCurves = new int[2][];
-
-				filteredCurves[0] = Ints.toArray(curves.get(0));
-				filteredCurves[1] = Ints.toArray(curves.get(1));
-
-				filteredData.put(type, filteredCurves);
-			}
-
-			target.put(id, new CannonLevelCurve(filteredData, maxLevels.get(id), part));
-		}
+		for (int key : initCurve.keySet())
+			target.put(key, new CannonLevelCurve(initCurve.get(key), part));
 	}
 
 	public static final Map<Integer, CannonLevelCurve> curveData = new HashMap<>();
@@ -229,35 +148,29 @@ public class Treasure extends Data {
 	/**
 	 * get base health
 	 */
-	public int getBaseHealth() {
+	public int getBaseHealth(boolean noCombo) {
 		int t = tech[LV_BASE];
 		int base = t < 6 ? t * 1000 : t < 8 ? 5000 + (t - 5) * 2000 : 9000 + (t - 7) * 3000;
 		base += trea[T_BASE] * 70;
-		if (bslv[0] > 10)
-			base += 36000 + 4000 * (bslv[0] - 10);
-		else
-			base += 3600 * bslv[0];
-		return base * (100 + b.getInc(C_BASE)) / 100;
+		base += (bslv[0] - 1) * 4000;
+		return base * (100 + (noCombo ? 0 : b.getInc(C_BASE))) / 100;
 	}
 
 	/**
 	 * get normal canon attack
 	 */
-	public int getCanonAtk() {
+	public int getCanonAtk(boolean noCombo) {
 		int base = 50 + tech[LV_CATK] * 50 + trea[T_CATK] * 5;
-		return base * (100 + b.getInc(C_C_ATK)) / 100;
+		return base * (100 + (noCombo ? 0 : b.getInc(C_C_ATK))) / 100;
 	}
 
 	public float getCannonMagnification(int id, int type) {
-		if(curveData.containsKey(id)) {
-			CannonLevelCurve levelCurve = curveData.get(id);
-
-			return levelCurve.applyFormula(type, bslv[id]);
+		if(!curveData.containsKey(id)) {
+			System.out.println("Warning : Unknown ID : "+ id);
+			return 0;
 		}
-
-		System.out.println("Warning : Unknown ID : "+ id);
-
-		return 0;
+		CannonLevelCurve levelCurve = curveData.get(id);
+		return levelCurve.applyFormula(type, bslv[id]);
 	}
 
 	public float getBaseMagnification(int id, List<Trait> traits, boolean raw) {
@@ -348,31 +261,43 @@ public class Treasure extends Data {
 	/**
 	 * get accounting multiplication
 	 */
-	public float getDropMulti() {
-		return (0.95f + 0.05f * tech[LV_ACC] + 0.005f * trea[T_ACC]) * (1 + b.getInc(C_MEAR) * 0.01f);
+	public float getDropMulti(boolean noCombo) {
+		return (0.95f + 0.05f * tech[LV_ACC] + 0.005f * trea[T_ACC]) * (1 + (noCombo ? 0 : b.getInc(C_MEAR)) * 0.01f);
 	}
 
 	/**
 	 * get EVA kill ability attack multiplication
 	 */
-	public float getEKAtk() {
-		return 0.05f * (100 + b.getInc(C_EKILL));
+	public float getEKAtk(boolean noCombo) {
+		return 0.05f * (100 + (noCombo ? 0 : b.getInc(C_EKILL)));
 	}
 
 	/**
 	 * get EVA kill ability reduce damage multiplication
 	 */
-	public float getEKDef() {
-		return 20f / (100 + b.getInc(C_EKILL));
+	public float getEKDef(boolean noCombo) {
+		return 20f / (100 + (noCombo ? 0 : b.getInc(C_EKILL)));
 	}
 
 	/**
 	 * get processed cat cool down time
 	 * max treasure & level should lead to -264f recharge
 	 */
-	public int getFinRes(int ori) {
+	public int getFinRes(int ori, boolean noCombo) {
 		float research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3f;
-		float deduction = research + (float) Math.floor(research * b.getInc(C_RESP) / 100);
+		float deduction = research + (float) Math.floor(research * (noCombo ? 0 : b.getInc(C_RESP)) / 100);
+		return (int) Math.max(60, ori - deduction);
+	}
+
+	/**
+	 * get processed cat cool down time w/ global restriction
+	 * ignores research and treasure data
+	 */
+	public int getFinResGlobal(int ori, boolean noCombo) {
+		if (ori <= 60)
+			return ori;
+		float research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3f;
+		float deduction = (float) Math.floor(research * (noCombo ? 0 : b.getInc(C_RESP)) / 100.0);
 		return (int) Math.max(60, ori - deduction);
 	}
 
@@ -412,7 +337,7 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public float getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
+	public float getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level, boolean noCombo) {
 		float ini = traits.isEmpty() ? 1 : 0.5f - 0.1f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
@@ -439,7 +364,7 @@ public class Treasure extends Data {
 		if (ini == 1)
 			return ini;
 
-		float com = 1 - b.getInc(C_GOOD) * 0.01f;
+		float com = 1 - (noCombo ? 0 : b.getInc(C_GOOD)) * 0.01f;
 
 		return ini * com;
 	}
@@ -454,25 +379,25 @@ public class Treasure extends Data {
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public float getMASSIVEATK(ArrayList<Trait> traits) {
+	public float getMASSIVEATK(ArrayList<Trait> traits, boolean noCombo) {
 		float ini = 3 + 1f / 3 * getFruit(traits);
-		float combo = (1 - (b.getInc(C_MASSIVE) * 0.01f));
+		float combo = (1 - ((noCombo ? 0 : b.getInc(C_MASSIVE)) * 0.01f));
 		return ini * combo;
 	}
 
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public float getGOODATK(ArrayList<Trait> traits) {
+	public float getGOODATK(ArrayList<Trait> traits, boolean noCombo) {
 		float ini = 1.5f + 0.3f / 3 * getFruit(traits);
-		float combo = 1 - (b.getInc(C_GOOD) * 0.01f);
+		float combo = 1 - ((noCombo ? 0 : b.getInc(C_GOOD)) * 0.01f);
 		return ini * combo;
 	}
 
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public float getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level) {
+	public float getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Orb orb, Level level, boolean noCombo) {
 		float ini = traits.isEmpty() ? 1 : 0.25f - 0.05f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
@@ -499,7 +424,7 @@ public class Treasure extends Data {
 		if (ini == 1)
 			return ini;
 
-		float com = 1 - b.getInc(C_RESIST) * 0.01f;
+		float com = 1 - (noCombo ? 0 : b.getInc(C_RESIST)) * 0.01f;
 		return ini * com;
 	}
 
@@ -523,15 +448,15 @@ public class Treasure extends Data {
 	/**
 	 * get witch kill ability attack multiplication
 	 */
-	public float getWKAtk() {
-		return 0.05f * (100 + b.getInc(C_WKILL));
+	public float getWKAtk(boolean noCombo) {
+		return 0.05f * (100 + (noCombo ? 0 : b.getInc(C_WKILL)));
 	}
 
 	/**
 	 * get witch kill ability reduce damage multiplication
 	 */
-	public float getWKDef() {
-		return 10f / (100 + b.getInc(C_WKILL));
+	public float getWKDef(boolean noCombo) {
+		return 10f / (100 + (noCombo ? 0 : b.getInc(C_WKILL)));
 	}
 
 	public float getXPMult() {
@@ -544,7 +469,7 @@ public class Treasure extends Data {
 	/**
 	 * get canon recharge time
 	 */
-	protected int CanonTime(int map) {
+	protected int CanonTime(int map, boolean noCombo) {
 		int base = 1500 + 50 * (tech[LV_CATK] - tech[LV_RECH]);
 
 		if (trea[T_RECH] <= 300)
@@ -554,7 +479,7 @@ public class Treasure extends Data {
 
 		base += map * 450;
 
-		base -= (int) (base * b.getInc(C_C_SPE) / 100.0);
+		base -= (int) (base * (noCombo ? 0 : b.getInc(C_C_SPE)) / 100.0);
 
 		return Math.max(950, base);
 	}
@@ -571,11 +496,11 @@ public class Treasure extends Data {
 	/**
 	 * get wallet capacity
 	 */
-	protected int getMaxMon(int lv) {
+	protected int getMaxMon(int lv, boolean noCombo) {
 		int base = Math.max(25, 50 * tech[LV_WALT]);
 		base = base * (1 + lv);
 		base += trea[T_WALT] * 10;
-		return base * (100 + b.getInc(C_M_MAX));
+		return base * (100 + (noCombo ? 0 : b.getInc(C_M_MAX)));
 	}
 
 	/**
@@ -627,9 +552,9 @@ public class Treasure extends Data {
 		fruit[T_METAL] = fruit[T_ZOMBIE] = fruit[T_ALIEN] = 300;
 		bslv[0] = 30;
 		for (int i = 1; i < BASE_TOT; i++) {
-			bslv[i] = curveData.get(i).max;
-			base[i - 1] = baseData.get(i).max;
-			deco[i - 1] = decorationData.get(i).max;
+			bslv[i] = curveData.get(i).getMax();
+			base[i - 1] = baseData.get(i).getMax();
+			deco[i - 1] = decorationData.get(i).getMax();
 		}
 		gods[0] = gods[1] = gods[2] = 100;
 		alien = 600;

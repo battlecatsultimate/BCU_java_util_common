@@ -66,9 +66,7 @@ public class EUnit extends Entity {
 		traits = de.getTraits();
 		lvl = level.getLv() + level.getPlusLv();
 		this.index = index;
-
 		this.level = level;
-
 		this.isSpirit = isSpirit;
 	}
 
@@ -88,7 +86,7 @@ public class EUnit extends Entity {
 	@Override
 	public int getAtk() {
 		int atk = aam.getAtk();
-		if (status[P_STRONG][0] != 0)
+		if (status[P_STRONG][0] != 0 && !basis.isBanned(C_STRONG))
 			atk += atk * (status[P_STRONG][0] + basis.b.getInc(C_STRONG)) / 100;
 		if (status[P_WEAK][0] > 0)
 			atk = atk * status[P_WEAK][1] / 100;
@@ -101,18 +99,16 @@ public class EUnit extends Entity {
 
 		traits = status[P_CURSE][0] == 0 && status[P_SEAL][0] == 0 ? data.getTraits() : new ArrayList<>();
 
-		if (isSpirit && atkm.atkTime == 0) {
+		if (isSpirit && atkm.atkTime == 0)
 			kill(KillMode.SPIRIT);
-		}
 	}
 
 	@Override
 	public void added(int d, float p) {
 		super.added(d, p);
 
-		if (isSpirit) {
+		if (isSpirit)
 			atkm.setUp();
-		}
 	}
 
 	@Override
@@ -198,20 +194,20 @@ public class EUnit extends Entity {
 			}
 
 			if ((getAbi() & AB_GOOD) != 0)
-				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level));
+				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level, basis.isBanned(C_GOOD)));
 
 			if ((getAbi() & AB_RESIST) != 0)
-				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level));
+				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level, basis.isBanned(Data.C_RESIST)));
 
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
 		}
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
-			ans = (int) (ans * basis.b.t().getWKDef());
+			ans = (int) (ans * basis.b.t().getWKDef(basis.isBanned(Data.C_WKILL)));
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
-			ans = (int) (ans * basis.b.t().getEKDef());
+			ans = (int) (ans * basis.b.t().getEKDef(basis.isBanned(Data.C_EKILL)));
 
 		if (isBase)
 			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
@@ -248,11 +244,9 @@ public class EUnit extends Entity {
 	}
 
 	@Override
-	protected boolean updateMove(float maxl, float extmov) {
-		if (status[P_SLOW][0] == 0)
-			extmov = (float) (extmov + data.getSpeed() * basis.b.getInc(C_SPE) / 200.0);
-
-		return super.updateMove(maxl, extmov);
+	protected void updateMove(float extmov) {
+		extmov = (float) (data.getSpeed() * basis.b.getInc(C_SPE) / 50) / 4f;
+		super.updateMove(extmov);
 	}
 
 	private int getOrbAtk(ArrayList<Trait> trait, MaskAtk matk) {

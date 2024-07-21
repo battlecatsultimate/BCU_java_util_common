@@ -1,12 +1,15 @@
 package common.battle.attack;
 
+import common.CommonStatic;
 import common.battle.data.MaskAtk;
 import common.battle.entity.AbEntity;
+import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
 import common.battle.entity.Sniper;
 import common.util.Data;
 import common.util.Data.Proc.MOVEWAVE;
 import common.util.Data.Proc.VOLC;
+import common.util.pack.EffAnim;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
@@ -71,19 +74,34 @@ public class AttackSimple extends AttackAb {
 			List<AbEntity> ents = new ArrayList<>();
 			ents.add(capt.get(0));
 
-			double dis = Math.abs(pos - ents.get(0).pos);
+			if (dire == 1) {
 
-			for (AbEntity e: capt) {
-				double targetDis = Math.abs(pos - e.pos);
+				double leftMost = ents.get(0).pos;
 
-				if (targetDis < dis) {
-					ents.clear();
-					ents.add(e);
-
-					dis = targetDis;
-				} else if (targetDis == dis) {
-					ents.add(e);
+				for (AbEntity e: capt) {
+					if (e.pos < leftMost) {
+						leftMost = e.pos;
+						ents.clear();
+						ents.add(e);
+					} else if (e.pos == leftMost) {
+						ents.add(e);
+					}
 				}
+
+			} else {
+
+				double rightMost = ents.get(0).pos;
+
+				for (AbEntity e: capt) {
+					if (e.pos > rightMost) {
+						rightMost = e.pos;
+						ents.clear();
+						ents.add(e);
+					} else if (e.pos == rightMost) {
+						ents.add(e);
+					}
+				}
+
 			}
 
 			capt.clear();
@@ -117,6 +135,11 @@ public class AttackSimple extends AttackAb {
 		}
 
 		int layer = model.getLayer();
+		if (proc.BOSS.exists()) {
+			model.b.lea.add(new EAnimCont(model.getPos(), model.getLayer(), effas().A_SHOCKWAVE.getEAnim(EffAnim.DefEff.DEF)));
+			CommonStatic.setSE(SE_BOSS);
+			model.b.leaSort = true;
+		}
 		if (proc.MOVEWAVE.exists()) {
 			MOVEWAVE mw = proc.MOVEWAVE;
 			int dire = model.getDire();
@@ -141,7 +164,7 @@ public class AttackSimple extends AttackAb {
 
 			// generate a wave when hits somebody
 
-			ContWaveDef wave = new ContWaveDef(new AttackWave(attacker, this, p0, wid, WT_WAVE), p0, layer, true);
+			ContWaveDef wave = new ContWaveDef(new AttackWave(attacker, this, p0, wid, WT_WAVE), p0, layer, -3);
 
 			if(attacker != null) {
 				attacker.summoned.add(wave);
@@ -154,7 +177,7 @@ public class AttackSimple extends AttackAb {
 			float addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2f;
 			float p0 = model.getPos() + dire * addp;
 
-			ContWaveDef wave = new ContWaveDef(new AttackWave(attacker, this, p0, wid, WT_MINI), p0, layer, false);
+			ContWaveDef wave = new ContWaveDef(new AttackWave(attacker, this, p0, wid, WT_MINI), p0, layer, -1);
 
 			if(attacker != null) {
 				attacker.summoned.add(wave);

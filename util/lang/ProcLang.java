@@ -103,27 +103,27 @@ public class ProcLang {
 
 	public static class ProcLangStore {
 
-		private final ProcLang[] langs = new ProcLang[CommonStatic.Lang.LOC_CODE.length];
+		private final ProcLang[] langs = new ProcLang[CommonStatic.Lang.Locale.values().length];
 
 		private ProcLang getLang() {
-			int lang = CommonStatic.getConfig().lang;
+			int lang = CommonStatic.getConfig().lang.ordinal();
 			if (langs[lang] == null)
 				Data.err(() -> read());
 			return langs[lang];
 		}
 
-		private ProcLang getLang(int lang) {
-			if (langs[lang] == null)
+		private ProcLang getLang(CommonStatic.Lang.Locale lang) {
+			if (langs[lang.ordinal()] == null)
 				Data.err(() -> read(lang));
-			return langs[lang];
+			return langs[lang.ordinal()];
 		}
 
 		private void setLang(ProcLang lang) {
-			langs[CommonStatic.getConfig().lang] = lang;
+			langs[CommonStatic.getConfig().lang.ordinal()] = lang;
 		}
 
-		private void setLang(ProcLang lang, int l) {
-			langs[l] = lang;
+		private void setLang(ProcLang lang, CommonStatic.Lang.Locale l) {
+			langs[l.ordinal()] = lang;
 		}
 
 	}
@@ -151,7 +151,7 @@ public class ProcLang {
 		return store().getLang();
 	}
 
-	public static ProcLang getWithLang(int lang) {
+	public static ProcLang getWithLang(CommonStatic.Lang.Locale lang) {
 		return store().getLang(lang);
 	}
 
@@ -159,14 +159,17 @@ public class ProcLang {
 		InputStream f;
 
 		switch (CommonStatic.getConfig().lang) {
-			case 2:
+			case KR:
 				f = CommonStatic.ctx.getLangFile("proc_kr.json");
 				break;
-			case 3:
+			case JP:
 				f = CommonStatic.ctx.getLangFile("proc_jp.json");
 				break;
-			case 8:
+			case ES:
 				f = CommonStatic.ctx.getLangFile("proc_es.json");
+				break;
+			case RU:
+				f = CommonStatic.ctx.getLangFile("proc_ru.json");
 				break;
 			default:
 				f = CommonStatic.ctx.getLangFile("proc.json");
@@ -178,17 +181,20 @@ public class ProcLang {
 		store().setLang(proc);
 	}
 
-	private static void read(int lang) throws Exception {
+	private static void read(CommonStatic.Lang.Locale lang) throws Exception {
 		InputStream f;
 
 		switch (lang) {
-			case 2:
+			case KR:
 				f = CommonStatic.ctx.getLangFile("proc_kr.json");
 				break;
-			case 3:
+			case JP:
 				f = CommonStatic.ctx.getLangFile("proc_jp.json");
 				break;
-			case 8:
+			case RU:
+				f = CommonStatic.ctx.getLangFile("proc_ru.json");
+				break;
+			case ES:
 				f = CommonStatic.ctx.getLangFile("proc_es.json");
 				break;
 			default:

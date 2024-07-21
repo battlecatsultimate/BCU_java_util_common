@@ -54,7 +54,7 @@ public class Stage extends Data
 	@JsonField(generic = MultiLangData.class)
 	public MultiLangData names = new MultiLangData();
 
-	public boolean non_con, trail;
+	public boolean non_con, trail, bossGuard;
 	public int len, health, max, mush, bgh;
 	public int timeLimit = 0;
 	public int minSpawn = 1, maxSpawn = 1;
@@ -100,16 +100,23 @@ public class Stage extends Data
 		Queue<String> qs = f.getData().readLine();
 		names.put("" + id);
 		String temp;
+		boolean hasCastleData = false;
 		if (type == 0) {
 			temp = qs.poll();
 
 			if(temp != null) {
+				hasCastleData = true;
+
 				String[] strs = temp.split(",");
+
 				int cas = CommonStatic.parseIntN(strs[0]);
+
 				if (cas == -1)
 					cas = CH_CASTLES[id.id];
+
 				if (sm.cast != -1)
 					cas = sm.cast * 1000 + cas;
+
 				castle = Identifier.parseInt(cas, CastleImg.class);
 				non_con = strs[1].equals("1");
 
@@ -135,14 +142,20 @@ public class Stage extends Data
 			timeLimit = strs.length >= 8 ? Math.max(Integer.parseInt(strs[7]), 0) : 0;
 			if(timeLimit != 0)
 				health = Integer.MAX_VALUE;
+
+			// Must be parsed only when it's for normal stages, not EoC/ItF/CotC
+			if (hasCastleData) {
+				bossGuard = Integer.parseInt(strs[8]) == 1;
+			}
+
 			trail = timeLimit != 0;
 
 			int isBase = Integer.parseInt(strs[6]) - 2;
 
 			List<int[]> ll = new ArrayList<>();
 
-			while (qs.size() > 0)
-				if ((temp = qs.poll()).length() > 0) {
+			while (!qs.isEmpty())
+				if (!(temp = qs.poll()).isEmpty()) {
 					if (!Character.isDigit(temp.charAt(0)))
 						break;
 					if (temp.startsWith("0,"))
@@ -235,6 +248,9 @@ public class Stage extends Data
 			ans.mus1 = mus1.clone();
 		ans.bgh = bgh;
 		ans.mush = mush;
+		ans.minSpawn = minSpawn;
+		ans.maxSpawn = maxSpawn;
+		ans.bossGuard = bossGuard;
 		return ans;
 	}
 
@@ -284,10 +300,10 @@ public class Stage extends Data
 	@Override
 	public String toString() {
 		String desp = MultiLangCont.get(this);
-		if (desp != null && desp.length() > 0)
+		if (desp != null && !desp.isEmpty())
 			return desp;
 		String n = names.toString();
-		if (n.length() > 0)
+		if (!n.isEmpty())
 			return n;
 		return map + " - " + id();
 	}

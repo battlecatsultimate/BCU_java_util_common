@@ -1,26 +1,19 @@
 package common.io.json;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import common.CommonStatic;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonException.Type;
 import common.pack.Identifier;
 import common.pack.Source;
 import common.util.Data;
-import common.util.stage.CastleImg;
-import common.util.stage.CastleList;
-import common.util.stage.MapColc;
+import common.util.stage.*;
 import common.util.stage.MapColc.PackMapColc;
-import common.util.stage.Stage;
-import common.util.stage.StageMap;
 
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class Dependency {
 
@@ -39,7 +32,7 @@ public class Dependency {
 				return;
 			if (obj instanceof Class)
 				return;
-			if (obj instanceof Source.BasePath)
+			if (obj instanceof Source.BasePath || obj instanceof CommonStatic.Lang.Locale) // todo: see if instanceof enum is sufficient
 				return;
 			if (obj instanceof Identifier) {
 				set.add((Identifier<?>) obj);

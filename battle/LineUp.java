@@ -356,18 +356,14 @@ public class LineUp extends Data {
 
 					if (fs[i][j].du.getProc().SPIRIT.exists()) {
 						Unit u = Identifier.getOr(fs[i][j].du.getProc().SPIRIT.id, Unit.class);
-
 						Form spiritForm = u.forms[0];
 
                         Level spiritLevel = getLv(fs[i][j]).clone();
-
 						spiritLevel.setLevel(Math.min(u.max, spiritLevel.getLv() + spiritLevel.getPlusLv()));
 						spiritLevel.setPlusLevel(0);
-
 						spiritLevel.setOrbs(null);
 
                         Arrays.fill(spiritLevel.getTalents(), 0);
-
 						spirits[i][j] = new EForm(spiritForm, spiritLevel);
                     }
 				}

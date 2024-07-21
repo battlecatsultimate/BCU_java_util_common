@@ -33,7 +33,7 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
 
 		protected final MultiLangCont<AnimI.AnimType<?, ?>, String> ANIMNAME = new MultiLangCont<>();
-		protected final boolean[] loaded_anim = new boolean[LOC_CODE.length];
+		protected final boolean[] loaded_anim = new boolean[Locale.values().length];
 
 		public void clear() {
 			Arrays.fill(loaded_anim, false);
@@ -41,7 +41,7 @@ public class MultiLangCont<I, T> extends Lang {
 		}
 
 		public String getAnimName(AnimI.AnimType<?, ?> type) {
-			int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang));
+			int lang = CommonStatic.getConfig().lang.ordinal();
 
 			if (!loaded_anim[lang]) {
 				loaded_anim[lang] = true;
@@ -73,7 +73,7 @@ public class MultiLangCont<I, T> extends Lang {
 		return null;
 	}
 
-	public static String get(Object o, int lang) {
+	public static String get(Object o, Locale lang) {
 		if(o == null)
 			return null;
 
@@ -93,9 +93,9 @@ public class MultiLangCont<I, T> extends Lang {
 		return null;
 	}
 
-	public static int getGrabbedLocale(Object o) {
+	public static Locale getGrabbedLocale(Object o) {
 		if (o == null)
-			return -1;
+			return Locale.EN;
 
 		if (o instanceof MapColc)
 			return getStatic().MCNAME.getSelectedLocale((MapColc) o);
@@ -110,7 +110,7 @@ public class MultiLangCont<I, T> extends Lang {
 		if (o instanceof Combo)
 			return getStatic().COMNAME.getSelectedLocale((Combo) o);
 
-		return -1;
+		return Locale.EN;
 	}
 
 	public static String[] getDesc(Object o) {
@@ -138,7 +138,7 @@ public class MultiLangCont<I, T> extends Lang {
 		return trial;
 	}
 
-	public static String getStageDrop(int id, int lang) {
+	public static String getStageDrop(int id, Locale lang) {
 		String trial = getStatic().RWSTNAME.getCont(id, lang);
 
 		if(trial == null || trial.isEmpty())
@@ -156,7 +156,7 @@ public class MultiLangCont<I, T> extends Lang {
 		return trial;
 	}
 
-	public static String getServerDrop(int id, int lang) {
+	public static String getServerDrop(int id, Locale lang) {
 		String trial = getStatic().RWSVNAME.getCont(id, lang);
 
 		if(trial == null || trial.isEmpty())
@@ -165,17 +165,17 @@ public class MultiLangCont<I, T> extends Lang {
 		return trial;
 	}
 
-	private final Map<String, HashMap<I, T>> map = new TreeMap<>();
+	private final Map<Locale, HashMap<I, T>> map = new TreeMap<>();
 
 	public void clear() {
 		map.clear();
 	}
 
 	public T getCont(I x) {
-		int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang));
+		int lang = CommonStatic.getConfig().lang.ordinal();
 
 		for (int i = 0; i < pref[lang].length; i++) {
-			T ans = getSub(LOC_CODE[pref[lang][i]]).get(x);
+			T ans = getSub(pref[lang][i]).get(x);
 			if (ans != null)
 				return ans;
 		}
@@ -183,11 +183,11 @@ public class MultiLangCont<I, T> extends Lang {
 		return null;
 	}
 
-	public T getCont(I x, int lang) {
-		int l = Math.max(0, Math.min(pref.length, lang));
+	public T getCont(I x, Locale lang) {
+		int l = lang.ordinal();
 
 		for (int i = 0; i < pref[l].length; i++) {
-			T ans = getSub(LOC_CODE[pref[l][i]]).get(x);
+			T ans = getSub(pref[l][i]).get(x);
 
 			if (ans != null)
 				return ans;
@@ -196,30 +196,30 @@ public class MultiLangCont<I, T> extends Lang {
 		return null;
 	}
 
-	public int getSelectedLocale(I x) {
-		int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang));
+	public Locale getSelectedLocale(I x) {
+		int lang = Math.max(0, Math.min(pref.length, CommonStatic.getConfig().lang.ordinal() - 1));
 
 		for(int i = 0; i < pref[lang].length; i++) {
-			T ans =  getSub(LOC_CODE[pref[lang][i]]).get(x);
+			T ans =  getSub(pref[lang][i]).get(x);
 
 			if(ans != null)
 				return pref[lang][i];
 		}
 
-		return -1;
+		return Locale.EN;
 	}
 
-	public void put(String loc, I x, T t) {
+	public void put(Locale loc, I x, T t) {
 		if (x == null || t == null)
 			return;
 		getSub(loc).put(x, t);
 	}
 
-	private HashMap<I, T> getSub(String loc) {
+	private HashMap<I, T> getSub(Locale loc) {
 		return map.computeIfAbsent(loc, k -> new HashMap<>());
 	}
 
-	public Map<I, T> getMap(String loc) {
+	public Map<I, T> getMap(Locale loc) {
 		return map.get(loc);
 	}
 }

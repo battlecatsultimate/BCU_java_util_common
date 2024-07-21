@@ -15,7 +15,10 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -322,6 +325,10 @@ public class JsonDecoder {
 		if (elem.isJsonNull())
 			return null;
 		Object[] constants = cls.getEnumConstants();
+		if (elem.getAsJsonPrimitive().isNumber()) {
+			int ord = elem.getAsInt();
+			return constants[ord];
+		}
 		String name = getString(elem);
 		for (Object constant : constants)
 			if (constant.toString().equals(name))

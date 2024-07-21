@@ -104,6 +104,17 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 					j[0] = data[3];
 					j[2] = j[3] = 100;
 				}
+				if (j[0] == 65 || j[0] == 56) {
+					int[] lvl = new int[] { j[4], j[5] };
+					int[] max = new int[] { j[6], j[7] };
+					int[] min = new int[] { j[8], j[9] };
+					j[4] = max[0] / 4;
+					j[5] = max[1] / 4;
+					j[6] = (max[0] + min[0]) / 4;
+					j[7] = (max[1] + min[1]) / 4;
+					j[8] = lvl[0];
+					j[9] = lvl[1];
+				}
 				pcoin.info.add(j);
 			}
 		}

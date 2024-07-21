@@ -55,6 +55,7 @@ public class StageBasis extends BattleObj {
 	public int[] selectedUnit = {-1, -1};
 	public final float boss_spawn;
 	public final int[] shakeCoolDown = {0, 0};
+	public int activeGuard = -1;
 
 	public float siz;
 	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, max_num, pos;
@@ -71,6 +72,8 @@ public class StageBasis extends BattleObj {
 	public int respawnTime, unitRespawnTime;
 	public Background bg;
 	public BackgroundEffect bgEffect;
+
+	public boolean leaSort = false;
 
 	/**
 	 * Real groundHeight of battle
@@ -134,11 +137,27 @@ public class StageBasis extends BattleObj {
 		}
 		int max = est.lim != null ? est.lim.num : 50;
 		max_num = max <= 0 ? 50 : max;
-		maxCannon = bas.t().CanonTime(sttime);
+		maxCannon = bas.t().CanonTime(sttime, isBanned(C_C_SPE));
 
-		work_lv = 1 + bas.getInc(C_M_LV);
-		money = bas.getInc(C_M_INI) * 100;
-		cannon = maxCannon * bas.getInc(C_C_INI) / 100;
+		int bank = maxBankLimit();
+		int cd = globalCdLimit();
+		if (bank > 0 || cd > 0) {
+			for (int i = 0; i < 2; i++)
+				for (int j = 0; j < 5; j++)
+					elu.get(i, j);
+		}
+		if (bank > 0) {
+			work_lv = 8;
+			money = bank * 100;
+		} else {
+			work_lv = 1;
+			if (!isBanned(C_M_LV))
+				work_lv += bas.getInc(C_M_LV);
+			if (!isBanned(C_M_INI))
+				money = bas.getInc(C_M_INI) * 100;
+		}
+
+		cannon = maxCannon * (isBanned(C_C_INI) ? 0 : bas.getInc(C_C_INI)) / 100;
 		canon = new Cannon(this, nyc[0], nyc[1], nyc[2]);
 		conf = ints;
 
@@ -148,6 +167,8 @@ public class StageBasis extends BattleObj {
 			respawnTime = st.minSpawn;
 		else
 			respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextDouble());
+
+		respawnTime--;
 
 		if ((conf[0] & 1) > 0)
 			work_lv = 8;
@@ -167,13 +188,16 @@ public class StageBasis extends BattleObj {
 
 		isOneLineup = oneLine;
 		this.buttonDelayOn = buttonDelayOn;
+
+		if (est.s.bossGuard)
+			activeGuard = 0;
 	}
 
 	/**
 	 * returns visual money.
 	 */
 	public int getMoney() {
-		return (int) Math.floor(money / 100.0);
+		return money / 100;
 	}
 
 	/**
@@ -338,7 +362,7 @@ public class StageBasis extends BattleObj {
 			money -= upgradeCost;
 			work_lv++;
 			upgradeCost = b.t().getLvCost(work_lv);
-			maxMoney = b.t().getMaxMon(work_lv);
+			maxMoney = b.t().getMaxMon(work_lv, isBanned(C_M_MAX));
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
@@ -400,12 +424,8 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected boolean act_spawn(int i, int j, boolean manual) {
-		if (buttonDelay > 0)
+		if (buttonDelay > 0 || ubase.health == 0)
 			return false;
-
-		if (ubase.health == 0) {
-			return false;
-		}
 
 		if(buttonDelayOn && manual && selectedUnit[0] == -1) {
 			if(elu.price[i][j] != -1 || b.lu.fs[i][j] == null) {
@@ -425,40 +445,35 @@ public class StageBasis extends BattleObj {
 			return false;
 
 		EForm f = b.lu.efs[i][j];
-
-		if (f == null) {
+		if (f == null)
 			return false;
-		}
 
 		if (manual && f.du.getProc().SPIRIT.exists() && summonerSummoned[i][j] && summoner[i][j].anim.dead < 0 && !spiritSummoned[i][j]) {
 			if (spiritCooldown[i][j] > 0) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
-
 				return false;
 			}
 
 			f = b.lu.spirits[i][j];
-
 			if (f == null)
 				return false;
-
 			if (entityCount(-1) >= max_num - f.du.getWill()) {
 				CommonStatic.setSE(SE_SPEND_FAIL);
-
 				return false;
 			}
 
 			CommonStatic.setSE(SE_SPIRIT_SUMMON);
-
 			EUnit su = f.getEntity(this, null, true);
 
-			su.added(-1, Math.min(ubase.pos, summoner[i][j].lastPosition + SPIRIT_SUMMON_RANGE));
+			// summoner.pos and not summoner.lastPosition
+			// actions are processed before the update so it's automatic for the spirit to spawn relative to the summoner last pos
+			// 800 + range and not ebase.pos + range because it doesn't respond to entity enemy base
+			su.added(-1, Math.max(800 + su.data.getRange(), Math.min(summoner[i][j].pos + SPIRIT_SUMMON_RANGE, ubase.pos)));
 
 			le.add(su);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 
 			spiritSummoned[i][j] = true;
-
 			unitRespawnTime = 1;
 
 			return true;
@@ -530,6 +545,118 @@ public class StageBasis extends BattleObj {
 			er.updateCopy((StageBasis) hardCopy(this), hardCopy(er.map.get(this)));
 	}
 
+	// -------------------- DEV_ONLY -------------------- //
+	private final int[][] transcription = {
+			{ 215,0},
+			{ 613,11},
+			{1029,2},
+			{ 947,0},
+			{1214,1},
+			{1251,9},
+			{ 537,2},
+			{ 623,1},
+			{ 848,4},
+			{ 670,2},
+			{1425,6},
+			{ 884,2},
+			{1318,9},
+			{ 720,3},
+			{ 201,1},
+			{ 238,0},
+			{ 428,1},
+			{ 407,2},
+			{ 796,4},
+			{ 264,1},
+			{ 798,5},
+			{ 724,3},
+			{ 397,2},
+			{1181,10},
+			{2221,11},
+			{1494,2},
+			{1317,1},
+			{1391,4},
+			{1234,9},
+			{ 898,1},
+			{ 850,2},
+			{ 863,3},
+			{ 825,6},
+			{ 540,0},
+			{ 899,4},
+			{ 328,0},
+			{ 553,1},
+			{ 498,2},
+			{1260,0},
+			{1259,8},
+			{ 494,1},
+			{2929,5},
+			{2512,9},
+			{1556,4},
+			{1463,3},
+			{ 931,6},
+			{ 401,0},
+			{ 489,1},
+			{ 746,2},
+			{ 685,0},
+			{ 725,1},
+			{1799,5},
+			{1280,6},
+			{ 778,4},
+			{1322,7},
+			{ 779,5},
+			{ 104,10},
+			{ 802,4},
+			{ 536,2},
+			{ 570,1},
+			{ 630,0},
+			{ 833,3},
+			{ 449,1},
+			{ 755,2},
+			{ 869,4},
+			{ 976,5},
+			{ 647,2},
+			{1176,3},
+			{1084,4},
+			{1095,0},
+			{1209,9},
+			{ 349,1},
+			{ 704,2},
+			{ 520,0},
+			{ 764,5},
+			{ 719,2},
+			{1946,4},
+			{1389,3},
+			{1046,6},
+			{ 741,2},
+			{2606,1},
+			{2652,7},
+			{1757,9},
+			{ 992,5},
+			{ 772,4},
+			{ 798,6},
+			{ 679,10},
+			{1727,8},
+			{ 894,3},
+			{ 986,5},
+			{1067,6},
+			{ 754,5},
+			{ 452,1},
+			{ 383,2},
+			{ 816,5},
+			{1224,6},
+			{1040,5},
+			{1491,5},
+			{2304,5},
+			{3499,2},
+			{3295,1},
+			{3450,0},
+			{3863,1},
+			{3998,2},
+			{3807,9},
+			{3429,1}
+	};
+	private int tranIdx = 0;
+	// -------------------- DEV_ONLY -------------------- //
+
 	/**
 	 * process actions and add enemies from stage first then update each entity
 	 * and receive attacks then excuse attacks and do post update then delete dead
@@ -542,6 +669,26 @@ public class StageBasis extends BattleObj {
 			bgEffect.initialize(st.len, battleHeight, midH, bg);
 			bgEffectInitialized = true;
 		}
+
+		// -------------------- DEV_ONLY -------------------- //
+		if(false) {
+			if (time == 1)
+				tranIdx = 0;
+			if (tranIdx < transcription.length) {
+				if (money / 100 == transcription[tranIdx][0]) {
+					if(transcription[tranIdx][1] < 10) {
+						act_spawn(transcription[tranIdx][1] / 5, transcription[tranIdx][1] % 5, true);
+					} else {
+						if(transcription[tranIdx][1] == 10)
+							act_can();
+						else
+							act_mon();
+					}
+					tranIdx++;
+				}
+			}
+		}
+		// -------------------- DEV_ONLY -------------------- //
 
 		if (buttonDelay > 0 && --buttonDelay == 0) {
 			act_spawn(selectedUnit[0], selectedUnit[1], true);
@@ -567,16 +714,19 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
-			ebase.preUpdate();
-			ebase.update();
+			// ebase.update();
+			// ebase.update2();
 		}
 
 		if (s_stop == 0) {
 			if(bgEffect != null)
 				bgEffect.update(st.len, battleHeight, midH);
 
-			ubase.preUpdate();
-			ubase.update();
+			// ubase.update();
+			// ubase.update2();
+
+			if (activeGuard == 0 && est.hasBoss(true, false))
+				activeGuard = 1;
 
 			int allow = st.max - entityCount(1);
 			if (respawnTime <= 0 && active && allow > 0) {
@@ -628,14 +778,23 @@ public class StageBasis extends BattleObj {
 			}
 			if (active) {
 				cannon++;
-				maxMoney = b.t().getMaxMon(work_lv);
-				money += b.t().getMonInc(work_lv) * (b.getInc(C_M_INC) / 100 + 1);
+				int bank = maxBankLimit();
+				if (bank > 0) {
+					maxMoney = bank * 100;
+				} else {
+					maxMoney = b.t().getMaxMon(work_lv, isBanned(C_M_MAX));
+					int mon = b.t().getMonInc(work_lv);
+					if (!isBanned(C_M_INC))
+						mon *= (b.getInc(C_M_INC) / 100 + 1);
+					money += mon;
+				}
 			}
 
 			if (active)
 				est.update();
 
-			canon.update();
+			// Cannon should be updated after entities
+			// canon.update();
 
 			if (sniper != null && active)
 				sniper.update();
@@ -668,6 +827,8 @@ public class StageBasis extends BattleObj {
 			n_inten--;
 		}
 
+		canon.update();
+
 		if (s_stop == 0) {
 			lea.forEach(EAnimCont::update);
 			ebaseSmoke.forEach(EAnimCont::update);
@@ -692,7 +853,7 @@ public class StageBasis extends BattleObj {
 		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();
 
-			if (!lethal && ebase instanceof ECastle && ebase.health <= 0 && est.hasBoss()) {
+			if (!lethal && ebase instanceof ECastle && ebase.health <= 0 && est.hasBoss(false, true)) {
 				lethal = true;
 				ebase.health = 1;
 			}
@@ -738,7 +899,7 @@ public class StageBasis extends BattleObj {
 				}
 			}
 			lea.add(new EAnimCont(700, 9, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
-			lea.sort(Comparator.comparingInt(e -> e.layer));
+			leaSort = true;
 			CommonStatic.setSE(SE_BOSS);
 			shock = false;
 		}
@@ -769,6 +930,10 @@ public class StageBasis extends BattleObj {
 			ubaseSmoke.removeIf(EAnimCont::done);
 		} else {
 			lea.removeIf(content -> content instanceof WaprCont && ((WaprCont) content).timeImmune && content.done());
+		}
+		if (leaSort) {
+			lea.sort(Comparator.comparingInt(e -> e.layer));
+			leaSort = false;
 		}
 		updateTheme();
 		if (s_stop > 0)
@@ -846,14 +1011,30 @@ public class StageBasis extends BattleObj {
 		}
 	}
 
-	private void updateEntities(boolean time) {
-		for (int i = 0; i < le.size(); i++)
-			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
-				le.get(i).preUpdate();
-
+	/*
+	private void updateEntitiesOld(boolean time) {
+		le.sort(Comparator.comparingInt(e -> e.dire));
+		ebase.update();
+		ubase.update();
 		for (int i = 0; i < le.size(); i++)
 			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
 				le.get(i).update();
+		ebase.update2();
+		ubase.update2();
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update2();
+		le.sort(Comparator.comparingInt(e -> e.layer));
+		for (int i = 0; i < tlw.size(); i++)
+			if (time || tlw.get(i).IMUTime())
+	@@ -868,6 +1011,47 @@ private void updateEntities(boolean time) {
+		for (int i = 0; i < lw.size(); i++)
+			if (time || lw.get(i).IMUTime())
+				lw.get(i).update();
+	}
+	 */
+
+	private void updateEntities(boolean time) {
 
 		for (int i = 0; i < tlw.size(); i++)
 			if (time || tlw.get(i).IMUTime())
@@ -862,6 +1043,35 @@ public class StageBasis extends BattleObj {
 		for (int i = 0; i < lw.size(); i++)
 			if (time || lw.get(i).IMUTime())
 				lw.get(i).update();
+
+		le.sort(Comparator.comparingInt(e -> e.dire));
+
+		ebase.update();
+		ubase.update();
+		for (int i = 0; i < le.size(); i++)
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update();
+
+		for (int i = 0; i < le.size(); i++) {
+			if (le.get(i).dire == 1) continue;
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update2();
+		}
+
+		la.forEach(AttackAb::capture);
+		la.forEach(AttackAb::excuse);
+		la.removeIf(a -> a.duration <= 0);
+
+		ebase.update2();
+		ubase.update2();
+		for (int i = 0; i < le.size(); i++) {
+			if (le.get(i).dire == -1) continue;
+			if (time || (le.get(i).getAbi() & AB_TIMEI) != 0)
+				le.get(i).update2();
+		}
+
+		le.sort(Comparator.comparingInt(e -> e.layer));
+
 	}
 
 	private void updateEntitiesAnimation(boolean time) {
@@ -925,5 +1135,42 @@ public class StageBasis extends BattleObj {
 				bgEffect = CommonStatic.getBCAssets().bgEffects.get(newBg.effect);
 		}
 		bg = newBg;
+	}
+
+	public boolean isBanned(byte comboId) {
+		if (st.getCont().stageLimit == null)
+			return false;
+		else
+			return st.getCont().stageLimit.bannedCatCombo.contains((int) comboId);
+	}
+
+	public void checkGuard() {
+		if (activeGuard != 1 || est.hasBoss(true, false))
+			return;
+
+		for (Entity e : le) {
+			if (e instanceof EEnemy && ((EEnemy) e).mark >= 1 && e.anim.dead == -1)
+				return;
+		}
+
+		activeGuard = 0;
+		if (ebase instanceof ECastle)
+			((ECastle) ebase).guardBreak();
+		else
+			((EEnemy) ebase).anim.getEff(Data.GUARD_BREAK);
+	}
+
+	public int maxBankLimit() {
+		if (st.getCont().stageLimit == null)
+			return 0;
+		else
+			return st.getCont().stageLimit.maxMoney;
+	}
+
+	public int globalCdLimit() {
+		if (st.getCont().stageLimit == null)
+			return 0;
+		else
+			return st.getCont().stageLimit.globalCooldown;
 	}
 }

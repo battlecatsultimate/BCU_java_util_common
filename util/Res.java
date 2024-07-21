@@ -58,7 +58,7 @@ public class Res extends ImgCore {
 		FakeImage[] input = new FakeImage[val.length + 1];
 		for (int i = 0; i < val.length; i++)
 			input[i] = aux.num[enable ? 3 : 4][val[i]].getImg();
-		input[input.length - 1] = aux.moneySign[enable ? 2 : 3][decideLocale()].getImg();
+		input[input.length - 1] = aux.moneySign[enable ? 2 : 3][decideLocale().ordinal()].getImg();
 		return coor.draw(input);
 	}
 
@@ -72,7 +72,7 @@ public class Res extends ImgCore {
 		input[val0.length] = aux.num[0][10].getImg();
 		for (int i = 0; i < val1.length; i++)
 			input[val0.length + i + 1] = aux.num[0][val1[i]].getImg();
-		input[input.length - 1] = aux.moneySign[0][decideLocale()].getImg();
+		input[input.length - 1] = aux.moneySign[0][decideLocale().ordinal()].getImg();
 
 		return sym.draw(input);
 	}
@@ -408,14 +408,14 @@ public class Res extends ImgCore {
 		return new VImg(fimg);
 	}
 
-	public static int decideLocale() {
+	public static CommonStatic.Lang.Locale decideLocale() {
 		switch (CommonStatic.getConfig().lang) {
-			case 1:
-			case 2:
-			case 3:
+			case EN:
+			case KR:
+			case JP:
 				return CommonStatic.getConfig().lang;
 			default:
-				return 0;
+				return CommonStatic.Lang.Locale.EN;
 		}
 	}
 }

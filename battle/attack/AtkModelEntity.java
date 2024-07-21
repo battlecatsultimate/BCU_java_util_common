@@ -4,17 +4,13 @@ import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
 import common.battle.data.MaskEntity;
 import common.battle.data.PCoin;
-import common.battle.entity.EAnimCont;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EUnit;
 import common.battle.entity.Entity;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.Data.Proc.SUMMON;
-import common.util.pack.EffAnim.DefEff;
 import common.util.unit.Level;
-
-import java.util.Comparator;
 
 public abstract class AtkModelEntity extends AtkModelAb {
 
@@ -55,7 +51,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
-			atks[i] = atks[i];
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
@@ -80,11 +75,12 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
+			double com = ent.basis.isBanned(Data.C_ATK) ? 1.0 : (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01);
 
 			if (pc != null && lv != null && lv.getTalents().length == pc.max.length)
-				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getTalents()) * atks[i]) * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
+				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getTalents()) * atks[i]) * com);
 			else
-				atks[i] = (int) Math.round(atks[i] * (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01));
+				atks[i] = (int) Math.round(atks[i] * com);
 			abis[i] = raw[i][2];
 			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
@@ -295,10 +291,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc.KB.dis = KB_DIS[INT_KB];
 		if (proc.KB.exists() && proc.KB.time == 0)
 			proc.KB.time = KB_TIME[INT_KB];
-		if (proc.BOSS.exists()) {
-			b.lea.add(new EAnimCont(e.pos, e.layer, effas().A_SHOCKWAVE.getEAnim(DefEff.DEF)));
-			b.lea.sort(Comparator.comparingInt(e -> e.layer));
-		}
 		if (proc.MINIWAVE.exists() && proc.MINIWAVE.multi == 0)
 			proc.MINIWAVE.multi = 20;
 		if (proc.MINIVOLC.exists() && proc.MINIVOLC.mult == 0)

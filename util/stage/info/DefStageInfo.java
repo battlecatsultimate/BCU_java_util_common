@@ -2,9 +2,6 @@ package common.util.stage.info;
 
 import common.CommonStatic;
 import common.pack.Identifier;
-import common.util.Data;
-import common.util.lang.MultiLangCont;
-import common.util.stage.MapColc;
 import common.util.stage.Music;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
@@ -43,8 +40,10 @@ public class DefStageInfo implements StageInfo {
         energy = data[0];
         xp = data[1];
         s.mus0 = Identifier.parseInt(data[2], Music.class);
-        s.mush = data[3];
-        s.mus1 = Identifier.parseInt(data[4], Music.class);
+        if (data[3] != 0 && data[3] != 100) {
+            s.mush = data[3];
+            s.mus1 = Identifier.parseInt(data[4], Music.class);
+        }
 
         once = data[data.length - 1];
         boolean isTime = data.length > 15;
@@ -92,114 +91,7 @@ public class DefStageInfo implements StageInfo {
     }
 
     @Override
-    public String getHTML() {
-        StringBuilder ans = new StringBuilder("<html>energy cost: " + energy + "<br> xp: " + xp);
-
-        ans.append("<br> Will be hidden upon full clear : ")
-                .append(st.getCont().info.hiddenUponClear);
-
-        if (st.getCont().info.resetMode != -1) {
-            switch (st.getCont().info.resetMode) {
-                case 1:
-                    ans.append("<br> This map's reward will get reset upon each appearance");
-                    break;
-                case 2:
-                    ans.append("<br> This map's clear status will be reset upon each appearance");
-                    break;
-                case 3:
-                    ans.append("<br> This map's number of plays can be done will be reset upon each appearance");
-                    break;
-                default:
-                    ans.append("<br> Reset mode flag ")
-                            .append(st.getCont().info.resetMode);
-            }
-        }
-
-        if (st.getCont().info.waitTime != -1) {
-            ans.append("<br> You have to wait for ")
-                    .append(st.getCont().info.waitTime)
-                    .append(" minute(s) to play this stage");
-        }
-
-        if (st.getCont().info.clearLimit != -1) {
-            ans.append("<br> number that you can play this stage : ")
-                    .append(st.getCont().info.clearLimit);
-        }
-
-        if (st.getCont().info.cantUseGoldCPU) {
-            ans.append("<br> You can't use gold CPU in this stage");
-        }
-
-        ans.append("<br><br> EX stage existing : ")
-                .append(exConnection || (exStages != null && exChances != null));
-
-        if (exConnection) {
-            ans.append("<br> EX stage appearance chance : ")
-                    .append(exChance)
-                    .append("%<br> EX Map Name : ")
-                    .append(MultiLangCont.get(MapColc.get("000004").maps.get(exMapID)))
-                    .append("<br> EX Stage ID Min : ")
-                    .append(Data.duo(exStageIDMin))
-                    .append("<bR> EX Stage ID Max : ")
-                    .append(Data.duo(exStageIDMax))
-                    .append("<br>");
-        }
-
-        if (exStages != null && exChances != null) {
-            ans.append("<table><tr><th>EX Stage Name</th><th>Chance</th></tr>");
-
-            for (int i = 0; i < exStages.length; i++) {
-                if (exStages[i] == null)
-                    continue;
-
-                String name = MultiLangCont.get(exStages[i]);
-                String smName = MultiLangCont.get(exStages[i].getCont());
-
-                if (name == null || name.isEmpty())
-                    name = exStages[i].id.toString();
-                else if (smName == null || smName.isEmpty()) {
-                    smName = exStages[i].getCont().id.toString();
-
-                    name = smName + " - " + name;
-                } else {
-                    name = smName + " - " + name;
-                }
-
-                ans.append("<tr><td>")
-                        .append(name)
-                        .append("</td><td>")
-                        .append(df.format(exChances[i]))
-                        .append("%</td></tr>");
-            }
-
-            ans.append("</table>");
-        }
-
-        if (!exConnection && (exStages == null || exChances == null)) {
-            ans.append("<br>");
-        }
-
-        ans.append("<br> drop rewards");
-
-        if(drop == null || drop.length == 0) {
-            ans.append(" : none");
-        } else {
-            ans.append("<br>");
-            appendDropData(ans);
-        }
-
-        if (time.length > 0) {
-            ans.append("<br> time scores: count: ").append(time.length).append("<br>");
-            ans.append("<table><tr><th>score</th><th>item name</th><th>number</th></tr>");
-            for (int[] tm : time)
-                ans.append("<tr><td>").append(tm[0]).append("</td><td>").append(MultiLangCont.getStageDrop(tm[1])).append("</td><td>").append(tm[2]).append("</td><tr>");
-            ans.append("</table>");
-        }
-        return ans.toString();
-    }
-
-    @Override
-    public boolean exConnection() {
+    public boolean hasExConnection() {
         return exConnection;
     }
 
@@ -215,60 +107,52 @@ public class DefStageInfo implements StageInfo {
         return exChances;
     }
 
-    private void appendDropData(StringBuilder ans) {
-        if (drop == null || drop.length == 0) {
-            ans.append("none");
-            return;
-        }
-
-        List<String> chances = analyzeRewardChance();
-
-        if(chances == null) {
-            ans.append("none");
-            return;
-        }
-
-        if(chances.isEmpty()) {
-            ans.append("<table><tr><th>No.</th><th>item name</th><th>amount</th></tr>");
-        } else {
-            ans.append("<table><tr><th>chance</th><th>item name</th><th>amount</th></tr>");
-        }
-
-        for(int i = 0; i < drop.length; i++) {
-            if(!chances.isEmpty() && i < chances.size() && Double.parseDouble(chances.get(i)) == 0.0)
-                continue;
-
-            String chance;
-
-            if(chances.isEmpty())
-                chance = String.valueOf(i + 1);
-            else
-                chance = chances.get(i) + "%";
-
-            String reward = MultiLangCont.getServerDrop(drop[i][1]);
-
-            if(reward == null || reward.isEmpty())
-                reward = "Reward " + drop[i][1];
-
-            if(i == 0 && (rand == 1 || (drop[i][1] >= 1000 && drop[i][1] < 30000)))
-                reward += " (Once)";
-
-            if(i == 0 && drop[i][0] != 100 && rand != -4)
-                reward += " [Treasure Radar]";
-
-            ans.append("<tr><td>")
-                    .append(chance)
-                    .append("</td><td>")
-                    .append(reward)
-                    .append("</td><td>")
-                    .append(drop[i][2])
-                    .append("</td></tr>");
-        }
-
-        ans.append("</table>");
+    @Override
+    public int getExChance() {
+        return exChance;
     }
 
-    private List<String> analyzeRewardChance() {
+    @Override
+    public int getExMapId() {
+        return exMapID;
+    }
+
+    @Override
+    public int getExStageIdMin() {
+        return exStageIDMin;
+    }
+
+    @Override
+    public int getExStageIdMax() {
+        return exStageIDMax;
+    }
+
+    @Override
+    public Stage getStage() {
+        return st;
+    }
+
+    @Override
+    public int getEnergy() {
+        return energy;
+    }
+
+    @Override
+    public int getXp() {
+        return xp;
+    }
+
+    @Override
+    public int[][] getDrop() {
+        return drop;
+    }
+
+    @Override
+    public int[][] getTime() {
+        return time;
+    }
+
+    public List<String> analyzeRewardChance() {
         ArrayList<String> res = new ArrayList<>();
 
         int sum = 0;

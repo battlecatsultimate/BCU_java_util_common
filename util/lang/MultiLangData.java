@@ -11,8 +11,8 @@ import java.util.LinkedHashMap;
 
 @JsonClass(read = JsonClass.RType.FILL)
 public class MultiLangData extends Data {
-    @JsonField(generic = {Integer.class, String.class})
-    private final LinkedHashMap<Integer, String> dat = new LinkedHashMap<>();
+    @JsonField(generic = {Lang.Locale.class, String.class})
+    private final LinkedHashMap<Lang.Locale, String> dat = new LinkedHashMap<>();
 
     @JsonClass.JCConstructor
     public MultiLangData() {
@@ -23,9 +23,9 @@ public class MultiLangData extends Data {
     }
 
     public void put(String data) {
-        int lang = lang();
+        Lang.Locale lang = lang();
 
-        if (data != null && data.length() > 0)
+        if (data != null && !data.isEmpty())
             dat.put(lang, data);
         else
             dat.remove(lang);
@@ -37,7 +37,7 @@ public class MultiLangData extends Data {
     @NotNull
     @Override
     public String toString() {
-        int lang = lang();
+        Lang.Locale lang = lang();
 
         if (dat.containsKey(lang)) {
             String temp = dat.get(lang);
@@ -46,16 +46,20 @@ public class MultiLangData extends Data {
                 return temp;
         }
 
-        for (int i = 1; i < Lang.LOC_CODE.length; i++) {
-            if (i < Lang.pref[lang].length) {
-                if (dat.containsKey(Lang.pref[lang][i])) {
-                    String temp = dat.get(Lang.pref[lang][i]);
+        Lang.Locale[] locales = Lang.Locale.values();
+
+        for (int i = 1; i < locales.length; i++) {
+            Lang.Locale[] preferences = Lang.pref[lang.ordinal()];
+
+            if (i < preferences.length) {
+                if (dat.containsKey(preferences[i])) {
+                    String temp = dat.get(preferences[i]);
 
                     if (temp != null)
                         return temp;
                 }
-            } else if (dat.containsKey(i)) {
-                String temp = dat.get(i);
+            } else if (dat.containsKey(locales[i])) {
+                String temp = dat.get(locales[i]);
 
                 if(temp != null)
                     return temp;
@@ -64,37 +68,41 @@ public class MultiLangData extends Data {
         return "";
     }
 
-    public int getGrabbedLocale() {
-        int lang = lang();
+    public Lang.Locale getGrabbedLocale() {
+        Lang.Locale lang = lang();
 
-        for (int i = 1; i < Lang.LOC_CODE.length; i++) {
-            if (i < Lang.pref[lang].length) {
-                if (dat.containsKey(Lang.pref[lang][i])) {
-                    String temp = dat.get(Lang.pref[lang][i]);
+        Lang.Locale[] locales = Lang.Locale.values();
+
+        for (int i = 1; i < Lang.Locale.values().length; i++) {
+            Lang.Locale[] preferences = Lang.pref[lang.ordinal()];
+
+            if (i < preferences.length) {
+                if (dat.containsKey(preferences[i])) {
+                    String temp = dat.get(preferences[i]);
 
                     if (temp != null)
-                        return Lang.pref[lang][i];
+                        return preferences[i];
                 }
-            } else if (dat.containsKey(i)) {
-                String temp = dat.get(i);
+            } else if (dat.containsKey(locales[i])) {
+                String temp = dat.get(locales[i]);
 
                 if(temp != null)
-                    return i;
+                    return locales[i];
             }
         }
 
-        return -1;
+        return Lang.Locale.EN;
     }
 
-    private static int lang() {
+    private static Lang.Locale lang() {
         return CommonStatic.getConfig().lang;
     }
 
     public MultiLangData copy() { //Makes a copy of this MultiLangData object
         MultiLangData ans = new MultiLangData();
-        for (int lang : dat.keySet())
+        for (Lang.Locale lang : dat.keySet())
             ans.dat.put(lang, dat.get(lang));
 
         return ans;
-    };
+    }
 }

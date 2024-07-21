@@ -13,7 +13,7 @@ import java.util.List;
 @JsonClass.JCGeneric(ResourceLocation.class)
 public class AnimCI extends AnimU<AnimCI.AnimCIKeeper> {
 
-	protected static class AnimCIKeeper implements AnimU.ImageKeeper {
+	public static class AnimCIKeeper implements AnimU.ImageKeeper {
 
 		public final Source.AnimLoader loader;
 		private FakeImage num;
