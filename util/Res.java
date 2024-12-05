@@ -177,6 +177,8 @@ public class Res extends ImgCore {
 		aux.icon[2][ATK_OMNI] = new VImg(parts[112]);
 		aux.icon[1][P_IMUCURSE] = new VImg(parts[116]);
 		aux.icon[1][P_WEAK] = new VImg(parts[195]);
+		aux.icon[1][P_TBACHANGE] = new VImg("./org/page/icons/Lethargy.png");
+		aux.icon[1][P_IMUTBA] = new VImg("./org/page/icons/LethargyX.png");
 		aux.icon[1][P_STRONG] = new VImg(parts[196]);
 		aux.icon[1][P_STOP] = new VImg(parts[197]);
 		aux.icon[1][P_SLOW] = new VImg(parts[198]);

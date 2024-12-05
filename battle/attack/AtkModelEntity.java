@@ -267,7 +267,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		String[] par = {
 				"CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
 				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "MINIWAVE", "SHIELDBREAK",
-				"MINIVOLC", "METALKILL"
+				"MINIVOLC", "METALKILL", "TBACHANGE"
 		};
 
 		for (String s0 : par)
@@ -295,6 +295,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc.MINIWAVE.multi = 20;
 		if (proc.MINIVOLC.exists() && proc.MINIVOLC.mult == 0)
 			proc.MINIVOLC.mult = 20;
+		if (proc.TBACHANGE.exists() && (proc.TBACHANGE.mult < 0 || proc.TBACHANGE.mult == 100))
+			proc.TBACHANGE.mult = 200;
 	}
 
 	protected abstract void summon(SUMMON sprc, Entity ent, Object acs, int resist);

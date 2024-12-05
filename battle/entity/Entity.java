@@ -23,6 +23,7 @@ import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import kotlin.math.UMathKt;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -269,6 +270,11 @@ public abstract class Entity extends AbEntity {
 					int id = dire == -1 ? A_WEAK_UP : A_E_WEAK_UP;
 					effs[id] = (dire == -1 ? effas().A_WEAK_UP : effas().A_E_WEAK_UP).getEAnim(WeakUpEff.UP);
 				}
+			} else if (t == P_TBACHANGE) {
+				int id = dire == -1 ? A_TBACHANGE : A_E_TBACHANGE;
+				EffAnim<TbaEff> eff = dire == -1 ? effas().A_TBACHANGE : effas().A_E_TBACHANGE;
+				TbaEff index = status[P_TBACHANGE][1] > 100 ? TbaEff.DEBUFF : TbaEff.BUFF;
+				effs[id] = eff.getEAnim(index);
 			} else if (t == P_CURSE) {
 				int id = dire == -1 ? A_CURSE : A_E_CURSE;
 				effs[id] = (dire == -1 ? effas().A_CURSE : effas().A_E_CURSE).getEAnim(DefEff.DEF);
@@ -437,6 +443,10 @@ public abstract class Entity extends AbEntity {
 					id = dire == -1 ? A_WEAK_UP : A_E_WEAK_UP;
 				}
 
+				effs[id] = null;
+			}
+			if (status[P_TBACHANGE][0] == 0) {
+				byte id = dire == -1 ? A_TBACHANGE : A_E_TBACHANGE;
 				effs[id] = null;
 			}
 			if (status[P_CURSE][0] == 0) {
@@ -760,7 +770,12 @@ public abstract class Entity extends AbEntity {
 						preTime = pres[preID];
 					} else {
 						attacksLeft--;
-						e.waitTime = Math.max(e.data.getTBA(), 0);
+						// lethargy handling
+						if (e.status[P_TBACHANGE][0] > 0) {
+							e.waitTime = (int) Math.max(Math.floor(e.data.getTBA() * (e.status[P_TBACHANGE][1] / 100f)), e.status[P_TBACHANGE][2]);
+						} else {
+							e.waitTime = Math.max(e.data.getTBA(), 0);
+						}
 					}
 				}
 			}
@@ -1872,6 +1887,29 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
+		if (atk.getProc().TBACHANGE.time != 0 || atk.getProc().TBACHANGE.prob > 0) {
+			int val = (int) (atk.getProc().TBACHANGE.time * time);
+			float rst = getResistValue(atk, "IMUTBA", getProc().IMUTBA.mult);
+
+			if (rst > 0f) {
+				val = (int) (val * rst);
+
+				boolean isNew = (status[P_TBACHANGE][0] <= 0);
+
+				if (val < 0)
+					status[P_TBACHANGE][0] = Math.max(status[P_TBACHANGE][0], Math.abs(val));
+				else
+					status[P_TBACHANGE][0] = val;
+				status[P_TBACHANGE][1] = atk.getProc().TBACHANGE.mult;
+				status[P_TBACHANGE][2] = atk.getProc().TBACHANGE.minimum;
+				if (isNew)
+					waitTime = (int) Math.floor(waitTime * (status[P_TBACHANGE][1] / 100f)); // stop exponentialness
+
+				anim.getEff(P_TBACHANGE);
+			} else
+				anim.getEff(INV);
+		}
+
 		if (atk.getProc().WEAK.time > 0) {
 			int val = (int) (atk.getProc().WEAK.time * time);
 
@@ -2553,6 +2591,12 @@ public abstract class Entity extends AbEntity {
 			status[P_STOP][0]--;
 		if (status[P_SLOW][0] > 0)
 			status[P_SLOW][0]--;
+		if (status[P_TBACHANGE][0] > 0) {
+			status[P_TBACHANGE][0]--;
+			if (status[P_TBACHANGE][0] == 0) {
+				waitTime = Math.min(data.getTBA(),waitTime);
+			}
+		}
 		if (status[P_CURSE][0] > 0)
 			status[P_CURSE][0]--;
 		if (status[P_SEAL][0] > 0)

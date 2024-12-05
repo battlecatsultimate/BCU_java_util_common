@@ -157,6 +157,30 @@
             }
         }
     },
+    "TBACHANGE": {
+        "abbr_name": "lethargy",
+        "full_name": "Lethargy",
+        "tooltip": "Affects TBA of afflicted units",
+        "format": "(prob)% chance to [(mult<100&mult>0){reduce}(mult>100){increase}(mult==0){set}] TBA to [(mult==0){(_dispTime(minimum))}(mult>0){(mult)% for (_dispTime(time))[(minimum>0){ with a minimum TBA of (_dispTime(minimum))}]}]",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "percent",
+                "tooltip": "Percentage to change TBA by"
+            },
+            "minimum": {
+                "name": "min. TBA",
+                "tooltip": "Minimum TBA of afflicted units. Useful for those units that have 0 TBA."
+            }
+        }
+    },
     "CURSE": {
         "abbr_name": "curse",
         "full_name": "Curse",
@@ -894,6 +918,25 @@
             "mult": {
                 "name": "percent",
                 "tooltip": "Set negative to make this unit weak to the effect."
+            }
+        }
+    },
+    "IMUTBA": {
+        "abbr_name": "imu. Lethargy",
+        "full_name": "Immune/Resistant to Lethargy",
+        "tooltip": null,
+        "format": ["[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Lethargy",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){Lethargy [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Set negative to make this unit weak to the effect"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block lethargy. Set negative to increase the effect."
             }
         }
     },

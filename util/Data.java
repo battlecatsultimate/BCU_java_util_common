@@ -383,6 +383,17 @@ public class Data {
 			@Order(1)
 			public int time;
 		}
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class PTM extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int mult;
+			@Order(3)
+			public int minimum;
+		}
 
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class PTD extends ProcItem {
@@ -841,6 +852,10 @@ public class Data {
 		public final SPIRIT SPIRIT = new SPIRIT();
 		@Order(57)
 		public final MULT METALKILL = new MULT();
+		@Order(58)
+		public final PTM TBACHANGE = new PTM();
+		@Order(59)
+		public final IMU IMUTBA = new IMU();
 
 		@Override
 		public Proc clone() {
@@ -1211,7 +1226,9 @@ public class Data {
 	public static final int P_MINIVOLC = 55;
 	public static final int P_SPIRIT = 56;
 	public static final int P_METALKILL = 57;
-	public static final byte PROC_TOT = 58;
+	public static final int P_TBACHANGE = 58;
+	public static final int P_IMUTBA = 59;
+	public static final byte PROC_TOT = 60;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1272,7 +1289,9 @@ public class Data {
 			true, //beast hunter
 			false, //mini surge
 			true, //spirit summon
-			false //metal killer
+			false, //metal killer
+			false, //lethargy
+			true // imu.lethargy
 	};
 
 	/**
@@ -1284,7 +1303,7 @@ public class Data {
 	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
 	 */
 	public static final byte[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_TBACHANGE
 	};
 
 	public static final byte WT_WAVE = 1;
@@ -1493,7 +1512,11 @@ public class Data {
 	public static final byte A_E_DMGCAP = 65;
 	public static final byte A_E_GREEN_GUARD = 66;
 	public static final byte[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final byte A_TOT = 67;
+	public static final byte A_TBACHANGE = 67;
+	public static final byte A_E_TBACHANGE = 68;
+	public static final byte A_TBACHANGE_UP = 69;
+	public static final byte A_E_TBACHANGE_UP = 70;
+	public static final byte A_TOT = 71;
 
 	// atk type index used in filter page
 	public static final byte ATK_SINGLE = 0;

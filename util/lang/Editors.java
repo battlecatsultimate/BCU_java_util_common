@@ -263,6 +263,17 @@ public class Editors {
 			else if (t.time == 0)
 				t.time = 1;
 		});
+		EditControl<Proc.PTM> ptm = new EditControl<>(Proc.PTM.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0)
+				t.time = 0;
+			else if (t.time == 0)
+				t.time = 1;
+			if (t.mult < 0 || t.mult == 100)
+				t.mult = 200;
+			if (t.minimum < 0)
+				t.minimum = 200;
+		});
 
 		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
 			t.mult = Math.min(t.mult, 100);
@@ -320,6 +331,8 @@ public class Editors {
 				t.time = Math.max(t.time, 1);
 			}
 		}));
+
+		map().put("TBACHANGE", ptm);
 
 		map().put("BREAK", prob);
 
@@ -599,6 +612,8 @@ public class Editors {
 		map().put("IMUSTOP", imu);
 
 		map().put("IMUSLOW", imu);
+
+		map().put("IMUTBA", imu);
 
 		map().put("IMUWAVE", wavei);
 

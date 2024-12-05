@@ -107,6 +107,14 @@ public abstract class AttackAb extends BattleObj {
 					else
 						proc.SLOW.time *= (100 - imus.IMUSLOW.block) / 100.0;
 				}
+				if (proc.TBACHANGE.time > 0 && imus.IMUTBA.block != 0) {
+					if (imus.IMUTBA.block > 0)
+						blocked = true;
+					if (imus.IMUTBA.block == 100)
+						proc.TBACHANGE.clear();
+					else
+						proc.TBACHANGE.time *= (100 - imus.IMUTBA.block) / 100.0;
+				}
 				if (proc.STOP.time > 0 && imus.IMUSTOP.block != 0) {
 					if (imus.IMUSTOP.block > 0)
 						blocked = true;

@@ -153,7 +153,7 @@ public class ContVolcano extends ContAb {
 				}
 			performed[1] = performed[3] = true;
 		}
-		String[] cursep = {"KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "POIATK", "ARMOR", "SPEED", "DMGCUT", "DMGCAP"};
+		String[] cursep = {"KB", "STOP", "SLOW", "WEAK", "WARP", "CURSE", "SNIPER", "SEAL", "POISON", "BOSS", "POIATK", "ARMOR", "SPEED", "DMGCUT", "DMGCAP", "TBACHANGE"};
 		if (v.attacker.status[P_CURSE][0] > 0 || v.attacker.status[P_SEAL][0] > 0 && performed[2]) {
 			performed[2] = false;
 			for (String s : cursep)
