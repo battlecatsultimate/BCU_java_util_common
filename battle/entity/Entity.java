@@ -2442,7 +2442,7 @@ public abstract class Entity extends AbEntity {
 				}
 			}
 
-			if (status[P_SPEEDUP][0] > 0) {
+			if (status[P_SPEEDUP][0] != 0) {
 				mov *= status[P_SPEEDUP][0] / 100f;
 				mov = (float) Math.round(mov * 4f) / 4f;
 			}
