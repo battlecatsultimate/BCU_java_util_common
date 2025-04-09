@@ -193,7 +193,7 @@
         "abbr_name": "inc. spd",
         "full_name": "Adrenaline",
         "tooltip": null,
-        "format": "Speed [(mult>=100){increased}(mult<100){decreased}] to (mult)% after health drops below (health)%",
+        "format": "Speed [(mult>0){increased}(mult<0){decreased}] by [(mult>0){(mult)}(mult<0){(mult*-1)}]% after health drops below (health)%",
         "class": {
             "health": {
                 "name": "health",
