@@ -335,7 +335,7 @@ public abstract class Source {
 
 			CommonStatic.ctx.noticeErr(
 					() -> Context.delete(CommonStatic.ctx.getWorkspaceFile("./" + id.pack + "/" + id.base + "/" + id.id)),
-					ErrType.ERROR, "failed to delete animation: " + id);
+					ErrType.WARN, "failed to delete/rename animation: " + id + ", duplicates may appear");
 		}
 
 		public void saveAll() {
