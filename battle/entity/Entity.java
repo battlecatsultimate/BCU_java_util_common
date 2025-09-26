@@ -2142,7 +2142,7 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/**
-	 * update the entity after receiving attacks 
+	 * update the entity after receiving attacks
 	 */
 	@Override
 	public void postUpdate() {
