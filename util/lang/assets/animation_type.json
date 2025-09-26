@@ -83,5 +83,9 @@
         "START": "Start",
         "EXPLODE": "Explode",
         "DUMMY": "Dummy"
+    },
+    "BoneEff": {
+        "BUFF": "parry",
+        "DEBUFF": "bonecrush"
     }
 }

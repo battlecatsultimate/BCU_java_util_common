@@ -43,6 +43,7 @@ public class AnimTypeLocale {
 		Collections.addAll(TYPES, EffAnim.DmgCap.values());
 		Collections.addAll(TYPES, EffAnim.GuardEff.values());
 		Collections.addAll(TYPES, EffAnim.BlastEff.values());
+		Collections.addAll(TYPES, EffAnim.BoneEff.values());
 	}
 
 	public static void read() {

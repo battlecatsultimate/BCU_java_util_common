@@ -34,7 +34,6 @@ public class Data {
 			@Order(2)
 			public int mult;
 		}
-
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class BURROW extends ProcItem {
 			@Order(0)
@@ -227,6 +226,8 @@ public class Data {
 					for (Field f : fs)
 						if (f.getType() == int.class)
 							f.set(this, 0);
+						else if (f.getType() == boolean.class)
+							f.set(this, false);
 						else if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(this, (f.getType().getDeclaredConstructor().newInstance()));
 						else if (f.getType() == Identifier.class)
@@ -473,6 +474,18 @@ public class Data {
 			public int speed;
 			@Order(3)
 			public int type;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class BONECRUSH extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int mult;
+			@Order(3)
+			public boolean single;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -883,13 +896,17 @@ public class Data {
 		public final BLAST BLAST = new BLAST();
 		@Order(61)
 		public final IMU IMUBLAST = new IMU();
-		@Order(61)
-		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
 		@Order(62)
-		public final MULT MONEYBACK = new MULT();
+		public final BONECRUSH BONECRUSH = new BONECRUSH();
 		@Order(63)
-		public final MULT CANONCHARGE = new MULT();
+		public final IMUAD IMUBONE = new IMUAD();
 		@Order(64)
+		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
+		@Order(65)
+		public final MULT MONEYBACK = new MULT();
+		@Order(66)
+		public final MULT CANONCHARGE = new MULT();
+		@Order(67)
 		public final PROB IMUATKANY = new PROB();
 
 		@Override
@@ -1265,7 +1282,9 @@ public class Data {
 	public static final int P_HPREGEN = 59;
 	public static final int P_BLAST = 60;
 	public static final int P_IMUBLAST = 61;
-	public static final byte PROC_TOT = 62;
+	public static final int P_BONECRUSH = 62;
+	public static final int P_IMUBONE = 63;
+	public static final byte PROC_TOT = 64;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1330,7 +1349,9 @@ public class Data {
 			true, //adrenaline
 			true, //hp regen
 			false, //blast
-			true   //imu.blast
+			true,   //imu.blast
+			true,  //mini death surge
+			false   //bone crush
 	};
 
 	/**
@@ -1342,7 +1363,7 @@ public class Data {
 	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
 	 */
 	public static final byte[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_BONECRUSH
 	};
 
 	public static final byte WT_WAVE = 1;
@@ -1553,8 +1574,9 @@ public class Data {
 	public static final byte A_DMGCAP = 64;
 	public static final byte A_E_DMGCAP = 65;
 	public static final byte A_E_GREEN_GUARD = 66;
+	public static final byte A_BONECRUSH = 67;
 	public static final byte[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final byte A_TOT = 67;
+	public static final byte A_TOT = 68;
 
 	// atk type index used in filter page
 	public static final byte ATK_SINGLE = 0;
