@@ -31,6 +31,21 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 	}
 
+	public enum BoneEff implements EffType<BoneEff> {
+		BUFF("buff"), DEBUFF("debuff");
+
+		private final String path;
+
+		BoneEff(String str) {
+			path = str;
+		}
+
+		@Override
+		public String path() {
+			return path;
+		}
+	}
+
 	public enum BarrierEff implements EffType<BarrierEff> {
 		BREAK("_breaker"), DESTR("_destruction"), NONE("");
 
@@ -285,6 +300,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<BlastEff> A_BLAST;
 		@Order(81)
 		public EffAnim<BlastEff> A_E_BLAST;
+		@Order(82)
+		public EffAnim<BoneEff> A_BONECRUSH;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -654,6 +671,13 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		effas.A_DMGCAP.rev = true;
 
 		effas.A_E_DMGCAP = new EffAnim<>(dmgcap, vdmgcap, icdmgcap, DmgCap.values());
+
+		String root = "./org/battle/";
+		String bonecrush = root + "bonecrush/bonecrush";
+		VImg vbonecrush = new VImg(bonecrush+".png");
+		ImgCut icbonecrush = ImgCut.newIns(bonecrush+".imgcut");
+		effas.A_BONECRUSH = new EffAnim<>(bonecrush, vbonecrush, icbonecrush, BoneEff.values());
+		effas.A_BONECRUSH.rev = true;
 	}
 
 	private final VImg vimg;

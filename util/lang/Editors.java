@@ -671,6 +671,8 @@ public class Editors {
 
 		map().put("IMUARMOR", imuad);
 
+		map().put("IMUBONE", imuad);
+
 		map().put("IMUSPEED", imuad);
 
 		map().put("BARRIER", new EditControl<>(Proc.BARRIER.class, (t) -> {
@@ -732,6 +734,15 @@ public class Editors {
 
 		map().put("BLAST", new EditControl<>(Proc.BLAST.class, (t) -> {
 			t.prob = Math.max(0, Math.min(100, t.prob));
+		}));
+
+		map().put("BONECRUSH", new EditControl<>(Proc.BONECRUSH.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.mult = t.time = 0;
+			} else {
+				t.time = Math.max(1, t.time);
+			}
 		}));
 	}
 

@@ -281,6 +281,8 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SPEED] = new VImg("./org/page/icons/Speed.png");
 		aux.icon[1][P_SPEEDUP] = new VImg("./org/page/icons/Speed.png");
 		aux.icon[1][P_HPREGEN] = new VImg("./org/page/icons/Barrier.png");
+		aux.icon[1][P_BONECRUSH] = new VImg("./org/page/icons/BoneCrush.png");
+		aux.icon[1][P_IMUBONE] = new VImg("./org/page/icons/BoneCrushX.png");
 		CommonStatic.getConfig().icon = false;
 	}
 

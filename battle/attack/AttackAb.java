@@ -187,6 +187,14 @@ public abstract class AttackAb extends BattleObj {
 					else
 						proc.ARMOR.time *= (100 - imus.IMUARMOR.block) / 100.0;
 				}
+				if (proc.BONECRUSH.time > 0 && imus.IMUBONE.block != 0 && checkAIImmunity(proc.BONECRUSH.mult, imus.IMUBONE.smartImu, imus.IMUBONE.block < 0)) {
+					if (imus.IMUBONE.block > 0)
+						blocked = true;
+					if (imus.IMUBONE.block == 100)
+						proc.BONECRUSH.clear();
+					else
+						proc.BONECRUSH.time *= (100 - imus.IMUBONE.block) / 100.0;
+				}
 				if (proc.SPEED.time > 0 && imus.IMUSPEED.block != 0) {
 					boolean b;
 					if (proc.SPEED.type != 2)

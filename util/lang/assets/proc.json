@@ -1440,5 +1440,53 @@
                 "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block slow. Set negative to increase the effect."
             }
         }
+    },
+    "BONECRUSH": {
+        "abbr_name": "bone crush",
+        "full_name": "Bone Crush",
+        "tooltip": "Changes damage from attacks that cause hitbacks",
+        "format": "(prob)% chance to inflict [(mult<0){parry}(mult>0){bone crush}], changing damage by (mult)% for (_dispTime(time))[(single){, only triggers once}]",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": ""
+            },
+            "mult": {
+                "name": "percent",
+                "tooltip": "Damage multiplier, -50% means half damage from hb, 100% means double"
+            },
+            "single": {
+                "name": "only trigger once",
+                "tooltip": "When on, the proc is removed after it triggers once"
+            }
+        }
+    },
+    "IMUBONE": {
+        "abbr_name": "Imu. BoneCrush",
+        "full_name": "Immune/Resistant to Bone Crush",
+        "tooltip": null,
+        "format": ["[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Bone Crush",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){Bone Crush [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){. Only affects [(smartImu>0){bone crush}(smartImu<0){parry}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Set negative to make this unit weak to the effect"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block bone crush. Set negative to increase the effect."
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to debuffs, -1 = Only resistant to buffs"
+            }
+        }
     }
 }

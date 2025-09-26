@@ -414,6 +414,11 @@ public abstract class Entity extends AbEntity {
 				EffAnim<GuardEff> eff = effas().A_E_GUARD;
 				effs[id] = eff.getEAnim(GuardEff.BREAK);
 				CommonStatic.setSE(SE_BARRIER_ABI);
+			} else if (t == P_BONECRUSH) {
+				int id = A_BONECRUSH;
+				EffAnim<BoneEff> eff = effas().A_BONECRUSH;
+				BoneEff index = status[P_BONECRUSH][1] >= 0 ? BoneEff.DEBUFF : BoneEff.BUFF;
+				effs[id] = eff.getEAnim(index);
 			}
 		}
 
@@ -484,6 +489,11 @@ public abstract class Entity extends AbEntity {
 
 			if (status[P_ARMOR][0] == 0) {
 				byte id = dire == -1 ? A_ARMOR : A_E_ARMOR;
+				effs[id] = null;
+			}
+
+			if (status[P_BONECRUSH][0] == 0) {
+				byte id = A_BONECRUSH;
 				effs[id] = null;
 			}
 
@@ -2014,6 +2024,20 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 		}
 
+		if (!isBase && atk.getProc().BONECRUSH.time > 0) {
+			int res = checkAIImmunity(atk.getProc().BONECRUSH.mult, getProc().IMUBONE.smartImu, getProc().IMUBONE.mult < 0) ? getProc().IMUBONE.mult : 0;
+
+			if (res < 100) {
+				int val = (int) (atk.getProc().BONECRUSH.time * time);
+				status[P_BONECRUSH][0] = val * (100 - res) / 100;
+				status[P_BONECRUSH][1] = atk.getProc().BONECRUSH.mult;
+				status[P_BONECRUSH][2] = atk.getProc().BONECRUSH.single ? 1 : 0;
+
+				anim.getEff(P_BONECRUSH);
+			} else
+				anim.getEff(INV);
+		}
+
 		if (atk.getProc().SPEED.time > 0) {
 			int res = getProc().IMUSPEED.mult;
 			int speed = data.getSpeed();
@@ -2131,8 +2155,17 @@ public abstract class Entity extends AbEntity {
 		if (status[P_ARMOR][0] > 0) {
 			damage = (long) (damage * (100 + status[P_ARMOR][1]) / 100.0);
 		}
-		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))
-			interrupt(INT_HB, KB_DIS[INT_HB]);
+		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage)) {
+			if (status[P_BONECRUSH][0] > 0) {
+				damage = (long) (damage * (100 + status[P_BONECRUSH][1]) / 100.0);
+				if (status[P_BONECRUSH][2] == 1) {
+					status[P_BONECRUSH][0] = 0;
+				}
+			}
+			if (damage != 0) {
+				interrupt(INT_HB, KB_DIS[INT_HB]);
+			}
+		}
 		if (damage > 0 && isBase && basis.activeGuard == 1) {
 			anim.getEff(GUARD_HOLD);
 		} else {
@@ -2633,6 +2666,8 @@ public abstract class Entity extends AbEntity {
 			status[P_ARMOR][0]--;
 		if (status[P_SPEED][0] > 0)
 			status[P_SPEED][0]--;
+		if (status[P_BONECRUSH][0] > 0)
+			status[P_BONECRUSH][0]--;
 		if (status[P_BSTHUNT][0] > 0)
 			status[P_BSTHUNT][0]--;
 		// update tokens
