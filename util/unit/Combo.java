@@ -67,7 +67,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
             if (strs.length < 5)
                 continue;
 
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < Math.min(strs.length, 6); j++) {
                 aux.values[i][j] = Integer.parseInt(strs[j]);
             }
         }

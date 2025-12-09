@@ -1483,7 +1483,10 @@ public class Data {
 	public static final byte C_RESP = 11;
 	public static final byte C_MEAR = 12;
 	public static final byte C_XP = 13;// abandoned
-	public static final byte C_TOT = 25;
+    public static final byte C_VKILL = 25;
+    public static final byte C_IMUWAVE = 26;
+    public static final byte C_DISCOUNT = 27;
+	public static final byte C_TOT = 28;
 
 	// Effects Anim index
 	public static final byte A_KB = 29;

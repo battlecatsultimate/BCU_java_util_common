@@ -75,7 +75,7 @@ public class CommonStatic {
 		// EffAnim
 		public final EffAnimStore effas = new EffAnimStore();
 
-		public final int[][] values = new int[Data.C_TOT][5];
+		public final int[][] values = new int[Data.C_TOT][6];
 		public int[][] filter;
 
 		public final VImg[] rarity = new VImg[6];
