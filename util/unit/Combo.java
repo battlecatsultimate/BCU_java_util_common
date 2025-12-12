@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -126,7 +127,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         int characterGroupID = Integer.parseInt(strs[2]);
 
         if (characterGroupID != -1) {
-            CharaGroup g = UserProfile.getBCData().groups.get(characterGroupID);
+            CharaGroup g = UserProfile.getBCData().groups.getRaw(characterGroupID);
 
             if (g != null) {
                 group = g;

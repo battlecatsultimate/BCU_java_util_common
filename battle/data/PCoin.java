@@ -25,7 +25,10 @@ public class PCoin extends Data {
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/data/SkillAcquisition.csv");
 
-		qs.poll();
+        if (qs == null)
+            return;
+
+        qs.poll();
 
 		for (String str : qs) {
 			String[] strs = str.trim().split(",");
@@ -47,7 +50,8 @@ public class PCoin extends Data {
 	public MaskUnit full = null;
 	@JsonField(generic = Trait.class, alias = Identifier.class)
 	public ArrayList<Trait> trait = new ArrayList<>();
-    public int traitActivator = -1;
+    @JsonField(generic = Integer.class)
+    public ArrayList<Integer> traitActivator = new ArrayList<>();
 
 	@JsonField(block = true)
 	public int[] max;
@@ -72,11 +76,7 @@ public class PCoin extends Data {
 				}
 
                 if (data[12] != -1) {
-                    if (traitActivator != -1) {
-                        System.out.println("W/PCoin::init - traitActivator is non -1 while another trait activator index has been found : " + traitActivator + " & " + i);
-                    }
-
-                    traitActivator = i;
+                    traitActivator.add(i);
                 }
 
                 info.add(data);
@@ -111,11 +111,7 @@ public class PCoin extends Data {
 				}
 
                 if (data[12] != -1) {
-                    if (traitActivator != -1) {
-                        System.out.println("W/PCoin::init - traitActivator is non -1 while another trait activator index has been found : " + traitActivator + " & " + i);
-                    }
-
-                    traitActivator = i;
+                    traitActivator.add(i);
                 }
 
 				info.add(data);
