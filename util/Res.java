@@ -179,6 +179,7 @@ public class Res extends ImgCore {
 		aux.icon[3][TRAIT_WHITE] = new VImg(parts[86]);
 		aux.icon[3][TRAIT_BEAST] = new VImg("./org/page/icons/Beast.png");
 		aux.icon[3][TRAIT_SAGE] = new VImg("./org/page/icons/SuperSage.png");
+        aux.icon[3][TRAIT_VILLAIN] = new VImg(parts[384]);
 		aux.icon[0][ABI_EKILL] = new VImg(parts[110]);
 		aux.icon[2][ATK_OMNI] = new VImg(parts[112]);
 		aux.icon[1][P_IMUCURSE] = new VImg(parts[116]);

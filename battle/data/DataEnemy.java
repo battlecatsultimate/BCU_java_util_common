@@ -4,6 +4,7 @@ import common.battle.Basis;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
 import common.pack.UserProfile;
+import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
 import common.util.unit.Trait;
@@ -206,6 +207,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 			}
 			if (ints[109] != 0)
 				proc.IMUBLAST.mult = 100;
+            if (ints[110] != 0)
+                traits.add(BCTraits.get(TRAIT_VILLAIN));
 		} catch (IndexOutOfBoundsException ignored) {
 
 		}

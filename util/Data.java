@@ -1077,8 +1077,9 @@ public class Data {
 	public static final byte TRAIT_BARON = 12;
 	public static final byte TRAIT_BEAST = 13;
 	public static final byte TRAIT_SAGE = 14;
-	public static final byte TRAIT_INFH = 15;
-	public static final byte TRAIT_TOT = 16;
+    public static final byte TRAIT_VILLAIN = 15;
+	public static final byte TRAIT_INFH = 16;
+	public static final byte TRAIT_TOT = 17;
 
 	// treasure
 	public static final byte T_RED = 0;
