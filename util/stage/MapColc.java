@@ -21,6 +21,7 @@ import common.util.unit.Level;
 import common.util.unit.Unit;
 import org.jetbrains.annotations.NotNull;
 
+import java.security.DrbgParameters;
 import java.util.*;
 
 @JsonClass(read = RType.FILL)
@@ -265,6 +266,74 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 				dropLine = qs.poll();
 			}
+
+            VFile countRewardFile = VFile.get("./org/data/MapStageDataClearCountReward.json");
+
+            String rewardJsonText = new String(countRewardFile.getData().getBytes());
+
+            JsonObject rewardElement = JsonParser.parseString(rewardJsonText).getAsJsonObject();
+            JsonObject rewardMapList = rewardElement.getAsJsonObject("MapID");
+
+            for (Map.Entry<String, JsonElement> e : rewardMapList.entrySet()) {
+                int mapID = CommonStatic.safeParseInt(e.getKey());
+                JsonObject rewardStageList = e.getValue().getAsJsonObject();
+
+                StageMap sm = getMap(mapID);
+
+                if (sm == null)
+                    continue;
+
+                for (Map.Entry<String, JsonElement> element : rewardStageList.entrySet()) {
+                    int stageID = CommonStatic.safeParseInt(element.getKey());
+
+                    Stage st = sm.list.get(stageID);
+
+                    if (st == null || st.info == null)
+                        continue;
+
+                    JsonArray rewardData = element.getValue().getAsJsonObject().getAsJsonArray("data");
+
+                    for (int i = 0; i < rewardData.size(); i++) {
+                        JsonObject reward = rewardData.get(i).getAsJsonObject();
+
+                        int dropID = reward.get("DropItemID").getAsInt();
+
+                        if (dropID == -1)
+                            continue;
+
+                        int quantity = reward.get("Quantity").getAsInt();
+
+                        ((DefStageInfo) st.info).challengeRewards.put(i, new AbstractMap.SimpleEntry<>(dropID, quantity));
+                    }
+                }
+            }
+
+            qs = VFile.readLine("./org/data/difficulty_level.tsv");
+
+            String difficultyLine = qs.poll();
+
+            while(difficultyLine != null && !difficultyLine.isEmpty()) {
+                String[] difficultyData = difficultyLine.split("\t");
+
+                if (difficultyLine.length() < 2)
+                    continue;
+
+                int mapID = CommonStatic.safeParseInt(difficultyData[0]);
+
+                StageMap sm = getMap(mapID);
+
+                if (sm != null)
+                    continue;
+
+                for (int i = 1; i < difficultyData.length; i++) {
+                    Stage st = sm.list.get(i - 1);
+
+                    if (st == null || st.info == null)
+                        continue;
+
+                    ((DefStageInfo) st.info).diff = (int) CommonStatic.safeParseFloat(difficultyData[i]);
+                }
+            }
 
 			qs = VFile.readLine("./org/data/LockSkipData.csv");
 

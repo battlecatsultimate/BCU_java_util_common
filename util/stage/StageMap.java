@@ -1,5 +1,8 @@
 package common.util.stage;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
@@ -16,6 +19,7 @@ import common.util.lang.MultiLangData;
 import common.util.stage.info.DefStageInfo;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Queue;
 
 @IndexContainer.IndexCont(MapColc.class)
@@ -91,6 +95,30 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 				}
 			}
 		}
+
+        protected void injectChallengeReward(JsonObject rewardStageList) {
+            for (Map.Entry<String, JsonElement> element : rewardStageList.entrySet()) {
+                int stageID = CommonStatic.safeParseInt(element.getKey());
+
+                Stage st = sm.list.get(stageID);
+
+                if (st == null || st.info == null)
+                    continue;
+
+                JsonArray rewardData = element.getValue().getAsJsonObject().getAsJsonArray("data");
+
+                for (int i = 0; i < rewardData.size(); i++) {
+                    JsonObject reward = rewardData.get(i).getAsJsonObject();
+
+                    int dropID = reward.get("DropItemID").getAsInt();
+
+                    if (dropID == -1)
+                        continue;
+
+                    int quantity = reward.get("Quantity").getAsInt();
+                }
+            }
+        }
 	}
 
 	@ContGetter
