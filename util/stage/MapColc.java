@@ -21,7 +21,6 @@ import common.util.unit.Level;
 import common.util.unit.Unit;
 import org.jetbrains.annotations.NotNull;
 
-import java.security.DrbgParameters;
 import java.util.*;
 
 @JsonClass(read = RType.FILL)
@@ -110,27 +109,29 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				int len = Integer.parseInt(strs[1]);
 				sm.stars = new int[len];
 				for (int i = 0; i < len; i++)
-					sm.stars[i] = Integer.parseInt(strs[2 + i]);
-				sm.name += strs[10];
-				sm.starMask = Integer.parseInt(strs[12]);
+					sm.stars[i] = Integer.parseInt(strs[3 + i]);
+				sm.name += strs[11];
+				sm.starMask = Integer.parseInt(strs[13]);
 
 				if(sm.info != null) {
-					if(!strs[7].equals("0")) {
-						sm.info.resetMode = Integer.parseInt(strs[7]);
+                    sm.info.hasAbyssChallenge = strs[2].equals("1");
+
+					if(!strs[8].equals("0")) {
+						sm.info.resetMode = Integer.parseInt(strs[8]);
 
 						if(sm.info.resetMode > 3) {
 							System.out.println("W/MapColc | Unknown stage reward reset mode " + sm.info.resetMode);
 						}
 					}
 
-					if(!strs[8].equals("0")) {
-						sm.info.clearLimit = Integer.parseInt(strs[8]);
+					if(!strs[9].equals("0")) {
+						sm.info.clearLimit = Integer.parseInt(strs[9]);
 					}
 
-					sm.info.hiddenUponClear = !strs[13].equals("0");
+					sm.info.hiddenUponClear = !strs[14].equals("0");
 
-					if(!strs[10].equals("0")) {
-						sm.info.waitTime = Integer.parseInt(strs[10]);
+					if(!strs[11].equals("0")) {
+						sm.info.waitTime = Integer.parseInt(strs[11]);
 					}
 				}
 			}
@@ -315,15 +316,21 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
             while(difficultyLine != null && !difficultyLine.isEmpty()) {
                 String[] difficultyData = difficultyLine.split("\t");
 
-                if (difficultyLine.length() < 2)
+                if (difficultyData.length < 2) {
+                    difficultyLine = qs.poll();
+
                     continue;
+                }
 
                 int mapID = CommonStatic.safeParseInt(difficultyData[0]);
 
                 StageMap sm = getMap(mapID);
 
-                if (sm != null)
+                if (sm == null) {
+                    difficultyLine = qs.poll();
+
                     continue;
+                }
 
                 for (int i = 1; i < difficultyData.length; i++) {
                     Stage st = sm.list.get(i - 1);
@@ -333,6 +340,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
                     ((DefStageInfo) st.info).diff = (int) CommonStatic.safeParseFloat(difficultyData[i]);
                 }
+
+                difficultyLine = qs.poll();
             }
 
 			qs = VFile.readLine("./org/data/LockSkipData.csv");

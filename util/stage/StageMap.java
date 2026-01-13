@@ -42,6 +42,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 
 		public boolean hiddenUponClear = false;
 		public boolean cantUseGoldCPU = false;
+        public boolean hasAbyssChallenge = false;
 
 		public StageMapInfo(StageMap map) {
 			sm = map;
@@ -95,30 +96,6 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 				}
 			}
 		}
-
-        protected void injectChallengeReward(JsonObject rewardStageList) {
-            for (Map.Entry<String, JsonElement> element : rewardStageList.entrySet()) {
-                int stageID = CommonStatic.safeParseInt(element.getKey());
-
-                Stage st = sm.list.get(stageID);
-
-                if (st == null || st.info == null)
-                    continue;
-
-                JsonArray rewardData = element.getValue().getAsJsonObject().getAsJsonArray("data");
-
-                for (int i = 0; i < rewardData.size(); i++) {
-                    JsonObject reward = rewardData.get(i).getAsJsonObject();
-
-                    int dropID = reward.get("DropItemID").getAsInt();
-
-                    if (dropID == -1)
-                        continue;
-
-                    int quantity = reward.get("Quantity").getAsInt();
-                }
-            }
-        }
 	}
 
 	@ContGetter
