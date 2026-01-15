@@ -304,7 +304,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
                         int quantity = reward.get("Quantity").getAsInt();
 
-                        ((DefStageInfo) st.info).challengeRewards.put(i, new AbstractMap.SimpleEntry<>(dropID, quantity));
+                        ((DefStageInfo) st.info).challengeRewards.put(i + 1, new AbstractMap.SimpleEntry<>(dropID, quantity));
                     }
                 }
             }
