@@ -1,8 +1,5 @@
 package common.util.stage;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.JCConstructor;
@@ -19,7 +16,6 @@ import common.util.lang.MultiLangData;
 import common.util.stage.info.DefStageInfo;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Queue;
 
 @IndexContainer.IndexCont(MapColc.class)
