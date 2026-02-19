@@ -1439,6 +1439,7 @@ public class Data {
 			{ 0, P_MINIVOLC, 4, -1 }, //65 : Mini surge
 			{ 1, AB_SKILL, 0, -1 }, //66 : super sage hunter
 			{ 0, P_BLAST, 3, -1 }, //67: baja blast
+			{ 1, AB_CSUR, 0, -1 }
 	};
 
 	// foot icon index used in battle
