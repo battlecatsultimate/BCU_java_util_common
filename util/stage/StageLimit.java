@@ -9,6 +9,11 @@ import java.util.HashSet;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class StageLimit extends Data implements BattleStatic {
+    public enum SpeedOverrideMode {
+        SET,
+        MULTIPLY
+    }
+
     public int maxMoney = 0;
     public int globalCooldown = 0;
     public int globalCost = -1;
@@ -25,7 +30,9 @@ public class StageLimit extends Data implements BattleStatic {
     
     public int cannonMultiplier = 100; // percentage
 
+    public SpeedOverrideMode unitSpeedOverrideMode = null;
     public int unitSpeedOverride = -1; // -1 for deactivated
+    public SpeedOverrideMode enemySpeedOverrideMode = null;
     public int enemySpeedOverride = -1; // -1 for deactivated
 
     @JsonField(generic = Integer.class)

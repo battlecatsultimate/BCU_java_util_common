@@ -747,10 +747,20 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 										}
 
 										if (unitActivate > 0) {
+											if (unitActivate == 1)
+												stage.lim.stageLimit.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
+											else
+												stage.lim.stageLimit.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.MULTIPLY;
+
 											stage.lim.stageLimit.unitSpeedOverride = parameter.get(1).getAsInt();
 										}
 
 										if (enemyActivate > 0) {
+											if (enemyActivate == 1)
+												stage.lim.stageLimit.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
+											else
+												stage.lim.stageLimit.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.MULTIPLY;
+
 											stage.lim.stageLimit.enemySpeedOverride = parameter.get(3).getAsInt();
 										}
 									}
