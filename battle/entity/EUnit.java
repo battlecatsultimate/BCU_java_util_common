@@ -118,6 +118,18 @@ public class EUnit extends Entity {
 			} else if (id == ORB_SLOW_RESIST) {
 				orbProc.IMUSLOW.mult = Math.min(100, orbProc.IMUSLOW.mult + ORB_RESIST_MULT[orb[2]]);
 				continue;
+			} else if (id == ORB_STOP_RESIST) {
+				orbProc.IMUSTOP.mult = Math.min(100, orbProc.IMUSTOP.mult + ORB_RESIST_MULT[orb[2]]);
+				continue;
+			} else if (id == ORB_WEAK_RESIST) {
+				orbProc.IMUWEAK.mult = Math.min(100, orbProc.IMUWEAK.mult + ORB_RESIST_MULT[orb[2]]);
+				continue;
+			} else if (id == ORB_VOLC_RESIST) {
+				orbProc.IMUVOLC.mult = Math.min(100, orbProc.IMUVOLC.mult + ORB_RESIST_MULT[orb[2]]);
+				continue;
+			} else if (id == ORB_BLAST_RESIST) {
+				orbProc.IMUBLAST.mult = Math.min(100, orbProc.IMUBLAST.mult + ORB_RESIST_MULT[orb[2]]);
+				continue;
 			}
 			if (!isOrbBoosted)
 				continue;

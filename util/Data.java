@@ -1716,10 +1716,10 @@ public class Data {
 	public static final int ORB_SINGLE_COUNTER_SURGE = 17;
 	public static final int ORB_BERSERKER = 18;
 	public static final int ORB_COOLDOWN = 19;
-	public static final int ORB_FREEZE_RESIST = 20;
+	public static final int ORB_STOP_RESIST = 20;
 	public static final int ORB_WEAK_RESIST = 21;
 	public static final int ORB_COST_DOWN = 22;
-	public static final int ORB_SURGE_RESIST = 23;
+	public static final int ORB_VOLC_RESIST = 23;
 	public static final int ORB_BOUNTY = 24;
 	public static final int ORB_BLAST_RESIST = 25;
 
