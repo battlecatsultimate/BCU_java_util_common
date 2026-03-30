@@ -326,7 +326,9 @@ public abstract class Entity extends AbEntity {
 				if (status[P_SPEED][2] <= 1) {
 					index = status[P_SPEED][1] >= 0 ? SpeedEff.UP : SpeedEff.DOWN;
 				} else {
-					index = status[P_SPEED][1] >= (e.data.getSpeed() > 0 && e.basis.getGlobalSpeed(-1) > -1 ? e.basis.getGlobalSpeed(-1) : e.data.getSpeed()) ? SpeedEff.UP : SpeedEff.DOWN;
+					int speed = e.data.getSpeed();
+					index = status[P_SPEED][1] >= (speed > 0 && e.basis.getGlobalSpeed(-1, speed) > -1 ? e.basis.getGlobalSpeed(-1, speed) : speed)
+							? SpeedEff.UP : SpeedEff.DOWN;
 				}
 
 				effs[id] = eff.getEAnim(index);
@@ -2018,8 +2020,8 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc().SPEED.time > 0) {
 			int res = getProc().IMUSPEED.mult;
 			int speed = data.getSpeed();
-			if (speed > 0 && basis.getGlobalSpeed(dire) > 0)
-				speed = basis.getGlobalSpeed(dire);
+			if (speed > 0 && basis.getGlobalSpeed(dire, speed) > 0)
+				speed = basis.getGlobalSpeed(dire, speed);
 
 			boolean b;
 
@@ -2479,8 +2481,8 @@ public abstract class Entity extends AbEntity {
 
 		} else {
 			int speed = data.getSpeed();
-			if (speed > 0 && basis.getGlobalSpeed(dire) > -1)
-				speed = basis.getGlobalSpeed(dire);
+			if (speed > 0 && basis.getGlobalSpeed(dire, speed) > -1)
+				speed = basis.getGlobalSpeed(dire, speed);
 			float mov = speed * 0.5f;
 
 			if (status[P_SPEED][0] > 0) {

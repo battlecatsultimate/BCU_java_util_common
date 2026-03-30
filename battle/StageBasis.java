@@ -1138,11 +1138,17 @@ public class StageBasis extends BattleObj {
 			return est.lim.stageLimit.cannonMultiplier;
 	}
 
-	public int getGlobalSpeed(int dire) {
+	public int getGlobalSpeed(int dire, int speed) {
 		if (est.lim.stageLimit == null)
 			return -1;
+		else if (dire == -1)
+			return est.lim.stageLimit.unitSpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY
+					? speed * est.lim.stageLimit.unitSpeedOverride
+					: est.lim.stageLimit.unitSpeedOverride;
 		else
-			return dire == -1 ? est.lim.stageLimit.unitSpeedOverride : est.lim.stageLimit.enemySpeedOverride;
+			return est.lim.stageLimit.enemySpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY
+					? speed * est.lim.stageLimit.enemySpeedOverride
+					: est.lim.stageLimit.enemySpeedOverride;
 	}
 
 	public int getDupeCount(int rar) {
