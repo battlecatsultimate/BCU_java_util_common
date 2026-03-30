@@ -1676,6 +1676,24 @@ public class Data {
 	public static final float SNIPER_POS = 442.5f;
 	public static final byte REVIVE_SHOW_TIME = 14;
 
+	// TODO: restructure Orb stuff into enum
+//	public static enum ORB {
+//		ORB_ATK(true, 0),
+//		ORB_RES(true, 0),
+//		ORB_STRONG(true, 0),
+//		ORB_MASSIVE(true, 0),
+//		ORB_RESISTANT(true, 0),
+//		ORB_DEATH_SURGE(false, 1)
+//
+//		public final boolean canStack;
+//		public final int inBetween;
+//
+//		ORB(boolean canStack, int inBetween) {
+//			this.canStack = canStack;
+//			this.inBetween = inBetween;
+//		}
+//	}
+
 	public static final int ORB_ATK = 0;
 	public static final int ORB_RES = 1;
 	public static final int ORB_STRONG = 2;
@@ -1695,10 +1713,21 @@ public class Data {
 	public static final int ORB_CURSE_RESIST = 15;
 	public static final int ORB_UL_BUFF = 16;
 
-	public static final int ORB_TOT = 17;
-	public static final int ORB_ABILITY_TOT = 12; // only count special orbs
+	public static final int ORB_SINGLE_COUNTER_SURGE = 17;
+	public static final int ORB_BERSERKER = 18;
+	public static final int ORB_COOLDOWN = 19;
+	public static final int ORB_FREEZE_RESIST = 20;
+	public static final int ORB_WEAK_RESIST = 21;
+	public static final int ORB_COST_DOWN = 22;
+	public static final int ORB_SURGE_RESIST = 23;
+	public static final int ORB_BOUNTY = 24;
+	public static final int ORB_BLAST_RESIST = 25;
+
+	public static final int ORB_TOT = 26;
+	public static final int ORB_ABILITY_TOT = ORB_TOT - 5; // only count special orbs
 	public static final int ORB_TYPE = 0, ORB_TRAIT = 1, ORB_GRADE = 2, ORB_INTS = 3;
-	public static final int[] ORB_EVERY_OTHER = { ORB_DEATH_SURGE, ORB_MONEY_BACK, ORB_BARON_KILLER, ORB_CANNON_RECHARGE, ORB_IMUATK };
+	public static final int[] ORB_EVERY_OTHER = { ORB_DEATH_SURGE, ORB_MONEY_BACK, ORB_BARON_KILLER,
+			ORB_CANNON_RECHARGE, ORB_IMUATK, ORB_SINGLE_COUNTER_SURGE, ORB_COOLDOWN, ORB_COST_DOWN, ORB_BOUNTY };
 
 	// todo: use equipment json file to auto-populate orb data into BCAuxAssets
 	public static final int[] ORB_ATK_MULTI = { 100, 200, 300, 400, 500 }; // Atk orb multiplication
