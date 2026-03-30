@@ -1746,6 +1746,9 @@ public class Data {
 	public static final int[] ORB_BARON_DEFENSE = { 95, 90, 85, 80, 70 }; // 1 x alpha
 	public static final int[] ORB_CANNON_RECHARGE_MULT = { 3, 5, 7, 10, 15 };
 	public static final int[] ORB_IMUATK_MULT = { 1, 3, 5, 7, 10 };
+
+	public static final int[] ORB_SINGLE_COUNTER_SURGE_MULT = { 10, 30, 50, 70, 100 };
+
 	public static final int[] GATYA = { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164, 167,
 			168, 169, 170, 171, 179, 180, 181, 182, 183, 184};
 

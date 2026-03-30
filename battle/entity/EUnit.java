@@ -11,6 +11,7 @@ import common.pack.UserProfile;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
+import common.util.pack.EffAnim;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 
@@ -60,7 +61,7 @@ public class EUnit extends Entity {
 
 	public final boolean isSpirit;
 	public final boolean isOrbBoosted;
-	public int legendGrade = -1, coloGrade = -1;
+	public int legendGrade = -1, coloGrade = -1, counterGrade = -1;
 	public Proc orbProc;
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc,
@@ -100,35 +101,36 @@ public class EUnit extends Entity {
 			int id = orb[0];
 			if (id < ORB_DEATH_SURGE)
 				continue;
+			int grade = orb[2];
 			if (id == ORB_SOL_BUFF && basis.est.s.getCont().getCont().getSID().equals("000000") || id == ORB_UL_BUFF && basis.est.s.getCont().getCont().getSID().equals("000013")) {
-				legendGrade = Math.max(legendGrade, orb[2]);
+				legendGrade = Math.max(legendGrade, grade);
 				continue;
 			}
 			if (orbProc == null)
 				orbProc = getProc().clone();
 			if (id == ORB_WAVE_RESIST) {
-				orbProc.IMUWAVE.mult = Math.min(100, orbProc.IMUWAVE.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUWAVE.mult = Math.min(100, orbProc.IMUWAVE.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_KB_RESIST) {
-				orbProc.IMUKB.mult = Math.min(100, orbProc.IMUKB.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUKB.mult = Math.min(100, orbProc.IMUKB.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_CURSE_RESIST) {
-				orbProc.IMUCURSE.mult = Math.min(100, orbProc.IMUCURSE.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUCURSE.mult = Math.min(100, orbProc.IMUCURSE.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_SLOW_RESIST) {
-				orbProc.IMUSLOW.mult = Math.min(100, orbProc.IMUSLOW.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUSLOW.mult = Math.min(100, orbProc.IMUSLOW.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_STOP_RESIST) {
-				orbProc.IMUSTOP.mult = Math.min(100, orbProc.IMUSTOP.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUSTOP.mult = Math.min(100, orbProc.IMUSTOP.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_WEAK_RESIST) {
-				orbProc.IMUWEAK.mult = Math.min(100, orbProc.IMUWEAK.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUWEAK.mult = Math.min(100, orbProc.IMUWEAK.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_VOLC_RESIST) {
-				orbProc.IMUVOLC.mult = Math.min(100, orbProc.IMUVOLC.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUVOLC.mult = Math.min(100, orbProc.IMUVOLC.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_BLAST_RESIST) {
-				orbProc.IMUBLAST.mult = Math.min(100, orbProc.IMUBLAST.mult + ORB_RESIST_MULT[orb[2]]);
+				orbProc.IMUBLAST.mult = Math.min(100, orbProc.IMUBLAST.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			}
 			if (!isOrbBoosted)
@@ -141,15 +143,17 @@ public class EUnit extends Entity {
 					orbProc.MINIDEATHSURGE.dis_1 = ORB_DEATH_SURGE_SPAWN_MAX;
 					orbProc.MINIDEATHSURGE.time = 20;
 				}
-				surge.mult = Math.max(surge.mult, ORB_DEATH_SURGE_MULT[orb[2]]);
+				surge.mult = Math.max(surge.mult, ORB_DEATH_SURGE_MULT[grade]);
 			} else if (id == ORB_MONEY_BACK)
-				orbProc.MONEYBACK.mult += ORB_MONEY_BACK_MULT[orb[2]];
+				orbProc.MONEYBACK.mult += ORB_MONEY_BACK_MULT[grade];
 			else if (id == ORB_CANNON_RECHARGE)
-				orbProc.CANONCHARGE.mult = Math.max(orbProc.CANONCHARGE.mult, ORB_CANNON_RECHARGE_MULT[orb[2]]);
+				orbProc.CANONCHARGE.mult = Math.max(orbProc.CANONCHARGE.mult, ORB_CANNON_RECHARGE_MULT[grade]);
 			else if (id == ORB_BARON_KILLER)
-				coloGrade = Math.max(coloGrade, orb[2]);
+				coloGrade = Math.max(coloGrade, grade);
 			else if (id == ORB_IMUATK)
-				orbProc.IMUATKANY.prob = Math.max(orbProc.IMUATKANY.prob, ORB_IMUATK_MULT[orb[2]]);
+				orbProc.IMUATKANY.prob = Math.max(orbProc.IMUATKANY.prob, ORB_IMUATK_MULT[grade]);
+			else if (id == ORB_SINGLE_COUNTER_SURGE)
+				counterGrade = Math.max(counterGrade, grade);
 		}
 		if (legendGrade != -1)
 			maxH = health = health * (100 + ORB_LEGEND_HEATLH[legendGrade]) / 100;
@@ -201,6 +205,20 @@ public class EUnit extends Entity {
 			anim.getEff(P_IMUATK);
 
 			return;
+		}
+
+		if (atk instanceof AttackVolcano && counterGrade > -1) {
+			AttackVolcano volc = (AttackVolcano) atk;
+
+			if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
+				basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(EffAnim.DefEff.DEF),
+						this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint,
+						ORB_SINGLE_COUNTER_SURGE_MULT[counterGrade]));
+				basis.leaSort = true;
+				volc.handler.surgeSummoned.add(this);
+			}
+
+			counterGrade = -1;
 		}
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BEAST))) {

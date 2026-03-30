@@ -22,6 +22,7 @@ import common.util.unit.Unit;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,7 +140,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	public static void write() {
 		File target = CommonStatic.ctx.getUserFile("./basis.json");
 		File temp = CommonStatic.ctx.getUserFile("./.temp.basis.json");
-		try (Writer w = new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.UTF_8)) {
+		try (Writer w = new OutputStreamWriter(Files.newOutputStream(temp.toPath()), StandardCharsets.UTF_8)) {
 			Context.check(temp);
 			List<BasisSet> list = list();
 			int cur = list.indexOf(current());

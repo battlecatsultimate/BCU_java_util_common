@@ -1702,13 +1702,14 @@ public abstract class Entity extends AbEntity {
 			return;
 
 		if ((atk.waveType & (WT_VOLC | WT_MIVC)) > 0) {
-			if((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
+			if ((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
 				AttackVolcano volc = (AttackVolcano) atk;
 
 				if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
-					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF), this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint));
+					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF),
+							this, volc.handler.time, atk.waveType, volc.handler.startPoint,
+							volc.handler.endPoint, 100));
 					basis.leaSort = true;
-
 					volc.handler.surgeSummoned.add(this);
 				}
 			}

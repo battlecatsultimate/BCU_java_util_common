@@ -9,8 +9,9 @@ public class SurgeSummoner extends EAnimCont {
     private final Entity summoner;
     private final int time, sta, end, type;
     private int surge = COUNTER_SURGE_FORESWING, sound = COUNTER_SURGE_SOUND;
+    private final int counterPercent;
 
-    public SurgeSummoner(float p, int lay, EAnimD<?> ead, Entity summoner, int time, int type, int sta, int end) {
+    public SurgeSummoner(float p, int lay, EAnimD<?> ead, Entity summoner, int time, int type, int sta, int end, int counterPercent) {
         super(p, lay, ead);
 
         this.summoner = summoner;
@@ -18,6 +19,7 @@ public class SurgeSummoner extends EAnimCont {
         this.type = type;
         this.sta = Math.min(sta, end);
         this.end = Math.max(sta, end);
+        this.counterPercent = counterPercent;
     }
 
     @Override
@@ -36,8 +38,9 @@ public class SurgeSummoner extends EAnimCont {
                 float e = p0 - (dire == 1 ? W_VOLC_INNER : W_VOLC_PIERCE);
 
                 AttackVolcano volcanoAttack = new AttackVolcano(summoner, summoner.aam.getAttack(0), s, e, type | WT_SOUL);
+                volcanoAttack.atk = volcanoAttack.atk * counterPercent / 100;
                 if ((type & WT_MIVC) > 0)
-                    volcanoAttack.getProc().MINIVOLC.mult = 20;
+                    volcanoAttack.getProc().MINIVOLC.mult = 20 * counterPercent / 100;
 
                 ContVolcano volcano = new ContVolcano(volcanoAttack, p0, summoner.layer, time, 0);
 
