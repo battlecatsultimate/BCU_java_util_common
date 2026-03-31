@@ -158,7 +158,7 @@ public class EUnit extends Entity {
 				coloGrade = Math.max(coloGrade, grade);
 			else if (id == ORB_IMUATK)
 				orbProc.IMUATKANY.prob = Math.max(orbProc.IMUATKANY.prob, ORB_IMUATK_MULT[grade]);
-			else if (id == ORB_SINGLE_COUNTER_SURGE)
+			else if (id == ORB_SINGLE_COUNTER_SURGE && (getAbi() & AB_CSUR) == 0)
 				counterGrade = Math.max(counterGrade, grade);
 			else if (id == ORB_BOUNTY)
 				bountyGrade = Math.max(bountyGrade, grade);
