@@ -736,7 +736,10 @@ public class Editors {
 
 		map().put("BERSERK", new EditControl<>(Proc.BERSERK.class, (t) -> {
 			t.killCount = Math.max(0, t.killCount);
-			t.mult = Math.max(0, t.mult);
+			if (t.killCount > 0 && t.mult == 0)
+				t.mult = 1;
+			else if (t.killCount == 0)
+				t.mult = 0;
 		}));
 	}
 
