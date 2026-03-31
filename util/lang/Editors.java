@@ -384,7 +384,9 @@ public class Editors {
 				t.type.range_type = 0;
 				t.type.revive_non_zombie = false;
 			} else {
-				t.health = MathUtil.clip(t.health, 1, 100);
+				// min revive health should be 1% with no upper cap
+				t.health = Math.max(1, t.health);
+
 				t.time = Math.max(t.time, 1);
 				if (!t.type.revive_others) {
 					t.dis_0 = t.dis_1 = 0;
@@ -494,6 +496,7 @@ public class Editors {
 				t.type.unstackable = false;
 				t.type.ignoreMetal = false;
 				t.type.modifAffected = false;
+				t.type.scaleWithBuff = false;
 			} else {
 				t.time = Math.max(1, t.time);
 				t.itv = Math.max(1, t.itv);

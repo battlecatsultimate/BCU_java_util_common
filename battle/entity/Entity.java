@@ -955,6 +955,7 @@ public abstract class Entity extends AbEntity {
 			if (ws.type.unstackable)
 				list.removeIf(e -> e.type.unstackable && type(e) == type(ws));
 			ws.prob = 0; // used as counter
+
 			list.add(ws);
 			getMax();
 		}
@@ -962,7 +963,10 @@ public abstract class Entity extends AbEntity {
 		private void damage(int dmg, int type) {
 			type &= 3;
 			long mul = type == 0 ? 100 : type == 1 ? e.maxH : type == 2 ? e.health : (e.maxH - e.health);
+
 			e.damage += mul * dmg / 100;
+
+
 		}
 
 		private void getMax() {
@@ -1125,7 +1129,24 @@ public abstract class Entity extends AbEntity {
 			deadAnim += ea.getEAnim(ZombieEff.REVIVE).len();
 			e.status[P_REVIVE][1] = deadAnim;
 			int maxR = maxRevHealth();
-			e.health = e.maxH * maxR / 100;
+
+			// set how much health to revive with
+			long reviveHealth = e.maxH * maxR / 100;
+
+			// if revive health exceeds max health, update the max health
+			if (reviveHealth > e.maxH)
+			{
+				e.maxH = reviveHealth;
+				e.health = e.maxH;
+			}
+
+			// otherwise set health as normal
+			else
+			{
+				e.health = reviveHealth;
+			}
+
+
 			if (c == 1)
 				e.status[P_REVIVE][0]--;
 			else if (c == 2)
@@ -1438,6 +1459,12 @@ public abstract class Entity extends AbEntity {
 	 */
 	private boolean killCounted = false;
 
+
+	/**
+	 * Damage to use for poison
+	 */
+	private int poisonDamage = 0;
+
 	/**
 	 * cooldown timer for regeneration ability
 	 */
@@ -1455,6 +1482,12 @@ public abstract class Entity extends AbEntity {
 		maxCurrentShield = currentShield = (int) (de.getProc().DEMONSHIELD.hp * hpMagnif);
 		shieldMagnification = hpMagnif;
 		regentimer = getProc().HPREGEN.interval;
+
+		// scale poison damage with mag if option is enabled, otherwise keep poison damage to set value
+		poisonDamage = de.getProc().POISON.damage;
+		if (de.getProc().POISON.type.scaleWithBuff) {
+			poisonDamage = (int) (((float) poisonDamage) * atkMagnif);
+		}
 	}
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, float lvMagnif, float tAtk, float tHP, PCoin pc, Level lv) {
@@ -1478,6 +1511,7 @@ public abstract class Entity extends AbEntity {
 		status[P_REVIVE][0] = getProc().REVIVE.count;
 		status[P_DMGCUT][0] = getProc().DMGCUT.type.magnif ? (int) (lvMagnif * getProc().DMGCUT.dmg) : getProc().DMGCUT.dmg;
 		status[P_DMGCAP][0] = getProc().DMGCAP.type.magnif ? (int) (lvMagnif * getProc().DMGCAP.dmg) : getProc().DMGCAP.dmg;
+
 		presetStatus(lvMagnif);
 		presetSealedProcs();
 		maxCurrentShield = currentShield = (int) (de.getProc().DEMONSHIELD.hp * lvMagnif);
@@ -1825,6 +1859,7 @@ public abstract class Entity extends AbEntity {
 		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
+
 		boolean cannonResist = atk.canon > 0 && getProc().IMUCANNON.exists() && (atk.canon & getProc().IMUCANNON.type) > 0;
 		if (atk.getProc().POIATK.mult > 0) {
 			int rst = getProc().IMUPOIATK.mult;
@@ -1992,8 +2027,10 @@ public abstract class Entity extends AbEntity {
 
 				ws.time = ws.time * (100 - res) / 100;
 
+				ws.damage = atk.attacker.poisonDamage;
+
 				if (atk.atk != 0 && ws.type.modifAffected)
-					ws.damage = (int) (ws.damage * (float) getDamage(atk, atk.atk) / atk.atk);
+					ws.damage = (int) (atk.attacker.poisonDamage * (float) getDamage(atk, atk.atk) / atk.atk);
 
 				pois.add(ws);
 				anim.getEff(P_POISON);

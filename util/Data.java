@@ -194,6 +194,8 @@ public class Data {
 				public boolean ignoreMetal;
 				@Order(3)
 				public boolean modifAffected;
+				@Order(4)
+				public boolean scaleWithBuff;
 			}
 
 			@Order(0)

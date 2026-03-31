@@ -792,6 +792,10 @@
             "type.modifAffected": {
                 "name": "Consider Abilities",
                 "tooltip": "Toggle this to make poison damage affected by damage-modifying abilities such as strong against or critical."
+            },
+            "type.scaleWithBuff": {
+                "name": "Scale With Buff",
+                "tooltip": "Toggle this to make the damage increase with magnifications. Works best with burn."
             }
         }
     },
