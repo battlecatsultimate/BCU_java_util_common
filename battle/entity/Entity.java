@@ -1325,8 +1325,8 @@ public abstract class Entity extends AbEntity {
 	public int killCount = 0;
 
 	/**
-	 * Enemies it got hit by.
-	 * Upon post update, if health is above 0, this is instantly cleared.
+	 * Attacks it got hit by in the current frame.
+	 * Upon post update, if health is above 0, this should be instantly cleared.
 	 */
 	public Set<AttackAb> lastHitBy = new HashSet<>();
 
@@ -2120,7 +2120,8 @@ public abstract class Entity extends AbEntity {
 		basis.checkGuard();
 		if (atk == KillMode.NORMAL)
 			for (AttackAb attack : lastHitBy)
-				attack.attacker.killCount++;
+				if (attack.attacker != null)
+					attack.attacker.killCount++;
 	}
 
 	/**
