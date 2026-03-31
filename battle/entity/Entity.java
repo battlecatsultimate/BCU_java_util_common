@@ -4,7 +4,10 @@ import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.*;
-import common.battle.data.*;
+import common.battle.data.AtkDataModel;
+import common.battle.data.CustomEntity;
+import common.battle.data.MaskEntity;
+import common.battle.data.PCoin;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -2258,23 +2261,6 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) {
 		if (targetOnly && isBase) return true;
-		if (attacker != null) {
-			if (attacker.dire == -1 && !attacker.traits.isEmpty()) {
-				for (int i = 0; i < traits.size(); i++) {
-					if (traits.get(i).id.pack.equals("000000"))
-						continue;
-					if (traits.get(i).targetForms.contains(((MaskUnit) attacker.data).getPack()))
-						return true;
-				}
-			} else if (dire == -1 && !traits.isEmpty()) {
-				for (int i = 0; i < attacker.traits.size(); i++) {
-					if (attacker.traits.get(i).id.pack.equals("000000"))
-						continue;
-					if (attacker.traits.get(i).targetForms.contains(((MaskUnit) data).getPack()))
-						return true;
-				}
-			}
-		}
 		if (targetTraited(t))
 			for (int i = 0; i < traits.size(); i++)
 				if (traits.get(i).targetType)
@@ -2283,10 +2269,10 @@ public abstract class Entity extends AbEntity {
 			for (int i = 0; i < t.size(); i++)
 				if (t.get(i).targetType)
 					return true;
-		for (int j = 0; j < t.size(); j++)
-			if (traits.contains(t.get(j)))
+		for (Trait trait : t)
+			if (traits.contains(trait))
 				return true;
-		return t.contains(UserProfile.getBCData().traits.get(TRAIT_TOT));
+		return false;
 	}
 
 	/**
