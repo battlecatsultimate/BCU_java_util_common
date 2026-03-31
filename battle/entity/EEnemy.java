@@ -49,9 +49,18 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(KillMode atk) {
 		super.kill(atk);
+		for (Entity attacker : lastHitBy) {
+			if (!(attacker instanceof EUnit))
+				return;
+			EUnit u = (EUnit) attacker;
+			if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
+				status[P_BOUNTY][1] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
+				u.bountyGrade = -1;
+			}
+		}
 
 		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
-			float mul = basis.b.t().getDropMulti(basis.isBanned(Data.C_MEAR)) * (1 + (status[P_BOUNTY][0] / 100f));
+			float mul = basis.b.t().getDropMulti(basis.isBanned(Data.C_MEAR)) * (1 + ((status[P_BOUNTY][0] + status[P_BOUNTY][1]) / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
 		}
 	}

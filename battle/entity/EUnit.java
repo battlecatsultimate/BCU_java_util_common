@@ -61,7 +61,7 @@ public class EUnit extends Entity {
 
 	public final boolean isSpirit;
 	public final boolean isOrbBoosted;
-	public int legendGrade = -1, coloGrade = -1, counterGrade = -1;
+	public int legendGrade = -1, coloGrade = -1, counterGrade = -1, bountyGrade = -1;
 	public Proc orbProc;
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc,
@@ -159,6 +159,8 @@ public class EUnit extends Entity {
 				orbProc.IMUATKANY.prob = Math.max(orbProc.IMUATKANY.prob, ORB_IMUATK_MULT[grade]);
 			else if (id == ORB_SINGLE_COUNTER_SURGE)
 				counterGrade = Math.max(counterGrade, grade);
+			else if (id == ORB_BOUNTY)
+				bountyGrade = Math.max(bountyGrade, grade);
 		}
 		if (legendGrade != -1)
 			maxH = health = health * (100 + ORB_LEGEND_HEATLH[legendGrade]) / 100;

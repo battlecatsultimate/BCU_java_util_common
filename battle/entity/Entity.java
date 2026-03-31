@@ -1154,10 +1154,8 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void postUpdate() {
-			if (e.health > 0) {
+			if (e.health > 0)
 				tempZK = false;
-				e.lastHitBy.clear();
-			}
 		}
 
 		private boolean prekill() {
@@ -2213,7 +2211,9 @@ public abstract class Entity extends AbEntity {
 
 		summoned.removeIf(s -> !s.activate);
 
-		if(health <= 0 && zx.canRevive() == 0 && !killCounted) {
+		if (health > 0) {
+			lastHitBy.clear();
+		} else if (zx.canRevive() == 0 && !killCounted) {
 			onLastBreathe();
 			killCounted = true;
 		}
