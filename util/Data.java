@@ -1760,6 +1760,8 @@ public class Data {
 
 	public static final int[] ORB_SINGLE_COUNTER_SURGE_MULT = { 10, 30, 50, 70, 100 };
 	public static final int[] ORB_BERSERKER_MULT = { 3, 6, 10, 14, 20 };
+	public static final int[] ORB_COOLDOWN_MULT = { 2, 4, 7, 10, 15 };
+	public static final int[] ORB_COST_DOWN_MULT = { 5, 10, 15, 20, 30 };
 	public static final int[] ORB_SINGLE_BOUNTY_MULT = { 5, 10, 15, 25, 40 };
 
 	public static final int[] GATYA = { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164, 167,

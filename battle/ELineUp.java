@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class ELineUp extends BattleObj {
 
-	public final int[][] price, cool, maxC, tick;
+	public final int[][] price, cool, maxC, tick, cdDownOrb, priceDownOrb;
 	private final StageBasis b;
 
 	protected ELineUp(LineUp lu, StageBasis sb) {
@@ -18,6 +18,8 @@ public class ELineUp extends BattleObj {
 		cool = new int[2][5];
 		maxC = new int[2][5];
 		tick = new int[2][5];
+		cdDownOrb = new int[2][5];
+		priceDownOrb = new int[2][5];
 		Limit lim = sb.est.lim;
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++) {
@@ -39,9 +41,21 @@ public class ELineUp extends BattleObj {
 					maxC[i][j] = maxC[i][j] * lim.stageLimit.cooldownMultiplier[form.unit.rarity] / 100;
 				}
 				int[][] orbs = lu.efs[i][j].getLevel().getOrbs();
-				if (orbs != null && Arrays.stream(orbs).anyMatch(o -> o.length == ORB_INTS && Arrays.stream(ORB_EVERY_OTHER).anyMatch(v -> v == o[0])))
-					tick[i][j] = 0;
-				else
+				boolean hasEveryOther = false;
+				if (orbs != null) {
+					for (int[] orb : orbs) {
+						if (orb.length != ORB_INTS)
+							continue;
+						int orbId = orb[0];
+						hasEveryOther |= Arrays.stream(ORB_EVERY_OTHER).anyMatch(v -> v == orbId);
+						if (orbId == ORB_COOLDOWN)
+							cdDownOrb[i][j] = ORB_COOLDOWN_MULT[orb[2]];
+						else if (orbId == ORB_COST_DOWN)
+							priceDownOrb[i][j] = ORB_COST_DOWN_MULT[orb[2]];
+					}
+				}
+
+				if (!hasEveryOther)
 					tick[i][j] = -1;
 			}
 	}
@@ -51,6 +65,8 @@ public class ELineUp extends BattleObj {
 	 */
 	protected void get(int i, int j) {
 		cool[i][j] = maxC[i][j];
+		if (cdDownOrb[i][j] > 0 && tick[i][j] == 1)
+			cool[i][j] -= cool[i][j] * cdDownOrb[i][j] / 100;
 	}
 
 	/**

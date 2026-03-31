@@ -588,8 +588,6 @@ public class StageBasis extends BattleObj {
 			EUnit eu = f.getEntity(this, new int[] {i, j}, false, elu.tick[i][j] == 1);
 			eu.added(-1, st.len - 700);
 
-			if (elu.tick[i][j] != -1)
-				elu.tick[i][j] = (elu.tick[i][j] + 1) % 2;
 			if (f.du.getProc().SPIRIT.exists()) {
 				summonerSummoned[i][j] = true;
 				spiritCooldown[i][j] = SPIRIT_SUMMON_DELAY;
@@ -603,10 +601,16 @@ public class StageBasis extends BattleObj {
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 
-			money -= elu.price[i][j];
+			if (elu.priceDownOrb[i][j] > 0 && elu.tick[i][j] == 1)
+				money -= elu.price[i][j] - (elu.price[i][j] * elu.priceDownOrb[i][j] / 100);
+			else
+				money -= elu.price[i][j];
 			unitRespawnTime = 1;
 			if (maxCatSpawns > 0)
 				maxCatSpawns--;
+
+			if (elu.tick[i][j] != -1)
+				elu.tick[i][j] = (elu.tick[i][j] + 1) % 2;
 
 			return true;
 		}
