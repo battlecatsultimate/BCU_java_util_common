@@ -1328,7 +1328,7 @@ public abstract class Entity extends AbEntity {
 	 * Enemies it got hit by.
 	 * Upon post update, if health is above 0, this is instantly cleared.
 	 */
-	public Set<Entity> lastHitBy = new HashSet<>();
+	public Set<AttackAb> lastHitBy = new HashSet<>();
 
 	/**
 	 * The time that this entity has been alive
@@ -2119,8 +2119,8 @@ public abstract class Entity extends AbEntity {
 		anim.kill();
 		basis.checkGuard();
 		if (atk == KillMode.NORMAL)
-			for (Entity attacker : lastHitBy)
-				attacker.killCount++;
+			for (AttackAb attack : lastHitBy)
+				attack.attacker.killCount++;
 	}
 
 	/**

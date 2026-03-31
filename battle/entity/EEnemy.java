@@ -1,10 +1,7 @@
 package common.battle.entity;
 
 import common.battle.StageBasis;
-import common.battle.attack.AtkModelUnit;
-import common.battle.attack.AttackAb;
-import common.battle.attack.AttackVolcano;
-import common.battle.attack.AttackWave;
+import common.battle.attack.*;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
@@ -49,18 +46,18 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(KillMode atk) {
 		super.kill(atk);
-		for (Entity attacker : lastHitBy) {
-			if (!(attacker instanceof EUnit))
+		for (AttackAb attack : lastHitBy) {
+			if (!(attack instanceof AttackSimple) || !(attack.attacker instanceof EUnit))
 				return;
-			EUnit u = (EUnit) attacker;
-			if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
-				status[P_BOUNTY][1] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
-				u.bountyGrade = -1;
+			EUnit u = (EUnit) attack.attacker;
+			if (u.bountyGrade != -1) {// todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
+				status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
+				u.bountyOrbCheck = true;
 			}
 		}
 
-		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
-			float mul = basis.b.t().getDropMulti(basis.isBanned(Data.C_MEAR)) * (1 + ((status[P_BOUNTY][0] + status[P_BOUNTY][1]) / 100f));
+		if (!basis.st.trail && atk == KillMode.NORMAL) {
+			float mul = basis.b.t().getDropMulti(basis.isBanned(Data.C_MEAR)) * (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
 		}
 	}

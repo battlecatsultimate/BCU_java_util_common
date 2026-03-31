@@ -154,7 +154,7 @@ public class AttackSimple extends AttackAb {
 			e.damaged(this);
 			attacked.add(e);
 			if (e instanceof Entity)
-				((Entity) e).lastHitBy.add(attacker);
+				((Entity) e).lastHitBy.add(this);
 		}
 		if (!capt.isEmpty() && proc.WAVE.exists()) {
 			int dire = model.getDire();

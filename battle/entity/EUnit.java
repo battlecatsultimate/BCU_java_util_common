@@ -61,6 +61,7 @@ public class EUnit extends Entity {
 
 	public final boolean isSpirit;
 	public final boolean isOrbBoosted;
+	public boolean bountyOrbCheck = false;
 	public int legendGrade = -1, coloGrade = -1, counterGrade = -1, bountyGrade = -1;
 	public Proc orbProc;
 
@@ -504,5 +505,13 @@ public class EUnit extends Entity {
 	@Override
 	public Proc getProc() {
 		return orbProc != null ? orbProc : super.getProc();
+	}
+
+	@Override
+	public void postUpdate() {
+		super.postUpdate();
+
+		if (bountyGrade > -1 && bountyOrbCheck)
+			bountyGrade = -1;
 	}
 }
