@@ -1,9 +1,6 @@
 package common.battle.attack;
 
-import common.battle.data.AtkDataModel;
-import common.battle.data.CustomEntity;
-import common.battle.data.MaskEntity;
-import common.battle.data.PCoin;
+import common.battle.data.*;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EUnit;
 import common.battle.entity.Entity;
@@ -75,7 +72,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
-			double com = ent.basis.isBanned(Data.C_ATK) ? 1.0 : (1 + ent.basis.b.getInc(Data.C_ATK) * 0.01);
+			double com = ent.basis.isBanned(Data.C_ATK) ? 1.0 : (1 + ent.basis.b.getInc(Data.C_ATK, ((MaskUnit) data).getPack().unit) * 0.01);
 
 			if (pc != null && lv != null && lv.getTalents().length == pc.max.length)
 				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getTalents()) * atks[i]) * com);

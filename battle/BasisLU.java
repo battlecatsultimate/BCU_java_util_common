@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.UserProfile;
 import common.system.Copable;
 import common.util.BattleStatic;
+import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Unit;
@@ -70,7 +71,29 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
 	@Override
 	public int getInc(int type) {
-		return lu.inc[type];
+		int inc = 0;
+		for (Combo combo : lu.coms)
+			if (combo.type == type)
+				inc += CommonStatic.getBCAssets().values[combo.type][combo.lv];
+		return inc;
+	}
+
+	public int getInc(int type, Unit unit) {
+		int inc = 0;
+		for (Combo combo : lu.coms) {
+			if (combo.type == type && combo.groupContains(unit))
+				inc += CommonStatic.getBCAssets().values[combo.type][combo.lv];
+		}
+		return inc;
+	}
+
+	public int getInc(int type, List<Unit> units) {
+		int inc = 0;
+		for (Combo combo : lu.coms) {
+			if (combo.type == type && units.stream().anyMatch(combo::groupContains))
+				inc += CommonStatic.getBCAssets().values[combo.type][combo.lv];
+		}
+		return inc;
 	}
 
 	public BasisLU randomize(int n) {

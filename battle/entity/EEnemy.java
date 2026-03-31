@@ -7,10 +7,13 @@ import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.anim.EAnimU;
+import common.util.unit.Form;
 import common.util.unit.Trait;
+import common.util.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class EEnemy extends Entity {
 
@@ -46,18 +49,22 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(KillMode atk) {
 		super.kill(atk);
+		List<Unit> unitsHit = new ArrayList<>();
 		for (AttackAb attack : lastHitBy) {
 			if (!(attack instanceof AttackSimple) || !(attack.attacker instanceof EUnit))
 				return;
 			EUnit u = (EUnit) attack.attacker;
-			if (u.bountyGrade != -1) {// todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
+			if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
 				status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
 				u.bountyOrbCheck = true;
 			}
+			unitsHit.add(((Form) u.data.getPack()).unit);
 		}
 
-		if (!basis.st.trail && atk == KillMode.NORMAL) {
-			float mul = basis.b.t().getDropMulti(basis.isBanned(Data.C_MEAR)) * (1 + (status[P_BOUNTY][0] / 100f));
+		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
+			float mul = basis.b.t().getDropMulti()
+					* (1 + (basis.isBanned(Data.C_MEAR) ? 0 : basis.b.getInc(Data.C_MEAR, unitsHit)) * 0.01f)
+					* (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
 		}
 	}
@@ -102,9 +109,10 @@ public class EEnemy extends Entity {
 			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
 
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (atk.abi & AB_WKILL) > 0)
-			ans = (int) (ans * basis.b.t().getWKAtk(basis.isBanned(Data.C_WKILL)));
+			ans = (int) (ans * basis.b.t().getWKAtk(basis.isBanned(Data.C_WKILL) ? 0 : basis.b.getInc(Data.C_WKILL, ((Form) atk.attacker.data.getPack()).unit)));
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (atk.abi & AB_EKILL) > 0)
-			ans = (int) (ans * basis.b.t().getEKAtk(basis.isBanned(Data.C_EKILL)));
+			ans = (int) (ans * basis.b.t().getEKAtk(basis.isBanned(Data.C_EKILL) ? 0 : basis.b.getInc(Data.C_EKILL, ((Form) atk.attacker.data.getPack()).unit)));
+
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BARON))) {
 			if ((atk.abi & AB_BAKILL) > 0)
 				ans = (int) (ans * 1.6);

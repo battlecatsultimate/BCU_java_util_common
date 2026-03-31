@@ -1822,6 +1822,10 @@ public class Data {
 	public static final float SUPER_SAGE_HUNTER_ATTACK = 1.2f;
 	public static final float SUPER_SAGE_HUNTER_HP = 0.5f;
 	public static final float SUPER_SAGE_HUNTER_RESIST = 0.7f;
+	public static final float WITCH_KILLER_ATTACK = 5f;
+	public static final float EVA_KILLER_ATTACK = 5f;
+	public static final float WITCH_KILLER_RESIST = 20f;
+	public static final float EVA_KILLER_RESIST = 10f;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s", "u" };
 

@@ -1,7 +1,7 @@
 package common.battle.attack;
 
 import common.battle.BasisLU;
-import common.battle.data.DataUnit;
+import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EUnit;
@@ -30,14 +30,15 @@ public class AtkModelUnit extends AtkModelEntity {
 			else
 				buffed[i] = data.getAtkModel(i).getProc().clone();
 
+			Unit u = ((MaskUnit) data).getPack().unit;
 			if (!ent.basis.isBanned(C_STOP))
-				buffed[i].STOP.time = (buffed[i].STOP.time * (100 + bas.getInc(C_STOP))) / 100;
+				buffed[i].STOP.time = (buffed[i].STOP.time * (100 + bas.getInc(C_STOP, u))) / 100;
 			if (!ent.basis.isBanned(C_SLOW))
-				buffed[i].SLOW.time = (buffed[i].SLOW.time * (100 + bas.getInc(C_SLOW))) / 100;
+				buffed[i].SLOW.time = (buffed[i].SLOW.time * (100 + bas.getInc(C_SLOW, u))) / 100;
 			if (!ent.basis.isBanned(C_WEAK))
-				buffed[i].WEAK.time = (buffed[i].WEAK.time * (100 + bas.getInc(C_WEAK))) / 100;
+				buffed[i].WEAK.time = (buffed[i].WEAK.time * (100 + bas.getInc(C_WEAK, u))) / 100;
 			if (buffed[i].CRIT.prob > 0 && !ent.basis.isBanned(C_CRIT))
-				buffed[i].CRIT.prob += bas.getInc(C_CRIT);
+				buffed[i].CRIT.prob += bas.getInc(C_CRIT, u);
 		}
 	}
 
@@ -122,10 +123,10 @@ public class AtkModelUnit extends AtkModelEntity {
 		if (abis[ind] == 1) {
 			setProc(ind, proc);
 			if (!e.basis.isBanned(C_KB))
-				proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB)) / 100;
+				proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB, ((MaskUnit) data).getPack().unit)) / 100;
 		}
-		if (e.data instanceof DataUnit)
-			for (int j : BCShareable) proc.getArr(j).set(e.getProc().getArr(j));
+		for (int j : BCShareable)
+			proc.getArr(j).set(e.getProc().getArr(j));
 		proc.getArr(P_BSTHUNT).set(e.getProc().getArr(P_BSTHUNT));
 		if (((EUnit) e).legendGrade != -1)
 			atk = atk * (100 + ORB_LEGEND_ATTACK[((EUnit) e).legendGrade]) / 100;

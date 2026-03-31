@@ -45,8 +45,9 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 		this.id = id;
 	}
 
-	public CharaGroup(int ID, int t, Identifier<Unit>[] units) {
+	public CharaGroup(int ID, String name, int t, Identifier<Unit>[] units) {
 		this(t, units);
+		this.name = name;
 		id = Identifier.parseInt(ID, CharaGroup.class);
 	}
 

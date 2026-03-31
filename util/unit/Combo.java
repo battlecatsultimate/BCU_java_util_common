@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -31,7 +30,6 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 
         if (qs == null) {
             System.out.println("W/Combo::readFile - \"./org/data/NyancomboData.csv\" file hasn't been found");
-
             return;
         }
 
@@ -42,9 +40,7 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
                 continue;
 
             String[] strs = str.trim().split(",");
-
             Combo c = new Combo(Identifier.parseInt(i++, Combo.class), strs);
-
             if (c.show > 0)
                 data.combos.add(c);
         }
@@ -53,18 +49,15 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 
         if (qs == null) {
             System.out.println("W/Combo::readFile - \"./org/data/NyancomboParam.tsv\" file hasn't been found");
-
             return;
         }
 
         for (i = 0; i < C_TOT; i++) {
             String line = qs.poll();
-
             if (line == null)
                 continue;
 
             String[] strs = line.trim().split("\t");
-
             if (strs.length < 5)
                 continue;
 
@@ -74,10 +67,8 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         }
 
         qs = VFile.readLine("./org/data/NyancomboFilter.tsv");
-
         if (qs == null) {
             System.out.println("W/Combo::readFile - \"./org/data/NyancomboFilter.tsv\" file hasn't been found");
-
             return;
         }
 
@@ -85,14 +76,11 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
 
         for (i = 0; i < aux.filter.length; i++) {
             String line = qs.poll();
-
             if (line == null)
                 continue;
 
             String[] strs = line.trim().split("\t");
-
             aux.filter[i] = new int[strs.length];
-
             for (int j = 0; j < strs.length; j++)
                 aux.filter[i][j] = Integer.parseInt(strs[j]);
         }
@@ -204,6 +192,10 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
                 formSrc[j++] = forms[i];
         }
         forms = formSrc;
+    }
+
+    public boolean groupContains(Unit u) {
+        return group == null || group.set.contains(u);
     }
 
     @SuppressWarnings("ForLoopReplaceableByForEach")

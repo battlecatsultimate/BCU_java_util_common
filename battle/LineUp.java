@@ -1,6 +1,5 @@
 package common.battle;
 
-import common.CommonStatic;
 import common.battle.data.PCoin;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
@@ -28,7 +27,7 @@ public class LineUp extends Data {
 	public final Form[][] fs = new Form[2][5];
 	public final EForm[][] efs = new EForm[2][5];
 	public final EForm[][] spirits = new EForm[2][5];
-	public int[] inc = new int[C_TOT], loc = new int[5];
+	public int[] loc = new int[5];
 
 	public List<Combo> coms = new ArrayList<>();
 
@@ -290,7 +289,6 @@ public class LineUp extends Data {
 	 */
 	private void renewCombo() {
 		List<Combo> tcom = new ArrayList<>();
-		inc = new int[C_TOT];
 		loc = new int[5];
 		for (PackData p : UserProfile.getAllPacks()) {
 			if (p instanceof PackData.UserPack && !((PackData.UserPack)p).useCombos)
@@ -319,14 +317,13 @@ public class LineUp extends Data {
 				}
 				if (b) {
 					tcom.add(c);
-					inc[c.type] += CommonStatic.getBCAssets().values[c.type][c.lv];
 					for (int i = 0; i < c.forms.length; i++)
 						for (int j = 0; j < 5; j++) {
 							Form fu = c.forms[i];
 							Form f = fs[0][j];
-							if (f == null)
+							if (f == null || fu == null)
 								continue;
-							if (f.unit == fu.unit && f.fid >= fu.fid)
+                            if (f.unit == fu.unit && f.fid >= fu.fid)
 								loc[j]++;
 						}
 				}

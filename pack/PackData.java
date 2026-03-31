@@ -120,12 +120,13 @@ public abstract class PackData implements IndexContainer {
             for (String str : qs) {
                 String[] strs = str.split(",");
                 int id = CommonStatic.parseIntN(strs[0]);
+                String name = strs[1];
                 int type = CommonStatic.parseIntN(strs[2]);
                 @SuppressWarnings("unchecked")
                 Identifier<Unit>[] units = new Identifier[strs.length - 3];
                 for (int i = 3; i < strs.length; i++)
                     units[i - 3] = Identifier.parseInt(CommonStatic.parseIntN(strs[i]), Unit.class);
-                groups.set(id, new CharaGroup(id, type, units));
+                groups.set(id, new CharaGroup(id, name, type, units));
             }
         }
 

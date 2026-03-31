@@ -22,6 +22,10 @@ import java.util.List;
 public class EUnit extends Entity {
 
 	public static class OrbHandler extends BattleObj {
+		private static EUnit getEUnit(AttackAb atk) {
+			return atk.origin.model instanceof AtkModelUnit ? (EUnit) ((AtkModelUnit) atk.origin.model).e : (EUnit) ((AtkModelUnit) atk.model).e;
+		}
+
 		protected static int getOrbAtk(AttackAb atk, EEnemy en) {
 			if (atk.matk == null) {
 				return 0;
@@ -29,33 +33,26 @@ public class EUnit extends Entity {
 
 			if (atk.origin.model instanceof AtkModelUnit) {
 				// Warning : Eunit.e became public now
-				EUnit unit = (EUnit) ((AtkModelUnit) atk.origin.model).e;
-
-				return unit.getOrbAtk(en.traits, atk.matk);
+				return getEUnit(atk).getOrbAtk(en.traits, atk.matk);
 			}
 
 			return 0;
 		}
 
 		protected static float getOrbMassive(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
-			if(atk.origin.model instanceof AtkModelUnit) {
-				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(atk.trait, traits, t);
-			}
-
-			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbMassive(atk.trait, traits, t);
+			EUnit eu = getEUnit(atk);
+			return eu.getOrbMassive(atk.trait, traits, t, eu.basis.b.getInc(Data.C_MASSIVE, ((MaskUnit) eu.data).getPack().unit));
 		}
 
 		protected static float getOrbGood(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
-			if(atk.origin.model instanceof AtkModelUnit) {
-				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(atk.trait, traits, t);
-			}
-
-			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbGood(atk.trait, traits, t);
+			EUnit eu = getEUnit(atk);
+			return eu.getOrbGood(atk.trait, traits, t, eu.basis.b.getInc(Data.C_GOOD, ((MaskUnit) eu.data).getPack().unit));
 		}
 	}
 
 	public final int lvl;
 	public final int[] index;
+	public final int[] inc = new int[C_TOT];
 
 	protected final Level level;
 
@@ -181,7 +178,7 @@ public class EUnit extends Entity {
 	public int getAtk() { // visual only
 		int atk = aam.getAtk();
 		if (status[P_STRONG][0] != 0 && !basis.isBanned(C_STRONG))
-			atk += atk * (status[P_STRONG][0] + basis.b.getInc(C_STRONG)) / 100;
+			atk += atk * (status[P_STRONG][0] + basis.b.getInc(C_STRONG, ((MaskUnit) data).getPack().unit)) / 100;
 		if (status[P_WEAK][0] > 0)
 			atk = atk * status[P_WEAK][1] / 100;
 		if (legendGrade != -1)
@@ -280,6 +277,7 @@ public class EUnit extends Entity {
 
 	@Override
 	protected int getDamage(AttackAb atk, int ans) {
+		MaskUnit mu = ((MaskUnit) data);
 		if (atk instanceof AttackWave && atk.waveType == WT_MINI)
 			ans = (int) ((float) ans * atk.getProc().MINIWAVE.multi / 100.0);
 		if (atk instanceof AttackVolcano && (atk.waveType & WT_MIVC) > 0)
@@ -295,22 +293,24 @@ public class EUnit extends Entity {
 			for (Trait t : traits) {
 				if (t.id.pack.equals("000000") || sharedTraits.contains(t))
 					continue;
-				if ((t.targetType && isAntiTraited) || t.targetForms.contains(((MaskUnit)data).getPack()))
+				if ((t.targetType && isAntiTraited) || t.targetForms.contains(mu.getPack()))
 					sharedTraits.add(t);
 			}
 
 			if ((getAbi() & AB_GOOD) != 0)
-				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level, basis.isBanned(C_GOOD)));
+				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, mu.getOrb(), level,
+						basis.isBanned(C_GOOD) ? 0 : basis.b.getInc(C_GOOD, mu.getPack().unit)));
 			if ((getAbi() & AB_RESIST) != 0)
-				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, ((MaskUnit)data).getOrb(), level, basis.isBanned(Data.C_RESIST)));
+				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, mu.getOrb(), level,
+						basis.isBanned(Data.C_RESIST) ? 0 : basis.b.getInc(Data.C_RESIST, mu.getPack().unit)));
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
 		}
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
-			ans = (int) (ans * basis.b.t().getWKDef(basis.isBanned(Data.C_WKILL)));
+			ans = (int) (ans * basis.b.t().getWKDef(basis.isBanned(Data.C_WKILL) ? 0 : basis.b.getInc(Data.C_WKILL, mu.getPack().unit)));
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
-			ans = (int) (ans * basis.b.t().getEKDef(basis.isBanned(Data.C_EKILL)));
+			ans = (int) (ans * basis.b.t().getEKDef(basis.isBanned(Data.C_EKILL) ? 0 : basis.b.getInc(Data.C_EKILL, mu.getPack().unit)));
 
 		if (isBase)
 			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
@@ -351,8 +351,9 @@ public class EUnit extends Entity {
 	@Override
 	protected void updateMove(float extmov) {
 		int speed = data.getSpeed();
-		extmov = (float) ((speed > 0 && basis.getGlobalSpeed(-1, speed) > -1 ? basis.getGlobalSpeed(-1, speed) : data.getSpeed()) * basis.b.getInc(C_SPE) / 50) / 4f;
-		super.updateMove(extmov);
+		extmov += (float) ((speed > 0 && basis.getGlobalSpeed(-1, speed) > -1 ? basis.getGlobalSpeed(-1, speed) : data.getSpeed())
+				* basis.b.getInc(C_SPE, ((MaskUnit) data).getPack().unit) / 50);
+		super.updateMove(extmov / 4f);
 	}
 
 	private int getOrbAtk(ArrayList<Trait> trait, MaskAtk matk) {
@@ -424,7 +425,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private float getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+	private float getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t, int comboInc) {
 		float ini = 1;
 
 		if (!traits.isEmpty())
@@ -456,12 +457,12 @@ public class EUnit extends Entity {
 		if (ini == 1)
 			return ini;
 
-		float com = 1 + t.b.getInc(C_MASSIVE) * 0.01f;
+		float com = 1 + comboInc * 0.01f;
 
 		return ini * com;
 	}
 
-	private float getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+	private float getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t, int comboInc) {
 		float ini = 1;
 
 		if (!traits.isEmpty())
@@ -493,7 +494,7 @@ public class EUnit extends Entity {
 		if (ini == 1)
 			return ini;
 
-		float com = 1 + t.b.getInc(C_GOOD) * 0.01f;
+		float com = 1 + comboInc * 0.01f;
 		return ini * com;
 	}
 

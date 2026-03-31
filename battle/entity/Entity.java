@@ -4,10 +4,7 @@ import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.*;
-import common.battle.data.AtkDataModel;
-import common.battle.data.CustomEntity;
-import common.battle.data.MaskEntity;
-import common.battle.data.PCoin;
+import common.battle.data.*;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.P;
@@ -1456,7 +1453,7 @@ public abstract class Entity extends AbEntity {
 	 */
 	private int regentimer;
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, float atkMagnif, float hpMagnif) {
+	protected Entity(StageBasis b, MaskEnemy de, EAnimU ea, float atkMagnif, float hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
 		basis = b;
 		data = de;
@@ -1470,11 +1467,11 @@ public abstract class Entity extends AbEntity {
 		regentimer = getProc().HPREGEN.interval;
 	}
 
-	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, float lvMagnif, float tAtk, float tHP, PCoin pc, Level lv) {
+	protected Entity(StageBasis b, MaskUnit de, EAnimU ea, float lvMagnif, float tAtk, float tHP, PCoin pc, Level lv) {
 		super((pc != null && lv != null && lv.getTalents().length == pc.max.length) ?
 				// (b.isBanned
-				(int) ((1 + (b.isBanned(Data.C_DEF) ? 0 : b.b.getInc(Data.C_DEF)) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getTalents()))) :
-				(int) ((1 + (b.isBanned(Data.C_DEF) ? 0 : b.b.getInc(Data.C_DEF)) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
+				(int) ((1 + (b.isBanned(Data.C_DEF) ? 0 : b.b.getInc(Data.C_DEF, de.getPack().unit)) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getTalents()))) :
+				(int) ((1 + (b.isBanned(Data.C_DEF) ? 0 : b.b.getInc(Data.C_DEF, de.getPack().unit)) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
 		);
 		basis = b;
 		data = de;
@@ -2368,9 +2365,6 @@ public abstract class Entity extends AbEntity {
 		// decrement TBA
 		if (waitTime > 0)
 			waitTime--;
-
-
-
 
 		updateProc();
 		barrier.update();
