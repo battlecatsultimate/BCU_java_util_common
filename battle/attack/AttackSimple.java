@@ -128,10 +128,13 @@ public class AttackSimple extends AttackAb {
 		//At this point, attacker must not be null if attack is sent from entity
 		//Thus we keep real "raw" attack, and change value such as weaken/strengthen here
 		if (attacker != null) {
-			if (attacker.status[P_STRONG][0] != 0)
-				atk += atk * attacker.status[P_STRONG][0] / 100;
-			if (attacker.status[P_WEAK][0] != 0)
-				atk = atk * attacker.status[P_WEAK][1] / 100;
+			int[][] status = attacker.status;
+			if (status[P_STRONG][0] != 0)
+				atk += atk * status[P_STRONG][0] / 100;
+			if (status[P_STRONG][1] != 0)
+				atk += atk * status[P_STRONG][1] / 100;
+			if (status[P_WEAK][0] != 0)
+				atk = atk * status[P_WEAK][1] / 100;
 		}
 
 		int layer = model.getLayer();
@@ -150,6 +153,8 @@ public class AttackSimple extends AttackAb {
 		for (AbEntity e : capt) {
 			e.damaged(this);
 			attacked.add(e);
+			if (e instanceof Entity)
+				((Entity) e).lastHitBy.add(attacker);
 		}
 		if (!capt.isEmpty() && proc.WAVE.exists()) {
 			int dire = model.getDire();

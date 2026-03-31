@@ -733,6 +733,11 @@ public class Editors {
 		map().put("BLAST", new EditControl<>(Proc.BLAST.class, (t) -> {
 			t.prob = Math.max(0, Math.min(100, t.prob));
 		}));
+
+		map().put("BERSERK", new EditControl<>(Proc.BERSERK.class, (t) -> {
+			t.killCount = Math.max(0, t.killCount);
+			t.mult = Math.max(0, t.mult);
+		}));
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {

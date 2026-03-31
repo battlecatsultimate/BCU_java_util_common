@@ -132,7 +132,12 @@ public class EUnit extends Entity {
 			} else if (id == ORB_BLAST_RESIST) {
 				orbProc.IMUBLAST.mult = Math.min(100, orbProc.IMUBLAST.mult + ORB_RESIST_MULT[grade]);
 				continue;
+			} else if (id == ORB_BERSERKER) {
+				orbProc.BERSERK.killCount = 10;
+				orbProc.BERSERK.mult = Math.max(orbProc.BERSERK.mult, ORB_BERSERKER_MULT[grade]);
+				continue;
 			}
+
 			if (!isOrbBoosted)
 				continue;
 			if (id == ORB_DEATH_SURGE) {

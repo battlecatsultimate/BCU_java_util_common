@@ -728,6 +728,15 @@ public class Data {
 			public Identifier<?> id;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class BERSERK extends ProcItem {
+			@Order(0)
+			public int killCount;
+
+			@Order(1)
+			public int mult;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -891,6 +900,8 @@ public class Data {
 		public final MULT CANONCHARGE = new MULT();
 		@Order(64)
 		public final PROB IMUATKANY = new PROB();
+		@Order(65)
+		public final BERSERK BERSERK = new BERSERK();
 
 		@Override
 		public Proc clone() {
@@ -1748,6 +1759,7 @@ public class Data {
 	public static final int[] ORB_IMUATK_MULT = { 1, 3, 5, 7, 10 };
 
 	public static final int[] ORB_SINGLE_COUNTER_SURGE_MULT = { 10, 30, 50, 70, 100 };
+	public static final int[] ORB_BERSERKER_MULT = { 3, 6, 10, 14, 20 };
 
 	public static final int[] GATYA = { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164, 167,
 			168, 169, 170, 171, 179, 180, 181, 182, 183, 184};

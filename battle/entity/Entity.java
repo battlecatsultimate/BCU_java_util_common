@@ -24,10 +24,7 @@ import common.util.pack.Soul;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Entity class for units and enemies
@@ -470,7 +467,7 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			} else
 				status[P_WAVE][0]--;
-			if (status[P_STRONG][0] == 0) {
+			if (Arrays.stream(status[P_STRONG]).allMatch(v -> v == 0)) {
 				byte id = dire == -1 ? A_UP : A_E_UP;
 				effs[id] = null;
 			}
@@ -1157,8 +1154,10 @@ public abstract class Entity extends AbEntity {
 		}
 
 		private void postUpdate() {
-			if (e.health > 0)
+			if (e.health > 0) {
 				tempZK = false;
+				e.lastHitBy.clear();
+			}
 		}
 
 		private boolean prekill() {
@@ -1321,6 +1320,17 @@ public abstract class Entity extends AbEntity {
 	 * Damage taken from opponents
 	 */
 	public long damageTaken = 0;
+
+	/**
+	 * Total number of entities killed
+	 */
+	public int killCount = 0;
+
+	/**
+	 * Enemies it got hit by.
+	 * Upon post update, if health is above 0, this is instantly cleared.
+	 */
+	public Set<Entity> lastHitBy = new HashSet<>();
 
 	/**
 	 * The time that this entity has been alive
@@ -2110,6 +2120,9 @@ public abstract class Entity extends AbEntity {
 		atkm.stopAtk();
 		anim.kill();
 		basis.checkGuard();
+		if (atk == KillMode.NORMAL)
+			for (Entity attacker : lastHitBy)
+				attacker.killCount++;
 	}
 
 	/**
@@ -2147,14 +2160,20 @@ public abstract class Entity extends AbEntity {
 		damage = 0;
 
 		// increase damage
-		int strong = getProc().STRONG.health;
-		if ((touchable() & TCH_CORPSE) == 0 && status[P_STRONG][0] == 0 && strong > 0 && health * 100 <= maxH * strong) {
+		int strongThreshold = getProc().STRONG.health;
+		if ((touchable() & TCH_CORPSE) == 0 && status[P_STRONG][0] == 0 && strongThreshold > 0 && health * 100 <= maxH * strongThreshold) {
 			status[P_STRONG][0] = getProc().STRONG.mult;
 			anim.getEff(P_STRONG);
 		}
+		// berserker increase damage
+		int requiredKills = getProc().BERSERK.killCount;
+		if ((touchable() & TCH_CORPSE) == 0 && status[P_STRONG][1] == 0 && requiredKills > 0 && killCount >= requiredKills) {
+			status[P_STRONG][1] = getProc().BERSERK.mult;
+			anim.getEff(P_STRONG);
+		}
 		// adrenaline
-		int threshold = getProc().SPEEDUP.health;
-		if ((touchable() & TCH_CORPSE) == 0 && threshold > 0 && health * 100 <= maxH * threshold) {
+		int adrenalineThreshold = getProc().SPEEDUP.health;
+		if ((touchable() & TCH_CORPSE) == 0 && adrenalineThreshold > 0 && health * 100 <= maxH * adrenalineThreshold) {
 			status[P_SPEEDUP][0] = getProc().SPEEDUP.mult;
 			anim.getEff(P_SPEEDUP);
 		}
