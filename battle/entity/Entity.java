@@ -1589,7 +1589,7 @@ public abstract class Entity extends AbEntity {
 		tokens.add(atk);
 
 		Proc.PT imuatk = getProc().IMUATK;
-		if (imuatk.exists() && (atk.dire == -1 || receive(-1)) || ctargetable(atk.trait, atk.attacker, false)) {
+		if (imuatk.exists() && (atk.dire == -1 || receive(-1)) || traitCompatible(atk.trait, atk.attacker, false)) {
 			if (status[P_IMUATK][0] == 0 && imuatk.perform(basis.r)) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
 				anim.getEff(P_IMUATK);
@@ -1609,7 +1609,7 @@ public abstract class Entity extends AbEntity {
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
 
-		if (dmgcut.exists() && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false))
+		if (dmgcut.exists() && ((dmgcut.type.traitIgnore && status[P_CURSE][0] == 0) || traitCompatible(atk.trait, atk.attacker, false))
 				&& dmg < status[P_DMGCUT][0] && dmg > 0 && dmgcut.perform(basis.r)) {
 			anim.getEff(P_DMGCUT);
 
@@ -1626,7 +1626,7 @@ public abstract class Entity extends AbEntity {
 
 		Proc.DMGCAP dmgcap = getProc().DMGCAP;
 
-		if (dmgcap.exists() && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || ctargetable(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0]
+		if (dmgcap.exists() && ((dmgcap.type.traitIgnore && status[P_CURSE][0] == 0) || traitCompatible(atk.trait, atk.attacker, false)) && dmg > status[P_DMGCAP][0]
 				&& dmgcap.perform(basis.r)) {
 			anim.getEff(dmgcap.type.nullify ? DMGCAP_SUCCESS : DMGCAP_FAIL);
 			if (dmgcap.type.procs)
@@ -1836,7 +1836,7 @@ public abstract class Entity extends AbEntity {
 
 	private void processProcs(AttackAb atk) {
 		// process proc part
-		if (!(ctargetable(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
+		if (!(traitCompatible(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
 			return;
 
 		boolean cannonResist = atk.canon > 0 && getProc().IMUCANNON.exists() && (atk.canon & getProc().IMUCANNON.type) > 0;
@@ -2259,8 +2259,11 @@ public abstract class Entity extends AbEntity {
 	 * @param targetOnly Used if this function is called as part of a "Target Only" call
 	 */
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) {
+	public boolean traitCompatible(List<Trait> t, Entity attacker, boolean targetOnly) {
 		if (targetOnly && isBase) return true;
+		for (Trait trait : t)
+			if (traits.contains(trait))
+				return true;
 		if (targetTraited(t))
 			for (int i = 0; i < traits.size(); i++)
 				if (traits.get(i).targetType)
@@ -2269,9 +2272,6 @@ public abstract class Entity extends AbEntity {
 			for (int i = 0; i < t.size(); i++)
 				if (t.get(i).targetType)
 					return true;
-		for (Trait trait : t)
-			if (traits.contains(trait))
-				return true;
 		return false;
 	}
 
@@ -2280,12 +2280,12 @@ public abstract class Entity extends AbEntity {
 	 * @param targets The list of traits the unit targets
 	 * @return true if the unit is anti-traited
 	 */
-	public static boolean targetTraited(ArrayList<Trait> targets) {
+	public static boolean targetTraited(List<Trait> targets) {
 		ArrayList<Trait> temp = new ArrayList<>();
 		for (Trait t : UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
 			if (t.id.id != TRAIT_METAL)
 				temp.add(t);
-		return targets.containsAll(temp);
+		return temp.containsAll(targets);
 	}
 
 	/**
@@ -2550,7 +2550,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * get the extra proc time due to fruits, for EEnemy only
 	 */
-	private float getFruit(ArrayList<Trait> trait, int dire, int e) {
+	private float getFruit(List<Trait> trait, int dire, int e) {
 		if (!receive(dire) || receive(e))
 			return 0;
 		ArrayList<Trait> sharedTraits = new ArrayList<>(trait);
@@ -2685,7 +2685,7 @@ public abstract class Entity extends AbEntity {
 		if ((getAbi() & AB_ONLY) > 0) {
 			touchEnemy = false;
 			for (int i = 0; i < le.size(); i++)
-				if (le.get(i).ctargetable(traits, this, true))
+				if (le.get(i).traitCompatible(traits, this, true))
 					touchEnemy = true;
 		}
 		return touch;

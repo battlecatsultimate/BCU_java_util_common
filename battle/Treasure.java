@@ -314,7 +314,7 @@ public class Treasure extends Data {
 	/**
 	 * get maximum fruit of certain trait bitmask
 	 */
-	public float getFruit(ArrayList<Trait> types) {
+	public float getFruit(List<Trait> types) {
 		float ans = 0;
 		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 		if (types.contains(BCTraits.get(Data.TRAIT_RED)))
@@ -337,7 +337,7 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public float getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, OrbInfo orb, Level level, boolean noCombo) {
+	public float getGOODDEF(List<Trait> eTraits, List<Trait> traits, OrbInfo orb, Level level, boolean noCombo) {
 		float ini = traits.isEmpty() ? 1 : 0.5f - 0.1f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
@@ -397,7 +397,7 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public float getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, OrbInfo orb, Level level, boolean noCombo) {
+	public float getRESISTDEF(List<Trait> eTraits, List<Trait> traits, OrbInfo orb, Level level, boolean noCombo) {
 		float ini = traits.isEmpty() ? 1 : 0.25f - 0.05f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {

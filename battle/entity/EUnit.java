@@ -37,7 +37,7 @@ public class EUnit extends Entity {
 			return 0;
 		}
 
-		protected static float getOrbMassive(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
+		protected static float getOrbMassive(AttackAb atk, List<Trait> traits, Treasure t) {
 			if(atk.origin.model instanceof AtkModelUnit) {
 				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbMassive(atk.trait, traits, t);
 			}
@@ -45,7 +45,7 @@ public class EUnit extends Entity {
 			return ((EUnit) ((AtkModelUnit)atk.model).e).getOrbMassive(atk.trait, traits, t);
 		}
 
-		protected static float getOrbGood(AttackAb atk, ArrayList<Trait> traits, Treasure t) {
+		protected static float getOrbGood(AttackAb atk, List<Trait> traits, Treasure t) {
 			if(atk.origin.model instanceof AtkModelUnit) {
 				return ((EUnit) ((AtkModelUnit) atk.origin.model).e).getOrbGood(atk.trait, traits, t);
 			}
@@ -391,7 +391,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private int getOrbRes(ArrayList<Trait> trait, int atk) {
+	private int getOrbRes(List<Trait> trait, int atk) {
 		OrbInfo orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level == null || level.getOrbs() == null)
@@ -424,7 +424,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private float getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+	private float getOrbMassive(List<Trait> eTraits, List<Trait> traits, Treasure t) {
 		float ini = 1;
 
 		if (!traits.isEmpty())
@@ -461,7 +461,7 @@ public class EUnit extends Entity {
 		return ini * com;
 	}
 
-	private float getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t) {
+	private float getOrbGood(List<Trait> eTraits, List<Trait> traits, Treasure t) {
 		float ini = 1;
 
 		if (!traits.isEmpty())
