@@ -81,7 +81,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	public int getInc(int type, Unit unit) {
 		int inc = 0;
 		for (Combo combo : lu.coms) {
-			if (combo.type == type && combo.groupContains(unit))
+			if (combo.type == type && combo.checkCharaGroup(unit))
 				inc += CommonStatic.getBCAssets().values[combo.type][combo.lv];
 		}
 		return inc;
@@ -90,7 +90,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	public int getInc(int type, List<Unit> units) {
 		int inc = 0;
 		for (Combo combo : lu.coms) {
-			if (combo.type == type && units.stream().anyMatch(combo::groupContains))
+			if (combo.type == type && units.stream().anyMatch(combo::checkCharaGroup))
 				inc += CommonStatic.getBCAssets().values[combo.type][combo.lv];
 		}
 		return inc;

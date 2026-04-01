@@ -194,8 +194,15 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
         forms = formSrc;
     }
 
-    public boolean groupContains(Unit u) {
-        return group == null || group.set.contains(u);
+    public boolean checkCharaGroup(Unit u) {
+        if (group == null)
+            return true;
+        else if (group.type == 0)
+            return group.set.contains(u);
+        else if (group.type == 1)
+            return !group.set.contains(u);
+        else
+            return true;
     }
 
     @SuppressWarnings("ForLoopReplaceableByForEach")
