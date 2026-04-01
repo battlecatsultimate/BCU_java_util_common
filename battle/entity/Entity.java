@@ -2283,7 +2283,7 @@ public abstract class Entity extends AbEntity {
 		for (Trait t : UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
 			if (t.id.id != TRAIT_METAL)
 				temp.add(t);
-		return temp.containsAll(targets);
+		return new HashSet<>(targets).containsAll(temp);
 	}
 
 	/**
