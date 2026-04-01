@@ -197,9 +197,9 @@ public class Combo extends Data implements IndexContainer.Indexable<IndexContain
     public boolean checkCharaGroup(Unit u) {
         if (group == null)
             return true;
-        else if (group.type == 0)
+        else if (group.type == 0) // includes
             return group.set.contains(u);
-        else if (group.type == 1)
+        else if (group.type == 2) // excludes
             return !group.set.contains(u);
         else
             return true;
