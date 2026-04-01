@@ -52,14 +52,17 @@ public class EEnemy extends Entity {
 		super.kill(atk);
 		List<Unit> unitsHit = new ArrayList<>();
 		for (AttackAb attack : lastHitBy) {
-			if (!(attack instanceof AttackSimple) || !(attack.attacker instanceof EUnit))
-				return;
+			if (!(attack.attacker instanceof EUnit))
+				continue;
 			EUnit u = (EUnit) attack.attacker;
+			unitsHit.add(((Form) u.data.getPack()).unit);
+
+			if (!(attack instanceof AttackSimple))
+				continue;
 			if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
 				status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
 				u.bountyOrbCheck = true;
 			}
-			unitsHit.add(((Form) u.data.getPack()).unit);
 		}
 
 		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
