@@ -5,6 +5,7 @@ import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.*;
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -21,10 +22,12 @@ import common.util.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class Cannon extends AtkModelAb {
 
     public final int id, base, deco;
+    private final List<Trait> traits = new ArrayList<>();
     private EAnimD<?> anim, atka, exta;
     private int preTime = 0;
     private EUnit wall = null;
@@ -36,6 +39,8 @@ public class Cannon extends AtkModelAb {
         id = type;
         this.base = base;
         this.deco = deco;
+        for (PackData pack : UserProfile.getAllPacks())
+            traits.addAll(pack.traits.getList());
     }
 
     /**
@@ -147,7 +152,7 @@ public class Cannon extends AtkModelAb {
                 for (Entity e : b.le)
                     if (e.dire == -1 && e.pos < pos && (e.touchable() & (TCH_N | TCH_KB)) != 0)
                         pos = e.pos;
-                pos -= NYRAN[id] / 2.0;
+                pos -= NYRAN[id] / 2.0f;
             } else if (id == 2 || id == 6) {
                 pos = Math.max(800f, b.ebase.pos);
                 for (Entity e : b.le)
@@ -180,7 +185,6 @@ public class Cannon extends AtkModelAb {
         }
 
         Proc proc = Proc.blank();
-        ArrayList<Trait> traits = new ArrayList<>();
 
         /**
          * Cannons can be grouped into 2 main type: waved and localized
@@ -196,7 +200,6 @@ public class Cannon extends AtkModelAb {
          */
         if (id == 0) {
             // basic canon
-            traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
             proc.SNIPER.prob = 1;
             float wid = NYRAN[0];
@@ -215,7 +218,6 @@ public class Cannon extends AtkModelAb {
             new ContExtend(eatk, p, wid, spe, 1, 32, 0, 9);
         } else if (id == 3) {
             // freeze canon
-            traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             duration = 11;
             proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + (StageLimit.isComboBanned(b.est.lim, C_STOP) ? 0 : b.b.getInc(C_STOP))) / 100.0);
             int atk = (int) (b.b.t().getCanonAtk(StageLimit.isComboBanned(b.est.lim, Data.C_C_ATK)) * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
@@ -223,14 +225,12 @@ public class Cannon extends AtkModelAb {
             b.getAttack(new AttackCanon(this, atk, traits, 0, proc, pos - rad, pos + rad, duration));
         } else if (id == 4) {
             // water canon
-            traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             duration = 11;
             proc.CRIT.mult = -(int) (b.b.t().getCannonMagnification(id, Data.BASE_HEALTH_PERCENTAGE));
             float rad = NYRAN[4] / 2;
             b.getAttack(new AttackCanon(this, 1, new ArrayList<>(), 0, proc, pos - rad, pos + rad, duration));
         } else if (id == 5) {
             // zombie canon
-            traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
             proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + (StageLimit.isComboBanned(b.est.lim, C_STOP) ? 0 : b.b.getInc(C_STOP))) / 100);
             proc.SNIPER.prob = 1;
@@ -241,7 +241,6 @@ public class Cannon extends AtkModelAb {
             new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
         } else if (id == 6) {
             // blast canon
-            traits.addAll(UserProfile.getAll(Identifier.DEF, Trait.class));
             duration = 11;
             proc.BREAK.prob = 1;
             proc.KB.dis = KB_DIS[INT_KB];
@@ -255,7 +254,6 @@ public class Cannon extends AtkModelAb {
             exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
         } else if (id == 7) {
             // curse cannon
-            traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
             proc.CURSE.time = (int) b.b.t().getCannonMagnification(id, Data.BASE_CURSE_TIME);
             float wid = NYRAN[7];
             int spe = 150;

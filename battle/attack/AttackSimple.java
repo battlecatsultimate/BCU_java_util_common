@@ -26,13 +26,13 @@ public class AttackSimple extends AttackAb {
 	private final boolean range;
 	public int ind = 0;
 
-	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc pro, float p0, float p1, boolean isr,
+	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, List<Trait> tr, int eab, Proc pro, float p0, float p1, boolean isr,
 						MaskAtk matk, int layer, boolean isLongAtk, int duration) {
 		super(attacker, ent, ATK, tr, eab, pro, p0, p1, matk, layer, isLongAtk, duration);
 		range = isr;
 	}
 
-	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc proc, float p0, float p1, MaskAtk mask, int layer, boolean isLongAtk) {
+	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, List<Trait> tr, int eab, Proc proc, float p0, float p1, MaskAtk mask, int layer, boolean isLongAtk) {
 		this(attacker, ent, ATK, tr, eab, proc, p0, p1, mask.isRange(), mask, layer, isLongAtk, 1);
 		touch = mask.getTarget();
 
@@ -42,7 +42,7 @@ public class AttackSimple extends AttackAb {
 		dire *= mask.getDire();
 	}
 
-	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, ArrayList<Trait> tr, int eab, Proc proc, float p0, float p1, MaskAtk mask, int layer, boolean isLongAtk, int ind) {
+	public AttackSimple(Entity attacker, AtkModelAb ent, int ATK, List<Trait> tr, int eab, Proc proc, float p0, float p1, MaskAtk mask, int layer, boolean isLongAtk, int ind) {
 		this(attacker, ent, ATK, tr, eab, proc, p0, p1, mask, layer, isLongAtk);
 		this.ind = ind;
 	}
@@ -65,7 +65,7 @@ public class AttackSimple extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.ctargetable(trait, attacker, true))
+				if (e.traitCompatible(trait, attacker, true))
 					capt.add(e);
 		if (!range) {
 			if (capt.isEmpty())

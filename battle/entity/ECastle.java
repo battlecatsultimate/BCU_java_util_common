@@ -11,8 +11,8 @@ import common.util.pack.EffAnim.DefEff;
 import common.util.stage.StageLimit;
 import common.util.unit.Trait;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ECastle extends AbEntity {
 
@@ -107,7 +107,9 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly) { return true; }
+	public boolean traitCompatible(List<Trait> t, Entity attacker, boolean targetOnly) {
+		return true;
+	}
 
 	@Override
 	public int touchable() {

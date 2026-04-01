@@ -3,11 +3,11 @@ package common.battle.attack;
 import common.battle.entity.Cannon;
 import common.util.unit.Trait;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AttackCanon extends AttackSimple {
 
-	public AttackCanon(Cannon c, int ATK, ArrayList<Trait> tr, int eab, Proc pro, float p0, float p1, int duration) {
+	public AttackCanon(Cannon c, int ATK, List<Trait> tr, int eab, Proc pro, float p0, float p1, int duration) {
 		super(null, c, ATK, tr, eab, pro, p0, p1, true, null, 9, false, duration);
 		canon = c.id > 2 ? 1 << (c.id - 1) : 1 << c.id;
 		excludeRightEdge = c.id == 6;

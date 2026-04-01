@@ -19,9 +19,8 @@ import java.util.Objects;
 @JsonClass
 public class Trait extends Data implements Indexable<PackData, Trait> {
     public static void read() {
-        //Reads traits from BC and implements it into the main pack
         PackData.DefPack data = UserProfile.getBCData();
-        for (int i = 0; i < 17 ; i++) {
+        for (int i = 0; i < TRAIT_TOT; i++) {
             Trait t = new Trait(data.getNextID(Trait.class));
             data.traits.add(t);
         }

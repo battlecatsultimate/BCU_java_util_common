@@ -328,7 +328,7 @@ public class Treasure extends Data {
 	/**
 	 * get maximum fruit of certain trait bitmask
 	 */
-	public float getFruit(ArrayList<Trait> types) {
+	public float getFruit(List<Trait> types) {
 		float ans = 0;
 		FixIndexMap<Trait> BCTraits = UserProfile.getBCData().traits;
 		if (types.contains(BCTraits.get(Data.TRAIT_RED)))
@@ -351,7 +351,7 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public float getGOODDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, OrbInfo orb, Level level, int comboInc) {
+	public float getGOODDEF(List<Trait> eTraits, List<Trait> traits, OrbInfo orb, Level level, int comboInc) {
 		float ini = traits.isEmpty() ? 1 : 0.5f - 0.1f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {
@@ -386,14 +386,14 @@ public class Treasure extends Data {
 	/**
 	 * get attack multiplication from super massive damage ability
 	 */
-	public float getMASSIVESATK(ArrayList<Trait> traits) {
+	public float getMASSIVESATK(List<Trait> traits) {
 		return 5 + 1f / 3 * getFruit(traits);
 	}
 
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public float getMASSIVEATK(ArrayList<Trait> traits, int comboInc) {
+	public float getMASSIVEATK(List<Trait> traits, int comboInc) {
 		float ini = 3 + 1f / 3 * getFruit(traits);
 		float combo = 1 - comboInc * 0.01f;
 		return ini * combo;
@@ -402,7 +402,7 @@ public class Treasure extends Data {
 	/**
 	 * get attack multiplication from massive damage ability
 	 */
-	public float getGOODATK(ArrayList<Trait> traits, int comboInc) {
+	public float getGOODATK(List<Trait> traits, int comboInc) {
 		float ini = 1.5f + 0.3f / 3 * getFruit(traits);
 		float combo = 1 - comboInc * 0.01f;
 		return ini * combo;
@@ -411,7 +411,7 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public float getRESISTDEF(ArrayList<Trait> eTraits, ArrayList<Trait> traits, OrbInfo orb, Level level, int comboInc) {
+	public float getRESISTDEF(List<Trait> eTraits, List<Trait> traits, OrbInfo orb, Level level, int comboInc) {
 		float ini = traits.isEmpty() ? 1 : 0.25f - 0.05f / 3 * getFruit(traits);
 
 		if(orb != null && level.getOrbs() != null) {

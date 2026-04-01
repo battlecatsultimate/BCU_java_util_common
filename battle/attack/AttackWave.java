@@ -55,7 +55,7 @@ public class AttackWave extends AttackAb {
 			capt.addAll(le);
 		else
 			for (AbEntity e : le)
-				if (e.ctargetable(trait, attacker, true))
+				if (e.traitCompatible(trait, attacker, true))
 					capt.add(e);
 	}
 

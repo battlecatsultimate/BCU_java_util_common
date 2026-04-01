@@ -393,7 +393,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private int getOrbRes(ArrayList<Trait> trait, int atk) {
+	private int getOrbRes(List<Trait> trait, int atk) {
 		OrbInfo orb = ((MaskUnit) data).getOrb();
 
 		if (orb == null || level == null || level.getOrbs() == null)
@@ -426,7 +426,7 @@ public class EUnit extends Entity {
 		return ans;
 	}
 
-	private float getOrbMassive(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t, int comboInc) {
+	private float getOrbMassive(List<Trait> eTraits, List<Trait> traits, Treasure t, int comboInc) {
 		float ini = 1;
 
 		if (!traits.isEmpty())
@@ -463,7 +463,7 @@ public class EUnit extends Entity {
 		return ini * com;
 	}
 
-	private float getOrbGood(ArrayList<Trait> eTraits, ArrayList<Trait> traits, Treasure t, int comboInc) {
+	private float getOrbGood(List<Trait> eTraits, List<Trait> traits, Treasure t, int comboInc) {
 		float ini = 1;
 
 		if (!traits.isEmpty())

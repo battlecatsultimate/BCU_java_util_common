@@ -4,7 +4,7 @@ import common.battle.attack.AttackAb;
 import common.util.BattleObj;
 import common.util.unit.Trait;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbEntity extends BattleObj {
 
@@ -46,7 +46,7 @@ public abstract class AbEntity extends BattleObj {
 
 	public abstract void postUpdate();
 
-	public abstract boolean ctargetable(ArrayList<Trait> t, Entity attacker, boolean targetOnly);
+	public abstract boolean traitCompatible(List<Trait> t, Entity attacker, boolean targetOnly);
 
 	public abstract int touchable();
 
