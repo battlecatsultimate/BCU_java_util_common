@@ -3,9 +3,12 @@ package common.battle.data;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
@@ -79,6 +82,17 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 	public void importData(MaskEntity de) {
 		super.importData(de);
 
+		traits = new ArrayList<>();
+		for (Trait t : de.getTraits()) {
+			if (t.id.pack.equals(Identifier.DEF) && t.id.id != Data.TRAIT_EVA && t.id.id != Data.TRAIT_WITCH) {
+				traits.add(t);
+				continue;
+			}
+			PackData.UserPack p = UserProfile.getUserPack(pack.uid.pack);
+			if (p != null && (p.desc.id.equals(t.id.pack) || p.desc.dependency.contains(t.id.pack)))
+				traits.add(t);
+		}
+
 		if (de instanceof MaskUnit) {
 			MaskUnit mu = (MaskUnit) de;
 
@@ -89,8 +103,10 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 			limit = mu.getLimit();
 
 			PCoin p = mu.getPCoin();
-			if (p == null)
+			if (p == null) {
+				pcoin = null;
 				return;
+			}
 
 			ArrayList<int[]> info = p.info;
 			pcoin = new PCoin(this);

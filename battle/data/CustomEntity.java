@@ -6,7 +6,6 @@ import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
 import common.util.Data;
-import common.util.unit.Trait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,39 +175,33 @@ public abstract class CustomEntity extends DataEntity {
 		return touch;
 	}
 
-	public void importData(MaskEntity de) {
-		hp = de.getHp();
-		hb = de.getHb();
-		speed = de.getSpeed();
-		range = de.getRange();
-		abi = de.getAbi();
-		loop = de.getAtkLoop();
-		traits = new ArrayList<>();
-		for (Trait t : de.getTraits()) {
-			if (t.id.pack.equals("000000") && t.id.id != Data.TRAIT_EVA && t.id.id != Data.TRAIT_WITCH)
-				traits.add(t);
-			// todo: check if trait is usable in destination unit's pack
-		}
-		width = de.getWidth();
-		tba = de.getTBA();
-		touch = de.getTouch();
-		death = de.getDeathAnim();
-		will = de.getWill();
-		if (de instanceof CustomEntity) {
-			importData$1((CustomEntity) de);
+	public void importData(MaskEntity src) {
+		hp = src.getHp();
+		hb = src.getHb();
+		speed = src.getSpeed();
+		range = src.getRange();
+		abi = src.getAbi();
+		loop = src.getAtkLoop();
+		width = src.getWidth();
+		tba = src.getTBA();
+		touch = src.getTouch();
+		death = src.getDeathAnim();
+		will = src.getWill();
+		if (src instanceof CustomEntity) {
+			importData$1((CustomEntity) src);
 			return;
 		}
 
-		base = de.touchBase();
-		common = ((DefaultData)de).isCommon();
+		base = src.touchBase();
+		common = ((DefaultData)src).isCommon();
 		rep = new AtkDataModel(this);
-		rep.proc = de.getRepAtk().getProc().clone();
-		int m = de.getAtkCount();
+		rep.proc = src.getRepAtk().getProc().clone();
+		int m = src.getAtkCount();
 		atks = new AtkDataModel[m];
 		for (int i = 0; i < m; i++) {
-			atks[i] = new AtkDataModel(this, de, i);
+			atks[i] = new AtkDataModel(this, src, i);
 			for (int j : BCShareable)
-				atks[i].proc.getArr(j).set(de.getProc().getArr(j));
+				atks[i].proc.getArr(j).set(src.getProc().getArr(j));
 		}
 	}
 
