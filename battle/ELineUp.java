@@ -3,6 +3,7 @@ package common.battle;
 import common.CommonStatic;
 import common.util.BattleObj;
 import common.util.stage.Limit;
+import common.util.stage.StageLimit;
 import common.util.unit.Form;
 
 import java.util.Arrays;
@@ -33,8 +34,8 @@ public class ELineUp extends BattleObj {
 				else
 					price[i][j] = 100 * (sb.globalCost() > -1 ? sb.globalCost() : (int) (lu.efs[i][j].getPrice(sb.st.getCont().price)));
 				maxC[i][j] = sb.globalCdLimit() > 0
-						? sb.b.t().getFinResGlobal(sb.globalCdLimit(), sb.isBanned(C_RESP) ? 0 : sb.b.getInc(C_RESP, lu.efs[i][j].du.getPack().unit))
-						: sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn(), sb.isBanned(C_RESP) ? 0 : sb.b.getInc(C_RESP, lu.efs[i][j].du.getPack().unit));
+						? sb.b.t().getFinResGlobal(sb.globalCdLimit(), StageLimit.isComboBanned(sb.est.lim, C_RESP) ? 0 : sb.b.getInc(C_RESP, lu.efs[i][j].du.getPack().unit))
+						: sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn(), StageLimit.isComboBanned(sb.est.lim, C_RESP) ? 0 : sb.b.getInc(C_RESP, lu.efs[i][j].du.getPack().unit));
 				if (lim != null && lim.stageLimit != null) {
 					if (price[i][j] != -1)
 						price[i][j] = price[i][j] * lim.stageLimit.costMultiplier[form.unit.rarity] / 100;

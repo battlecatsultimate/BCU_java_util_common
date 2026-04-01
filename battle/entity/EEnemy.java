@@ -7,6 +7,7 @@ import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.anim.EAnimU;
+import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
@@ -63,7 +64,7 @@ public class EEnemy extends Entity {
 
 		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
 			float mul = basis.b.t().getDropMulti()
-					* (1 + (basis.isBanned(Data.C_MEAR) ? 0 : basis.b.getInc(Data.C_MEAR, unitsHit)) * 0.01f)
+					* (1 + (StageLimit.isComboBanned(basis.est.lim, Data.C_MEAR) ? 0 : basis.b.getInc(Data.C_MEAR, unitsHit)) * 0.01f)
 					* (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
 		}
@@ -109,9 +110,9 @@ public class EEnemy extends Entity {
 			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
 
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (atk.abi & AB_WKILL) > 0)
-			ans = (int) (ans * basis.b.t().getWKAtk(basis.isBanned(Data.C_WKILL) ? 0 : basis.b.getInc(Data.C_WKILL, ((Form) atk.attacker.data.getPack()).unit)));
+			ans = (int) (ans * basis.b.t().getWKAtk(StageLimit.isComboBanned(basis.est.lim, Data.C_WKILL) ? 0 : basis.b.getInc(Data.C_WKILL, ((Form) atk.attacker.data.getPack()).unit)));
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (atk.abi & AB_EKILL) > 0)
-			ans = (int) (ans * basis.b.t().getEKAtk(basis.isBanned(Data.C_EKILL) ? 0 : basis.b.getInc(Data.C_EKILL, ((Form) atk.attacker.data.getPack()).unit)));
+			ans = (int) (ans * basis.b.t().getEKAtk(StageLimit.isComboBanned(basis.est.lim, Data.C_EKILL) ? 0 : basis.b.getInc(Data.C_EKILL, ((Form) atk.attacker.data.getPack()).unit)));
 
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_BARON))) {
 			if ((atk.abi & AB_BAKILL) > 0)

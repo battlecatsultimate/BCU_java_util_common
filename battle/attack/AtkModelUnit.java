@@ -9,6 +9,7 @@ import common.battle.entity.EntCont;
 import common.battle.entity.Entity;
 import common.pack.Identifier;
 import common.util.Data.Proc.SUMMON;
+import common.util.stage.StageLimit;
 import common.util.unit.AbEnemy;
 import common.util.unit.EForm;
 import common.util.unit.Level;
@@ -31,13 +32,13 @@ public class AtkModelUnit extends AtkModelEntity {
 				buffed[i] = data.getAtkModel(i).getProc().clone();
 
 			Unit u = ((MaskUnit) data).getPack().unit;
-			if (!ent.basis.isBanned(C_STOP))
+			if (!StageLimit.isComboBanned(e.basis.est.lim, C_STOP))
 				buffed[i].STOP.time = (buffed[i].STOP.time * (100 + bas.getInc(C_STOP, u))) / 100;
-			if (!ent.basis.isBanned(C_SLOW))
+			if (!StageLimit.isComboBanned(e.basis.est.lim, C_SLOW))
 				buffed[i].SLOW.time = (buffed[i].SLOW.time * (100 + bas.getInc(C_SLOW, u))) / 100;
-			if (!ent.basis.isBanned(C_WEAK))
+			if (!StageLimit.isComboBanned(e.basis.est.lim, C_WEAK))
 				buffed[i].WEAK.time = (buffed[i].WEAK.time * (100 + bas.getInc(C_WEAK, u))) / 100;
-			if (buffed[i].CRIT.prob > 0 && !ent.basis.isBanned(C_CRIT))
+			if (buffed[i].CRIT.prob > 0 && !StageLimit.isComboBanned(e.basis.est.lim, C_CRIT))
 				buffed[i].CRIT.prob += bas.getInc(C_CRIT, u);
 		}
 	}
@@ -122,7 +123,7 @@ public class AtkModelUnit extends AtkModelEntity {
 		int atk = atks[ind];
 		if (abis[ind] == 1) {
 			setProc(ind, proc);
-			if (!e.basis.isBanned(C_KB))
+			if (!StageLimit.isComboBanned(e.basis.est.lim, C_KB))
 				proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB, ((MaskUnit) data).getPack().unit)) / 100;
 		}
 		for (int j : BCShareable)

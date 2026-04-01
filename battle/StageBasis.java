@@ -148,7 +148,7 @@ public class StageBasis extends BattleObj {
 			max = 50;
 		}
 		maxNum = max <= 0 ? 50 : max;
-		maxCannon = bas.t().CanonTime(sttime, isBanned(C_C_SPE));
+		maxCannon = bas.t().CanonTime(sttime, StageLimit.isComboBanned(est.lim, C_C_SPE));
 
 		int bank = maxBankLimit();
 		if (bank > 0) {
@@ -156,9 +156,9 @@ public class StageBasis extends BattleObj {
 			money = maxBankLimit() * 100;
 		} else {
 			work_lv = 1;
-			if (!isBanned(C_M_LV))
+			if (!StageLimit.isComboBanned(est.lim, C_M_LV))
 				work_lv += bas.getInc(C_M_LV);
-			if (!isBanned(C_M_INI))
+			if (!StageLimit.isComboBanned(est.lim, C_M_INI))
 				money = bas.getInc(C_M_INI) * 100;
 		}
 		if (est.lim != null && est.lim.stageLimit != null && est.lim.stageLimit.coolStart) {
@@ -167,7 +167,7 @@ public class StageBasis extends BattleObj {
 					elu.get(i, j);
 		}
 
-		cannon = maxCannon * (isBanned(C_C_INI) ? 0 : bas.getInc(C_C_INI)) / 100;
+		cannon = maxCannon * (StageLimit.isComboBanned(est.lim, C_C_INI) ? 0 : bas.getInc(C_C_INI)) / 100;
 		canon = new Cannon(this, nyc[0], nyc[1], nyc[2]);
 		conf = ints;
 
@@ -424,7 +424,7 @@ public class StageBasis extends BattleObj {
 			money -= upgradeCost;
 			work_lv++;
 			upgradeCost = b.t().getLvCost(work_lv);
-			maxMoney = b.t().getMaxMon(work_lv, isBanned(C_M_MAX));
+			maxMoney = b.t().getMaxMon(work_lv, StageLimit.isComboBanned(est.lim, C_M_MAX));
 			return true;
 		}
 		CommonStatic.setSE(SE_SPEND_FAIL);
@@ -567,10 +567,16 @@ public class StageBasis extends BattleObj {
 
 				return false;
 			}
-			if (elu.price[i][j] == -1) {
+
+			int price = elu.price[i][j];
+			if (elu.price[i][j] == -1)
 				return false;
-			}
-			if (elu.price[i][j] > money) {
+			if (elu.priceDownOrb[i][j] > 0 && elu.tick[i][j] == 1)
+				price -= price * elu.priceDownOrb[i][j] / 100;
+			if (!StageLimit.isComboBanned(est.lim, C_DISCOUNT))
+				price -= price * b.getInc(C_DISCOUNT, f.du.getPack().unit) / 100;
+
+			if (price > money) {
 				if (manual)
 					CommonStatic.setSE(SE_SPEND_FAIL);
 
@@ -601,10 +607,7 @@ public class StageBasis extends BattleObj {
 			le.add(eu);
 			le.sort(Comparator.comparingInt(e -> e.layer));
 
-			if (elu.priceDownOrb[i][j] > 0 && elu.tick[i][j] == 1)
-				money -= elu.price[i][j] - (elu.price[i][j] * elu.priceDownOrb[i][j] / 100);
-			else
-				money -= elu.price[i][j];
+			money -= price;
 			unitRespawnTime = 1;
 			if (maxCatSpawns > 0)
 				maxCatSpawns--;
@@ -742,9 +745,9 @@ public class StageBasis extends BattleObj {
 				if (bank > 0) {
 					maxMoney = bank * 100;
 				} else {
-					maxMoney = b.t().getMaxMon(work_lv, isBanned(C_M_MAX));
+					maxMoney = b.t().getMaxMon(work_lv, StageLimit.isComboBanned(est.lim, C_M_MAX));
 					int mon = b.t().getMonInc(work_lv);
-					if (!isBanned(C_M_INC))
+					if (!StageLimit.isComboBanned(est.lim, C_M_INC))
 						mon *= (b.getInc(C_M_INC) / 100 + 1);
 					money += mon;
 				}
@@ -1089,13 +1092,6 @@ public class StageBasis extends BattleObj {
 				bgEffect = CommonStatic.getBCAssets().bgEffects.get(newBg.effect);
 		}
 		bg = newBg;
-	}
-
-	public boolean isBanned(byte comboId) {
-		if (est.lim.stageLimit == null)
-			return false;
-		else
-			return est.lim.stageLimit.bannedCatCombo.contains((int) comboId);
 	}
 
 	public void checkGuard() {

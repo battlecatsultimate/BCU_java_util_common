@@ -7,6 +7,7 @@ import common.battle.entity.Entity;
 import common.util.BattleObj;
 import common.util.Data;
 import common.util.Data.Proc.SUMMON;
+import common.util.stage.StageLimit;
 import common.util.unit.Level;
 
 public abstract class AtkModelEntity extends AtkModelAb {
@@ -72,7 +73,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		acs = new BattleObj[raw.length + 5];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d1) * d0);
-			double com = ent.basis.isBanned(Data.C_ATK) ? 1.0 : (1 + ent.basis.b.getInc(Data.C_ATK, ((MaskUnit) data).getPack().unit) * 0.01);
+			double com = StageLimit.isComboBanned(e.basis.est.lim, Data.C_ATK) ? 1.0 : (1 + ent.basis.b.getInc(Data.C_ATK, ((MaskUnit) data).getPack().unit) * 0.01);
 
 			if (pc != null && lv != null && lv.getTalents().length == pc.max.length)
 				atks[i] = (int) Math.round((int) (pc.getAtkMultiplication(lv.getTalents()) * atks[i]) * com);

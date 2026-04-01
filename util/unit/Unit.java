@@ -231,10 +231,10 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	@Override
 	public String toString() {
 		String desp = MultiLangCont.get(forms == null ? null : forms[0]);
-		if (desp != null && desp.length() > 0)
+		if (desp != null && !desp.isEmpty())
 			return Data.trio(id.id) + " " + desp;
 		String name = forms[0].names.toString();
-		if (name.length() > 0)
+		if (!name.isEmpty())
 			return Data.trio(id.id) + " " + name;
 		return Data.trio(id.id);
 	}

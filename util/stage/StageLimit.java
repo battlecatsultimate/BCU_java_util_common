@@ -9,6 +9,12 @@ import java.util.HashSet;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class StageLimit extends Data implements BattleStatic {
+    public static boolean isComboBanned(Limit lim, int comboId) {
+        if (lim == null || lim.stageLimit == null)
+            return false;
+        else
+            return lim.stageLimit.bannedCatCombo.contains(comboId);
+    }
     public enum SpeedOverrideMode {
         SET,
         MULTIPLY

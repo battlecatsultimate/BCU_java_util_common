@@ -12,6 +12,7 @@ import common.util.BattleObj;
 import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.pack.EffAnim;
+import common.util.stage.StageLimit;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 
@@ -177,7 +178,7 @@ public class EUnit extends Entity {
 	@Override
 	public int getAtk() { // visual only
 		int atk = aam.getAtk();
-		if (status[P_STRONG][0] != 0 && !basis.isBanned(C_STRONG))
+		if (status[P_STRONG][0] != 0 && !StageLimit.isComboBanned(basis.est.lim, C_STRONG))
 			atk += atk * (status[P_STRONG][0] + basis.b.getInc(C_STRONG, ((MaskUnit) data).getPack().unit)) / 100;
 		if (status[P_WEAK][0] > 0)
 			atk = atk * status[P_WEAK][1] / 100;
@@ -299,18 +300,18 @@ public class EUnit extends Entity {
 
 			if ((getAbi() & AB_GOOD) != 0)
 				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, mu.getOrb(), level,
-						basis.isBanned(C_GOOD) ? 0 : basis.b.getInc(C_GOOD, mu.getPack().unit)));
+						StageLimit.isComboBanned(basis.est.lim, C_GOOD) ? 0 : basis.b.getInc(C_GOOD, mu.getPack().unit)));
 			if ((getAbi() & AB_RESIST) != 0)
 				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, mu.getOrb(), level,
-						basis.isBanned(Data.C_RESIST) ? 0 : basis.b.getInc(Data.C_RESIST, mu.getPack().unit)));
+						StageLimit.isComboBanned(basis.est.lim, Data.C_RESIST) ? 0 : basis.b.getInc(Data.C_RESIST, mu.getPack().unit)));
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
 		}
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
-			ans = (int) (ans * basis.b.t().getWKDef(basis.isBanned(Data.C_WKILL) ? 0 : basis.b.getInc(Data.C_WKILL, mu.getPack().unit)));
+			ans = (int) (ans * basis.b.t().getWKDef(StageLimit.isComboBanned(basis.est.lim, Data.C_WKILL) ? 0 : basis.b.getInc(Data.C_WKILL, mu.getPack().unit)));
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_EVA)) && (getAbi() & AB_EKILL) > 0)
-			ans = (int) (ans * basis.b.t().getEKDef(basis.isBanned(Data.C_EKILL) ? 0 : basis.b.getInc(Data.C_EKILL, mu.getPack().unit)));
+			ans = (int) (ans * basis.b.t().getEKDef(StageLimit.isComboBanned(basis.est.lim, Data.C_EKILL) ? 0 : basis.b.getInc(Data.C_EKILL, mu.getPack().unit)));
 
 		if (isBase)
 			ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));

@@ -8,6 +8,7 @@ import common.battle.attack.AttackVolcano;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.DefEff;
+import common.util.stage.StageLimit;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ECastle extends AbEntity {
 	}
 
 	public ECastle(StageBasis b, BasisLU lu) {
-		super(lu.t().getBaseHealth(b.isBanned(C_BASE)));
+		super(lu.t().getBaseHealth(StageLimit.isComboBanned(b.est.lim, C_BASE)));
 		sb = b;
 		isEnemy = false;
 	}

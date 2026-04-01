@@ -11,6 +11,7 @@ import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.anim.EAnimD;
 import common.util.pack.EffAnim.SniperEff;
+import common.util.stage.StageLimit;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class Sniper extends AtkModelAb {
 			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
 
 			if (bulletX <= pos) {
-				int atk = b.b.t().getBaseHealth(target.basis.isBanned(C_BASE)) / 20;
+				int atk = b.b.t().getBaseHealth(StageLimit.isComboBanned(target.basis.est.lim, C_BASE)) / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;
 				ArrayList<Trait> CTrait = new ArrayList<>();
