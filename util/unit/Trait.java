@@ -130,7 +130,7 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
 
     @JsonField
     public boolean targetType;
-    @JsonField(generic = Form.class, alias = Form.FormJson.class)
+    @JsonField(generic = Form.class, alias = Form.FormJson.class, tag = "others")
     public final ArrayList<Form> targetForms = new ArrayList<>();
 
 
