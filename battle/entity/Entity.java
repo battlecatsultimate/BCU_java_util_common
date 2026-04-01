@@ -2274,7 +2274,7 @@ public abstract class Entity extends AbEntity {
 			for (int i = 0; i < t.size(); i++)
 				if (t.get(i).targetType)
 					return true;
-		return false;
+		return t.contains(null);
 	}
 
 	/**

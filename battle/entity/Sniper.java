@@ -6,8 +6,6 @@ import common.battle.StageBasis;
 import common.battle.attack.AtkModelAb;
 import common.battle.attack.AttackAb;
 import common.battle.attack.AttackSimple;
-import common.pack.PackData;
-import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.util.anim.EAnimD;
@@ -24,7 +22,6 @@ public class Sniper extends AtkModelAb {
 	private final EAnimD<?> atka = effas().A_SNIPER.getEAnim(SniperEff.ATK);
 	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
 	private Entity target;
-	private final List<Trait> traits = new ArrayList<>();
 	public boolean enabled = true;
 	public double pos, layer, height, bulletX, targetAngle = 0, cannonAngle = 0, bulletAngle = 0;
 	public final BattleField bf; //Used for replay pos/siz gathering
@@ -32,8 +29,6 @@ public class Sniper extends AtkModelAb {
 	public Sniper(StageBasis sb, BattleField bf) {
 		super(sb);
 		this.bf = bf;
-		for (PackData pack : UserProfile.getAllPacks())
-			traits.addAll(pack.traits.getList());
 	}
 
 	/**
@@ -162,6 +157,8 @@ public class Sniper extends AtkModelAb {
 				int atk = b.b.t().getBaseHealth(StageLimit.isComboBanned(target.basis.est.lim, C_BASE)) / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;
+				List<Trait> traits = new ArrayList<>();
+				traits.add(null);
 				AttackAb a = new AttackSimple(null, this, atk, traits, 0, proc, 0, getPos(), false, null, -1, true, 1);
 				a.canon = -1;
 

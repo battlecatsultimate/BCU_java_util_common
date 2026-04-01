@@ -5,7 +5,6 @@ import common.CommonStatic.BattleConst;
 import common.battle.StageBasis;
 import common.battle.attack.*;
 import common.pack.Identifier;
-import common.pack.PackData;
 import common.pack.UserProfile;
 import common.system.P;
 import common.system.fake.FakeGraphics;
@@ -27,7 +26,6 @@ import java.util.List;
 public class Cannon extends AtkModelAb {
 
     public final int id, base, deco;
-    private final List<Trait> traits = new ArrayList<>();
     private EAnimD<?> anim, atka, exta;
     private int preTime = 0;
     private EUnit wall = null;
@@ -39,8 +37,6 @@ public class Cannon extends AtkModelAb {
         id = type;
         this.base = base;
         this.deco = deco;
-        for (PackData pack : UserProfile.getAllPacks())
-            traits.addAll(pack.traits.getList());
     }
 
     /**
@@ -198,8 +194,10 @@ public class Cannon extends AtkModelAb {
          *       - slow and curse cannons use NYRAN for wave-0 offset
          *             spe is indeed used for the aoe of their single wave
          */
+        List<Trait> traits = new ArrayList<>();
         if (id == 0) {
             // basic canon
+            traits.add(null);
             proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
             proc.SNIPER.prob = 1;
             float wid = NYRAN[0];
@@ -209,7 +207,7 @@ public class Cannon extends AtkModelAb {
             new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 0);
         } else if (id == 1) {
             // slow canon
-            traits.add(UserProfile.getBCData().traits.get(TRAIT_TOT));
+            traits.add(null);
             proc.SLOW.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_SLOW_TIME) * (100 + (StageLimit.isComboBanned(b.est.lim, C_SLOW) ? 0 : b.b.getInc(C_SLOW))) / 100);
             float wid = NYRAN[1];
             int spe = 150;
@@ -218,6 +216,7 @@ public class Cannon extends AtkModelAb {
             new ContExtend(eatk, p, wid, spe, 1, 32, 0, 9);
         } else if (id == 3) {
             // freeze canon
+            traits.add(null);
             duration = 11;
             proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + (StageLimit.isComboBanned(b.est.lim, C_STOP) ? 0 : b.b.getInc(C_STOP))) / 100.0);
             int atk = (int) (b.b.t().getCanonAtk(StageLimit.isComboBanned(b.est.lim, Data.C_C_ATK)) * b.b.t().getCannonMagnification(id, Data.BASE_ATK_MAGNIFICATION) / 100.0);
@@ -225,12 +224,14 @@ public class Cannon extends AtkModelAb {
             b.getAttack(new AttackCanon(this, atk, traits, 0, proc, pos - rad, pos + rad, duration));
         } else if (id == 4) {
             // water canon
+            traits.add(UserProfile.getBCData().traits.get(TRAIT_METAL));
             duration = 11;
             proc.CRIT.mult = -(int) (b.b.t().getCannonMagnification(id, Data.BASE_HEALTH_PERCENTAGE));
             float rad = NYRAN[4] / 2;
             b.getAttack(new AttackCanon(this, 1, new ArrayList<>(), 0, proc, pos - rad, pos + rad, duration));
         } else if (id == 5) {
             // zombie canon
+            traits.add(UserProfile.getBCData().traits.get(TRAIT_ZOMBIE));
             proc.WAVE.lv = b.b.t().tech[LV_CRG] + 2;
             proc.STOP.time = (int) (b.b.t().getCannonMagnification(id, Data.BASE_TIME) * (100 + (StageLimit.isComboBanned(b.est.lim, C_STOP) ? 0 : b.b.getInc(C_STOP))) / 100);
             proc.SNIPER.prob = 1;
@@ -241,6 +242,7 @@ public class Cannon extends AtkModelAb {
             new ContWaveCanon(new AttackWave(eatk.attacker, eatk, p, wid, WT_CANN | WT_WAVE), p, 5);
         } else if (id == 6) {
             // blast canon
+            traits.add(null);
             duration = 11;
             proc.BREAK.prob = 1;
             proc.KB.dis = KB_DIS[INT_KB];
@@ -254,6 +256,7 @@ public class Cannon extends AtkModelAb {
             exta = CommonStatic.getBCAssets().atks[id].getEAnim(NyType.EXT);
         } else if (id == 7) {
             // curse cannon
+            traits.add(null);
             proc.CURSE.time = (int) b.b.t().getCannonMagnification(id, Data.BASE_CURSE_TIME);
             float wid = NYRAN[7];
             int spe = 150;
