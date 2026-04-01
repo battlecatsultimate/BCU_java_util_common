@@ -33,6 +33,8 @@ public class ELineUp extends BattleObj {
 					price[i][j] = -1;
 				else
 					price[i][j] = 100 * (sb.globalCost() > -1 ? sb.globalCost() : (int) (lu.efs[i][j].getPrice(sb.st.getCont().price)));
+				if (!StageLimit.isComboBanned(lim, C_DISCOUNT))
+					price[i][j] -= price[i][j] * b.b.getInc(C_DISCOUNT, form.du.getPack().unit) / 100;
 				maxC[i][j] = sb.globalCdLimit() > 0
 						? sb.b.t().getFinResGlobal(sb.globalCdLimit(), StageLimit.isComboBanned(sb.est.lim, C_RESP) ? 0 : sb.b.getInc(C_RESP, lu.efs[i][j].du.getPack().unit))
 						: sb.b.t().getFinRes(lu.efs[i][j].du.getRespawn(), StageLimit.isComboBanned(sb.est.lim, C_RESP) ? 0 : sb.b.getInc(C_RESP, lu.efs[i][j].du.getPack().unit));

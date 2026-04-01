@@ -573,8 +573,6 @@ public class StageBasis extends BattleObj {
 				return false;
 			if (elu.priceDownOrb[i][j] > 0 && elu.tick[i][j] == 1)
 				price -= price * elu.priceDownOrb[i][j] / 100;
-			if (!StageLimit.isComboBanned(est.lim, C_DISCOUNT))
-				price -= price * b.getInc(C_DISCOUNT, f.du.getPack().unit) / 100;
 
 			if (price > money) {
 				if (manual)
