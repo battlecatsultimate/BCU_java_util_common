@@ -15,6 +15,7 @@ import common.util.pack.EffAnim;
 import common.util.stage.StageLimit;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import common.util.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,6 @@ public class EUnit extends Entity {
 	public final boolean isOrbBoosted;
 	public boolean bountyOrbCheck = false;
 	public int legendGrade = -1, coloGrade = -1, counterGrade = -1, bountyGrade = -1;
-	public Proc orbProc;
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc,
 				 int[] index, boolean isSpirit, boolean isEveryOther) {
@@ -75,6 +75,7 @@ public class EUnit extends Entity {
 		this.isSpirit = isSpirit;
 
 		processAbilityOrbs();
+		processComboAbilities();
 	}
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0) {
@@ -105,57 +106,55 @@ public class EUnit extends Entity {
 				legendGrade = Math.max(legendGrade, grade);
 				continue;
 			}
-			if (orbProc == null)
-				orbProc = getProc().clone();
 			if (id == ORB_WAVE_RESIST) {
-				orbProc.IMUWAVE.mult = Math.min(100, orbProc.IMUWAVE.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUWAVE.mult = Math.min(100, proc.IMUWAVE.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_KB_RESIST) {
-				orbProc.IMUKB.mult = Math.min(100, orbProc.IMUKB.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUKB.mult = Math.min(100, proc.IMUKB.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_CURSE_RESIST) {
-				orbProc.IMUCURSE.mult = Math.min(100, orbProc.IMUCURSE.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUCURSE.mult = Math.min(100, proc.IMUCURSE.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_SLOW_RESIST) {
-				orbProc.IMUSLOW.mult = Math.min(100, orbProc.IMUSLOW.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUSLOW.mult = Math.min(100, proc.IMUSLOW.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_STOP_RESIST) {
-				orbProc.IMUSTOP.mult = Math.min(100, orbProc.IMUSTOP.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUSTOP.mult = Math.min(100, proc.IMUSTOP.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_WEAK_RESIST) {
-				orbProc.IMUWEAK.mult = Math.min(100, orbProc.IMUWEAK.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUWEAK.mult = Math.min(100, proc.IMUWEAK.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_VOLC_RESIST) {
-				orbProc.IMUVOLC.mult = Math.min(100, orbProc.IMUVOLC.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUVOLC.mult = Math.min(100, proc.IMUVOLC.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_BLAST_RESIST) {
-				orbProc.IMUBLAST.mult = Math.min(100, orbProc.IMUBLAST.mult + ORB_RESIST_MULT[grade]);
+				proc.IMUBLAST.mult = Math.min(100, proc.IMUBLAST.mult + ORB_RESIST_MULT[grade]);
 				continue;
 			} else if (id == ORB_BERSERKER) {
-				orbProc.BERSERK.killCount = 10;
-				orbProc.BERSERK.mult = Math.max(orbProc.BERSERK.mult, ORB_BERSERKER_MULT[grade]);
+				proc.BERSERK.killCount = 10;
+				proc.BERSERK.mult = Math.max(proc.BERSERK.mult, ORB_BERSERKER_MULT[grade]);
 				continue;
 			}
 
 			if (!isOrbBoosted)
 				continue;
 			if (id == ORB_DEATH_SURGE) {
-				Proc.MINIVOLC surge = orbProc.MINIDEATHSURGE;
+				Proc.MINIVOLC surge = proc.MINIDEATHSURGE;
 				if (!surge.exists()) {
 					surge.prob = 100;
-					orbProc.MINIDEATHSURGE.dis_0 = ORB_DEATH_SURGE_SPAWN_MIN;
-					orbProc.MINIDEATHSURGE.dis_1 = ORB_DEATH_SURGE_SPAWN_MAX;
-					orbProc.MINIDEATHSURGE.time = 20;
+					proc.MINIDEATHSURGE.dis_0 = ORB_DEATH_SURGE_SPAWN_MIN;
+					proc.MINIDEATHSURGE.dis_1 = ORB_DEATH_SURGE_SPAWN_MAX;
+					proc.MINIDEATHSURGE.time = 20;
 				}
 				surge.mult = Math.max(surge.mult, ORB_DEATH_SURGE_MULT[grade]);
 			} else if (id == ORB_MONEY_BACK)
-				orbProc.MONEYBACK.mult += ORB_MONEY_BACK_MULT[grade];
+				proc.MONEYBACK.mult += ORB_MONEY_BACK_MULT[grade];
 			else if (id == ORB_CANNON_RECHARGE)
-				orbProc.CANONCHARGE.mult = Math.max(orbProc.CANONCHARGE.mult, ORB_CANNON_RECHARGE_MULT[grade]);
+				proc.CANONCHARGE.mult = Math.max(proc.CANONCHARGE.mult, ORB_CANNON_RECHARGE_MULT[grade]);
 			else if (id == ORB_BARON_KILLER)
 				coloGrade = Math.max(coloGrade, grade);
 			else if (id == ORB_IMUATK)
-				orbProc.IMUATKANY.prob = Math.max(orbProc.IMUATKANY.prob, ORB_IMUATK_MULT[grade]);
+				proc.IMUATKANY.prob = Math.max(proc.IMUATKANY.prob, ORB_IMUATK_MULT[grade]);
 			else if (id == ORB_SINGLE_COUNTER_SURGE && (getAbi() & AB_CSUR) == 0)
 				counterGrade = Math.max(counterGrade, grade);
 			else if (id == ORB_BOUNTY)
@@ -163,6 +162,21 @@ public class EUnit extends Entity {
 		}
 		if (legendGrade != -1)
 			maxH = health = health * (100 + ORB_LEGEND_HEATLH[legendGrade]) / 100;
+	}
+
+	private void processComboAbilities() {
+		Unit u = ((MaskUnit) data).getPack().unit;
+		if (!StageLimit.isComboBanned(basis.est.lim, C_IMUWAVE) && basis.b.getInc(C_IMUWAVE, u) > 0)
+			proc.IMUWAVE.mult = 100;
+	}
+
+	@Override
+	public int getAbi() {
+		int abi = super.getAbi();
+		Unit u = ((MaskUnit) data).getPack().unit;
+		if (!StageLimit.isComboBanned(basis.est.lim, C_VKILL) && basis.b.getInc(C_VKILL, u) > 0)
+			abi |= AB_VKILL;
+		return abi;
 	}
 
 	@Override
@@ -322,10 +336,12 @@ public class EUnit extends Entity {
 			else if (coloGrade != -1)
 				ans = ans * ORB_BARON_DEFENSE[coloGrade] / 100;
 		}
-		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_BEAST)) && getProc().BSTHUNT.active > 0)
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_BEAST)) && getProc().BSTHUNT.active > 0)
 			ans = (int) (ans * 0.6);
-		if (atk.trait.contains(UserProfile.getBCData().traits.get(Data.TRAIT_SAGE)) && (getAbi() & AB_SKILL) > 0)
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_SAGE)) && (getAbi() & AB_SKILL) > 0)
 			ans = (int) (ans * SUPER_SAGE_HUNTER_HP);
+		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_VILLAIN)) && (getAbi() & AB_VKILL) > 0)
+			ans = (int) (ans * VILLAIN_KILLER_RESIST);
 
 		// Perform orb
 		ans = getOrbRes(atk.trait, ans);
@@ -502,11 +518,6 @@ public class EUnit extends Entity {
 	@Override
 	protected void onLastBreathe() {
 		basis.notifyUnitDeath();
-	}
-
-	@Override
-	public Proc getProc() {
-		return orbProc != null ? orbProc : super.getProc();
 	}
 
 	@Override

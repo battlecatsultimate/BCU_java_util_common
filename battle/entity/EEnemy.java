@@ -81,7 +81,7 @@ public class EEnemy extends Entity {
 			else
 				ans = (int) (ans * atk.getProc().MINIVOLC.mult / 100f);
 
-		if (atk.model instanceof AtkModelUnit && ((AtkModelUnit) atk.model).e.status[P_CURSE][0] == 0) {
+		if (atk.model instanceof AtkModelUnit && atk.attacker.status[P_CURSE][0] == 0) {
 			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
 
 			sharedTraits.retainAll(traits);
@@ -124,6 +124,8 @@ public class EEnemy extends Entity {
 			ans = (int) (ans * 2.5);
 		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_SAGE)) && (atk.abi & AB_SKILL) > 0)
 			ans = (int) (ans * SUPER_SAGE_HUNTER_ATTACK);
+		if (traits.contains(UserProfile.getBCData().traits.get(TRAIT_VILLAIN)) && (atk.abi & AB_VKILL) > 0)
+			ans = (int) (ans * VILLAIN_KILLER_ATTACK);
 		if (atk.canon == 16)
 			if ((touchable() & TCH_UG) > 0)
 				ans = (int) (maxH * basis.b.t().getCannonMagnification(5, BASE_HOLY_ATK_UNDERGROUND));

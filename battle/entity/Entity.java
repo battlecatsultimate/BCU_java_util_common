@@ -1454,10 +1454,13 @@ public abstract class Entity extends AbEntity {
 	 */
 	private int regentimer;
 
+	public final Proc proc;
+
 	protected Entity(StageBasis b, MaskEnemy de, EAnimU ea, float atkMagnif, float hpMagnif) {
 		super((int) (de.getHp() * hpMagnif));
 		basis = b;
 		data = de;
+		proc = data.getProc().clone();
 		aam = AtkModelEntity.getEnemyAtk(this, atkMagnif);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
@@ -1476,6 +1479,7 @@ public abstract class Entity extends AbEntity {
 		);
 		basis = b;
 		data = de;
+		proc = data.getProc().clone();
 		if (data.getRealTBA() < 0) {
 			waitTime = data.getTBA();
 		}
@@ -2088,7 +2092,7 @@ public abstract class Entity extends AbEntity {
 	public Proc getProc() {
 		if (status[P_SEAL][0] > 0)
 			return sealed;
-		return data.getProc();
+		return proc;
 	}
 
 	/**

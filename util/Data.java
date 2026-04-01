@@ -1155,6 +1155,7 @@ public class Data {
 	public static final int AB_CKILL = 1 << 18;
 	public static final int AB_CSUR = 1 << 19;
 	public static final int AB_SKILL = 1 << 20;
+	public static final int AB_VKILL = 1 << 21;
 
 	// abi index
 	public static final byte ABI_GOOD = 0;
@@ -1823,9 +1824,11 @@ public class Data {
 	public static final float SUPER_SAGE_HUNTER_HP = 0.5f;
 	public static final float SUPER_SAGE_HUNTER_RESIST = 0.7f;
 	public static final float WITCH_KILLER_ATTACK = 5f;
-	public static final float EVA_KILLER_ATTACK = 5f;
 	public static final float WITCH_KILLER_RESIST = 20f;
+	public static final float EVA_KILLER_ATTACK = 5f;
 	public static final float EVA_KILLER_RESIST = 10f;
+	public static final float VILLAIN_KILLER_ATTACK = 2.5f;
+	public static final float VILLAIN_KILLER_RESIST = 0.4f;
 
 	public static final String[] SUFX = new String[] { "f", "c", "s", "u" };
 
