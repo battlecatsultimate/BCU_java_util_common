@@ -1471,6 +1471,16 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 					}
 				}
 			}
+			if (UserProfile.isOlderPack(pack, "0.7.15.1")) {
+				for (StageMap sm: maps) {
+					for (Stage st : sm.list) {
+						if (st.lim.stageLimit == null)
+							continue;
+						if (Arrays.stream(st.lim.stageLimit.rarityDeployLimit).allMatch(v -> v == 0))
+							st.lim.stageLimit.rarityDeployLimit = new int[] { -1, -1, -1, -1, -1, -1 };
+					}
+				}
+			}
 		}
 	}
 
