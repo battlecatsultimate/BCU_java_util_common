@@ -892,15 +892,15 @@ public class Data {
 		public final BLAST BLAST = new BLAST();
 		@Order(61)
 		public final IMU IMUBLAST = new IMU();
-		@Order(61)
-		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
 		@Order(62)
-		public final MULT MONEYBACK = new MULT();
+		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
 		@Order(63)
-		public final MULT CANONCHARGE = new MULT();
+		public final MULT MONEYBACK = new MULT();
 		@Order(64)
-		public final PROB IMUATKANY = new PROB();
+		public final MULT CANONCHARGE = new MULT();
 		@Order(65)
+		public final PROB IMUATKANY = new PROB();
+		@Order(66)
 		public final BERSERK BERSERK = new BERSERK();
 
 		@Override
@@ -1438,7 +1438,7 @@ public class Data {
 			{ 0, P_IMUPOIATK, 1, -1 }, // 52: resist to poison ?
 			{ 3, P_IMUPOIATK, 0, 52 }, // 53: immune to poison
 			{ 0, P_IMUVOLC, 1, -1 }, // 54: resist to surge ?
-			{ 3, P_IMUVOLC, 0, 55 }, // 55: immune to surge
+			{ 3, P_IMUVOLC, 0, 54 }, // 55: immune to surge
 			{ 0, P_VOLC, 4, -1 }, // 56: surge, level up to chance up
 			{ 4, TRAIT_DEMON, 0, -1 }, // 57: Targetting Aku
 			{ 0, P_SHIELDBREAK, 1, -1 }, //58 : shield piercing

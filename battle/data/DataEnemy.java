@@ -4,7 +4,6 @@ import common.battle.Basis;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
 import common.pack.UserProfile;
-import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
 import common.util.unit.Trait;

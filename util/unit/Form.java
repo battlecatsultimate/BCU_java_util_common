@@ -102,7 +102,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		anim = new AnimUD(str, nam, "edi" + nam + ".png", "uni" + nam + "00.png");
 		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
 		String[] strs = data.split("//")[0].trim().split(",");
-		du = new DataUnit(this, unit, strs);
+		du = new DataUnit(this, strs);
 		MaModel model = anim.loader.getMM();
 		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}
@@ -115,7 +115,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 		anim = new AnimUD(str, nam, "edi" + nam + duo(fid) + ".png", "uni" + nam + duo(fid) + ".png");
 		anim.getUni().setCut(CommonStatic.getBCAssets().unicut);
 		String[] strs = data.split("//")[0].trim().split(",");
-		du = new DataUnit(this, unit, strs);
+		du = new DataUnit(this, strs);
 		MaModel model = anim.loader.getMM();
 		((DataUnit) du).limit = CommonStatic.dataFormMinPos(model);
 	}

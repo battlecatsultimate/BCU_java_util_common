@@ -20,7 +20,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	public PCoin pcoin = null;
 
-	public DataUnit(Form f, Unit u, String[] data) {
+	public DataUnit(Form f, String[] data) {
 		form = f;
 		int[] ints = new int[data.length];
 		for (int i = 0; i < data.length; i++)
