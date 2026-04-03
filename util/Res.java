@@ -177,8 +177,8 @@ public class Res extends ImgCore {
 		aux.icon[3][TRAIT_RELIC] = new VImg(parts[84]);
 		aux.icon[3][TRAIT_DEMON] = new VImg(parts[85]);
 		aux.icon[3][TRAIT_WHITE] = new VImg(parts[86]);
-		aux.icon[3][TRAIT_BEAST] = new VImg("./org/page/icons/Beast.png");
-		aux.icon[3][TRAIT_SAGE] = new VImg("./org/page/icons/SuperSage.png");
+		aux.icon[3][TRAIT_BEAST] = new VImg(parts[325]);
+		aux.icon[3][TRAIT_SAGE] = new VImg(parts[326]);
         aux.icon[3][TRAIT_VILLAIN] = new VImg(parts[384]);
 		aux.icon[0][ABI_EKILL] = new VImg(parts[110]);
 		aux.icon[2][ATK_OMNI] = new VImg(parts[112]);
@@ -275,7 +275,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_CRITI] = new VImg("./org/page/icons/CritX.png");
 		aux.icon[3][TRAIT_WITCH] = new VImg("./org/page/icons/Witch.png");
 		aux.icon[3][TRAIT_EVA] = new VImg("./org/page/icons/Eva.png");
-		aux.icon[3][TRAIT_BARON] = new VImg("./org/page/icons/Baron.png");
+		aux.icon[3][TRAIT_BARON] = new VImg(parts[324]);
 		aux.icon[3][TRAIT_INFH] = new VImg("./org/page/icons/Base.png");
 		aux.icon[1][P_POIATK] = new VImg("./org/page/icons/BCPoison.png");
 		aux.icon[1][P_ARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
