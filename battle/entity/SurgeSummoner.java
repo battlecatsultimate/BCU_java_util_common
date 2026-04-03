@@ -42,7 +42,7 @@ public class SurgeSummoner extends EAnimCont {
                 if ((type & WT_MIVC) > 0)
                     volcanoAttack.getProc().MINIVOLC.mult = 20 * counterPercent / 100;
 
-                ContVolcano volcano = new ContVolcano(volcanoAttack, p0, summoner.layer, time, 0);
+                ContVolcano volcano = new ContVolcano(volcanoAttack, p0, summoner.currentLayer, time, 0);
 
                 summoner.summoned.add(volcano);
             }

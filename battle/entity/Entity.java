@@ -291,7 +291,7 @@ public abstract class Entity extends AbEntity {
 				EffAnim<WarpEff> ea = effas().A_W;
 				int ind = status[P_WARP][2];
 				WarpEff pa = ind == 0 ? WarpEff.ENTER : WarpEff.EXIT;
-				e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim, e.dire, (e.getAbi() & AB_TIMEI) != 0));
+				e.basis.lea.add(new WaprCont(e.pos, pa, e.currentLayer, anim, e.dire, (e.getAbi() & AB_TIMEI) != 0));
 				e.basis.leaSort = true;
 				CommonStatic.setSE(ind == 0 ? SE_WARP_ENTER : SE_WARP_EXIT);
 				status[P_WARP][ind] = ea.len(pa);
@@ -568,7 +568,7 @@ public abstract class Entity extends AbEntity {
 			// Z-kill icon
 			if (e.health <= 0 && e.zx.tempZK && e.traits.contains(UserProfile.getBCData().traits.get(TRAIT_ZOMBIE))) {
 				EAnimD<DefEff> eae = effas().A_Z_STRONG.getEAnim(DefEff.DEF);
-				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
+				e.basis.lea.add(new EAnimCont(e.pos, e.currentLayer, eae));
 				e.basis.leaSort = true;
 				CommonStatic.setSE(SE_ZKILL);
 			}
@@ -601,7 +601,7 @@ public abstract class Entity extends AbEntity {
 			} else {
 				// converge souls layer: death on the same frame = same soul height
 				// still not sure how this precisely work in BC, it seems to have exceptions
-				e.layer = 0;
+				e.currentLayer = 0;
 				Soul s = Identifier.get(e.data.getDeathAnim());
 				dead = s == null ? 0 : (soul = s.getEAnim(UType.SOUL)).len();
 			}
@@ -1341,7 +1341,12 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * layer of display, constant field
 	 */
-	public int layer;
+	public int currentLayer;
+
+	/**
+	 * layer when spawned in
+	 */
+	public int spawnLayer;
 
 	/**
 	 * proc status, contains ability-specific status data
@@ -1694,7 +1699,7 @@ public abstract class Entity extends AbEntity {
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_CRIT.getEAnim(DefEff.DEF), -75f));
+			basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_CRIT.getEAnim(DefEff.DEF), -75f));
 			basis.leaSort = true;
 
 			CommonStatic.setSE(SE_CRIT);
@@ -1702,14 +1707,14 @@ public abstract class Entity extends AbEntity {
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().SATK.mult > 0) {
-			basis.lea.add(new EAnimCont(pos, layer, effas().A_SATK.getEAnim(DefEff.DEF), -75f));
+			basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_SATK.getEAnim(DefEff.DEF), -75f));
 			basis.leaSort = true;
 
 			CommonStatic.setSE(SE_SATK);
 		}
 
 		if (metalKillerActivate) {
-			basis.lea.add(new EAnimCont(pos, layer, (dire == 1 ? effas().A_E_METAL_KILLER : effas().A_METAL_KILLER).getEAnim(DefEff.DEF), -75f));
+			basis.lea.add(new EAnimCont(pos, currentLayer, (dire == 1 ? effas().A_E_METAL_KILLER : effas().A_METAL_KILLER).getEAnim(DefEff.DEF), -75f));
 			basis.leaSort = true;
 		}
 
@@ -1721,7 +1726,7 @@ public abstract class Entity extends AbEntity {
 				AttackVolcano volc = (AttackVolcano) atk;
 
 				if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
-					basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF),
+					basis.lea.add(new SurgeSummoner(pos, currentLayer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(DefEff.DEF),
 							this, volc.handler.time, atk.waveType, volc.handler.startPoint,
 							volc.handler.endPoint, 100));
 					basis.leaSort = true;
@@ -1750,7 +1755,7 @@ public abstract class Entity extends AbEntity {
 		else
 			anim.smoke = effas().A_ATK_SMOKE.getEAnim(DefEff.DEF);
 
-		anim.smokeLayer = (int) (layer + 3 - basis.r.nextFloat() * -6);
+		anim.smokeLayer = (int) (currentLayer + 3 - basis.r.nextFloat() * -6);
 		anim.smokeX = (int) (pos + 25 - basis.r.nextFloat() * -50);
 
 		bondTree.damaged(atk, dmg, proc);
@@ -1809,7 +1814,7 @@ public abstract class Entity extends AbEntity {
 						reflectAtk += reflectAtk * e.status[P_STRONG][0] / 100;
 					if (e.status[P_WEAK][0] > 0)
 						reflectAtk = reflectAtk * e.status[P_WEAK][1] / 100;
-					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.layer, false);
+					AttackSimple as = new AttackSimple(this, aam, reflectAtk, traits, getAbi(), reflectProc, ds[0], ds[1], e.data.getAtkModel(0), e.currentLayer, false);
 					if (counter.type.areaAttack)
 						as.capture();
 					if (as.counterEntity(counter.type.outRange || (e.pos - ds[0]) * (e.pos - ds[1]) <= 0 ? e : null))
@@ -1855,7 +1860,7 @@ public abstract class Entity extends AbEntity {
 
 				damage = (long) (damage + maxH * poiDmg);
 
-				basis.lea.add(new EAnimCont(pos, layer, effas().A_POISON.getEAnim(DefEff.DEF)));
+				basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_POISON.getEAnim(DefEff.DEF)));
 				basis.leaSort = true;
 
 				CommonStatic.setSE(SE_POISON);

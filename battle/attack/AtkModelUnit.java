@@ -63,7 +63,7 @@ public class AtkModelUnit extends AtkModelEntity {
 					float up = ent.pos + getDire() * dis;
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
-						minlayer = maxlayer = e.layer;
+						minlayer = maxlayer = e.currentLayer;
 
 					EForm ef = new EForm(u.forms[Math.max(proc.form - 1, 0)], proc.mult + ((EUnit) e).lvl);
 					EUnit eu = ef.invokeEntity(b, lvl, minlayer, maxlayer);
@@ -93,7 +93,7 @@ public class AtkModelUnit extends AtkModelEntity {
 
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == -1 || proc.max_layer == -1)
-						minlayer = maxlayer = e.layer;
+						minlayer = maxlayer = e.currentLayer;
 					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0);
 
 					ee.group = allow;

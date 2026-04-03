@@ -66,7 +66,7 @@ public class EUnit extends Entity {
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc,
 				 int[] index, boolean isSpirit, boolean isEveryOther) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
-		layer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextFloat() * (layer1 - layer0 + 1));
+		currentLayer = spawnLayer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextFloat() * (layer1 - layer0 + 1));
 		traits = de.getTraits();
 		lvl = level.getLv() + level.getPlusLv();
 		this.isOrbBoosted = isEveryOther;
@@ -80,7 +80,7 @@ public class EUnit extends Entity {
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), null, null);
-		layer = de.getFront() + (int) (b.r.nextFloat() * (de.getBack() - de.getFront() + 1));
+		currentLayer = spawnLayer = de.getFront() + (int) (b.r.nextFloat() * (de.getBack() - de.getFront() + 1));
 		traits = de.getTraits();
 		this.index = null;
 
@@ -231,7 +231,7 @@ public class EUnit extends Entity {
 			AttackVolcano volc = (AttackVolcano) atk;
 
 			if (volc.handler != null && !volc.handler.reflected && !volc.handler.surgeSummoned.contains(this)) {
-				basis.lea.add(new SurgeSummoner(pos, layer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(EffAnim.DefEff.DEF),
+				basis.lea.add(new SurgeSummoner(pos, currentLayer, (dire == 1 ? effas().A_E_COUNTERSURGE : effas().A_COUNTERSURGE).getEAnim(EffAnim.DefEff.DEF),
 						this, volc.handler.time, atk.waveType, volc.handler.startPoint, volc.handler.endPoint,
 						ORB_SINGLE_COUNTER_SURGE_MULT[counterGrade]));
 				basis.leaSort = true;
@@ -302,13 +302,13 @@ public class EUnit extends Entity {
 				ans = (int) (ans * atk.getProc().MINIVOLC.mult / 100f);
 
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
-			ArrayList<Trait> sharedTraits = new ArrayList<>(atk.trait);
-			sharedTraits.retainAll(traits);
+			List<Trait> sharedTraits = new ArrayList<>(atk.trait); // get traits of enemy
+			sharedTraits.retainAll(traits); // keep
 			boolean isAntiTraited = targetTraited(atk.trait);
 			for (Trait t : traits) {
 				if (t.id.pack.equals("000000") || sharedTraits.contains(t))
 					continue;
-				if ((t.targetType && isAntiTraited) || t.targetForms.contains(mu.getPack()))
+				if (t.targetType && isAntiTraited)
 					sharedTraits.add(t);
 			}
 

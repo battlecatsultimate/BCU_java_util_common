@@ -534,7 +534,7 @@ public class StageBasis extends BattleObj {
 				le.add(su);
 			}
 
-			le.sort(Comparator.comparingInt(e -> e.layer));
+			le.sort(Comparator.comparingInt(e -> e.currentLayer));
 
 			spiritSummoned[i][j] = true;
 			unitRespawnTime = 1;
@@ -603,7 +603,7 @@ public class StageBasis extends BattleObj {
 			}
 
 			le.add(eu);
-			le.sort(Comparator.comparingInt(e -> e.layer));
+			le.sort(Comparator.comparingInt(e -> e.currentLayer));
 
 			money -= price;
 			unitRespawnTime = 1;
@@ -655,7 +655,7 @@ public class StageBasis extends BattleObj {
 			}
 		}
 
-		le.sort(Comparator.comparingInt(e -> e.layer));
+		le.sort(Comparator.comparingInt(e -> e.currentLayer));
 
 		// i would prefer "dev only" code to be on its own separate branch so it's not clogging main branch, im too lazy to do that, sorry  -- red
 
@@ -668,7 +668,7 @@ public class StageBasis extends BattleObj {
 		tempe.removeIf(e -> {
 			if (e.t == 0) {
 				le.add(e.ent);
-				le.sort(Comparator.comparingInt(en -> en.layer));
+				le.sort(Comparator.comparingInt(en -> en.currentLayer));
 			}
 			return e.t == 0;
 		});
@@ -697,7 +697,7 @@ public class StageBasis extends BattleObj {
 					e.added(1, e.mark >= 1 ? boss_spawn : 700f);
 
 					le.add(e);
-					le.sort(Comparator.comparingInt(en -> en.layer));
+					le.sort(Comparator.comparingInt(en -> en.currentLayer));
 
 					if(st.minSpawn <= 0 || st.maxSpawn <= 0)
 						respawnTime = 1;
@@ -1025,7 +1025,7 @@ public class StageBasis extends BattleObj {
 				le.get(i).update2();
 		}
 
-		le.sort(Comparator.comparingInt(e -> e.layer));
+		le.sort(Comparator.comparingInt(e -> e.currentLayer));
 
 	}
 

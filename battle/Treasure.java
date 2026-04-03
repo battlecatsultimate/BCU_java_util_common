@@ -15,7 +15,10 @@ import common.util.Data;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 @JsonClass(read = RType.FILL)
@@ -442,7 +445,7 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from super resistant ability
 	 */
-	public float getRESISTSDEF(ArrayList<Trait> traits) {
+	public float getRESISTSDEF(List<Trait> traits) {
 		return 1f / 6 - 1f / 126 * getFruit(traits);
 	}
 

@@ -52,12 +52,12 @@ public class AtkModelEnemy extends AtkModelEntity {
 						mula *= ((EEnemy) e).mula;
 					}
 
-					mula *= (100.0 - resist) / 100;
-					mult *= (100.0 - resist) / 100;
+					mula *= (100.0f - resist) / 100;
+					mult *= (100.0f - resist) / 100;
 
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
-						minlayer = maxlayer = e.layer;
+						minlayer = maxlayer = e.spawnLayer;
 					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0);
 
 					ee.group = allow;
@@ -100,7 +100,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 					float up = ent.pos + getDire() * dis;
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
-						minlayer = maxlayer = e.layer;
+						minlayer = maxlayer = e.spawnLayer;
 
 					EForm ef = new EForm(u.forms[form], lvl);
 					EUnit eu = ef.invokeEntity(b, lvl, minlayer, maxlayer);
