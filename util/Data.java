@@ -1179,7 +1179,8 @@ public class Data {
 	public static final byte ABI_CKILL = 18;
 	public static final byte ABI_CSUR = 19;
 	public static final byte ABI_SKILL = 20;
-	public static final byte ABI_TOT = 21;// 20 currently
+	public static final byte ABI_VKILL = 21;
+	public static final byte ABI_TOT = 22;// 20 currently
 
 	// proc index
 	public static final int P_KB = 0;
