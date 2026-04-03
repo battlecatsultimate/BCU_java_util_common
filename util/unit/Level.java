@@ -15,6 +15,7 @@ import static common.util.Data.ORB_INTS;
 @SuppressWarnings("unused")
 @JsonClass(noTag = NoTag.LOAD)
 public class Level implements BattleStatic, LevelInterface {
+
 	private int level, plusLevel;
 	@Nonnull
 	private int[] talents;
@@ -183,6 +184,15 @@ public class Level implements BattleStatic, LevelInterface {
 
 		if (valid) {
 			orbs = orb;
+		}
+	}
+
+	public void revalidateOrb(Unit u) {
+		int slotCount = u.orbs.size();
+		if (orbs != null && slotCount != orbs.length) {
+			int[][] newOrbs = new int[slotCount][3];
+			System.arraycopy(orbs, 0, newOrbs, 0, Math.min(slotCount, orbs.length));
+			orbs = newOrbs;
 		}
 	}
 
