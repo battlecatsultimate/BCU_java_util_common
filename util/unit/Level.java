@@ -190,7 +190,7 @@ public class Level implements BattleStatic, LevelInterface {
 	public void revalidateOrb(Unit u) {
 		int slotCount = u.orbs.size();
 		if (orbs != null && slotCount != orbs.length) {
-			int[][] newOrbs = new int[slotCount][3];
+			int[][] newOrbs = new int[slotCount][0];
 			System.arraycopy(orbs, 0, newOrbs, 0, Math.min(slotCount, orbs.length));
 			orbs = newOrbs;
 		}

@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-@JsonClass(read = JsonClass.RType.FILL)
+@JsonClass
 public class Orb extends Data {
 
 	public static final int[] orbTrait = { // the 12 connects to the "ability orb" sprite (since no targets)
@@ -166,6 +166,11 @@ public class Orb extends Data {
 	@JsonField
 	public int minLv;
 
+	@JsonClass.JCConstructor
+	public Orb() {
+
+	}
+
 	public Orb(int minimumForm, int minimumLv) { // used for data
 		minForm = minimumForm;
 		minLv = minimumLv;
@@ -173,5 +178,10 @@ public class Orb extends Data {
 
 	public boolean isRestricted(int formId, int lv) {
 		return formId < minForm || lv < minLv;
+	}
+
+	@Override
+	public String toString() {
+		return "Min Form " + minForm + ", Min Lv. " + minLv;
 	}
 }

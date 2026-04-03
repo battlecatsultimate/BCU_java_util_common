@@ -96,9 +96,9 @@ public class Unit extends Data implements Comparable<Unit>, Indexable<PackData, 
 	@JsonField(alias = Identifier.class)
 	@FieldOrder.Order(3)
 	public UnitLevel lv;
-	@JsonField(generic = Orb.class)
 	@FieldOrder.Order(4)
-	public List<Orb> orbs = new ArrayList<>();
+	@JsonField(generic = Orb.class)
+	public ArrayList<Orb> orbs = new ArrayList<>();
 
 	public final UnitInfo info = new UnitInfo();
 
