@@ -113,7 +113,7 @@ public class Orb extends Data {
 
 				if (strs.length == 2) {
 					for (int i = 0; i < slots; i++)
-						f.unit.orbs.add(new Orb(30, 0));
+						f.unit.orbs.add(new Orb(2, 0));
 				} else {
 					for (int i = 0; i < slots; i++) {
 						int limitId = CommonStatic.parseIntN(strs[2 + i]);
