@@ -1,7 +1,6 @@
 package common.battle;
 
 import common.CommonStatic;
-import common.battle.data.OrbInfo;
 import common.io.InStream;
 import common.io.OutStream;
 import common.io.json.JsonClass;
@@ -354,10 +353,10 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from strong against ability
 	 */
-	public float getGOODDEF(List<Trait> eTraits, List<Trait> traits, OrbInfo orb, Level level, int comboInc) {
+	public float getGOODDEF(List<Trait> eTraits, List<Trait> traits, Level level, int comboInc) {
 		float ini = traits.isEmpty() ? 1 : 0.5f - 0.1f / 3 * getFruit(traits);
 
-		if(orb != null && level.getOrbs() != null) {
+		if(level.getOrbs() != null) {
 			int[][] orbs = level.getOrbs();
 
 			for(int i = 0; i < orbs.length; i++) {
@@ -414,10 +413,10 @@ public class Treasure extends Data {
 	/**
 	 * get damage reduce multiplication from resistant ability
 	 */
-	public float getRESISTDEF(List<Trait> eTraits, List<Trait> traits, OrbInfo orb, Level level, int comboInc) {
+	public float getRESISTDEF(List<Trait> eTraits, List<Trait> traits, Level level, int comboInc) {
 		float ini = traits.isEmpty() ? 1 : 0.25f - 0.05f / 3 * getFruit(traits);
 
-		if(orb != null && level.getOrbs() != null) {
+		if (level.getOrbs() != null) {
 			int[][] orbs = level.getOrbs();
 			for(int i = 0; i < orbs.length; i++) {
 				if (orbs[i].length < ORB_INTS)

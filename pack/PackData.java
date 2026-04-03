@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import common.CommonStatic;
 import common.battle.Treasure;
 import common.battle.data.DataEnemy;
-import common.battle.data.OrbInfo;
+import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.io.assets.AssetLoader;
 import common.io.json.Dependency;
@@ -86,7 +86,7 @@ public abstract class PackData implements IndexContainer {
             Combo.readFile();
             PCoin.read();
             progress.accept("loading orbs");
-            OrbInfo.read();
+            Orb.read();
             progress.accept("loading musics");
             loadMusic();
             progress.accept("process data");

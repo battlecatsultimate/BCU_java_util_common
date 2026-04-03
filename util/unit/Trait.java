@@ -1,6 +1,6 @@
 package common.util.unit;
 
-import common.battle.data.OrbInfo;
+import common.battle.data.Orb;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
@@ -92,9 +92,9 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         List<Trait> ans = new ArrayList<>();
         PackData.DefPack data = UserProfile.getBCData();
 
-        for (int i = 0; i < OrbInfo.orbTrait.length; i++) {
-            if ((mask & (1 << OrbInfo.orbTrait[i])) > 0) {
-                ans.add(data.traits.get(OrbInfo.orbTrait[i]));
+        for (int i = 0; i < Orb.orbTrait.length - 1; i++) {
+            if ((mask & (1 << Orb.orbTrait[i])) > 0) {
+                ans.add(data.traits.get(Orb.orbTrait[i]));
             }
         }
 

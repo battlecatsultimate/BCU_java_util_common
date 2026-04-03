@@ -2,6 +2,8 @@ package common.battle.data;
 
 import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
+import common.io.json.JsonClass;
+import common.io.json.JsonField;
 import common.pack.Context;
 import common.pack.Identifier;
 import common.system.VImg;
@@ -17,7 +19,8 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class OrbInfo extends Data {
+@JsonClass(read = JsonClass.RType.FILL)
+public class Orb extends Data {
 
 	public static final int[] orbTrait = { // the 12 connects to the "ability orb" sprite (since no targets)
 			Data.TRAIT_RED, Data.TRAIT_FLOAT, Data.TRAIT_BLACK, Data.TRAIT_METAL, Data.TRAIT_ANGEL, Data.TRAIT_ALIEN,
@@ -92,10 +95,8 @@ public class OrbInfo extends Data {
 			Queue<String> units = VFile.readLine("./org/data/equipmentslot.csv");
 
 			for (String line : units) {
-				if (line == null || line.startsWith("//") || line.isEmpty()) {
+				if (line == null || line.startsWith("//") || line.isEmpty())
 					continue;
-				}
-
 				String[] strs = line.trim().split(",");
 				if (strs.length != 2 && strs.length != 2 + CommonStatic.parseIntN(strs[1]))
 					continue;
@@ -110,10 +111,16 @@ public class OrbInfo extends Data {
 				if (f == null)
 					continue;
 
-				if(strs.length == 2) {
-					f.unit.orbs = new OrbInfo(slots);
+				if (strs.length == 2) {
+					for (int i = 0; i < slots; i++)
+						f.unit.orbs.add(new Orb(30, 0));
 				} else {
-					f.unit.orbs = new OrbInfo(slots, new int[] { CommonStatic.parseIntN(strs[2]), CommonStatic.parseIntN(strs[3]) });
+					for (int i = 0; i < slots; i++) {
+						int limitId = CommonStatic.parseIntN(strs[2 + i]);
+						int minForm = limitId >= 0 ? 2 : 0;
+						int minLv = limitId >= 1 ? 60 : 0;
+						f.unit.orbs.add(new Orb(minForm, minLv));
+					}
 				}
 			}
 
@@ -154,47 +161,17 @@ public class OrbInfo extends Data {
 		return -1;
 	}
 
-	private final int slots;
-	private final int[] limit;
+	@JsonField
+	public int minForm;
+	@JsonField
+	public int minLv;
 
-	public OrbInfo(int slots) {
-		this.slots = slots;
-
-		if(slots == -1)
-			this.limit = null;
-		else
-			this.limit = new int[slots];
+	public Orb(int minimumForm, int minimumLv) { // used for data
+		minForm = minimumForm;
+		minLv = minimumLv;
 	}
 
-	public OrbInfo(int slots, int[] limit) {
-		this.slots = slots;
-
-		if(slots != limit.length) {
-			System.out.println("W/Orb - Desynced number of slot and level limit data : " + slots + " -> " + Arrays.toString(limit));
-
-			int[] temp = new int[slots];
-
-			System.arraycopy(limit, 0, temp, 0, temp.length);
-
-			this.limit = temp;
-		} else {
-			this.limit = limit;
-		}
-	}
-
-	public int getAtk(int grade, MaskAtk atk) {
-		return ORB_ATK_MULTI[grade] * atk.getAtk() / 100;
-	}
-
-	public int getRes(int grade, int atk) {
-		return (100-ORB_RES_MULTI[grade]) * atk / 100;
-	}
-
-	public int getSlots() {
-		return slots;
-	}
-
-	public int[] getLimits() {
-		return limit;
+	public boolean isRestricted(int formId, int lv) {
+		return formId < minForm || lv < minLv;
 	}
 }

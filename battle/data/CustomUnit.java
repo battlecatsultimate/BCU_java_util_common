@@ -51,11 +51,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 	}
 
 	@Override
-	public OrbInfo getOrb() {
-		return pack.unit.orbs;
-	}
-
-	@Override
 	public Form getPack() {
 		return pack;
 	}

@@ -5,7 +5,6 @@ import common.battle.Treasure;
 import common.battle.attack.*;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskUnit;
-import common.battle.data.OrbInfo;
 import common.battle.data.PCoin;
 import common.pack.UserProfile;
 import common.util.BattleObj;
@@ -313,10 +312,10 @@ public class EUnit extends Entity {
 			}
 
 			if ((getAbi() & AB_GOOD) != 0)
-				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, mu.getOrb(), level,
+				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, level,
 						StageLimit.isComboBanned(basis.est.lim, C_GOOD) ? 0 : basis.b.getInc(C_GOOD, mu.getPack().unit)));
 			if ((getAbi() & AB_RESIST) != 0)
-				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, mu.getOrb(), level,
+				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, level,
 						StageLimit.isComboBanned(basis.est.lim, Data.C_RESIST) ? 0 : basis.b.getInc(Data.C_RESIST, mu.getPack().unit)));
 			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
 				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
@@ -374,11 +373,8 @@ public class EUnit extends Entity {
 	}
 
 	private int getOrbAtk(ArrayList<Trait> trait, MaskAtk matk) {
-		OrbInfo orb = ((MaskUnit) data).getOrb();
-
-		if (orb == null || level.getOrbs() == null) {
+		if (level.getOrbs() == null)
 			return 0;
-		}
 
 		int ans = 0;
 
@@ -403,16 +399,14 @@ public class EUnit extends Entity {
 			if (!orbValid)
 				continue;
 
-			ans += orb.getAtk(line[ORB_GRADE], matk);
+			ans += ORB_ATK_MULTI[line[ORB_GRADE]] * matk.getAtk() / 100;
 		}
 
 		return ans;
 	}
 
 	private int getOrbRes(List<Trait> trait, int atk) {
-		OrbInfo orb = ((MaskUnit) data).getOrb();
-
-		if (orb == null || level == null || level.getOrbs() == null)
+		if (level.getOrbs() == null)
 			return atk;
 
 		int ans = atk;
@@ -422,21 +416,17 @@ public class EUnit extends Entity {
 				continue;
 
 			List<Trait> orbType = Trait.convertOrb(line[ORB_TRAIT]);
-
 			boolean orbValid = false;
-
 			for(int i = 0; i < orbType.size(); i++) {
 				if (trait.contains(orbType.get(i))) {
 					orbValid = true;
-
 					break;
 				}
 			}
 
 			if (!orbValid)
 				continue;
-
-			ans = orb.getRes(line[ORB_GRADE], ans);
+			ans = (100 - ORB_RES_MULTI[line[ORB_GRADE]]) * ans / 100;
 		}
 
 		return ans;
@@ -448,9 +438,7 @@ public class EUnit extends Entity {
 		if (!traits.isEmpty())
 			ini = 3 + 1f / 3 * t.getFruit(traits);
 
-		OrbInfo orbs = ((MaskUnit)data).getOrb();
-
-		if(orbs != null && level.getOrbs() != null) {
+		if(level.getOrbs() != null) {
 			int[][] levelOrbs = level.getOrbs();
 
 			for(int i = 0; i < levelOrbs.length; i++) {
@@ -485,9 +473,7 @@ public class EUnit extends Entity {
 		if (!traits.isEmpty())
 			ini = 1.5f * (1 + 0.2f / 3 * t.getFruit(traits));
 
-		OrbInfo orbs = ((MaskUnit)data).getOrb();
-
-		if(orbs != null && level.getOrbs() != null) {
+		if(level.getOrbs() != null) {
 			int[][] levelOrbs = level.getOrbs();
 
 			for (int i = 0; i < levelOrbs.length; i++) {

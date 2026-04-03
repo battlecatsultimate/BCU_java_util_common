@@ -306,18 +306,18 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 	public String toString() {
 		String base = (uid == null ? "NULL" : uid.id) + "-" + fid + " ";
 		String desp = MultiLangCont.get(this);
-		if (desp != null && desp.length() > 0)
+		if (desp != null && !desp.isEmpty())
 			return base + desp;
 
 		String nam = names.toString();
-		if (nam.length() > 0)
+		if (!nam.isEmpty())
 			return base + nam;
 		return base;
 	}
 
 	public String getExplaination() {
 		String[] desp = MultiLangCont.getDesc(this);
-		if (desp != null && desp[fid + 1].length() > 0)
+		if (desp != null && !desp[fid + 1].isEmpty())
 			return desp[fid + 1];
 		return description.toString();
 	}
@@ -328,25 +328,5 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 	public boolean hasZeroForm() {
 		return unit.info.hasZeroForm() && fid == 3;
-	}
-
-	public boolean checkOrb(int level) {
-		for (int lim : unit.orbs.getLimits())
-			if (lim == 0 && fid >= 2 || lim == 1 && level >= 60)
-				return true;
-		return false;
-	}
-
-	public boolean checkOrb(int level, int index) {
-		if (index >= unit.orbs.getLimits().length)
-			return false;
-
-		int limit = unit.orbs.getLimits()[index];
-		if (limit == 0 && fid >= 2)
-			return true;
-		else if (limit == 1 && level >= 60)
-			return true;
-		else
-			return false;
 	}
 }

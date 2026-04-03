@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class ELineUp extends BattleObj {
 
-	public final int[][] price, cool, maxC, tick, cdDownOrb, priceDownOrb;
+	public final int[][] price, cool, maxC, tick, cdDownOrb, priceDownOrb, cdDelay;
 	private final StageBasis b;
 
 	protected ELineUp(LineUp lu, StageBasis sb) {
@@ -21,6 +21,7 @@ public class ELineUp extends BattleObj {
 		tick = new int[2][5];
 		cdDownOrb = new int[2][5];
 		priceDownOrb = new int[2][5];
+		cdDelay = new int[2][5];
 		Limit lim = sb.est.lim;
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++) {
