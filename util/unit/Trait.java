@@ -9,21 +9,23 @@ import common.pack.IndexContainer.Indexable;
 import common.system.VImg;
 import common.util.Data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @IndexContainer.IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
 @JsonClass
 public class Trait extends Data implements Indexable<PackData, Trait> {
+
+    public static List<Trait> TRAITED;
+
     public static void read() {
         PackData.DefPack data = UserProfile.getBCData();
         for (int i = 0; i < TRAIT_TOT; i++) {
             Trait t = new Trait(data.getNextID(Trait.class));
             data.traits.add(t);
         }
+        TRAITED = UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE);
+        TRAITED.remove(TRAIT_METAL);
     }
 
     public static ArrayList<Trait> bitmaskToTrait(int type) {
@@ -118,6 +120,10 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
             }
         }
         return false;
+    }
+
+    public static boolean isTargetTraited(List<Trait> traits) {
+        return new HashSet<>(traits).containsAll(TRAITED);
     }
 
     @JsonField
