@@ -4,8 +4,8 @@ import common.CommonStatic;
 import common.io.assets.AssetLoader;
 import common.pack.Context;
 import common.pack.PackData;
-import org.jetbrains.annotations.NotNull;
 import common.system.DateComparator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -108,7 +108,7 @@ public class Backup {
 
         String[] dates = name.split("-");
 
-        return dates.length == 6;
+        return dates.length == 6; // todo: add a popup asking if user would like to rename incorrect format to current time
     }
 
     private static String getTimeStamp() {
