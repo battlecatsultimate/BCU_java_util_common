@@ -182,6 +182,6 @@ public class Orb extends Data {
 
 	@Override
 	public String toString() {
-		return "Min Form " + minForm + ", Min Lv. " + minLv;
+		return "form " + minForm + ", lv " + minLv;
 	}
 }
