@@ -2271,28 +2271,11 @@ public abstract class Entity extends AbEntity {
 		for (Trait trait : t)
 			if (traits.contains(trait))
 				return true;
-		if (targetTraited(t))
-			for (int i = 0; i < traits.size(); i++)
-				if (traits.get(i).targetType)
-					return true;
-		if (targetTraited(traits))
+		if (Trait.isTargetTraited(traits))
 			for (int i = 0; i < t.size(); i++)
 				if (t.get(i).targetType)
 					return true;
 		return t.contains(null);
-	}
-
-	/**
-	 * Check if the unit can be considered an anti-traited
-	 * @param targets The list of traits the unit targets
-	 * @return true if the unit is anti-traited
-	 */
-	public static boolean targetTraited(List<Trait> targets) {
-		ArrayList<Trait> temp = new ArrayList<>();
-		for (Trait t : UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_WHITE))
-			if (t.id.id != TRAIT_METAL)
-				temp.add(t);
-		return new HashSet<>(targets).containsAll(temp);
 	}
 
 	/**

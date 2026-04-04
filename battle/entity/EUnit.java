@@ -303,7 +303,7 @@ public class EUnit extends Entity {
 		if (atk.model instanceof AtkModelEnemy && status[P_CURSE][0] == 0) {
 			List<Trait> sharedTraits = new ArrayList<>(atk.trait); // get traits of enemy
 			sharedTraits.retainAll(traits); // keep
-			boolean isAntiTraited = targetTraited(atk.trait);
+			boolean isAntiTraited = Trait.isTargetTraited(atk.trait);
 			for (Trait t : traits) {
 				if (t.id.pack.equals("000000") || sharedTraits.contains(t))
 					continue;

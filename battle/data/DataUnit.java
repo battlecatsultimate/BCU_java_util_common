@@ -266,7 +266,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		ArrayList<Trait> result = new ArrayList<>(super.getTraits());
 		for (PackData.UserPack userPack : UserProfile.getUserPacks())
 			for (Trait trait : userPack.traits)
-				if (trait.targetForms.contains(form))
+				if (trait.targetForms.contains(form) || (trait.targetType && Trait.isTargetTraited(traits)))
 					result.add(trait);
 		return result;
 	}

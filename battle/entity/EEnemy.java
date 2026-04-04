@@ -89,7 +89,7 @@ public class EEnemy extends Entity {
 
 			sharedTraits.retainAll(traits);
 
-			boolean isAntiTraited = targetTraited(atk.trait);
+			boolean isAntiTraited = Trait.isTargetTraited(atk.trait);
 
 			for (Trait t : traits) {
 				if (t.id.pack.equals("000000") || sharedTraits.contains(t))

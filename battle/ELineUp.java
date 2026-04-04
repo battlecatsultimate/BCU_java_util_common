@@ -69,7 +69,7 @@ public class ELineUp extends BattleObj {
 	 */
 	protected void get(int i, int j) {
 		cool[i][j] = maxC[i][j];
-		if (cdDownOrb[i][j] > 0 && tick[i][j] == 1)
+		if (cdDownOrb[i][j] > 0 && tick[i][j] == 0)
 			cool[i][j] -= cool[i][j] * cdDownOrb[i][j] / 100;
 	}
 
