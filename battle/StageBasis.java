@@ -1141,11 +1141,11 @@ public class StageBasis extends BattleObj {
 			return -1;
 		else if (dire == -1)
 			return est.lim.stageLimit.unitSpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY
-					? speed * est.lim.stageLimit.unitSpeedOverride
+					? speed * est.lim.stageLimit.unitSpeedOverride / 100
 					: est.lim.stageLimit.unitSpeedOverride;
 		else
 			return est.lim.stageLimit.enemySpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY
-					? speed * est.lim.stageLimit.enemySpeedOverride
+					? speed * est.lim.stageLimit.enemySpeedOverride / 100
 					: est.lim.stageLimit.enemySpeedOverride;
 	}
 

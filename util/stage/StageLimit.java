@@ -15,9 +15,31 @@ public class StageLimit extends Data implements BattleStatic {
         else
             return lim.stageLimit.bannedCatCombo.contains(comboId);
     }
+
     public enum SpeedOverrideMode {
-        SET,
-        MULTIPLY
+        SET("=", ""),
+        MULTIPLY("x", "%");
+
+        final String pre;
+        final String post;
+
+        SpeedOverrideMode(String pr, String po) {
+            pre = pr;
+            post = po;
+        }
+
+        public String getPre() {
+            return pre;
+        }
+
+        public String getPost() {
+            return post;
+        }
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
     public int maxMoney = 0;
@@ -80,7 +102,9 @@ public class StageLimit extends Data implements BattleStatic {
         sl.cannonMultiplier = cannonMultiplier;
 
         sl.unitSpeedOverride = unitSpeedOverride;
+        sl.unitSpeedOverrideMode = unitSpeedOverrideMode;
         sl.enemySpeedOverride = enemySpeedOverride;
+        sl.enemySpeedOverrideMode = enemySpeedOverrideMode;
 
         return sl;
     }
@@ -119,7 +143,7 @@ public class StageLimit extends Data implements BattleStatic {
         }
         if (alt.enemySpeedOverride != -1) {
             c.enemySpeedOverride = alt.enemySpeedOverride;
-            c.unitSpeedOverrideMode = alt.enemySpeedOverrideMode;
+            c.enemySpeedOverrideMode = alt.enemySpeedOverrideMode;
         }
 
         c.bannedCatCombo.addAll(alt.bannedCatCombo);
