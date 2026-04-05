@@ -245,6 +245,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_DMGCAP] = new VImg("./org/page/icons/DmgCap.png");
 		aux.icon[1][P_IMUARMOR] = new VImg("./org/page/icons/ArmorBreakX.png");
 		aux.icon[1][P_IMUSPEED] = new VImg("./org/page/icons/SpeedX.png");
+		aux.icon[1][P_IMULETH] = new VImg("./org/page/icons/SpeedX.png");
 		aux.icon[1][P_BARRIER] = new VImg(parts[330]);
 		aux.icon[1][P_COUNTER] = new VImg("./org/page/icons/Counter.png");
 		aux.icon[1][P_IMUCANNON] = new VImg("./org/page/icons/CannonX.png");
@@ -285,6 +286,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SPEED] = new VImg("./org/page/icons/Speed.png");
 		aux.icon[1][P_SPEEDUP] = new VImg("./org/page/icons/Speed.png");
 		aux.icon[1][P_HPREGEN] = new VImg("./org/page/icons/Barrier.png");
+		aux.icon[1][P_LETHARGY] = new VImg("./org/page/icons/Speed.png");
 		CommonStatic.getConfig().icon = false;
 	}
 

@@ -200,7 +200,11 @@ public class Editors {
 			String[] arr = item.list();
 			list = new Editor[arr.length];
 			for (int i = 0; i < arr.length; i++) {
-				list[i] = getEditor(ctrl, this, arr[i], edit);
+				if (ctrl != null) {
+					list[i] = getEditor(ctrl, this, arr[i], edit);
+				} else {
+					System.out.println("Can't get editor for " + proc + " because ctrl is null, likely crash imminent!");
+				}
 			}
 			eg.put(proc, this);
 		}
@@ -741,6 +745,19 @@ public class Editors {
 			else if (t.killCount == 0)
 				t.mult = 0;
 		}));
+
+		map().put("LETHARGY", new EditControl<>(Proc.LETHARGY.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.mult = t.time = 0;
+				t.type = 0;
+			} else {
+				t.time = Math.max(1, t.time);
+				t.type = MathUtil.clip(t.type, 0, 2);
+			}
+		}));
+
+		map().put("IMULETH", imuad);
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
