@@ -8,6 +8,7 @@ import common.io.json.JsonField.GenType;
 import common.pack.UserProfile;
 import common.system.Copable;
 import common.util.BattleStatic;
+import common.util.stage.StageLimit;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Level;
@@ -114,7 +115,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		return ans;
 	}
 
-	public void performRealisticLeveling() {
+	public void performRealisticLeveling(StageLimit lim) {
 		for(Form[] fs : lu.fs) {
 			for(int i = 0; i < fs.length; i++) {
 				if(fs[i] == null)
@@ -128,10 +129,11 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 				}
 
 				int[][] orbs = lv.getOrbs();
+				int totalLv = lv.getLv() + lv.getPlusLv();
 
 				if(orbs != null && !f.unit.orbs.isEmpty()) {
 					for (int j = 0; j < orbs.length; j++) {
-						if (f.unit.orbs.get(j).isRestricted(f.fid, lv.getLv() + lv.getPlusLv()))
+						if (f.unit.orbs.get(j).isRestricted(f.fid, totalLv) || (lim != null && lim.bannedOrb.contains(orbs[j][0])))
 							orbs[j] = new int[3];
 					}
 				}
@@ -140,11 +142,11 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 					continue;
 
 				int maxForm;
-				if (lv.getLv() + lv.getPlusLv() < 10) {
+				if (totalLv < 10) {
 					maxForm = 0;
-				} else if (lv.getLv() + lv.getPlusLv() < (fs[i].unit.info.tfLevel == -1 ? 20 : fs[i].unit.info.tfLevel)) {
+				} else if (totalLv < (fs[i].unit.info.tfLevel == -1 ? 20 : fs[i].unit.info.tfLevel)) {
 					maxForm = 1;
-				} else if (lv.getLv() + lv.getPlusLv() < fs[i].unit.info.zeroLevel) {
+				} else if (totalLv < fs[i].unit.info.zeroLevel) {
 					maxForm = 2;
 				} else {
 					maxForm = 3;
