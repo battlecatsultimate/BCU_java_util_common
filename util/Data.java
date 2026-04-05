@@ -892,15 +892,12 @@ public class Data {
 		public final BLAST BLAST = new BLAST();
 		@Order(61)
 		public final IMU IMUBLAST = new IMU();
-		@Order(62)
+
+		// Talent orbs, shouldn't be given @Order
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
-		@Order(63)
 		public final MULT MONEYBACK = new MULT();
-		@Order(64)
 		public final MULT CANONCHARGE = new MULT();
-		@Order(65)
 		public final PROB IMUATKANY = new PROB();
-		@Order(66)
 		public final BERSERK BERSERK = new BERSERK();
 
 		@Override
