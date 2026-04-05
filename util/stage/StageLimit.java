@@ -43,6 +43,8 @@ public class StageLimit extends Data implements BattleStatic {
 
     @JsonField(generic = Integer.class)
     public HashSet<Integer> bannedCatCombo = new HashSet<>();
+    @JsonField(generic = Integer.class)
+    public HashSet<Integer> bannedOrb = new HashSet<>();
 
     public StageLimit() {
 
@@ -73,12 +75,12 @@ public class StageLimit extends Data implements BattleStatic {
         sl.deployDuplicationDelay = deployDuplicationDelay.clone();
 
         sl.bannedCatCombo.addAll(bannedCatCombo);
+        sl.bannedOrb.addAll(bannedOrb);
         sl.coolStart = coolStart;
         sl.cannonMultiplier = cannonMultiplier;
 
         sl.unitSpeedOverride = unitSpeedOverride;
         sl.enemySpeedOverride = enemySpeedOverride;
-
 
         return sl;
     }
@@ -96,12 +98,17 @@ public class StageLimit extends Data implements BattleStatic {
 
         c.cooldownMultiplier = alt.cooldownMultiplier.clone();
         c.costMultiplier = alt.costMultiplier.clone();
+
         for (int i = 0; i < alt.rarityDeployLimit.length; i++)
             if (alt.rarityDeployLimit[i] != -1)
                 c.rarityDeployLimit[i] = alt.rarityDeployLimit[i];
 
-        c.deployDuplicationTimes = alt.deployDuplicationTimes.clone();
-        c.deployDuplicationDelay = alt.deployDuplicationDelay.clone();
+        for (int i = 0; i < 6; i++) {
+            if (alt.deployDuplicationTimes[i] != 0) {
+                c.deployDuplicationTimes[i] = alt.deployDuplicationTimes[i];
+                c.deployDuplicationDelay[i] = alt.deployDuplicationDelay[i];
+            }
+        }
 
         c.coolStart = alt.coolStart;
         c.cannonMultiplier = alt.cannonMultiplier;
@@ -116,6 +123,7 @@ public class StageLimit extends Data implements BattleStatic {
         }
 
         c.bannedCatCombo.addAll(alt.bannedCatCombo);
+        c.bannedOrb.addAll(alt.bannedOrb);
 
         return c;
     }
