@@ -83,33 +83,39 @@ public class StageLimit extends Data implements BattleStatic {
         return sl;
     }
 
-    public StageLimit combine(StageLimit sec) {
+    public StageLimit combine(StageLimit alt) {
         StageLimit c = clone();
-        if (sec.maxMoney != 0)
-            c.maxMoney = sec.maxMoney;
-        if (sec.globalCooldown != 0)
-            c.globalCooldown = sec.globalCooldown;
-        if (sec.globalCost != -1)
-            c.globalCost = sec.globalCost;
-        if (sec.maxUnitSpawn != -1)
-            c.maxUnitSpawn = sec.maxUnitSpawn;
+        if (alt.maxMoney != 0)
+            c.maxMoney = alt.maxMoney;
+        if (alt.globalCooldown != 0)
+            c.globalCooldown = alt.globalCooldown;
+        if (alt.globalCost != -1)
+            c.globalCost = alt.globalCost;
+        if (alt.maxUnitSpawn != -1)
+            c.maxUnitSpawn = alt.maxUnitSpawn;
 
-        c.cooldownMultiplier = sec.cooldownMultiplier.clone();
-        c.costMultiplier = sec.costMultiplier.clone();
-        for (int i = 0; i < sec.rarityDeployLimit.length; i++)
-            if (sec.rarityDeployLimit[i] != -1)
-                c.rarityDeployLimit[i] = sec.rarityDeployLimit[i];
+        c.cooldownMultiplier = alt.cooldownMultiplier.clone();
+        c.costMultiplier = alt.costMultiplier.clone();
+        for (int i = 0; i < alt.rarityDeployLimit.length; i++)
+            if (alt.rarityDeployLimit[i] != -1)
+                c.rarityDeployLimit[i] = alt.rarityDeployLimit[i];
 
-        c.deployDuplicationTimes = sec.deployDuplicationTimes.clone();
-        c.deployDuplicationDelay = sec.deployDuplicationDelay.clone();
+        c.deployDuplicationTimes = alt.deployDuplicationTimes.clone();
+        c.deployDuplicationDelay = alt.deployDuplicationDelay.clone();
 
-        c.coolStart = sec.coolStart;
-        c.cannonMultiplier = sec.cannonMultiplier;
+        c.coolStart = alt.coolStart;
+        c.cannonMultiplier = alt.cannonMultiplier;
 
-        if (sec.unitSpeedOverride != -1)
-            c.unitSpeedOverride = sec.unitSpeedOverride;
-        if (sec.enemySpeedOverride != -1)
-            c.enemySpeedOverride = sec.enemySpeedOverride;
+        if (alt.unitSpeedOverride != -1) {
+            c.unitSpeedOverride = alt.unitSpeedOverride;
+            c.unitSpeedOverrideMode = alt.unitSpeedOverrideMode;
+        }
+        if (alt.enemySpeedOverride != -1) {
+            c.enemySpeedOverride = alt.enemySpeedOverride;
+            c.unitSpeedOverrideMode = alt.enemySpeedOverrideMode;
+        }
+
+        c.bannedCatCombo.addAll(alt.bannedCatCombo);
 
         return c;
     }
