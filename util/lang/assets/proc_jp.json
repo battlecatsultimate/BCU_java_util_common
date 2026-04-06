@@ -1265,7 +1265,7 @@
     "tooltip": null,
     "format": "超獣特効(_left)与ダメx2.5 被ダメx0.6[(prob>0){&(prob)%の確率で(_dispTime(time))の間攻撃を無効にする}](_right)",
     "class": {
-      "type.active": {
+      "active": {
         "name": "対 超獣敵めっぽう強い",
         "tooltip": null
       },

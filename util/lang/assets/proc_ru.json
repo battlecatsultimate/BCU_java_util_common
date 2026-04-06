@@ -1300,7 +1300,7 @@
         "tooltip": null,
         "format": "Убийца Диких (_left)Наносит 2.5x урона[(prob>0){, }(prob==0){ и }]получает только 0.6x урона[(prob>0){, и имеет (prob)% шанс уклониться от атаки диких врагов на (_dispTime(time))}](_right)",
         "class": {
-            "type.active": {
+            "active": {
                 "name": "Сильнее против Диких",
                 "tooltip": null
             },
