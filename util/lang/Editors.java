@@ -222,6 +222,11 @@ public class Editors {
 			ProcItem item = getProcItem();
 			if (item instanceof Proc.IMUAD)
 				setComponentVisibility(this, item.exists(), 2);
+			else if (item instanceof Proc.BSTHUNT) {
+				Proc.BSTHUNT p = (Proc.BSTHUNT) item;
+				setComponentVisibility(this, p.active == 1, 1);
+				setComponentVisibility(this, p.active == 1 && p.prob > 0, 2);
+			}
 			else if (!(item instanceof Proc.IMU)) {
 				Editors.Editor base = list[0];
 
@@ -710,6 +715,7 @@ public class Editors {
 		map().put("ATKBASE", new EditControl<>(Proc.MULT.class, (t) -> {}));
 
 		map().put("BSTHUNT", new EditControl<>(Proc.BSTHUNT.class, (t) -> {
+			t.active = MathUtil.clip(t.active, 0, 1);
 			setComponentVisibility("BSTHUNT", t.active == 1, 1);
 			if (t.active == 1) {
 				t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -717,7 +723,6 @@ public class Editors {
 					t.time = 0;
 				else
 					t.time = Math.max(1, t.time);
-				setComponentVisibility("BSTHUNT", t.prob != 0, 2);
 			} else {
 				t.prob = 0;
 				t.time = 0;
