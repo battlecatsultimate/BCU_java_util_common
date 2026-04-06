@@ -1332,8 +1332,8 @@
         "tooltip": null,
         "format": "Behemoth Slayer (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
         "class": {
-            "type.active": {
-                "name": "Stronger Vs. Behemoth",
+            "active": {
+                "name": "active",
                 "tooltip": null
             },
             "prob": {
