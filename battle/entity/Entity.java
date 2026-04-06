@@ -335,11 +335,11 @@ public abstract class Entity extends AbEntity {
 				EffAnim<LethEff> eff = effas().A_LETHARGY;
 				LethEff index;
 
-				if (status[P_SPEED][2] <= 1) {
-					index = status[P_SPEED][1] >= 0 ? LethEff.DEBUFF : LethEff.BUFF;
+				if (status[P_LETHARGY][2] <= 1) {
+					index = status[P_LETHARGY][1] >= 0 ? LethEff.DEBUFF : LethEff.BUFF;
 				} else {
 					int modifiedTba = e.applyLethargy(e.waitTime);
-					index = status[P_SPEED][1] >= (modifiedTba > 0 && e.data.getTBA() > -1 ? e.data.getTBA() : modifiedTba)
+					index = status[P_LETHARGY][1] >= (modifiedTba > 0 && e.data.getTBA() > -1 ? e.data.getTBA() : modifiedTba)
 							? LethEff.DEBUFF : LethEff.BUFF;
 				}
 
@@ -2107,7 +2107,7 @@ public abstract class Entity extends AbEntity {
 				status[P_LETHARGY][1] = atk.getProc().LETHARGY.mult;
 				status[P_LETHARGY][2] = atk.getProc().LETHARGY.type;
 
-				anim.getEff(P_SPEED); // This is the thing where it does the thing
+				anim.getEff(P_LETHARGY); // This is the thing where it does the thing
 			} else
 				anim.getEff(INV);
 		}

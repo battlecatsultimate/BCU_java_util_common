@@ -32,7 +32,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 	}
 
 	public enum LethEff implements EffType<LethEff> {
-		BUFF("lethargy_up"), DEBUFF("lethargy_down");
+		BUFF("_down"), DEBUFF("_up");
 
 		private final String path;
 
@@ -41,9 +41,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 
 		@Override
-		public String path() {
-			return path;
-		}
+		public String path() { return path; }
 	}
 
 	public enum BarrierEff implements EffType<BarrierEff> {
@@ -639,7 +637,7 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		effas.A_E_WEAK_UP = new EffAnim<>(weakup, vwea, icwea, WeakUpEff.values());
 
 		// String leth = wea + "lethargy/lethargy"; // TODO use bcuzipmaker to add thsi animation also if this isn't right, try just "lethargy" instead
-		String leth = stfs[3] + "speed/speed";
+		String leth = "./org/battle/lethargy/lethargy";
 		VImg vleth = new VImg(leth + ".png");
 		ImgCut icleth = ImgCut.newIns(leth + ".imgcut");
 		effas.A_LETHARGY = new EffAnim<>(leth, vleth, icleth, LethEff.values());
