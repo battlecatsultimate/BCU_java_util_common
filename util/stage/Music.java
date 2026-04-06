@@ -9,6 +9,9 @@ import common.pack.PackData;
 import common.system.files.FileData;
 import common.util.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @JsonClass
 @IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
@@ -48,4 +51,12 @@ public class Music implements Indexable<PackData, Music> {
 		}
 	}
 
+	public List<Stage> getStages() {
+		List<Stage> ans = new ArrayList<>();
+		for (Stage st : MapColc.getAllStage()) {
+			if (st != null && (st.mus0 != null && st.mus0.equals(id) || st.mus1 != null && st.mus1.equals(id)))
+				ans.add(st);
+		}
+		return ans;
+	}
 }

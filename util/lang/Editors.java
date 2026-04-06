@@ -7,6 +7,7 @@ import common.util.Data.Proc;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.LocaleCenter.Displayable;
 import common.util.lang.ProcLang.ItemLang;
+import common.util.unit.AbEnemy;
 import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
 
@@ -224,15 +225,27 @@ public class Editors {
 
 		public void updateVisibility() {
 			ProcItem item = getProcItem();
+			Editors.Editor base = list[0];
+			EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+			boolean isActive = (base.field.f0.getDeclaringClass() == boolean.class && base.field.getBoolean()) ||
+					(base.field.f0.getDeclaringClass() == int.class && base.field.getInt() > 0);
 			if (item instanceof Proc.IMUAD)
 				setComponentVisibility(this, item.exists(), 2);
+			else if (item instanceof Proc.BSTHUNT) {
+				Proc.BSTHUNT p = (Proc.BSTHUNT) item;
+				setComponentVisibility(this, p.active == 1, 1);
+				setComponentVisibility(this, p.active == 1 && p.prob > 0, 2);
+			} else if (item instanceof Proc.SUMMON) {
+				Proc.SUMMON t = (Proc.SUMMON) item;
+				setComponentVisibility(this, item.exists(), 1);
+				if (t.prob > 0) {
+					setComponentVisibility(this, t.id != null && t.id.cls == Unit.class, 2);
+					setComponentVisibility(this, t.id != null && AbEnemy.class.isAssignableFrom(t.id.cls), 3);
+					setComponentVisibility(this, item.exists(), IntStream.range(4, list.length).toArray());
+				}
+			}
 			else if (!(item instanceof Proc.IMU)) {
-				Editors.Editor base = list[0];
-
-				if (
-					(base.field.f0.getDeclaringClass() == boolean.class && base.field.getBoolean()) ||
-					(base.field.f0.getDeclaringClass() == int.class && base.field.getInt() > 0)
-				)
+				if (isActive)
 					setComponentVisibility(this, item.exists(), IntStream.range(0, list.length).toArray());
 				else
 					setComponentVisibility(this, item.exists(), 1);
@@ -435,6 +448,7 @@ public class Editors {
 				t.min_layer = 0;
 				t.max_layer = 0;
 				t.type.same_health = false;
+				t.tba = 0;
 			} else {
 				t.time = Math.max(0, t.time);
 
@@ -444,6 +458,7 @@ public class Editors {
 				temp = t.min_layer;
 				t.min_layer = Math.min(temp, t.max_layer);
 				t.max_layer = Math.max(temp, t.max_layer);
+				t.tba = Math.max(-1, t.tba);
 
 				EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
 				if ((!edi.isEnemy() && t.id == null) || (t.id != null && t.id.cls == Unit.class)) {
@@ -453,11 +468,9 @@ public class Editors {
 						t.mult = MathUtil.clip(t.mult, -u.max - u.maxp, u.max + u.maxp);
 					else
 						t.mult = MathUtil.clip(t.mult, 1, u.max + u.maxp);
-					setComponentVisibility("SUMMON", true, 15);
 				} else {
 					t.form = 1;
 					t.mult = Math.max(1, t.mult);
-					setComponentVisibility("SUMMON", false, 15);
 				}
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
 			}
@@ -714,6 +727,7 @@ public class Editors {
 		map().put("ATKBASE", new EditControl<>(Proc.MULT.class, (t) -> {}));
 
 		map().put("BSTHUNT", new EditControl<>(Proc.BSTHUNT.class, (t) -> {
+			t.active = MathUtil.clip(t.active, 0, 1);
 			setComponentVisibility("BSTHUNT", t.active == 1, 1);
 			if (t.active == 1) {
 				t.prob = MathUtil.clip(t.prob, 0, 100);
@@ -721,7 +735,6 @@ public class Editors {
 					t.time = 0;
 				else
 					t.time = Math.max(1, t.time);
-				setComponentVisibility("BSTHUNT", t.prob != 0, 2);
 			} else {
 				t.prob = 0;
 				t.time = 0;

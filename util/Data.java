@@ -544,21 +544,23 @@ public class Data {
 			@Order(1)
 			public Identifier<?> id;
 			@Order(2)
-			public int dis;
+			public int form;
 			@Order(3)
-			public int max_dis;
-			@Order(4)
 			public int mult;
+			@Order(4)
+			public int dis;
 			@Order(5)
-			public int min_layer;
+			public int max_dis;
 			@Order(6)
-			public int max_layer;
+			public int min_layer;
 			@Order(7)
-			public TYPE type = new TYPE();
+			public int max_layer;
 			@Order(8)
 			public int time;
 			@Order(9)
-			public int form;
+			public int tba;
+			@Order(100)
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -908,16 +910,12 @@ public class Data {
 		public final LETHARGY LETHARGY = new LETHARGY();
 		@Order(63)
 		public final IMUAD IMULETH = new IMUAD();
-		// NOTE right now if adding new abilities, keep these talent orb abilities at the end of the list to avoid NullPointerException
-		@Order(64)
-		public final MULT CANONCHARGE = new MULT();
-		@Order(65)
+
+		// Talent orbs, shouldn't be given @Order
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
-		@Order(66)
 		public final MULT MONEYBACK = new MULT();
-		@Order(67)
+		public final MULT CANONCHARGE = new MULT();
 		public final PROB IMUATKANY = new PROB();
-		@Order(68)
 		public final BERSERK BERSERK = new BERSERK();
 
 		@Override

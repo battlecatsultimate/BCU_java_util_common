@@ -406,7 +406,7 @@ public class EUnit extends Entity {
 	}
 
 	private int getOrbRes(List<Trait> trait, int atk) {
-		if (level.getOrbs() == null)
+		if (level == null || level.getOrbs() == null)
 			return atk;
 
 		int ans = atk;

@@ -583,7 +583,8 @@
             "Summoned entities will be in [(min_layer==max_layer){[(min_layer==-1){the same layer as this entity}(min_layer!=-1){layer (min_layer)}]}",
             "(min_layer!=max_layer){a random layer between (min_layer) and (max_layer)}]. ",
             "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
-            " animation[(type.anim_type==3){ and disable burrow for summoned entities}]."
+            " animation[(type.anim_type==3){ and disable burrow for summoned entities}]. ",
+            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
         ],
         "class": {
             "prob": {
@@ -607,8 +608,8 @@
                 "tooltip": "Buff of the summoned entity, relative to this entity by default, fixed buff if you enable fix buff"
             },
             "time": {
-                "name": "delay",
-                "tooltip": "delay of this summon"
+                "name": "spawn delay",
+                "tooltip": "Will spawn after X frames."
             },
             "min_layer": {
                 "name": "min layer",
@@ -664,6 +665,13 @@
             "form": {
                 "name": "Form",
                 "tooltip": "Set which form of the unit you want to summon. Only applicable on Cat Units."
+            },
+            "tba": {
+                "name": "starting tba",
+                "tooltip": [
+                    "Summoned enemy enters the fight with added attack cooldown.",
+                    " Set -1 to use TBA of summoned entity."
+                ]
             }
         }
     },
@@ -1376,8 +1384,8 @@
         "tooltip": null,
         "format": "Behemoth Slayer (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
         "class": {
-            "type.active": {
-                "name": "Stronger Vs. Behemoth",
+            "active": {
+                "name": "active",
                 "tooltip": null
             },
             "prob": {

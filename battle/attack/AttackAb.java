@@ -97,7 +97,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUKB.block == 100)
 						proc.KB.clear();
 					else
-						proc.KB.dis *= (100 - imus.IMUKB.block) / 100.0;
+						proc.KB.dis *= (int) ((100 - imus.IMUKB.block) / 100.0);
 				}
 				if (proc.SLOW.time > 0 && imus.IMUSLOW.block != 0) {
 					if (imus.IMUSLOW.block > 0)
@@ -105,7 +105,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUSLOW.block == 100)
 						proc.SLOW.clear();
 					else
-						proc.SLOW.time *= (100 - imus.IMUSLOW.block) / 100.0;
+						proc.SLOW.time *= (int) ((100 - imus.IMUSLOW.block) / 100.0);
 				}
 				if (proc.STOP.time > 0 && imus.IMUSTOP.block != 0) {
 					if (imus.IMUSTOP.block > 0)
@@ -113,7 +113,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUSTOP.block == 100)
 						proc.STOP.clear();
 					else
-						proc.STOP.time *= (100 - imus.IMUSTOP.block) / 100.0;
+						proc.STOP.time *= (int) ((100 - imus.IMUSTOP.block) / 100.0);
 				}
 				if (proc.WEAK.time > 0 && checkAIImmunity(proc.WEAK.mult - 100,imus.IMUWEAK.smartImu, imus.IMUWEAK.block > 0)) {
 					if (imus.IMUWEAK.block > 0)
@@ -121,7 +121,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUWEAK.block == 100)
 						proc.WEAK.clear();
 					else
-						proc.WEAK.time *= (100 - imus.IMUWEAK.block) / 100.0;
+						proc.WEAK.time *= (int) ((100 - imus.IMUWEAK.block) / 100.0);
 				}
 				if (proc.WARP.time > 0 && imus.IMUWARP.block != 0) {
 					if (imus.IMUWARP.block > 0)
@@ -129,7 +129,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUWARP.block == 100)
 						proc.WARP.clear();
 					else
-						proc.WARP.time *= (100 - imus.IMUWARP.block) / 100.0;
+						proc.WARP.time *= (int) ((100 - imus.IMUWARP.block) / 100.0);
 				}
 				if (proc.CURSE.time > 0 && imus.IMUCURSE.block != 0) {
 					if (imus.IMUCURSE.block > 0)
@@ -137,7 +137,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUCURSE.block == 100)
 						proc.CURSE.clear();
 					else
-						proc.CURSE.time *= (100 - imus.IMUCURSE.block) / 100.0;
+						proc.CURSE.time *= (int) ((100 - imus.IMUCURSE.block) / 100.0);
 				}
 				if (proc.POIATK.mult != 0 && imus.IMUPOIATK.block != 0) {
 					if (imus.IMUPOIATK.block > 0)
@@ -145,7 +145,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUPOIATK.block == 100)
 						proc.POIATK.clear();
 					else
-						proc.POIATK.mult *= (100 - imus.IMUPOIATK.block) / 100.0;
+						proc.POIATK.mult *= (int) ((100 - imus.IMUPOIATK.block) / 100.0);
 				}
 				if (proc.SUMMON.mult > 0 && imus.IMUSUMMON.block != 0) {
 					if (imus.IMUSUMMON.block > 0)
@@ -153,7 +153,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUSUMMON.block == 100)
 						proc.SUMMON.clear();
 					else
-						proc.SUMMON.mult *= (100 - imus.IMUSUMMON.block) / 100.0;
+						proc.SUMMON.mult *= (int) ((100 - imus.IMUSUMMON.block) / 100.0);
 				}
 				if (proc.CRIT.mult > 0 && imus.CRITI.block != 0) {
 					if (imus.CRITI.block > 0)
@@ -161,7 +161,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.CRITI.block == 100)
 						proc.CRIT.clear();
 					else
-						proc.CRIT.mult *= (100 - imus.CRITI.block) / 100.0;
+						proc.CRIT.mult *= (int) ((100 - imus.CRITI.block) / 100.0);
 				}
 				if (proc.POISON.damage != 0 && imus.IMUPOI.block != 0 && checkAIImmunity(proc.POISON.damage, imus.IMUPOI.smartImu, imus.IMUPOI.block < 0)) {
 					if (imus.IMUPOI.block > 0)
@@ -169,7 +169,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUPOI.block == 100)
 						proc.POISON.clear();
 					else
-						proc.POISON.damage *= (100 - imus.IMUPOI.block) / 100.0;
+						proc.POISON.damage *= (int) ((100 - imus.IMUPOI.block) / 100.0);
 				}
 				if (proc.SEAL.time > 0 && imus.IMUSEAL.block != 0) {
 					if (imus.IMUSEAL.block > 0)
@@ -177,7 +177,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUSEAL.block == 100)
 						proc.SEAL.clear();
 					else
-						proc.SEAL.time *= (100 - imus.IMUSEAL.block) / 100.0;
+						proc.SEAL.time *= (int) ((100 - imus.IMUSEAL.block) / 100.0);
 				}
 				if (proc.ARMOR.time > 0 && imus.IMUARMOR.block != 0 && checkAIImmunity(proc.ARMOR.mult, imus.IMUARMOR.smartImu, imus.IMUARMOR.block < 0)) {
 					if (imus.IMUARMOR.block > 0)
@@ -185,7 +185,7 @@ public abstract class AttackAb extends BattleObj {
 					if (imus.IMUARMOR.block == 100)
 						proc.ARMOR.clear();
 					else
-						proc.ARMOR.time *= (100 - imus.IMUARMOR.block) / 100.0;
+						proc.ARMOR.time *= (int) ((100 - imus.IMUARMOR.block) / 100.0);
 				}
 				if (proc.SPEED.time > 0 && imus.IMUSPEED.block != 0) {
 					boolean b;
@@ -200,7 +200,7 @@ public abstract class AttackAb extends BattleObj {
 						if (imus.IMUSPEED.block == 100)
 							proc.ARMOR.clear();
 						else
-							proc.ARMOR.time *= (100 - imus.IMUSPEED.block) / 100.0;
+							proc.ARMOR.time *= (int) ((100 - imus.IMUSPEED.block) / 100.0);
 					}
 				}
 

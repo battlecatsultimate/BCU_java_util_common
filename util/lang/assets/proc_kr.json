@@ -527,7 +527,8 @@
             "[(min_layer==max_layer){소환자의 레이어와 같은 곳에}",
             "(min_layer!=max_layer){렌덤한 레이어 (min_layer)~(max_layer) 사이에}] ",
             "[(type.same_health){소환자와 같은 체력[(type.bond_hp){이고 소환자화 연동된 상태로}(!type.bond_hp){으로}] }]",
-            "[(type.anim_type==0){평범하게 소환}(type.anim_type==1){워프 에니메이션과 함께 소환}(type.anim_type>=2){버로우 애니메이션과 함께 소환}](_right)"
+            "[(type.anim_type==0){평범하게 소환}(type.anim_type==1){워프 에니메이션과 함께 소환}(type.anim_type>=2){버로우 애니메이션과 함께 소환}](_right) ",
+            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
         ],
         "class": {
             "prob": {
@@ -603,6 +604,17 @@
                     "타겟을 소환자가 죽였을 시에만 소환됩니다.",
                     " 해당 특성을 활성화하면 죽게 되는 타겟 앞에 특정된 거리 앞에 소환되게 됩니다.",
                     " 소환자가 범위 공격을 가지고 있으면 한번에 여러마리의 개체를 소환할 수 있습니다"
+                ]
+            },
+            "form": {
+                "name": "Form",
+                "tooltip": "Set which form of the unit you want to summon. Only applicable on Cat Units."
+            },
+            "tba": {
+                "name": "starting tba",
+                "tooltip": [
+                    "Summoned enemy enters the fight with added attack cooldown.",
+                    " Set -1 to use TBA of summoned entity."
                 ]
             }
         }
@@ -1269,7 +1281,7 @@
         "tooltip": "초수 특성을 가진 적에게 추가적인 데미지를 가하고 감소된 데미지를 입습니다. 확률적으로 공격 무효도 발동됩니다",
         "format": "초수 특효 (_left)피격 시 데미지 x0.6, 공격 시 데미지 x2.5[(prob>0){로 적용되고, (prob)% 확률로 (_dispTime(time)) 동안 공격 무효}](_right)",
         "class": {
-            "type.active": {
+            "active": {
                 "name": "초수 특효",
                 "tooltip": "활성화 시 초수에게 들어오는 데미지가 감소되고 가하는 데미지가 증가합니다"
             },

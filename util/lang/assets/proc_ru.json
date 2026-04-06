@@ -571,7 +571,8 @@
             "Призванные существа будут находиться [(min_layer==max_layer){[(min_layer==-1){на том же уровне, что и это существо}(min_layer!=-1){на уровне (min_layer)}]}",
             "(min_layer!=max_layer){на случайном уровне между (min_layer) и (max_layer)}]. ",
             "Призыв будет показывать [(type.anim_type==0){никакую}(type.anim_type==1){телепортацию}(type.anim_type>=2){копание}]",
-            " анимацию[(type.anim_type==3){ и отключать копание для призванных существ}]."
+            " анимацию[(type.anim_type==3){ и отключать копание для призванных существ}]. ",
+            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
         ],
         "class": {
             "prob": {
@@ -640,6 +641,13 @@
             "form": {
                 "name": "Форма",
                 "tooltip": "Установите, какую форму единицы вы хотите призвать. Применимо только к единицам Котов."
+            },
+            "tba": {
+                "name": "starting tba",
+                "tooltip": [
+                    "Summoned enemy enters the fight with added attack cooldown.",
+                    " Set -1 to use TBA of summoned entity."
+                ]
             }
         }
     },
@@ -1292,7 +1300,7 @@
         "tooltip": null,
         "format": "Убийца Диких (_left)Наносит 2.5x урона[(prob>0){, }(prob==0){ и }]получает только 0.6x урона[(prob>0){, и имеет (prob)% шанс уклониться от атаки диких врагов на (_dispTime(time))}](_right)",
         "class": {
-            "type.active": {
+            "active": {
                 "name": "Сильнее против Диких",
                 "tooltip": null
             },

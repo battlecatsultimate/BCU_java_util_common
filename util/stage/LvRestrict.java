@@ -30,9 +30,11 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
 	public int[][] rares = new int[RARITY_TOT][7];
 	public int[] all = new int[7];
+	public int[] orb = new int[] { -1, -1, -1, -1, -1, -1 };
+	public int allOrb = -1;
 	@JCIdentifier
 	public Identifier<LvRestrict> id;
-	public String name = "";
+	public String name = "new level restrict";
 
 	@JsonClass.JCConstructor
 	public LvRestrict() {
@@ -49,8 +51,11 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 	public LvRestrict(Identifier<LvRestrict> ID, LvRestrict lvr) {
 		id = ID;
 		all = lvr.all.clone();
-		for (int i = 0; i < RARITY_TOT; i++)
+		allOrb = lvr.allOrb;
+		for (int i = 0; i < RARITY_TOT; i++) {
 			rares[i] = lvr.rares[i].clone();
+			orb[i] = lvr.orb[i];
+		}
 		for (CharaGroup cg : lvr.res.keySet())
 			res.put(cg, lvr.res.get(cg).clone());
 	}
@@ -62,11 +67,15 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 
 	public LvRestrict combine(LvRestrict lvr) {
 		LvRestrict ans = new LvRestrict(this);
-		for (int i = 0; i < 6; i++)
+		ans.allOrb = Math.min(lvr.allOrb, allOrb);
+		for (int i = 0; i < ans.all.length; i++) {
 			ans.all[i] = Math.min(lvr.all[i], all[i]);
+		}
 		for (int i = 0; i < RARITY_TOT; i++)
-			for (int j = 0; j < 6; j++)
+			for (int j = 0; j < ans.rares[i].length; j++) {
 				ans.rares[i][j] = Math.min(lvr.rares[i][j], rares[i][j]);
+				ans.orb[i] = Math.min(lvr.orb[i], orb[i]);
+			}
 		for (CharaGroup cg : lvr.res.keySet())
 			if (res.containsKey(cg)) {
 				int[] lv0 = res.get(cg);
@@ -89,14 +98,14 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 		for (Form[] fs : lu.fs)
 			for (Form f : fs)
 				if (f != null) {
-					Level mlv = valid(f);
-					Level flv = lu.map.get(f.unit.id);
+					Level maxLv = valid(f);
+					Level curLv = lu.map.get(f.unit.id);
 
-					if (mlv.getLv() < flv.getLv() || mlv.getPlusLv() < flv.getPlusLv())
+					if (maxLv.getLv() < curLv.getLv() || maxLv.getPlusLv() < curLv.getPlusLv())
 						return false;
 
-					int[] mt = mlv.getTalents();
-					int[] ft = flv.getTalents();
+					int[] mt = maxLv.getTalents();
+					int[] ft = curLv.getTalents();
 
 					for (int i = 0; i < Math.min(mt.length, ft.length); i++)
 						if (mt[i] < ft[i])

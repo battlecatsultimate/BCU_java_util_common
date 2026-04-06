@@ -15,9 +15,31 @@ public class StageLimit extends Data implements BattleStatic {
         else
             return lim.stageLimit.bannedCatCombo.contains(comboId);
     }
+
     public enum SpeedOverrideMode {
-        SET,
-        MULTIPLY
+        SET("=", ""),
+        MULTIPLY("x", "%");
+
+        final String pre;
+        final String post;
+
+        SpeedOverrideMode(String pr, String po) {
+            pre = pr;
+            post = po;
+        }
+
+        public String getPre() {
+            return pre;
+        }
+
+        public String getPost() {
+            return post;
+        }
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
     public int maxMoney = 0;
@@ -43,6 +65,8 @@ public class StageLimit extends Data implements BattleStatic {
 
     @JsonField(generic = Integer.class)
     public HashSet<Integer> bannedCatCombo = new HashSet<>();
+    @JsonField(generic = Integer.class)
+    public HashSet<Integer> bannedOrb = new HashSet<>();
 
     public StageLimit() {
 
@@ -73,43 +97,57 @@ public class StageLimit extends Data implements BattleStatic {
         sl.deployDuplicationDelay = deployDuplicationDelay.clone();
 
         sl.bannedCatCombo.addAll(bannedCatCombo);
+        sl.bannedOrb.addAll(bannedOrb);
         sl.coolStart = coolStart;
         sl.cannonMultiplier = cannonMultiplier;
 
         sl.unitSpeedOverride = unitSpeedOverride;
+        sl.unitSpeedOverrideMode = unitSpeedOverrideMode;
         sl.enemySpeedOverride = enemySpeedOverride;
-
+        sl.enemySpeedOverrideMode = enemySpeedOverrideMode;
 
         return sl;
     }
 
-    public StageLimit combine(StageLimit sec) {
+    public StageLimit combine(StageLimit alt) {
         StageLimit c = clone();
-        if (sec.maxMoney != 0)
-            c.maxMoney = sec.maxMoney;
-        if (sec.globalCooldown != 0)
-            c.globalCooldown = sec.globalCooldown;
-        if (sec.globalCost != -1)
-            c.globalCost = sec.globalCost;
-        if (sec.maxUnitSpawn != -1)
-            c.maxUnitSpawn = sec.maxUnitSpawn;
+        if (alt.maxMoney != 0)
+            c.maxMoney = alt.maxMoney;
+        if (alt.globalCooldown != 0)
+            c.globalCooldown = alt.globalCooldown;
+        if (alt.globalCost != -1)
+            c.globalCost = alt.globalCost;
+        if (alt.maxUnitSpawn != -1)
+            c.maxUnitSpawn = alt.maxUnitSpawn;
 
-        c.cooldownMultiplier = sec.cooldownMultiplier.clone();
-        c.costMultiplier = sec.costMultiplier.clone();
-        for (int i = 0; i < sec.rarityDeployLimit.length; i++)
-            if (sec.rarityDeployLimit[i] != -1)
-                c.rarityDeployLimit[i] = sec.rarityDeployLimit[i];
+        c.cooldownMultiplier = alt.cooldownMultiplier.clone();
+        c.costMultiplier = alt.costMultiplier.clone();
 
-        c.deployDuplicationTimes = sec.deployDuplicationTimes.clone();
-        c.deployDuplicationDelay = sec.deployDuplicationDelay.clone();
+        for (int i = 0; i < alt.rarityDeployLimit.length; i++)
+            if (alt.rarityDeployLimit[i] != -1)
+                c.rarityDeployLimit[i] = alt.rarityDeployLimit[i];
 
-        c.coolStart = sec.coolStart;
-        c.cannonMultiplier = sec.cannonMultiplier;
+        for (int i = 0; i < 6; i++) {
+            if (alt.deployDuplicationTimes[i] != 0) {
+                c.deployDuplicationTimes[i] = alt.deployDuplicationTimes[i];
+                c.deployDuplicationDelay[i] = alt.deployDuplicationDelay[i];
+            }
+        }
 
-        if (sec.unitSpeedOverride != -1)
-            c.unitSpeedOverride = sec.unitSpeedOverride;
-        if (sec.enemySpeedOverride != -1)
-            c.enemySpeedOverride = sec.enemySpeedOverride;
+        c.coolStart = alt.coolStart;
+        c.cannonMultiplier = alt.cannonMultiplier;
+
+        if (alt.unitSpeedOverride != -1) {
+            c.unitSpeedOverride = alt.unitSpeedOverride;
+            c.unitSpeedOverrideMode = alt.unitSpeedOverrideMode;
+        }
+        if (alt.enemySpeedOverride != -1) {
+            c.enemySpeedOverride = alt.enemySpeedOverride;
+            c.enemySpeedOverrideMode = alt.enemySpeedOverrideMode;
+        }
+
+        c.bannedCatCombo.addAll(alt.bannedCatCombo);
+        c.bannedOrb.addAll(alt.bannedOrb);
 
         return c;
     }

@@ -1397,7 +1397,7 @@ public abstract class Entity extends AbEntity {
 	private int kbTime;
 
 	/**
-	 * wait FSM time
+	 * wait FSM time (TBA)
 	 */
 	private int waitTime;
 
@@ -2729,5 +2729,9 @@ public abstract class Entity extends AbEntity {
 					touchEnemy = true;
 		}
 		return touch;
+	}
+
+	public void setWaitTime(int t) {
+		waitTime = t;
 	}
 }

@@ -540,7 +540,8 @@
       "(_left)召喚されたエンティティは[(min_layer==max_layer){[(min_layer==-1){このエンティティと同じレイヤーになる}(min_layer!=-1){(min_layer)レイヤーになる}]}",
       "(min_layer!=max_layer){(min_layer)～(max_layer)のランダムなレイヤーに存在する}](_right) ",
       "(_left)召喚は[(type.anim_type==1){ワープの}(type.anim_type>=2){埋葬終了の}]",
-      "[(type.anim_type==3){(_left)+埋葬の無効化(_right)}]アニメーションを表示[(type.anim_type!=0){する}(type.anim_type==0){しません}](_right)"
+      "[(type.anim_type==3){(_left)+埋葬の無効化(_right)}]アニメーションを表示[(type.anim_type!=0){する}(type.anim_type==0){しません}](_right) ",
+      "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
     ],
     "class": {
       "prob": {
@@ -620,6 +621,13 @@
       "form": {
         "name": "フォーム",
         "tooltip": "召喚したいユニットの形態を設定します。ネコのユニットにのみ適用されます。"
+      },
+      "tba": {
+        "name": "starting tba",
+        "tooltip": [
+          "Summoned enemy enters the fight with added attack cooldown.",
+          " Set -1 to use TBA of summoned entity."
+        ]
       }
     }
   },
@@ -1257,7 +1265,7 @@
     "tooltip": null,
     "format": "超獣特効(_left)与ダメx2.5 被ダメx0.6[(prob>0){&(prob)%の確率で(_dispTime(time))の間攻撃を無効にする}](_right)",
     "class": {
-      "type.active": {
+      "active": {
         "name": "対 超獣敵めっぽう強い",
         "tooltip": null
       },

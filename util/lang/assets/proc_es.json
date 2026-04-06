@@ -564,7 +564,8 @@
             "Las entidades invocadas estarán en [(min_layer==max_layer){la misma capa que esta entidad}",
             "(min_layer!=max_layer){una capa aleatoria}]. ",
             "La invocación mostrará [(type.anim_type==0){cero animaciones}(type.anim_type==1){la animación de abducción}(type.anim_type>=2){la animación de escarbar}]",
-            "[(type.anim_type==3){ y desactivará escarbar para las entidades invocadas}]."
+            "[(type.anim_type==3){ y desactivará escarbar para las entidades invocadas}]. ",
+            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
         ],
         "class": {
             "prob": {
@@ -645,6 +646,13 @@
             "form": {
                 "name": "Forma",
                 "tooltip": "Establece qué forma de la unidad deseas invocar. Sólo aplicable a Unidades."
+            },
+            "tba": {
+                "name": "starting tba",
+                "tooltip": [
+                    "Summoned enemy enters the fight with added attack cooldown.",
+                    " Set -1 to use TBA of summoned entity."
+                ]
             }
         }
     },
@@ -1297,7 +1305,7 @@
         "tooltip": null,
         "format": "Cazador de Bestias (_left)Inflige 2.5x de daño[(prob>0){, }(prob==0){ y }]sólo recibe 0.6x de daño[(prob>0){, y una probabilidad del (prob)% de evadir sus ataques por (_dispTime(time))}](_right)",
         "class": {
-            "type.active": {
+            "active": {
                 "name": "Mayor fuerza contra Bestias",
                 "tooltip": null
             },
