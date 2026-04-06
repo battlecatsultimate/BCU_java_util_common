@@ -349,7 +349,7 @@ public class CommonStatic {
 	}
 
 	public static String verifyFileName(String str) {
-		return str.replaceAll("[\\\\/:*<>?\"|]|\\.$", "_");
+		return str.replaceAll("[\\\\/:*<>?\"|]|\\.+$", "_");
 	}
 
 	public static double parseDoubleN(String str) {
