@@ -544,21 +544,23 @@ public class Data {
 			@Order(1)
 			public Identifier<?> id;
 			@Order(2)
-			public int dis;
+			public int form;
 			@Order(3)
-			public int max_dis;
-			@Order(4)
 			public int mult;
+			@Order(4)
+			public int dis;
 			@Order(5)
-			public int min_layer;
+			public int max_dis;
 			@Order(6)
-			public int max_layer;
+			public int min_layer;
 			@Order(7)
-			public TYPE type = new TYPE();
+			public int max_layer;
 			@Order(8)
 			public int time;
 			@Order(9)
-			public int form;
+			public int tba;
+			@Order(100)
+			public TYPE type = new TYPE();
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)

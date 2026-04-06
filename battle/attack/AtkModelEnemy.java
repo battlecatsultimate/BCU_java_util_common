@@ -48,8 +48,8 @@ public class AtkModelEnemy extends AtkModelEntity {
 					float mult = proc.mult * 0.01f;
 
 					if (!conf.fix_buff) {
-						mult *= ((EEnemy) e).mult;
-						mula *= ((EEnemy) e).mula;
+						mult *= (float) ((EEnemy) e).mult;
+						mula *= (float) ((EEnemy) e).mula;
 					}
 
 					mula *= (100.0f - resist) / 100;
@@ -61,10 +61,13 @@ public class AtkModelEnemy extends AtkModelEntity {
 					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0);
 
 					ee.group = allow;
+					if (proc.tba == -1)
+						ee.setWaitTime(ee.data.getTBA());
+					else if (proc.tba > 0)
+						ee.setWaitTime(proc.tba);
 
 					if (ep < ee.data.getWidth())
 						ep = ee.data.getWidth();
-
 					if (ep > b.st.len - 800)
 						ep = b.st.len - 800;
 
