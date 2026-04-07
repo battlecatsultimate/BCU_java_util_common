@@ -1556,7 +1556,7 @@
         "tooltip": null,
         "format": [
             "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] unit cooldowns by (_abs(strength))[(type==0){%}(type==1){f}]",
-            " of their [(use_max){max cooldown}(!use_max){current cooldown}]"
+            "[(type==2){ of its max cooldown}(type==0){ of its current cooldown}]"
         ],
         "class": {
             "prob": {
@@ -1569,11 +1569,7 @@
             },
             "type": {
                 "name": "type",
-                "tooltip": "Set as 0 to apply a % amount. Set as 1 to apply a direct amount."
-            },
-            "use_max": {
-                "name": "use max cooldown",
-                "tooltip": "If enabled, reduce cooldown by % of max cooldown (while type is 0)."
+                "tooltip": "0 = Apply x% current cooldown. 1 = Apply a direct amount. 2 = Apply x% max cooldown."
             }
         }
     },

@@ -777,12 +777,10 @@ public class Editors {
 			if (t.prob == 0) {
 				t.type = 0;
 				t.strength = 0;
-				t.use_max = false;
 			} else {
-				t.type = MathUtil.clip(t.type, 0, 1);
+				t.type = MathUtil.clip(t.type, 0, 2);
 				if (t.strength == 0)
 					t.strength = 1;
-				t.use_max &= t.type == 0;
 			}
 		}));
 

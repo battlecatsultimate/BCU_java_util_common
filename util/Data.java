@@ -759,8 +759,6 @@ public class Data {
 			public int strength;
 			@Order(2)
 			public int type;
-			@Order(3)
-			public boolean use_max;
 		}
 
 		public static Proc blank() {
