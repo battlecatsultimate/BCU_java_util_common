@@ -1547,7 +1547,7 @@ public abstract class Entity extends AbEntity {
 	 * accept attack
 	 */
 	@Override
-	public void damaged(AttackAb atk) {
+	public boolean damaged(AttackAb atk) {
 		damageTaken += atk.atk;
 
 		int dmg = getDamage(atk, atk.atk);
@@ -1558,7 +1558,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
-			return;
+			return false;
 
 		Proc.CANNI imuCannon = getProc().IMUCANNON;
 		if (atk.canon > 0 && imuCannon.exists() && (atk.canon & imuCannon.type) > 0) {
@@ -1566,7 +1566,7 @@ public abstract class Entity extends AbEntity {
 				dmg = dmg * (100 - imuCannon.mult) / 100;
 			} else {
 				anim.getEff(P_WAVE);
-				return;
+				return false;
 			}
 		}
 
@@ -1575,7 +1575,7 @@ public abstract class Entity extends AbEntity {
 			if (getProc().IMUWAVE.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUWAVE.mult == 100)
-				return;
+				return false;
 			else
 				dmg = dmg * (100 - getProc().IMUWAVE.mult) / 100;
 		}
@@ -1584,7 +1584,7 @@ public abstract class Entity extends AbEntity {
 			if (getProc().IMUMOVING.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUMOVING.mult == 100)
-				return;
+				return false;
 			else
 				dmg = dmg * (100 - getProc().IMUMOVING.mult) / 100;
 		}
@@ -1593,7 +1593,7 @@ public abstract class Entity extends AbEntity {
 			if (getProc().IMUVOLC.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUVOLC.mult == 100)
-				return;
+				return false;
 			else
 				dmg = dmg * (100 - getProc().IMUVOLC.mult) / 100;
 		}
@@ -1602,7 +1602,7 @@ public abstract class Entity extends AbEntity {
 			if (getProc().IMUBLAST.mult > 0)
 				anim.getEff(P_WAVE);
 			if (getProc().IMUBLAST.mult == 100)
-				return;
+				return false;
 			else
 				dmg = dmg * (100 - getProc().IMUBLAST.mult) / 100;
 		}
@@ -1616,7 +1616,7 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
-				return;
+				return false;
 		}
 		if (getProc().IMUATKANY.exists()) { // todo: figure out if dodge orb is affected by treasure or by dodge ability
 			if (status[P_IMUATK][0] == 0 && getProc().IMUATKANY.perform(basis.r)) {
@@ -1625,7 +1625,7 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (status[P_IMUATK][0] > 0)
-				return;
+				return false;
 		}
 
 		Proc.DMGCUT dmgcut = getProc().DMGCUT;
@@ -1639,7 +1639,7 @@ public abstract class Entity extends AbEntity {
 
 			if (dmgcut.reduction == 100) {
 				if (!proc)
-					return;
+					return false;
 				dmg = 0;
 			} else if (dmgcut.reduction != 0)
 				dmg = dmg * (100 - dmgcut.reduction) / 100;
@@ -1655,7 +1655,7 @@ public abstract class Entity extends AbEntity {
 
 			if (dmgcap.type.nullify) {
 				if (!proc)
-					return;
+					return false;
 				dmg = 0;
 			} else
 				dmg = status[P_DMGCAP][0];
@@ -1707,9 +1707,8 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if (!barrierContinue) {
-			return;
-		}
+		if (!barrierContinue)
+			return false;
 
 		//75.0 is guessed value compared from BC
 		if (atk.getProc().CRIT.mult > 0) {
@@ -1733,7 +1732,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (!shieldContinue)
-			return;
+			return false;
 
 		if ((atk.waveType & (WT_VOLC | WT_MIVC)) > 0) {
 			if ((getAbi() & AB_CSUR) > 0 && atk instanceof AttackVolcano) {
@@ -1853,6 +1852,8 @@ public abstract class Entity extends AbEntity {
 
 		if (proc)
 			processProcs(atk);
+
+		return true;
 	}
 
 	private int applyLethargy(int tba) {
@@ -1874,13 +1875,14 @@ public abstract class Entity extends AbEntity {
 			return;
 
 		boolean cannonResist = atk.canon > 0 && getProc().IMUCANNON.exists() && (atk.canon & getProc().IMUCANNON.type) > 0;
-		if (atk.getProc().POIATK.mult > 0) {
+		Proc atkProc = atk.getProc();
+		if (atkProc.POIATK.mult > 0) {
 			int rst = getProc().IMUPOIATK.mult;
 
 			if (rst == 100) {
 				anim.getEff(INV);
 			} else {
-				float poiDmg = atk.getProc().POIATK.mult * (100 - rst) / 10000f;
+				float poiDmg = atkProc.POIATK.mult * (100 - rst) / 10000f;
 
 				if (dire == -1 && basis.canon.deco == DECO_BASE_BARRIER)
 					poiDmg *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_TOXIC);
@@ -1898,8 +1900,8 @@ public abstract class Entity extends AbEntity {
 		float time = atk.origin instanceof AttackCanon ? 1 : 1 + f * 0.2f / 3;
 		float dist = 1 + f * 0.1f;
 
-		if (atk.getProc().STOP.time != 0 || atk.getProc().STOP.prob > 0) {
-			int val = (int) (atk.getProc().STOP.time * time);
+		if (atkProc.STOP.time != 0 || atkProc.STOP.prob > 0) {
+			int val = (int) (atkProc.STOP.time * time);
 			float rst = getResistValue(atk, "IMUSTOP", getProc().IMUSTOP.mult);
 
 			if (rst > 0f) {
@@ -1919,8 +1921,8 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if (atk.getProc().SLOW.time != 0 || atk.getProc().SLOW.prob > 0) {
-			int val = (int) (atk.getProc().SLOW.time * time);
+		if (atkProc.SLOW.time != 0 || atkProc.SLOW.prob > 0) {
+			int val = (int) (atkProc.SLOW.time * time);
 			float rst = getResistValue(atk, "IMUSLOW", getProc().IMUSLOW.mult);
 
 			if (rst > 0f) {
@@ -1940,12 +1942,12 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if (atk.getProc().WEAK.time > 0) {
-			int val = (int) (atk.getProc().WEAK.time * time);
+		if (atkProc.WEAK.time > 0) {
+			int val = (int) (atkProc.WEAK.time * time);
 			float rst = getResistValue(
 					atk,
 					"IMUWEAK",
-					checkAIImmunity(atk.getProc().WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0
+					checkAIImmunity(atkProc.WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0
 			);
 
 			val = (int) (val * rst);
@@ -1954,14 +1956,14 @@ public abstract class Entity extends AbEntity {
 			}
 
 			if (rst > 0f) {
-				weaks.add(new int[] { val, atk.getProc().WEAK.mult });
+				weaks.add(new int[] { val, atkProc.WEAK.mult });
 				anim.getEff(P_WEAK);
 			} else
 				anim.getEff(INV);
 		}
 
-		if (atk.getProc().CURSE.time != 0 || atk.getProc().CURSE.prob > 0) {
-			int val = (int) (atk.getProc().CURSE.time * time);
+		if (atkProc.CURSE.time != 0 || atkProc.CURSE.prob > 0) {
+			int val = (int) (atkProc.CURSE.time * time);
 			float rst = getResistValue(atk, "IMUCURSE", getProc().IMUCURSE.mult);
 
 			if (rst > 0f) {
@@ -1980,26 +1982,26 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		if (atk.getProc().KB.dis != 0) {
+		if (atkProc.KB.dis != 0) {
 			float rst = getResistValue(atk, "IMUKB", getProc().IMUKB.mult);
 
 			if (rst > 0f) {
-				status[P_KB][0] = atk.getProc().KB.time;
+				status[P_KB][0] = atkProc.KB.time;
 
-				interrupt(P_KB, atk.getProc().KB.dis * dist * rst);
+				interrupt(P_KB, atkProc.KB.dis * dist * rst);
 			} else
 				anim.getEff(INV);
 		}
 
-		if (atk.getProc().SNIPER.prob > 0)
+		if (atkProc.SNIPER.prob > 0)
 			interrupt(INT_ASS, KB_DIS[INT_ASS]);
 
-		if (atk.getProc().BOSS.prob > 0)
+		if (atkProc.BOSS.prob > 0)
 			interrupt(INT_SW, KB_DIS[INT_SW]);
 
-		if (atk.getProc().WARP.exists())
+		if (atkProc.WARP.exists())
 			if (getProc().IMUWARP.mult < 100) {
-				Data.Proc.WARP warp = atk.getProc().WARP;
+				Data.Proc.WARP warp = atkProc.WARP;
 
 				interrupt(INT_WARP, warp.dis_0 + (int) (basis.r.nextFloat() * (warp.dis_1 - warp.dis_0)));
 
@@ -2014,11 +2016,11 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INVWARP);
 
-		if (atk.getProc().SEAL.prob > 0) {
+		if (atkProc.SEAL.prob > 0) {
 			int rst = data.getProc().IMUSEAL.mult;
 
 			if (rst < 100) {
-				int val = (int) (atk.getProc().SEAL.time * time);
+				int val = (int) (atkProc.SEAL.time * time);
 
 				val = val * (100 - rst) / 100;
 
@@ -2032,11 +2034,11 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 		}
 
-		if (atk.getProc().POISON.time > 0) {
-			int res = checkAIImmunity(atk.getProc().POISON.damage, getProc().IMUPOI.smartImu, getProc().IMUPOI.mult < 0) ? getProc().IMUPOI.mult : 0;
+		if (atkProc.POISON.time > 0) {
+			int res = checkAIImmunity(atkProc.POISON.damage, getProc().IMUPOI.smartImu, getProc().IMUPOI.mult < 0) ? getProc().IMUPOI.mult : 0;
 
 			if (res < 100) {
-				POISON ws = (POISON) atk.getProc().POISON.clone();
+				POISON ws = (POISON) atkProc.POISON.clone();
 
 				ws.time = ws.time * (100 - res) / 100;
 
@@ -2049,20 +2051,20 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 		}
 
-		if (!isBase && atk.getProc().ARMOR.time > 0) {
-			int res = checkAIImmunity(atk.getProc().ARMOR.mult, getProc().IMUARMOR.smartImu, getProc().IMUARMOR.mult < 0) ? getProc().IMUARMOR.mult : 0;
+		if (!isBase && atkProc.ARMOR.time > 0) {
+			int res = checkAIImmunity(atkProc.ARMOR.mult, getProc().IMUARMOR.smartImu, getProc().IMUARMOR.mult < 0) ? getProc().IMUARMOR.mult : 0;
 
 			if (res < 100) {
-				int val = (int) (atk.getProc().ARMOR.time * time);
+				int val = (int) (atkProc.ARMOR.time * time);
 				status[P_ARMOR][0] = val * (100 - res) / 100;
-				status[P_ARMOR][1] = atk.getProc().ARMOR.mult;
+				status[P_ARMOR][1] = atkProc.ARMOR.mult;
 
 				anim.getEff(P_ARMOR);
 			} else
 				anim.getEff(INV);
 		}
 
-		if (atk.getProc().SPEED.time > 0) {
+		if (atkProc.SPEED.time > 0) {
 			int res = getProc().IMUSPEED.mult;
 			int speed = data.getSpeed();
 			if (speed > 0 && basis.getGlobalSpeed(dire, speed) > 0)
@@ -2070,42 +2072,42 @@ public abstract class Entity extends AbEntity {
 
 			boolean b;
 
-			if (atk.getProc().SPEED.type == 2)
-				b = (speed > atk.getProc().SPEED.speed && res > 0) || (speed < atk.getProc().SPEED.speed && res < 0);
+			if (atkProc.SPEED.type == 2)
+				b = (speed > atkProc.SPEED.speed && res > 0) || (speed < atkProc.SPEED.speed && res < 0);
 			else
 				b = res < 0;
-			if (checkAIImmunity(atk.getProc().SPEED.speed, getProc().IMUSPEED.smartImu, b))
+			if (checkAIImmunity(atkProc.SPEED.speed, getProc().IMUSPEED.smartImu, b))
 				res = 0;
 
 			if (res < 100) {
-				int val = (int) (atk.getProc().SPEED.time * time);
+				int val = (int) (atkProc.SPEED.time * time);
 				status[P_SPEED][0] = val * (100 - res) / 100;
-				status[P_SPEED][1] = atk.getProc().SPEED.speed;
-				status[P_SPEED][2] = atk.getProc().SPEED.type;
+				status[P_SPEED][1] = atkProc.SPEED.speed;
+				status[P_SPEED][2] = atkProc.SPEED.type;
 
 				anim.getEff(P_SPEED);
 			} else
 				anim.getEff(INV);
 		}
 
-		if (atk.getProc().LETHARGY.time > 0) {
+		if (atkProc.LETHARGY.time > 0) {
 			int res = getProc().IMULETH.mult;
 			int tba = data.getTBA();
 
 			boolean isBuff; // Checking if the Lethargy TBA is < the getTBA TBA is how you determine if it's a buff or not for effs
 
-			if (atk.getProc().LETHARGY.type == 2)
-				isBuff = (tba > atk.getProc().LETHARGY.mult && res > 0) || (tba < atk.getProc().LETHARGY.mult && res < 0);
+			if (atkProc.LETHARGY.type == 2)
+				isBuff = (tba > atkProc.LETHARGY.mult && res > 0) || (tba < atkProc.LETHARGY.mult && res < 0);
 			else
 				isBuff = res < 0;
-			if (checkAIImmunity(atk.getProc().LETHARGY.mult, getProc().IMULETH.smartImu, !isBuff))
+			if (checkAIImmunity(atkProc.LETHARGY.mult, getProc().IMULETH.smartImu, !isBuff))
 				res = 0;
 
 			if (res < 100) {
-				int val = (int) (atk.getProc().LETHARGY.time * time);
+				int val = (int) (atkProc.LETHARGY.time * time);
 				status[P_LETHARGY][0] = val * (100 - res) / 100;
-				status[P_LETHARGY][1] = atk.getProc().LETHARGY.mult;
-				status[P_LETHARGY][2] = atk.getProc().LETHARGY.type;
+				status[P_LETHARGY][1] = atkProc.LETHARGY.mult;
+				status[P_LETHARGY][2] = atkProc.LETHARGY.type;
 
 				anim.getEff(P_LETHARGY); // This is the thing where it does the thing
 			} else

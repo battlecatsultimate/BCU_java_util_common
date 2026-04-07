@@ -38,7 +38,7 @@ public abstract class AbEntity extends BattleObj {
 		dire = d;
 	}
 
-	public abstract void damaged(AttackAb atk);
+	public abstract boolean damaged(AttackAb atk);
 
 	public abstract int getAbi();
 

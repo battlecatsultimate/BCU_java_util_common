@@ -161,9 +161,9 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	public void damaged(AttackAb atk) {
+	public boolean damaged(AttackAb atk) {
 		hit = 2;
-		super.damaged(atk);
+		return super.damaged(atk);
 	}
 
 	@Override

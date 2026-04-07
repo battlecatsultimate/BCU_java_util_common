@@ -40,14 +40,14 @@ public class ECastle extends AbEntity {
 	}
 
 	@Override
-	public void damaged(AttackAb atk) {
+	public boolean damaged(AttackAb atk) {
 		if (isEnemy && sb.activeGuard == 1) {
 			if (guard != null)
-				return;
+				return false;
 			EffAnim<EffAnim.GuardEff> eff = effas().A_E_GUARD;
 			guard = eff.getEAnim(EffAnim.GuardEff.NONE);
 			CommonStatic.setSE(SE_BARRIER_NON);
-			return;
+			return false;
 		}
 		hit = 2;
 
@@ -89,6 +89,8 @@ public class ECastle extends AbEntity {
 			sb.shakeDuration = SHAKE_MODE_HIT[SHAKE_DURATION];
 			sb.shakeCoolDown[0] = SHAKE_MODE_HIT[SHAKE_COOL_DOWN];
 		}
+
+		return true;
 	}
 
 	@Override

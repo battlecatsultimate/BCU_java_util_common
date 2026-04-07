@@ -218,12 +218,12 @@ public class EUnit extends Entity {
 	}
 
 	@Override
-	public void damaged(AttackAb atk) {
+	public boolean damaged(AttackAb atk) {
 		if (isSpirit) {
 			status[P_IMUATK][0] = Integer.MAX_VALUE;
 			anim.getEff(P_IMUATK);
 
-			return;
+			return false;
 		}
 
 		if (atk instanceof AttackVolcano && counterGrade > -1) {
@@ -256,16 +256,17 @@ public class EUnit extends Entity {
 						basis.totalDamageTaken[index[0]][index[1]] += atk.atk;
 					}
 
-					return;
+					return false;
 				}
 			}
 		}
 
-		super.damaged(atk);
+		boolean damaged = super.damaged(atk);
 
-		if(index != null) {
+		if (index != null)
 			basis.totalDamageTaken[index[0]][index[1]] += atk.atk;
-		}
+
+		return damaged;
 	}
 
 	@Override
@@ -508,6 +509,12 @@ public class EUnit extends Entity {
 
 	@Override
 	public void postUpdate() {
+		for (int type = 0; type < status[P_DELAY].length; type++) {
+			int strength = status[P_DELAY][type];
+			if (strength == 0)
+				continue;
+		}
+
 		super.postUpdate();
 
 		if (bountyGrade > -1 && bountyOrbCheck)
