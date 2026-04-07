@@ -506,6 +506,11 @@ public abstract class Entity extends AbEntity {
 				effs[id] = null;
 			}
 
+			if (status[P_LETHARGY][0] == 0) {
+				byte id = A_LETHARGY;
+				effs[id] = null;
+			}
+
 			byte healId = e.dire == -1 ? A_HEAL : A_E_HEAL;
 
 			if(effs[healId] != null && effs[healId].done()) {
@@ -782,7 +787,7 @@ public abstract class Entity extends AbEntity {
 						preTime = pres[preID];
 					} else {
 						attacksLeft--;
-						e.waitTime = e.applyLethargy(Math.max(e.data.getTBA(), 0));
+						e.waitTime = Math.max(e.applyLethargy(e.data.getTBA()), 0);
 					}
 				}
 			}
