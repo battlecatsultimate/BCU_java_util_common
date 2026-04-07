@@ -1557,7 +1557,8 @@ public class Data {
     public static final byte C_VKILL = 25;
     public static final byte C_IMUWAVE = 26;
     public static final byte C_DISCOUNT = 27;
-	public static final byte C_TOT = 28;
+	public static final byte C_IMUVOLC = 28;
+	public static final byte C_TOT = 29;
 
 	// Effects Anim index
 	public static final byte A_KB = 29;

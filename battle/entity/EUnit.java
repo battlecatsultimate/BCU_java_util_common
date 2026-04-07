@@ -168,6 +168,8 @@ public class EUnit extends Entity {
 		Unit u = ((MaskUnit) data).getPack().unit;
 		if (!StageLimit.isComboBanned(basis.est.lim, C_IMUWAVE) && basis.b.getInc(C_IMUWAVE, u) > 0)
 			proc.IMUWAVE.mult = 100;
+		if (!StageLimit.isComboBanned(basis.est.lim, C_IMUVOLC) && basis.b.getInc(C_IMUVOLC, u) > 0)
+			proc.IMUVOLC.mult = 100;
 	}
 
 	@Override
