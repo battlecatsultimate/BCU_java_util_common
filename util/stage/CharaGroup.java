@@ -114,7 +114,7 @@ public class CharaGroup extends Data implements Indexable<PackData, CharaGroup>,
 	public boolean used() {
 		UserPack mc = (UserPack) getCont();
 		for (LvRestrict lr : mc.lvrs.getList())
-			if (lr.res.containsKey(this))
+			if (lr.groups.containsKey(this))
 				return true;
 		for (StageMap sm : mc.mc.maps)
 			for (Stage st : sm.list)

@@ -92,7 +92,7 @@ public class JsonEncoder {
 			if (jc.write() == JsonClass.WType.DEF)
 				return new JsonEncoder(par, obj).ans;
 			else if (jc.write() == JsonClass.WType.CLASS) {
-				if (jc.serializer().length() == 0)
+				if (jc.serializer().isEmpty())
 					throw new JsonException(Type.FUNC, null, "no serializer function");
 				String func = jc.serializer();
 				Method m = cls.getMethod(func);

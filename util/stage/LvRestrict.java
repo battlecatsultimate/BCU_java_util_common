@@ -23,11 +23,35 @@ import java.util.TreeMap;
 @JsonClass.JCGeneric(Identifier.class)
 public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> {
 
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class GroupRestrict {
+		public int[] lv;
+		public int orb;
+
+		@JsonClass.JCConstructor
+		public GroupRestrict() {
+
+		}
+
+		public GroupRestrict(GroupRestrict gr) {
+			lv = gr.lv;
+			orb = gr.orb;
+		}
+
+		public GroupRestrict(int[] maxlv, int maxorb) {
+			lv = maxlv;
+			this.orb = maxorb;
+		}
+	}
+
 	@StaticPermitted
 	public static final int[] MAX = new int[] { 50, 90, 10, 10, 10, 10, 10 };
 
-	@JsonField(generic = { CharaGroup.class, int[].class }, alias = Identifier.class)
+	@JsonField(io = JsonField.IOType.R, generic = { CharaGroup.class, int[].class }, alias = Identifier.class)
 	public final TreeMap<CharaGroup, int[]> res = new TreeMap<>();
+
+	@JsonField(generic = { CharaGroup.class, GroupRestrict.class }, alias = Identifier.class)
+	public final TreeMap<CharaGroup, GroupRestrict> groups = new TreeMap<>();
 	public int[][] rares = new int[RARITY_TOT][7];
 	public int[] all = new int[7];
 	public int[] orb = new int[] { -1, -1, -1, -1, -1, -1 };
@@ -56,36 +80,40 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			rares[i] = lvr.rares[i].clone();
 			orb[i] = lvr.orb[i];
 		}
-		for (CharaGroup cg : lvr.res.keySet())
-			res.put(cg, lvr.res.get(cg).clone());
+		for (CharaGroup cg : lvr.groups.keySet())
+			groups.put(cg, new GroupRestrict(lvr.groups.get(cg)));
 	}
 
 	private LvRestrict(LvRestrict lvr) {
-		for (CharaGroup cg : lvr.res.keySet())
-			res.put(cg, lvr.res.get(cg).clone());
+		for (CharaGroup cg : lvr.groups.keySet())
+			groups.put(cg, new GroupRestrict(lvr.groups.get(cg)));
 	}
 
 	public LvRestrict combine(LvRestrict lvr) {
 		LvRestrict ans = new LvRestrict(this);
-		ans.allOrb = Math.min(lvr.allOrb, allOrb);
+		ans.allOrb = allOrb == -1 ? lvr.allOrb : lvr.allOrb == -1 ? allOrb : Math.min(lvr.allOrb, allOrb);
 		for (int i = 0; i < ans.all.length; i++) {
 			ans.all[i] = Math.min(lvr.all[i], all[i]);
 		}
+		int[] orbc = new int[6];
 		for (int i = 0; i < RARITY_TOT; i++)
 			for (int j = 0; j < ans.rares[i].length; j++) {
 				ans.rares[i][j] = Math.min(lvr.rares[i][j], rares[i][j]);
-				ans.orb[i] = Math.min(lvr.orb[i], orb[i]);
+				orbc[i] = orb[i] == -1 ? lvr.orb[i] : lvr.orb[i] == -1 ? orb[i] : Math.min(lvr.orb[i], orb[i]);
 			}
-		for (CharaGroup cg : lvr.res.keySet())
-			if (res.containsKey(cg)) {
-				int[] lv0 = res.get(cg);
-				int[] lv1 = lvr.res.get(cg);
+		ans.orb = orbc;
+		for (CharaGroup cg : lvr.groups.keySet())
+			if (groups.containsKey(cg)) {
+				GroupRestrict lv0 = groups.get(cg);
+				GroupRestrict lv1 = lvr.groups.get(cg);
 				int[] lv = new int[6];
-				for (int i = 0; i < 6; i++)
-					lv[i] = Math.min(lv0[i], lv1[i]);
-				ans.res.put(cg, lv);
+				int o = lv0.orb == -1 ? lv1.orb : lv1.orb == -1 ? lv0.orb : Math.min(lv0.orb, lv1.orb);
+				for (int i = 0; i < 6; i++) {
+					lv[i] = Math.min(lv0.lv[i], lv1.lv[i]);
+				}
+				ans.groups.put(cg, new GroupRestrict(lv, o));
 			} else
-				ans.res.put(cg, lvr.res.get(cg).clone());
+				ans.groups.put(cg, new GroupRestrict(lvr.groups.get(cg)));
 		return ans;
 	}
 
@@ -135,12 +163,14 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 
 	public Level valid(Form f) {
 		int[] lv = MAX.clone();
+
 		boolean mod = false;
-		for (CharaGroup cg : res.keySet())
+		for (CharaGroup cg : groups.keySet())
 			if (cg.set.contains(f.unit)) {
-				int[] rst = res.get(cg);
-				for (int i = 0; i < 6; i++)
-					lv[i] = Math.min(lv[i], rst[i]);
+				GroupRestrict rst = groups.get(cg);
+				for (int i = 0; i < 6; i++) {
+					lv[i] = Math.min(lv[i], rst.lv[i]);
+				}
 				mod = true;
 			}
 		if (mod)
@@ -199,6 +229,13 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			System.arraycopy(all, 1, l, 2, l.length - 2);
 
 			all = l;
+		}
+
+		if (!res.isEmpty()) {
+			for (CharaGroup g : res.keySet()) {
+				int[] lv = res.get(g);
+				groups.put(g, new GroupRestrict(lv, -1));
+			}
 		}
 	}
 }
