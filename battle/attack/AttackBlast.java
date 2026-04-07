@@ -60,7 +60,9 @@ public class AttackBlast extends AttackAb {
                 continue;
 
             if (e instanceof Entity) {
-                e.damaged(this);
+                boolean damaged = e.damaged(this);
+                if (damaged)
+                    ((Entity) e).lastHitBy.add(this);
                 attacked = true;
                 bcapt.add((Entity) e);
             }
