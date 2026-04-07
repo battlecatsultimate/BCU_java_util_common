@@ -1960,7 +1960,7 @@ public abstract class Entity extends AbEntity {
 			float rst = getResistValue(
 					atk,
 					"IMUWEAK",
-					checkAIImmunity(atkProc.WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0
+					Proc.checkSmartImu(atkProc.WEAK.mult - 100, getProc().IMUWEAK.smartImu, getProc().IMUWEAK.mult > 0) ? getProc().IMUWEAK.mult : 0
 			);
 
 			val = (int) (val * rst);
@@ -2014,7 +2014,7 @@ public abstract class Entity extends AbEntity {
 
 		if (atkProc.WARP.exists())
 			if (getProc().IMUWARP.mult < 100) {
-				Data.Proc.WARP warp = atkProc.WARP;
+				Proc.WARP warp = atkProc.WARP;
 
 				interrupt(INT_WARP, warp.dis_0 + (int) (basis.r.nextFloat() * (warp.dis_1 - warp.dis_0)));
 
@@ -2048,7 +2048,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (atkProc.POISON.time > 0) {
-			int res = checkAIImmunity(atkProc.POISON.damage, getProc().IMUPOI.smartImu, getProc().IMUPOI.mult < 0) ? getProc().IMUPOI.mult : 0;
+			int res = Proc.checkSmartImu(atkProc.POISON.damage, getProc().IMUPOI.smartImu, getProc().IMUPOI.mult < 0) ? getProc().IMUPOI.mult : 0;
 
 			if (res < 100) {
 				POISON ws = (POISON) atkProc.POISON.clone();
@@ -2065,7 +2065,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (!isBase && atkProc.ARMOR.time > 0) {
-			int res = checkAIImmunity(atkProc.ARMOR.mult, getProc().IMUARMOR.smartImu, getProc().IMUARMOR.mult < 0) ? getProc().IMUARMOR.mult : 0;
+			int res = Proc.checkSmartImu(atkProc.ARMOR.mult, getProc().IMUARMOR.smartImu, getProc().IMUARMOR.mult < 0) ? getProc().IMUARMOR.mult : 0;
 
 			if (res < 100) {
 				int val = (int) (atkProc.ARMOR.time * time);
@@ -2089,7 +2089,7 @@ public abstract class Entity extends AbEntity {
 				b = (speed > atkProc.SPEED.speed && res > 0) || (speed < atkProc.SPEED.speed && res < 0);
 			else
 				b = res < 0;
-			if (checkAIImmunity(atkProc.SPEED.speed, getProc().IMUSPEED.smartImu, b))
+			if (Proc.checkSmartImu(atkProc.SPEED.speed, getProc().IMUSPEED.smartImu, b))
 				res = 0;
 
 			if (res < 100) {
@@ -2113,7 +2113,7 @@ public abstract class Entity extends AbEntity {
 				isBuff = (tba > atkProc.LETHARGY.mult && res > 0) || (tba < atkProc.LETHARGY.mult && res < 0);
 			else
 				isBuff = res < 0;
-			if (checkAIImmunity(atkProc.LETHARGY.mult, getProc().IMULETH.smartImu, !isBuff))
+			if (Proc.checkSmartImu(atkProc.LETHARGY.mult, getProc().IMULETH.smartImu, !isBuff))
 				res = 0;
 
 			if (res < 100) {
@@ -2126,19 +2126,25 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INV);
 		}
+
+		if (atkProc.DELAY.exists()) {
+			Proc.DELAY d = atkProc.DELAY;
+			Proc.IMUAD imu = getProc().IMUDELAY;
+			float res;
+			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
+				res = getResistValue(atk, "IMUDELAY", d.strength);
+			else
+				res = 0;
+			if (res < 100) {
+				int strength = (int) (d.strength * res);
+				status[P_DELAY][d.type] += strength;
+			} else {
+				anim.getEff(INV);
+			}
+		}
 	}
 
 	public abstract float getResistValue(AttackAb atk, String procName, int procResist);
-
-	private boolean checkAIImmunity(int val, int side, boolean invert) {
-		if (side == 0)
-			return true;
-		if (invert) {
-			return val * side < 0;
-		} else {
-			return val * side > 0;
-		}
-	}
 
 	/**
 	 * get the current ability bitmask

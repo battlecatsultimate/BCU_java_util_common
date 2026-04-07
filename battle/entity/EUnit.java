@@ -17,6 +17,7 @@ import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
@@ -509,6 +510,13 @@ public class EUnit extends Entity {
 
 	@Override
 	public void postUpdate() {
+		if (Arrays.stream(status[P_DELAY]).anyMatch(v -> v != 0) && index != null) {
+			for (int i = 0; i < 3; i++) {
+				basis.cdDelay[index[0]][index[1]][i] += status[P_DELAY][i];
+				status[P_DELAY][i] = 0;
+			}
+		}
+
 		super.postUpdate();
 
 		if (bountyGrade > -1 && bountyOrbCheck)

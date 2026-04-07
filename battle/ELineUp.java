@@ -73,6 +73,9 @@ public class ELineUp extends BattleObj {
 	}
 
 	protected void delay(int i, int j, int[] delay) {
+		if (cool[i][j] == 0)
+			return;
+
 		int delayStrength = getDelayStrength(i, j, delay);
 		if (delayStrength > 0) {
 			b.cdDelayVisual[i][j][0] = Math.max(b.cdDelayVisual[i][j][0], cool[i][j]);
@@ -99,13 +102,13 @@ public class ELineUp extends BattleObj {
 		int prog = maxC[i][j] - cool[i][j];
 		int inc = 0;
 		if (delay[0] != 0) { // increase by %
-			int add = Math.min(prog * delay[0] / 100, maxC[i][j]); // increase by %
+			int add = Math.min(prog * Math.min(100, delay[0]) / 100, maxC[i][j]);
 			if (add == 0)
 				add = delay[0] < 0 ? -1 : 1;
 			inc += add;
 		}
 		if (delay[1] != 0) { // increase direct value
-			inc += Math.min(delay[1], maxC[i][j]); // increase by frame count
+			inc += Math.min(delay[1], maxC[i][j]);
 		}
 		if (delay[2] != 0) { // increase by % of max C
 			int add = Math.min(maxC[i][j] * delay[2], maxC[i][j]);
