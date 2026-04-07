@@ -751,6 +751,18 @@ public class Data {
 			public int type;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class DELAY extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int strength;
+			@Order(2)
+			public int type;
+			@Order(3)
+			public boolean use_max;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -910,8 +922,12 @@ public class Data {
 		public final LETHARGY LETHARGY = new LETHARGY();
 		@Order(63)
 		public final IMUAD IMULETH = new IMUAD();
+		@Order(64)
+		public final DELAY DELAY = new DELAY();
+		@Order(65)
+		public final IMU IMUDELAY = new IMU();
 
-		// Talent orbs, shouldn't be given @Order
+		// Talent orbs, shouldn't be given @Order unless allowed as editable fields
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
 		public final MULT MONEYBACK = new MULT();
 		public final MULT CANONCHARGE = new MULT();
@@ -1296,7 +1312,9 @@ public class Data {
 	public static final int P_IMUBLAST = 61;
 	public static final int P_LETHARGY = 62; // Works like Speed
 	public static final int P_IMULETH = 63;
-	public static final byte PROC_TOT = 64;
+	public static final int P_DELAY = 64; // Works like Speed
+	public static final int P_IMUDELAY = 65;
+	public static final byte PROC_TOT = 66;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1363,7 +1381,9 @@ public class Data {
 			false, //blast
 			true,   //imu.blast
 			false, //lethargy
-			true //imu.lethargy
+			true, //imu.lethargy
+			false, //delay
+			true //delay
 	};
 
 	/**

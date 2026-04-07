@@ -771,6 +771,22 @@ public class Editors {
 		}));
 
 		map().put("IMULETH", imuad);
+
+		map().put("DELAY", new EditControl<>(Proc.DELAY.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.type = 0;
+				t.strength = 0;
+				t.use_max = false;
+			} else {
+				t.type = MathUtil.clip(t.type, 0, 1);
+				if (t.strength == 0)
+					t.strength = 1;
+				t.use_max &= t.type == 0;
+			}
+		}));
+
+		map().put("IMUDELAY", imu);
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {

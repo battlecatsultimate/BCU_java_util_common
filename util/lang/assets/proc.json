@@ -1549,5 +1549,54 @@
                 "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to speed debuffs, -1 = Only resistant to speed buffs"
             }
         }
+    },
+    "DELAY": {
+        "abbr_name": "delay cd",
+        "full_name": "Delay/Advance CD",
+        "tooltip": null,
+        "format": [
+            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] unit cooldowns by (strength)[(type==0){%}(type==1){f}]",
+            " of its [(use_max){max cooldown}(!use_max){current cooldown}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "strength": {
+                "name": "strength",
+                "tooltip": "How much the cooldown gets delayed. Set negative to speed up instead."
+            },
+            "type": {
+                "name": "type",
+                "tooltip": "Set as 0 to apply a % amount. Set as 1 to apply a direct amount."
+            },
+            "use_max": {
+                "name": "use max cooldown",
+                "tooltip": "If using type 0, reduce cooldown by % of max cooldown."
+            }
+        }
+    },
+    "IMUDELAY" : {
+        "abbr_name": "imu. Delay",
+        "full_name": "Immune/Resistant to Delay",
+        "tooltip": null,
+        "format": [
+            "[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Delay"
+        ],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Set negative to make this unit weak to the effect"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block delay. Set negative to increase the effect."
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist both Delay and Advance. 1 = Only resistant to Delay. -1 = Only resistant to Advance"
+            }
+        }
     }
 }
