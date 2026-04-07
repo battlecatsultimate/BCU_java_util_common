@@ -1463,5 +1463,53 @@
                 "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to speed debuffs, -1 = Only resistant to speed buffs"
             }
         }
+    },
+    "DELAY": {
+        "abbr_name": "delay cd",
+        "full_name": "Delay/Advance CD",
+        "tooltip": null,
+        "format": [
+            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] unit cooldowns by (_abs(strength))[(type==0){%}(type==1){f}]",
+            "[(type==2){ of its max cooldown}(type==0){ of its current cooldown}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "strength": {
+                "name": "strength",
+                "tooltip": "How much the cooldown gets delayed. Set negative to speed up instead."
+            },
+            "type": {
+                "name": "type",
+                "tooltip": "0 = Apply x% current cooldown. 1 = Apply a direct amount. 2 = Apply x% max cooldown."
+            }
+        }
+    },
+    "IMUDELAY" : {
+        "abbr_name": "imu. Delay",
+        "full_name": "Immune/Resistant to Delay",
+        "tooltip": null,
+        "format": [
+            "[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to [(smartImu==0){Delay/Advance}(smartImu>0){Delay}(smartImu<0){Advance}]",
+            "[(mult<100&mult>0){ (_left)Decreases strength by (mult)%(_right)}(mult<0){ (_left)Increases strength by (_abs(mult))%(_right)}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(smartImu==0){Delay/Advance}(smartImu>0){Delay}(smartImu<0){Advance}] [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases strength by (block)%(_right)}(block<0){ (_left)Increases strength by (_abs(block))%(_right)}]}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Set negative to make this unit weak to the effect"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block delay. Set negative to increase the effect."
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist both Delay and Advance. 1 = Only resistant to Delay. -1 = Only resistant to Advance"
+            }
+        }
     }
 }
