@@ -637,6 +637,39 @@ public class StageBasis extends BattleObj {
 			er.updateCopy((StageBasis) hardCopy(this), hardCopy(er.map.get(this)));
 	}
 
+	protected void processSingleProcs() {
+		for (Entity e : le) {
+			if (!(e instanceof EUnit))
+				continue;
+			EUnit eu = (EUnit) e;
+			Set<EEnemy> enems = new HashSet<>();
+			int[] delay = new int[3];
+			for (AttackAb atk : eu.lastHitBy) {
+				if (atk.attacker instanceof EEnemy) {
+					EEnemy ee = (EEnemy) atk.attacker;
+					if (enems.contains(ee))
+						continue;
+					enems.add(ee);
+					if (atk.getProc().DELAY.exists()) {
+						Proc.DELAY d = atk.getProc().DELAY;
+						Proc.IMUAD imu = eu.getProc().IMUDELAY;
+						float res = eu.getResistValue(atk, "IMUDELAY", imu.mult);
+						if (res > 0) {
+							int strength = (int) (d.strength * res);
+
+							if (strength > 0)
+								delay[d.type] = strength;
+						} else {
+							eu.anim.getEff(INV);
+						}
+					}
+				}
+				if (Arrays.stream(delay).anyMatch(s -> s > 0))
+					elu.delay(eu.index[0], eu.index[1], delay);
+			}
+		}
+	}
+
 	/**
 	 * process actions and add enemies from stage first then update each entity
 	 * and receive attacks then excuse attacks and do post update then delete dead
@@ -822,29 +855,7 @@ public class StageBasis extends BattleObj {
 		la.forEach(AttackAb::excuse);
 		la.removeIf(a -> a.duration <= 0);
 
-		Set<EEnemy> enems = new HashSet<>();
-		int[][][] delay = new int[2][5][3];
-		for (Entity e : le) {
-			if (!(e instanceof EUnit))
-				continue;
-			EUnit eu = (EUnit) e;
-			for (AttackAb atk : eu.lastHitBy) {
-				if (atk.attacker instanceof EEnemy) {
-					EEnemy ee = (EEnemy) atk.attacker;
-					if (enems.contains(ee) || !atk.getProc().DELAY.exists())
-						continue;
-					Proc.DELAY delayProc = atk.getProc().DELAY;
-					delay[eu.index[0]][eu.index[1]][delayProc.type] = delayProc.strength;
-					enems.add(ee);
-				}
-			}
-		}
-		for (int i = 0; i < delay.length; i++)
-			for (int j = 0; j < delay[i].length; j++) {
-				if (Arrays.stream(delay[i][j]).anyMatch(v -> v != 0))
-					elu.delay(i, j, delay[i][j]);
-			}
-		enems.clear();
+		processSingleProcs();
 
 		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();

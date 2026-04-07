@@ -25,6 +25,24 @@ public class Data {
 	@JsonClass(read = JsonClass.RType.MANUAL, write = JsonClass.WType.CLASS, generator = "genProc", serializer = "serProc")
 	public static class Proc implements BattleStatic {
 
+		/**
+		 * Used to obtain whether controlled immunity will have effect or not
+		 *
+		 * @param val    The effect of the proc
+		 * @param side   The side used by the smartImu (0 = either or; 1 = )
+		 * @param invert Inverts the >,< signs depending on the proc
+		 * @return idk
+		 */
+		public static boolean checkSmartImu(int val, int side, boolean invert) { // strength = 50, imu = 0,
+			if (side == 0)
+				return true;
+			if (invert) {
+				return val * side < 0;
+			} else {
+				return val * side > 0;
+			}
+		}
+
 		@JsonClass(noTag = NoTag.LOAD)
 		public static class ARMOR extends ProcItem {
 			@Order(0)
@@ -923,7 +941,7 @@ public class Data {
 		@Order(64)
 		public final DELAY DELAY = new DELAY();
 		@Order(65)
-		public final IMU IMUDELAY = new IMU();
+		public final IMUAD IMUDELAY = new IMUAD();
 
 		// Talent orbs, shouldn't be given @Order unless allowed as editable fields
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
@@ -1859,7 +1877,7 @@ public class Data {
 	public static final int SPIRIT_SUMMON_RANGE = 150;
 	public static final int SPIRIT_SUMMON_DELAY = 15; // unsure
 	public static final int SUPER_SAGE_RESIST = 70; // todo: sage value consistency to match other percentage data standard
-	public static final String[] SUPER_SAGE_RESIST_TYPE = { "IMUWEAK", "IMUSTOP", "IMUSLOW", "IMUCURSE", "IMUKB", "IMUWARP" };
+	public static final String[] SUPER_SAGE_RESIST_TYPE = { "IMUWEAK", "IMUSTOP", "IMUSLOW", "IMUCURSE", "IMUKB", "IMUWARP", "IMUDELAY" };
 	public static final float SUPER_SAGE_HUNTER_ATTACK = 1.2f;
 	public static final float SUPER_SAGE_HUNTER_HP = 0.5f;
 	public static final float SUPER_SAGE_HUNTER_RESIST = 0.7f;
