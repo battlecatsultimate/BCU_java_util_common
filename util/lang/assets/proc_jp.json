@@ -1369,5 +1369,64 @@
         "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block slow. Set negative to increase the effect."
       }
     }
+  },
+  "LETHARGY": {
+    "abbr_name": "lethargy",
+    "full_name": "Lethargy",
+    "tooltip": null,
+    "format": [
+      "[(type==2){Lockstep Hex}(type!=2){[(mult>=0){Lethargy}(mult<0){Energize}]}]",
+      " (_left)",
+      "(prob)% chance to ",
+      "[(type==2){set}(type!=2){[(mult>=0){increase}(mult<0){decrease}]}]",
+      " target's TBA ",
+      "[(type!=2){by}(type==2){to}] [(type==2){(mult)}(type!=2){(_abs(mult))}][(type==1){%}]",
+      " for (_dispTime(time))",
+      "(_right)"
+    ],
+    "class": {
+      "prob": {
+        "name": "chance",
+        "tooltip": null
+      },
+      "time": {
+        "name": "duration",
+        "tooltip": null
+      },
+      "mult": {
+        "name": "TBA",
+        "tooltip": "In mode 0 or 1, set negative to reduce and set positive to increase"
+      },
+      "type": {
+        "name": "type",
+        "tooltip": "0 for adding TBA by a value, 1 for increasing the TBA by a percentage, 2 for setting TBA to a value"
+      }
+    }
+  },
+  "IMULETH": {
+    "abbr_name": "Imu.Lethargy",
+    "full_name": "Immune/Resistant to Lethargy",
+    "tooltip": null,
+    "format": [
+      "[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Lethargy",
+      "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}]",
+      "[(block!=0&block<100){ & }]}][(block!=0){Lethargy [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+      "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+      "[(smartImu!=0){. Only affects speed [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"
+    ],
+    "class": {
+      "mult": {
+        "name": "percent",
+        "tooltip": "Set negative to make this unit weak to the effect"
+      },
+      "block": {
+        "name": "Blocker",
+        "tooltip": "Set from 1 to 99 to reduce Lethargy time. Set to 100 to completely block Lethargy. Set negative to increase the effect."
+      },
+      "smartImu": {
+        "name": "Ignore",
+        "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to speed debuffs, -1 = Only resistant to speed buffs"
+      }
+    }
   }
 }

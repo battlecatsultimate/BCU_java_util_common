@@ -24,6 +24,10 @@
     "BUFF": "버프",
     "DEBUFF": "디버프"
   },
+  "LethEff": {
+    "BUFF": "buff",
+    "DEBUFF": "debuff"
+  },
   "SpeedEff": {
     "UP": "증가",
     "DOWN": "감소"

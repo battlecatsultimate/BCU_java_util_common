@@ -24,6 +24,10 @@
     "BUFF": "増加",
     "DEBUFF": "減少"
   },
+  "LethEff": {
+    "BUFF": "buff",
+    "DEBUFF": "debuff"
+  },
   "SpeedEff": {
     "UP": "増加",
     "DOWN": "減少"
