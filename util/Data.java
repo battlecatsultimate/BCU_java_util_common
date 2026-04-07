@@ -1082,6 +1082,7 @@ public class Data {
 	public static final short SE_DEATH_SURGE = 143;
 	public static final short SE_COUNTER_SURGE = 159;
 	public static final short SE_SPIRIT_SUMMON = 162;
+	public static final short SE_DELAY_COOLDOWN = 188;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };

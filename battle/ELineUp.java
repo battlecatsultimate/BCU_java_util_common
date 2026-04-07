@@ -91,7 +91,7 @@ public class ELineUp extends BattleObj {
 			CommonStatic.setSE(SE_SHIELD_HIT);
 		} else {
 			b.cdDelayVisual[i][j][1] = 10;
-			CommonStatic.setSE(SE_POISON);
+			CommonStatic.setSE(SE_DELAY_COOLDOWN);
 		}
 	}
 
