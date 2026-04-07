@@ -1555,8 +1555,8 @@
         "full_name": "Delay/Advance CD",
         "tooltip": null,
         "format": [
-            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] unit cooldowns by (strength)[(type==0){%}(type==1){f}]",
-            " of its [(use_max){max cooldown}(!use_max){current cooldown}]"
+            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] unit cooldowns by (_abs(strength))[(type==0){%}(type==1){f}]",
+            " of their [(use_max){max cooldown}(!use_max){current cooldown}]"
         ],
         "class": {
             "prob": {
