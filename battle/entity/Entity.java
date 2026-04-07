@@ -1485,6 +1485,9 @@ public abstract class Entity extends AbEntity {
 		basis = b;
 		data = de;
 		proc = data.getProc().clone();
+		if (data.getRealTBA() < 0) {
+			waitTime = data.getTBA();
+		}
 		aam = AtkModelEntity.getEnemyAtk(this, atkMagnif);
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
