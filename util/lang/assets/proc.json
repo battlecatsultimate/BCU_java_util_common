@@ -1578,7 +1578,10 @@
         "full_name": "Immune/Resistant to Delay",
         "tooltip": null,
         "format": [
-            "[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Delay"
+            "[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to [(smartImu==0){Delay/Advance}(smartImu>0){Delay}(smartImu<0){Advance}]",
+            "[(mult<100&mult>0){ (_left)Decreases strength by (mult)%(_right)}(mult<0){ (_left)Increases strength by (_abs(mult))%(_right)}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[(smartImu==0){Delay/Advance}(smartImu>0){Delay}(smartImu<0){Advance}] [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases strength by (block)%(_right)}(block<0){ (_left)Increases strength by (_abs(block))%(_right)}]}]"
         ],
         "class": {
             "mult": {

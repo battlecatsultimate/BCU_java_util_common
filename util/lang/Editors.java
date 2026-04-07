@@ -784,7 +784,7 @@ public class Editors {
 			}
 		}));
 
-		map().put("IMUDELAY", imu);
+		map().put("IMUDELAY", imuad);
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
