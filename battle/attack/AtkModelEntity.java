@@ -278,7 +278,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		String[] par = {
 				"CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
 				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "LETHARGY", "MINIWAVE", "SHIELDBREAK",
-				"MINIVOLC", "METALKILL", "BLAST"
+				"MINIVOLC", "METALKILL", "BLAST", "DELAY"
 		};
 
 		for (String s0 : par)

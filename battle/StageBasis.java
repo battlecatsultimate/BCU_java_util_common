@@ -95,6 +95,7 @@ public class StageBasis extends BattleObj {
 
 	public final int[][] spiritCooldown = new int[2][5];
 	public int[][] frameOffCd = new int[2][5];
+	public final int[][][] cdDelay = new int[2][5][3];
 	public final int[][][] cdDelayVisual = new int[2][5][DELAY_BASE.length];
 
 	/**
@@ -820,6 +821,30 @@ public class StageBasis extends BattleObj {
 		la.forEach(AttackAb::capture);
 		la.forEach(AttackAb::excuse);
 		la.removeIf(a -> a.duration <= 0);
+
+		Set<EEnemy> enems = new HashSet<>();
+		int[][][] delay = new int[2][5][3];
+		for (Entity e : le) {
+			if (!(e instanceof EUnit))
+				continue;
+			EUnit eu = (EUnit) e;
+			for (AttackAb atk : eu.lastHitBy) {
+				if (atk.attacker instanceof EEnemy) {
+					EEnemy ee = (EEnemy) atk.attacker;
+					if (enems.contains(ee) || !atk.getProc().DELAY.exists())
+						continue;
+					Proc.DELAY delayProc = atk.getProc().DELAY;
+					delay[eu.index[0]][eu.index[1]][delayProc.type] = delayProc.strength;
+					enems.add(ee);
+				}
+			}
+		}
+		for (int i = 0; i < delay.length; i++)
+			for (int j = 0; j < delay[i].length; j++) {
+				if (Arrays.stream(delay[i][j]).anyMatch(v -> v != 0))
+					elu.delay(i, j, delay[i][j]);
+			}
+		enems.clear();
 
 		if(s_stop == 0 || (ebase.getAbi() & AB_TIMEI) != 0) {
 			ebase.postUpdate();

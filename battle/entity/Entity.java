@@ -1341,9 +1341,14 @@ public abstract class Entity extends AbEntity {
 
 	/**
 	 * Attacks it got hit by in the current frame.
-	 * Upon post update, if health is above 0, this should be instantly cleared.
+	 * This gets instantly cleared upon post update.
 	 */
 	public Set<AttackAb> lastHitBy = new HashSet<>();
+
+	/**
+	 * Attacks it got hit by on the frame of KB into death.
+	 */
+	public Set<AttackAb> lastKilledBy = new HashSet<>();
 
 	/**
 	 * The time that this entity has been alive
@@ -2182,7 +2187,7 @@ public abstract class Entity extends AbEntity {
 		anim.kill();
 		basis.checkGuard();
 		if (atk == KillMode.NORMAL)
-			for (AttackAb attack : lastHitBy)
+			for (AttackAb attack : lastKilledBy)
 				if (attack.attacker != null)
 					attack.attacker.killCount++;
 	}
@@ -2275,12 +2280,13 @@ public abstract class Entity extends AbEntity {
 
 		summoned.removeIf(s -> !s.activate);
 
-		if (health > 0) {
-			lastHitBy.clear();
-		} else if (zx.canRevive() == 0 && !killCounted) {
+		if (health <= 0 && zx.canRevive() == 0 && !killCounted) {
 			onLastBreathe();
 			killCounted = true;
+			lastKilledBy.addAll(lastHitBy);
 		}
+
+		lastHitBy.clear();
 	}
 
 	/**

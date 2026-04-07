@@ -51,7 +51,7 @@ public class EEnemy extends Entity {
 	public void kill(KillMode atk) {
 		super.kill(atk);
 		List<Unit> unitsHit = new ArrayList<>();
-		for (AttackAb attack : lastHitBy) {
+		for (AttackAb attack : lastKilledBy) {
 			if (!(attack.attacker instanceof EUnit))
 				continue;
 			EUnit u = (EUnit) attack.attacker;
