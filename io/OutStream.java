@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public strictfp interface OutStream {
+public interface OutStream {
 
 	static OutStream getIns() {
 		return new OutStreamDef();
@@ -60,7 +60,7 @@ public strictfp interface OutStream {
 
 }
 
-strictfp class OutStreamDef extends DataIO implements OutStream {
+class OutStreamDef extends DataIO implements OutStream {
 
 	private byte[] bs;
 	private int index;
@@ -259,7 +259,7 @@ strictfp class OutStreamDef extends DataIO implements OutStream {
 
 }
 
-strictfp class OutStreamAnim extends DataIO implements OutStream {
+class OutStreamAnim extends DataIO implements OutStream {
 
 	private byte[] bs;
 	private int index;

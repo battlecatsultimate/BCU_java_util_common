@@ -6,7 +6,7 @@ import common.util.BattleObj;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public strictfp class P extends BattleObj {
+public class P extends BattleObj {
 
 	@StaticPermitted(StaticPermitted.Type.TEMP)
 	public static Deque<P> stack = new ArrayDeque<>();

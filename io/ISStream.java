@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 
 import common.util.Data;
 
-strictfp class ISStream extends InputStream implements InStream {
+class ISStream extends InputStream implements InStream {
 
 	private static class FileTracer {
 
