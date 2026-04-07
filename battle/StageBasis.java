@@ -651,7 +651,8 @@ public class StageBasis extends BattleObj {
 						check.put(ee, new ArrayList<>());
 					else if (check.get(ee).contains(eu))
 						continue;
-					check.get(ee).add(eu);
+					if (eu.index == null)
+						continue;
 					if (atk.getProc().DELAY.exists()) {
 						Proc.DELAY d = atk.getProc().DELAY;
 						Proc.IMUAD imu = eu.getProc().IMUDELAY;
@@ -665,6 +666,7 @@ public class StageBasis extends BattleObj {
 							eu.anim.getEff(INV);
 						}
 					}
+					check.get(ee).add(eu);
 				}
 			}
 		}
