@@ -509,12 +509,6 @@ public class EUnit extends Entity {
 
 	@Override
 	public void postUpdate() {
-		for (int type = 0; type < status[P_DELAY].length; type++) {
-			int strength = status[P_DELAY][type];
-			if (strength == 0)
-				continue;
-		}
-
 		super.postUpdate();
 
 		if (bountyGrade > -1 && bountyOrbCheck)
