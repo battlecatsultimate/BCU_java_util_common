@@ -241,6 +241,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_BLAST] = new VImg(parts[335]);
 		aux.icon[1][P_IMUBLAST] = new VImg(parts[337]);
 		aux.icon[1][P_POISON] = new VImg(parts[329]);
+		aux.icon[1][P_DELAY] = new VImg(parts[389]);
 
 		aux.icon[0][ABI_VKILL] = new VImg("./org/page/icons/SupervillainSlayer.png");
 		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/SummonX.png");
