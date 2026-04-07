@@ -1573,7 +1573,7 @@
             },
             "use_max": {
                 "name": "use max cooldown",
-                "tooltip": "If using type 0, reduce cooldown by % of max cooldown."
+                "tooltip": "If enabled, reduce cooldown by % of max cooldown (while type is 0)."
             }
         }
     },
