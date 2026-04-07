@@ -1412,7 +1412,7 @@ public class Data {
 	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
 	 */
 	public static final byte[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY, P_DELAY
 	};
 
 	public static final byte WT_WAVE = 1;
