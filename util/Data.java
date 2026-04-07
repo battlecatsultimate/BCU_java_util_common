@@ -739,6 +739,18 @@ public class Data {
 			public int mult;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class LETHARGY extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int mult;
+			@Order(3)
+			public int type;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -894,6 +906,10 @@ public class Data {
 		public final BLAST BLAST = new BLAST();
 		@Order(61)
 		public final IMU IMUBLAST = new IMU();
+		@Order(62)
+		public final LETHARGY LETHARGY = new LETHARGY();
+		@Order(63)
+		public final IMUAD IMULETH = new IMUAD();
 
 		// Talent orbs, shouldn't be given @Order
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
@@ -1278,7 +1294,9 @@ public class Data {
 	public static final int P_HPREGEN = 59;
 	public static final int P_BLAST = 60;
 	public static final int P_IMUBLAST = 61;
-	public static final byte PROC_TOT = 62;
+	public static final int P_LETHARGY = 62; // Works like Speed
+	public static final int P_IMULETH = 63;
+	public static final byte PROC_TOT = 64;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final boolean[] procSharable = {
@@ -1343,7 +1361,9 @@ public class Data {
 			true, //adrenaline
 			true, //hp regen
 			false, //blast
-			true   //imu.blast
+			true,   //imu.blast
+			false, //lethargy
+			true //imu.lethargy
 	};
 
 	/**
@@ -1355,7 +1375,7 @@ public class Data {
 	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
 	 */
 	public static final byte[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY
 	};
 
 	public static final byte WT_WAVE = 1;
@@ -1570,8 +1590,10 @@ public class Data {
 	public static final byte A_DMGCAP = 64;
 	public static final byte A_E_DMGCAP = 65;
 	public static final byte A_E_GREEN_GUARD = 66;
+	public static final byte A_LETHARGY = 67;
+	public static final byte A_LETHARGY_UP = 68;
 	public static final byte[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
-	public static final byte A_TOT = 67;
+	public static final byte A_TOT = 69;
 
 	// atk type index used in filter page
 	public static final byte ATK_SINGLE = 0;

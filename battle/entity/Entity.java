@@ -330,6 +330,20 @@ public abstract class Entity extends AbEntity {
 				}
 
 				effs[id] = eff.getEAnim(index);
+			} else if (t == P_LETHARGY) {
+				int id = A_LETHARGY;
+				EffAnim<LethEff> eff = effas().A_LETHARGY;
+				LethEff index;
+
+				if (status[P_LETHARGY][2] <= 1) {
+					index = status[P_LETHARGY][1] >= 0 ? LethEff.DEBUFF : LethEff.BUFF;
+				} else {
+					int modifiedTba = e.applyLethargy(e.waitTime);
+					index = status[P_LETHARGY][1] >= (modifiedTba > 0 && e.data.getTBA() > -1 ? e.data.getTBA() : modifiedTba)
+							? LethEff.DEBUFF : LethEff.BUFF;
+				}
+
+				effs[id] = eff.getEAnim(index);
 			} else if (t == P_SPEEDUP) {
 				int id = dire == -1 ? A_SPEED : A_E_SPEED;
 				EffAnim<SpeedEff> eff = dire == -1 ? effas().A_SPEED : effas().A_E_SPEED;
@@ -768,7 +782,7 @@ public abstract class Entity extends AbEntity {
 						preTime = pres[preID];
 					} else {
 						attacksLeft--;
-						e.waitTime = Math.max(e.data.getTBA(), 0);
+						e.waitTime = e.applyLethargy(Math.max(e.data.getTBA(), 0));
 					}
 				}
 			}
@@ -1772,7 +1786,7 @@ public abstract class Entity extends AbEntity {
 
 					Proc reflectProc = Proc.blank();
 					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "MINIVOLC", "WAVE",
-							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "SHIELDBREAK", "MINIWAVE"};
+							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "LETHARGY", "SHIELDBREAK", "MINIWAVE"};
 
 					if (counter.type.procType == 1 || counter.type.procType == 3)
 						for (String s0 : par)
@@ -1839,6 +1853,19 @@ public abstract class Entity extends AbEntity {
 
 		if (proc)
 			processProcs(atk);
+	}
+
+	private int applyLethargy(int tba) {
+		if (status[P_LETHARGY][0] > 0) {
+			if (status[P_LETHARGY][2] == 0) {
+				return tba + status[P_LETHARGY][1];
+			} else if (status[P_LETHARGY][2] == 1) {
+				return tba * (100 + status[P_LETHARGY][1]) / 100;
+			} else if (status[P_LETHARGY][2] == 2) {
+				return status[P_LETHARGY][1];
+			}
+		}
+		return tba;
 	}
 
 	private void processProcs(AttackAb atk) {
@@ -2057,6 +2084,30 @@ public abstract class Entity extends AbEntity {
 				status[P_SPEED][2] = atk.getProc().SPEED.type;
 
 				anim.getEff(P_SPEED);
+			} else
+				anim.getEff(INV);
+		}
+
+		if (atk.getProc().LETHARGY.time > 0) {
+			int res = getProc().IMULETH.mult;
+			int tba = data.getTBA();
+
+			boolean isBuff; // Checking if the Lethargy TBA is < the getTBA TBA is how you determine if it's a buff or not for effs
+
+			if (atk.getProc().LETHARGY.type == 2)
+				isBuff = (tba > atk.getProc().LETHARGY.mult && res > 0) || (tba < atk.getProc().LETHARGY.mult && res < 0);
+			else
+				isBuff = res < 0;
+			if (checkAIImmunity(atk.getProc().LETHARGY.mult, getProc().IMULETH.smartImu, !isBuff))
+				res = 0;
+
+			if (res < 100) {
+				int val = (int) (atk.getProc().LETHARGY.time * time);
+				status[P_LETHARGY][0] = val * (100 - res) / 100;
+				status[P_LETHARGY][1] = atk.getProc().LETHARGY.mult;
+				status[P_LETHARGY][2] = atk.getProc().LETHARGY.type;
+
+				anim.getEff(P_LETHARGY); // This is the thing where it does the thing
 			} else
 				anim.getEff(INV);
 		}
@@ -2629,6 +2680,8 @@ public abstract class Entity extends AbEntity {
 			status[P_ARMOR][0]--;
 		if (status[P_SPEED][0] > 0)
 			status[P_SPEED][0]--;
+		if (status[P_LETHARGY][0] > 0)
+			status[P_LETHARGY][0]--;
 		if (status[P_BSTHUNT][0] > 0)
 			status[P_BSTHUNT][0]--;
 		// update tokens

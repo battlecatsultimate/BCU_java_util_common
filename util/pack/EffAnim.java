@@ -31,6 +31,19 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		}
 	}
 
+	public enum LethEff implements EffType<LethEff> {
+		BUFF("_down"), DEBUFF("_up");
+
+		private final String path;
+
+		LethEff(String str) {
+			path = str;
+		}
+
+		@Override
+		public String path() { return path; }
+	}
+
 	public enum BarrierEff implements EffType<BarrierEff> {
 		BREAK("_breaker"), DESTR("_destruction"), NONE("");
 
@@ -285,6 +298,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<BlastEff> A_BLAST;
 		@Order(81)
 		public EffAnim<BlastEff> A_E_BLAST;
+		@Order(82)
+		public EffAnim<LethEff> A_LETHARGY;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -620,6 +635,12 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		vwea = new VImg(weakup + ".png");
 		icwea = ImgCut.newIns(weakup + ".imgcut");
 		effas.A_E_WEAK_UP = new EffAnim<>(weakup, vwea, icwea, WeakUpEff.values());
+
+		// String leth = wea + "lethargy/lethargy"; // TODO use bcuzipmaker to add thsi animation also if this isn't right, try just "lethargy" instead
+		String leth = "./org/battle/lethargy/lethargy";
+		VImg vleth = new VImg(leth + ".png");
+		ImgCut icleth = ImgCut.newIns(leth + ".imgcut");
+		effas.A_LETHARGY = new EffAnim<>(leth, vleth, icleth, LethEff.values());
 
 		String heal = stfs[3] + "heal/heal";
 		VImg vheal = new VImg(heal + ".png");
