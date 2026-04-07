@@ -638,18 +638,20 @@ public class StageBasis extends BattleObj {
 	}
 
 	protected void processSingleProcs() {
+		Map<EEnemy, List<EUnit>> check = new HashMap<>();
+		int[][][] delay = new int[2][5][3];
 		for (Entity e : le) {
 			if (!(e instanceof EUnit))
 				continue;
 			EUnit eu = (EUnit) e;
-			Set<EEnemy> enems = new HashSet<>();
-			int[] delay = new int[3];
 			for (AttackAb atk : eu.lastHitBy) {
 				if (atk.attacker instanceof EEnemy) {
 					EEnemy ee = (EEnemy) atk.attacker;
-					if (enems.contains(ee))
+					if (!check.containsKey(ee))
+						check.put(ee, new ArrayList<>());
+					else if (check.get(ee).contains(eu))
 						continue;
-					enems.add(ee);
+					check.get(ee).add(eu);
 					if (atk.getProc().DELAY.exists()) {
 						Proc.DELAY d = atk.getProc().DELAY;
 						Proc.IMUAD imu = eu.getProc().IMUDELAY;
@@ -658,16 +660,19 @@ public class StageBasis extends BattleObj {
 							int strength = (int) (d.strength * res);
 
 							if (strength > 0)
-								delay[d.type] = strength;
+								delay[eu.index[0]][eu.index[1]][d.type] = strength;
 						} else {
 							eu.anim.getEff(INV);
 						}
 					}
 				}
-				if (Arrays.stream(delay).anyMatch(s -> s > 0))
-					elu.delay(eu.index[0], eu.index[1], delay);
 			}
 		}
+
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 5; j++)
+				if (Arrays.stream(delay[i][j]).anyMatch(s -> s != 0))
+					elu.delay(i, j, delay[i][j]);
 	}
 
 	/**
