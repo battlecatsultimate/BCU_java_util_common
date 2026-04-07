@@ -11,7 +11,6 @@ import java.util.Arrays;
 public class ELineUp extends BattleObj {
 
 	public final int[][] price, cool, maxC, tick, cdDownOrb, priceDownOrb;
-	public final int[][][] cdDelay;
 	private final StageBasis b;
 
 	protected ELineUp(LineUp lu, StageBasis sb) {
@@ -22,7 +21,6 @@ public class ELineUp extends BattleObj {
 		tick = new int[2][5];
 		cdDownOrb = new int[2][5];
 		priceDownOrb = new int[2][5];
-		cdDelay = new int[2][5][3];
 		Limit lim = sb.est.lim;
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++) {
@@ -61,7 +59,6 @@ public class ELineUp extends BattleObj {
 				}
 				if (!hasEveryOther)
 					tick[i][j] = -1;
-				cdDelay[i][j] = new int[] { 0, -1, 0 };
 			}
 	}
 
@@ -72,25 +69,23 @@ public class ELineUp extends BattleObj {
 		cool[i][j] = maxC[i][j];
 		if (cdDownOrb[i][j] > 0 && tick[i][j] == 0)
 			cool[i][j] -= cool[i][j] * cdDownOrb[i][j] / 100;
-		cdDelay[i][j] = new int[] { 0, -1, 0 };
+		b.cdDelay[i][j] = StageBasis.DELAY_BASE.clone();
 	}
 
 	protected void delay(int i, int j, int cdStrength, int reduceType) {
-		if (cdDelay[i][j][0] != 0 || cool[i][j] == 0)
-			return;
-
-		cdDelay[i][j][0]++;
 		int prog = maxC[i][j] - cool[i][j];
 		int inc = 0;
 		if (reduceType == 0) {
 			inc = Math.min(prog * cdStrength / 100, maxC[i][j]); // increase by %
+			if (inc == 0)
+				inc = cdStrength < 0 ? -1 : 1;
 		} else if (reduceType == 1) {
-			inc = Math.min(cool[i][j] + cdStrength, maxC[i][j]); // increase by frame count
+			inc = Math.min(cdStrength, maxC[i][j]); // increase by frame count
 		}
 		if (inc > 0) {
-			cdDelay[i][j][1] = cool[i][j];
+			b.cdDelay[i][j][0] = Math.max(b.cdDelay[i][j][0], cool[i][j]);
 		} else {
-			cdDelay[i][j][1] = inc;
+			b.cdDelay[i][j][2] += inc;
 		}
 		cool[i][j] += inc;
 		if (inc < 0) {
@@ -99,11 +94,11 @@ public class ELineUp extends BattleObj {
 				CommonStatic.setSE(SE_SPEND_REF);
 				b.frameOffCd[i][j] = b.time;
 			} else {
-				cdDelay[i][j][2] = 10;
+				b.cdDelay[i][j][3] = 10;
 			}
 			CommonStatic.setSE(SE_SHIELD_HIT);
 		} else {
-			cdDelay[i][j][2] = 20;
+			b.cdDelay[i][j][1] = 10;
 			CommonStatic.setSE(SE_POISON);
 		}
 	}
@@ -117,13 +112,20 @@ public class ELineUp extends BattleObj {
 				if (cool[i][j] > 0) {
 					cool[i][j]--;
 
+//					if (cool[i][j] == 30)
+//						delay(i, j, -30, 0);
+
 					if (cool[i][j] == 0) {
 						CommonStatic.setSE(SE_SPEND_REF);
 						b.frameOffCd[i][j] = b.time;
 					}
 				}
-				if (cdDelay[i][j][2] > 0)
-					cdDelay[i][j][2]--;
+				if (b.cdDelay[i][j][1] > 0 && --b.cdDelay[i][j][1] == 0) {
+					b.cdDelay[i][j][0] = 0;
+				}
+				if (b.cdDelay[i][j][3] > 0 && --b.cdDelay[i][j][3] == 0) {
+					b.cdDelay[i][j][2] = 0;
+				}
 			}
 	}
 

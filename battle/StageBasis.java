@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class StageBasis extends BattleObj {
 
+	public static final int[] DELAY_BASE = new int[] { 0, 0, 0, 0 };
+
 	public final BasisLU b;
 	public final Stage st;
 	public final EStage est;
@@ -93,6 +95,8 @@ public class StageBasis extends BattleObj {
 
 	public final int[][] spiritCooldown = new int[2][5];
 	public int[][] frameOffCd = new int[2][5];
+	public final int[][][] cdDelay = new int[2][5][DELAY_BASE.length];
+
 	/**
 	 * Flag for whether summoner has been summoned or not
 	 */
@@ -201,6 +205,10 @@ public class StageBasis extends BattleObj {
 
 		if (est.s.bossGuard)
 			activeGuard = 0;
+
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 5; j++)
+				cdDelay[i][j] = DELAY_BASE.clone();
 	}
 
 	/**
