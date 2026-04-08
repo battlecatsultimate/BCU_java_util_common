@@ -7,7 +7,6 @@ import common.util.Data.Proc;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.LocaleCenter.Displayable;
 import common.util.lang.ProcLang.ItemLang;
-import common.util.unit.AbEnemy;
 import common.util.unit.Unit;
 import org.jcodec.common.tools.MathUtil;
 
@@ -240,8 +239,7 @@ public class Editors {
 				setComponentVisibility(this, item.exists(), 1);
 				if (t.prob > 0) {
 					setComponentVisibility(this, t.id != null && t.id.cls == Unit.class, 2);
-					setComponentVisibility(this, t.id != null && AbEnemy.class.isAssignableFrom(t.id.cls), 3);
-					setComponentVisibility(this, item.exists(), IntStream.range(4, list.length).toArray());
+					setComponentVisibility(this, item.exists(), IntStream.range(3, list.length).toArray());
 				}
 			}
 			else if (!(item instanceof Proc.IMU)) {
