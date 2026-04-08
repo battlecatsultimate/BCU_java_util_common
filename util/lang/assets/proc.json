@@ -1555,8 +1555,8 @@
         "full_name": "Delay/Advance",
         "tooltip": null,
         "format": [
-            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] cat cooldown or enemy respawn by (_abs(strength))[(type==0){%}(type==1){f}]",
-            "[(type==2){ of their maximum value}(type==0){ of their current value}]"
+            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] respawn by (_abs(strength))[(type==0){%}(type==1){f}]",
+            "[(type==2){ of maximum respawn}(type==0){ of current respawn}]"
         ],
         "class": {
             "prob": {
