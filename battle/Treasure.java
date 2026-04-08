@@ -322,8 +322,7 @@ public class Treasure extends Data {
 	 */
 	public int getRevRes(int res) {
 		float research = (tech[LV_RES] - 1) * 6 + trea[T_RES] * 0.3f;
-		float addition = research + (float) Math.floor(research / 100);
-		return (int) Math.max(60, res + addition);
+		return (int) Math.max(60, res + research);
 
 	}
 
