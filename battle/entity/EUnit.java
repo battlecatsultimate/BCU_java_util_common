@@ -524,4 +524,34 @@ public class EUnit extends Entity {
 		if (bountyGrade > -1 && bountyOrbCheck)
 			bountyGrade = -1;
 	}
+
+	@Override
+	public boolean processProcs(AttackAb atk) {
+		boolean doCheck = super.processProcs(atk);
+		if (!doCheck)
+			return false;
+		Proc atkProc = atk.getProc();
+
+		if (atkProc.DELAY.exists() && index != null) {
+			Proc.DELAY d = atkProc.DELAY;
+			Proc.IMUAD imu = getProc().IMUDELAY;
+			float res;
+			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
+				res = getResistValue(atk, "IMUDELAY", d.strength);
+			else
+				res = 0;
+			if (res < 100) {
+				int strength = (int) (d.strength * res);
+				if (strength != 0 && basis.elu.cool[index[0]][index[1]] > 0) {
+					status[P_DELAY][d.type] += strength;
+					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
+					basis.leaSort = true;
+				}
+			} else {
+				anim.getEff(INV);
+			}
+		}
+
+		return true;
+	}
 }

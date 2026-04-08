@@ -91,7 +91,7 @@ public class ELineUp extends BattleObj {
 			} else {
 				b.cdDelayVisual[i][j][3] = 10;
 			}
-			CommonStatic.setSE(SE_SHIELD_HIT);
+			CommonStatic.setSE(SE_DELAY_COOLDOWN);
 		} else {
 			b.cdDelayVisual[i][j][1] = 10;
 			CommonStatic.setSE(SE_DELAY_COOLDOWN);
@@ -111,7 +111,7 @@ public class ELineUp extends BattleObj {
 			inc += Math.min(delay[1], maxC[i][j]);
 		}
 		if (delay[2] != 0) { // increase by % of max C
-			int add = Math.min(maxC[i][j] * delay[2], maxC[i][j]);
+			int add = Math.min(maxC[i][j] * Math.min(100, delay[2]), maxC[i][j]);
 			if (add == 0)
 				add = delay[2] < 0 ? -1 : 1;
 			inc += add;

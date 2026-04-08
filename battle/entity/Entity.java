@@ -1882,10 +1882,10 @@ public abstract class Entity extends AbEntity {
 		return tba;
 	}
 
-	private void processProcs(AttackAb atk) {
+	public boolean processProcs(AttackAb atk) {
 		// process proc part
 		if (!(traitCompatible(atk.trait, atk.attacker, false) || (receive(-1) && atk.SPtr) || (receive(1) && !atk.SPtr)))
-			return;
+			return false;
 
 		boolean cannonResist = atk.canon > 0 && getProc().IMUCANNON.exists() && (atk.canon & getProc().IMUCANNON.type) > 0;
 		Proc atkProc = atk.getProc();
@@ -2126,22 +2126,7 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INV);
 		}
-
-		if (atkProc.DELAY.exists()) {
-			Proc.DELAY d = atkProc.DELAY;
-			Proc.IMUAD imu = getProc().IMUDELAY;
-			float res;
-			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
-				res = getResistValue(atk, "IMUDELAY", d.strength);
-			else
-				res = 0;
-			if (res < 100) {
-				int strength = (int) (d.strength * res);
-				status[P_DELAY][d.type] += strength;
-			} else {
-				anim.getEff(INV);
-			}
-		}
+		return true;
 	}
 
 	public abstract float getResistValue(AttackAb atk, String procName, int procResist);
