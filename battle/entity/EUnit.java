@@ -537,7 +537,7 @@ public class EUnit extends Entity {
 			Proc.IMUAD imu = getProc().IMUDELAY;
 			float res;
 			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
-				res = getResistValue(atk, "IMUDELAY", d.strength);
+				res = getResistValue(atk, "IMUDELAY", imu.mult);
 			else
 				res = 0;
 			if (res < 100) {

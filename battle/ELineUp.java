@@ -83,6 +83,8 @@ public class ELineUp extends BattleObj {
 			b.cdDelayVisual[i][j][2] += inc;
 		}
 		cool[i][j] += inc;
+		if (cool[i][j] > maxC[i][j])
+			cool[i][j] = maxC[i][j];
 		if (inc < 0) {
 			if (cool[i][j] <= 0) {
 				cool[i][j] = 0;
