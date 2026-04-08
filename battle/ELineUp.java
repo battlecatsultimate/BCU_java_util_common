@@ -76,14 +76,14 @@ public class ELineUp extends BattleObj {
 		if (cool[i][j] == 0)
 			return;
 
-		int delayStrength = getDelayStrength(i, j, delay);
-		if (delayStrength > 0) {
+		int inc = b.getDelayStrength(cool[i][j], maxC[i][j], delay);
+		if (inc > 0) {
 			b.cdDelayVisual[i][j][0] = Math.max(b.cdDelayVisual[i][j][0], cool[i][j]);
 		} else {
-			b.cdDelayVisual[i][j][2] += delayStrength;
+			b.cdDelayVisual[i][j][2] += inc;
 		}
-		cool[i][j] += delayStrength;
-		if (delayStrength < 0) {
+		cool[i][j] += inc;
+		if (inc < 0) {
 			if (cool[i][j] <= 0) {
 				cool[i][j] = 0;
 				CommonStatic.setSE(SE_SPEND_REF);
@@ -96,27 +96,6 @@ public class ELineUp extends BattleObj {
 			b.cdDelayVisual[i][j][1] = 10;
 			CommonStatic.setSE(SE_DELAY_COOLDOWN);
 		}
-	}
-
-	private int getDelayStrength(int i, int j, int[] delay) {
-		int prog = maxC[i][j] - cool[i][j];
-		int inc = 0;
-		if (delay[0] != 0) { // increase by %
-			int add = Math.min(prog * Math.min(100, delay[0]) / 100, maxC[i][j]);
-			if (add == 0)
-				add = delay[0] < 0 ? -1 : 1;
-			inc += add;
-		}
-		if (delay[1] != 0) { // increase direct value
-			inc += Math.min(delay[1], maxC[i][j]);
-		}
-		if (delay[2] != 0) { // increase by % of max C
-			int add = Math.min(maxC[i][j] * Math.min(100, delay[2]), maxC[i][j]);
-			if (add == 0)
-				add = delay[2] < 0 ? -1 : 1;
-			inc += add;
-		}
-		return inc;
 	}
 
 	/**

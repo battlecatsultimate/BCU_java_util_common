@@ -97,6 +97,7 @@ public class StageBasis extends BattleObj {
 	public int[][] frameOffCd = new int[2][5];
 	public final int[][][] cdDelay = new int[2][5][3];
 	public final int[][][] cdDelayVisual = new int[2][5][DELAY_BASE.length];
+	public final int[][] lineDelay;
 
 	/**
 	 * Flag for whether summoner has been summoned or not
@@ -117,6 +118,7 @@ public class StageBasis extends BattleObj {
 		nyc = bas.nyc;
 		est = stage;
 		st = est.s;
+		lineDelay = new int[st.data.datas.length][3];
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
 		boss_spawn = Identifier.getOr(st.castle, CastleImg.class).boss_spawn;
@@ -913,6 +915,13 @@ public class StageBasis extends BattleObj {
 				}
 		}
 
+		for (int i = 0; i < lineDelay.length; i++) {
+			if (Arrays.stream(lineDelay[i]).anyMatch(v -> v != 0)) {
+				est.delay(i, lineDelay[i]);
+				lineDelay[i] = new int[] { 0, 0, 0 };
+			}
+		}
+
 		if (shock) {
 			for (Entity entity : le) {
 				if (entity.dire == -1 && (entity.touchable() & TCH_N) > 0 && (!(entity instanceof EUnit) || !((EUnit) entity).isSpirit)) {
@@ -1216,5 +1225,26 @@ public class StageBasis extends BattleObj {
 
 	public int getDupeDelay(int rar) {
 		return est.lim.stageLimit == null ? 0 : est.lim.stageLimit.deployDuplicationDelay[rar];
+	}
+
+	public int getDelayStrength(int current, int max, int[] delay) {
+		int prog = max - current;
+		int inc = 0;
+		if (delay[0] != 0) { // increase by %
+			int add = Math.min(prog * Math.min(100, delay[0]) / 100, max);
+			if (add == 0)
+				add = delay[0] < 0 ? -1 : 1;
+			inc += add;
+		}
+		if (delay[1] != 0) { // increase direct value
+			inc += Math.min(delay[1], current);
+		}
+		if (delay[2] != 0) { // increase by % of max C
+			int add = Math.min(max * Math.min(100, delay[2]), max);
+			if (add == 0)
+				add = delay[2] < 0 ? -1 : 1;
+			inc += add;
+		}
+		return inc;
 	}
 }

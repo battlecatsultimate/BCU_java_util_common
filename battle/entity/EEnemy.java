@@ -7,6 +7,7 @@ import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.anim.EAnimU;
+import common.util.pack.EffAnim;
 import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Trait;
@@ -20,14 +21,16 @@ public class EEnemy extends Entity {
 
 	public final int mark;
 	public final double mult, mula;
+	public final int line;
 
 	public byte hit;
 
-	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, float magnif, float atkMagnif, int d0, int d1, int m) {
+	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, float magnif, float atkMagnif, int d0, int d1, int m, int l) {
 		super(b, de, ea, atkMagnif, magnif);
 		mult = magnif;
 		mula = atkMagnif;
 		mark = m;
+		line = l;
 		isBase = mark <= -1;
 		currentLayer = spawnLayer = d0 == d1 ? d0 : d0 + (int) (b.r.nextFloat() * (d1 - d0 + 1));
 		traits = de.getTraits();
@@ -189,7 +192,44 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
+	public boolean processProcs(AttackAb atk) {
+		boolean doCheck = super.processProcs(atk);
+		if (!doCheck)
+			return false;
+		Proc atkProc = atk.getProc();
+
+		if (atkProc.DELAY.exists() && line != -1 && basis.est.num[line] > 0 && basis.est.rem[line] > 0) {
+			Proc.DELAY d = atkProc.DELAY;
+			Proc.IMUAD imu = getProc().IMUDELAY;
+			float res;
+			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
+				res = getResistValue(atk, "IMUDELAY", d.strength);
+			else
+				res = 0;
+			if (res < 100) {
+				int strength = (int) (d.strength * res);
+				if (strength != 0) {
+					status[P_DELAY][d.type] += strength;
+					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
+					basis.leaSort = true;
+				}
+			} else {
+				anim.getEff(INV);
+			}
+		}
+
+		return true;
+	}
+
+	@Override
 	public void postUpdate() {
+		if (Arrays.stream(status[P_DELAY]).anyMatch(v -> v != 0)) {
+			for (int i = 0; i < 3; i++) {
+				basis.lineDelay[line][i] = status[P_DELAY][i];
+				status[P_DELAY][i] = 0;
+			}
+		}
+
 		super.postUpdate();
 
 		if (health > 0)

@@ -88,13 +88,13 @@ public class AtkModelUnit extends AtkModelEntity {
 					float mula = proc.mult * 0.01f;
 					float mult = proc.mult * 0.01f;
 
-					mula *= (100.0 - resist) / 100;
-					mult *= (100.0 - resist) / 100;
+					mula *= (100.0f - resist) / 100;
+					mult *= (100.0f - resist) / 100;
 
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == -1 || proc.max_layer == -1)
 						minlayer = maxlayer = e.currentLayer;
-					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0);
+					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0, -1);
 
 					ee.group = allow;
 

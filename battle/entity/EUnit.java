@@ -512,7 +512,7 @@ public class EUnit extends Entity {
 
 	@Override
 	public void postUpdate() {
-		if (Arrays.stream(status[P_DELAY]).anyMatch(v -> v != 0) && index != null) {
+		if (Arrays.stream(status[P_DELAY]).anyMatch(v -> v != 0)) {
 			for (int i = 0; i < 3; i++) {
 				basis.cdDelay[index[0]][index[1]][i] += status[P_DELAY][i];
 				status[P_DELAY][i] = 0;
@@ -532,7 +532,7 @@ public class EUnit extends Entity {
 			return false;
 		Proc atkProc = atk.getProc();
 
-		if (atkProc.DELAY.exists() && index != null) {
+		if (atkProc.DELAY.exists() && index != null && basis.elu.cool[index[0]][index[1]] > 0) {
 			Proc.DELAY d = atkProc.DELAY;
 			Proc.IMUAD imu = getProc().IMUDELAY;
 			float res;
@@ -542,7 +542,7 @@ public class EUnit extends Entity {
 				res = 0;
 			if (res < 100) {
 				int strength = (int) (d.strength * res);
-				if (strength != 0 && basis.elu.cool[index[0]][index[1]] > 0) {
+				if (strength != 0) {
 					status[P_DELAY][d.type] += strength;
 					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
 					basis.leaSort = true;
