@@ -8,7 +8,7 @@ import common.util.Data;
 import java.util.HashSet;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
-public class StageLimit extends Data implements BattleStatic {
+public class StageLimit extends Data implements BattleStatic, Cloneable {
     public static boolean isComboBanned(Limit lim, int comboId) {
         if (lim == null || lim.stageLimit == null)
             return false;
