@@ -2326,6 +2326,8 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public boolean traitCompatible(List<Trait> t, Entity attacker, boolean targetOnly) {
 		if (targetOnly && isBase) return true;
+		if (t.contains(null))
+			return true;
 		for (Trait trait : t)
 			if (traits.contains(trait))
 				return true;
@@ -2333,7 +2335,7 @@ public abstract class Entity extends AbEntity {
 			for (int i = 0; i < t.size(); i++)
 				if (t.get(i).targetType)
 					return true;
-		return t.contains(null);
+		return false;
 	}
 
 	/**
