@@ -1240,7 +1240,7 @@ public class StageBasis extends BattleObj {
 			inc += Math.min(delay[1], current);
 		}
 		if (delay[2] != 0) { // increase by % of max C
-			int add = Math.min(max * Math.min(100, delay[2]), max);
+			int add = Math.min(max * Math.min(100, delay[2]) / 100, max);
 			if (add == 0)
 				add = delay[2] < 0 ? -1 : 1;
 			inc += add;
