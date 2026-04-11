@@ -85,6 +85,7 @@ public class Stage extends Data
 	public BattlePreset preset;
 	@JsonField(generic = Replay.class, alias = ResourceLocation.class)
 	public ArrayList<Replay> recd = new ArrayList<>();
+	@JsonField(block = true)
 	public ArrayList<ScoreBonus> scoreBonus = new ArrayList<>();
 
 	@JsonClass.JCConstructor
