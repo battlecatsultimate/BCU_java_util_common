@@ -1553,8 +1553,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			if (UserProfile.isOlderPack(pack, "0.7.17.0")) {
 				for (StageMap sm : maps) {
 					for (Stage st : sm.list) {
-						if (st.trail || (st.lim.stageLimit != null && st.lim.stageLimit.maxMoney > 0))
+						boolean lim = st.lim.stageLimit != null;
+						if (st.trail || (lim && st.lim.stageLimit.maxMoney > 0))
 							st.drop = false;
+						if (lim && st.lim.stageLimit.unitSpeedOverride > -1 && st.lim.stageLimit.unitSpeedOverrideMode == null)
+							st.lim.stageLimit.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
+						if (lim && st.lim.stageLimit.enemySpeedOverride > -1 && st.lim.stageLimit.enemySpeedOverrideMode == null)
+							st.lim.stageLimit.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
 					}
 				}
 			}
