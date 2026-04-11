@@ -68,7 +68,7 @@ public class EEnemy extends Entity {
 			}
 		}
 
-		if (basis.st.drop && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
+		if (basis.st.drop && atk == KillMode.NORMAL) {
 			float mul = basis.b.t().getDropMulti()
 					* (1 + (StageLimit.isComboBanned(basis.est.lim, Data.C_MEAR) ? 0 : basis.b.getInc(Data.C_MEAR, unitsHit)) * 0.01f)
 					* (1 + (status[P_BOUNTY][0] / 100f));

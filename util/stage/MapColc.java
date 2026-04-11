@@ -456,6 +456,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 										stage.lim.stageLimit.maxMoney = maxMoney;
 										stage.lim.stageLimit.bannedCatCombo.addAll(bannedCombo);
 										stage.lim.stageLimit.coolStart = true;
+										stage.drop = false;
 									}
 								}
 
@@ -1552,7 +1553,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			if (UserProfile.isOlderPack(pack, "0.7.17.0")) {
 				for (StageMap sm : maps) {
 					for (Stage st : sm.list) {
-						st.drop = !st.trail;
+						if (st.trail || (st.lim.stageLimit != null && st.lim.stageLimit.maxMoney > 0))
+							st.drop = false;
 					}
 				}
 			}
