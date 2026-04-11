@@ -32,6 +32,26 @@ import java.util.*;
 public class Stage extends Data
 		implements BasedCopable<Stage, StageMap>, BattleStatic, IndexContainer.Indexable<StageMap, Stage> {
 
+	@JsonClass(noTag = NoTag.LOAD)
+	public static class ScoreBonus {
+		public int type; // 0: P_, 1: AB_
+		public int proc;
+		public int dire; // 1: deal proc, -1: take dmg while having proc, 0: both
+		public int score;
+
+		@JsonClass.JCConstructor
+		public ScoreBonus() {
+
+		}
+
+		public ScoreBonus(int p, int s, int t, int d) {
+			proc = p;
+			score = s;
+			type = t;
+			dire = d;
+		}
+	}
+
 	@StaticPermitted
 	public static final MapColc CLIPMC = new MapColc.ClipMapColc();
 	@StaticPermitted
@@ -43,8 +63,6 @@ public class Stage extends Data
 
 	@JsonField(block = true)
 	public StageInfo info;
-	@JsonField(block = true)
-	public boolean isBCstage = false;
 
 	@JsonClass.JCIdentifier
 	public final Identifier<Stage> id;
@@ -55,6 +73,7 @@ public class Stage extends Data
 	public MultiLangData names = new MultiLangData();
 
 	public boolean non_con, trail, bossGuard;
+	public boolean enemy_drop = true;
 	public int len, health, max, mush, bgh;
 	public int timeLimit = 0;
 	public int minSpawn = 1, maxSpawn = 1;
@@ -66,6 +85,7 @@ public class Stage extends Data
 	public BattlePreset preset;
 	@JsonField(generic = Replay.class, alias = ResourceLocation.class)
 	public ArrayList<Replay> recd = new ArrayList<>();
+	public ArrayList<ScoreBonus> score_bonus = new ArrayList<>();
 
 	@JsonClass.JCConstructor
 	public Stage() {
@@ -94,7 +114,6 @@ public class Stage extends Data
 
 	protected Stage(Identifier<Stage> id, VFile f, int type) {
 		this.id = id;
-		isBCstage = true;
 		StageMap sm = getCont();
 		if (sm.info != null)
 			sm.info.getData(this);
@@ -150,6 +169,7 @@ public class Stage extends Data
 			}
 
 			trail = timeLimit != 0;
+			enemy_drop = !trail;
 
 			int isBase = Integer.parseInt(strs[6]) - 2;
 

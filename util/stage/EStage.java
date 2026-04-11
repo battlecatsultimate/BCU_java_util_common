@@ -98,8 +98,7 @@ public class EStage extends BattleObj {
 
 			if (Math.abs(datas[i].spawn_0) < Math.abs(datas[i].spawn_1))
 				rem[i] += (int) ((datas[i].spawn_1 - datas[i].spawn_0) * b.r.nextFloat());
-
-			if (s.isBCstage && datas[i].castle_0 < 100 && rem[i] > 0 && !s.trail)
+			if (s.id.pack.equals(Identifier.DEF) && datas[i].castle_0 < 100 && rem[i] > 0 && !s.trail)
 				rem[i] = 0;
 		}
 	}
