@@ -1247,4 +1247,8 @@ public class StageBasis extends BattleObj {
 		}
 		return inc;
 	}
+
+	public boolean isDojoOvertime() {
+		return st.trail && st.timeLimit != 0 && st.timeLimit * 60 * 30 - time < 0;
+	}
 }

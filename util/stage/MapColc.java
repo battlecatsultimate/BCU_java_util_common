@@ -823,6 +823,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 						else {
 							for (Stage st : map.list) {
 								st.scoreBonus.add(new Stage.ScoreBonus(proc, score, type, dire));
+								st.drop = true;
 							}
 						}
 					}

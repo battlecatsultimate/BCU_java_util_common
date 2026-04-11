@@ -53,7 +53,7 @@ public class SBCtrl extends BattleField {
 	protected void actions() {
 		if (sb.ebase.health <= 0)
 			return;
-		if (sb.st.trail && sb.st.timeLimit != 0 && sb.st.timeLimit * 60 * 30 - sb.time < 0)
+		if (sb.isDojoOvertime())
 			return;
 		int rec = 0;
 		if ((keys.pressed(-1, 0) || action.contains(-1)) && act_mon()) {
