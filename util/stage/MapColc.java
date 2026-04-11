@@ -822,7 +822,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 									ruleID);
 						else {
 							for (Stage st : map.list) {
-								st.score_bonus.add(new Stage.ScoreBonus(proc, score, type, dire));
+								st.scoreBonus.add(new Stage.ScoreBonus(proc, score, type, dire));
 							}
 						}
 					}
@@ -1551,7 +1551,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			if (UserProfile.isOlderPack(pack, "0.7.17.0")) {
 				for (StageMap sm : maps) {
 					for (Stage st : sm.list) {
-						st.enemy_drop = !st.trail;
+						st.drop = !st.trail;
 					}
 				}
 			}

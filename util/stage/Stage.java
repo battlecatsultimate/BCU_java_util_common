@@ -73,7 +73,7 @@ public class Stage extends Data
 	public MultiLangData names = new MultiLangData();
 
 	public boolean non_con, trail, bossGuard;
-	public boolean enemy_drop = true;
+	public boolean drop = true;
 	public int len, health, max, mush, bgh;
 	public int timeLimit = 0;
 	public int minSpawn = 1, maxSpawn = 1;
@@ -85,7 +85,7 @@ public class Stage extends Data
 	public BattlePreset preset;
 	@JsonField(generic = Replay.class, alias = ResourceLocation.class)
 	public ArrayList<Replay> recd = new ArrayList<>();
-	public ArrayList<ScoreBonus> score_bonus = new ArrayList<>();
+	public ArrayList<ScoreBonus> scoreBonus = new ArrayList<>();
 
 	@JsonClass.JCConstructor
 	public Stage() {
@@ -169,7 +169,7 @@ public class Stage extends Data
 			}
 
 			trail = timeLimit != 0;
-			enemy_drop = !trail;
+			drop = !trail;
 
 			int isBase = Integer.parseInt(strs[6]) - 2;
 
