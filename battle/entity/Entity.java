@@ -1797,8 +1797,9 @@ public abstract class Entity extends AbEntity {
 					int reflectAtk = FDmg;
 
 					Proc reflectProc = Proc.blank();
-					String[] par = {"CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "MINIVOLC", "WAVE",
-							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "LETHARGY", "SHIELDBREAK", "MINIWAVE"};
+					String[] par = { "CRIT", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "CURSE", "SNIPER", "VOLC", "MINIVOLC", "WAVE",
+							"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "ARMOR", "SPEED", "LETHARGY", "SHIELDBREAK", "MINIWAVE",
+							"DELAY" };
 
 					if (counter.type.procType == 1 || counter.type.procType == 3)
 						for (String s0 : par)
