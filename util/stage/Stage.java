@@ -202,7 +202,7 @@ public class Stage extends Data
 					data[3] *= 2;
 					data[4] *= 2;
 
-					if (timeLimit == 0 && intl > 9 && data[5] > 100 && data[9] == 100) {
+					if (!trail && intl > 9 && data[5] > 100 && data[9] == 100) {
 						data[9] = data[5];
 						data[5] = 100;
 					}
