@@ -13,6 +13,8 @@ import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.files.VFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 @IndexCont(CastleList.class)
@@ -109,5 +111,14 @@ public class CastleImg implements Indexable<CastleList, CastleImg> {
 			return super.toString();
 
 		return id.toString();
+	}
+
+	public List<Stage> getStages() {
+		List<Stage> ans = new ArrayList<>();
+		for (Stage st : MapColc.getAllStage()) {
+			if (st != null && st.castle != null && st.castle.equals(id))
+				ans.add(st);
+		}
+		return ans;
 	}
 }

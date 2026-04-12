@@ -22,7 +22,11 @@ import common.util.anim.AnimI;
 import common.util.anim.EAnimD;
 import common.util.anim.ImgCut;
 import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.stage.MapColc;
+import common.util.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 @IndexCont(PackData.class)
@@ -439,4 +443,12 @@ public class Background extends AnimI<Background, Background.BGWvType> implement
         return BGWvType.values();
     }
 
+    public List<Stage> getStages() {
+        List<Stage> ans = new ArrayList<>();
+        for (Stage st : MapColc.getAllStage()) {
+            if (st != null && (st.bg != null && st.bg.equals(id) || st.bg1 != null && st.bg1.equals(id)))
+                ans.add(st);
+        }
+        return ans;
+    }
 }
