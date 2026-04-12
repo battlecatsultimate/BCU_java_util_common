@@ -71,7 +71,7 @@ public class StarBackgroundEffect extends BackgroundEffect {
                 capture.add(i);
         }
 
-        if(capture.size() > 0) {
+        if(!capture.isEmpty()) {
             int rangeH = BGHeight * 2 + range;
 
             for(int i = 0; i < capture.size(); i++) {

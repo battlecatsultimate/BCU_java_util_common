@@ -24,28 +24,21 @@ public abstract class BackgroundEffect {
     public static final int battleOffset = (int) (400 / CommonStatic.BattleConst.ratio);
     public static final List<Integer> jsonList = new ArrayList<>();
 
+    public static final Map<Integer, Integer> oldToNew = new HashMap<>();
+
     public static void read() {
         CommonStatic.BCAuxAssets asset = CommonStatic.getBCAssets();
 
-        asset.bgEffects.add(new StarBackgroundEffect());
-
-        asset.bgEffects.add(new RainBGEffect(new VImg("./org/battle/a/000_a.png"), ImgCut.newIns("./org/battle/a/000_a.imgcut")));
-
-        asset.bgEffects.add(new BubbleBGEffect(new VImg("./org/img/bgEffect/bubble02.png")));
-
-        asset.bgEffects.add(new FallingSnowBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
-
-        asset.bgEffects.add(new SnowBGEffect(new VImg("./org/img/bgEffect/img021.png")));
-
-        asset.bgEffects.add(new SnowStarBGEffect());
-
-        asset.bgEffects.add(new BlizzardBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
-
-        asset.bgEffects.add(new ShiningBGEffect());
-
-        asset.bgEffects.add(new BalloonBGEffect());
-
-        asset.bgEffects.add(new RockBGEffect());
+        asset.bgEffects.put(Data.BG_EFFECT_STAR, new StarBackgroundEffect());
+        asset.bgEffects.put(Data.BG_EFFECT_RAIN, new RainBGEffect(new VImg("./org/battle/a/000_a.png"), ImgCut.newIns("./org/battle/a/000_a.imgcut")));
+        asset.bgEffects.put(Data.BG_EFFECT_BUBBLE, new BubbleBGEffect(new VImg("./org/img/bgEffect/bubble02.png")));
+        asset.bgEffects.put(Data.BG_EFFECT_FALLING_SNOW, new FallingSnowBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
+        asset.bgEffects.put(Data.BG_EFFECT_SNOW, new SnowBGEffect(new VImg("./org/img/bgEffect/img021.png")));
+        asset.bgEffects.put(Data.BG_EFFECT_SNOWSTAR, new SnowStarBGEffect());
+        asset.bgEffects.put(Data.BG_EFFECT_BLIZZARD, new BlizzardBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
+        asset.bgEffects.put(Data.BG_EFFECT_SHINING, new ShiningBGEffect());
+        asset.bgEffects.put(Data.BG_EFFECT_BALLOON, new BalloonBGEffect());
+        asset.bgEffects.put(Data.BG_EFFECT_ROCK, new RockBGEffect());
 
         CommonStatic.ctx.noticeErr(() -> {
             VFile vf = VFile.get("./org/data/");
@@ -70,14 +63,13 @@ public abstract class BackgroundEffect {
             int currentSize = asset.bgEffects.size();
 
             for (Integer id : jsonList) {
-                asset.bgEffects.add(new JsonBGEffect(id, false));
-
-                UserProfile.getBCData().bgs.getRaw(id).effect = currentSize;
-
+                asset.bgEffects.put(id, new JsonBGEffect(id, false));
+                UserProfile.getBCData().bgs.getRaw(id).effect = id;
+                oldToNew.put(currentSize, id);
                 currentSize++;
             }
 
-            asset.bgEffects.replaceAll(a -> {
+            asset.bgEffects.replaceAll((i, a) -> {
                 if(!(a instanceof JsonBGEffect) || !((JsonBGEffect) a).postNeed)
                     return a;
 

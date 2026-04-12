@@ -91,7 +91,7 @@ public class CommonStatic {
 		public UnitLevel defLv;
 
 		// bg effect
-		public final ArrayList<BackgroundEffect> bgEffects = new ArrayList<>();
+		public final Map<Integer, BackgroundEffect> bgEffects = new HashMap<>();
 
 	}
 
