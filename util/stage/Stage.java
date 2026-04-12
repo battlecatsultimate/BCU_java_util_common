@@ -184,13 +184,11 @@ public class Stage extends Data
 						break;
 
 					String[] ss = temp.split(",");
-
 					for(int i = 0; i < ss.length; i++) {
 						ss[i] = ss[i].trim();
 					}
 
 					int[] data = new int[SCDef.SIZE];
-
 					for (int i = 0; i < intl; i++)
 						if(i < ss.length)
 							data[i] = Integer.parseInt(ss[i]);
@@ -207,6 +205,10 @@ public class Stage extends Data
 					if (timeLimit == 0 && intl > 9 && data[5] > 100 && data[9] == 100) {
 						data[9] = data[5];
 						data[5] = 100;
+					}
+
+					if (ss.length > 10) {
+						data[SCDef.SC] = CommonStatic.parseIntN(ss[10]);
 					}
 
 					if (ss.length > 11 && CommonStatic.isInteger(ss[11])) {
