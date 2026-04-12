@@ -646,9 +646,9 @@ public class CommonStatic {
 
 	/**
 	 * Gets the boss spawn point for a castle.
-	 * Basically 3200 + yx/10 + 0.9*z but the 0.9*z part appears to use a quirky rounding
+	 * Credits to Domimmo314 for formula
 	 */
 	public static float bossSpawnPoint(int y, int z) {
-		return (float) (3200 + (y * z / 10) + (9 * z + 8 * z % 10) / 10) / 4f;
+		return (float) (Math.floor(3200f + (y * z / 10f) - z * 1180 / 100f + z * 127 / 10f) / 4f);
 	}
 }
