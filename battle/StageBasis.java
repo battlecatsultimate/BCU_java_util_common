@@ -63,7 +63,7 @@ public class StageBasis extends BattleObj {
 	public int maxCatSpawns = -1;
 
 	public float siz;
-	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, maxNum, pos;
+	public int work_lv, money, maxMoney, cannon, maxCannon, upgradeCost, maxNum, pos, score;
 	public int[] maxRarityNum = { -1, -1, -1, -1, -1, -1 };
 	public int frontLineup = 0;
 	public boolean lineupChanging = false;
@@ -679,14 +679,17 @@ public class StageBasis extends BattleObj {
 //					elu.delay(i, j, delay[i][j]);
 //	}
 
+	public boolean isActive() {
+		return ebase.health > 0 && ubase.health > 0;
+	}
+
 	/**
 	 * process actions and add enemies from stage first then update each entity
 	 * and receive attacks then excuse attacks and do post update then delete dead
 	 * entities
 	 */
 	protected void update() {
-		boolean active = ebase.health > 0 && ubase.health > 0;
-
+		boolean active = isActive();
 		if (midH != -1 && bgEffect != null && !bgEffectInitialized) {
 			bgEffect.initialize(st.len, battleHeight, midH, bg);
 			bgEffectInitialized = true;

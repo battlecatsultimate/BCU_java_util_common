@@ -8,6 +8,7 @@ import common.pack.UserProfile;
 import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.pack.EffAnim;
+import common.util.stage.SCDef;
 import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Trait;
@@ -53,26 +54,32 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(KillMode atk) {
 		super.kill(atk);
-		List<Unit> unitsHit = new ArrayList<>();
-		for (AttackAb attack : lastKilledBy) {
-			if (!(attack.attacker instanceof EUnit))
-				continue;
-			EUnit u = (EUnit) attack.attacker;
-			unitsHit.add(((Form) u.data.getPack()).unit);
-
-			if (!(attack instanceof AttackSimple))
-				continue;
-			if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
-				status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
-				u.bountyOrbCheck = true;
-			}
-		}
 
 		if (basis.st.drop && atk == KillMode.NORMAL) {
+			List<Unit> unitsHit = new ArrayList<>();
+			for (AttackAb attack : lastKilledBy) {
+				if (!(attack.attacker instanceof EUnit))
+					continue;
+				EUnit u = (EUnit) attack.attacker;
+				unitsHit.add(((Form) u.data.getPack()).unit);
+
+				if (!(attack instanceof AttackSimple))
+					continue;
+				if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
+					status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
+					u.bountyOrbCheck = true;
+				}
+			}
 			float mul = basis.b.t().getDropMulti()
 					* (1 + (StageLimit.isComboBanned(basis.est.lim, Data.C_MEAR) ? 0 : basis.b.getInc(Data.C_MEAR, unitsHit)) * 0.01f)
 					* (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
+		}
+		if (basis.st.trail && !basis.isDojoOvertime() && basis.isActive() && atk == KillMode.NORMAL) {
+			SCDef.Line d = basis.st.data.getSimple(line);
+			int time = basis.st.timeLimit * 1800;
+			int score = (int) (((MaskEnemy) data).getDrop() / 100f + (d.score * (2f * time - basis.time)) / time);
+			basis.score += score;
 		}
 	}
 
