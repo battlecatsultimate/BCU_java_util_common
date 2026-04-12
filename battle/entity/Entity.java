@@ -349,7 +349,7 @@ public abstract class Entity extends AbEntity {
 				EffAnim<SpeedEff> eff = dire == -1 ? effas().A_SPEED : effas().A_E_SPEED;
 				SpeedEff index;
 
-				index = status[P_SPEEDUP][0] >= 100 ? SpeedEff.UP : SpeedEff.DOWN;
+				index = status[P_SPEEDUP][0] > 0 ? SpeedEff.UP : SpeedEff.DOWN;
 
 				effs[id] = eff.getEAnim(index);
 			} else if (t == HEAL) {
@@ -2235,7 +2235,7 @@ public abstract class Entity extends AbEntity {
 		}
 		// adrenaline
 		int adrenalineThreshold = getProc().SPEEDUP.health;
-		if ((touchable() & TCH_CORPSE) == 0 && adrenalineThreshold > 0 && health * 100 <= maxH * adrenalineThreshold) {
+		if (status[P_SPEEDUP][0] == 0 && (touchable() & TCH_CORPSE) == 0 && adrenalineThreshold > 0 && health * 100 <= maxH * adrenalineThreshold) {
 			status[P_SPEEDUP][0] = getProc().SPEEDUP.mult;
 			anim.getEff(P_SPEEDUP);
 		}
