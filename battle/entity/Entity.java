@@ -486,7 +486,7 @@ public abstract class Entity extends AbEntity {
 				byte id = dire == -1 ? A_UP : A_E_UP;
 				effs[id] = null;
 			}
-			if (status[P_SPEEDUP][0] == 0) {
+			if (status[P_SPEEDUP][0] == 0 && status[P_SPEED][0] == 0) {
 				byte id = dire == -1 ? A_SPEED : A_E_SPEED;
 				effs[id] = null;
 			}
@@ -498,11 +498,6 @@ public abstract class Entity extends AbEntity {
 
 			if (status[P_ARMOR][0] == 0) {
 				byte id = dire == -1 ? A_ARMOR : A_E_ARMOR;
-				effs[id] = null;
-			}
-
-			if (status[P_SPEED][0] == 0) {
-				byte id = dire == -1 ? A_SPEED : A_E_SPEED;
 				effs[id] = null;
 			}
 
