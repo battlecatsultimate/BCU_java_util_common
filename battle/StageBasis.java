@@ -543,7 +543,7 @@ public class StageBasis extends BattleObj {
 
 			for (Entity summoner : summoners) {
 				EUnit su = f.getEntity(this, null, true, false);
-				su.added(-1, Math.max(800 + su.data.getRange(), Math.min(summoner.pos + SPIRIT_SUMMON_RANGE, ubase.pos)));
+				su.added(-1, Math.max(ebase.pos + su.data.getRange(), Math.min(summoner.pos + SPIRIT_SUMMON_RANGE, ubase.pos)));
 				le.add(su);
 			}
 
