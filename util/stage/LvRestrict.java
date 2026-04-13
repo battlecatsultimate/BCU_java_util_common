@@ -106,9 +106,9 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			if (groups.containsKey(cg)) {
 				GroupRestrict lv0 = groups.get(cg);
 				GroupRestrict lv1 = lvr.groups.get(cg);
-				int[] lv = new int[6];
+				int[] lv = new int[7];
 				int o = lv0.orb == -1 ? lv1.orb : lv1.orb == -1 ? lv0.orb : Math.min(lv0.orb, lv1.orb);
-				for (int i = 0; i < 6; i++) {
+				for (int i = 0; i < 7; i++) {
 					lv[i] = Math.min(lv0.lv[i], lv1.lv[i]);
 				}
 				ans.groups.put(cg, new GroupRestrict(lv, o));
@@ -175,9 +175,9 @@ public class LvRestrict extends Data implements Indexable<PackData, LvRestrict> 
 			}
 		if (mod)
 			return f.regulateLv(null, Level.lvList(f.unit, lv, null));
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 7; i++)
 			lv[i] = Math.min(lv[i], rares[f.unit.rarity][i]);
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 7; i++)
 			lv[i] = Math.min(lv[i], all[i]);
 		return f.regulateLv(null, Level.lvList(f.unit, lv, null));
 	}
