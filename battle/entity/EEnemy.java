@@ -109,14 +109,20 @@ public class EEnemy extends Entity {
 					sharedTraits.add(t);
 			}
 
-			if (!sharedTraits.isEmpty() && (atk.abi & AB_GOOD) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_GOOD) != 0) {
 				ans = (int) (ans * EUnit.OrbHandler.getOrbGood(atk, sharedTraits, basis.b.t()));
+				basis.scoreActivated(SCORE_GOOD, 1, atk.trait.size());
+			}
 
-			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVE) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVE) != 0) {
 				ans = (int) (ans * EUnit.OrbHandler.getOrbMassive(atk, sharedTraits, basis.b.t()));
+				basis.scoreActivated(SCORE_MASSIVE, 1, atk.trait.size());
+			}
 
-			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0) {
 				ans = (int) (ans * basis.b.t().getMASSIVESATK(sharedTraits));
+				basis.scoreActivated(SCORE_MASSIVES, 1, atk.trait.size());
+			}
 		}
 
 		if (isBase)
@@ -220,7 +226,7 @@ public class EEnemy extends Entity {
 					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
 					basis.leaSort = true;
 				}
-				basis.procActivated(P_DELAY, 1, atk.trait.size());
+				basis.scoreActivated(P_DELAY, 1, atk.trait.size());
 			} else {
 				anim.getEff(INV);
 			}

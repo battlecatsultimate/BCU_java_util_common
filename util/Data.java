@@ -1334,6 +1334,17 @@ public class Data {
 	public static final byte PROC_TOT = 66;
 	public static final byte PROC_WIDTH = 6;
 
+	public static final int SCORE_WEAK = 0;
+	public static final int SCORE_STOP = 1;
+	public static final int SCORE_SLOW = 2;
+	public static final int SCORE_KB = 3;
+	public static final int SCORE_GOOD = 4;
+	public static final int SCORE_RESIST = 5;
+	public static final int SCORE_MASSIVE = 6;
+	public static final int SCORE_RESISTS = 7;
+	public static final int SCORE_MASSIVES = 8;
+	public static final int SCORE_TOT = 9;
+
 	public static final boolean[] procSharable = {
 			false, //kb
 			false, //freeze

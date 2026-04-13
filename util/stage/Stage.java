@@ -34,7 +34,6 @@ public class Stage extends Data
 
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class ScoreBonus {
-		public int type; // 0: P_, 1: AB_
 		public int proc;
 		public int dire; // 1: deal proc, -1: take dmg while having proc, 0: both
 		public int score;
@@ -44,10 +43,9 @@ public class Stage extends Data
 
 		}
 
-		public ScoreBonus(int p, int s, int t, int d) {
+		public ScoreBonus(int p, int s, int d) {
 			proc = p;
 			score = s;
-			type = t;
 			dire = d;
 		}
 	}

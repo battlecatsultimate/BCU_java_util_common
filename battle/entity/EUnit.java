@@ -315,14 +315,22 @@ public class EUnit extends Entity {
 					sharedTraits.add(t);
 			}
 
-			if ((getAbi() & AB_GOOD) != 0)
+			if ((getAbi() & AB_GOOD) != 0) {
 				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, level,
 						StageLimit.isComboBanned(basis.est.lim, C_GOOD) ? 0 : basis.b.getInc(C_GOOD, mu.getPack().unit)));
-			if ((getAbi() & AB_RESIST) != 0)
+				if (!sharedTraits.isEmpty())
+					basis.scoreActivated(SCORE_GOOD, -1, traits.size());
+			}
+			if ((getAbi() & AB_RESIST) != 0) {
 				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, level,
 						StageLimit.isComboBanned(basis.est.lim, Data.C_RESIST) ? 0 : basis.b.getInc(Data.C_RESIST, mu.getPack().unit)));
-			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
+				if (!sharedTraits.isEmpty())
+					basis.scoreActivated(SCORE_RESIST, -1, traits.size());
+			}
+			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0) {
 				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
+				basis.scoreActivated(SCORE_RESISTS, -1, traits.size());
+			}
 		}
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
@@ -547,7 +555,7 @@ public class EUnit extends Entity {
 					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
 					basis.leaSort = true;
 				}
-				basis.procActivated(P_DELAY, -1, atk.trait.size());
+				basis.scoreActivated(P_DELAY, -1, atk.trait.size());
 			} else {
 				anim.getEff(INV);
 			}

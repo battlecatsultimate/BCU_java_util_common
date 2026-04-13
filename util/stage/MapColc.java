@@ -787,32 +787,29 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 						int ruleID = CommonStatic.parseIntN(key);
 						JsonArray parameter = scoreType.getAsJsonObject(key).getAsJsonArray("Parameters");
 						int score = parameter.getAsInt();
-						int proc = -1, type = 0, dire = 1;
+						int proc = -1, dire = 1;
 
 						switch (ruleID) {
 							case 0:
-								proc = P_WEAK;
+								proc = SCORE_WEAK;
 								break;
 							case 1:
-								proc = P_STOP;
+								proc = SCORE_STOP;
 								break;
 							case 2:
-								proc = P_SLOW;
+								proc = SCORE_SLOW;
 								break;
 							case 3:
-								proc = P_KB;
+								proc = SCORE_KB;
 								break;
 							case 13:
-								proc = AB_GOOD;
-								type = 1;
+								proc = SCORE_GOOD;
 								break;
 							case 14:
-								proc = AB_MASSIVE;
-								type = 1;
+								proc = SCORE_MASSIVE;
 								break;
 							case 16:
-								proc = AB_GOOD;
-								type = 1;
+								proc = SCORE_GOOD;
 								dire = -1;
 								break;
 						}
@@ -823,7 +820,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 									ruleID);
 						else {
 							for (Stage st : map.list) {
-								st.scoreBonus.add(new Stage.ScoreBonus(proc, score, type, dire));
+								st.scoreBonus.add(new Stage.ScoreBonus(proc, score, dire));
 								st.drop = true;
 							}
 						}

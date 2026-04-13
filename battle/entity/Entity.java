@@ -1884,6 +1884,8 @@ public abstract class Entity extends AbEntity {
 			return false;
 
 		boolean cannonResist = atk.canon > 0 && getProc().IMUCANNON.exists() && (atk.canon & getProc().IMUCANNON.type) > 0;
+		int dire = data instanceof MaskEnemy ? 1 : -1;
+		int trait = data instanceof MaskEnemy ? atk.trait.size() : 1;
 		Proc atkProc = atk.getProc();
 		if (atkProc.POIATK.mult > 0) {
 			int rst = getProc().IMUPOIATK.mult;
@@ -1893,7 +1895,7 @@ public abstract class Entity extends AbEntity {
 			} else {
 				float poiDmg = atkProc.POIATK.mult * (100 - rst) / 10000f;
 
-				if (dire == -1 && basis.canon.deco == DECO_BASE_BARRIER)
+				if (this.dire == -1 && basis.canon.deco == DECO_BASE_BARRIER)
 					poiDmg *= basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_TOXIC);
 
 				damage = (long) (damage + maxH * poiDmg);
@@ -1902,7 +1904,7 @@ public abstract class Entity extends AbEntity {
 				basis.leaSort = true;
 
 				CommonStatic.setSE(SE_POISON);
-				basis.procActivated(P_POIATK, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_POIATK, dire, trait);
 			}
 		}
 
@@ -1923,11 +1925,11 @@ public abstract class Entity extends AbEntity {
 					status[P_STOP][0] = val;
 
 				anim.getEff(P_STOP);
-				basis.procActivated(P_STOP, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(SCORE_STOP, dire, trait);
 			} else
 				anim.getEff(INV);
 
-			if(dire == -1 && basis.canon.deco == DECO_BASE_STOP) {
+			if(this.dire == -1 && basis.canon.deco == DECO_BASE_STOP) {
 				status[P_STOP][0] = (int) (status[P_STOP][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_FREEZE));
 			}
 		}
@@ -1945,11 +1947,11 @@ public abstract class Entity extends AbEntity {
 					status[P_SLOW][0] = val;
 
 				anim.getEff(P_SLOW);
-				basis.procActivated(P_SLOW, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(SCORE_SLOW, dire, trait);
 			} else
 				anim.getEff(INV);
 
-			if(dire == -1 && basis.canon.deco == DECO_BASE_SLOW) {
+			if(this.dire == -1 && basis.canon.deco == DECO_BASE_SLOW) {
 				status[P_SLOW][0] = (int) (status[P_SLOW][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_SLOW));
 			}
 		}
@@ -1963,14 +1965,14 @@ public abstract class Entity extends AbEntity {
 			);
 
 			val = (int) (val * rst);
-			if(dire == -1 && basis.canon.deco == DECO_BASE_GROUND) {
+			if(this.dire == -1 && basis.canon.deco == DECO_BASE_GROUND) {
 				val = (int) (val * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_WEAK));
 			}
 
 			if (rst > 0f) {
 				weaks.add(new int[] { val, atkProc.WEAK.mult });
 				anim.getEff(P_WEAK);
-				basis.procActivated(P_WEAK, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(SCORE_WEAK, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -1987,11 +1989,11 @@ public abstract class Entity extends AbEntity {
 					status[P_CURSE][0] = val;
 
 				anim.getEff(P_CURSE);
-				basis.procActivated(P_CURSE, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_CURSE, dire, trait);
 			} else
 				anim.getEff(INV);
 
-			if(dire == -1 && basis.canon.deco == DECO_BASE_CURSE) {
+			if(this.dire == -1 && basis.canon.deco == DECO_BASE_CURSE) {
 				status[P_CURSE][0] = (int) (status[P_CURSE][0] * basis.b.t().getDecorationMagnification(basis.canon.deco, Data.DECO_CURSE));
 			}
 		}
@@ -2003,7 +2005,7 @@ public abstract class Entity extends AbEntity {
 				status[P_KB][0] = atkProc.KB.time;
 
 				interrupt(P_KB, atkProc.KB.dis * dist * rst);
-				basis.procActivated(P_KB, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(SCORE_KB, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2028,7 +2030,7 @@ public abstract class Entity extends AbEntity {
 				val = (int) (val * rst);
 
 				status[P_WARP][0] = val + len;
-				basis.procActivated(P_WARP, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_WARP, dire, trait);
 			} else
 				anim.getEff(INVWARP);
 
@@ -2046,7 +2048,7 @@ public abstract class Entity extends AbEntity {
 					status[P_SEAL][0] = val;
 
 				anim.getEff(P_SEAL);
-				basis.procActivated(P_SEAL, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_SEAL, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2064,7 +2066,7 @@ public abstract class Entity extends AbEntity {
 
 				pois.add(ws);
 				anim.getEff(P_POISON);
-				basis.procActivated(P_POISON, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_POISON, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2078,7 +2080,7 @@ public abstract class Entity extends AbEntity {
 				status[P_ARMOR][1] = atkProc.ARMOR.mult;
 
 				anim.getEff(P_ARMOR);
-				basis.procActivated(P_ARMOR, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_ARMOR, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2086,8 +2088,8 @@ public abstract class Entity extends AbEntity {
 		if (atkProc.SPEED.time > 0) {
 			int res = getProc().IMUSPEED.mult;
 			int speed = data.getSpeed();
-			if (speed > 0 && basis.getGlobalSpeed(dire, speed) > 0)
-				speed = basis.getGlobalSpeed(dire, speed);
+			if (speed > 0 && basis.getGlobalSpeed(this.dire, speed) > 0)
+				speed = basis.getGlobalSpeed(this.dire, speed);
 
 			boolean b;
 
@@ -2105,7 +2107,7 @@ public abstract class Entity extends AbEntity {
 				status[P_SPEED][2] = atkProc.SPEED.type;
 
 				anim.getEff(P_SPEED);
-				basis.procActivated(P_SPEED, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_SPEED, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2130,7 +2132,7 @@ public abstract class Entity extends AbEntity {
 				status[P_LETHARGY][2] = atkProc.LETHARGY.type;
 
 				anim.getEff(P_LETHARGY); // This is the thing where it does the thing
-				basis.procActivated(P_LETHARGY, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
+				basis.scoreActivated(P_LETHARGY, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
