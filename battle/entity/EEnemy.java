@@ -220,6 +220,7 @@ public class EEnemy extends Entity {
 					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
 					basis.leaSort = true;
 				}
+				basis.procActivated(P_DELAY, 1, atk.trait.size());
 			} else {
 				anim.getEff(INV);
 			}

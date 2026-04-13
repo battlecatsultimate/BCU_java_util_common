@@ -1254,4 +1254,24 @@ public class StageBasis extends BattleObj {
 	public boolean isDojoOvertime() {
 		return st.trail && st.timeLimit != 0 && st.timeLimit * 60 * 30 - time < 0;
 	}
+
+	public void procActivated(int proc, int dire, int traits) {
+		if (!st.trail)
+			return;
+
+		for (Stage.ScoreBonus bonus : st.scoreBonus) {
+			if (bonus.type == 0 && bonus.proc == proc && (bonus.dire == 0 || bonus.dire == dire))
+				score += bonus.score / traits;
+		}
+	}
+
+	public void abiActivated(int abi, int dire, int traits) {
+		if (!st.trail)
+			return;
+
+		for (Stage.ScoreBonus bonus : st.scoreBonus) {
+			if (bonus.type == 0 && bonus.proc == abi && (bonus.dire == 0 || bonus.dire == dire))
+				score += bonus.score / traits;
+		}
+	}
 }

@@ -1902,6 +1902,7 @@ public abstract class Entity extends AbEntity {
 				basis.leaSort = true;
 
 				CommonStatic.setSE(SE_POISON);
+				basis.procActivated(P_POIATK, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			}
 		}
 
@@ -1922,6 +1923,7 @@ public abstract class Entity extends AbEntity {
 					status[P_STOP][0] = val;
 
 				anim.getEff(P_STOP);
+				basis.procActivated(P_STOP, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 
@@ -1943,6 +1945,7 @@ public abstract class Entity extends AbEntity {
 					status[P_SLOW][0] = val;
 
 				anim.getEff(P_SLOW);
+				basis.procActivated(P_SLOW, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 
@@ -1967,6 +1970,7 @@ public abstract class Entity extends AbEntity {
 			if (rst > 0f) {
 				weaks.add(new int[] { val, atkProc.WEAK.mult });
 				anim.getEff(P_WEAK);
+				basis.procActivated(P_WEAK, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}
@@ -1983,6 +1987,7 @@ public abstract class Entity extends AbEntity {
 					status[P_CURSE][0] = val;
 
 				anim.getEff(P_CURSE);
+				basis.procActivated(P_CURSE, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 
@@ -1998,6 +2003,7 @@ public abstract class Entity extends AbEntity {
 				status[P_KB][0] = atkProc.KB.time;
 
 				interrupt(P_KB, atkProc.KB.dis * dist * rst);
+				basis.procActivated(P_KB, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}
@@ -2022,6 +2028,7 @@ public abstract class Entity extends AbEntity {
 				val = (int) (val * rst);
 
 				status[P_WARP][0] = val + len;
+				basis.procActivated(P_WARP, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INVWARP);
 
@@ -2039,6 +2046,7 @@ public abstract class Entity extends AbEntity {
 					status[P_SEAL][0] = val;
 
 				anim.getEff(P_SEAL);
+				basis.procActivated(P_SEAL, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}
@@ -2056,6 +2064,7 @@ public abstract class Entity extends AbEntity {
 
 				pois.add(ws);
 				anim.getEff(P_POISON);
+				basis.procActivated(P_POISON, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}
@@ -2069,6 +2078,7 @@ public abstract class Entity extends AbEntity {
 				status[P_ARMOR][1] = atkProc.ARMOR.mult;
 
 				anim.getEff(P_ARMOR);
+				basis.procActivated(P_ARMOR, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}
@@ -2095,6 +2105,7 @@ public abstract class Entity extends AbEntity {
 				status[P_SPEED][2] = atkProc.SPEED.type;
 
 				anim.getEff(P_SPEED);
+				basis.procActivated(P_SPEED, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}
@@ -2119,6 +2130,7 @@ public abstract class Entity extends AbEntity {
 				status[P_LETHARGY][2] = atkProc.LETHARGY.type;
 
 				anim.getEff(P_LETHARGY); // This is the thing where it does the thing
+				basis.procActivated(P_LETHARGY, data instanceof MaskEnemy ? 1 : -1, atk.trait.size());
 			} else
 				anim.getEff(INV);
 		}

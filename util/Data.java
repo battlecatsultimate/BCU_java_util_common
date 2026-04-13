@@ -1400,7 +1400,7 @@ public class Data {
 			false, //lethargy
 			true, //imu.lethargy
 			false, //delay
-			true //delay
+			true //imu delay
 	};
 
 	/**
