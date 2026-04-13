@@ -1904,7 +1904,6 @@ public abstract class Entity extends AbEntity {
 				basis.leaSort = true;
 
 				CommonStatic.setSE(SE_POISON);
-				basis.scoreActivated(P_POIATK, dire, trait);
 			}
 		}
 
@@ -1989,7 +1988,6 @@ public abstract class Entity extends AbEntity {
 					status[P_CURSE][0] = val;
 
 				anim.getEff(P_CURSE);
-				basis.scoreActivated(P_CURSE, dire, trait);
 			} else
 				anim.getEff(INV);
 
@@ -2030,7 +2028,6 @@ public abstract class Entity extends AbEntity {
 				val = (int) (val * rst);
 
 				status[P_WARP][0] = val + len;
-				basis.scoreActivated(P_WARP, dire, trait);
 			} else
 				anim.getEff(INVWARP);
 
@@ -2048,7 +2045,6 @@ public abstract class Entity extends AbEntity {
 					status[P_SEAL][0] = val;
 
 				anim.getEff(P_SEAL);
-				basis.scoreActivated(P_SEAL, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2066,7 +2062,6 @@ public abstract class Entity extends AbEntity {
 
 				pois.add(ws);
 				anim.getEff(P_POISON);
-				basis.scoreActivated(P_POISON, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2080,7 +2075,6 @@ public abstract class Entity extends AbEntity {
 				status[P_ARMOR][1] = atkProc.ARMOR.mult;
 
 				anim.getEff(P_ARMOR);
-				basis.scoreActivated(P_ARMOR, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2107,7 +2101,6 @@ public abstract class Entity extends AbEntity {
 				status[P_SPEED][2] = atkProc.SPEED.type;
 
 				anim.getEff(P_SPEED);
-				basis.scoreActivated(P_SPEED, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
@@ -2132,7 +2125,6 @@ public abstract class Entity extends AbEntity {
 				status[P_LETHARGY][2] = atkProc.LETHARGY.type;
 
 				anim.getEff(P_LETHARGY); // This is the thing where it does the thing
-				basis.scoreActivated(P_LETHARGY, dire, trait);
 			} else
 				anim.getEff(INV);
 		}
