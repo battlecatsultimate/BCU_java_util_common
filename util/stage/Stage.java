@@ -33,7 +33,7 @@ public class Stage extends Data
 		implements BasedCopable<Stage, StageMap>, BattleStatic, IndexContainer.Indexable<StageMap, Stage> {
 
 	@JsonClass(noTag = NoTag.LOAD)
-	public static class ScoreBonus {
+	public static class ScoreBonus implements Cloneable {
 		public int proc;
 		public int dire; // 1: deal proc, -1: take dmg while having proc, 0: both
 		public int score;
@@ -47,6 +47,22 @@ public class Stage extends Data
 			proc = p;
 			score = s;
 			dire = d;
+		}
+
+		public ScoreBonus clone() {
+            ScoreBonus n;
+
+			try {
+				n = (ScoreBonus) super.clone();
+			} catch (CloneNotSupportedException e) {
+				n = new ScoreBonus();
+			}
+
+			n.proc = proc;
+			n.dire = dire;
+			n.score = score;
+
+			return n;
 		}
 	}
 
@@ -273,6 +289,11 @@ public class Stage extends Data
 		ans.minSpawn = minSpawn;
 		ans.maxSpawn = maxSpawn;
 		ans.bossGuard = bossGuard;
+		ans.trail = trail;
+		ans.timeLimit = timeLimit;
+		ans.drop = drop;
+		for (ScoreBonus bonus : scoreBonus)
+			ans.scoreBonus.add(bonus.clone());
 		return ans;
 	}
 
