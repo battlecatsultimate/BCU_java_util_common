@@ -36,8 +36,8 @@ public class Stage extends Data
 	public static class ScoreBonus implements Cloneable {
 		public int proc;
 		/**
-		 * 1: cat inflicts enemy
-		 * -1: enemy inflicts cat
+		 * 1: inflicted onto enemy
+		 * -1: inflicted onto cat
 		 * 0: both ways
 		 */
 		public int dire;

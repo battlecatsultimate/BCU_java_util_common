@@ -1885,7 +1885,7 @@ public abstract class Entity extends AbEntity {
 
 		boolean cannonResist = atk.canon > 0 && getProc().IMUCANNON.exists() && (atk.canon & getProc().IMUCANNON.type) > 0;
 		int dire = data instanceof MaskEnemy ? 1 : -1;
-		int trait = data instanceof MaskEnemy ? atk.trait.size() : 1;
+		int trait = atk.attacker instanceof MaskUnit ? atk.attacker.data.getTraitsRaw().size() : 1;
 		Proc atkProc = atk.getProc();
 		if (atkProc.POIATK.mult > 0) {
 			int rst = getProc().IMUPOIATK.mult;
