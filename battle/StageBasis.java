@@ -680,7 +680,7 @@ public class StageBasis extends BattleObj {
 //	}
 
 	public boolean isActive() {
-		return ebase.health > 0 && ubase.health > 0;
+		return ebase.health > 0 && ubase.health > 0 && !isDojoOvertime();
 	}
 
 	/**
@@ -739,6 +739,9 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0) {
+			if (isDojoOvertime() && st.lim.score < score)
+				ubase.health = 0;
+
 			if(bgEffect != null)
 				bgEffect.update(st.len, battleHeight, midH);
 
@@ -1252,7 +1255,7 @@ public class StageBasis extends BattleObj {
 	}
 
 	public boolean isDojoOvertime() {
-		return st.trail && st.timeLimit != 0 && st.timeLimit * 60 * 30 - time < 0;
+		return st.trail && st.timeLimit != 0 && st.timeLimit * 1800 - time < 0;
 	}
 
 	public void scoreActivated(int proc, int dire, int traits) {

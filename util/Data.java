@@ -1057,6 +1057,7 @@ public class Data {
 	public static final byte SE_DEATH_0 = 23;
 	public static final byte SE_DEATH_1 = 24;
 	public static final byte SE_HIT_BASE = 22;
+	public static final byte SE_DOJO = 57;
 	public static final byte SE_ZKILL = 59;
 	public static final byte SE_CRIT = 44;
 	public static final byte SE_SATK = 90;
