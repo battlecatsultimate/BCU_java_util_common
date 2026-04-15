@@ -1,6 +1,7 @@
 package common.battle.attack;
 
 import common.battle.BasisLU;
+import common.battle.data.DataUnit;
 import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
 import common.battle.entity.EEnemy;
@@ -126,8 +127,9 @@ public class AtkModelUnit extends AtkModelEntity {
 			if (!StageLimit.isComboBanned(e.basis.est.lim, C_KB))
 				proc.KB.dis = proc.KB.dis * (100 + bas.getInc(C_KB, ((MaskUnit) data).getPack().unit)) / 100;
 		}
-		for (int j : BCShareable)
-			proc.getArr(j).set(e.getProc().getArr(j));
+		if (e.data instanceof DataUnit)
+			for (int j : BCShareable)
+				proc.getArr(j).set(e.getProc().getArr(j));
 		proc.getArr(P_BSTHUNT).set(e.getProc().getArr(P_BSTHUNT));
 		if (((EUnit) e).legendGrade != -1)
 			atk = atk * (100 + ORB_LEGEND_ATTACK[((EUnit) e).legendGrade]) / 100;
