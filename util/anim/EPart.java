@@ -10,6 +10,8 @@ import common.util.ImgCore;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class EPart extends ImgCore implements Comparable<EPart> {
@@ -21,6 +23,18 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 		df = (DecimalFormat) nf;
 		df.applyPattern("#.###");
+	}
+
+	private static boolean isParentValid(EPart part, List<Integer> parents) {
+		if (parents == null)
+			parents = new ArrayList<>();
+		if (parents.contains(part.ind))
+			return false;
+		parents.add(part.ind);
+		if (part.fa == null || part.fa.ind == 0)
+			return true;
+		else
+			return isParentValid(part.fa, parents);
 	}
 
 	private final String name;
@@ -51,8 +65,11 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	public void alter(int m, float v) {
 		if (m == 0) {
-			if (v < ind && v >= 0)
+			if (v < ent.length && v >= 0 && v != ind) {
 				fa = ent[par = (int) v];
+				if (!isParentValid(this, null))
+					fa = ent[par = 0];
+			}
 			else
 				fa = ent[par = 0];
 		}
