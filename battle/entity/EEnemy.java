@@ -211,7 +211,7 @@ public class EEnemy extends Entity {
 			return false;
 		Proc atkProc = atk.getProc();
 
-		if (atkProc.DELAY.exists() && line != -1 && basis.est.num[line] > 0 && basis.est.rem[line] > 0) {
+		if (atkProc.DELAY.exists() && line != -1 && basis.est.num[line] >= 0 && basis.est.rem[line] > 0) {
 			Proc.DELAY d = atkProc.DELAY;
 			Proc.IMUAD imu = getProc().IMUDELAY;
 			float res;
