@@ -125,7 +125,7 @@ public class Limit extends Data implements BattleStatic {
 		sniper |= l.sniper;
 		if (l.stageLimit != null)
 			stageLimit = stageLimit != null ? stageLimit.combine(l.stageLimit) : l.stageLimit;
-		score = score > 0 && l.score > 0 ? Math.min(score, l.score) : (score + l.score);
+		score = score > 0 && l.score > 0 ? Math.max(score, l.score) : (score + l.score);
 	}
 
 	public boolean unusable(MaskUnit du, int price) {
