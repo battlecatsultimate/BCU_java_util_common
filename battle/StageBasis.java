@@ -739,7 +739,7 @@ public class StageBasis extends BattleObj {
 		}
 
 		if (s_stop == 0) {
-			if (isDojoOvertime() && st.lim.score < score)
+			if (isDojoOvertime() && st.lim != null && score < st.lim.score)
 				ubase.health = 0;
 
 			if(bgEffect != null)
