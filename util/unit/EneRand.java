@@ -5,8 +5,11 @@ import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.io.InStream;
 import common.io.json.JsonClass;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.Source;
 import common.system.VImg;
 import common.util.EREnt;
 import common.util.EntRand;
@@ -24,6 +27,8 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
 	@JsonField
 	public String name = "";
+
+	public VImg icon;
 
 	@JsonClass.JCConstructor
 	public EneRand() {
@@ -56,7 +61,7 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
 	@Override
 	public VImg getIcon() {
-		return CommonStatic.getBCAssets().ico[0][0];
+		return icon == null ? CommonStatic.getBCAssets().ico[0][0] : icon;
 	}
 
 	@Override
@@ -70,8 +75,6 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		fillPossible(te, new TreeSet<>());
 		return te;
 	}
-
-
 
 	@Override
 	public String toString() {
@@ -126,5 +129,11 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		}
 
 		return false;
+	}
+
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		if (id != null)
+			icon = ((PackData.UserPack) getCont()).source.readImage(Source.BasePath.ENERAND.toString(), id.id);
 	}
 }

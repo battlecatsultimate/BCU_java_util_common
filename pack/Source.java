@@ -20,10 +20,7 @@ import common.util.anim.*;
 import common.util.pack.Background;
 import common.util.pack.Soul;
 import common.util.stage.*;
-import common.util.unit.Enemy;
-import common.util.unit.Form;
-import common.util.unit.Trait;
-import common.util.unit.Unit;
+import common.util.unit.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -617,7 +614,7 @@ public abstract class Source {
 		}
 
 		public File getBGFile(Identifier<Background> id) {
-			return getFile("./" + BasePath.BG.toString() + "/" + Data.trio(id.id) + ".png");
+			return getFile("./" + BasePath.BG + "/" + Data.trio(id.id) + ".png");
 		}
 
 		public File getCasFile(Identifier<CastleImg> id) {
@@ -630,6 +627,10 @@ public abstract class Source {
 
 		public File getTraitIconFile(Identifier<Trait> id) {
 			return getFile("./" + BasePath.TRAIT + "/" + Data.trio(id.id) + ".png");
+		}
+
+		public File getEneRandFile(Identifier<AbEnemy> e) {
+			return getFile("./" + BasePath.ENERAND + "/" + Data.trio(e.id) + ".png");
 		}
 
 		@Override
@@ -663,8 +664,8 @@ public abstract class Source {
 			return Files.newInputStream(getFile(path).toPath());
 		}
 
-		public OutputStream writeFile(String path) throws IOException {
-			File f = getFile(path);
+		public OutputStream writeFile(BasePath path, Identifier<?> id) throws IOException {
+			File f = getFile(path.toString() + "/" + Data.trio(id.id) + ".png");
 			Context.check(f);
 			return Files.newOutputStream(f.toPath());
 		}
@@ -780,7 +781,8 @@ public abstract class Source {
 		MUSIC("musics"),
 		REPLAY("replays"),
 		SOUL("souls"),
-		TRAIT("traitIcons"); // i would prefer this not be traitIcons to match with rest of folders
+		TRAIT("traitIcons"), // i would prefer this not be traitIcons to match with rest of folders
+		ENERAND("enerand");
 
 		private final String path;
 
