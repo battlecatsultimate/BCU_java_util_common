@@ -245,6 +245,8 @@ public class Data {
 					for (Field f : fs)
 						if (f.getType() == int.class)
 							f.set(this, 0);
+						else if (f.getType() == boolean.class)
+							f.set(this, false);
 						else if (IntType.class.isAssignableFrom(f.getType()))
 							f.set(this, (f.getType().getDeclaredConstructor().newInstance()));
 						else if (f.getType() == Identifier.class)
@@ -779,6 +781,28 @@ public class Data {
 			public int type;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class CHANGEMONEY extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int condition;
+			@Order(2)
+			public int amount;
+			@Order(3)
+			public int type;
+			@Order(4)
+			public int cooldown;
+			@Order(5)
+			public int sound;
+			@Order(6)
+			public boolean usesound;
+			@Order(7)
+			public boolean hitstacks;
+			@Order(8)
+			public boolean freezeeff;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -942,6 +966,8 @@ public class Data {
 		public final DELAY DELAY = new DELAY();
 		@Order(65)
 		public final IMUAD IMUDELAY = new IMUAD();
+		@Order(66)
+		public final CHANGEMONEY CHANGEMONEY = new CHANGEMONEY();
 
 		// Talent orbs, shouldn't be given @Order unless allowed as editable fields
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
@@ -1332,7 +1358,8 @@ public class Data {
 	public static final int P_IMULETH = 63;
 	public static final int P_DELAY = 64; // Works like Speed
 	public static final int P_IMUDELAY = 65;
-	public static final byte PROC_TOT = 66;
+	public static final int P_CHANGEMONEY = 66;
+	public static final byte PROC_TOT = 67;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final int SCORE_WEAK = 0;
@@ -1412,7 +1439,8 @@ public class Data {
 			false, //lethargy
 			true, //imu.lethargy
 			false, //delay
-			true //imu delay
+			true, //imu delay
+			true //bounty
 	};
 
 	/**
@@ -1424,7 +1452,7 @@ public class Data {
 	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
 	 */
 	public static final byte[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY, P_DELAY
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY, P_DELAY, P_CHANGEMONEY
 	};
 
 	public static final byte WT_WAVE = 1;

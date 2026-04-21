@@ -225,6 +225,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 				summon(proc, e, e, rst);
 			}
 		}
+		if (atk.getProc().CHANGEMONEY.exists()) {
+			if (e.health <= 0) {
+				atk.attacker.triggerChangeMoney(2); // on kill
+			}
+		}
 	}
 
 	/**
@@ -278,7 +283,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		String[] par = {
 				"CRIT", "WAVE", "KB", "WARP", "STOP", "SLOW", "WEAK", "POISON", "MOVEWAVE", "CURSE", "SNIPER",
 				"BOSS", "SEAL", "BREAK", "SUMMON", "SATK", "POIATK", "VOLC", "ARMOR", "SPEED", "LETHARGY", "MINIWAVE", "SHIELDBREAK",
-				"MINIVOLC", "METALKILL", "BLAST", "DELAY"
+				"MINIVOLC", "METALKILL", "BLAST", "DELAY", "CHANGEMONEY"
 		};
 
 		for (String s0 : par)

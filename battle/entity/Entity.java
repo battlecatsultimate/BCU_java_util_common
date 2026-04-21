@@ -24,6 +24,7 @@ import common.util.pack.Soul;
 import common.util.stage.StageLimit;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import org.jcodec.common.tools.MathUtil;
 
 import java.util.*;
 
@@ -1478,6 +1479,19 @@ public abstract class Entity extends AbEntity {
 	 */
 	private int regentimer;
 
+	/**
+	 * change money cooldown
+	 */
+	private int bountycooldown;
+	/**
+	 * change money cooldown that it wants to be set to (for multi hits)
+	 */
+	private int trybountycooldown;
+	/**
+	 * change money tracking of multi hits
+	 */
+	private boolean firstbountydone;
+
 	public final Proc proc;
 
 	protected Entity(StageBasis b, MaskEnemy de, EAnimU ea, float atkMagnif, float hpMagnif) {
@@ -1563,6 +1577,11 @@ public abstract class Entity extends AbEntity {
 
 		if (getProc().HPREGEN.resetWhenDamaged && getProc().HPREGEN.prob > 0) {
 			regentimer = getProc().HPREGEN.interval; // Reset if enabled
+		}
+
+		atk.attacker.triggerChangeMoney(1); // on hit
+		if (isBase) {
+			atk.attacker.triggerChangeMoney(4); // on hit base
 		}
 
 		if (anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && status[P_REVIVE][1] >= REVIVE_SHOW_TIME)
@@ -1863,6 +1882,81 @@ public abstract class Entity extends AbEntity {
 			processProcs(atk);
 
 		return true;
+	}
+
+	public void triggerChangeMoney(int context) {
+		boolean isFirstTrigger = false;
+		if (getProc().CHANGEMONEY.prob <= 0) {
+			return;
+		}
+		if (getProc().CHANGEMONEY.condition != context) {
+			return;
+		}
+		if (getProc().CHANGEMONEY.condition != 0 && health <= 0) {
+			return;
+		}
+		if (firstbountydone && !getProc().CHANGEMONEY.hitstacks) {
+			return;
+		}
+		if (bountycooldown > 0) {
+			return;
+		}
+		if (getProc().CHANGEMONEY.freezeeff && status[P_STOP][0] > 0) {
+			return;
+		}
+		if (!firstbountydone) {
+			isFirstTrigger = true;
+		}
+		firstbountydone = true;
+		float actualChance = getProc().CHANGEMONEY.prob / 100f;
+		if (basis.r.nextFloat() < actualChance) {
+			if (getProc().CHANGEMONEY.usesound && isFirstTrigger) {
+				switch (getProc().CHANGEMONEY.sound) {
+					case 0:
+						CommonStatic.setSE(14);
+						break;
+					case 1:
+						CommonStatic.setSE(13);
+						break;
+					case 2:
+						CommonStatic.setSE(12);
+						break;
+					case 3:
+						CommonStatic.setSE(190);
+						break;
+					case 4:
+						CommonStatic.setSE(107);
+						break;
+					case 5:
+						CommonStatic.setSE(64);
+						break;
+				}
+			}
+			float actualPercent = (getProc().CHANGEMONEY.amount/100f);
+			switch (getProc().CHANGEMONEY.type) {
+				case 0: // change by flat
+					basis.money += getProc().CHANGEMONEY.amount * 100;
+					break;
+				case 1: // change by % of max
+					basis.money += (int)(basis.maxMoney * actualPercent);
+					break;
+				case 2: // change by % of current
+					basis.money = (int)(basis.money * (1 + actualPercent));
+					break;
+				case 3: // change by % of missing
+					int missing = basis.maxMoney - basis.money;
+					basis.money += (int)(missing * actualPercent);
+					break;
+				case 4: // set to amount
+					basis.money = getProc().CHANGEMONEY.amount * 100;
+					break;
+				case 5: // set to % of max
+					basis.money = (int)(basis.maxMoney * actualPercent);
+					break;
+			}
+			basis.money = MathUtil.clip(basis.money,0,basis.maxMoney);
+		}
+		trybountycooldown = getProc().CHANGEMONEY.cooldown;
 	}
 
 	private int applyLethargy(int tba) {
@@ -2207,6 +2301,18 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public void postUpdate() {
 		regenUpdate();
+		if ((getProc().CHANGEMONEY.freezeeff && status[P_STOP][0] == 0) || !getProc().CHANGEMONEY.freezeeff) {
+			bountycooldown = Math.max(bountycooldown-1,-1);
+		}
+		firstbountydone = false;
+		triggerChangeMoney(3); // constantly
+		if (getProc().CHANGEMONEY.condition == 5 && !walking && !dead) {
+			triggerChangeMoney(5); // while idle/attacking
+		}
+		if (trybountycooldown != -1) {
+			bountycooldown = trybountycooldown;
+			trybountycooldown = -1;
+		}
 
 		int hb = data.getHb();
 		long ext = health * hb % maxH;
@@ -2257,6 +2363,10 @@ public abstract class Entity extends AbEntity {
 		for (int i = 0; i < tokens.size(); i++)
 			tokens.get(i).model.invokeLater(tokens.get(i), this);
 		tokens.clear();
+
+		if (health <= 0) {
+			triggerChangeMoney(0); // on death
+		}
 
 		if(isBase && health <= 0)
 			kbTime = 1;

@@ -61,6 +61,7 @@ public class ECastle extends AbEntity {
 
 		int ans = atk.atk;
 		ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
+		atk.attacker.triggerChangeMoney(4); // on hit base
 
 		int satk = atk.getProc().SATK.mult;
 		if (satk > 0) {

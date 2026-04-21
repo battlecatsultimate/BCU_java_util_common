@@ -783,6 +783,24 @@ public class Editors {
 		}));
 
 		map().put("IMUDELAY", imuad);
+
+		map().put("CHANGEMONEY", new EditControl<>(Proc.CHANGEMONEY.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.type = 0;
+				t.condition = 0;
+				t.amount = 0;
+				t.hitstacks = false;
+				t.usesound = false;
+				t.sound = 0;
+				t.cooldown = 0;
+			} else {
+				t.condition = MathUtil.clip(t.condition, 0, 5);
+				t.sound = MathUtil.clip(t.sound, 0, 5);
+				t.cooldown = Math.max(0, t.cooldown);
+				t.type = MathUtil.clip(t.type, 0, 5);
+			}
+		}));
 	}
 
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
