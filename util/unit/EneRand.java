@@ -133,6 +133,10 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
 	@JsonDecoder.OnInjected
 	public void onInjected() {
+		reloadIcon();
+	}
+
+	public void reloadIcon() {
 		if (id != null)
 			icon = ((PackData.UserPack) getCont()).source.readImage(Source.BasePath.ENERAND.toString(), id.id);
 	}
