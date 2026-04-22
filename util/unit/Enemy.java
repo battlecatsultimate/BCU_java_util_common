@@ -213,7 +213,7 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				}
 			}
 
-			if (proc.SUMMON.prob > 0 && (proc.SUMMON.id == null || !AbEnemy.class.isAssignableFrom(proc.SUMMON.id.cls)))
+			if (proc.SUMMON.prob > 0 && proc.SUMMON.id != null && !AbEnemy.class.isAssignableFrom(proc.SUMMON.id.cls) && proc.SUMMON.form <= 0)
 				proc.SUMMON.form = 1;
 
 			for (AtkDataModel adm : enemy.atks)
