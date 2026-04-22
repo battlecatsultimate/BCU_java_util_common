@@ -293,6 +293,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_HPREGEN] = new VImg("./org/page/icons/Barrier.png");
 		aux.icon[1][P_LETHARGY] = new VImg("./org/page/icons/Lethargy.png");
 		aux.icon[1][P_CHANGEMONEY] = new VImg("./org/page/icons/Bounty.png");
+		aux.icon[1][P_CHANGEMONEYPROC] = new VImg("./org/page/icons/Bounty.png");
 		CommonStatic.getConfig().icon = false;
 	}
 

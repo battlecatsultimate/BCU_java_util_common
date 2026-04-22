@@ -798,8 +798,26 @@ public class Data {
 			@Order(6)
 			public boolean usesound;
 			@Order(7)
+			public boolean freezeeff;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class CHANGEMONEYPROC extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int condition;
+			@Order(2)
+			public int amount;
+			@Order(3)
+			public int type;
+			@Order(4)
+			public int sound;
+			@Order(5)
+			public boolean usesound;
+			@Order(6)
 			public boolean hitstacks;
-			@Order(8)
+			@Order(7)
 			public boolean freezeeff;
 		}
 
@@ -1359,7 +1377,8 @@ public class Data {
 	public static final int P_DELAY = 64; // Works like Speed
 	public static final int P_IMUDELAY = 65;
 	public static final int P_CHANGEMONEY = 66;
-	public static final byte PROC_TOT = 67;
+	public static final int P_CHANGEMONEYPROC = 67;
+	public static final byte PROC_TOT = 68;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final int SCORE_WEAK = 0;
@@ -1452,7 +1471,7 @@ public class Data {
 	 * Procs in this list are removed when an unit is hit and has a barrier or Aku shield active
 	 */
 	public static final byte[] REMOVABLE_PROC = {
-			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY, P_DELAY, P_CHANGEMONEY
+			P_STOP, P_SLOW, P_WEAK, P_CURSE, P_SEAL, P_POISON, P_ARMOR, P_SPEED, P_LETHARGY, P_DELAY
 	};
 
 	public static final byte WT_WAVE = 1;

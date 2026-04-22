@@ -1605,9 +1605,57 @@
         "format": [
             "[(amount<0){Tax}(amount>0){Bounty}]",
             " (_left)",
-            "[(condition==0){On death, }][(condition==1){On hit, }][(condition==2){On kill, }][(condition==3){Constantly, }][(condition==4){On base hit, }]",
+            "[(condition==0){On death, }][(condition==1){Constantly, }][(condition==2){While idle, }]",
             "[(type==0){change money by (amount), }][(type==1){change money by (amount)% of max, }][(type==2){change money by (amount)% of current money, }][(type==3){change money by (amount)% of missing money, }][(type==4){set money to (amount), }][(type==5){set money to (amount)% of max, }]",
             "[(cooldown>0){with a cooldown of (_dispTime(cooldown)), }]",
+            "[(freezeeff){affected by freeze, }]",
+            "[(usesound){playing [(sound==0){upgrade sound}(sound==1){unused #13 sound}(sound==2){unused #12 sound}(sound==3){destiny rank sound}(sound==4){meow medal sound}(sound==5){dojo rank sound}] on trigger}][(!usesound){no sound}]",
+            "(_right)"
+        ],
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "condition": {
+                "name": "condition",
+                "tooltip": "0: on death, 1: on hit enemy, 2: on kill enemy, 3: constantly, 4: on hit base, 5: while idle/attacking"
+            },
+            "cooldown": {
+                "name": "cooldown",
+                "tooltip": "Amount of time that must pass before the ability can activate again"
+            },
+            "amount": {
+                "name": "amount",
+                "tooltip": "Amount to change money by"
+            },
+            "type": {
+                "name": "type",
+                "tooltip": "0: change by flat amount, 1: change by % of max wallet, 2: change by % of current money, 3: change by % of missing money, 4: set to money, 5: set to % of max money"
+            },
+            "sound": {
+                "name": "sound",
+                "tooltip": "0: upgrade sound, 1: unused sound 13, 2: unused sound 12, 3: destiny rank sfx, 4: meow medal sfx, 5: dojo rank sfx"
+            },
+            "usesound": {
+                "name": "use sound",
+                "tooltip": "Enable to play a sound when this ability triggers."
+            },
+            "freezeeff": {
+                "name": "affected by freeze",
+                "tooltip": "Ability and constant effects are disabled while frozen."
+            }
+        }
+    },
+    "CHANGEMONEYPROC": {
+        "abbr_name": "atk. bounty",
+        "full_name": "Atk. Bounty",
+        "tooltip": "Change money by an amount when some condition happens.",
+        "format": [
+            "[(amount<0){Tax}(amount>0){Bounty}]",
+            " (_left)",
+            "[(condition==0){On hit, }][(condition==1){On kill, }]",
+            "[(type==0){change money by (amount), }][(type==1){change money by (amount)% of max, }][(type==2){change money by (amount)% of current money, }][(type==3){change money by (amount)% of missing money, }][(type==4){set money to (amount), }][(type==5){set money to (amount)% of max, }]",
             "[(hitstacks){stacking with multiple hits, }]",
             "[(freezeeff){affected by freeze, }]",
             "[(usesound){playing [(sound==0){upgrade sound}(sound==1){unused #13 sound}(sound==2){unused #12 sound}(sound==3){destiny rank sound}(sound==4){meow medal sound}(sound==5){dojo rank sound}] on trigger}][(!usesound){no sound}]",
