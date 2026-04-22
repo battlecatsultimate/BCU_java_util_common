@@ -1685,7 +1685,9 @@ public abstract class Entity extends AbEntity {
 			}
 		}
 
-		boolean metalKillerActivate = atk.getProc().METALKILL.mult > 0;
+		float effMult = getResistValue(atk, "IMUMKILL", getProc().IMUMKILL.mult);
+
+		boolean metalKillerActivate = effMult > 0;
 
 		if (dire == 1) {
 			metalKillerActivate &= data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL));
@@ -1694,7 +1696,7 @@ public abstract class Entity extends AbEntity {
 		}
 
 		if (metalKillerActivate) {
-			dmg = dmg + (int) Math.max(health * atk.getProc().METALKILL.mult / 100f, 1f);
+			dmg = dmg + (int) (Math.max(health * atk.getProc().METALKILL.mult / 100f, 1f) * effMult);
 		}
 
 		if (!shieldContinue) {

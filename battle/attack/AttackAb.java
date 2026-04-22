@@ -211,6 +211,14 @@ public abstract class AttackAb extends BattleObj {
 					else
 						proc.DELAY.strength *= (int) ((100 - imus.IMUDELAY.block) / 100.0);
 				}
+				if (proc.METALKILL.mult > 0 && imus.IMUMKILL.block != 0) {
+					if (imus.IMUMKILL.block > 0)
+						blocked = true;
+					if (imus.IMUMKILL.block == 100)
+						proc.METALKILL.clear();
+					else
+						proc.METALKILL.mult *= (int) ((100 - imus.IMUMKILL.block) / 100.0);
+				}
 
 				if (blocked)
 					e.anim.getEff(STPWAVE);

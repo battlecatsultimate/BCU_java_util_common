@@ -942,6 +942,8 @@ public class Data {
 		public final DELAY DELAY = new DELAY();
 		@Order(65)
 		public final IMUAD IMUDELAY = new IMUAD();
+		@Order(66)
+		public final IMU IMUMKILL = new IMU();
 
 		// Talent orbs, shouldn't be given @Order unless allowed as editable fields
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
@@ -1332,7 +1334,8 @@ public class Data {
 	public static final int P_IMULETH = 63;
 	public static final int P_DELAY = 64; // Works like Speed
 	public static final int P_IMUDELAY = 65;
-	public static final byte PROC_TOT = 66;
+	public static final int P_IMUMKILL = 66;
+	public static final byte PROC_TOT = 67;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final int SCORE_WEAK = 0;
