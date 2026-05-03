@@ -398,17 +398,13 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 				for (String key : ruleList.keySet()) {
 					JsonElement comboData = ruleList.get(key);
-
 					int ruleID = CommonStatic.parseIntN(key);
-
 					JsonArray comboArray = comboData.getAsJsonObject().getAsJsonArray("InvalidNyancomboID");
-
 					List<Integer> bannedCombo = new ArrayList<>();
 
 					for (JsonElement element : comboArray) {
 						if (!element.isJsonPrimitive())
 							continue;
-
 						bannedCombo.add(element.getAsInt());
 					}
 
@@ -420,18 +416,14 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 				for (String id : mapIDs.keySet()) {
 					JsonObject ruleData = mapIDs.getAsJsonObject(id);
 					int mapID = CommonStatic.safeParseInt(id);
-
 					StageMap map = getMap(mapID);
-
 					if (map == null)
 						continue;
 
 					JsonObject ruleTypes = ruleData.getAsJsonObject("RuleType");
-
 					for (String key : ruleTypes.keySet()) {
 						int ruleID = CommonStatic.parseIntN(key);
 						JsonObject parameterData = ruleTypes.getAsJsonObject(key);
-
 						JsonArray parameter = parameterData.getAsJsonArray("Parameters");
 
 						switch (ruleID) {
@@ -464,6 +456,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 										stage.lim.stageLimit.maxMoney = maxMoney;
 										stage.lim.stageLimit.bannedCatCombo.addAll(bannedCombo);
 										stage.lim.stageLimit.coolStart = true;
+										stage.drop = false;
 									}
 								}
 
@@ -769,6 +762,67 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
                                 break;
                             default:
                                 System.out.println("W/MapColc::init - Unknown rule ID " + ruleID + " found");
+						}
+					}
+				}
+			}
+
+			// dojos with score bonuses
+			VFile scoreBonus = VFile.get("./org/data/ScoreBonusMap.json");
+			String specialScore = new String(scoreBonus.getData().getBytes());
+			JsonElement scoreElement = JsonParser.parseString(specialScore);
+
+			if (scoreElement.isJsonObject()) {
+				JsonObject scoreObj = scoreElement.getAsJsonObject();
+				JsonObject mapIDs = scoreObj.getAsJsonObject("MapID");
+				for (String id : mapIDs.keySet()) {
+					JsonObject scoreData = mapIDs.getAsJsonObject(id);
+					int mapID = CommonStatic.safeParseInt(id);
+					StageMap map = getMap(mapID);
+					if (map == null)
+						continue;
+
+					JsonObject scoreType = scoreData.getAsJsonObject("BonusType");
+					for (String key : scoreType.keySet()) {
+						int ruleID = CommonStatic.parseIntN(key);
+						JsonArray parameter = scoreType.getAsJsonObject(key).getAsJsonArray("Parameters");
+						int score = parameter.getAsInt();
+						int proc = -1, dire = 1;
+
+						switch (ruleID) {
+							case 0:
+								proc = SCORE_WEAK;
+								break;
+							case 1:
+								proc = SCORE_STOP;
+								break;
+							case 2:
+								proc = SCORE_SLOW;
+								break;
+							case 3:
+								proc = SCORE_KB;
+								break;
+							case 13:
+								proc = SCORE_GOOD;
+								break;
+							case 14:
+								proc = SCORE_MASSIVE;
+								break;
+							case 16:
+								proc = SCORE_GOOD;
+								dire = -1;
+								break;
+						}
+
+						if (proc == -1)
+							System.out.printf("W/MapColc::read - Unexpected score bonus rule type for map %d : Rule = %d\n",
+									mapID,
+									ruleID);
+						else {
+							for (Stage st : map.list) {
+								st.scoreBonus.add(new Stage.ScoreBonus(proc, score, dire));
+								st.drop = true;
+							}
 						}
 					}
 				}
@@ -1490,6 +1544,19 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 							st.lim.stageLimit.enemySpeedOverride *= 100;
 						if (st.lim.stageLimit.unitSpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY)
 							st.lim.stageLimit.unitSpeedOverride *= 100;
+					}
+				}
+			}
+			if (UserProfile.isOlderPack(pack, "0.7.17.0")) {
+				for (StageMap sm : maps) {
+					for (Stage st : sm.list) {
+						boolean lim = st.lim.stageLimit != null;
+						if (st.trail || (lim && st.lim.stageLimit.maxMoney > 0))
+							st.drop = false;
+						if (lim && st.lim.stageLimit.unitSpeedOverride > -1 && st.lim.stageLimit.unitSpeedOverrideMode == null)
+							st.lim.stageLimit.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
+						if (lim && st.lim.stageLimit.enemySpeedOverride > -1 && st.lim.stageLimit.enemySpeedOverrideMode == null)
+							st.lim.stageLimit.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
 					}
 				}
 			}

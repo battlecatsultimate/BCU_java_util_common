@@ -1551,12 +1551,12 @@
         }
     },
     "DELAY": {
-        "abbr_name": "delay cd",
-        "full_name": "Delay/Advance CD",
+        "abbr_name": "delay",
+        "full_name": "Delay/Advance",
         "tooltip": null,
         "format": [
-            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] unit cooldowns by (_abs(strength))[(type==0){%}(type==1){f}]",
-            "[(type==2){ of its max cooldown}(type==0){ of its current cooldown}]"
+            "(prob)% chance to [(strength>=0){delay}(strength<0){advance}] target's respawn by (_abs(strength))[(type==0|type==2){%}(type==1){f}]",
+            "[(type==2){ of maximum respawn}(type==0){ of current respawn}]"
         ],
         "class": {
             "prob": {

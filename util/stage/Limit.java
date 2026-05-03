@@ -57,7 +57,7 @@ public class Limit extends Data implements BattleStatic {
 	@JsonField
 	public int star = -1, sid = -1;
 	@JsonField
-	public int rich, sniper, rare, num, line, min, max;
+	public int rich, sniper, rare, num, line, min, max, score;
 	@JsonField(alias = Identifier.class)
 	public CharaGroup group;
 	@JsonField(alias = Identifier.class)
@@ -93,6 +93,7 @@ public class Limit extends Data implements BattleStatic {
 		l.rich = rich;
 		l.sniper = sniper;
 		l.stageLimit = stageLimit != null ? stageLimit.clone() : null;
+		l.score = score;
 		return l;
 	}
 
@@ -124,6 +125,7 @@ public class Limit extends Data implements BattleStatic {
 		sniper |= l.sniper;
 		if (l.stageLimit != null)
 			stageLimit = stageLimit != null ? stageLimit.combine(l.stageLimit) : l.stageLimit;
+		score = score > 0 && l.score > 0 ? Math.max(score, l.score) : (score + l.score);
 	}
 
 	public boolean unusable(MaskUnit du, int price) {

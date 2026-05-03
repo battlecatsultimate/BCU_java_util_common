@@ -17,6 +17,7 @@ import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
@@ -167,6 +168,8 @@ public class EUnit extends Entity {
 		Unit u = ((MaskUnit) data).getPack().unit;
 		if (!StageLimit.isComboBanned(basis.est.lim, C_IMUWAVE) && basis.b.getInc(C_IMUWAVE, u) > 0)
 			proc.IMUWAVE.mult = 100;
+		if (!StageLimit.isComboBanned(basis.est.lim, C_IMUVOLC) && basis.b.getInc(C_IMUVOLC, u) > 0)
+			proc.IMUVOLC.mult = 100;
 	}
 
 	@Override
@@ -312,14 +315,22 @@ public class EUnit extends Entity {
 					sharedTraits.add(t);
 			}
 
-			if ((getAbi() & AB_GOOD) != 0)
+			if ((getAbi() & AB_GOOD) != 0) {
 				ans = (int) (ans * basis.b.t().getGOODDEF(atk.trait, sharedTraits, level,
 						StageLimit.isComboBanned(basis.est.lim, C_GOOD) ? 0 : basis.b.getInc(C_GOOD, mu.getPack().unit)));
-			if ((getAbi() & AB_RESIST) != 0)
+				if (!sharedTraits.isEmpty())
+					basis.scoreActivated(SCORE_GOOD, -1, traits.size());
+			}
+			if ((getAbi() & AB_RESIST) != 0) {
 				ans = (int) (ans * basis.b.t().getRESISTDEF(atk.trait, sharedTraits, level,
 						StageLimit.isComboBanned(basis.est.lim, Data.C_RESIST) ? 0 : basis.b.getInc(Data.C_RESIST, mu.getPack().unit)));
-			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0)
+				if (!sharedTraits.isEmpty())
+					basis.scoreActivated(SCORE_RESIST, -1, traits.size());
+			}
+			if (!sharedTraits.isEmpty() && (getAbi() & AB_RESISTS) != 0) {
 				ans = (int) (ans * basis.b.t().getRESISTSDEF(sharedTraits));
+				basis.scoreActivated(SCORE_RESISTS, -1, traits.size());
+			}
 		}
 
 		if (atk.trait.contains(UserProfile.getBCData().traits.get(TRAIT_WITCH)) && (getAbi() & AB_WKILL) > 0)
@@ -509,9 +520,46 @@ public class EUnit extends Entity {
 
 	@Override
 	public void postUpdate() {
+		if (Arrays.stream(status[P_DELAY]).anyMatch(v -> v != 0)) {
+			for (int i = 0; i < 3; i++) {
+				basis.cdDelay[index[0]][index[1]][i] += status[P_DELAY][i];
+				status[P_DELAY][i] = 0;
+			}
+		}
+
 		super.postUpdate();
 
 		if (bountyGrade > -1 && bountyOrbCheck)
 			bountyGrade = -1;
+	}
+
+	@Override
+	public boolean processProcs(AttackAb atk) {
+		boolean doCheck = super.processProcs(atk);
+		if (!doCheck)
+			return false;
+		Proc atkProc = atk.getProc();
+
+		if (atkProc.DELAY.exists() && index != null && basis.elu.cool[index[0]][index[1]] > 0) {
+			Proc.DELAY d = atkProc.DELAY;
+			Proc.IMUAD imu = getProc().IMUDELAY;
+			float res;
+			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
+				res = getResistValue(atk, "IMUDELAY", imu.mult);
+			else
+				res = 0;
+			if (res < 100) {
+				int strength = (int) (d.strength * res);
+				if (strength != 0) {
+					status[P_DELAY][d.type] += strength;
+					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
+					basis.leaSort = true;
+				}
+			} else {
+				anim.getEff(INV);
+			}
+		}
+
+		return true;
 	}
 }

@@ -203,7 +203,7 @@ public abstract class AttackAb extends BattleObj {
 							proc.ARMOR.time *= (int) ((100 - imus.IMUSPEED.block) / 100.0);
 					}
 				}
-				if (proc.DELAY.prob > 0 && Proc.checkSmartImu(proc.DELAY.strength, imus.IMUDELAY.smartImu, imus.IMUWEAK.block < 0)) {
+				if (proc.DELAY.prob > 0 && Proc.checkSmartImu(proc.DELAY.strength, imus.IMUDELAY.smartImu, imus.IMUDELAY.block < 0)) {
 					if (imus.IMUDELAY.block > 0)
 						blocked = true;
 					if (imus.IMUDELAY.block == 100)

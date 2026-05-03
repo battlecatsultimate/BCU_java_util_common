@@ -9,6 +9,7 @@ import common.io.json.JsonClass.JCGetter;
 import common.io.json.JsonException.Type;
 import common.io.json.JsonField.GenType;
 import common.io.json.JsonField.Handler;
+import common.pack.PackData;
 import common.util.Data;
 
 import java.lang.annotation.Documented;
@@ -396,7 +397,7 @@ public class JsonDecoder {
 			if (curjfld == null || curjfld.block() || curjfld.io() == JsonField.IOType.W)
 				continue;
 			String tag = curjfld.tag();
-			if (tag.length() == 0)
+			if (tag.isEmpty())
 				tag = f.getName();
 			if (!jobj.has(tag))
 				continue;
@@ -406,7 +407,13 @@ public class JsonDecoder {
 			try {
 				f.set(obj, decode(elem, f.getType(), getInvoker()));
 			} catch (Exception e) {
-				throw new Exception("error at " + curcls + " in field " + f +" | Elem : "+elem, e);
+				StringBuilder err = new StringBuilder("error");
+				if (PackData.class.isAssignableFrom(tarcls))
+					err.append(" in pack ").append(((PackData) obj).getSID());
+				err.append(" at ").append(curcls);
+				err.append(" in field ").append(f);
+				err.append(" | Elem : ").append(elem);
+				throw new Exception(err.toString(), e);
 			}
 			curfld = null;
 		}
@@ -425,7 +432,7 @@ public class JsonDecoder {
 			if (m.getParameterTypes().length != 1)
 				throw new JsonException(Type.FUNC, null, "parameter count should be 1");
 			String tag = curjfld.tag();
-			if (tag.length() == 0)
+			if (tag.isEmpty())
 				throw new JsonException(Type.TAG, null, "function fields must have tag");
 			if (!jobj.has(tag))
 				continue;

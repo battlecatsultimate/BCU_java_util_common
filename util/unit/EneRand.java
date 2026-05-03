@@ -5,8 +5,11 @@ import common.battle.StageBasis;
 import common.battle.entity.EEnemy;
 import common.io.InStream;
 import common.io.json.JsonClass;
+import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.Source;
 import common.system.VImg;
 import common.util.EREnt;
 import common.util.EntRand;
@@ -24,6 +27,8 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 
 	@JsonField
 	public String name = "";
+
+	public VImg icon;
 
 	@JsonClass.JCConstructor
 	public EneRand() {
@@ -49,14 +54,14 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 	}
 
 	@Override
-	public EEnemy getEntity(StageBasis sb, Object obj, float mul, float mul2, int d0, int d1, int m) {
+	public EEnemy getEntity(StageBasis sb, Object obj, float mul, float mul2, int d0, int d1, int m, int l) {
 		sb.rege.add(this);
-		return get(getSelection(sb, obj), sb, obj, mul, mul2, d0, d1, m);
+		return get(getSelection(sb, obj), sb, obj, mul, mul2, d0, d1, m, l);
 	}
 
 	@Override
 	public VImg getIcon() {
-		return CommonStatic.getBCAssets().ico[0][0];
+		return icon == null ? CommonStatic.getBCAssets().ico[0][0] : icon;
 	}
 
 	@Override
@@ -71,8 +76,6 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		return te;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return id.id + " - " + name + " (" + id.pack + ")";
@@ -85,9 +88,9 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 	}
 
 	private EEnemy get(EREnt<Identifier<AbEnemy>> x, StageBasis sb, Object obj, float mul, float mul2, int d0, int d1,
-			int m) {
+			int m, int l) {
 		return Identifier.getOr(x.ent, AbEnemy.class).getEntity(sb, obj, x.multi * mul / 100, x.multi * mul2 / 100, d0,
-				d1, m);
+				d1, m, l);
 	}
 
 	private void zread$000400(InStream is) {
@@ -126,5 +129,15 @@ public class EneRand extends EntRand<Identifier<AbEnemy>> implements AbEnemy {
 		}
 
 		return false;
+	}
+
+	@JsonDecoder.OnInjected
+	public void onInjected() {
+		reloadIcon();
+	}
+
+	public void reloadIcon() {
+		if (id != null)
+			icon = ((PackData.UserPack) getCont()).source.readImage(Source.BasePath.ENERAND.toString(), id.id);
 	}
 }

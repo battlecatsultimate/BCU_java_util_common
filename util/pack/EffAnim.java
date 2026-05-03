@@ -300,6 +300,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<BlastEff> A_E_BLAST;
 		@Order(82)
 		public EffAnim<LethEff> A_LETHARGY;
+		@Order(83)
+		public EffAnim<DefEff> A_E_DELAY;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -478,65 +480,87 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vuw = new VImg("./org/battle/s4/skill004.png");
 		ImgCut icsvuw = ImgCut.newIns("./org/battle/s4/skill004.imgcut");
 		effas.A_WAVE = new EffAnim<>("./org/battle/s4/skill_wave_attack", vuw, icsvuw, DefEff.values());
+
 		VImg vew = new VImg("./org/battle/s5/skill005.png");
 		ImgCut icsvew = ImgCut.newIns("./org/battle/s5/skill005.imgcut");
 		effas.A_E_WAVE = new EffAnim<>("./org/battle/s5/skill_wave_attack_e", vew, icsvew, DefEff.values());
+
 		VImg vsatk = new VImg("./org/battle/s6/skill006.png");
 		ImgCut icsatk = ImgCut.newIns("./org/battle/s6/skill006.imgcut");
 		effas.A_SATK = new EffAnim<>("./org/battle/s6/strong_attack", vsatk, icsatk, DefEff.values());
+
 		VImg viatk = new VImg("./org/battle/s7/skill007.png");
 		ImgCut iciatk = ImgCut.newIns("./org/battle/s7/skill007.imgcut");
 		effas.A_IMUATK = new EffAnim<>("./org/battle/s7/skill_attack_invalid", viatk, iciatk, DefEff.values());
+
 		VImg vip = new VImg("./org/battle/s8/skill008.png");
 		ImgCut icp = ImgCut.newIns("./org/battle/s8/skill008.imgcut");
 		effas.A_POISON = new EffAnim<>("./org/battle/s8/skill_percentage_attack", vip, icp, DefEff.values());
+
 		VImg vic = new VImg("./org/battle/s9/skill009.png");
 		ImgCut icc = ImgCut.newIns("./org/battle/s9/skill009.imgcut");
 		effas.A_VOLC = new EffAnim<>("./org/battle/s9/skill_volcano", vic, icc, VolcEff.values());
+
 		vic = new VImg("./org/battle/s10/skill010.png");
 		icc = ImgCut.newIns("./org/battle/s10/skill010.imgcut");
 		effas.A_E_VOLC = new EffAnim<>("./org/battle/s10/skill_volcano", vic, icc, VolcEff.values());
+
 		VImg vcu = new VImg("./org/battle/s11/skill011.png");
 		ImgCut iccu = ImgCut.newIns("./org/battle/s11/skill011.imgcut");
 		effas.A_E_CURSE = new EffAnim<>("./org/battle/s11/skill_curse_e", vcu, iccu, DefEff.values());
+
 		VImg vmw = new VImg("./org/battle/s12/skill012.png");
 		ImgCut icmw = ImgCut.newIns("./org/battle/s12/skill012.imgcut");
 		effas.A_MINIWAVE = new EffAnim<>("./org/battle/s12/skill_smallwave_attack", vmw, icmw, DefEff.values());
+
 		vmw = new VImg("./org/battle/s13/skill013.png");
 		icmw = ImgCut.newIns("./org/battle/s13/skill013.imgcut");
 		effas.A_E_MINIWAVE = new EffAnim<>("./org/battle/s13/skill_smallwave_attack_e", vmw, icmw, DefEff.values());
+
 		VImg vsh = new VImg("./org/battle/s14/skill014.png");
 		ImgCut icsh = ImgCut.newIns("./org/battle/s14/skill014.imgcut");
 		effas.A_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
 		effas.A_DEMON_SHIELD.rev = true;
 		effas.A_E_DEMON_SHIELD = new EffAnim<>("./org/battle/s14/skill_demonshield", vsh, icsh, ShieldEff.values());
+
 		VImg vmv = new VImg("./org/battle/s15/skill015.png");
 		ImgCut icmv = ImgCut.newIns("./org/battle/s15/skill015.imgcut");
 		effas.A_MINIVOLC = new EffAnim<>("./org/battle/s15/skill_smallvolcano", vmv, icmv, VolcEff.values());
+
 		vmv = new VImg("./org/battle/s16/skill016.png");
 		icmv = ImgCut.newIns("./org/battle/s16/skill016.imgcut");
 		effas.A_E_MINIVOLC = new EffAnim<>("./org/battle/s16/skill_smallvolcano_e", vmv, icmv, VolcEff.values());
+
 		ImgCut iccs = ImgCut.newIns("./org/battle/s17/skill017.imgcut");
 		VImg vcs = new VImg("./org/battle/s17/skill017.png");
 		effas.A_E_COUNTERSURGE = new EffAnim<>("./org/battle/s17/skill_demonsummon_e", vcs, iccs, DefEff.values());
+
 		iccs = ImgCut.newIns("./org/battle/s18/skill018.imgcut");
 		vcs = new VImg("./org/battle/s18/skill018.png");
 		effas.A_COUNTERSURGE = new EffAnim<>("./org/battle/s18/skill_demonsummon", vcs, iccs, DefEff.values());
+
 		VImg vgd = new VImg("./org/battle/s19/skill019.png");
 		ImgCut icgd = ImgCut.newIns("./org/battle/s19/skill019.imgcut");
 		effas.A_E_GUARD = new EffAnim<>("./org/battle/s19/skill_guard_e", vgd, icgd, GuardEff.values());
+
 		VImg vmk = new VImg("./org/battle/s20/skill020.png");
 		ImgCut icmk = ImgCut.newIns("./org/battle/s20/skill020.imgcut");
 		effas.A_METAL_KILLER = new EffAnim<>("./org/battle/s20/skill_metal_strong", vmk, icmk, DefEff.values());
 		effas.A_E_METAL_KILLER = new EffAnim<>("./org/battle/s20/skill_metal_strong", vmk, icmk, DefEff.values());
 		effas.A_E_METAL_KILLER.rev = true;
+
 		VImg vbs = new VImg("./org/battle/s21/skill021.png");
 		ImgCut icbs = ImgCut.newIns("./org/battle/s21/skill021.imgcut");
 		effas.A_BLAST = new EffAnim<>("./org/battle/s21/skill_explosion", vbs, icbs, BlastEff.values());
+
 		vbs = new VImg("./org/battle/s22/skill022.png");
 		icbs = ImgCut.newIns("./org/battle/s22/skill022.imgcut");
 		MaModel mmbs = MaModel.newIns("./org/battle/s22/skill_explosion_e.mamodel");
 		effas.A_E_BLAST = new EffAnim<>("./org/battle/s22/skill_explosion", vbs, icbs, mmbs, BlastEff.values());
+
+		VImg vde = new VImg("./org/battle/s23/skill023.png");
+		ImgCut icde = ImgCut.newIns("./org/battle/s23/skill023.imgcut");
+		effas.A_E_DELAY = new EffAnim<>("./org/battle/s23/skill_recast_decrease_e", vde, icde, DefEff.values());
 	}
 
 	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
@@ -636,7 +660,6 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		icwea = ImgCut.newIns(weakup + ".imgcut");
 		effas.A_E_WEAK_UP = new EffAnim<>(weakup, vwea, icwea, WeakUpEff.values());
 
-		// String leth = wea + "lethargy/lethargy"; // TODO use bcuzipmaker to add thsi animation also if this isn't right, try just "lethargy" instead
 		String leth = "./org/battle/lethargy/lethargy";
 		VImg vleth = new VImg(leth + ".png");
 		ImgCut icleth = ImgCut.newIns(leth + ".imgcut");

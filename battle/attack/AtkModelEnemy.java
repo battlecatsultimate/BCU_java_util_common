@@ -58,7 +58,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
 						minlayer = maxlayer = e.spawnLayer;
-					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0);
+					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0, -1);
 
 					ee.group = allow;
 					if (proc.tba == -1)

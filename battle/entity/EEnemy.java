@@ -7,6 +7,8 @@ import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.anim.EAnimU;
+import common.util.pack.EffAnim;
+import common.util.stage.SCDef;
 import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Trait;
@@ -20,14 +22,16 @@ public class EEnemy extends Entity {
 
 	public final int mark;
 	public final double mult, mula;
+	public final int line;
 
 	public byte hit;
 
-	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, float magnif, float atkMagnif, int d0, int d1, int m) {
+	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, float magnif, float atkMagnif, int d0, int d1, int m, int l) {
 		super(b, de, ea, atkMagnif, magnif);
 		mult = magnif;
 		mula = atkMagnif;
 		mark = m;
+		line = l;
 		isBase = mark <= -1;
 		currentLayer = spawnLayer = d0 == d1 ? d0 : d0 + (int) (b.r.nextFloat() * (d1 - d0 + 1));
 		traits = de.getTraits();
@@ -50,26 +54,32 @@ public class EEnemy extends Entity {
 	@Override
 	public void kill(KillMode atk) {
 		super.kill(atk);
-		List<Unit> unitsHit = new ArrayList<>();
-		for (AttackAb attack : lastKilledBy) {
-			if (!(attack.attacker instanceof EUnit))
-				continue;
-			EUnit u = (EUnit) attack.attacker;
-			unitsHit.add(((Form) u.data.getPack()).unit);
 
-			if (!(attack instanceof AttackSimple))
-				continue;
-			if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
-				status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
-				u.bountyOrbCheck = true;
+		if (basis.st.drop && atk == KillMode.NORMAL) {
+			List<Unit> unitsHit = new ArrayList<>();
+			for (AttackAb attack : lastKilledBy) {
+				if (!(attack.attacker instanceof EUnit))
+					continue;
+				EUnit u = (EUnit) attack.attacker;
+				unitsHit.add(((Form) u.data.getPack()).unit);
+
+				if (!(attack instanceof AttackSimple))
+					continue;
+				if (u.bountyGrade != -1) { // todo: verify what happens if two bounty orb cats kill one enemy at the same time in BC
+					status[P_BOUNTY][0] += ORB_SINGLE_BOUNTY_MULT[u.bountyGrade];
+					u.bountyOrbCheck = true;
+				}
 			}
-		}
-
-		if (!basis.st.trail && atk == KillMode.NORMAL && basis.maxBankLimit() <= 0) {
 			float mul = basis.b.t().getDropMulti()
 					* (1 + (StageLimit.isComboBanned(basis.est.lim, Data.C_MEAR) ? 0 : basis.b.getInc(Data.C_MEAR, unitsHit)) * 0.01f)
 					* (1 + (status[P_BOUNTY][0] / 100f));
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
+		}
+		if (basis.st.trail && !basis.isDojoOvertime() && basis.isActive() && atk == KillMode.NORMAL) {
+			SCDef.Line d = basis.st.data.getSimple(line);
+			int time = basis.st.timeLimit * 1800;
+			int score = (int) (((MaskEnemy) data).getDrop() / 100f + (d.score * (2f * time - basis.time)) / time);
+			basis.score += score;
 		}
 	}
 
@@ -99,14 +109,20 @@ public class EEnemy extends Entity {
 					sharedTraits.add(t);
 			}
 
-			if (!sharedTraits.isEmpty() && (atk.abi & AB_GOOD) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_GOOD) != 0) {
 				ans = (int) (ans * EUnit.OrbHandler.getOrbGood(atk, sharedTraits, basis.b.t()));
+				basis.scoreActivated(SCORE_GOOD, 1, atk.trait.size());
+			}
 
-			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVE) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVE) != 0) {
 				ans = (int) (ans * EUnit.OrbHandler.getOrbMassive(atk, sharedTraits, basis.b.t()));
+				basis.scoreActivated(SCORE_MASSIVE, 1, atk.trait.size());
+			}
 
-			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0)
+			if (!sharedTraits.isEmpty() && (atk.abi & AB_MASSIVES) != 0) {
 				ans = (int) (ans * basis.b.t().getMASSIVESATK(sharedTraits));
+				basis.scoreActivated(SCORE_MASSIVES, 1, atk.trait.size());
+			}
 		}
 
 		if (isBase)
@@ -189,7 +205,45 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
+	public boolean processProcs(AttackAb atk) {
+		boolean doCheck = super.processProcs(atk);
+		if (!doCheck)
+			return false;
+		Proc atkProc = atk.getProc();
+
+		if (atkProc.DELAY.exists() && line != -1 && basis.est.num[line] >= 0 && basis.est.rem[line] > 0) {
+			Proc.DELAY d = atkProc.DELAY;
+			Proc.IMUAD imu = getProc().IMUDELAY;
+			float res;
+			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
+				res = getResistValue(atk, "IMUDELAY", imu.mult);
+			else
+				res = 0;
+			if (res < 100) {
+				int strength = (int) (d.strength * res);
+				if (strength != 0) {
+					status[P_DELAY][d.type] += strength;
+					basis.lea.add(new EAnimCont(pos, currentLayer, effas().A_E_DELAY.getEAnim(EffAnim.DefEff.DEF), -50f));
+					basis.leaSort = true;
+				}
+				basis.scoreActivated(P_DELAY, 1, atk.trait.size());
+			} else {
+				anim.getEff(INV);
+			}
+		}
+
+		return true;
+	}
+
+	@Override
 	public void postUpdate() {
+		if (Arrays.stream(status[P_DELAY]).anyMatch(v -> v != 0)) {
+			for (int i = 0; i < 3; i++) {
+				basis.lineDelay[line][i] = status[P_DELAY][i];
+				status[P_DELAY][i] = 0;
+			}
+		}
+
 		super.postUpdate();
 
 		if (health > 0)

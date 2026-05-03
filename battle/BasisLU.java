@@ -133,7 +133,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
 				if(orbs != null && !f.unit.orbs.isEmpty()) {
 					for (int j = 0; j < orbs.length; j++) {
-						if (f.unit.orbs.get(j).isRestricted(f.fid, totalLv) || (lim != null && lim.bannedOrb.contains(orbs[j][0])))
+						if (f.unit.orbs.get(j).isRestricted(f.fid, totalLv) || (lim != null && orbs[j].length > 0 && lim.bannedOrb.contains(orbs[j][0])))
 							orbs[j] = new int[3];
 					}
 				}

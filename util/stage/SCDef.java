@@ -32,6 +32,7 @@ public class SCDef implements Copable<SCDef> {
 		public int castle_0, castle_1, layer_0, layer_1;
 		public int mult_atk;
 		public int kill_count;
+		public int score;
 
 		@JCConstructor
 		public Line() {
@@ -53,6 +54,7 @@ public class SCDef implements Copable<SCDef> {
 			layer_1 = arr[L1];
 			mult_atk = arr[M1];
 			kill_count = arr[KC];
+			score = arr[SC];
 		}
 
 		@Override
@@ -66,8 +68,8 @@ public class SCDef implements Copable<SCDef> {
 		}
 	}
 
-	public static final int SIZE = 15, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
-			S1 = 10, C1 = 11, G = 12, M1 = 13, KC = 14;
+	public static final int SIZE = 16, E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9,
+			S1 = 10, C1 = 11, G = 12, M1 = 13, KC = 14, SC = 15;
 
 	@JsonField
 	public Line[] datas;
@@ -213,7 +215,7 @@ public class SCDef implements Copable<SCDef> {
 			if (e != null)
 				pre.addAll(e.getPossible());
 		}
-		while (pre.size() > 0) {
+		while (!pre.isEmpty()) {
 			for (Enemy e : pre)
 				temp.addAll(e.de.getSummon());
 			ans.addAll(temp);

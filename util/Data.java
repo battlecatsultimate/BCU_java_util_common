@@ -1057,6 +1057,7 @@ public class Data {
 	public static final byte SE_DEATH_0 = 23;
 	public static final byte SE_DEATH_1 = 24;
 	public static final byte SE_HIT_BASE = 22;
+	public static final byte SE_DOJO = 57;
 	public static final byte SE_ZKILL = 59;
 	public static final byte SE_CRIT = 44;
 	public static final byte SE_SATK = 90;
@@ -1334,6 +1335,17 @@ public class Data {
 	public static final byte PROC_TOT = 66;
 	public static final byte PROC_WIDTH = 6;
 
+	public static final int SCORE_WEAK = 0;
+	public static final int SCORE_STOP = 1;
+	public static final int SCORE_SLOW = 2;
+	public static final int SCORE_KB = 3;
+	public static final int SCORE_GOOD = 4;
+	public static final int SCORE_RESIST = 5;
+	public static final int SCORE_MASSIVE = 6;
+	public static final int SCORE_RESISTS = 7;
+	public static final int SCORE_MASSIVES = 8;
+	public static final int SCORE_TOT = 9;
+
 	public static final boolean[] procSharable = {
 			false, //kb
 			false, //freeze
@@ -1400,7 +1412,7 @@ public class Data {
 			false, //lethargy
 			true, //imu.lethargy
 			false, //delay
-			true //delay
+			true //imu delay
 	};
 
 	/**
@@ -1557,7 +1569,8 @@ public class Data {
     public static final byte C_VKILL = 25;
     public static final byte C_IMUWAVE = 26;
     public static final byte C_DISCOUNT = 27;
-	public static final byte C_TOT = 28;
+	public static final byte C_IMUVOLC = 28;
+	public static final byte C_TOT = 29;
 
 	// Effects Anim index
 	public static final byte A_KB = 29;

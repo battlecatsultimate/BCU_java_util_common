@@ -81,7 +81,7 @@ public class EStage extends BattleObj {
 
 				AbEnemy e = Identifier.getOr(data.enemy, AbEnemy.class);
 
-				EEnemy ee = e.getEntity(b, data, multi, mulatk, data.layer_0, data.layer_1, data.boss);
+				EEnemy ee = e.getEntity(b, data, multi, mulatk, data.layer_0, data.layer_1, data.boss, i);
 
 				ee.group = data.group;
 				return ee;
@@ -98,8 +98,7 @@ public class EStage extends BattleObj {
 
 			if (Math.abs(datas[i].spawn_0) < Math.abs(datas[i].spawn_1))
 				rem[i] += (int) ((datas[i].spawn_1 - datas[i].spawn_0) * b.r.nextFloat());
-
-			if (s.isBCstage && datas[i].castle_0 < 100 && rem[i] > 0 && !s.trail)
+			if (s.id.pack.equals(Identifier.DEF) && datas[i].castle_0 < 100 && rem[i] > 0 && !s.trail)
 				rem[i] = 0;
 		}
 	}
@@ -130,7 +129,7 @@ public class EStage extends BattleObj {
 			}
 
 			AbEnemy e = Identifier.getOr(enemy, AbEnemy.class);
-			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, data.boss >= 1 ? -2 : -1);
+			return e.getEntity(sb, this, multi, mulatk, data.layer_0, data.layer_1, data.boss >= 1 ? -2 : -1, 0);
 		}
 		return null;
 	}
@@ -174,6 +173,16 @@ public class EStage extends BattleObj {
 		}
 
 		return inRange;
+	}
+
+	public void delay(int l, int[] delay) {
+		Line line = s.data.getSimple(l);
+		int inc = b.getDelayStrength(rem[l], Math.max(line.respawn_0, line.respawn_1), delay);
+
+		rem[l] += inc;
+		if (rem[l] < 0)
+			rem[l] = 0;
+		CommonStatic.setSE(SE_DELAY_COOLDOWN);
 	}
 
 }

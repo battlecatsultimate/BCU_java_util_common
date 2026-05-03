@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +59,7 @@ public class JsonBGEffect extends BackgroundEffect {
                 if(post) {
                     int efID = obj.get("id").getAsInt();
 
-                    ArrayList<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects;
+                    Collection<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects.values();
 
                     for (BackgroundEffect bge : effs)
                         if (bge instanceof JsonBGEffect && ((JsonBGEffect)bge).id == efID) {
@@ -85,7 +86,7 @@ public class JsonBGEffect extends BackgroundEffect {
                     if(obj.has("id")) {
                         int efID = obj.get("id").getAsInt();
 
-                        ArrayList<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects;
+                        Collection<BackgroundEffect> effs = CommonStatic.getBCAssets().bgEffects.values();
 
                         for (BackgroundEffect bge : effs)
                             if (bge instanceof JsonBGEffect && ((JsonBGEffect)bge).id == efID) {

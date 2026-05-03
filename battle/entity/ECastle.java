@@ -60,7 +60,7 @@ public class ECastle extends AbEntity {
 		smokeX = (int) (pos + 25 - sb.r.nextFloat() * -25);
 
 		int ans = atk.atk;
-		ans *= 1 + atk.getProc().ATKBASE.mult / 100.0;
+		ans = (int) (ans * (1 + atk.getProc().ATKBASE.mult / 100.0));
 
 		int satk = atk.getProc().SATK.mult;
 		if (satk > 0) {

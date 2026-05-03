@@ -91,7 +91,7 @@ public class CommonStatic {
 		public UnitLevel defLv;
 
 		// bg effect
-		public final ArrayList<BackgroundEffect> bgEffects = new ArrayList<>();
+		public final Map<Integer, BackgroundEffect> bgEffects = new HashMap<>();
 
 	}
 
@@ -646,9 +646,10 @@ public class CommonStatic {
 
 	/**
 	 * Gets the boss spawn point for a castle.
-	 * Basically 3200 + yx/10 + 0.9*z but the 0.9*z part appears to use a quirky rounding
+	 * Credits to Domimmo314 for formula
 	 */
-	public static float bossSpawnPoint(int y, int z) {
-		return (float) (3200 + (y * z / 10) + (9 * z + 8 * z % 10) / 10) / 4f;
+	public static float bossSpawnPoint(int x, int s) {
+		int v = 3200 + x * s / 10 - s * 1180 / 100 + s * 127 / 10;
+		return v / 4f;
 	}
 }
