@@ -58,9 +58,11 @@ public class Backup {
         desc.BCU_VERSION = AssetLoader.CORE_VER;
 
         CommonStatic.ctx.noticeErr(() -> PackLoader.writePackWithSpecificFiles(dst, files, desc, "backup", prog), Context.ErrType.WARN, "Failed to create backup file");
+        loadBackups();
     }
 
     public static void loadBackups() {
+        backups.clear();
         File backupFolder = CommonStatic.ctx.getBackupFile("");
 
         if(!backupFolder.exists())
