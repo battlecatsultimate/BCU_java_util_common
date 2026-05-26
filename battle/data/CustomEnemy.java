@@ -8,13 +8,10 @@ import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.pack.Soul;
-import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 
 @JsonClass
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
@@ -60,19 +57,6 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	@Override
 	public int getStar() {
 		return star;
-	}
-
-	@Override
-	public Set<AbEnemy> getSummon() {
-		Set<AbEnemy> ans = new TreeSet<>();
-		if (common) {
-			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
-				ans.add(Identifier.getOr(rep.proc.SUMMON.id, AbEnemy.class));
-		} else
-			for (AtkDataModel adm : atks)
-				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
-					ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
-		return ans;
 	}
 
 	@Override

@@ -217,7 +217,7 @@ public class SCDef implements Copable<SCDef> {
 		}
 		while (!pre.isEmpty()) {
 			for (Enemy e : pre)
-				temp.addAll(e.de.getSummon());
+				temp.addAll(e.de.getEnemySummon());
 			ans.addAll(temp);
 			post.addAll(pre);
 			pre.clear();

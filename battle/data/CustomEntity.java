@@ -5,10 +5,15 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.Identifier;
 import common.util.Data;
+import common.util.unit.AbEnemy;
+import common.util.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
@@ -351,5 +356,31 @@ public abstract class CustomEntity extends DataEntity {
 				traits.remove(i);
 				i--;
 			}
+	}
+
+	@Override
+	public Set<AbEnemy> getEnemySummon() {
+		Set<AbEnemy> ans = new TreeSet<>();
+		if (common) {
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
+				ans.add(Identifier.getOr(rep.proc.SUMMON.id, AbEnemy.class));
+		} else
+			for (AtkDataModel adm : atks)
+				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
+					ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
+		return ans;
+	}
+
+	@Override
+	public Set<Unit> getUnitSummon() {
+		Set<Unit> ans = new TreeSet<>();
+		if (common) {
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || Unit.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
+				ans.add(Identifier.getOr(rep.proc.SUMMON.id, Unit.class));
+		} else
+			for (AtkDataModel adm : atks)
+				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || Unit.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
+					ans.add(Identifier.getOr(adm.proc.SUMMON.id, Unit.class));
+		return ans;
 	}
 }
