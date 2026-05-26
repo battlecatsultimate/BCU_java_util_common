@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public strictfp interface InStream {
+public interface InStream {
 
 	static InStream getIns(File f) {
 		return Data.err(() -> new ISStream(f));
@@ -81,7 +81,7 @@ public strictfp interface InStream {
 	}
 }
 
-strictfp class InStreamDef extends DataIO implements InStream {
+class InStreamDef extends DataIO implements InStream {
 
 	private final int[] bs;
 	private final int off, max;
@@ -208,7 +208,7 @@ strictfp class InStreamDef extends DataIO implements InStream {
 
 }
 
-strictfp class InStreamAnim extends DataIO implements InStream {
+class InStreamAnim extends DataIO implements InStream {
 
 	private final int[] bs;
 	private final int off, max;

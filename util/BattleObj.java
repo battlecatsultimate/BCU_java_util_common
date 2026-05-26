@@ -29,7 +29,7 @@ import java.util.*;
  * EneRand (update map reference) <br>
  */
 @StaticPermitted(StaticPermitted.Type.TEMP)
-public strictfp class BattleObj extends ImgCore implements Cloneable {
+public class BattleObj extends ImgCore implements Cloneable {
 
 	public static final String NONC = "NONC_";
 
