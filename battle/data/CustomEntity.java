@@ -199,6 +199,8 @@ public abstract class CustomEntity extends DataEntity {
 
 		base = src.touchBase();
 		common = ((DefaultData)src).isCommon();
+		kbBounce = true;
+		bossBounce = true;
 		rep = new AtkDataModel(this);
 		rep.proc = src.getRepAtk().getProc().clone();
 		int m = src.getAtkCount();
@@ -320,18 +322,20 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
+		kbBounce = ce.kbBounce;
+		bossBounce = ce.bossBounce;
 		rep = new AtkDataModel(this, ce.rep);
-		if (rev != null)
+		if (ce.rev != null)
 			rev = new AtkDataModel(this, ce.rev);
-		if (res != null)
+		if (ce.res != null)
 			res = new AtkDataModel(this, ce.res);
-		if (cntr != null)
+		if (ce.cntr != null)
 			cntr = new AtkDataModel(this, ce.cntr);
-		if (bur != null)
+		if (ce.bur != null)
 			bur = new AtkDataModel(this, ce.bur);
-		if (resu != null)
+		if (ce.resu != null)
 			resu = new AtkDataModel(this, ce.resu);
-		if (revi != null)
+		if (ce.revi != null)
 			revi = new AtkDataModel(this, ce.revi);
 
 		List<AtkDataModel> temp = new ArrayList<>();
