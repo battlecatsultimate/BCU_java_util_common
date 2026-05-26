@@ -2191,6 +2191,11 @@ public abstract class Entity extends AbEntity {
 			for (AttackAb attack : lastKilledBy)
 				if (attack.attacker != null)
 					attack.attacker.killCount++;
+		if (atk == KillMode.SELF_DESTRUCT) {
+			AtkDataModel res = data.getResurrection();
+			if (res != null && res.pre < 2)
+				basis.getAttack(aam.getAttack(data.getAtkCount() + 1));
+		}
 	}
 
 	/**
