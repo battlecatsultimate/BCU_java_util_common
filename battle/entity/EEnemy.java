@@ -8,7 +8,6 @@ import common.pack.UserProfile;
 import common.util.Data;
 import common.util.anim.EAnimU;
 import common.util.pack.EffAnim;
-import common.util.stage.SCDef;
 import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Trait;
@@ -76,9 +75,9 @@ public class EEnemy extends Entity {
 			basis.money = (int) (basis.money + mul * ((MaskEnemy) data).getDrop());
 		}
 		if (basis.st.trail && !basis.isDojoOvertime() && basis.isActive() && atk == KillMode.NORMAL) {
-			SCDef.Line d = basis.st.data.getSimple(line);
+			int lineScore = line != -1 ? basis.st.data.getSimple(line).score : 0;
 			int time = basis.st.timeLimit * 1800;
-			int score = (int) (((MaskEnemy) data).getDrop() / 100f + (d.score * (2f * time - basis.time)) / time);
+			int score = (int) (((MaskEnemy) data).getDrop() / 100f + (lineScore * (2f * time - basis.time)) / time);
 			basis.score += score;
 		}
 	}
