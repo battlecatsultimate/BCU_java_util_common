@@ -20,10 +20,10 @@ import java.util.function.Consumer;
 
 public class Backup {
     public static void createBackup(@Nullable Consumer<Double> prog, @NotNull List<File> files) {
-        if(CommonStatic.getConfig().maxBackup != 0 && backups.size() > CommonStatic.getConfig().maxBackup) {
+        if(CommonStatic.getConfig().maxBackup != 0 && backups.size() >= CommonStatic.getConfig().maxBackup) {
             int i = backups.size();
 
-            while(i > CommonStatic.getConfig().maxBackup) {
+            while(i >= CommonStatic.getConfig().maxBackup) {
                 backups.get(backups.size() - 1).delete();
                 i--;
             }
