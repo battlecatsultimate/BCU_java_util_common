@@ -316,6 +316,12 @@ public abstract class CustomEntity extends DataEntity {
 		base = ce.base;
 		common = ce.common;
 		rep = new AtkDataModel(this, ce.rep);
+		rev = new AtkDataModel(this, ce.rev);
+		res = new AtkDataModel(this, ce.res);
+		cntr = new AtkDataModel(this, ce.cntr);
+		bur = new AtkDataModel(this, ce.bur);
+		resu = new AtkDataModel(this, ce.resu);
+		revi = new AtkDataModel(this, ce.revi);
 
 		List<AtkDataModel> temp = new ArrayList<>();
 		List<AtkDataModel> tnew = new ArrayList<>();
