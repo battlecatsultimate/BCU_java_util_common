@@ -3,6 +3,7 @@ package common.util.pack.bgeffect;
 import common.CommonStatic;
 import common.system.P;
 import common.system.fake.FakeGraphics;
+import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.pack.Background;
 
@@ -38,11 +39,18 @@ public class SnowBGEffect extends BackgroundEffect{
     @Override
     public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         g.setComposite(FakeGraphics.TRANS, 127, 0);
-
         g.setColor(FakeGraphics.WHITE);
 
+        FakeTransform orig = g.getTransform();
+
         for(int i = 0; i < snowPosition.size(); i++) {
-            g.fillOval(convertP(snowPosition.get(i).x, siz) + (int) rect.x, (int) (snowPosition.get(i).y * siz - rect.y + midH * siz), sw * siz, sh * siz);
+            float x = convertP(snowPosition.get(i).x, siz) + (int) rect.x;
+            float y = snowPosition.get(i).y * siz - rect.y + midH * siz;
+            float rx = sw * siz;
+            float ry = sh * siz;
+            g.translate(x, y);
+            g.fillOval(rx / -2, ry / -2, rx, ry);
+            g.setTransform(orig);
         }
 
         g.setComposite(FakeGraphics.DEF, 255, 0);
