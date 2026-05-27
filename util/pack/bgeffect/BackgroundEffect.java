@@ -33,7 +33,7 @@ public abstract class BackgroundEffect {
         asset.bgEffects.put(Data.BG_EFFECT_RAIN, new RainBGEffect(new VImg("./org/battle/a/000_a.png"), ImgCut.newIns("./org/battle/a/000_a.imgcut")));
         asset.bgEffects.put(Data.BG_EFFECT_BUBBLE, new BubbleBGEffect(new VImg("./org/img/bgEffect/bubble02.png")));
         asset.bgEffects.put(Data.BG_EFFECT_FALLING_SNOW, new FallingSnowBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
-        asset.bgEffects.put(Data.BG_EFFECT_SNOW, new SnowBGEffect(new VImg("./org/img/bgEffect/img021.png")));
+        asset.bgEffects.put(Data.BG_EFFECT_SNOW, new SnowBGEffect());
         asset.bgEffects.put(Data.BG_EFFECT_SNOWSTAR, new SnowStarBGEffect());
         asset.bgEffects.put(Data.BG_EFFECT_BLIZZARD, new BlizzardBGEffect(new VImg("./org/img/bgEffect/bubble03_bg040.png")));
         asset.bgEffects.put(Data.BG_EFFECT_SHINING, new ShiningBGEffect());
