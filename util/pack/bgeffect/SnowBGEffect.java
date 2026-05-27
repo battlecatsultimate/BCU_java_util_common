@@ -102,7 +102,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
         snowPosition.clear();
 
-        int number = w / 200;
+        int number = w / 150;
 
         for(int i = 0; i < number; i++) {
             float x = r.nextInt(w + sw + battleOffset);
