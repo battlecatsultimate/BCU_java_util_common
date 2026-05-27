@@ -1521,7 +1521,7 @@ public class Data {
 			{ 1, AB_SKILL, 0, -1 }, //66 : super sage hunter
 			{ 0, P_BLAST, 3, -1 }, //67: baja blast
 			{ 1, AB_CSUR, 0, -1 }, //68: counter surge
-			{ 3, P_IMUBLAST, 0, 69 } // 69: immune to blast
+			{ 3, P_IMUBLAST, 0, 69 } // 69: immune to blast todo: when resist blast comes, connect to that talent
 	};
 
 	// foot icon index used in battle
