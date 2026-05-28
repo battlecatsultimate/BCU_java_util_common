@@ -122,7 +122,9 @@ public abstract class Entity extends AbEntity {
 
 			if (corpse != null) {
 				corpse.paraTo(back);
-				corpse.draw(gra, p, siz);
+				P corpseP = P.newP(p.x - 25f, p.y);
+				corpse.draw(gra, corpseP, siz);
+				P.delete(corpseP);
 			}
 
 			if (corpse == null || status[P_REVIVE][1] < REVIVE_SHOW_TIME) {
