@@ -572,7 +572,8 @@
             "(min_layer!=max_layer){на случайном уровне между (min_layer) и (max_layer)}]. ",
             "Призыв будет показывать [(type.anim_type==0){никакую}(type.anim_type==1){телепортацию}(type.anim_type>=2){копание}]",
             " анимацию[(type.anim_type==3){ и отключать копание для призванных существ}]. ",
-            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
+            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]",
+            "[(type.fix_buff){ (fixed buff)}]"
         ],
         "class": {
             "prob": {
