@@ -690,9 +690,10 @@ public abstract class Entity extends AbEntity {
 				anim.update(false);
 			if (back != null)
 				back.update(false);
-			if (dead > 0) {
+			if (dead > 0)
 				soul.update(false);
-			}
+			if (corpse != null)
+				corpse.update(false);
 
 			if(smoke != null) {
 				if(smoke.done()) {
