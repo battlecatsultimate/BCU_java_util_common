@@ -1248,20 +1248,21 @@ public abstract class Entity extends AbEntity {
 					anim.corpse = ea.getEAnim(ZombieEff.REVIVE);
 					anim.corpse.setTime(0);
 				}
+
+				boolean isCorpseRevive = anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && e.data.getRevive() != null;
+
 				if(e.kbTime == 0) {
 					status[P_REVIVE][1]--;
 
-					if(anim.corpse != null && anim.corpse.type == ZombieEff.REVIVE && e.data.getRevive() != null && anim.corpse.len() - status[P_REVIVE][1] == e.data.getRevive().pre) {
+					if (isCorpseRevive && anim.corpse.len() - status[P_REVIVE][1] - 2 == e.data.getRevive().pre)
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 4));
-					}
-
 					if (anim.corpse != null)
 						anim.corpse.update(false);
 				}
+
 				if (status[P_REVIVE][1] == 0) {
-					if(anim.corpse != null && e.anim.corpse.type == ZombieEff.REVIVE && e.data.getRevive() != null && e.data.getRevive().pre >= e.anim.corpse.len()) {
+					if (isCorpseRevive && e.data.getRevive().pre >= e.anim.corpse.len())
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 4));
-					}
 
 					anim.corpse = null;
 				}
