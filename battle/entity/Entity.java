@@ -111,7 +111,7 @@ public abstract class Entity extends AbEntity {
 		 * draw this entity
 		 */
 		public void draw(FakeGraphics gra, P p, float siz) {
-			if (dead > 0) {
+			if (dead > 0 && soul != null) {
 				//100 is guessed value comparing from BC
 				p.y -= 100 * siz;
 				soul.draw(gra, p, siz);
@@ -148,7 +148,7 @@ public abstract class Entity extends AbEntity {
 				anim.paraTo(back);
 			}
 
-			if (e.kbTime == 0 || e.kb.kbType != INT_WARP)
+			if (dead == -1 && (e.kbTime == 0 || e.kb.kbType != INT_WARP))
 				anim.draw(gra, p, siz);
 
 			anim.paraTo(null);
@@ -596,12 +596,6 @@ public abstract class Entity extends AbEntity {
 		 * set kill anim
 		 */
 		private void kill() {
-			if ((e.getAbi() & AB_GLASS) != 0) {
-				e.dead = true;
-				dead = 0;
-				return;
-			}
-
 			if (e.getProc().DEATHSURGE.perform(e.basis.r))
 				deathSurge |= 1;
 			else if (e.getProc().MINIDEATHSURGE.perform(e.basis.r))
@@ -615,6 +609,11 @@ public abstract class Entity extends AbEntity {
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
+				if ((e.getAbi() & AB_GLASS) != 0) {
+					dead = 4;
+					return;
+				}
+
 				// converge souls layer: death on the same frame = same soul height
 				// still not sure how this precisely work in BC, it seems to have exceptions
 				e.currentLayer = 0;
@@ -651,7 +650,8 @@ public abstract class Entity extends AbEntity {
 			if (back != null)
 				back.update(false);
 			if (dead > 0) {
-				soul.update(false);
+				if (soul != null)
+					soul.update(false);
 				dead--;
 			}
 			if (anim.done() && anim.type == UType.ENTER)
@@ -661,11 +661,9 @@ public abstract class Entity extends AbEntity {
 					e.aam.getDeathSurge(deathSurge);
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
-					if ((soul == null && !e.dead) || (soul != null && adm.pre == soul.len() - dead))
+					int startTime = soul != null ? soul.len() : 4;
+					if ((adm.pre > 1 && adm.pre == startTime - dead) || (dead == 0 && adm.pre >= startTime && !e.dead))
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
-					if (soul != null && dead == 0 && adm.pre >= soul.len() && !e.dead) {
-						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
-					}
 				}
 			}
 			if(smoke != null) {
@@ -692,7 +690,7 @@ public abstract class Entity extends AbEntity {
 				anim.update(false);
 			if (back != null)
 				back.update(false);
-			if (dead > 0)
+			if (dead > 0 && soul != null)
 				soul.update(false);
 			if (corpse != null)
 				corpse.update(false);
@@ -2195,11 +2193,6 @@ public abstract class Entity extends AbEntity {
 			for (AttackAb attack : lastKilledBy)
 				if (attack.attacker != null)
 					attack.attacker.killCount++;
-		if (atk == KillMode.SELF_DESTRUCT) {
-			AtkDataModel res = data.getResurrection();
-			if (res != null && res.pre < 2)
-				basis.getAttack(aam.getAttack(data.getAtkCount() + 1));
-		}
 	}
 
 	/**
