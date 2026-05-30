@@ -8,9 +8,13 @@ import common.util.Data.Proc;
 import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.pack.Soul;
+import common.util.unit.AbEnemy;
 import common.util.unit.Trait;
+import common.util.unit.Unit;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public interface MaskEntity extends BattleStatic {
 
@@ -37,9 +41,9 @@ public interface MaskEntity extends BattleStatic {
 
 	Identifier<Soul> getDeathAnim();
 
-	ArrayList<Trait> getTraits();
+	List<Trait> getTraits(); // todo: deprecate this function, replace with Trait.getAllTraits
 
-    ArrayList<Trait> getTraitsRaw();
+    List<Trait> getTraitsRaw();
 
 	int getHb();
 
@@ -120,5 +124,13 @@ public interface MaskEntity extends BattleStatic {
 	int[][] rawAtkData();
 
 	int touchBase();
+
+	default Set<AbEnemy> getEnemySummon() {
+		return new TreeSet<>();
+	}
+
+	default Set<Unit> getUnitSummon() {
+		return new TreeSet<>();
+	}
 
 }

@@ -1,12 +1,10 @@
 package common.io.json;
 
 import com.google.gson.JsonElement;
-import common.CommonStatic;
 import common.io.json.JsonClass.JCGeneric;
 import common.io.json.JsonClass.JCIdentifier;
 import common.io.json.JsonException.Type;
 import common.pack.Identifier;
-import common.pack.Source;
 import common.util.Data;
 import common.util.stage.*;
 import common.util.stage.MapColc.PackMapColc;
@@ -32,9 +30,9 @@ public class Dependency {
 				return;
 			if (obj instanceof Class)
 				return;
-			if (obj instanceof Source.BasePath || obj instanceof CommonStatic.Lang.Locale) // todo: see if instanceof enum is sufficient
+			if (obj instanceof Enum)
 				return;
-			if (obj instanceof Identifier) {
+            if (obj instanceof Identifier) {
 				set.add((Identifier<?>) obj);
 				return;
 			}

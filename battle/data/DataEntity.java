@@ -9,6 +9,7 @@ import common.util.pack.Soul;
 import common.util.unit.Trait;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class DataEntity extends Data implements MaskEntity {
@@ -41,7 +42,7 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	}
 
 	@Override
-	public ArrayList<Trait> getTraits() {
+	public List<Trait> getTraits() {
 		return traits;
 	}
 

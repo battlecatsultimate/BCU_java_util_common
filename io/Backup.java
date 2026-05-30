@@ -20,10 +20,10 @@ import java.util.function.Consumer;
 
 public class Backup {
     public static void createBackup(@Nullable Consumer<Double> prog, @NotNull List<File> files) {
-        if(CommonStatic.getConfig().maxBackup != 0 && backups.size() > CommonStatic.getConfig().maxBackup) {
+        if(CommonStatic.getConfig().maxBackup != 0 && backups.size() >= CommonStatic.getConfig().maxBackup) {
             int i = backups.size();
 
-            while(i > CommonStatic.getConfig().maxBackup) {
+            while(i >= CommonStatic.getConfig().maxBackup) {
                 backups.get(backups.size() - 1).delete();
                 i--;
             }
@@ -58,9 +58,11 @@ public class Backup {
         desc.BCU_VERSION = AssetLoader.CORE_VER;
 
         CommonStatic.ctx.noticeErr(() -> PackLoader.writePackWithSpecificFiles(dst, files, desc, "backup", prog), Context.ErrType.WARN, "Failed to create backup file");
+        loadBackups();
     }
 
     public static void loadBackups() {
+        backups.clear();
         File backupFolder = CommonStatic.ctx.getBackupFile("");
 
         if(!backupFolder.exists())

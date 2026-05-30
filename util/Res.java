@@ -291,7 +291,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_ARMOR] = new VImg("./org/page/icons/ArmorBreak.png");
 		aux.icon[1][P_SPEED] = new VImg("./org/page/icons/Speed.png");
 		aux.icon[1][P_SPEEDUP] = new VImg("./org/page/icons/Speed.png");
-		aux.icon[1][P_HPREGEN] = new VImg("./org/page/icons/Barrier.png");
+		aux.icon[1][P_HPREGEN] = new VImg("./org/page/icons/Regeneration.png");
 		aux.icon[1][P_LETHARGY] = new VImg("./org/page/icons/Lethargy.png");
 		CommonStatic.getConfig().icon = false;
 	}

@@ -5,10 +5,15 @@ import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonField;
 import common.io.json.JsonField.GenType;
+import common.pack.Identifier;
 import common.util.Data;
+import common.util.unit.AbEnemy;
+import common.util.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
@@ -194,6 +199,8 @@ public abstract class CustomEntity extends DataEntity {
 
 		base = src.touchBase();
 		common = ((DefaultData)src).isCommon();
+		kbBounce = true;
+		bossBounce = true;
 		rep = new AtkDataModel(this);
 		rep.proc = src.getRepAtk().getProc().clone();
 		int m = src.getAtkCount();
@@ -315,7 +322,21 @@ public abstract class CustomEntity extends DataEntity {
 	private void importData$1(CustomEntity ce) {
 		base = ce.base;
 		common = ce.common;
+		kbBounce = ce.kbBounce;
+		bossBounce = ce.bossBounce;
 		rep = new AtkDataModel(this, ce.rep);
+		if (ce.rev != null)
+			rev = new AtkDataModel(this, ce.rev);
+		if (ce.res != null)
+			res = new AtkDataModel(this, ce.res);
+		if (ce.cntr != null)
+			cntr = new AtkDataModel(this, ce.cntr);
+		if (ce.bur != null)
+			bur = new AtkDataModel(this, ce.bur);
+		if (ce.resu != null)
+			resu = new AtkDataModel(this, ce.resu);
+		if (ce.revi != null)
+			revi = new AtkDataModel(this, ce.revi);
 
 		List<AtkDataModel> temp = new ArrayList<>();
 		List<AtkDataModel> tnew = new ArrayList<>();
@@ -339,5 +360,31 @@ public abstract class CustomEntity extends DataEntity {
 				traits.remove(i);
 				i--;
 			}
+	}
+
+	@Override
+	public Set<AbEnemy> getEnemySummon() {
+		Set<AbEnemy> ans = new TreeSet<>();
+		if (common) {
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
+				ans.add(Identifier.getOr(rep.proc.SUMMON.id, AbEnemy.class));
+		} else
+			for (AtkDataModel adm : atks)
+				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || AbEnemy.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
+					ans.add(Identifier.getOr(adm.proc.SUMMON.id, AbEnemy.class));
+		return ans;
+	}
+
+	@Override
+	public Set<Unit> getUnitSummon() {
+		Set<Unit> ans = new TreeSet<>();
+		if (common) {
+			if (rep.proc.SUMMON.prob > 0 && (rep.proc.SUMMON.id == null || Unit.class.isAssignableFrom(rep.proc.SUMMON.id.cls)))
+				ans.add(Identifier.getOr(rep.proc.SUMMON.id, Unit.class));
+		} else
+			for (AtkDataModel adm : atks)
+				if (adm.proc.SUMMON.prob > 0 && (adm.proc.SUMMON.id == null || Unit.class.isAssignableFrom(adm.proc.SUMMON.id.cls)))
+					ans.add(Identifier.getOr(adm.proc.SUMMON.id, Unit.class));
+		return ans;
 	}
 }

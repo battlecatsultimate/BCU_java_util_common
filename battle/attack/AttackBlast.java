@@ -11,12 +11,14 @@ import java.util.Set;
 public class AttackBlast extends AttackAb {
     public ContBlast handler;
     protected final Set<Entity> bcapt = new HashSet<>();
+    protected final int stage;
 
     boolean attacked = false;
 
-    protected AttackBlast(Entity attacker, AttackSimple src, float sta, float end, int bt) {
+    protected AttackBlast(Entity attacker, AttackSimple src, float sta, float end, int bt, int stage) {
         super(attacker, src, sta, end, false);
         waveType = bt;
+        this.stage = stage;
     }
 
     @Override
@@ -24,15 +26,11 @@ public class AttackBlast extends AttackAb {
         capt.clear();
 
         List<AbEntity> le = new ArrayList<>();
-        int time = handler.getTime();
-        if (time == 10 || time == 20 || time == 30)
-            bcapt.clear();
-        int lvl = getLevel(time);
 
-        if (lvl == 0)
+        if (stage == 0)
             le.addAll(model.b.inRange(touch, -dire, sta, end, excludeRightEdge));
         else // todo: figure out if sta is always rightmost and end is always leftmost
-            le.addAll(model.b.inRange(touch, -dire, sta + EXPLOSION_SHIFT * lvl, end - EXPLOSION_SHIFT * lvl, excludeRightEdge, 150 + (EXPLOSION_SHIFT * (lvl - 1) * 2)));
+            le.addAll(model.b.inRange(touch, -dire, sta + EXPLOSION_SHIFT * stage, end - EXPLOSION_SHIFT * stage, excludeRightEdge, 150 + (EXPLOSION_SHIFT * (stage - 1) * 2)));
         for (AbEntity e : le)
             if (e instanceof Entity && !bcapt.contains((Entity) e))
                 capt.add(e);
@@ -52,7 +50,7 @@ public class AttackBlast extends AttackAb {
                 atk += atk * status[P_STRONG][1] / 100;
             if (status[P_WEAK][0] != 0)
                 atk = atk * status[P_WEAK][1] / 100;
-            atk = (atk * (100 - (30 * getLevel(handler.getTime()))) / 100);
+            atk = (atk * (100 - (30 * stage)) / 100);
         }
 
         for (AbEntity e : capt) {
@@ -67,15 +65,5 @@ public class AttackBlast extends AttackAb {
                 bcapt.add((Entity) e);
             }
         }
-    }
-
-    public int getLevel(int time) { // TODO: fix blast timings
-        if (time >= 10 && time <= 19)
-            return 0;
-        if (time >= 20 && time <= 29)
-            return 1;
-        if (time >= 30)
-            return 2;
-        return -1;
     }
 }

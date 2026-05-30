@@ -2,8 +2,8 @@ package common.util.pack.bgeffect;
 
 import common.CommonStatic;
 import common.system.P;
-import common.system.VImg;
 import common.system.fake.FakeGraphics;
+import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.pack.Background;
 
@@ -13,11 +13,10 @@ import java.util.Random;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class SnowBGEffect extends BackgroundEffect{
-    private final float maxSlope = (float) Math.tan(Math.toRadians(75));
-    private final VImg snow;
+    private static final int sw = 12;
+    private static final int sh = 12;
 
-    private final int sw;
-    private final int sh;
+    private final float maxSlope = (float) Math.tan(Math.toRadians(75));
 
     private final List<P> snowPosition = new ArrayList<>();
     private final List<P> initPos = new ArrayList<>();
@@ -27,16 +26,9 @@ public class SnowBGEffect extends BackgroundEffect{
 
     private final List<Integer> capture = new ArrayList<>();
 
-    public SnowBGEffect(VImg snow) {
-        this.snow = snow;
-
-        this.sw = (int) (snow.getImg().getWidth() * 1.8);
-        this.sh = (int) (snow.getImg().getHeight() * 1.8);
-    }
-
     @Override
     public void check() {
-        snow.check();
+
     }
 
     @Override
@@ -47,9 +39,18 @@ public class SnowBGEffect extends BackgroundEffect{
     @Override
     public void postDraw(FakeGraphics g, P rect, float siz, float midH) {
         g.setComposite(FakeGraphics.TRANS, 127, 0);
+        g.setColor(FakeGraphics.WHITE);
+
+        FakeTransform orig = g.getTransform();
 
         for(int i = 0; i < snowPosition.size(); i++) {
-            g.drawImage(snow.getImg(), convertP(snowPosition.get(i).x, siz) + (int) rect.x, (int) (snowPosition.get(i).y * siz - rect.y + midH * siz), sw * siz, sh * siz);
+            float x = convertP(snowPosition.get(i).x, siz) + (int) rect.x;
+            float y = snowPosition.get(i).y * siz - rect.y + midH * siz;
+            float rx = sw * siz;
+            float ry = sh * siz;
+            g.translate(x, y);
+            g.fillOval(rx / -2, ry / -2, rx, ry);
+            g.setTransform(orig);
         }
 
         g.setComposite(FakeGraphics.DEF, 255, 0);
@@ -101,7 +102,7 @@ public class SnowBGEffect extends BackgroundEffect{
 
         snowPosition.clear();
 
-        int number = w / 200;
+        int number = w / 150;
 
         for(int i = 0; i < number; i++) {
             float x = r.nextInt(w + sw + battleOffset);

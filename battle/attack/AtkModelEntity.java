@@ -95,27 +95,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 	public void setExtraAtks(int[][] raw, float d0) {
 		for(int i = 0; i <= 4; i++) {
-			AtkDataModel model;
+			MaskAtk model = data.getAtkModel(raw.length + i);
 
-			switch (i) {
-				case 0:
-					model = data.getRevenge();
-					break;
-				case 1:
-					model = data.getResurrection();
-					break;
-				case 2:
-					model = data.getGouge();
-					break;
-				case 3:
-					model = data.getResurface();
-					break;
-				default:
-					model = data.getRevive();
-			}
-
-			if(model != null) {
-				atks[raw.length + i] = (int) (model.atk * d0);
+			if (model instanceof AtkDataModel) {
+				atks[raw.length + i] = (int) (((AtkDataModel) model).atk * d0);
 				abis[raw.length + i] = 1;
 				acs[raw.length + i] = new BattleObj();
 				act[raw.length + i] = model.loopCount();

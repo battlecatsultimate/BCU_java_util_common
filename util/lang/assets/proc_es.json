@@ -565,7 +565,8 @@
             "(min_layer!=max_layer){una capa aleatoria}]. ",
             "La invocación mostrará [(type.anim_type==0){cero animaciones}(type.anim_type==1){la animación de abducción}(type.anim_type>=2){la animación de escarbar}]",
             "[(type.anim_type==3){ y desactivará escarbar para las entidades invocadas}]. ",
-            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"
+            "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]",
+            "[(type.fix_buff){ (fixed buff)}]"
         ],
         "class": {
             "prob": {

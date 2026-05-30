@@ -4,7 +4,7 @@ import java.util.function.BiFunction;
 import common.pack.Context;
 import common.system.P;
 
-public strictfp abstract class DataIO {
+public abstract class DataIO {
 
 	protected static final byte BYTE = 1;
 	protected static final byte SHORT = 2;
