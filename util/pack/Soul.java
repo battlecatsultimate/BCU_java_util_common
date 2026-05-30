@@ -1,7 +1,7 @@
 package common.util.pack;
 
+import common.CommonStatic;
 import common.io.json.JsonClass;
-import common.io.json.JsonField;
 import common.pack.Identifier;
 import common.pack.IndexContainer.IndexCont;
 import common.pack.IndexContainer.Indexable;
@@ -11,20 +11,18 @@ import common.util.anim.AnimU;
 import common.util.anim.EAnimI;
 import common.util.stage.Music;
 
-@JsonClass
+@JsonClass(noTag = JsonClass.NoTag.LOAD)
 @IndexCont(PackData.class)
 @JsonClass.JCGeneric(Identifier.class)
 public class Soul extends Animable<AnimU<?>, AnimU.UType> implements Indexable<PackData, Soul> {
 
 	@JsonClass.JCIdentifier
-	@JsonField
 	private final Identifier<Soul> id;
 
-	@JsonField
 	public Identifier<Music> audio;
-
-	@JsonField
 	public String name;
+	public int layer_0, layer_1;
+	public CommonStatic.LayerType layertype = CommonStatic.LayerType.ORIG;
 
 	@JsonClass.JCConstructor
 	public Soul() {

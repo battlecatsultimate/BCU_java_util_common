@@ -29,10 +29,28 @@ import static java.lang.Character.isDigit;
 
 public class CommonStatic {
 
+	public enum LayerType {
+		ORIG(0), SET(1), RELATIVE(2);
+
+		final int ind;
+
+		LayerType(int i) {
+			ind = i;
+		}
+
+		public String getStr() {
+			return "lay" + ind;
+		}
+
+		@Override
+		public String toString() {
+			return name();
+		}
+	}
+
 	public interface BattleConst {
 
 		float ratio = 768f / 2400f;// r = p/u
-
 	}
 
 	public static class BCAuxAssets {

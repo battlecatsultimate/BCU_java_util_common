@@ -232,9 +232,9 @@ public class BattleObj extends ImgCore implements Cloneable {
 				}
 				if (f2 != null)
 					f2.forEach((a, b) -> {
-						if (a != null && a instanceof BattleObj)
+						if (a instanceof BattleObj)
 							((BattleObj) a).terminate();
-						if (b != null && b instanceof BattleObj)
+						if (b instanceof BattleObj)
 							((BattleObj) b).terminate();
 					});
 			}
