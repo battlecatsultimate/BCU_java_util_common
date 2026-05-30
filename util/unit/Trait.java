@@ -126,6 +126,15 @@ public class Trait extends Data implements Indexable<PackData, Trait> {
         return new HashSet<>(traits).containsAll(TRAITED);
     }
 
+    public static List<Trait> getAllTraits(Form form) {
+        ArrayList<Trait> result = new ArrayList<>(form.du.getTraitsRaw());
+        for (PackData.UserPack userPack : UserProfile.getUserPacks())
+            for (Trait trait : userPack.traits)
+                if (trait.targetForms.contains(form) || (trait.targetType && Trait.isTargetTraited(result)))
+                    result.add(trait);
+        return result;
+    }
+
     @JsonField
     public String name = "new trait";
 

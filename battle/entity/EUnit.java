@@ -384,7 +384,7 @@ public class EUnit extends Entity {
 		super.updateMove(extmov / 4f);
 	}
 
-	private int getOrbAtk(ArrayList<Trait> trait, MaskAtk matk) {
+	private int getOrbAtk(List<Trait> trait, MaskAtk matk) {
 		if (level.getOrbs() == null)
 			return 0;
 

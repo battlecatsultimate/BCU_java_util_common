@@ -2,14 +2,13 @@ package common.battle.data;
 
 import common.CommonStatic;
 import common.pack.Identifier;
-import common.pack.PackData;
-import common.pack.UserProfile;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
@@ -262,13 +261,8 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 	public PCoin getPCoin() { return pcoin; }
 
 	@Override
-	public ArrayList<Trait> getTraits() {
-		ArrayList<Trait> result = new ArrayList<>(super.getTraits());
-		for (PackData.UserPack userPack : UserProfile.getUserPacks())
-			for (Trait trait : userPack.traits)
-				if (trait.targetForms.contains(form) || (trait.targetType && Trait.isTargetTraited(traits)))
-					result.add(trait);
-		return result;
+	public List<Trait> getTraits() {
+		return Trait.getAllTraits(form);
 	}
 
 	@Override

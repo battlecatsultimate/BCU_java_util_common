@@ -12,6 +12,7 @@ import common.util.unit.Trait;
 import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonClass
 public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
@@ -72,6 +73,11 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 
 	@Override
 	public PCoin getPCoin() { return pcoin; }
+
+	@Override
+	public List<Trait> getTraits() {
+		return Trait.getAllTraits(pack);
+	}
 
 	@Override
 	public void importData(MaskEntity de) {

@@ -1377,7 +1377,7 @@ public abstract class Entity extends AbEntity {
 	/**
 	 * trait of enemy, also target trait of unit, uses list
 	 */
-	public ArrayList<Trait> traits;
+	public List<Trait> traits;
 
 	/**
 	 * attack model

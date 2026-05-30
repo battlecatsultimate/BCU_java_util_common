@@ -12,7 +12,7 @@ import common.util.unit.AbEnemy;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -41,9 +41,9 @@ public interface MaskEntity extends BattleStatic {
 
 	Identifier<Soul> getDeathAnim();
 
-	ArrayList<Trait> getTraits();
+	List<Trait> getTraits(); // todo: deprecate this function, replace with Trait.getAllTraits
 
-    ArrayList<Trait> getTraitsRaw();
+    List<Trait> getTraitsRaw();
 
 	int getHb();
 
