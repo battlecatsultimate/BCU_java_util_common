@@ -236,7 +236,6 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SPIRIT] = new VImg(parts[317]);
 		aux.icon[0][ABI_SKILL] = new VImg(parts[319]);
 		aux.icon[1][P_METALKILL] = new VImg(parts[321]);
-		aux.icon[1][P_IMUMKILL] = new VImg(parts[321]);
 		aux.icon[1][P_DEMONSHIELD] = new VImg(parts[331]);
 		aux.icon[1][P_DEATHSURGE] = new VImg(parts[332]);
 		aux.icon[1][P_BLAST] = new VImg(parts[335]);
@@ -255,6 +254,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_COUNTER] = new VImg("./org/page/icons/Counter.png");
 		aux.icon[1][P_IMUCANNON] = new VImg("./org/page/icons/CannonX.png");
 		aux.icon[1][P_IMUDELAY] = new VImg("./org/page/icons/ImuDelay.png");
+		aux.icon[1][P_IMUMKILL] = new VImg("./org/page/icons/MKillX.png");
 
 		//These are used for talent edit page icons
 		aux.icon[4][PC2_HP] = new VImg(parts[120]);

@@ -1415,7 +1415,8 @@ public class Data {
 			false, //lethargy
 			true, //imu.lethargy
 			false, //delay
-			true //imu delay
+			true, //imu delay
+			true, //imu metal killer
 	};
 
 	/**
