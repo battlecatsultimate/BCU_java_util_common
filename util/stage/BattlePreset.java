@@ -22,6 +22,8 @@ public class BattlePreset {
         t.bslv = bp.bslv.clone();
         t.fruit = bp.fruit.clone();
         t.gods = bp.gods.clone();
+        t.alien = bp.alien;
+        t.star = bp.star;
 
         System.arraycopy(bp.fs, 0, preset.lu.fs, 0, bp.fs.length);
         for (int i = 0; i < 2; i++) {
@@ -77,7 +79,7 @@ public class BattlePreset {
             gods = new int[3];
 
     @JsonField(block = true)
-    public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>();
+    public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons
 
     @JsonField
     public int alien, star;
