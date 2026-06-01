@@ -855,7 +855,10 @@
         "abbr_name": "Инвиз.",
         "full_name": "Уворот",
         "tooltip": null,
-        "format": "(prob)% шанс увернуться от атак в течении (_dispFruit(time))",
+        "format": [
+            "(prob)% шанс увернуться от атак в течении (_dispFruit(time))",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "prob": {
                 "name": "шанс",
@@ -863,6 +866,10 @@
             },
             "time": {
                 "name": "длительность",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }
@@ -1299,7 +1306,10 @@
         "abbr_name": "Убийца ДКХ",
         "full_name": "Убийца Диких",
         "tooltip": null,
-        "format": "Убийца Диких (_left)Наносит 2.5x урона[(prob>0){, }(prob==0){ и }]получает только 0.6x урона[(prob>0){, и имеет (prob)% шанс уклониться от атаки диких врагов на (_dispTime(time))}](_right)",
+        "format": [
+            "Убийца Диких (_left)Наносит 2.5x урона[(prob>0){, }(prob==0){ и }]получает только 0.6x урона[(prob>0){, и имеет (prob)% шанс уклониться от атаки диких врагов на (_dispTime(time))}](_right)",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "active": {
                 "name": "Сильнее против Диких",
@@ -1311,6 +1321,10 @@
             },
             "time": {
                 "name": "длительность",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }

@@ -237,6 +237,21 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		return t;
 	}
 
+	public void renewTreasure() {
+		for (BasisLU lu : lb) {
+			Treasure trea = lu.t();
+			trea.tech = t.tech.clone();
+			trea.trea = t.trea.clone();
+			trea.base = t.base.clone();
+			trea.deco = t.deco.clone();
+			trea.fruit = t.fruit.clone();
+			trea.bslv = t.bslv.clone();
+			trea.gods = t.gods.clone();
+			trea.star = t.star;
+			trea.alien = t.alien;
+		}
+	}
+
 	@JsonField(tag = "sele", io = IOType.R)
 	public void zgen(int ind) {
 		sele = lb.get(ind);

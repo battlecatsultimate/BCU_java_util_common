@@ -430,6 +430,8 @@ public abstract class Entity extends AbEntity {
 				EffAnim<GuardEff> eff = effas().A_E_GUARD;
 				effs[id] = eff.getEAnim(GuardEff.BREAK);
 				CommonStatic.setSE(SE_BARRIER_ABI);
+			} else if (t == IMUATK_CD) {
+				effs[A_IMUATK] = effas().A_IMUATKCD.getEAnim(DefEff.DEF);
 			}
 		}
 
@@ -463,7 +465,7 @@ public abstract class Entity extends AbEntity {
 				byte id = dire == -1 ? A_CURSE : A_E_CURSE;
 				effs[id] = null;
 			}
-			if (status[P_IMUATK][0] == 0 && status[P_BSTHUNT][0] == 0) {
+			if (status[P_IMUATK][0] + status[P_IMUATK][1] + status[P_BSTHUNT][0] + status[P_BSTHUNT][1] == 0) {
 				effs[A_IMUATK] = null;
 			}
 			if (status[P_POISON][0] == 0) {
@@ -1630,10 +1632,11 @@ public abstract class Entity extends AbEntity {
 
 		tokens.add(atk);
 
-		Proc.PT imuatk = getProc().IMUATK;
+		Proc.PTC imuatk = getProc().IMUATK;
 		if (imuatk.exists() && (atk.dire == -1 || receive(-1)) || traitCompatible(atk.trait, atk.attacker, false)) {
-			if (status[P_IMUATK][0] == 0 && imuatk.perform(basis.r)) {
+			if (status[P_IMUATK][0] + status[P_IMUATK][1] == 0 && imuatk.perform(basis.r)) {
 				status[P_IMUATK][0] = (int) (imuatk.time * (1 + 0.2 / 3 * getFruit(atk.trait, atk.dire, -1)));
+				status[P_IMUATK][1] = status[P_IMUATK][2] = imuatk.cd;
 				anim.getEff(P_IMUATK);
 			}
 			if (status[P_IMUATK][0] > 0)
@@ -2700,6 +2703,12 @@ public abstract class Entity extends AbEntity {
 			status[P_SEAL][0]--;
 		if (status[P_IMUATK][0] > 0)
 			status[P_IMUATK][0]--;
+		else if (status[P_IMUATK][1] > 0) {
+			if (status[P_IMUATK][1] == status[P_IMUATK][2]) {
+				anim.getEff(IMUATK_CD);
+			}
+			status[P_IMUATK][1]--;
+		}
 		if (status[P_ARMOR][0] > 0)
 			status[P_ARMOR][0]--;
 		if (status[P_SPEED][0] > 0)
@@ -2708,6 +2717,12 @@ public abstract class Entity extends AbEntity {
 			status[P_LETHARGY][0]--;
 		if (status[P_BSTHUNT][0] > 0)
 			status[P_BSTHUNT][0]--;
+		else if (status[P_BSTHUNT][1] > 0) {
+			if (status[P_BSTHUNT][1] == status[P_BSTHUNT][2]) {
+				anim.getEff(IMUATK_CD);
+			}
+			status[P_BSTHUNT][1]--;
+		}
 		// update tokens
 		weaks.update();
 		pois.update();

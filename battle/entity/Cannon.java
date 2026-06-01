@@ -287,4 +287,8 @@ public class Cannon extends AtkModelAb {
     private float getBreakerSpawnPoint(float pos, float range) {
         return pos + (float) Math.ceil(range * 4 / 5) / 4f;
     }
+
+    public EUnit getWall() {
+        return wall;
+    }
 }

@@ -34,7 +34,7 @@ public class ECastle extends AbEntity {
 	}
 
 	public ECastle(StageBasis b, BasisLU lu) {
-		super(lu.t().getBaseHealth(StageLimit.isComboBanned(b.est.lim, C_BASE)));
+		super(lu.t().getBaseHealth(StageLimit.isComboBanned(b.est.lim, C_BASE), b));
 		sb = b;
 		isEnemy = false;
 	}

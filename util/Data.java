@@ -434,6 +434,16 @@ public class Data {
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
+		public static class PTC extends ProcItem {
+			@Order(0)
+			public int prob;
+			@Order(1)
+			public int time;
+			@Order(2)
+			public int cd;
+		}
+
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class REVIVE extends ProcItem {
 
 			@JsonClass(noTag = NoTag.LOAD)
@@ -714,6 +724,8 @@ public class Data {
 			public int prob;
 			@Order(2)
 			public int time;
+			@Order(3)
+			public int cd;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)
@@ -899,7 +911,7 @@ public class Data {
 		@Order(43)
 		public final COUNTER COUNTER = new COUNTER();
 		@Order(44)
-		public final PT IMUATK = new PT();
+		public final PTC IMUATK = new PTC();
 		@Order(45)
 		public final DMGCUT DMGCUT = new DMGCUT();
 		@Order(46)
@@ -1540,6 +1552,7 @@ public class Data {
 	public static final byte DMGCAP_SUCCESS = -13;
 	public static final byte GUARD_HOLD = -14;
 	public static final byte GUARD_BREAK = -15;
+	public static final byte IMUATK_CD = -16;
 
 	// Combo index
 	public static final byte C_ATK = 0;
@@ -1643,8 +1656,8 @@ public class Data {
 	public static final byte A_E_GREEN_GUARD = 66;
 	public static final byte A_LETHARGY = 67;
 	public static final byte A_LETHARGY_UP = 68;
-	public static final byte[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
 	public static final byte A_TOT = 69;
+	public static final byte[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
 
 	// atk type index used in filter page
 	public static final byte ATK_SINGLE = 0;

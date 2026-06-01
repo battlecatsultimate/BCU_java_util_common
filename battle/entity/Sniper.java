@@ -154,7 +154,7 @@ public class Sniper extends AtkModelAb {
 			anim.ent[6].alter(4, (int) ((bulletX - b.ubase.pos - SNIPER_POS) / Math.cos(Math.toRadians((int) bulletAngle)) * CommonStatic.BattleConst.ratio * 0.75));
 
 			if (bulletX <= pos) {
-				int atk = b.b.t().getBaseHealth(StageLimit.isComboBanned(target.basis.est.lim, C_BASE)) / 20;
+				int atk = b.b.t().getBaseHealth(StageLimit.isComboBanned(target.basis.est.lim, C_BASE), b) / 20;
 				Proc proc = Proc.blank();
 				proc.SNIPER.prob = 1;
 				List<Trait> traits = new ArrayList<>();

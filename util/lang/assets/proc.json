@@ -878,7 +878,10 @@
         "abbr_name": "Invi.",
         "full_name": "Invincibility",
         "tooltip": null,
-        "format": "(prob)% chance to gain invincibility for (_dispTime(time))",
+        "format": [
+            "(prob)% chance to gain invincibility for (_dispTime(time))",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "prob": {
                 "name": "chance",
@@ -886,6 +889,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }
@@ -1382,7 +1389,10 @@
         "abbr_name": "BST Kill",
         "full_name": "Behemoth Slayer",
         "tooltip": null,
-        "format": "Behemoth Slayer (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "format": [
+            "Behemoth Slayer (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "active": {
                 "name": "active",
@@ -1394,6 +1404,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }
