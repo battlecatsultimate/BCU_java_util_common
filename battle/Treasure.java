@@ -11,6 +11,7 @@ import common.pack.FixIndexList.FixIndexMap;
 import common.pack.UserProfile;
 import common.system.files.VFile;
 import common.util.Data;
+import common.util.stage.BattlePreset;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 
@@ -150,12 +151,15 @@ public class Treasure extends Data {
 	/**
 	 * get base health
 	 */
-	public int getBaseHealth(boolean noCombo) {
+	public int getBaseHealth(boolean noCombo, StageBasis sb) {
 		int t = tech[LV_BASE];
 		int base = t < 6 ? t * 1000 : t < 8 ? 5000 + (t - 5) * 2000 : 9000 + (t - 7) * 3000;
 		base += trea[T_BASE] * 70;
 		base += (bslv[0] - 1) * 4000;
-		return base * (100 + (noCombo ? 0 : b.getInc(C_BASE))) / 100;
+		int result = base * (100 + (noCombo ? 0 : b.getInc(C_BASE))) / 100;
+		if (sb.st.preset != null && BattlePreset.isLineupPreset(sb.st.preset) && sb.st.preset.baseHealthBoost)
+			result += 20000;
+		return result;
 	}
 
 	/**

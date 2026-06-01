@@ -1,6 +1,7 @@
 package common.util.stage;
 
 import common.battle.BasisLU;
+import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
@@ -13,9 +14,10 @@ import java.util.List;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class BattlePreset {
-    public static boolean isLineupPreset(BasisLU blu, BattlePreset bp) {
+    public static boolean isLineupPreset(BattlePreset bp) {
+        BasisLU blu = BasisSet.current().sele;
         blu.lu.renew();
-        Treasure t = blu.t();
+        Treasure t = BasisSet.current().t();
 
         if (!Arrays.equals(t.tech, bp.tech))
             return false;
@@ -56,8 +58,9 @@ public class BattlePreset {
         return true;
     }
 
-    public static void generateBasis(BasisLU dest, BattlePreset bp) {
-        Treasure t = dest.t();
+    public static void generateBasis(BattlePreset bp) {
+        BasisLU dest = BasisSet.current().sele;
+        Treasure t = BasisSet.current().t();
 
         t.tech = bp.tech.clone();
         t.trea = bp.trea.clone();
@@ -66,13 +69,16 @@ public class BattlePreset {
         t.gods = bp.gods.clone();
         t.alien = bp.alien;
         t.star = bp.star;
+        BasisSet.current().renewTreasure();
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++) {
                 Form form = bp.fs[i][j];
                 Level lv = bp.levels[i][j];
-                if (form == null)
+                if (form == null) {
+                    dest.lu.fs[i][j] = null;
                     continue;
+                }
 
                 dest.lu.fs[i][j] = form.unit.forms[form.fid]; // prevent form change affecting battle preset
                 int[] lvs = new int[10];
@@ -82,6 +88,7 @@ public class BattlePreset {
                 dest.lu.setLv(form.unit, Level.lvList(form.unit, lvs, lv.getOrbs()));
             }
         }
+        
         dest.nyc[0] = bp.cannonType;
         dest.lu.renew();
     }
