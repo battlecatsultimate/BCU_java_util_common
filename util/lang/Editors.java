@@ -742,13 +742,17 @@ public class Editors {
 			setComponentVisibility("BSTHUNT", t.active == 1, 1);
 			if (t.active == 1) {
 				t.prob = MathUtil.clip(t.prob, 0, 100);
-				if (t.prob == 0)
+				if (t.prob == 0) {
 					t.time = 0;
-				else
+					t.cd = 0;
+				} else {
 					t.time = Math.max(1, t.time);
+					t.cd = Math.max(0, t.cd);
+				}
 			} else {
 				t.prob = 0;
 				t.time = 0;
+				t.cd = 0;
 			}
 		}));
 
