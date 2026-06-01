@@ -249,7 +249,7 @@ public class EUnit extends Entity {
 			if (beastDodge.prob > 0 && (atk.dire != dire)) {
 				if (status[P_BSTHUNT][0] + status[P_BSTHUNT][1] == 0 && beastDodge.perform(basis.r)) {
 					status[P_BSTHUNT][0] = beastDodge.time;
-					status[P_BSTHUNT][1] = beastDodge.cd;
+					status[P_BSTHUNT][1] = status[P_BSTHUNT][2] = beastDodge.cd;
 					anim.getEff(P_IMUATK);
 				}
 
