@@ -88,7 +88,7 @@ public class BattlePreset {
                 dest.lu.setLv(form.unit, Level.lvList(form.unit, lvs, lv.getOrbs()));
             }
         }
-        
+
         dest.nyc[0] = bp.cannonType;
         dest.lu.renew();
     }
@@ -113,6 +113,7 @@ public class BattlePreset {
     }
     //TODO verify customized battle preset loading
 
+    @JsonField(block = true)
     public int level; // It seems preset can be activated per crown
 
     @JsonField(alias = Form.FormJson.class)
@@ -120,7 +121,7 @@ public class BattlePreset {
     public final Level[][] levels = new Level[2][5];
 
     public int cannonType; // Raw ID of cannon that is parsed into BCU ID order
-    public boolean baseHealthBoost; // Add 20k to unit base health if this is true
+    public int baseHealthBoost; // Add 20k to unit base health if this is true
 
     // Copied treasure data manually
     @JsonField(gen = JsonField.GenType.FILL)

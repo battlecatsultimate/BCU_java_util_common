@@ -1425,7 +1425,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 					break;
 				case BASE:
-					preset.baseHealthBoost = true;
+					preset.baseHealthBoost = 20000;
 
 					break;
 				case ITF1:
