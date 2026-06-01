@@ -724,6 +724,8 @@ public class Data {
 			public int prob;
 			@Order(2)
 			public int time;
+			@Order(3)
+			public int cd;
 		}
 
 		@JsonClass(noTag = NoTag.LOAD)

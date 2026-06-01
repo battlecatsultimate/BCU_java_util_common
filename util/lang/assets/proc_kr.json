@@ -1287,7 +1287,10 @@
         "abbr_name": "초수 특효",
         "full_name": "초수 특효",
         "tooltip": "초수 특성을 가진 적에게 추가적인 데미지를 가하고 감소된 데미지를 입습니다. 확률적으로 공격 무효도 발동됩니다",
-        "format": "초수 특효 (_left)피격 시 데미지 x0.6, 공격 시 데미지 x2.5[(prob>0){로 적용되고, (prob)% 확률로 (_dispTime(time)) 동안 공격 무효}](_right)",
+        "format": [
+            "초수 특효 (_left)피격 시 데미지 x0.6, 공격 시 데미지 x2.5[(prob>0){로 적용되고, (prob)% 확률로 (_dispTime(time)) 동안 공격 무효}](_right)",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "active": {
                 "name": "초수 특효",
@@ -1300,6 +1303,10 @@
             "time": {
                 "name": "시간",
                 "tooltip": "공격 무효가 얼마동안 발동될지 정합니다"
+            },
+            "cd": {
+                "name": "cooldown",
+                "tooltip": null
             }
         }
     },

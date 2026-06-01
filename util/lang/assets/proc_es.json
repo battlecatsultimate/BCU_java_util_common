@@ -1311,7 +1311,10 @@
         "abbr_name": "Mata BST",
         "full_name": "Cazador de Bestias",
         "tooltip": null,
-        "format": "Cazador de Bestias (_left)Inflige 2.5x de daño[(prob>0){, }(prob==0){ y }]sólo recibe 0.6x de daño[(prob>0){, y una probabilidad del (prob)% de evadir sus ataques por (_dispTime(time))}](_right)",
+        "format": [
+            "Cazador de Bestias (_left)Inflige 2.5x de daño[(prob>0){, }(prob==0){ y }]sólo recibe 0.6x de daño[(prob>0){, y una probabilidad del (prob)% de evadir sus ataques por (_dispTime(time))}](_right)",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "active": {
                 "name": "Mayor fuerza contra Bestias",
@@ -1323,6 +1326,10 @@
             },
             "time": {
                 "name": "duración",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }
