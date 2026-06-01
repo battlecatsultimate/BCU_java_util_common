@@ -1,5 +1,6 @@
 package common.util.stage;
 
+import common.battle.BasisLU;
 import common.battle.Treasure;
 import common.io.json.JsonClass;
 import common.io.json.JsonField;
@@ -12,6 +13,32 @@ import java.util.List;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class BattlePreset {
+    public static BasisLU generateBasis(BattlePreset bp) {
+        BasisLU preset = new BasisLU();
+        Treasure t = preset.t();
+
+        t.tech = bp.tech.clone();
+        t.trea = bp.trea.clone();
+        t.bslv = bp.bslv.clone();
+        t.fruit = bp.fruit.clone();
+        t.gods = bp.gods.clone();
+
+        System.arraycopy(bp.fs, 0, preset.lu.fs, 0, bp.fs.length);
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 5; j++) {
+                Form form = bp.fs[i][j];
+                if (form == null)
+                    continue;
+
+                preset.lu.fs[i][j] = form;
+                preset.lu.setLv(form.unit, bp.levels[i][j]);
+            }
+        }
+        preset.nyc[0] = bp.cannonType;
+        preset.lu.renew();
+        return preset;
+    }
+
     public enum ActivatedTreasure {
         EOC1,  // EoC Ch. 1
         EOC2,  // EoC Ch. 2
