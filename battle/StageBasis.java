@@ -271,7 +271,7 @@ public class StageBasis extends BattleObj {
 	public int entityCountRar(int r) {
 		int ans = 0;
 		for (Entity ent : le) {
-			if (ent.dire == -1 && !ent.dead && ((MaskUnit) ent.data).getPack().unit.rarity == r)
+			if (ent instanceof EUnit && ent != canon.getWall() && !ent.dead && !((EUnit) ent).isSpirit && ((MaskUnit) ent.data).getPack().unit.rarity == r)
 				ans += ent.data.getWill() + 1;
 		}
 		return ans;
