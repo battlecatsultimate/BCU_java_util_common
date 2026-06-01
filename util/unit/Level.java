@@ -14,7 +14,7 @@ import static common.util.Data.ORB_INTS;
 
 @SuppressWarnings("unused")
 @JsonClass(noTag = NoTag.LOAD)
-public class Level implements BattleStatic, LevelInterface {
+public class Level implements BattleStatic, LevelInterface, Cloneable {
 
 	private int level, plusLevel;
 	@Nonnull

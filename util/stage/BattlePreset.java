@@ -13,9 +13,50 @@ import java.util.List;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class BattlePreset {
-    public static BasisLU generateBasis(BattlePreset bp) {
-        BasisLU preset = new BasisLU();
-        Treasure t = preset.t();
+    public static boolean isLineupPreset(BasisLU blu, BattlePreset bp) {
+        blu.lu.renew();
+        Treasure t = blu.t();
+
+        if (!Arrays.equals(t.tech, bp.tech))
+            return false;
+        else if (!Arrays.equals(t.trea, bp.trea))
+            return false;
+        else if (!Arrays.equals(t.bslv, bp.bslv))
+            return false;
+        else if (!Arrays.equals(t.fruit, bp.fruit))
+            return false;
+        else if (!Arrays.equals(t.gods, bp.gods))
+            return false;
+        else if (t.alien != bp.alien || t.star != bp.star)
+            return false;
+        else if (blu.nyc[0] != bp.cannonType)
+            return false;
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 5; j++) {
+                Form bpform = bp.fs[i][j];
+                Form luform = blu.lu.fs[i][j];
+                if (bpform == null || luform == null) {
+                    if (bpform != null || luform != null)
+                        return false;
+                } else if (!bpform.uid.equals(luform.uid) || bpform.fid != luform.fid) {
+                    return false;
+                } else {
+                    Level bplv = bp.levels[i][j];
+                    Level lulv = blu.lu.getLv(luform);
+                    if (lulv.getLv() != bplv.getLv() || lulv.getPlusLv() != bplv.getPlusLv())
+                        return false;
+                    else if (!Arrays.equals(lulv.getTalents(), bplv.getTalents()))
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static void generateBasis(BasisLU dest, BattlePreset bp) {
+        Treasure t = dest.t();
 
         t.tech = bp.tech.clone();
         t.trea = bp.trea.clone();
@@ -25,20 +66,18 @@ public class BattlePreset {
         t.alien = bp.alien;
         t.star = bp.star;
 
-        System.arraycopy(bp.fs, 0, preset.lu.fs, 0, bp.fs.length);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++) {
                 Form form = bp.fs[i][j];
                 if (form == null)
                     continue;
 
-                preset.lu.fs[i][j] = form;
-                preset.lu.setLv(form.unit, bp.levels[i][j]);
+                dest.lu.fs[i][j] = form.unit.forms[form.fid]; // prevent form change affecting battle preset
+                dest.lu.setLv(form.unit, bp.levels[i][j].clone());
             }
         }
-        preset.nyc[0] = bp.cannonType;
-        preset.lu.renew();
-        return preset;
+        dest.nyc[0] = bp.cannonType;
+        dest.lu.renew();
     }
 
     public enum ActivatedTreasure {
@@ -54,7 +93,7 @@ public class BattlePreset {
         BASE   // Base health boost
     }
 
-    public static class LevelObject {
+    public static class LevelObject { // Used in reading BC data
         public int evolution;
         public int level;
         public int plusLevel;
@@ -79,7 +118,7 @@ public class BattlePreset {
             gods = new int[3];
 
     @JsonField(block = true)
-    public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons
+    public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons (technically deactivated treasures)
 
     @JsonField
     public int alien, star;
