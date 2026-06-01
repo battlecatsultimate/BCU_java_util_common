@@ -46,8 +46,9 @@ public class BattlePreset {
                     Level lulv = blu.lu.getLv(luform);
                     if (lulv.getLv() != bplv.getLv() || lulv.getPlusLv() != bplv.getPlusLv())
                         return false;
-                    else if (!Arrays.equals(lulv.getTalents(), bplv.getTalents()))
+                    else if (!Arrays.equals(Level.getInts(lulv), Level.getInts(bplv)))
                         return false;
+                    // todo: check if orbs match
                 }
             }
         }
@@ -69,11 +70,16 @@ public class BattlePreset {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++) {
                 Form form = bp.fs[i][j];
+                Level lv = bp.levels[i][j];
                 if (form == null)
                     continue;
 
                 dest.lu.fs[i][j] = form.unit.forms[form.fid]; // prevent form change affecting battle preset
-                dest.lu.setLv(form.unit, bp.levels[i][j].clone());
+                int[] lvs = new int[10];
+                lvs[0] = lv.getLv();
+                lvs[1] = lv.getPlusLv();
+                System.arraycopy(lv.getTalents(), 0, lvs, 2, lv.getTalents().length);
+                dest.lu.setLv(form.unit, Level.lvList(form.unit, lvs, lv.getOrbs()));
             }
         }
         dest.nyc[0] = bp.cannonType;

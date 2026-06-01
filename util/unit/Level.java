@@ -22,6 +22,14 @@ public class Level implements BattleStatic, LevelInterface, Cloneable {
 
 	private int[][] orbs = null;
 
+	public static int[] getInts(Level lv) {
+		int[] ans = new int[10];
+		ans[0] = lv.getLv();
+		ans[1] = lv.getPlusLv();
+		System.arraycopy(lv.getTalents(), 0, ans, 2, lv.getTalents().length);
+		return ans;
+	}
+
 	public static Level lvList(Unit u, int[] arr, int[][] orbs) {
 		int talentNumber = 0;
 		PCoin coin = null;
