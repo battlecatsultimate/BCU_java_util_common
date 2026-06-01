@@ -118,7 +118,7 @@ public class BattlePreset {
             gods = new int[3];
 
     @JsonField(block = true)
-    public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons (technically deactivated treasures)
+    public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons
 
     @JsonField
     public int alien, star;
