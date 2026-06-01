@@ -878,7 +878,10 @@
         "abbr_name": "Invi.",
         "full_name": "Invincibility",
         "tooltip": null,
-        "format": "(prob)% chance to gain invincibility for (_dispTime(time))",
+        "format": [
+            "(prob)% chance to gain invincibility for (_dispTime(time))",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "prob": {
                 "name": "chance",
@@ -886,6 +889,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }

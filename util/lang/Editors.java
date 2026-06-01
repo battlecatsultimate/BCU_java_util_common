@@ -279,6 +279,19 @@ public class Editors {
 				t.time = 1;
 		});
 
+		EditControl<Proc.PTC> ptc = new EditControl<>(Proc.PTC.class, (t) -> {
+			t.prob = MathUtil.clip(t.prob, 0, 100);
+			if (t.prob == 0) {
+				t.time = 0;
+				t.cd = 0;
+			} else {
+				if (t.time == 0)
+					t.time = 1;
+				if (t.cd < 0)
+					t.cd = 0;
+			}
+		});
+
 		EditControl<Proc.IMU> imu = new EditControl<>(Proc.IMU.class, (t) -> {
 			t.mult = Math.min(t.mult, 100);
 			t.block = Math.min(t.block, 100);
@@ -546,7 +559,7 @@ public class Editors {
 			}
 		}));
 
-		map().put("IMUATK", pt);
+		map().put("IMUATK", ptc);
 
 		map().put("DMGCUT", new EditControl<>(Proc.DMGCUT.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);

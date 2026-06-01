@@ -855,7 +855,10 @@
         "abbr_name": "Инвиз.",
         "full_name": "Уворот",
         "tooltip": null,
-        "format": "(prob)% шанс увернуться от атак в течении (_dispFruit(time))",
+        "format": [
+            "(prob)% шанс увернуться от атак в течении (_dispFruit(time))",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "prob": {
                 "name": "шанс",
@@ -863,6 +866,10 @@
             },
             "time": {
                 "name": "длительность",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }

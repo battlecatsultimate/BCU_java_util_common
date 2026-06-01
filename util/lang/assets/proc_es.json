@@ -860,7 +860,10 @@
         "abbr_name": "evasión",
         "full_name": "Evasión",
         "tooltip": null,
-        "format": "Probabilidad del (prob)% de esquivar ataques por (_dispTime(time))",
+        "format": [
+            "Probabilidad del (prob)% de esquivar ataques por (_dispTime(time))",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "prob": {
                 "name": "probabilidad",
@@ -868,6 +871,10 @@
             },
             "time": {
                 "name": "duración",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
                 "tooltip": null
             }
         }

@@ -808,7 +808,10 @@
     "abbr_name": "攻撃無効",
     "full_name": "攻撃無効",
     "tooltip": null,
-    "format": "(prob)%の確率で(_dispTime(time))の間攻撃を無効にする",
+    "format": [
+      "(prob)%の確率で(_dispTime(time))の間攻撃を無効にする",
+      "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+    ],
     "class": {
       "prob": {
         "name": "確率",
@@ -816,6 +819,10 @@
       },
       "time": {
         "name": "期間",
+        "tooltip": null
+      },
+      "cd": {
+        "name": "cooldown",
         "tooltip": null
       }
     }

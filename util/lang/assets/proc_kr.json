@@ -775,7 +775,10 @@
         "abbr_name": "공격 무효",
         "full_name": "공격 무효",
         "tooltip": "특정 확률로 일정 시간동안 들어오는 모든 공격을 무시합니다",
-        "format": "(prob)% 확률로 (_dispTime(time)) 동안 공격 무효",
+        "format": [
+            "(prob)% 확률로 (_dispTime(time)) 동안 공격 무효",
+            "[(cd>0){, with (_dispTime(cd)) cooldown after invincibility expires}]"
+        ],
         "class": {
             "prob": {
                 "name": "확률",
@@ -784,6 +787,10 @@
             "time": {
                 "name": "시간",
                 "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "cd": {
+                "name": "cooldown",
+                "tooltip": null
             }
         }
     },
