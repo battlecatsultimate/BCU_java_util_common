@@ -157,7 +157,7 @@ public class Treasure extends Data {
 		base += trea[T_BASE] * 70;
 		base += (bslv[0] - 1) * 4000;
 		int result = base * (100 + (noCombo ? 0 : b.getInc(C_BASE))) / 100;
-		if (sb.st.preset != null && BattlePreset.isLineupPreset(sb.st.preset))
+		if (sb.st.preset != null && BattlePreset.isCurrentLineupPreset(sb.st.preset))
 			result += sb.st.preset.baseHealthBoost;
 		return result;
 	}

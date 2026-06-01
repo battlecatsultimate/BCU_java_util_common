@@ -972,7 +972,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 						i++;
 					}
 
-					targetStage.preset.cannonType = slotData.get("cannon").getAsInt();
+					targetStage.preset.nyc[0] = slotData.get("cannon").getAsInt();
 
 					JsonObject abilityData = presetObject.getAsJsonObject("ability").getAsJsonObject("data");
 

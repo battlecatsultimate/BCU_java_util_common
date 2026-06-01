@@ -14,7 +14,7 @@ import java.util.List;
 
 @JsonClass(noTag = JsonClass.NoTag.LOAD)
 public class BattlePreset {
-    public static boolean isLineupPreset(BattlePreset bp) {
+    public static boolean isCurrentLineupPreset(BattlePreset bp) {
         BasisLU blu = BasisSet.current().sele;
         blu.lu.renew();
         Treasure t = BasisSet.current().t();
@@ -31,8 +31,10 @@ public class BattlePreset {
             return false;
         else if (t.alien != bp.alien || t.star != bp.star)
             return false;
-        else if (blu.nyc[0] != bp.cannonType)
-            return false;
+
+        for (int i = 0; i < 3; i++)
+            if (bp.nyc[i] != -1 && bp.nyc[i] != blu.nyc[i])
+                return false;
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++) {
@@ -89,7 +91,10 @@ public class BattlePreset {
             }
         }
 
-        dest.nyc[0] = bp.cannonType;
+        for (int i = 0; i < 3; i++)
+            if (bp.nyc[i] != -1)
+                dest.nyc[i] = bp.nyc[i];
+
         dest.lu.renew();
     }
 
@@ -131,6 +136,9 @@ public class BattlePreset {
             fruit = new int[7],
             gods = new int[3];
 
+    @JsonField(gen = JsonField.GenType.FILL)
+    public int[] nyc = new int[] { -1, -1, -1 }; // -1 means don't need to replace
+
     @JsonField(block = true)
     public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons
 
@@ -143,7 +151,7 @@ public class BattlePreset {
                 "level=" + level + "\n" +
                 ", fs=" + Arrays.toString(fs) + "\n" +
                 ", levels=" + Arrays.toString(levels) + "\n" +
-                ", cannonType=" + cannonType + "\n" +
+                ", cannonType=" + Arrays.toString(nyc) + "\n" +
                 ", tech=" + Arrays.toString(tech) + "\n" +
                 ", trea=" + Arrays.toString(trea) + "\n" +
                 ", bslv=" + Arrays.toString(bslv) + "\n" +
