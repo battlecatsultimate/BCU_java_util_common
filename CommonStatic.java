@@ -30,17 +30,7 @@ import static java.lang.Character.isDigit;
 public class CommonStatic {
 
 	public enum LayerType {
-		ORIG(0), SET(1), RELATIVE(2);
-
-		final int ind;
-
-		LayerType(int i) {
-			ind = i;
-		}
-
-		public String getStr() {
-			return "layertype" + ind;
-		}
+		ORIG, SET, RELATIVE;
 
 		@Override
 		public String toString() {
