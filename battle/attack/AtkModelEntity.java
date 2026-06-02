@@ -43,10 +43,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
-		atks = new int[raw.length + CustomEntity.specialAttackCount];
-		abis = new int[raw.length + CustomEntity.specialAttackCount];
-		act = new int[raw.length + CustomEntity.specialAttackCount];
-		acs = new BattleObj[raw.length + CustomEntity.specialAttackCount];
+		atks = new int[raw.length + CustomEntity.SPECIAL_ATTACK_COUNT];
+		abis = new int[raw.length + CustomEntity.SPECIAL_ATTACK_COUNT];
+		act = new int[raw.length + CustomEntity.SPECIAL_ATTACK_COUNT];
+		acs = new BattleObj[raw.length + CustomEntity.SPECIAL_ATTACK_COUNT];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (Math.round(raw[i][0] * d0) * d1);
 			abis[i] = raw[i][2];
@@ -94,7 +94,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	public void setExtraAtks(int[][] raw, float d0) {
-		for(int i = 0; i < CustomEntity.specialAttackCount; i++) {
+		for(int i = 0; i < CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
 			MaskAtk model = data.getAtkModel(raw.length + i);
 
 			if (model instanceof AtkDataModel) {

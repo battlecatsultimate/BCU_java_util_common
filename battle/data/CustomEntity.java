@@ -18,7 +18,7 @@ import java.util.TreeSet;
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
 
-	public static int specialAttackCount = 6;
+	public static int SPECIAL_ATTACK_COUNT = 6;
 
 	@JsonField(gen = GenType.GEN)
 	public AtkDataModel rev, res, bur, resu, revi, glas; // special attacks
