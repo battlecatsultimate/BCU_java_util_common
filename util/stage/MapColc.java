@@ -812,6 +812,10 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 								proc = SCORE_GOOD;
 								dire = -1;
 								break;
+							case 17:
+								proc = SCORE_RESIST;
+								dire = -1;
+								break;
 						}
 
 						if (proc == -1)
