@@ -619,16 +619,10 @@ public abstract class Entity extends AbEntity {
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 5));
 				}
 
-				// converge souls layer: death on the same frame = same soul height
-				// still not sure how this precisely work in BC, it seems to have exceptions
 				Soul s = selfDestructed ? null : Identifier.get(e.data.getDeathAnim());
 				boolean soulExists = s != null;
 				dead = soulExists ? (soul = s.getEAnim(UType.SOUL)).len() : 4;
 				if (soulExists && s.layertype != CommonStatic.LayerType.ORIG) {
-					if (s.layertype == CommonStatic.LayerType.ZERO) {
-						e.currentLayer = 0;
-						return;
-					}
 					int slay = s.layer_0 == s.layer_1 ? s.layer_0 : s.layer_0 + (int) (e.basis.r.nextFloat() * (s.layer_1 - s.layer_0 + 1));
 					if (s.layertype == CommonStatic.LayerType.SET)
 						e.currentLayer = slay;
