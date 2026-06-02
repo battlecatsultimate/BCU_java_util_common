@@ -611,16 +611,11 @@ public abstract class Entity extends AbEntity {
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
-				if ((e.getAbi() & AB_GLASS) != 0) {
-					dead = 4;
-					return;
-				}
-
 				// converge souls layer: death on the same frame = same soul height
 				// still not sure how this precisely work in BC, it seems to have exceptions
 				e.currentLayer = 0;
-				Soul s = Identifier.get(e.data.getDeathAnim());
-				dead = s == null ? 0 : (soul = s.getEAnim(UType.SOUL)).len();
+				Soul s = ((e.getAbi() & AB_GLASS) != 0) ? null : Identifier.get(e.data.getDeathAnim());
+				dead = s == null ? 4 : (soul = s.getEAnim(UType.SOUL)).len();
 			}
 		}
 
