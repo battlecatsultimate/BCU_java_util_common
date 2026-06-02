@@ -664,7 +664,7 @@ public abstract class Entity extends AbEntity {
 				if (e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
 					int startTime = soul != null ? soul.len() : 4;
-					if ((adm.pre > 1 && adm.pre == startTime - dead) || (dead == 0 && adm.pre >= startTime && !e.dead))
+					if ((adm.pre == startTime - dead) || (dead == 0 && adm.pre >= startTime && !e.dead))
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 				}
 			}
