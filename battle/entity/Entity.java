@@ -613,6 +613,12 @@ public abstract class Entity extends AbEntity {
 			} else {
 				boolean selfDestructed = ((e.getAbi() & AB_GLASS) != 0) && e.health > 0;
 
+				if (selfDestructed) {
+					AtkDataModel glas = e.data.getGlass();
+					if (glas != null)
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 5));
+				}
+
 				// converge souls layer: death on the same frame = same soul height
 				// still not sure how this precisely work in BC, it seems to have exceptions
 				e.currentLayer = 0;
