@@ -231,6 +231,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 				enemy.resu.inject(pack);
 			if (enemy.revi != null)
 				enemy.revi.inject(pack);
+			if (enemy.glas != null)
+				enemy.glas.inject(pack);
 		}
 	}
 

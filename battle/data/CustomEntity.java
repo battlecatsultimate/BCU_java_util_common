@@ -18,8 +18,13 @@ import java.util.TreeSet;
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
 
+	public static int specialAttackCount = 6;
+
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rep, rev, res, cntr, bur, resu, revi;
+	public AtkDataModel rev, res, bur, resu, revi, glas; // special attacks
+
+	@JsonField(gen = GenType.GEN)
+	public AtkDataModel rep, cntr; // common & counter attacks
 
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
@@ -96,6 +101,8 @@ public abstract class CustomEntity extends DataEntity {
 			return resu;
 		if (ind == atks.length + 4)
 			return revi;
+		if (ind == atks.length + 5)
+			return glas;
 
 		return null;
 	}
@@ -167,6 +174,11 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
+	public AtkDataModel getGlass() {
+		return glas;
+	}
+
+	@Override
 	public int getTBA() {
 		return Math.abs(tba);
 	}
@@ -217,16 +229,18 @@ public abstract class CustomEntity extends DataEntity {
 		boolean ans = false;
 		for (AtkDataModel adm : atks)
 			ans |= adm.isLD();
-		if(getRevenge() != null)
+		if (getRevenge() != null)
 			ans |= getRevenge().isLD();
-		if(getResurrection() != null)
+		if (getResurrection() != null)
 			ans |= getResurrection().isLD();
-		if(getGouge() != null)
+		if (getGouge() != null)
 			ans |= getGouge().isLD();
-		if(getResurface() != null)
+		if (getResurface() != null)
 			ans |= getResurface().isLD();
-		if(getRevive() != null)
+		if (getRevive() != null)
 			ans |= getRevive().isLD();
+		if (getGlass() != null)
+			ans |= getGlass().isLD();
 		return ans;
 	}
 
@@ -237,17 +251,8 @@ public abstract class CustomEntity extends DataEntity {
 	 */
 	@Override
 	public boolean isLD(int ind) {
-		if (ind == atks.length)
-			return rev.isLD();
-		if (ind == atks.length + 1)
-			return res.isLD();
-		if (ind == atks.length + 2)
-			return bur.isLD();
-		if (ind == atks.length + 3)
-			return resu.isLD();
-		if (ind == atks.length + 4)
-			return revi.isLD();
-		return atks[ind].isLD();
+		AtkDataModel model = (AtkDataModel) getAtkModel(ind);
+		return model.isLD();
 	}
 
 	@Override
@@ -265,6 +270,8 @@ public abstract class CustomEntity extends DataEntity {
 			ans |= getResurface().isOmni();
 		if(getRevive() != null)
 			ans |= getRevive().isOmni();
+		if (getGlass() != null)
+			ans |= getGlass().isOmni();
 		return ans;
 	}
 
@@ -275,18 +282,8 @@ public abstract class CustomEntity extends DataEntity {
 	 */
 	@Override
 	public boolean isOmni(int ind) {
-		if (ind == atks.length)
-			return rev.isOmni();
-		if (ind == atks.length + 1)
-			return res.isOmni();
-		if (ind == atks.length + 2)
-			return bur.isOmni();
-		if (ind == atks.length + 3)
-			return resu.isOmni();
-		if (ind == atks.length + 4)
-			return revi.isOmni();
-
-		return atks[ind].isOmni();
+		AtkDataModel model = (AtkDataModel) getAtkModel(ind);
+		return model.isOmni();
 	}
 
 	@Override
@@ -337,6 +334,8 @@ public abstract class CustomEntity extends DataEntity {
 			resu = new AtkDataModel(this, ce.resu);
 		if (ce.revi != null)
 			revi = new AtkDataModel(this, ce.revi);
+		if (ce.glas != null)
+			glas = new AtkDataModel(this, ce.glas);
 
 		List<AtkDataModel> temp = new ArrayList<>();
 		List<AtkDataModel> tnew = new ArrayList<>();

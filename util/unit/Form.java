@@ -237,6 +237,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					data.resu.inject(pack);
 				if (data.revi != null)
 					data.revi.inject(pack);
+				if (data.glas != null)
+					data.glas.inject(pack);
 			}
 		}
 		if (data.getPCoin() != null) {
