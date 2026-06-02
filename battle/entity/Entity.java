@@ -611,16 +611,19 @@ public abstract class Entity extends AbEntity {
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
-				if ((e.getAbi() & AB_GLASS) != 0) {
-					dead = 4;
-					return;
+				boolean selfDestructed = ((e.getAbi() & AB_GLASS) != 0) && e.health > 0;
+
+				if (selfDestructed) {
+					AtkDataModel glas = e.data.getGlass();
+					if (glas != null)
+						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 5));
 				}
 
 				// converge souls layer: death on the same frame = same soul height
 				// still not sure how this precisely work in BC, it seems to have exceptions
-				Soul s = Identifier.get(e.data.getDeathAnim());
+				Soul s = selfDestructed ? null : Identifier.get(e.data.getDeathAnim());
 				boolean soulExists = s != null;
-				dead = soulExists ? (soul = s.getEAnim(UType.SOUL)).len() : 0;
+				dead = soulExists ? (soul = s.getEAnim(UType.SOUL)).len() : 4;
 				if (soulExists && s.layertype != CommonStatic.LayerType.ORIG) {
 					if (s.layertype == CommonStatic.LayerType.ZERO) {
 						e.currentLayer = 0;
@@ -672,10 +675,11 @@ public abstract class Entity extends AbEntity {
 			if (dead >= 0) {
 				if (deathSurge > 0 && soul.len() - dead == 21) // 21 is guessed delay compared to BC
 					e.aam.getDeathSurge(deathSurge);
-				if (e.data.getResurrection() != null) {
+				boolean selfDestructed = ((e.getAbi() & AB_GLASS) != 0) && e.health > 0;
+				if (!selfDestructed && e.data.getResurrection() != null) {
 					AtkDataModel adm = e.data.getResurrection();
-					int startTime = soul != null ? soul.len() : 4;
-					if ((adm.pre > 1 && adm.pre == startTime - dead) || (dead == 0 && adm.pre >= startTime && !e.dead))
+					int startTime = soul == null ? 4 : soul.len();
+					if ((adm.pre == startTime - dead) || (dead == 0 && adm.pre >= startTime && !e.dead))
 						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 				}
 			}

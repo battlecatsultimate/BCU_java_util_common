@@ -2,10 +2,7 @@ package common.util.unit;
 
 import common.CommonStatic;
 import common.battle.StageBasis;
-import common.battle.data.AtkDataModel;
-import common.battle.data.CustomEnemy;
-import common.battle.data.DataEnemy;
-import common.battle.data.MaskEnemy;
+import common.battle.data.*;
 import common.battle.entity.EEnemy;
 import common.io.json.JsonClass;
 import common.io.json.JsonDecoder.OnInjected;
@@ -219,18 +216,13 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			for (AtkDataModel adm : enemy.atks)
 				adm.inject(pack);
 			enemy.rep.inject(pack);
-			if (enemy.rev != null)
-				enemy.rev.inject(pack);
-			if (enemy.res != null)
-				enemy.res.inject(pack);
 			if (enemy.cntr != null)
 				enemy.cntr.inject(pack);
-			if (enemy.bur != null)
-				enemy.bur.inject(pack);
-			if (enemy.resu != null)
-				enemy.resu.inject(pack);
-			if (enemy.revi != null)
-				enemy.revi.inject(pack);
+			for (int i = 0; i < enemy.getAtkCount() + CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
+				AtkDataModel model = (AtkDataModel) enemy.getAtkModel(i);
+				if (model != null)
+					model.inject(pack);
+			}
 		}
 	}
 
