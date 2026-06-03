@@ -164,8 +164,8 @@ public class ImgCore extends Data {
 
 	protected static void drawSca(FakeGraphics g, P piv, P sc) {
 		g.setColor(FakeGraphics.RED);
-		g.fillOval(-10, -10, 20, 20);
-		g.drawOval(-40, -40, 80, 80);
+		g.fillOval(-5, -5, 10, 10);
+		g.drawOval(-20, -20, 40, 40);
 		int x = (int) -piv.x;
 		int y = (int) -piv.y;
 		if (sc.x < 0)
