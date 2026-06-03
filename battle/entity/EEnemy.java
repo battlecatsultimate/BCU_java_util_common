@@ -32,7 +32,7 @@ public class EEnemy extends Entity {
 		mark = m;
 		line = l;
 		isBase = mark <= -1;
-		currentLayer = spawnLayer = d0 == d1 ? d0 : d0 + (int) (b.r.nextFloat() * (d1 - d0 + 1));
+		currentLayer = spawnLayer = b.getValueBetween(d0, d1);
 		traits = de.getTraits();
 
 		skipSpawnBurrow = mark >= 1;

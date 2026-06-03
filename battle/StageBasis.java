@@ -758,13 +758,10 @@ public class StageBasis extends BattleObj {
 					le.add(e);
 					le.sort(Comparator.comparingInt(en -> en.currentLayer));
 
-					if(st.minSpawn <= 0 || st.maxSpawn <= 0)
+					if (st.minSpawn <= 0 || st.maxSpawn <= 0)
 						respawnTime = 1;
-					else if(st.minSpawn == st.maxSpawn)
-						respawnTime = st.minSpawn;
-					else {
-						respawnTime = st.minSpawn + (int) ((st.maxSpawn - st.minSpawn) * r.nextFloat());
-					}
+					else
+						respawnTime = getValueBetween(st.minSpawn, st.maxSpawn);
 				}
 			}
 
@@ -1266,5 +1263,12 @@ public class StageBasis extends BattleObj {
 			if (bonus.proc == proc && (bonus.dire == 0 || bonus.dire == dire))
 				score += bonus.score / Math.max(1, traits);
 		}
+	}
+
+	public int getValueBetween(int v0, int v1) {
+		if (v0 == v1)
+			return v0;
+		else
+			return v0 + (int) (r.nextFloat() * (v0 - v1 + 1));
 	}
 }

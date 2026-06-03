@@ -42,7 +42,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 				int allow = b.st.data.allow(b, ene);
 
 				if (allow >= 0 || conf.ignore_limit) {
-					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));
+					int dis = b.getValueBetween(proc.dis, proc.max_dis);
 					float ep = ent.pos + getDire() * dis;
 					float mula = proc.mult * 0.01f;
 					float mult = proc.mult * 0.01f;
@@ -99,7 +99,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 					lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
 					lvl = (int) (lvl * (100.0 - resist) / 100);
 
-					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));
+					int dis = b.getValueBetween(proc.dis, proc.max_dis);
 					float up = ent.pos + getDire() * dis;
 					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
 					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)

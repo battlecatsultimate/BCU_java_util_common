@@ -84,7 +84,7 @@ public class AtkModelUnit extends AtkModelEntity {
 				int time = proc.time;
 				int allow = b.st.data.allow(b, ene);
 				if (allow >= 0 || conf.ignore_limit) {
-					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));
+					int dis = b.getValueBetween(proc.dis, proc.max_dis);
 					float ep = ent.pos + getDire() * dis;
 					float mula = proc.mult * 0.01f;
 					float mult = proc.mult * 0.01f;

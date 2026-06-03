@@ -611,19 +611,16 @@ public abstract class Entity extends AbEntity {
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
-				boolean selfDestructed = ((e.getAbi() & AB_GLASS) != 0) && e.health > 0;
+				boolean isGlass = (e.getAbi() & AB_GLASS) != 0;
 
-				if (selfDestructed) {
-					AtkDataModel glas = e.data.getGlass();
-					if (glas != null)
-						e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 5));
-				}
+				if (isGlass && e.health > 0 && e.data.getGlass() != null)
+					e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 5));
 
-				Soul s = selfDestructed ? null : Identifier.get(e.data.getDeathAnim());
-				boolean soulExists = s != null;
-				dead = soulExists ? (soul = s.getEAnim(UType.SOUL)).len() : 4;
-				if (soulExists && s.layertype != CommonStatic.LayerType.ORIG) {
-					int slay = s.layer_0 == s.layer_1 ? s.layer_0 : s.layer_0 + (int) (e.basis.r.nextFloat() * (s.layer_1 - s.layer_0 + 1));
+				Soul s = isGlass ? null : Identifier.get(e.data.getDeathAnim());
+				dead = s != null ? (soul = s.getEAnim(UType.SOUL)).len() : 4;
+
+				if (s != null && s.layertype != CommonStatic.LayerType.ORIG) {
+					int slay = e.basis.getValueBetween(s.layer_0, s.layer_1);
 					if (s.layertype == CommonStatic.LayerType.SET)
 						e.currentLayer = slay;
 					else if (s.layertype == CommonStatic.LayerType.RELATIVE)

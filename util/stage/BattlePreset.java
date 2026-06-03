@@ -60,6 +60,46 @@ public class BattlePreset {
         return true;
     }
 
+    public static BattlePreset generatePreset(BasisSet set, boolean treasure, boolean forms, boolean cannon, boolean deco, boolean base) {
+        BattlePreset ans = new BattlePreset();
+        BasisLU src = set.sele;
+        Treasure t = BasisSet.current().t();
+
+        if (treasure) {
+            ans.tech = t.tech.clone();
+            ans.trea = t.trea.clone();
+            ans.bslv = t.bslv.clone();
+            ans.fruit = t.fruit.clone();
+            ans.gods = t.gods.clone();
+            ans.alien = t.alien;
+            ans.star = t.star;
+        }
+
+        if (forms) {
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 5; j++) {
+                    Form form = src.lu.fs[i][j];
+                    if (form == null)
+                        continue;
+
+                    Level lv = src.lu.getLv(form);
+                    ans.fs[i][j] = form.unit.forms[form.fid];
+                    int[] lvs = new int[10];
+                    lvs[0] = lv.getLv();
+                    lvs[1] = lv.getPlusLv();
+                    System.arraycopy(lv.getTalents(), 0, lvs, 2, lv.getTalents().length);
+                    ans.levels[i][j] = Level.lvList(form.unit, lvs, lv.getOrbs());
+                }
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+            if (ans.nyc[i] != -1)
+                ans.nyc[i] = src.nyc[i];
+
+        return ans;
+    }
+
     public static void generateBasis(BattlePreset bp) {
         BasisLU dest = BasisSet.current().sele;
         Treasure t = BasisSet.current().t();
@@ -118,14 +158,10 @@ public class BattlePreset {
     }
     //TODO verify customized battle preset loading
 
-    @JsonField(block = true)
-    public int level; // It seems preset can be activated per crown
-
     @JsonField(alias = Form.FormJson.class)
     public final Form[][] fs = new Form[2][5];
     public final Level[][] levels = new Level[2][5];
 
-    public int cannonType; // Raw ID of cannon that is parsed into BCU ID order
     public int baseHealthBoost; // Add 20k to unit base health if this is true
 
     // Copied treasure data manually
@@ -141,9 +177,16 @@ public class BattlePreset {
 
     @JsonField(block = true)
     public final List<ActivatedTreasure> activatedTreasures = new ArrayList<>(); // Used for display reasons
+    @JsonField(block = true)
+    public int level; // It seems preset can be activated per crown
 
     @JsonField
     public int alien, star;
+
+    @JsonClass.JCConstructor
+    public BattlePreset() {
+
+    }
 
     @Override
     public String toString() {

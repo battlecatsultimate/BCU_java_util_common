@@ -66,7 +66,7 @@ public class EUnit extends Entity {
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0, int layer0, int layer1, Level level, PCoin pc,
 				 int[] index, boolean isSpirit, boolean isEveryOther) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), pc, level);
-		currentLayer = spawnLayer = layer0 == layer1 ? layer0 : layer0 + (int) (b.r.nextFloat() * (layer1 - layer0 + 1));
+		currentLayer = spawnLayer = b.getValueBetween(layer0, layer1);
 		traits = de.getTraits();
 		lvl = level.getLv() + level.getPlusLv();
 		this.isOrbBoosted = isEveryOther;
@@ -80,7 +80,7 @@ public class EUnit extends Entity {
 
 	public EUnit(StageBasis b, MaskUnit de, EAnimU ea, float d0) {
 		super(b, de, ea, d0, b.b.t().getAtkMulti(), b.b.t().getDefMulti(), null, null);
-		currentLayer = spawnLayer = de.getFront() + (int) (b.r.nextFloat() * (de.getBack() - de.getFront() + 1));
+		currentLayer = spawnLayer = b.getValueBetween(de.getFront(), de.getBack());
 		traits = de.getTraits();
 		this.index = null;
 
