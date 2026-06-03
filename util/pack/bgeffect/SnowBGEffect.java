@@ -61,7 +61,7 @@ public class SnowBGEffect extends BackgroundEffect{
         capture.clear();
 
         for(int i = 0; i < snowPosition.size(); i++) {
-            if(snowPosition.get(i).y >= 1510 + sh || snowPosition.get(i).x < -sw || snowPosition.get(i).x >= w + battleOffset) {
+            if(snowPosition.get(i).y >= 1510 + sh * 4 || snowPosition.get(i).x < -sw * 4 || snowPosition.get(i).x >= w + battleOffset) {
                 capture.add(i);
             } else {
                 snowPosition.get(i).y += speed.get(i);
