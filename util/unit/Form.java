@@ -155,6 +155,7 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 
 			if(u.getCont() instanceof PackData.UserPack) {
 				PackData.UserPack pack = (PackData.UserPack) u.getCont();
+				Proc proc = data.getProc();
 
 				if (UserProfile.isOlderPack(pack, "0.5.1.0")) {
 					data.type = Data.reorderTrait(data.type);
@@ -167,9 +168,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				if (UserProfile.isOlderPack(pack, "0.6.0.0")) {
 					MaModel model = anim.loader.getMM();
 					data.limit = CommonStatic.customFormMinPos(model);
-					data.getProc().BARRIER.health = data.shield;
+					proc.BARRIER.health = data.shield;
 					data.traits = Trait.bitmaskToTrait(data.type);
-					Proc proc = data.getProc();
 					if ((data.abi & (1 << 18)) != 0) //Seal Immunity
 						proc.IMUSEAL.mult = 100;
 					if ((data.abi & (1 << 7)) != 0) //Moving atk Immunity
@@ -180,8 +180,8 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.1.0")) {
-					data.getProc().DMGCUT.reduction = 100;
-					data.getProc().POISON.type.ignoreMetal = true;
+					proc.DMGCUT.reduction = 100;
+					proc.POISON.type.ignoreMetal = true;
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.4.0")) {
@@ -190,8 +190,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				}
 
 				if (UserProfile.isOlderPack(pack, "0.6.5.0")) {
-					Proc proc = data.getProc();
-
 					if ((data.abi & 16) > 0) //2x money
 						proc.BOUNTY.mult = 100;
 					if ((data.abi & 32) > 0) //base destroyer
@@ -199,13 +197,13 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					data.abi = Data.reorderAbi(data.abi, 1);
 				}
 				if (UserProfile.isOlderPack(pack, "0.6.6.0")) {
-					if (data.getProc().TIME.prob > 0)
-						data.getProc().TIME.intensity = data.getProc().TIME.time;
+					if (proc.TIME.prob > 0)
+						proc.TIME.intensity = proc.TIME.time;
 
-					if (data.getProc().SUMMON.prob > 0) {
-						data.getProc().SUMMON.max_dis = data.getProc().SUMMON.dis;
-						data.getProc().SUMMON.min_layer = -1;
-						data.getProc().SUMMON.max_layer = -1;
+					if (proc.SUMMON.prob > 0) {
+						proc.SUMMON.max_dis = proc.SUMMON.dis;
+						proc.SUMMON.min_layer = -1;
+						proc.SUMMON.max_layer = -1;
 					}
 				}
 				if (UserProfile.isOlderPack(pack, "0.7.4.1") && data.pcoin != null) {
@@ -216,10 +214,17 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 					data.pcoin.update();
 				}
 
-				if (data.getProc().SUMMON.prob > 0 && data.getProc().SUMMON.form <= 0) {
-					data.getProc().SUMMON.form = 1;
-					data.getProc().SUMMON.mult = 1;
-					data.getProc().SUMMON.type.fix_buff = true;
+				if (proc.SUMMON.prob > 0 && proc.SUMMON.form <= 0) {
+					proc.SUMMON.form = 1;
+					proc.SUMMON.mult = 1;
+					proc.SUMMON.type.fix_buff = true;
+				}
+
+				if ((UserProfile.isOlderPack(pack, "0.7.19.1") || proc.SUMMON.type.layer_type == null) && proc.SUMMON.prob > 0) {
+					if (proc.SUMMON.min_layer == proc.SUMMON.max_layer && proc.SUMMON.min_layer == -1)
+						proc.SUMMON.type.layer_type = CommonStatic.LayerType.ORIG;
+					else
+						proc.SUMMON.type.layer_type = CommonStatic.LayerType.SET;
 				}
 
 				for (AtkDataModel adm : data.atks)

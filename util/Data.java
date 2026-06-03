@@ -564,6 +564,8 @@ public class Data {
 				public boolean on_hit;
 				@Order(6)
 				public boolean on_kill;
+				@Order(7)
+				public CommonStatic.LayerType layer_type;
 
 			}
 

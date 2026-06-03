@@ -1,5 +1,6 @@
 package common.battle.data;
 
+import common.CommonStatic;
 import common.io.json.JsonClass;
 import common.io.json.JsonClass.NoTag;
 import common.io.json.JsonClass.RType;
@@ -151,5 +152,12 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	public void inject(PackData.UserPack pack) { // // TODO: atkdatamodel.onInject cannot reliably get userpack at this time; this is done so procs properly apply on ALL attacks
 		if (UserProfile.isOlderPack(pack, "0.7.4.1") && proc.WARP.prob > 0)
 			proc.WARP.dis_1 = proc.WARP.dis_0;
+
+		if ((UserProfile.isOlderPack(pack, "0.7.19.1") || proc.SUMMON.type.layer_type == null) && proc.SUMMON.prob > 0) {
+			if (proc.SUMMON.min_layer == -1 && proc.SUMMON.max_layer == -1)
+				proc.SUMMON.type.layer_type = CommonStatic.LayerType.ORIG;
+			else
+				proc.SUMMON.type.layer_type = CommonStatic.LayerType.SET;
+		}
 	}
 }

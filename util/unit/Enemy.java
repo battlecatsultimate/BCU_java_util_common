@@ -213,6 +213,13 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			if (proc.SUMMON.prob > 0 && proc.SUMMON.id != null && !AbEnemy.class.isAssignableFrom(proc.SUMMON.id.cls) && proc.SUMMON.form <= 0)
 				proc.SUMMON.form = 1;
 
+			if ((UserProfile.isOlderPack(pack, "0.7.19.1") && proc.SUMMON.prob > 0) || proc.SUMMON.type.layer_type == null) {
+				if (proc.SUMMON.min_layer == proc.SUMMON.max_layer && proc.SUMMON.min_layer == -1)
+					proc.SUMMON.type.layer_type = CommonStatic.LayerType.ORIG;
+				else
+					proc.SUMMON.type.layer_type = CommonStatic.LayerType.SET;
+			}
+
 			for (AtkDataModel adm : enemy.atks)
 				adm.inject(pack);
 			enemy.rep.inject(pack);
@@ -229,18 +236,18 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 	@Override
 	public String toString() {
 		String desp = MultiLangCont.get(this);
-		if (desp != null && desp.length() > 0)
+		if (desp != null && !desp.isEmpty())
 			return Data.trio(id.id) + " - " + desp;
 
 		String nam = names.toString();
-		if (nam.length() == 0)
+		if (nam.isEmpty())
 			return Data.trio(id.id);
 		return Data.trio(id.id) + " - " + nam;
 	}
 
 	public String getExplaination() {
 		String[] desp = MultiLangCont.getDesc(this);
-		if (desp != null && desp[1].length() > 0)
+		if (desp != null && !desp[1].isEmpty())
 			return desp[1];
 		return description.toString();
 	}

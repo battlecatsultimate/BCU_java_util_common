@@ -1,5 +1,6 @@
 package common.util.lang;
 
+import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -459,6 +460,7 @@ public class Editors {
 				t.min_layer = 0;
 				t.max_layer = 0;
 				t.type.same_health = false;
+				t.type.layer_type = null;
 				t.tba = 0;
 			} else {
 				t.time = Math.max(0, t.time);
@@ -484,6 +486,8 @@ public class Editors {
 					t.mult = Math.max(1, t.mult);
 				}
 				t.type.anim_type = MathUtil.clip(t.type.anim_type, 0, 3);
+				if (t.type.layer_type == null)
+					t.type.layer_type = CommonStatic.LayerType.ORIG;
 			}
 		}));
 

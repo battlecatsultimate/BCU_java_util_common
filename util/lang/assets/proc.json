@@ -662,6 +662,14 @@
                     " Multiple summon possible for ranged attack."
                 ]
             },
+            "type.layer_type": {
+                "name": "layer type",
+                "tooltip": [
+                    "0 (original): Use exact layer of summoner for summon.<br>",
+                    "1 (set): Set layer of summon.<br>",
+                    "2 (relative): Add/subtract to summoner's layer for summon."
+                ]
+            },
             "form": {
                 "name": "Form",
                 "tooltip": "Set which form of the unit you want to summon. Only applicable on Cat Units."
