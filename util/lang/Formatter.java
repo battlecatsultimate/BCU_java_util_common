@@ -421,7 +421,7 @@ public class Formatter {
 			else if (obj.getClass().isEnum())
 				return neg * ((Enum<?>) obj).ordinal();
 			else
-				return neg * (Integer) new RefObj(pre, ind).eval();
+				return neg * (Integer) obj;
 		}
 
 		private int readNumber() {
