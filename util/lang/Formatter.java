@@ -415,7 +415,11 @@ public class Formatter {
 			int pre = ind;
 			while (ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ch != '&' && ch != '|' && ind < p1)
 				ch = str.charAt(++ind);
-			return neg * (Integer) new RefObj(pre, ind).eval();
+			Object obj = new RefObj(pre, ind).eval();
+			if (obj.getClass().isEnum())
+				return neg * ((Enum<?>) obj).ordinal();
+			else
+				return neg * (Integer) new RefObj(pre, ind).eval();
 		}
 
 		private int readNumber() {
