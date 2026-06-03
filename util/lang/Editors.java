@@ -240,7 +240,9 @@ public class Editors {
 				setComponentVisibility(this, item.exists(), 1);
 				if (t.prob > 0) {
 					setComponentVisibility(this, t.id != null && t.id.cls == Unit.class, 2);
-					setComponentVisibility(this, item.exists(), IntStream.range(3, list.length).toArray());
+					setComponentVisibility(this, item.exists(), IntStream.rangeClosed(3, 5).toArray());
+					setComponentVisibility(this, item.exists() && ((Proc.SUMMON) item).type.layer_type != CommonStatic.LayerType.ORIG, 6, 7);
+					setComponentVisibility(this, item.exists(), IntStream.range(8, list.length).toArray());
 				}
 			}
 			else if (!(item instanceof Proc.IMU)) {
@@ -806,16 +808,17 @@ public class Editors {
 		map().put("IMUDELAY", imuad);
 	}
 
+	private static void setComponentVisibility(EditorGroup egg, boolean boo, int field) {
+		EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
+		int l1 = egg.list.length;
+			for (int i = field; i < l1; i++)
+				edi.setEditorVisibility(egg.list[i], boo);
+	}
+
 	private static void setComponentVisibility(EditorGroup egg, boolean boo, int... fields) {
 		EditorSupplier edi = UserProfile.getStatic("Editor_Supplier", () -> null);
-		if (fields.length > 2)
-			for (int field : fields)
-				edi.setEditorVisibility(egg.list[field], boo);
-		else {
-			int l1 = fields.length == 2 ? fields[1] : egg.list.length;
-			for (int i = fields[0]; i < l1; i++)
-				edi.setEditorVisibility(egg.list[i], boo);
-		}
+		for (int field : fields)
+			edi.setEditorVisibility(egg.list[field], boo);
 	}
 
 	private static void setComponentVisibility(String proc, boolean boo, int... fields) {
