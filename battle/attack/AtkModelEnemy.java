@@ -1,5 +1,6 @@
 package common.battle.attack;
 
+import common.CommonStatic;
 import common.battle.data.DataEnemy;
 import common.battle.entity.EEnemy;
 import common.battle.entity.EUnit;
@@ -55,10 +56,14 @@ public class AtkModelEnemy extends AtkModelEntity {
 					mula *= (100.0f - resist) / 100;
 					mult *= (100.0f - resist) / 100;
 
-					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
-					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
-						minlayer = maxlayer = e.spawnLayer;
-					EEnemy ee = ene.getEntity(b, acs, mult, mula, minlayer, maxlayer, 0, -1);
+					int layer = e.spawnLayer;
+
+					if (proc.type.layer_type == CommonStatic.LayerType.SET)
+						layer = b.getValueBetween(proc.min_layer, proc.max_layer);
+					else if (proc.type.layer_type == CommonStatic.LayerType.RELATIVE)
+						layer += b.getValueBetween(proc.min_layer, proc.max_layer);
+
+					EEnemy ee = ene.getEntity(b, acs, mult, mula, layer, layer, 0, -1);
 
 					ee.group = allow;
 					if (proc.tba == -1)
@@ -101,12 +106,15 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 					int dis = b.getValueBetween(proc.dis, proc.max_dis);
 					float up = ent.pos + getDire() * dis;
-					int minlayer = proc.min_layer, maxlayer = proc.max_layer;
-					if (proc.min_layer == proc.max_layer && proc.min_layer == -1)
-						minlayer = maxlayer = e.spawnLayer;
+					int layer = e.spawnLayer;
+
+					if (proc.type.layer_type == CommonStatic.LayerType.SET)
+						layer = b.getValueBetween(proc.min_layer, proc.max_layer);
+					else if (proc.type.layer_type == CommonStatic.LayerType.RELATIVE)
+						layer += b.getValueBetween(proc.min_layer, proc.max_layer);
 
 					EForm ef = new EForm(u.forms[form], lvl);
-					EUnit eu = ef.invokeEntity(b, lvl, minlayer, maxlayer);
+					EUnit eu = ef.invokeEntity(b, lvl, layer, layer);
 					if (conf.same_health)
 						eu.health = e.health;
 
