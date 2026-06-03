@@ -75,6 +75,13 @@ public class Formatter {
 			return time + "f";
 		}
 
+		public String dispTimeAbs(int time) {
+			time = Math.abs(time);
+			if (useSecond)
+				return toSecond(time) + "s";
+			return time + "f";
+		}
+
 		public String dispFruit(int time) {
 			if(!treasure || treasureFunction == null || traits == null)
 				return dispTime(time);
