@@ -31,6 +31,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +166,7 @@ public class PackLoader {
 		}
 
 		public void unzip(PatchFile func, Consumer<Double> prog) throws Exception {
-			InputStream fis = new FileInputStream(loader.file);
+			InputStream fis = Files.newInputStream(loader.file.toPath());
 			long skippedBytes = fis.skip(offset);
 
 			if (skippedBytes != offset) {
@@ -177,7 +178,7 @@ public class PackLoader {
 				int n = regulate(fd.size) / PASSWORD;
 				File dest = func.getFile(fd.path);
 				Context.check(dest);
-				OutputStream fos = new FileOutputStream(dest);
+				OutputStream fos = Files.newOutputStream(dest.toPath());
 				byte[] bs = new byte[PASSWORD];
 				Cipher cipher = decrypt(loader.key);
 				for (int i = 0; i < n; i++) {
@@ -534,8 +535,7 @@ public class PackLoader {
 
 	public static ZipDesc readPack(Preload cont, File f) throws Exception {
 		FileInputStream fis = new FileInputStream(f);
-		ZipDesc ans = new FileLoader((desc) -> cont, fis, 0, f, false, (d) -> {
-		}).pack;
+		ZipDesc ans = new FileLoader((desc) -> cont, fis, 0, f, false, (d) -> {}).pack;
 		fis.close();
 		return ans;
 	}

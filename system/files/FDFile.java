@@ -3,7 +3,11 @@ package common.system.files;
 import common.CommonStatic;
 import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
-import java.io.*;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 
 public class FDFile implements FileData {
@@ -16,16 +20,15 @@ public class FDFile implements FileData {
 
 	@Override
 	public byte[] getBytes() {
-		try {
-			byte[] bs = new byte[(int) file.length()];
-			BufferedInputStream buf = new BufferedInputStream(Files.newInputStream(file.toPath()));
+		byte[] bs = new byte[(int) file.length()];
+
+        try (InputStream stream = Files.newInputStream(file.toPath()); BufferedInputStream buf = new BufferedInputStream(stream)) {
 			buf.read(bs, 0, bs.length);
-			buf.close();
 			return bs;
-		} catch (IOException e) {
-			e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 			return null;
-		}
+        }
 	}
 
 	@Override

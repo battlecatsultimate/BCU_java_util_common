@@ -114,7 +114,12 @@ public abstract class Source {
 				return Replay.getMap().get(id);
 			Source s = UserProfile.getUserPack(pack).source;
 			String path = "./" + BasePath.REPLAY + "/" + id + ".replay";
-			return Data.err(() -> Replay.read(s.getFileData(path).getStream()));
+			return Data.err(() -> {
+				InputStream stream = s.getFileData(path).getStream();
+				Replay rep = Replay.read(stream);
+				stream.close();
+				return rep;
+			});
 		}
 
 		@Override

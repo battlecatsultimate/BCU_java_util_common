@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
 import common.io.assets.Admin.StaticPermitted;
+import common.util.Data;
 import common.util.anim.AnimI;
 import common.util.anim.AnimU.UType;
 import common.util.pack.Background.BGWvType;
@@ -67,6 +68,7 @@ public class AnimTypeLocale {
 			String val = obj.get(type.toString()).getAsString();
 			MultiLangCont.getStatic().ANIMNAME.put(loc, type, val);
 		}
+		Data.err(f::close);
 	}
 
 }
