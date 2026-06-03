@@ -596,11 +596,11 @@
             },
             "min_layer": {
                 "name": "min layer",
-                "tooltip": "lowest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
+                "tooltip": "lowest layer the summoned entity will be at."
             },
             "max_layer": {
                 "name": "max layer",
-                "tooltip": "highest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
+                "tooltip": "highest layer the summoned entity will be at."
             },
             "type.anim_type": {
                 "name": "anim. invocar",

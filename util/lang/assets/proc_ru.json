@@ -616,10 +616,6 @@
                 "name": "такое же здоровье",
                 "tooltip": "Установите, чтобы призванная сущность имела такое же здоровье, как и это существо."
             },
-            "type.random_layer": {
-                "name": "случайный слой",
-                "tooltip": "По умолчанию призванная сущность будет находиться в том же слое, что и это существо. Включите это, чтобы сделать слой случайным."
-            },
             "type.on_hit": {
                 "name": "при ударе",
                 "tooltip": [
@@ -647,6 +643,14 @@
             "time": {
                 "name": "длительность",
                 "tooltip": "задержка этого призыва"
+            },
+            "min_layer": {
+                "name": "min layer",
+                "tooltip": "lowest layer the summoned entity will be at."
+            },
+            "max_layer": {
+                "name": "max layer",
+                "tooltip": "highest layer the summoned entity will be at."
             },
             "form": {
                 "name": "Форма",
