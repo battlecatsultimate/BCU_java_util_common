@@ -542,7 +542,8 @@
       "(_left)召喚は[(type.anim_type==1){ワープの}(type.anim_type>=2){埋葬終了の}]",
       "[(type.anim_type==3){(_left)+埋葬の無効化(_right)}]アニメーションを表示[(type.anim_type!=0){する}(type.anim_type==0){しません}](_right) ",
       "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]",
-      "[(type.fix_buff){ (fixed buff)}]"
+      "[(type.fix_buff){ (_left)fixed buff(_right)}]",
+      " (_left)layer type (type.layer_type)(_right)"
     ],
     "class": {
       "prob": {
@@ -619,6 +620,15 @@
           "範囲攻撃では複数体の召喚が可能です。"
         ]
       },
+      "type.layer_type": {
+        "name": "layer type",
+        "tooltip": [
+          "0 (original): Use exact layer of summoner for summon.<br>",
+          "1 (set): Set layer of summon.<br>",
+          "2 (relative): Add/subtract to summoner's layer for summon."
+        ]
+      },
+
       "form": {
         "name": "フォーム",
         "tooltip": "召喚したいユニットの形態を設定します。ネコのユニットにのみ適用されます。"

@@ -573,7 +573,8 @@
             "Призыв будет показывать [(type.anim_type==0){никакую}(type.anim_type==1){телепортацию}(type.anim_type>=2){копание}]",
             " анимацию[(type.anim_type==3){ и отключать копание для призванных существ}]. ",
             "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]",
-            "[(type.fix_buff){ (fixed buff)}]"
+            "[(type.fix_buff){ (_left)fixed buff(_right)}]",
+            " (_left)layer type (type.layer_type)(_right)"
         ],
         "class": {
             "prob": {
@@ -633,6 +634,14 @@
                     "Призвать, если и только если эта атака убивает цели.",
                     " Призыв за каждое убитое существо, точки начала расстояния устанавливаются в позиции целей.",
                     " Множественные призывы возможны для дальнобойных атак."
+                ]
+            },
+            "type.layer_type": {
+                "name": "layer type",
+                "tooltip": [
+                    "0 (original): Use exact layer of summoner for summon.<br>",
+                    "1 (set): Set layer of summon.<br>",
+                    "2 (relative): Add/subtract to summoner's layer for summon."
                 ]
             },
             "time": {

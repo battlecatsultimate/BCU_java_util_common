@@ -566,7 +566,8 @@
             "La invocación mostrará [(type.anim_type==0){cero animaciones}(type.anim_type==1){la animación de abducción}(type.anim_type>=2){la animación de escarbar}]",
             "[(type.anim_type==3){ y desactivará escarbar para las entidades invocadas}]. ",
             "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]",
-            "[(type.fix_buff){ (fixed buff)}]"
+            "[(type.fix_buff){ (_left)fixed buff(_right)}]",
+            " (_left)layer type (type.layer_type)(_right)"
         ],
         "class": {
             "prob": {
@@ -642,6 +643,14 @@
                     "Invoca si y sólo si este ataque mata objetivos.",
                     " Invocación por cada objetivo eliminado, las distancias de origen son relativas a las posiciones de los blancos.",
                     " Las invocaciones múltiples son posibles para ataques de área."
+                ]
+            },
+            "type.layer_type": {
+                "name": "layer type",
+                "tooltip": [
+                    "0 (original): Use exact layer of summoner for summon.<br>",
+                    "1 (set): Set layer of summon.<br>",
+                    "2 (relative): Add/subtract to summoner's layer for summon."
                 ]
             },
             "form": {

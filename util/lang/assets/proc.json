@@ -580,8 +580,10 @@
             "[(type.same_health){each entity will have the same hp as the summoner, }]",
             "[(type.bond_hp){the summoner's hp will be bound with each summoned entity's hp, }]",
             "and is[(type.ignore_limit){n't}] restricted by the stage entity limit. ",
-            "Summoned entities will be in [(min_layer==max_layer){[(min_layer==-1){the same layer as this entity}(min_layer!=-1){layer (min_layer)}]}",
-            "(min_layer!=max_layer){a random layer between (min_layer) and (max_layer)}]. ",
+            "Summoned entities will spawn ",
+            "[(type.layer_type==0){with same layer as summoner}",
+            "(type.layer_type==1|type.layer_type==2){on layer [(min_layer==max_layer){(min_layer)}(min_layer!=max_layer){(min_layer)~(max_layer)}]}",
+            "(type.layer_type==2){ relative to summoner}]. ",
             "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
             " animation[(type.anim_type==3){ and disable burrow for summoned entities}]. ",
             "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]"

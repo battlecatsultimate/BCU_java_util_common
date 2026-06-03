@@ -529,7 +529,8 @@
             "[(type.same_health){소환자와 같은 체력[(type.bond_hp){이고 소환자화 연동된 상태로}(!type.bond_hp){으로}] }]",
             "[(type.anim_type==0){평범하게 소환}(type.anim_type==1){워프 에니메이션과 함께 소환}(type.anim_type>=2){버로우 애니메이션과 함께 소환}](_right) ",
             "[(tba!=0){Summon will start with [(tba==-1){its attack cooldown.}(tba>0){(tba) frames of attack cooldown.}]}]",
-            "[(type.fix_buff){ (fixed buff)}]"
+            "[(type.fix_buff){ (_left)fixed buff(_right)}]",
+            " (_left)layer type (type.layer_type)(_right)"
         ],
         "class": {
             "prob": {
@@ -605,6 +606,14 @@
                     "타겟을 소환자가 죽였을 시에만 소환됩니다.",
                     " 해당 특성을 활성화하면 죽게 되는 타겟 앞에 특정된 거리 앞에 소환되게 됩니다.",
                     " 소환자가 범위 공격을 가지고 있으면 한번에 여러마리의 개체를 소환할 수 있습니다"
+                ]
+            },
+            "type.layer_type": {
+                "name": "layer type",
+                "tooltip": [
+                    "0 (original): Use exact layer of summoner for summon.<br>",
+                    "1 (set): Set layer of summon.<br>",
+                    "2 (relative): Add/subtract to summoner's layer for summon."
                 ]
             },
             "form": {
