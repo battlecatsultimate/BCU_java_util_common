@@ -1268,7 +1268,9 @@ public class StageBasis extends BattleObj {
 	public int getValueBetween(int v0, int v1) {
 		if (v0 == v1)
 			return v0;
+		else if (v0 < v1)
+			return v0 + (int) (r.nextFloat() * (v1 - v0 + 1));
 		else
-			return v0 + (int) (r.nextFloat() * (v0 - v1 + 1));
+			return v1 + (int) (r.nextFloat() * (v0 - v1 + 1));
 	}
 }
