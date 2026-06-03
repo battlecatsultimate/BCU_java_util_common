@@ -416,7 +416,9 @@ public class Formatter {
 			while (ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '%' && ch != '&' && ch != '|' && ind < p1)
 				ch = str.charAt(++ind);
 			Object obj = new RefObj(pre, ind).eval();
-			if (obj.getClass().isEnum())
+			if (obj == null)
+				return -1;
+			else if (obj.getClass().isEnum())
 				return neg * ((Enum<?>) obj).ordinal();
 			else
 				return neg * (Integer) new RefObj(pre, ind).eval();
