@@ -2358,7 +2358,7 @@ public abstract class Entity extends AbEntity {
 	public int touchable() {
 		int n = (getAbi() & AB_GHOST) > 0 ? TCH_EX : TCH_N;
 		int ex = getProc().REVIVE.type.revive_others ? TCH_ZOMBX : 0;
-		if (kbTime == -1)
+		if (kbTime == -1 && anim.soul != null)
 			return TCH_SOUL | ex;
 		if (status[P_REVIVE][1] >= REVIVE_SHOW_TIME && anim.corpse != null && anim.corpse.type != ZombieEff.BACK)
 			return TCH_CORPSE | ex;
