@@ -15,16 +15,12 @@ public class DataAtk implements MaskAtk {
 
 	@Override
 	public int getAtk() {
-		switch (index) {
-		case 0:
-			return data.atk;
-		case 1:
-			return data.atk1;
-		case 2:
-			return data.atk2;
-		default:
-			return 0;
-		}
+        return switch (index) {
+            case 0 -> data.atk;
+            case 1 -> data.atk1;
+            case 2 -> data.atk2;
+            default -> 0;
+        };
 	}
 
 	@Override

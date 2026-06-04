@@ -35,25 +35,22 @@ public class Treasure extends Data {
 
 			if(vf != null) {
 				Map<Integer, CannonLevelCurve> target;
-				CannonLevelCurve.PART part;
+				CannonLevelCurve.PART part = switch (i) {
+                    case 0 -> {
+                        target = curveData;
+                        yield CannonLevelCurve.PART.CANNON;
+                    }
+                    case 1 -> {
+                        target = baseData;
+                        yield CannonLevelCurve.PART.BASE;
+                    }
+                    default -> {
+                        target = decorationData;
+                        yield CannonLevelCurve.PART.DECORATION;
+                    }
+                };
 
-				switch (i) {
-					case 0:
-						target = curveData;
-						part = CannonLevelCurve.PART.CANNON;
-
-						break;
-					case 1:
-						target = baseData;
-						part = CannonLevelCurve.PART.BASE;
-
-						break;
-					default:
-						target = decorationData;
-						part = CannonLevelCurve.PART.DECORATION;
-				}
-
-				injectData(vf, target, part);
+                injectData(vf, target, part);
 			} else {
 				System.out.println("W/Treasure::readCannonCurveData - No such file called ./org/data/" + targetFiles[i] + " in VFile");
 			}

@@ -44,7 +44,7 @@ public interface IndexContainer {
 
 	}
 
-	public static interface SingleIC<T extends Indexable<?, T>> extends IndexContainer {
+	interface SingleIC<T extends Indexable<?, T>> extends IndexContainer {
 
 		default T add(Constructor<T, T> con) {
 			int ind = getFIM().nextInd();

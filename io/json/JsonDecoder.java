@@ -205,7 +205,7 @@ public class JsonDecoder {
 		if (elem.isJsonNull())
 			return null;
 		@SuppressWarnings("unchecked")
-		List<Object> val = (List<Object>) cls.newInstance();
+		List<Object> val = (List<Object>) cls.getDeclaredConstructor().newInstance();
 		if (elem.isJsonObject() && par.curjfld.usePool()) {
 			JsonArray pool = elem.getAsJsonObject().get("pool").getAsJsonArray();
 			JsonArray data = elem.getAsJsonObject().get("data").getAsJsonArray();
@@ -260,7 +260,7 @@ public class JsonDecoder {
 		int n = jarr.size();
 
 		@SuppressWarnings("unchecked")
-		Map<Object, Object> val = (Map<Object, Object>) cls.newInstance();
+		Map<Object, Object> val = (Map<Object, Object>) cls.getDeclaredConstructor().newInstance();
 		for (int i = 0; i < n; i++) {
 			JsonObject obj = jarr.get(i).getAsJsonObject();
 			Object key = decode(obj.get("key"), par.curjfld.generic()[0], par);
@@ -315,7 +315,7 @@ public class JsonDecoder {
 		JsonArray jarr = elem.getAsJsonArray();
 		int n = jarr.size();
 		@SuppressWarnings("unchecked")
-		Set<Object> val = (Set<Object>) cls.newInstance();
+		Set<Object> val = (Set<Object>) cls.getDeclaredConstructor().newInstance();
 		for (int i = 0; i < n; i++) {
 			val.add(decode(jarr.get(i), par.curjfld.generic()[0], par));
 		}
@@ -354,7 +354,7 @@ public class JsonDecoder {
 	}
 
 	private static Object inject(JsonDecoder par, JsonObject jobj, Class<?> cls, Object pre) throws Exception {
-		return new JsonDecoder(par, jobj, cls, pre == null ? cls.newInstance() : pre).obj;
+		return new JsonDecoder(par, jobj, cls, pre == null ? cls.getDeclaredConstructor().newInstance() : pre).obj;
 	}
 
 	private final JsonDecoder par;

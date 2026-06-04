@@ -412,18 +412,12 @@ public class BGEffectSegment {
         if(elem.has("equallySpaced")) {
             JsonObject obj = elem.getAsJsonObject("equallySpaced");
 
-            BattleRange.SNAP snap;
-
-            switch (obj.get("base").getAsString()) {
-                case "default":
-                    snap = BattleRange.SNAP.DEFAULT;
-                    break;
-                case "bgImage":
-                    snap = BattleRange.SNAP.BGIMAGE;
-                    break;
-                default:
-                    throw new IllegalStateException("E/BGEffectSegment | "+json+" / Unhandled snap mode for equallySpaced tag : " + obj.get("base").getAsString());
-            }
+            BattleRange.SNAP snap = switch (obj.get("base").getAsString()) {
+                case "default" -> BattleRange.SNAP.DEFAULT;
+                case "bgImage" -> BattleRange.SNAP.BGIMAGE;
+                default ->
+                        throw new IllegalStateException("E/BGEffectSegment | " + json + " / Unhandled snap mode for equallySpaced tag : " + obj.get("base").getAsString());
+            };
 
             spacer = new BGEffectSpacer(obj.get("pos1").getAsInt(), obj.get("pos2").getAsInt(), obj.get("value").getAsInt(), snap, bgID);
 
@@ -443,30 +437,19 @@ public class BGEffectSegment {
     }
 
     private BattleRange.SNAP getSnap(String base) {
-        switch (base) {
-            case "worldLeft":
-                return BattleRange.SNAP.LEFT;
-            case "worldRight":
-                return BattleRange.SNAP.RIGHT;
-            case "worldTop":
-                return BattleRange.SNAP.TOP;
-            case "worldBottom":
-                return BattleRange.SNAP.BOTTOM;
-            case "frontChara":
-                return BattleRange.SNAP.FRONT;
-            case "backChara":
-                return BattleRange.SNAP.BACK;
-            case "animeInterval":
-                return BattleRange.SNAP.INTERVAL;
-            case "animeLength":
-                return BattleRange.SNAP.LENGTH;
-            case "secondToFrame":
-                return BattleRange.SNAP.SECOND;
-            case "percentToFloat":
-                return BattleRange.SNAP.PERCENT;
-            default:
-                throw new IllegalStateException("Unknown base type found in " + json + " : "+base);
-        }
+        return switch (base) {
+            case "worldLeft" -> BattleRange.SNAP.LEFT;
+            case "worldRight" -> BattleRange.SNAP.RIGHT;
+            case "worldTop" -> BattleRange.SNAP.TOP;
+            case "worldBottom" -> BattleRange.SNAP.BOTTOM;
+            case "frontChara" -> BattleRange.SNAP.FRONT;
+            case "backChara" -> BattleRange.SNAP.BACK;
+            case "animeInterval" -> BattleRange.SNAP.INTERVAL;
+            case "animeLength" -> BattleRange.SNAP.LENGTH;
+            case "secondToFrame" -> BattleRange.SNAP.SECOND;
+            case "percentToFloat" -> BattleRange.SNAP.PERCENT;
+            default -> throw new IllegalStateException("Unknown base type found in " + json + " : " + base);
+        };
     }
 
     @Nonnull

@@ -57,22 +57,13 @@ public class BattleRange<T extends Number> {
         int mi;
 
         if(minSnap != null) {
-            switch (minSnap) {
-                case LEFT:
-                    mi = (int) (-battleOffset + min.intValue());
-                    break;
-                case RIGHT:
-                    mi = (int) (len + battleOffset + min.intValue());
-                    break;
-                case BOTTOM:
-                    mi = (int) (battleHeightOffset + min.intValue());
-                    break;
-                case SECOND:
-                    mi = (int) (min.intValue() / 30.0);
-                    break;
-                default:
-                    mi = min.intValue();
-            }
+            mi = switch (minSnap) {
+                case LEFT -> (int) (-battleOffset + min.intValue());
+                case RIGHT -> (int) (len + battleOffset + min.intValue());
+                case BOTTOM -> (int) (battleHeightOffset + min.intValue());
+                case SECOND -> (int) (min.intValue() / 30.0);
+                default -> min.intValue();
+            };
         } else {
             mi = min.intValue();
         }
@@ -80,22 +71,13 @@ public class BattleRange<T extends Number> {
         int ma;
 
         if(maxSnap != null) {
-            switch (maxSnap) {
-                case LEFT:
-                    ma = (int) (-battleOffset + max.intValue());
-                    break;
-                case RIGHT:
-                    ma = (int) (len + battleOffset + max.intValue());
-                    break;
-                case BOTTOM:
-                    ma = (int) (battleHeightOffset + max.intValue());
-                    break;
-                case SECOND:
-                    ma = (int) (max.intValue() / 30.0);
-                    break;
-                default:
-                    ma = max.intValue();
-            }
+            ma = switch (maxSnap) {
+                case LEFT -> (int) (-battleOffset + max.intValue());
+                case RIGHT -> (int) (len + battleOffset + max.intValue());
+                case BOTTOM -> (int) (battleHeightOffset + max.intValue());
+                case SECOND -> (int) (max.intValue() / 30.0);
+                default -> max.intValue();
+            };
         } else {
             ma = max.intValue();
         }
@@ -111,25 +93,14 @@ public class BattleRange<T extends Number> {
         float mi;
 
         if(minSnap != null) {
-            switch (minSnap) {
-                case LEFT:
-                    mi = -battleOffset + min.floatValue();
-                    break;
-                case RIGHT:
-                    mi = len + battleOffset + min.floatValue();
-                    break;
-                case BOTTOM:
-                    mi = battleHeightOffset + min.floatValue();
-                    break;
-                case SECOND:
-                    mi = min.floatValue() / 30f;
-                    break;
-                case PERCENT:
-                    mi = min.floatValue() / 100f;
-                    break;
-                default:
-                    mi = min.floatValue();
-            }
+            mi = switch (minSnap) {
+                case LEFT -> -battleOffset + min.floatValue();
+                case RIGHT -> len + battleOffset + min.floatValue();
+                case BOTTOM -> battleHeightOffset + min.floatValue();
+                case SECOND -> min.floatValue() / 30f;
+                case PERCENT -> min.floatValue() / 100f;
+                default -> min.floatValue();
+            };
         } else {
             mi = min.floatValue();
         }
@@ -137,25 +108,14 @@ public class BattleRange<T extends Number> {
         float ma;
 
         if(maxSnap != null) {
-            switch (maxSnap) {
-                case LEFT:
-                    ma = -battleOffset + max.floatValue();
-                    break;
-                case RIGHT:
-                    ma = len + battleOffset + max.floatValue();
-                    break;
-                case BOTTOM:
-                    ma = battleHeightOffset + max.floatValue();
-                    break;
-                case SECOND:
-                    ma = max.floatValue() / 30f;
-                    break;
-                case PERCENT:
-                    ma = max.floatValue() / 100f;
-                    break;
-                default:
-                    ma = max.floatValue();
-            }
+            ma = switch (maxSnap) {
+                case LEFT -> -battleOffset + max.floatValue();
+                case RIGHT -> len + battleOffset + max.floatValue();
+                case BOTTOM -> battleHeightOffset + max.floatValue();
+                case SECOND -> max.floatValue() / 30f;
+                case PERCENT -> max.floatValue() / 100f;
+                default -> max.floatValue();
+            };
         } else {
             ma = max.floatValue();
         }

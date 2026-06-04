@@ -438,13 +438,9 @@ public class Res extends ImgCore {
 	}
 
 	public static CommonStatic.Lang.Locale decideLocale() {
-		switch (CommonStatic.getConfig().lang) {
-			case EN:
-			case KR:
-			case JP:
-				return CommonStatic.getConfig().lang;
-			default:
-				return CommonStatic.Lang.Locale.EN;
-		}
+        return switch (CommonStatic.getConfig().lang) {
+            case EN, KR, JP -> CommonStatic.getConfig().lang;
+            default -> CommonStatic.Lang.Locale.EN;
+        };
 	}
 }

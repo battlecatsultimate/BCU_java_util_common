@@ -4,13 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import common.CommonStatic;
-import common.io.json.FieldOrder;
-import common.io.json.JsonClass;
+import common.io.json.*;
 import common.io.json.JsonClass.RType;
 import common.io.json.JsonClass.WType;
-import common.io.json.JsonDecoder;
-import common.io.json.JsonEncoder;
-import common.io.json.JsonField;
 import common.io.json.JsonField.IOType;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -156,52 +152,30 @@ public class ProcLang {
 	}
 
 	private static void read() throws Exception {
-		InputStream f;
+		InputStream f = switch (CommonStatic.getConfig().lang) {
+            case KR -> CommonStatic.ctx.getLangFile("proc_kr.json");
+            case JP -> CommonStatic.ctx.getLangFile("proc_jp.json");
+            case ES -> CommonStatic.ctx.getLangFile("proc_es.json");
+            case RU -> CommonStatic.ctx.getLangFile("proc_ru.json");
+            default -> CommonStatic.ctx.getLangFile("proc.json");
+        };
 
-		switch (CommonStatic.getConfig().lang) {
-			case KR:
-				f = CommonStatic.ctx.getLangFile("proc_kr.json");
-				break;
-			case JP:
-				f = CommonStatic.ctx.getLangFile("proc_jp.json");
-				break;
-			case ES:
-				f = CommonStatic.ctx.getLangFile("proc_es.json");
-				break;
-			case RU:
-				f = CommonStatic.ctx.getLangFile("proc_ru.json");
-				break;
-			default:
-				f = CommonStatic.ctx.getLangFile("proc.json");
-		}
-
-		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
+        JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
 		f.close();
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);
 		store().setLang(proc);
 	}
 
 	private static void read(CommonStatic.Lang.Locale lang) throws Exception {
-		InputStream f;
+		InputStream f = switch (lang) {
+            case KR -> CommonStatic.ctx.getLangFile("proc_kr.json");
+            case JP -> CommonStatic.ctx.getLangFile("proc_jp.json");
+            case RU -> CommonStatic.ctx.getLangFile("proc_ru.json");
+            case ES -> CommonStatic.ctx.getLangFile("proc_es.json");
+            default -> CommonStatic.ctx.getLangFile("proc.json");
+        };
 
-		switch (lang) {
-			case KR:
-				f = CommonStatic.ctx.getLangFile("proc_kr.json");
-				break;
-			case JP:
-				f = CommonStatic.ctx.getLangFile("proc_jp.json");
-				break;
-			case RU:
-				f = CommonStatic.ctx.getLangFile("proc_ru.json");
-				break;
-			case ES:
-				f = CommonStatic.ctx.getLangFile("proc_es.json");
-				break;
-			default:
-				f = CommonStatic.ctx.getLangFile("proc.json");
-		}
-
-		JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
+        JsonElement elem = JsonParser.parseReader(new InputStreamReader(f, StandardCharsets.UTF_8));
 		f.close();
 		ProcLang proc = JsonDecoder.decode(elem, ProcLang.class);
 		store().setLang(proc, lang);

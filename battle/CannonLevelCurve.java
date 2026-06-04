@@ -27,25 +27,15 @@ public class CannonLevelCurve extends Data {
 
     public float applyFormula(int type, int level) {
         float v = applyFormulaRaw(type, level);
-        switch (part) {
-            case CANNON:
-                switch (type) {
-                    case BASE_RANGE:
-                        return v / 4f;
-                    case BASE_HEALTH_PERCENTAGE:
-                        return v / 10f;
-                    case BASE_HOLY_ATK_SURFACE:
-                    case BASE_HOLY_ATK_UNDERGROUND:
-                        return v / 1000f;
-                    default:
-                        return v;
-                }
-            case BASE:
-            case DECORATION:
-                return 1f - v / 10000f;
-            default:
-                return v;
-        }
+        return switch (part) {
+            case CANNON -> switch (type) {
+                case BASE_RANGE -> v / 4f;
+                case BASE_HEALTH_PERCENTAGE -> v / 10f;
+                case BASE_HOLY_ATK_SURFACE, BASE_HOLY_ATK_UNDERGROUND -> v / 1000f;
+                default -> v;
+            };
+            case BASE, DECORATION -> 1f - v / 10000f;
+        };
     }
 
     public int applyFormulaRaw(int type, int level) {

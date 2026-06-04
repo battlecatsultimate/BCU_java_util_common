@@ -1,22 +1,18 @@
 package common.io;
 
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
-import com.google.api.client.http.*;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpBackOffIOExceptionHandler;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
 import common.io.assets.Admin.StaticPermitted;
 import common.pack.Context;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
+
+import java.io.*;
+import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
@@ -60,10 +56,10 @@ public class WebFileIO {
 				new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 	}
 
-	private static void direct(String url, OutputStream out, Consumer<Double> prog) throws IOException {
-		URLConnection conn = new URL(url).openConnection();
+	private static void direct(String url, OutputStream out, Consumer<Double> prog) throws Exception {
+		URLConnection conn = new URI(url).toURL().openConnection();
 		InputStream is = conn.getInputStream();
-		int n, ava = 0, count = 0;
+		int n, ava, count = 0;
 		byte[] buffer = new byte[BUFFER];
 		while ((n = is.read(buffer)) != -1) {
 			out.write(buffer, 0, n);
