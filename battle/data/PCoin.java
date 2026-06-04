@@ -12,7 +12,6 @@ import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
-import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,28 +149,28 @@ public class PCoin extends Data {
 				case 0:
 					break;
 				case 56: case 65: // normalize surge chance
-					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(0));
-					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(0));
+					data[2] = Math.clamp(data[2], 0, 100 - proc.getArr(type).get(0));
+					data[3] = Math.clamp(data[3], data[2], 100 - proc.getArr(type).get(0));
 					data[8] = Math.max(1, data[8] / Data.VOLC_ITV) * Data.VOLC_ITV;
 					data[9] = Math.max(Math.max(1, data[9] / Data.VOLC_ITV) * Data.VOLC_ITV, data[8]);
 					break;
 				case 10:
-					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(0));
-					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(0));
+					data[2] = Math.clamp(data[2], 0, 100 - proc.getArr(type).get(0));
+					data[3] = Math.clamp(data[3], data[2], 100 - proc.getArr(type).get(0));
 					data[4] = Math.max(data[4], 0);
 					data[5] = Math.max(data[5], data[4]);
 					break;
 				case 61:
-					data[2] = MathUtil.clip(data[2], 0, 100);
-					data[3] = MathUtil.clip(data[3], data[2], 100);
+					data[2] = Math.clamp(data[2], 0, 100);
+					data[3] = Math.clamp(data[3], data[2], 100);
 					break;
 				case 25: case 26: case 31: case 32:
 					data[2] = Math.max(data[2], 0);
 					data[3] = Math.max(data[3], data[2]);
 					break;
 				case 64:
-					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(1));
-					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(1));
+					data[2] = Math.clamp(data[2], 0, 100 - proc.getArr(type).get(1));
+					data[3] = Math.clamp(data[3], data[2], 100 - proc.getArr(type).get(1));
 					data[4] = Math.max(data[4], 0);
 					data[5] = Math.max(data[5], data[4]);
 					break;
@@ -183,8 +182,8 @@ public class PCoin extends Data {
 					data[5] = Math.max(data[5], data[4]);
 				case 8: case 11: case 13: case 15: case 18: case 19: case 20: case 21: case 22: case 24: case 30:
 				case 52: case 54: case 58:
-					data[2] = MathUtil.clip(data[2], 0, 100 - proc.getArr(type).get(0));
-					data[3] = MathUtil.clip(data[3], data[2], 100 - proc.getArr(type).get(0));
+					data[2] = Math.clamp(data[2], 0, 100 - proc.getArr(type).get(0));
+					data[3] = Math.clamp(data[3], data[2], 100 - proc.getArr(type).get(0));
 					break;
 			}
 		}

@@ -16,7 +16,6 @@ import common.util.unit.AbEnemy;
 import common.util.unit.EForm;
 import common.util.unit.Level;
 import common.util.unit.Unit;
-import org.jcodec.common.tools.MathUtil;
 
 public class AtkModelUnit extends AtkModelEntity {
 
@@ -58,7 +57,7 @@ public class AtkModelUnit extends AtkModelEntity {
 					int lvl = proc.mult + ((EUnit) e).lvl;
 					if (conf.fix_buff)
 						lvl = proc.mult;
-					lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
+					lvl = Math.clamp(lvl, 1, u.max + u.maxp);
 					lvl *= (100.0 - resist) / 100;
 
 					int dis = proc.dis == proc.max_dis ? proc.dis : (int) (proc.dis + b.r.nextFloat() * (proc.max_dis - proc.dis + 1));

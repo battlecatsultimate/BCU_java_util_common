@@ -11,7 +11,6 @@ import common.util.Data.Proc.SUMMON;
 import common.util.unit.AbEnemy;
 import common.util.unit.EForm;
 import common.util.unit.Unit;
-import org.jcodec.common.tools.MathUtil;
 
 public class AtkModelEnemy extends AtkModelEntity {
 
@@ -97,11 +96,11 @@ public class AtkModelEnemy extends AtkModelEntity {
 				if (u.forms.length == 0)
 					return;
 
-				int form = Math.max(0, Math.min(proc.form - 1, u.forms.length - 1));
+				int form = Math.clamp(proc.form - 1, 0, u.forms.length - 1);
 
 				if (b.entityCount(-1) < b.maxNum - u.forms[form].du.getWill() || conf.ignore_limit) {
 					int lvl = proc.mult;
-					lvl = MathUtil.clip(lvl, 1, u.max + u.maxp);
+					lvl = Math.clamp(lvl, 1, u.max + u.maxp);
 					lvl = (int) (lvl * (100.0 - resist) / 100);
 
 					int dis = b.getValueBetween(proc.dis, proc.max_dis);

@@ -9,7 +9,6 @@ import common.util.Data;
 import common.util.pack.Soul;
 import common.util.unit.Form;
 import common.util.unit.Trait;
-import org.jcodec.common.tools.MathUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +115,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 				int[] j = info.get(i).clone();
 				int[] data = Data.PC_CORRES[j[0]];
 				j[1] = pcoin.max[i] = data[3] > -1 ? 1 : Math.max(1, j[1]);
-				j[13] = MathUtil.clip(j[13], 0, 1);
+				j[13] = Math.clamp(j[13], 0, 1);
 				if (data[3] > -1) {
 					j[0] = data[3];
 					j[2] = j[3] = 100;
