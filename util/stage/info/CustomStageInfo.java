@@ -148,7 +148,6 @@ public class CustomStageInfo implements StageInfo {
     public void destroy() {
         stages.clear();
         chances.clear();
-        ((PackMapColc)st.getCont().getCont()).si.remove(this);
         st.info = null;
     }
 
