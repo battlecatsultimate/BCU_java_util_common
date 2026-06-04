@@ -764,11 +764,11 @@ public class Editors {
 		map().put("SPIRIT", new EditControl<>(Proc.SPIRIT.class, (t) -> {}));
 
 		map().put("METALKILL", new EditControl<>(Proc.MULT.class, (t) -> {
-			t.mult = Math.max(0, Math.min(100, t.mult));
+			t.mult = Math.clamp(t.mult, 0, 100);
 		}));
 
 		map().put("BLAST", new EditControl<>(Proc.BLAST.class, (t) -> {
-			t.prob = Math.max(0, Math.min(100, t.prob));
+			t.prob = Math.clamp(t.prob, 0, 100);
 		}));
 
 		map().put("BERSERK", new EditControl<>(Proc.BERSERK.class, (t) -> {
