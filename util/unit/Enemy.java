@@ -223,8 +223,6 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 			for (AtkDataModel adm : enemy.atks)
 				adm.inject(pack);
 			enemy.rep.inject(pack);
-			if (enemy.cntr != null)
-				enemy.cntr.inject(pack);
 			for (int i = 0; i < enemy.getAtkCount() + CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
 				AtkDataModel model = (AtkDataModel) enemy.getAtkModel(enemy.getAtkCount() + i);
 				if (model != null)

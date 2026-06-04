@@ -230,8 +230,6 @@ public class Form extends Animable<AnimU<?>, AnimU.UType> implements BasedCopabl
 				for (AtkDataModel adm : data.atks)
 					adm.inject(pack);
 				data.rep.inject(pack);
-				if (data.cntr != null)
-					data.cntr.inject(pack);
 				for (int i = 0; i < data.getAtkCount() + CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
 					AtkDataModel model = (AtkDataModel) data.getAtkModel(data.getAtkCount() + i);
 					if (model != null)

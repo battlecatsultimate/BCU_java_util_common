@@ -18,13 +18,13 @@ import java.util.TreeSet;
 @JsonClass(noTag = NoTag.LOAD)
 public abstract class CustomEntity extends DataEntity {
 
-	public static int SPECIAL_ATTACK_COUNT = 6;
+	public static int SPECIAL_ATTACK_COUNT = 7;
 
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rev, res, bur, resu, revi, glas; // special attacks
+	public AtkDataModel rev, res, bur, resu, revi, glas, cntr; // special attacks
 
 	@JsonField(gen = GenType.GEN)
-	public AtkDataModel rep, cntr; // common & counter attacks
+	public AtkDataModel rep; // common
 
 	@JsonField(gen = GenType.GEN, usePool = true)
 	public AtkDataModel[] atks;
@@ -103,6 +103,8 @@ public abstract class CustomEntity extends DataEntity {
 			return revi;
 		if (ind == atks.length + 5)
 			return glas;
+		if (ind == atks.length + 6)
+			return cntr;
 
 		return null;
 	}
