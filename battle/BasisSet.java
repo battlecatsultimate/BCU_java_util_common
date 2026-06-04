@@ -121,7 +121,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 		def();
 		File f = CommonStatic.ctx.getUserFile("./basis.json");
 		if (f.exists()) {
-            try (InputStream stream = Files.newInputStream(f.toPath()); Reader r = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+            try (Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8)) {
 				JsonElement je = JsonParser.parseReader(r);
 
 				r.close();

@@ -18,7 +18,6 @@ import common.pack.Source.ZipSource;
 import common.util.Data;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -249,11 +248,9 @@ public class UserProfile {
 
 	public static UserPack readJsonPack(File f) throws Exception {
 		File folder = f.getParentFile();
-		InputStream stream = Files.newInputStream(f.toPath());
-		Reader r = new InputStreamReader(stream, StandardCharsets.UTF_8);
+		Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8);
 		JsonElement elem = JsonParser.parseReader(r);
 		r.close();
-		stream.close();
 		PackDesc desc = JsonDecoder.decode(elem.getAsJsonObject().get("desc"), PackDesc.class);
 
 		if (Data.getVer(desc.BCU_VERSION) > Data.getVer(AssetLoader.CORE_VER)) {

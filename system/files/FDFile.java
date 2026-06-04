@@ -22,7 +22,7 @@ public class FDFile implements FileData {
 	public byte[] getBytes() {
 		byte[] bs = new byte[(int) file.length()];
 
-        try (InputStream stream = Files.newInputStream(file.toPath()); BufferedInputStream buf = new BufferedInputStream(stream)) {
+        try (BufferedInputStream buf = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
 			buf.read(bs, 0, bs.length);
 			return bs;
         } catch (Exception e) {
