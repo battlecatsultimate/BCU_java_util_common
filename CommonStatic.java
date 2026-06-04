@@ -106,6 +106,9 @@ public class CommonStatic {
 	@JsonClass(noTag = NoTag.LOAD)
 	public static class Config {
 
+		@JsonField(generic = String.class)
+		public ArrayList<String> receivedAnnouncements = new ArrayList<>();
+
 		@JsonField(generic = { String.class, String.class })
 		public HashMap<String, String> localLangMap = new HashMap<>();
 

@@ -100,9 +100,19 @@ public class UpdateCheck {
 			public boolean isTest;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class AnnouncementJson {
+			public String id;
+			public String title;
+			public String[] text;
+			public int min_ver;
+			public int max_ver;
+		}
+
 		public AssetJson[] assets;
 		public String[] pc_libs;
 		public JarJson[] pc_update;
+		public AnnouncementJson[] pc_announcement;
 		public ApkJson[] apk_update;
 		public long text_update;
 		public int music;
