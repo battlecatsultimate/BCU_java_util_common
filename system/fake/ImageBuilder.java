@@ -26,13 +26,13 @@ public abstract class ImageBuilder<T> {
 	}
 
 	public final FakeImage build(byte[] bs) throws IOException {
-		return build((Supplier<InputStream>) () -> new ByteArrayInputStream(bs));
+		return build(() -> new ByteArrayInputStream(bs));
 	}
 
 	public abstract FakeImage build(File f) throws IOException;
 
 	public final FakeImage build(FileData fd) throws IOException {
-		return build((Supplier<InputStream>) fd::getStream);
+		return build(fd::getStream);
 	}
 
 	public abstract FakeImage build(Supplier<InputStream> sup) throws IOException;

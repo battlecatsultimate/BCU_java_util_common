@@ -274,6 +274,7 @@ public class PackLoader {
 			@Override
 			public void close() throws IOException {
 				fis.close();
+				super.close();
 			}
 
 			@Override

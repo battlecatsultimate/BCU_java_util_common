@@ -106,7 +106,7 @@ public class JsonDecoder {
 		if (par != null && par.curjfld.gen() == GenType.GEN) {
 			Class<?> ccls = par.obj.getClass();
 			// default generator
-			if (par.curjfld.generator().length() == 0) {
+			if (par.curjfld.generator().isEmpty()) {
 				Constructor<?> cst = null;
 				for (Constructor<?> ci : cls.getDeclaredConstructors())
 					if (ci.getParameterTypes().length == 1 && ci.getParameterTypes()[0].isAssignableFrom(ccls))
