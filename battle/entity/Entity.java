@@ -148,7 +148,7 @@ public abstract class Entity extends AbEntity {
 				anim.paraTo(back);
 			}
 
-			if (dead == -1 && (e.kbTime <= 0 || e.kb.kbType != INT_WARP))
+			if (dead == -1 && (e.kbTime <= 0 && e.kbTime != -1 || e.kb.kbType != INT_WARP))
 				anim.draw(gra, p, siz);
 
 			anim.paraTo(null);
@@ -652,7 +652,7 @@ public abstract class Entity extends AbEntity {
 					effs[i].update(false);
 
 			boolean checkKB = e.kb.kbType != INT_SW && e.kb.kbType != INT_WARP;
-			if (status[P_STOP][0] == 0 && (e.kbTime <= 0 || checkKB))
+			if (status[P_STOP][0] == 0 && (e.kbTime <= 0 && e.kbTime != -1 || checkKB))
 				anim.update(false);
 			if (back != null)
 				back.update(false);
@@ -694,7 +694,7 @@ public abstract class Entity extends AbEntity {
 
 			boolean checkKB = e.kb.kbType != INT_SW && e.kb.kbType != INT_WARP;
 
-			if (status[P_STOP][0] == 0 && (e.kbTime <= 0 || checkKB))
+			if (status[P_STOP][0] == 0 && (e.kbTime <= 0 && e.kbTime != -1 || checkKB))
 				anim.update(false);
 			if (back != null)
 				back.update(false);
