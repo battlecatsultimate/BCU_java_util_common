@@ -9,17 +9,10 @@ import common.util.anim.AnimU;
 public class DemonSoul extends AbSoul implements IndexContainer.Indexable<PackData, DemonSoul> {
 
     private final Identifier<DemonSoul> id;
-    boolean e;
 
-    public DemonSoul(int id, AnimU<?> animS, boolean enemy) {
+    public DemonSoul(int id, AnimU<?> animS) {
         super(animS);
         this.id = new Identifier<>(Identifier.DEF, DemonSoul.class, id);
-        e = enemy;
-
-        if (!enemy) {
-            anim.partial();
-            anim.revert();
-        }
     }
 
     @Override
@@ -29,6 +22,6 @@ public class DemonSoul extends AbSoul implements IndexContainer.Indexable<PackDa
 
     @Override
     public String toString() {
-        return (e ? "enemy " : "") + "demonsoul " + id;
+        return "demonsoul_" + id;
     }
 }

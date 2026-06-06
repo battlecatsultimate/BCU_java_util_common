@@ -607,7 +607,7 @@ public abstract class Entity extends AbEntity {
 				e.weaks.list.clear();
 				status[P_WEAK] = new int[PROC_WIDTH];
 
-				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.SOUL);
+				soul = UserProfile.getBCData().demonSouls.get(e.dire == -1 ? 1 : 0).getEAnim(UType.SOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
