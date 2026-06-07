@@ -4,10 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.io.json.JsonClass;
+import common.io.json.JsonClass.RType;
 import common.io.json.JsonDecoder;
 import common.io.json.JsonEncoder;
 import common.io.json.JsonField;
-import common.io.json.JsonClass.RType;
 import common.io.json.JsonField.IOType;
 import common.pack.IndexContainer.Indexable;
 import common.util.Data;
@@ -307,7 +307,7 @@ public class FixIndexList<T> extends Data {
 				Field[] fields = cl.getFields();
 
 				for(int j = 0; j < fields.length; j++) {
-					if(fields[j].getAnnotation(JsonClass.JCGetter.class) != null && fields[j].getName().equals("id")) {
+					if(fields[j].getAnnotation(JsonClass.JCIdentifier.class) != null && fields[j].getName().equals("id")) {
 						Identifier<?> identifier = (Identifier<?>) fields[j].get(t);
 
 						if(identifier != null && identifier.id == id)
