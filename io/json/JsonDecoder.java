@@ -315,11 +315,13 @@ public class JsonDecoder {
 		JsonArray jarr = elem.getAsJsonArray();
 		int n = jarr.size();
 		@SuppressWarnings("unchecked")
-		Set<Object> val = (Set<Object>) cls.newInstance();
+		Set<Object> set = (Set<Object>) cls.newInstance();
 		for (int i = 0; i < n; i++) {
-			val.add(decode(jarr.get(i), par.curjfld.generic()[0], par));
+			Object val = decode(jarr.get(i), par.curjfld.generic()[0], par);
+			if (val != null)
+				set.add(val);
 		}
-		return val;
+		return set;
 	}
 
 	private static Object decodeEnum(JsonElement elem, Class<?> cls) throws IllegalArgumentException, JsonException {
