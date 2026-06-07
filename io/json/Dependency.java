@@ -68,14 +68,14 @@ public class Dependency {
 			if (par != null && par.curjfld != null) {
 				JsonField jfield = par.curjfld;
 				if (jfield.ser() == JsonField.SerType.FUNC) {
-					if (jfield.serializer().length() == 0)
+					if (jfield.serializer().isEmpty())
 						throw new JsonException(Type.FUNC, null, "no serializer function");
 					Method m = par.obj.getClass().getMethod(jfield.serializer(), cls);
 					collect(set, m.invoke(par.obj, obj), null);
 					return;
 				} else if (jfield.ser() == JsonField.SerType.CLASS) {
 					JsonClass cjc = cls.getAnnotation(JsonClass.class);
-					if (cjc == null || cjc.serializer().length() == 0)
+					if (cjc == null || cjc.serializer().isEmpty())
 						throw new JsonException(Type.FUNC, null, "no serializer function");
 					String func = cjc.serializer();
 					Method m = cls.getMethod(func);
@@ -94,7 +94,7 @@ public class Dependency {
 					new DependencyCheck(set, par, obj);
 					return;
 				} else if (jc.write() == JsonClass.WType.CLASS) {
-					if (jc.serializer().length() == 0)
+					if (jc.serializer().isEmpty())
 						throw new JsonException(Type.FUNC, null, "no serializer function");
 					String func = jc.serializer();
 					Method m = cls.getMethod(func);

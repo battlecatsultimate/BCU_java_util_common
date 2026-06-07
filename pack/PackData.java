@@ -402,7 +402,7 @@ public abstract class PackData implements IndexContainer {
             if (dep.getPacks().contains(id))
                 for (Entry<Class<?>, Map<String, Set<Identifier<?>>>> ent : dep.getMap().entrySet()) {
                     Map<String, Set<Identifier<?>>> map = ent.getValue();
-                    if (map.containsKey(id) && map.get(id).size() > 0) {
+                    if (map.containsKey(id) && !map.get(id).isEmpty()) {
                         list.add(ent.getKey().getSimpleName() + ":");
                         for (Identifier<?> identifier : map.get(id))
                             list.add("\t" + identifier.get().toString());
