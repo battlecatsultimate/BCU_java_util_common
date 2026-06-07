@@ -153,6 +153,8 @@ public class CustomStageInfo implements StageInfo {
 
     @JsonDecoder.OnInjected
     public void onInjected() {
+        if (st == null)
+            return;
         st.info = this;
         for (int i = 0; i < chances.size(); i++)
             totalChance += chances.get(i);
