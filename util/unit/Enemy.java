@@ -98,16 +98,8 @@ public class Enemy extends Animable<AnimU<?>, UType> implements AbEnemy {
 		for (MapColc mc : MapColc.values()) {
 			if (mc instanceof PackMapColc)
 				continue;
-			boolean col = false;
-			for (StageMap sm : mc.maps) {
-				for (Stage st : sm.list)
-					if (col = st.contains(this)) {
-						ans.add(mc);
-						break;
-					}
-				if (col)
-					break;
-			}
+			if (mc.containsEnemy(this))
+				ans.add(mc);
 		}
 		return ans;
 	}
