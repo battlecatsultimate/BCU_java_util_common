@@ -1493,6 +1493,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 		@OnInjected
 		public void onInjected() {
+            si.removeIf(csi -> csi.st == null);
+
 			boolean oldNames = UserProfile.isOlderPack(pack, "0.6.4.0");
 			if (UserProfile.isOlderPack(pack, "0.7.8.1")) {
 				for (StageMap sm : maps) {

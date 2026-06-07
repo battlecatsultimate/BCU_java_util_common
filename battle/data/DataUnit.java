@@ -262,7 +262,7 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 
 	@Override
 	public List<Trait> getTraits() {
-		return Trait.getAllTraits(form);
+		return Trait.getAllTraits(form, traits);
 	}
 
 	@Override

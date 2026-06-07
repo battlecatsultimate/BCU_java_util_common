@@ -75,7 +75,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 
 	@Override
 	public List<Trait> getTraits() {
-		return Trait.getAllTraits(pack);
+		return Trait.getAllTraits(pack, traits);
 	}
 
 	@Override

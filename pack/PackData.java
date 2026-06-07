@@ -214,8 +214,8 @@ public abstract class PackData implements IndexContainer {
                 souls.add(new Soul(identifier, anim));
             }
             String dem = "demonsoul"; // TODO identify if anim is enemy or not in demon soul name in effect page
-            demonSouls.add(new DemonSoul(0, new AnimUD(pre + dem + mid, "demonsoul_" + Data.duo(0), null, null), true));
-            demonSouls.add(new DemonSoul(0, new AnimUD(pre + dem + mid, "demonsoul_" + Data.duo(0), null, null), false));
+            demonSouls.add(new DemonSoul(0, new AnimUD(pre + dem + mid, "demonsoul_" + Data.duo(0), null, null)));
+            demonSouls.add(new DemonSoul(1, new AnimUD(pre + dem + mid, "demonsoul_" + Data.duo(1), null, null)));
         }
 
         private void loadUnits(Consumer<Double> bar) {

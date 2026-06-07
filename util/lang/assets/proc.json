@@ -1297,7 +1297,7 @@
                 "name": "duration",
                 "tooltip": null
             },
-            "max time": {
+            "maxtime": {
                 "name": "max duration",
                 "tooltip": null
             }

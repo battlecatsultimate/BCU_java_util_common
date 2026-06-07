@@ -148,7 +148,7 @@ public abstract class Entity extends AbEntity {
 				anim.paraTo(back);
 			}
 
-			if (dead == -1 && (e.kbTime == 0 || e.kb.kbType != INT_WARP))
+			if (dead == -1 && (e.kbTime <= 0 && e.kbTime != -1 || e.kb.kbType != INT_WARP))
 				anim.draw(gra, p, siz);
 
 			anim.paraTo(null);
@@ -607,7 +607,7 @@ public abstract class Entity extends AbEntity {
 				e.weaks.list.clear();
 				status[P_WEAK] = new int[PROC_WIDTH];
 
-				soul = UserProfile.getBCData().demonSouls.get((1 - e.dire) / 2).getEAnim(UType.SOUL);
+				soul = UserProfile.getBCData().demonSouls.get(e.dire == -1 ? 1 : 0).getEAnim(UType.SOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
 			} else {
@@ -652,7 +652,7 @@ public abstract class Entity extends AbEntity {
 					effs[i].update(false);
 
 			boolean checkKB = e.kb.kbType != INT_SW && e.kb.kbType != INT_WARP;
-			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || checkKB))
+			if (status[P_STOP][0] == 0 && (e.kbTime <= 0 && e.kbTime != -1 || checkKB))
 				anim.update(false);
 			if (back != null)
 				back.update(false);
@@ -694,7 +694,7 @@ public abstract class Entity extends AbEntity {
 
 			boolean checkKB = e.kb.kbType != INT_SW && e.kb.kbType != INT_WARP;
 
-			if (status[P_STOP][0] == 0 && (e.kbTime == 0 || checkKB))
+			if (status[P_STOP][0] == 0 && (e.kbTime <= 0 && e.kbTime != -1 || checkKB))
 				anim.update(false);
 			if (back != null)
 				back.update(false);
@@ -1509,8 +1509,8 @@ public abstract class Entity extends AbEntity {
 	}
 
 	protected Entity(StageBasis b, MaskUnit de, EAnimU ea, float lvMagnif, float tAtk, float tHP, PCoin pc, Level lv) {
-		super((pc != null && lv != null && lv.getTalents().length == pc.max.length) ?
-				// (b.isBanned
+		super(
+				(pc != null && lv != null && lv.getTalents().length == pc.max.length) ?
 				(int) ((1 + (StageLimit.isComboBanned(b.est.lim, Data.C_DEF) ? 0 : b.b.getInc(Data.C_DEF, de.getPack().unit)) * 0.01) * (int) ((int) (Math.round(de.getHp() * lvMagnif) * tHP) * pc.getHPMultiplication(lv.getTalents()))) :
 				(int) ((1 + (StageLimit.isComboBanned(b.est.lim, Data.C_DEF) ? 0 : b.b.getInc(Data.C_DEF, de.getPack().unit)) * 0.01) * (int) (Math.round(de.getHp() * lvMagnif) * tHP))
 		);
