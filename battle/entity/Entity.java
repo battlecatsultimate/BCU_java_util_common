@@ -604,9 +604,6 @@ public abstract class Entity extends AbEntity {
 				deathSurge |= 2;
 
 			if (deathSurge != 0) {
-				e.weaks.list.clear();
-				status[P_WEAK] = new int[PROC_WIDTH];
-
 				soul = UserProfile.getBCData().demonSouls.get(e.dire == -1 ? 1 : 0).getEAnim(UType.SOUL);
 				dead = soul.len();
 				CommonStatic.setSE(SE_DEATH_SURGE);
@@ -2202,6 +2199,10 @@ public abstract class Entity extends AbEntity {
 			for (AttackAb attack : lastKilledBy)
 				if (attack.attacker != null)
 					attack.attacker.killCount++;
+		weaks.list.clear();
+		status[P_WEAK] = new int[PROC_WIDTH];
+		status[P_STOP] = new int[PROC_WIDTH];
+		status[P_SLOW] = new int[PROC_WIDTH];
 	}
 
 	/**
