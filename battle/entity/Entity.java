@@ -1687,7 +1687,7 @@ public abstract class Entity extends AbEntity {
 
 		float effMult = getResistValue(atk, "IMUMKILL", getProc().IMUMKILL.mult);
 
-		boolean metalKillerActivate = effMult > 0;
+		boolean metalKillerActivate = effMult > 0 && getProc().IMUMKILL.block < 1;
 
 		if (dire == 1) {
 			metalKillerActivate &= data.getTraits().contains(UserProfile.getBCData().traits.get(TRAIT_METAL));
