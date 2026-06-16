@@ -9,6 +9,7 @@ import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
+import common.system.files.VFile;
 import common.util.anim.ImgCut;
 
 public class Res extends ImgCore {
@@ -140,6 +141,12 @@ public class Res extends ImgCore {
 		aux.dummyTrait = new VImg("./org/page/Trait.png");
 		readAbiIcon();
 		readBattle();
+		readSound();
+	}
+
+	private static void readSound() {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		aux.assetSfx[0] = VFile.get("./org/audio/test/440test.ogg");
 	}
 
 	private static int[] getLab(long cost) {

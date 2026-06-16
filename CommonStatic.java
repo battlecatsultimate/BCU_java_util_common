@@ -9,6 +9,7 @@ import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.anim.MaModel;
@@ -101,6 +102,8 @@ public class CommonStatic {
 		// bg effect
 		public final Map<Integer, BackgroundEffect> bgEffects = new HashMap<>();
 
+		// custom sfx
+		public VFile[] assetSfx = new VFile[1];
 	}
 
 	@JsonClass(noTag = NoTag.LOAD)

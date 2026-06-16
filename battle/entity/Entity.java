@@ -24,6 +24,7 @@ import common.util.pack.Soul;
 import common.util.stage.StageLimit;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import io.BCMusic;
 
 import java.util.*;
 
@@ -1564,6 +1565,8 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public boolean damaged(AttackAb atk) {
 		damageTaken += atk.atk;
+
+		BCMusic.setAssetSE(0);
 
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;
