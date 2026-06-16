@@ -236,6 +236,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_SPIRIT] = new VImg(parts[317]);
 		aux.icon[0][ABI_SKILL] = new VImg(parts[319]);
 		aux.icon[1][P_METALKILL] = new VImg(parts[321]);
+		aux.icon[1][P_IMUMKILL] = new VImg(parts[321]);
 		aux.icon[1][P_DEMONSHIELD] = new VImg(parts[331]);
 		aux.icon[1][P_DEATHSURGE] = new VImg(parts[332]);
 		aux.icon[1][P_BLAST] = new VImg(parts[335]);
