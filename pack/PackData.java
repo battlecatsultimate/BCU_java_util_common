@@ -276,6 +276,50 @@ public abstract class PackData implements IndexContainer {
 
     }
 
+    public static class DefBcuPack extends PackData {
+
+        public VFileRoot root = new VFileRoot(".");
+
+        protected DefBcuPack() {
+
+        }
+
+        @Override
+        public String getSID() {
+            return Identifier.BCU;
+        }
+
+        public void load(Consumer<String> progress, Consumer<Double> bar) {
+            System.out.println("LOADING BCU DATA");
+            progress.accept("loading BCU musics");
+            loadMusic();
+        }
+
+        @Override
+        public String toString() {
+            return "Custom BCU Data";
+        }
+
+        private void loadMusic() {
+            File dict = CommonStatic.ctx.getAssetFile("./music/");
+            if (!dict.exists())
+                return;
+            File[] fs = dict.listFiles();
+            for (File f : fs) {
+                String str = f.getName();
+                if (str.length() != 9)
+                    continue;
+                if (!str.endsWith("_c.ogg"))
+                    continue;
+                int id = CommonStatic.parseIntN(str.substring(0, 3));
+                if (id == -1)
+                    continue;
+                System.out.println("Loaded " + str + " as custom");
+                musics.set(id, new Music(new Identifier<>(Identifier.BCU, Music.class, id), 0, new FDFile(f)));
+            }
+        }
+    }
+
     @JsonClass(noTag = NoTag.LOAD)
     public static class PackDesc {
         public String BCU_VERSION;
