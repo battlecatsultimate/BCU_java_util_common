@@ -1567,9 +1567,6 @@ public abstract class Entity extends AbEntity {
 	public boolean damaged(AttackAb atk) {
 		damageTaken += atk.atk;
 
-		BCMusic.setBCUSE(0);
-		System.out.println("Called");
-
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;
 
