@@ -265,10 +265,11 @@ public class UpdateCheck {
 		List<Downloader> ans = new ArrayList<>();
 		for (int i = 0; i < count; i++)
 			if (!exists[i]) {
-				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
-				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
+				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + "_c.ogg");
+				File temp = CommonStatic.ctx.getAssetFile("./music/_c.ogg.temp");
 				String url = URL_MUSIC + Data.trio(i) + "_c.ogg";
 				ans.add(new Downloader(target, temp, "bcu custom music " + Data.trio(i), false, url));
+				System.out.println("bcu custom music " + Data.trio(i));
 			}
 		return ans;
 	}
