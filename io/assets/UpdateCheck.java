@@ -116,6 +116,7 @@ public class UpdateCheck {
 		public ApkJson[] apk_update;
 		public long text_update;
 		public int music;
+		public int customMusic;
 
 	}
 
@@ -242,6 +243,32 @@ public class UpdateCheck {
 				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
 				String url = URL_MUSIC + Data.trio(i) + ".ogg";
 				ans.add(new Downloader(target, temp, "music " + Data.trio(i), false, url));
+			}
+		return ans;
+	}
+
+	public static List<Downloader> checkNewCustomMusic(int count) {
+		boolean[] exists = new boolean[count];
+		File musicFolder = CommonStatic.ctx.getAssetFile("./music/");
+		if (musicFolder.exists()) {
+			File[] musicList = musicFolder.listFiles();
+
+			if (musicList != null) {
+				for (File music : musicList)
+					if (music.getName().length() == 9 && music.getName().endsWith("_c.ogg")) {
+						int id = CommonStatic.parseIntN(music.getName());
+						if (id < count && id != -1) // prevents array index out of bounds
+							exists[id] = true;
+					}
+			}
+		}
+		List<Downloader> ans = new ArrayList<>();
+		for (int i = 0; i < count; i++)
+			if (!exists[i]) {
+				File target = CommonStatic.ctx.getAssetFile("./music/" + Data.trio(i) + ".ogg");
+				File temp = CommonStatic.ctx.getAssetFile("./music/.ogg.temp");
+				String url = URL_MUSIC + Data.trio(i) + "_c.ogg";
+				ans.add(new Downloader(target, temp, "bcu custom music " + Data.trio(i), false, url));
 			}
 		return ans;
 	}

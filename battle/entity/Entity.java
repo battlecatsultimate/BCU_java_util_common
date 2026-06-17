@@ -21,9 +21,11 @@ import common.util.anim.EAnimU;
 import common.util.pack.EffAnim;
 import common.util.pack.EffAnim.*;
 import common.util.pack.Soul;
+import common.util.stage.Music;
 import common.util.stage.StageLimit;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import io.BCMusic;
 
 import java.util.*;
 
@@ -1564,6 +1566,9 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public boolean damaged(AttackAb atk) {
 		damageTaken += atk.atk;
+
+		BCMusic.setBCUSE(0);
+		System.out.println("Called");
 
 		int dmg = getDamage(atk, atk.atk);
 		boolean proc = true;

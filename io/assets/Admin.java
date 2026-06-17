@@ -89,6 +89,9 @@ public class Admin {
 			UserProfile.getBCData().load((str) -> {
 			}, (d) -> {
 			});
+			UserProfile.getBCUData().load((str) -> {
+			}, (d) -> {
+			});
 			BasisSet.read();
 			// UserProfile.loadPacks(); TODO
 		}
