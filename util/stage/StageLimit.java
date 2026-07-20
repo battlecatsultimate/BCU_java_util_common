@@ -42,6 +42,11 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
         }
     }
 
+    public enum CostIncreaseMode {
+        ADD,
+        MULTIPLY
+    }
+
     public int maxMoney = 0;
     public int globalCooldown = 0;
     public int globalCost = -1;
@@ -50,6 +55,10 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
     public int[] cooldownMultiplier = { 100, 100, 100, 100, 100, 100 };
     public int[] costMultiplier = { 100, 100, 100, 100, 100, 100 };
     public int[] rarityDeployLimit = { -1, -1, -1, -1, -1, -1 }; // -1 for none
+
+    public CostIncreaseMode costIncreaseMode;
+    public int costIncreaseValue;
+    public int costMaxIncreaseValue;
 
     public int[] deployDuplicationTimes = { 0, 0, 0, 0, 0, 0 }; // 0 for deactivated
     public int[] deployDuplicationDelay = { 0, 0, 0, 0, 0, 0 }; // unit is frame
