@@ -68,6 +68,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("ND", 34);
 			idmap.put("SR", 36);
 			idmap.put("G", 37);
+			idmap.put("PR", 39);
 
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
@@ -495,6 +496,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 								break;
 							// Rarity deploy limit
+							case 2:
 							case 3:
 								if (!parameter.isEmpty()) {
 									int[] deployLimit = new int[parameter.size()];
@@ -788,6 +790,31 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 										stage.lim.stageLimit.costMaxIncreaseValue = increaseMax;
 									}
 								}
+
+								break;
+							case 12:
+								if (!parameter.isEmpty()) {
+									if (parameter.size() < 3) {
+										System.out.printf(
+												"W/MapColc::read - Unexpected parameter size for map %d : Size = %d, Limit ID = 11\n",
+												mapID,
+												parameter.size()
+										);
+									}
+
+									int feverMaxScore = parameter.get(1).getAsInt();
+									int feverDuration = parameter.get(2).getAsInt();
+
+									for (Stage stage : map.list) {
+										if (stage == null || !(stage.info instanceof DefStageInfo))
+											continue;
+
+										((DefStageInfo) stage.info).feverMaxScore = feverMaxScore;
+										((DefStageInfo) stage.info).feverDuration = feverDuration;
+									}
+								}
+
+								break;
                             default:
                                 System.out.println("W/MapColc::init - Unknown rule ID " + ruleID + " found");
 						}
@@ -1256,6 +1283,122 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 							System.out.printf("W/MapColc::read - God mask treasure value out of range : %d, %d\n", j, targetStage.preset.fruit[j]);
 
 							targetStage.preset.gods[j] = 100;
+						}
+					}
+				}
+			}
+
+			// Fever dojo settings
+			VFile pointMapFile = VFile.get("./org/data/PointStageSettings.json");
+			VFile pointRuleFile = VFile.get("./org/data/StagePointRulesMap.json");
+
+			String pointMaps = new String(pointMapFile.getData().getBytes());
+			String pointRules = new String(pointRuleFile.getData().getBytes());
+
+			JsonElement pointMapElement = JsonParser.parseString(pointMaps);
+			JsonElement pointRuleElement = JsonParser.parseString(pointRules);
+
+			if (!(pointMapElement instanceof JsonObject)) {
+				System.out.println("W/MapColc::read - PointStageSettings.json turned out to be not json object");
+			} else {
+				JsonObject pointMapObject = pointMapElement.getAsJsonObject();
+
+				if (!pointMapObject.has("PointID")) {
+					System.out.println("W/MapColc::read - PointStageSettings.json has different format than expected");
+				} else {
+					JsonObject pointIDObject = pointMapObject.getAsJsonObject("PointID");
+
+					for (String pointID : pointIDObject.keySet()) {
+						JsonObject pointIDMap = pointIDObject.getAsJsonObject(pointID);
+
+						if (!pointIDMap.has("MapID") || !(pointIDMap.get("MapID") instanceof JsonArray)) {
+							System.out.println("W/MapColc::read - PointStageSettings has different map data than expected");
+						} else {
+							JsonArray mapArray = pointIDMap.getAsJsonArray("MapID");
+
+							for (int i = 0; i < mapArray.size(); i++) {
+								int mapID = mapArray.get(i).getAsInt();
+
+								StageMap map = getMap(mapID);
+
+								if (map == null)
+									continue;
+
+								if (map.info == null)
+									map.info = new StageMap.StageMapInfo(map);
+
+								map.info.hasFeverBar = true;
+							}
+						}
+					}
+				}
+			}
+
+			if (!(pointRuleElement instanceof JsonObject)) {
+				System.out.println("W/MapColc::read - StagePointRulesMap.json isn't json object");
+			} else {
+				JsonObject pointRuleObject = pointRuleElement.getAsJsonObject();
+
+				if (!pointRuleObject.has("MapID") || !(pointRuleObject.get("MapID") instanceof JsonObject)) {
+					System.out.println("W/MapColc::read - StagePointRulesMap.json doesn't have proper format");
+				} else {
+					JsonObject mapIDObject = pointRuleObject.getAsJsonObject("MapID");
+
+					for (String mapID : mapIDObject.keySet()) {
+						int integerMapID = CommonStatic.safeParseInt(mapID);
+
+						StageMap map = getMap(integerMapID);
+
+						if (map == null)
+							continue;
+
+						JsonObject mapDataObject = mapIDObject.getAsJsonObject(mapID);
+
+						if (!mapDataObject.has("StageIndex")) {
+							System.out.println("W/MapColc::read - StagePointRulesMap.json doesn't have StageIndex object for map ID : " + mapID);
+
+							continue;
+						}
+
+						JsonObject stageIndexObject = mapDataObject.getAsJsonObject("StageIndex");
+
+						for (String stageIndex : stageIndexObject.keySet()) {
+							int integerStageIndex = CommonStatic.safeParseInt(stageIndex);
+
+							if (integerStageIndex < 0 || integerStageIndex >= map.list.size()) {
+								System.out.println("W/MapColc::read - StagePointRulesMap.json has stage index that is out of range -> Map ID : " + integerMapID + ", Stage ID : " + integerStageIndex);
+
+								continue;
+							}
+
+							Stage stage = map.list.get(integerStageIndex);
+
+							if (stage == null || !(stage.info instanceof DefStageInfo))
+								continue;
+
+							JsonObject stageData = stageIndexObject.getAsJsonObject(stageIndex);
+
+							if (stageData.has("RuleType") && stageData.get("RuleType").getAsInt() != 0) {
+								System.out.println("W/MapColc::read - Unknown rule type has been found -> Map ID : " + integerMapID + ", Stage ID : " + integerStageIndex + ", Rule Type : " + stageData.get("RuleType").getAsInt());
+
+								continue;
+							}
+
+							if (!stageData.has("Parameters")) {
+								System.out.println("W/MapColc::read - There's no parameters data -> Map ID : " + integerMapID + ", Stage ID : " + integerStageIndex);
+
+								continue;
+							}
+
+							JsonArray parameterArray = stageData.getAsJsonArray("Parameters");
+
+							((DefStageInfo) stage.info).feverBarMultiplier = new int[(parameterArray.size() - 1) / 2][3];
+
+							for (int i = 0; i < ((DefStageInfo) stage.info).feverBarMultiplier.length; i++) {
+								((DefStageInfo) stage.info).feverBarMultiplier[i][0] = parameterArray.get(i * 2).getAsInt();
+								((DefStageInfo) stage.info).feverBarMultiplier[i][1] = parameterArray.get(i * 2 + 1).getAsInt();
+								((DefStageInfo) stage.info).feverBarMultiplier[i][2] = parameterArray.get(i * 2 + 2).getAsInt();
+							}
 						}
 					}
 				}
