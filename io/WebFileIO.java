@@ -89,6 +89,7 @@ public class WebFileIO {
 				request.setReadTimeout(timeout);
 			}
 			request.setEncoding(null);
+			request.getHeaders().setAccept("*/*");
 		});
 
 		if(size == CHUNK) {
