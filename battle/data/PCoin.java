@@ -389,8 +389,8 @@ public class PCoin extends Data {
 	}
 
 	public double getAtkMultiplication(int[] talents) {
-		double atkMultiplier = 0.0;
-		double atkPlusMultiplier = 1.0;
+		int atkMultiplier = 0;
+		int atkPlusMultiplier = 100;
 
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
@@ -419,18 +419,18 @@ public class PCoin extends Data {
 						modifs[j] = info.get(i)[3 + j * 2];
 
 				if (type[1] == PC2_ATK)
-					atkMultiplier = modifs[0] * 0.01;
+					atkMultiplier = modifs[0];
 				else
-					atkPlusMultiplier = 1.0 + modifs[0] * 0.01;
+					atkPlusMultiplier = 100 + modifs[0];
 			}
 		}
 
-		return (1.0 + atkMultiplier) * atkPlusMultiplier;
+		return (100 + atkMultiplier) * atkPlusMultiplier / 10000.0;
 	}
 
 	public double getHPMultiplication(int[] talents) {
-		double hpMultiplier = 0.0;
-		double hpPlusMultiplier = 1.0;
+		int hpMultiplier = 0;
+		int hpPlusMultiplier = 100;
 
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
@@ -459,13 +459,13 @@ public class PCoin extends Data {
 						modifs[j] = info.get(i)[3 + j * 2];
 
 				if (type[1] == PC2_HP)
-					hpMultiplier = modifs[0] * 0.01;
+					hpMultiplier = modifs[0];
 				else
-					hpPlusMultiplier = 1.0 + modifs[0] * 0.01;
+					hpPlusMultiplier = 100 + modifs[0];
 			}
 		}
 
-		return (1.0 + hpMultiplier) * hpPlusMultiplier;
+		return (100 + hpMultiplier) * hpPlusMultiplier / 10000.0;
 	}
 	
 	@OnInjected

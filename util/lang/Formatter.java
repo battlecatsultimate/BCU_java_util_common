@@ -37,28 +37,32 @@ public class Formatter {
         public final double[] magnification;
 		@JsonField
 		public final boolean treasure;
+		@JsonField
+		public final CommonStatic.Lang.Locale locale;
 		private final Function<List<Trait>, Double> treasureFunction;
 		private final List<Trait> traits;
 
 		public DecimalFormat df = new DecimalFormat("#.##");
 
-		public Context(boolean ene, boolean sec, double[] magnif) {
+		public Context(boolean ene, boolean sec, double[] magnif, CommonStatic.Lang.Locale loc) {
 			isEnemy = ene;
 			useSecond = sec;
 			magnification = magnif;
+			locale = loc;
 			treasure = false;
 			traits = null;
 			treasureFunction = null;
 		}
 
 		//The reason of passing function is because of bot. If you want to use this constructor later, use Treasure normally
-		public Context(boolean ene, boolean sec, double[] magnif, boolean trea, List<Trait> tr, Function<List<Trait>, Double> t) {
+		public Context(boolean ene, boolean sec, double[] magnif, boolean trea, List<Trait> tr, Function<List<Trait>, Double> t, CommonStatic.Lang.Locale loc) {
 			isEnemy = ene;
 			useSecond = sec;
 			magnification = magnif;
 			treasure = trea;
 			traits = tr;
 			treasureFunction = t;
+			locale = loc;
 		}
 
 		public String abs(int v) {
@@ -119,6 +123,30 @@ public class Formatter {
 
 		public String waveRange(int lv) {
 			return df.format((isEnemy ? 467.25 : 332.5) + 200 * (lv - 1));
+		}
+
+		public String ordinal(int value) {
+			switch (locale) {
+				case KR -> {
+					return value + " 번째";
+				}
+                default -> {
+					int twoDigit = Math.abs(value) % 100;
+
+					if (twoDigit >= 11 && twoDigit <= 13) {
+						return value + "th";
+					}
+
+					int firstDigit = Math.abs(value) % 10;
+
+					return switch (firstDigit) {
+						case 1 -> value + "st";
+						case 2 -> value + "nd";
+						case 3 -> value + "rd";
+                        default -> value + "th";
+					};
+				}
+			}
 		}
 	}
 
