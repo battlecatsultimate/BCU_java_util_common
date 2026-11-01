@@ -347,6 +347,7 @@ public abstract class Source {
 
 		public boolean saveAllChecked() {
 			try {
+				write("sprite.png", anim.getNum());
 				write("imgcut.txt", anim.imgcut::write);
 				write("mamodel.txt", anim.mamodel::write);
 
@@ -357,8 +358,6 @@ public abstract class Source {
 				} else {
 					write(SourceAnimLoader.MA_SOUL[0], anim.anims[0]::write);
 				}
-
-				write("sprite.png", anim.getNum());
 
 				if (anim.getEdi() != null) {
 					write("icon_display.png", anim.getEdi().getImg());
