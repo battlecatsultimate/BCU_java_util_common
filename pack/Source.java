@@ -345,6 +345,36 @@ public abstract class Source {
 			saveImgs();
 		}
 
+		public boolean saveAllChecked() {
+			try {
+				write("sprite.png", anim.getNum());
+				write("imgcut.txt", anim.imgcut::write);
+				write("mamodel.txt", anim.mamodel::write);
+
+				if (id.base.equals(BasePath.ANIM)) {
+					for (int i = 0; i < SourceAnimLoader.MA_ENTITY.length; i++) {
+						write(SourceAnimLoader.MA_ENTITY[i], anim.anims[i]::write);
+					}
+				} else {
+					write(SourceAnimLoader.MA_SOUL[0], anim.anims[0]::write);
+				}
+
+				if (anim.getEdi() != null) {
+					write("icon_display.png", anim.getEdi().getImg());
+				}
+
+				if (anim.getUni() != null && !id.base.equals(BasePath.SOUL)) {
+					write("icon_deploy.png", anim.getUni().getImg());
+				}
+
+				return true;
+			} catch (Exception e) {
+				CommonStatic.ctx.noticeErr(
+						e, ErrType.ERROR, "Error during renaming animation: " + id);
+				return false;
+			}
+		}
+
 		public void saveData() {
 			try {
 				write("imgcut.txt", anim.imgcut::write);

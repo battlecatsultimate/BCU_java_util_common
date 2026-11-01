@@ -243,16 +243,33 @@ public class AnimCE extends AnimCI {
 
 	public void renameTo(String str) {
 		check();
-		if (id.pack.equals(ResourceLocation.LOCAL))
-			map().remove(id.id);
-		SourceAnimSaver saver = new SourceAnimSaver(id, this);
-		saver.delete(false);
-		id.id = str;
-		Workspace.validate(id);
-		if (id.pack.equals(ResourceLocation.LOCAL))
+
+		String oldId = id.id;
+		ResourceLocation oldLocation =
+				new ResourceLocation(id.pack, oldId, id.base);
+
+		ResourceLocation newLocation =
+				new ResourceLocation(id.pack, str, id.base);
+
+		Workspace.validate(newLocation);
+
+		SourceAnimSaver newSaver = new SourceAnimSaver(newLocation, this);
+
+		if (!newSaver.saveAllChecked()) {
+			return;
+		}
+
+		SourceAnimSaver oldSaver = new SourceAnimSaver(oldLocation, this);
+		oldSaver.delete(false);
+
+		id.id = newLocation.id;
+
+		if (id.pack.equals(ResourceLocation.LOCAL)) {
+			map().remove(oldId);
 			map().put(id.id, this);
+		}
+
 		AnimGroup.workspaceGroup.renewGroup();
-		saver.saveAll();
 		reloImg();
 		unSave("rename (not applicable for undo)");
 	}
