@@ -1436,7 +1436,8 @@ public class Data {
 			false, //lethargy
 			true, //imu.lethargy
 			false, //delay
-			true //imu delay
+			true, //imu delay
+			false //shortened cost
 	};
 
 	/**
@@ -1550,7 +1551,7 @@ public class Data {
 			{ 3, P_IMUBLAST, 0, 69 }, // 69: immune to blast todo: when resist blast comes, connect to that talent
 			{ 2, PC2_ATKP, 1, -1 }, // 70: inc ATK+
 			{ 2, PC2_HPP, 1, -1 }, // 71: inc HP+
-			{ 3, P_CDDEC, 3, -1 } // cd decrease
+			{ 0, P_CDDEC, 3, -1 } // cd decrease
 	};
 
 	// foot icon index used in battle
