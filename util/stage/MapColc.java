@@ -1392,12 +1392,23 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 							JsonArray parameterArray = stageData.getAsJsonArray("Parameters");
 
-							((DefStageInfo) stage.info).feverBarMultiplier = new int[(parameterArray.size() - 1) / 2][3];
+							((DefStageInfo) stage.info).feverBarMultiplier = new int[parameterArray.size() / 2 + 1][3];
 
 							for (int i = 0; i < ((DefStageInfo) stage.info).feverBarMultiplier.length; i++) {
-								((DefStageInfo) stage.info).feverBarMultiplier[i][0] = parameterArray.get(i * 2).getAsInt();
-								((DefStageInfo) stage.info).feverBarMultiplier[i][1] = parameterArray.get(i * 2 + 1).getAsInt();
-								((DefStageInfo) stage.info).feverBarMultiplier[i][2] = parameterArray.get(i * 2 + 2).getAsInt();
+								if (i == 0) {
+									((DefStageInfo) stage.info).feverBarMultiplier[i][0] = -1;
+									((DefStageInfo) stage.info).feverBarMultiplier[i][1] = -1;
+									((DefStageInfo) stage.info).feverBarMultiplier[i][2] = parameterArray.get(0).getAsInt();
+								} else {
+									if (i == 1) {
+										((DefStageInfo) stage.info).feverBarMultiplier[i][0] = 0;
+									} else {
+										((DefStageInfo) stage.info).feverBarMultiplier[i][0] = parameterArray.get(i * 2 - 2).getAsInt();
+									}
+
+									((DefStageInfo) stage.info).feverBarMultiplier[i][1] = parameterArray.get(i * 2).getAsInt();
+									((DefStageInfo) stage.info).feverBarMultiplier[i][2] = parameterArray.get(i * 2 - 1).getAsInt();
+								}
 							}
 						}
 					}
