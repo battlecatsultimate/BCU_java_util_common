@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public class Identifier<T extends IndexContainer.Indexable<?, T>> implements Comparable<Identifier<?>>, Cloneable {
 
 	public static final String DEF = "000000";
+	public static final String BCU = "000001";
 
 	@Nullable
 	public static <T extends IndexContainer.Indexable<?, T>> T get(Identifier<T> id) {

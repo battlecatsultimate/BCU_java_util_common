@@ -71,17 +71,22 @@ public class UserProfile {
 	}
 
 	/**
-	 * get all packs, including default pack
+	 * get all packs, including default and bcu pack
 	 */
 	public static Collection<PackData> getAllPacks() {
 		List<PackData> ans = new ArrayList<>();
 		ans.add(getBCData());
+		ans.add(getBCUData());
 		ans.addAll(getUserPacks());
 		return ans;
 	}
 
 	public static DefPack getBCData() {
 		return profile().def;
+	}
+
+	public static PackData.DefBcuPack getBCUData() {
+		return profile().defbcu;
 	}
 
 	/**
@@ -345,6 +350,7 @@ public class UserProfile {
 	}
 
 	public final DefPack def = new DefPack();
+	public final PackData.DefBcuPack defbcu = new PackData.DefBcuPack();
 	public final Map<String, UserPack> packmap = new HashMap<>();
 
 	public final Set<UserPack> packlist = new HashSet<>();
