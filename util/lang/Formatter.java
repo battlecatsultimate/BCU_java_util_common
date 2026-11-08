@@ -127,25 +127,23 @@ public class Formatter {
 
 		public String ordinal(int value) {
 			switch (locale) {
-				case KR -> {
+				case KR:
 					return value + " 번째";
-				}
-                default -> {
+				default:
 					int twoDigit = Math.abs(value) % 100;
-
-					if (twoDigit >= 11 && twoDigit <= 13) {
+					if (twoDigit >= 11 && twoDigit <= 13)
 						return value + "th";
-					}
-
 					int firstDigit = Math.abs(value) % 10;
-
-					return switch (firstDigit) {
-						case 1 -> value + "st";
-						case 2 -> value + "nd";
-						case 3 -> value + "rd";
-                        default -> value + "th";
-					};
-				}
+					switch (firstDigit) {
+						case 1:
+							return value + "st";
+						case 2:
+							return value + "nd";
+						case 3:
+							return value + "rd";
+						default:
+							return value + "th";
+					}
 			}
 		}
 	}
