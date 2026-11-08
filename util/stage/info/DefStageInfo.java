@@ -27,6 +27,9 @@ public class DefStageInfo implements StageInfo {
     public final int[][] time;
     public Stage[] exStages;
     public float[] exChances;
+    public int feverMaxScore = -1;
+    public int feverDuration = -1; // 30 fps
+    public int[][] feverBarMultiplier = null; // [ Cost Range Start, Cost Range End, Multiplier ]
     public int diff = -1, exChance = -1, exMapID = -1, exStageIDMin = -1, exStageIDMax = -1;
     public boolean exConnection = false;
     public int maxMaterial = -1;
