@@ -2,16 +2,132 @@ package common.util;
 
 import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
+import common.battle.FeverMode;
 import common.battle.entity.AbEntity;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
+import common.system.fake.FakeTransform;
 import common.system.fake.ImageBuilder;
+import common.system.files.VFile;
 import common.util.anim.ImgCut;
 
 public class Res extends ImgCore {
+
+	// Fever HUD stuff
+	private static final float FEVER_SCREEN_H = 640f;
+	private static final float FEVER_POINTS_W = 268f, FEVER_POINTS_H = 42f, FEVER_POINTS_Y = 13.5f;
+	private static final float FEVER_POINTS_CAP_L = 20f, FEVER_POINTS_CAP_R = 21f;
+	private static final float FEVER_ICON_X = 14f, FEVER_ICON_Y = 5f;
+	private static final float FEVER_DIGIT_RIGHT = 234f, FEVER_DIGIT_Y = 6.5f, FEVER_DIGIT_ADVANCE = 17f;
+	private static final float FEVER_GAUGE_W = 308f, FEVER_GAUGE_H = 46f, FEVER_GAUGE_Y = 73.5f;
+	private static final float FEVER_GAUGE_INNER_X = 7f, FEVER_GAUGE_INNER_Y = 7f, FEVER_GAUGE_INNER_W = 294f, FEVER_GAUGE_INNER_H = 32f;
+	// the full gauge switches between its two looks every this many frames
+	private static final int FEVER_FLASH_FRAMES = 4;
+	/**
+	 * Fever dojo HUD assets, the HUD stays disabled if the point sprites or the fever files aren't available
+	 * @param parts the sprites of img001
+	 */
+	public static void readFeverHud(FakeImage[] parts) {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+
+		aux.feverPoints = null;
+		aux.feverGauge = null;
+
+		// older versions of img001 don't have the point sprites
+		if (parts.length <= 159)
+			return;
+
+		String path = "./org/battle/fever/FeverEffect";
+
+		if (VFile.get(path + ".png") == null || VFile.get(path + ".imgcut") == null)
+			return;
+
+		FakeImage[] gauge = ImgCut.newIns(path + ".imgcut").cut(new VImg(path + ".png").getImg());
+
+		if (gauge.length < 10)
+			return;
+
+		FakeImage bar = parts[106];
+		int capR = (int) FEVER_POINTS_CAP_R;
+
+		aux.feverPoints = new VImg[] {
+				new VImg(bar.getSubimage(0, 0, (int) FEVER_POINTS_CAP_L, bar.getHeight())),
+				new VImg(parts[107]),
+				new VImg(bar.getSubimage(bar.getWidth() - capR, 0, capR, bar.getHeight())),
+				new VImg(parts[159])
+		};
+		aux.feverGauge = new VImg[] { new VImg(gauge[6]), new VImg(gauge[7]), new VImg(gauge[8]), new VImg(gauge[9]) };
+	}
+
+	/**
+	 * Draws the fever dojo points and the fever gauge on the top middle of the screen
+	 * @param w     width of the screen
+	 * @param h     height of the screen
+	 * @param frame current frame of the battle
+	 */
+	public static void drawFeverHud(FakeGraphics g, FeverMode fever, int w, int h, int frame) {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
+		if (fever == null || !fever.isEnabled() || !aux.hasFeverHud())
+			return;
+		float s = h / FEVER_SCREEN_H;
+		drawFeverPoints(g, aux, fever.points, w, s);
+		drawFeverGauge(g, aux, fever, w, s, frame);
+	}
+	/**
+	 * Draws the effect that is shown when fever mode starts
+	 */
+	public static void drawFeverEffect(FakeGraphics g, FeverMode fever, int w, int h) {
+		if (fever == null || fever.effect == null)
+			return;
+		FakeTransform at = g.getTransform();
+		P p = P.newP(w / 2f, h / 2f);
+		fever.effect.draw(g, p, h / FEVER_SCREEN_H);
+		P.delete(p);
+		g.setTransform(at);
+		g.delete(at);
+	}
+
+	private static void drawFeverPoints(FakeGraphics g, BCAuxAssets aux, int points, int w, float s) {
+		float x = (w - FEVER_POINTS_W * s) / 2f;
+		float y = FEVER_POINTS_Y * s;
+		// both ends and the middle are placed on rounded edges, so there are no seams between them
+		int x0 = Math.round(x);
+		int x1 = Math.round(x + FEVER_POINTS_CAP_L * s);
+		int x2 = Math.round(x + (FEVER_POINTS_W - FEVER_POINTS_CAP_R) * s);
+		int x3 = Math.round(x + FEVER_POINTS_W * s);
+		int y0 = Math.round(y);
+		int y1 = Math.round(y + FEVER_POINTS_H * s);
+		g.drawImage(aux.feverPoints[0].getImg(), x0, y0, x1 - x0, y1 - y0);
+		g.drawImage(aux.feverPoints[1].getImg(), x1, y0, x2 - x1, y1 - y0);
+		g.drawImage(aux.feverPoints[2].getImg(), x2, y0, x3 - x2, y1 - y0);
+		FakeImage icon = aux.feverPoints[3].getImg();
+		g.drawImage(icon, x + FEVER_ICON_X * s, y + FEVER_ICON_Y * s, icon.getWidth() * s, icon.getHeight() * s);
+		int[] val = getLab(points);
+		float dw = aux.num[1][0].getImg().getWidth();
+		float dx = x + (FEVER_DIGIT_RIGHT - (val.length - 1) * FEVER_DIGIT_ADVANCE - dw) * s;
+		for (int i = 0; i < val.length; i++) {
+			FakeImage digit = aux.num[1][val[i]].getImg();
+			g.drawImage(digit, dx + i * FEVER_DIGIT_ADVANCE * s, y + FEVER_DIGIT_Y * s, digit.getWidth() * s, digit.getHeight() * s);
+		}
+	}
+
+	private static void drawFeverGauge(FakeGraphics g, BCAuxAssets aux, FeverMode fever, int w, float s, int frame) {
+		boolean flash = fever.isActive() && (frame / FEVER_FLASH_FRAMES) % 2 == 1;
+		float x = (w - FEVER_GAUGE_W * s) / 2f;
+		float y = FEVER_GAUGE_Y * s;
+		// the full gauge is drawn first, the part that isn't filled is covered with the empty bar
+		g.drawImage(aux.feverGauge[flash ? 3 : 2].getImg(), x, y, FEVER_GAUGE_W * s, FEVER_GAUGE_H * s);
+		float innerW = FEVER_GAUGE_INNER_W * s;
+		float filled = Math.round(fever.getGauge() * innerW);
+		if (filled < innerW)
+			g.drawImage(aux.feverGauge[1].getImg(), x + FEVER_GAUGE_INNER_X * s + filled, y + FEVER_GAUGE_INNER_Y * s, innerW - filled, FEVER_GAUGE_INNER_H * s);
+		FakeImage label = aux.feverGauge[0].getImg();
+		float lw = label.getWidth() * s, lh = label.getHeight() * s;
+		g.drawImage(label, x + (FEVER_GAUGE_W * s - lw) / 2f, y + (FEVER_GAUGE_H * s - lh) / 2f, lw, lh);
+	}
 
 	public static P getBase(AbEntity ae, SymCoord coor, boolean dojo) {
 		BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -242,6 +358,7 @@ public class Res extends ImgCore {
 		aux.icon[1][P_IMUBLAST] = new VImg(parts[337]);
 		aux.icon[1][P_POISON] = new VImg(parts[329]);
 		aux.icon[1][P_DELAY] = new VImg(parts[389]);
+		aux.icon[1][P_CDDEC] = new VImg(parts[396]);
 
 		aux.icon[0][ABI_VKILL] = new VImg("./org/page/icons/SupervillainSlayer.png");
 		aux.icon[1][P_IMUSUMMON] = new VImg("./org/page/icons/SummonX.png");
@@ -263,6 +380,8 @@ public class Res extends ImgCore {
 		aux.icon[4][PC2_CD] = new VImg(parts[94]);
 		aux.icon[4][PC2_HB] = new VImg(parts[98]);
 		aux.icon[4][PC2_TBA] = new VImg(parts[305]);
+		aux.icon[4][PC2_ATKP] = new VImg(parts[392]);
+		aux.icon[4][PC2_HPP] = new VImg(parts[393]);
 
 		aux.icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
 		aux.icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
@@ -328,6 +447,7 @@ public class Res extends ImgCore {
 		for (int i = 0; i < aux.maxcat.length; i++)
 			aux.maxcat[i] = new VImg(parts[i + 141]);
 
+		readFeverHud(parts);
 		ImgCut moneyCut = ImgCut.newIns("./org/page/moneySign.imgcut");
 		VImg moneyImg = new VImg("./org/page/moneySign.png");
 

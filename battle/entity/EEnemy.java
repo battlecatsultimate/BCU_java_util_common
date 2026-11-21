@@ -80,6 +80,10 @@ public class EEnemy extends Entity {
 			int score = (int) (((MaskEnemy) data).getDrop() / 100f + (lineScore * (2f * time - basis.time)) / time);
 			basis.score += score;
 		}
+
+		// kill gives fever points
+		if (basis.fever.isEnabled() && basis.isActive() && atk == KillMode.NORMAL)
+			basis.fever.killed(((MaskEnemy) data).getDrop() / 100, line != -1 ? basis.st.data.getSimple(line).score : 0, basis.time);
 	}
 
 	@Override
@@ -213,12 +217,8 @@ public class EEnemy extends Entity {
 		if (atkProc.DELAY.exists() && line != -1 && basis.est.num[line] >= 0 && basis.est.rem[line] > 0) {
 			Proc.DELAY d = atkProc.DELAY;
 			Proc.IMUAD imu = getProc().IMUDELAY;
-			float res;
-			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
-				res = getResistValue(atk, "IMUDELAY", imu.mult);
-			else
-				res = 0;
-			if (res < 100) {
+			float res = getResistValue(atk, "IMUDELAY", Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0) ? imu.mult : 0);
+			if (res > 0f) {
 				int strength = (int) (d.strength * res);
 				if (strength != 0) {
 					status[P_DELAY][d.type] += strength;

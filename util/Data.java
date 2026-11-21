@@ -793,6 +793,7 @@ public class Data {
 			public int type;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
 		public static class MULTCOUNT extends ProcItem {
 			@Order(0)
 			public int mult;
@@ -1107,6 +1108,7 @@ public class Data {
 	public static final short SE_COUNTER_SURGE = 159;
 	public static final short SE_SPIRIT_SUMMON = 162;
 	public static final short SE_DELAY_COOLDOWN = 188;
+	public static final short SE_FEVER = 194;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -1437,7 +1439,7 @@ public class Data {
 			true, //imu.lethargy
 			false, //delay
 			true, //imu delay
-			false //shortened cost
+			true //cooldown decrease
 	};
 
 	/**
@@ -1551,7 +1553,7 @@ public class Data {
 			{ 3, P_IMUBLAST, 0, 69 }, // 69: immune to blast todo: when resist blast comes, connect to that talent
 			{ 2, PC2_ATKP, 1, -1 }, // 70: inc ATK+
 			{ 2, PC2_HPP, 1, -1 }, // 71: inc HP+
-			{ 0, P_CDDEC, 3, -1 } // cd decrease
+			{ 0, P_CDDEC, 1, -1 }, // 72: cd decrease
 	};
 
 	// foot icon index used in battle

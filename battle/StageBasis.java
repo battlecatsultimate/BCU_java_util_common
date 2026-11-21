@@ -32,6 +32,7 @@ public class StageBasis extends BattleObj {
 	public final Stage st;
 	public final EStage est;
 	public final ELineUp elu;
+	public final FeverMode fever;
 	public final long[][] totalDamageTaken = new long[2][5];
 	public final long[][] totalDamageGiven = new long[2][5];
 	public final int[] nyc;
@@ -118,6 +119,8 @@ public class StageBasis extends BattleObj {
 		nyc = bas.nyc;
 		est = stage;
 		st = est.s;
+		FeverSettings feverSettings = FeverSettings.get(st, est.lim);
+		fever = new FeverMode(feverSettings, feverSettings == null ? 0 : feverSettings.getTimeBonusFrames(st));
 		lineDelay = new int[st.data.datas.length][3];
 		elu = new ELineUp(bas.lu, this);
 		est.assign(this);
@@ -619,12 +622,14 @@ public class StageBasis extends BattleObj {
 			le.sort(Comparator.comparingInt(e -> e.currentLayer));
 
 			money -= price;
+			fever.deployed(price / 100);
 			unitRespawnTime = 1;
 			if (maxCatSpawns > 0)
 				maxCatSpawns--;
 
 			if (elu.tick[i][j] != -1)
 				elu.tick[i][j] = (elu.tick[i][j] + 1) % 2;
+			elu.deployed(i, j);
 
 			return true;
 		}
@@ -770,6 +775,15 @@ public class StageBasis extends BattleObj {
 
 			if(respawnTime > 0 && active)
 				respawnTime--;
+
+			if (fever.update()) {
+				// fever mode starts, the cooldown of every unit is set to 0
+				for (int[] c : elu.cool)
+					Arrays.fill(c, 0);
+
+				fever.startEffect();
+				CommonStatic.setSE(SE_FEVER);
+			}
 
 			elu.update();
 

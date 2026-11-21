@@ -495,7 +495,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 								}
 
 								break;
-							// Rarity deploy limit
+							// Rarity lineup limit (2) and rarity deploy limit (3)
 							case 2:
 							case 3:
 								if (!parameter.isEmpty()) {
@@ -534,7 +534,9 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 											stage.lim.stageLimit = new StageLimit();
 										}
 
-										System.arraycopy(deployLimit, 0, stage.lim.stageLimit.rarityDeployLimit, 0, Math.min(stage.lim.stageLimit.rarityDeployLimit.length, deployLimit.length));
+										// Rule 2 limits how many units of a rarity can be in the lineup, rule 3 how many can be on the field at once
+										int[] limitTarget = ruleID == 2 ? stage.lim.stageLimit.rarityLineupLimit : stage.lim.stageLimit.rarityDeployLimit;
+										System.arraycopy(deployLimit, 0, limitTarget, 0, Math.min(limitTarget.length, deployLimit.length));
 									}
 								}
 
@@ -674,7 +676,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 									int deployTimes = parameter.get(1).getAsInt();
 									int deployDelay = parameter.get(2).getAsInt();
 
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 6; i++) {
 										if ((bitMask & (1 << i)) != 0) {
 											indices.add(i);
 										}
@@ -811,6 +813,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 										((DefStageInfo) stage.info).feverMaxScore = feverMaxScore;
 										((DefStageInfo) stage.info).feverDuration = feverDuration;
+										// unlike the other dojo stages, enemies of the fever dojo drop money
+										stage.drop = true;
 									}
 								}
 
@@ -1392,24 +1396,11 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 
 							JsonArray parameterArray = stageData.getAsJsonArray("Parameters");
 
-							((DefStageInfo) stage.info).feverBarMultiplier = new int[parameterArray.size() / 2 + 1][3];
+							int[] feverParameters = new int[parameterArray.size()];
+							for (int i = 0; i < feverParameters.length; i++)
+								feverParameters[i] = parameterArray.get(i).getAsInt();
 
-							for (int i = 0; i < ((DefStageInfo) stage.info).feverBarMultiplier.length; i++) {
-								if (i == 0) {
-									((DefStageInfo) stage.info).feverBarMultiplier[i][0] = -1;
-									((DefStageInfo) stage.info).feverBarMultiplier[i][1] = -1;
-									((DefStageInfo) stage.info).feverBarMultiplier[i][2] = parameterArray.get(0).getAsInt();
-								} else {
-									if (i == 1) {
-										((DefStageInfo) stage.info).feverBarMultiplier[i][0] = 0;
-									} else {
-										((DefStageInfo) stage.info).feverBarMultiplier[i][0] = parameterArray.get(i * 2 - 2).getAsInt();
-									}
-
-									((DefStageInfo) stage.info).feverBarMultiplier[i][1] = parameterArray.get(i * 2).getAsInt();
-									((DefStageInfo) stage.info).feverBarMultiplier[i][2] = parameterArray.get(i * 2 - 1).getAsInt();
-								}
-							}
+							((DefStageInfo) stage.info).feverBarMultiplier = DefStageInfo.parseFeverBar(feverParameters);
 						}
 					}
 				}

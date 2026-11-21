@@ -52,6 +52,8 @@ public class CommonStatic {
 		public VImg[][] battle = new VImg[3][];
 		public VImg[][] icon = new VImg[5][];
 		public VImg[] timer = new VImg[11];
+		public VImg[] feverPoints = null;
+		public VImg[] feverGauge = null;
 		public VImg emptyEdi = null;
 
 		public Map<Integer, VImg> gatyaitem = new HashMap<>();
@@ -62,6 +64,10 @@ public class CommonStatic {
 		 * Use this if trait.icon is null
 		 */
 		public VImg dummyTrait;
+
+		public boolean hasFeverHud() {
+			return feverPoints != null && feverGauge != null;
+		}
 
 		// Background resources
 		public final List<ImgCut> iclist = new ArrayList<>();

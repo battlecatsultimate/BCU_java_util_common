@@ -289,9 +289,12 @@ public class PCoin extends Data {
 					tar.set(0, tar.get(0) + modifs[0]);
 					tar.set(1, tar.get(1) + modifs[1]);
 					tar.set(3, tar.get(3) + modifs[2]);
-				} else if (type[1] == P_CDDEC && du instanceof DataUnit) {
+				} else if (type[1] == P_CDDEC) {
 					tar.set(0, tar.get(0) + modifs[0]);
-					tar.set(1, 2);
+
+					// the talent triggers on every 2nd deployment, a unit that already has its own interval keeps it
+					if (tar.get(1) < 1)
+						tar.set(1, 2);
 				} else {
 					for (int j = 0; j < 4; j++) {
 						if (modifs[j] > 0) {

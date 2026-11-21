@@ -35,6 +35,25 @@ public class DefStageInfo implements StageInfo {
     public int maxMaterial = -1;
     public Map<Integer, Map.Entry<Integer, Integer>> challengeRewards = new HashMap<>(); // <Clear, <ID, Amount>>
 
+    /**
+     * Fever dojo gauge bonus table, read from the parameters of a stage point rule: [ base, (percent, cost limit), ... ]
+     * @return rows of [ cost range start (exclusive), cost range end (inclusive), percent of the cost added to the gauge ],
+     * the first row is [ -1, -1, multiplier ], the multiplier of the points an enemy kill gives
+     */
+    public static int[][] parseFeverBar(int[] params) {
+        int tiers = Math.max(0, (params.length - 1) / 2);
+        int[][] ans = new int[tiers + 1][3];
+        ans[0][0] = -1;
+        ans[0][1] = -1;
+        ans[0][2] = params.length > 0 ? params[0] : 0;
+        for (int i = 1; i <= tiers; i++) {
+            ans[i][0] = i == 1 ? 0 : params[i * 2 - 2];
+            ans[i][1] = params[i * 2];
+            ans[i][2] = params[i * 2 - 1];
+        }
+        return ans;
+    }
+
     public DefStageInfo(StageMap.StageMapInfo info, Stage s, int[] data) {
         map = info;
         st = s;

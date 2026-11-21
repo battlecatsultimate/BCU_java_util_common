@@ -544,12 +544,8 @@ public class EUnit extends Entity {
 		if (atkProc.DELAY.exists() && index != null && basis.elu.cool[index[0]][index[1]] > 0) {
 			Proc.DELAY d = atkProc.DELAY;
 			Proc.IMUAD imu = getProc().IMUDELAY;
-			float res;
-			if (Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0))
-				res = getResistValue(atk, "IMUDELAY", imu.mult);
-			else
-				res = 0;
-			if (res < 100) {
+			float res = getResistValue(atk, "IMUDELAY", Proc.checkSmartImu(d.strength, imu.smartImu, imu.mult < 0) ? imu.mult : 0);
+			if (res > 0f) {
 				int strength = (int) (d.strength * res);
 				if (strength != 0) {
 					status[P_DELAY][d.type] += strength;
