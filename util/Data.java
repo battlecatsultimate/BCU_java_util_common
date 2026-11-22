@@ -1493,11 +1493,11 @@ public class Data {
 			{ 0, P_WARP, 4, -1 }, // 9: warp
 			{ 0, P_STRONG, 2, -1 }, // 10: berserker, reversed health
 			{ 0, P_LETHAL, 1, -1 }, // 11: lethal
-			{ 0, P_ATKBASE, 0, -1 }, // 12: Base Destroyer
+			{ 0, P_ATKBASE, 1, -1 }, // 12: Base Destroyer
 			{ 0, P_CRIT, 1, -1 }, // 13: crit
 			{ 1, AB_ZKILL, 0, -1 }, // 14: zkill
 			{ 0, P_BREAK, 1, -1 }, // 15: break
-			{ 0, P_BOUNTY, 0, -1 }, // 16: 2x income
+			{ 0, P_BOUNTY, 1, -1 }, // 16: 2x income
 			{ 0, P_WAVE, 2, -1 }, // 17: wave
 			{ 0, P_IMUWEAK, 1, -1 }, // 18: res weak
 			{ 0, P_IMUSTOP, 1, -1 }, // 19: res stop
