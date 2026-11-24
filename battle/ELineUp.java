@@ -79,10 +79,10 @@ public class ELineUp extends BattleObj {
 		cool[i][j] = maxC[i][j];
 
 		// In the game a unit with the cooldown ability can't equip the cooldown orb, so the ability
-		// always takes priority and the orb is ignored entirely (even on deployments where the ability doesn't trigger)
+		// always takes priority and the orb is ignored entirely
 		int dec = 0;
 		if (cdDownAbi[i][j] > 0) {
-			if (cdDownTick[i][j] == cdDownEvery[i][j] - 1)
+			if (cdDownTick[i][j] == 0)
 				dec = cdDownAbi[i][j];
 		} else if (cdDownOrb[i][j] > 0 && tick[i][j] == 0)
 			dec = cdDownOrb[i][j];
