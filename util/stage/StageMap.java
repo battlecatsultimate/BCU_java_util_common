@@ -39,6 +39,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc>,
 		public boolean hiddenUponClear = false;
 		public boolean cantUseGoldCPU = false;
         public boolean hasAbyssChallenge = false;
+		public boolean hasFeverBar = false;
 
 		public StageMapInfo(StageMap map) {
 			sm = map;

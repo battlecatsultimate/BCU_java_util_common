@@ -4,6 +4,7 @@ import common.io.json.JsonClass;
 import common.io.json.JsonField;
 import common.util.BattleStatic;
 import common.util.Data;
+import common.util.unit.Form;
 
 import java.util.HashSet;
 
@@ -14,6 +15,51 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
             return false;
         else
             return lim.stageLimit.bannedCatCombo.contains(comboId);
+    }
+
+    /**
+     * Stage rule "only N units of each rarity in the lineup".
+     * Slots are counted in lineup order (front row left to right, then back row), so the first N units of a
+     * rarity stay usable and the ones past the limit are flagged.
+     * @param lim the stage limit, may be null
+     * @param fs  the lineup, empty slots are null
+     * @return a flag for every lineup slot, true if that slot is over the limit and can't be used
+     */
+    public static boolean[][] lineupOverLimit(Limit lim, Form[][] fs) {
+        int[][] rarity = new int[fs.length][];
+
+        for (int i = 0; i < fs.length; i++) {
+            rarity[i] = new int[fs[i].length];
+
+            for (int j = 0; j < fs[i].length; j++)
+                rarity[i][j] = fs[i][j] == null ? -1 : fs[i][j].unit.rarity;
+        }
+        return lineupOverLimit(lim == null || lim.stageLimit == null ? null : lim.stageLimit.rarityLineupLimit, rarity);
+    }
+
+    /**
+     * @param limit  max units per rarity, -1 for none, null for no limits at all
+     * @param rarity the rarity of every lineup slot, -1 for empty slots
+     */
+    public static boolean[][] lineupOverLimit(int[] limit, int[][] rarity) {
+        boolean[][] over = new boolean[rarity.length][];
+        int[] count = new int[limit == null ? 0 : limit.length];
+
+        for (int i = 0; i < rarity.length; i++) {
+            over[i] = new boolean[rarity[i].length];
+
+            for (int j = 0; j < rarity[i].length; j++) {
+                int r = rarity[i][j];
+
+                if (limit == null || r < 0 || r >= limit.length || limit[r] < 0)
+                    continue;
+
+                if (++count[r] > limit[r])
+                    over[i][j] = true;
+            }
+        }
+
+        return over;
     }
 
     public enum SpeedOverrideMode {
@@ -42,6 +88,11 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
         }
     }
 
+    public enum CostIncreaseMode {
+        ADD,
+        MULTIPLY
+    }
+
     public int maxMoney = 0;
     public int globalCooldown = 0;
     public int globalCost = -1;
@@ -49,7 +100,13 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
 
     public int[] cooldownMultiplier = { 100, 100, 100, 100, 100, 100 };
     public int[] costMultiplier = { 100, 100, 100, 100, 100, 100 };
-    public int[] rarityDeployLimit = { -1, -1, -1, -1, -1, -1 }; // -1 for none
+    public int[] rarityDeployLimit = { -1, -1, -1, -1, -1, -1 }; // -1 for none, max units of a rarity on the field
+    public int[] rarityLineupLimit = { -1, -1, -1, -1, -1, -1 }; // -1 for none, max units of a rarity in the lineup
+    public FeverSettings fever = new FeverSettings();
+
+    public CostIncreaseMode costIncreaseMode;
+    public int costIncreaseValue;
+    public int costMaxIncreaseValue;
 
     public int[] deployDuplicationTimes = { 0, 0, 0, 0, 0, 0 }; // 0 for deactivated
     public int[] deployDuplicationDelay = { 0, 0, 0, 0, 0, 0 }; // unit is frame
@@ -92,6 +149,8 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
         sl.cooldownMultiplier = cooldownMultiplier.clone();
         sl.costMultiplier = costMultiplier.clone();
         sl.rarityDeployLimit = rarityDeployLimit.clone();
+        sl.rarityLineupLimit = rarityLineupLimit.clone();
+        sl.fever = fever.clone();
 
         sl.deployDuplicationTimes = deployDuplicationTimes.clone();
         sl.deployDuplicationDelay = deployDuplicationDelay.clone();
@@ -126,6 +185,13 @@ public class StageLimit extends Data implements BattleStatic, Cloneable {
         for (int i = 0; i < alt.rarityDeployLimit.length; i++)
             if (alt.rarityDeployLimit[i] != -1)
                 c.rarityDeployLimit[i] = alt.rarityDeployLimit[i];
+
+        for (int i = 0; i < alt.rarityLineupLimit.length; i++)
+            if (alt.rarityLineupLimit[i] != -1)
+                c.rarityLineupLimit[i] = alt.rarityLineupLimit[i];
+
+        if (alt.fever.enabled)
+            c.fever = alt.fever.clone();
 
         for (int i = 0; i < 6; i++) {
             if (alt.deployDuplicationTimes[i] != 0) {

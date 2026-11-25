@@ -121,6 +121,9 @@ public class CustomUnit extends CustomEntity implements MaskUnit, Cloneable {
 					j[0] = data[3];
 					j[2] = j[3] = 100;
 				}
+				// the official data has no values for these, they are fixed (2x income, 4x base damage)
+				if (data[1] == P_BOUNTY || data[1] == P_ATKBASE)
+					j[2] = j[3] = data[1] == P_BOUNTY ? 100 : 300;
 				if (j[0] == 65 || j[0] == 56) {
 					int[] lvl = new int[] { j[4], j[5] };
 					int[] max = new int[] { j[6], j[7] };

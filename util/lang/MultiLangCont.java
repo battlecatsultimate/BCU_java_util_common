@@ -31,6 +31,7 @@ public class MultiLangCont<I, T> extends Lang {
 		public final MultiLangCont<Unit.UnitInfo, String> CFEXP = new MultiLangCont<>();
 		public final MultiLangCont<Unit.UnitInfo, String> UFEXP = new MultiLangCont<>();
 		public final MultiLangCont<Enemy, String[]> EEXP = new MultiLangCont<>();
+		public final MultiLangCont<Integer, String> MUSNAME = new MultiLangCont<>();
 
 		protected final MultiLangCont<AnimI.AnimType<?, ?>, String> ANIMNAME = new MultiLangCont<>();
 		protected final boolean[] loaded_anim = new boolean[Locale.values().length];

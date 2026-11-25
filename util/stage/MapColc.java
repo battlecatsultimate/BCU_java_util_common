@@ -68,6 +68,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 			idmap.put("ND", 34);
 			idmap.put("SR", 36);
 			idmap.put("G", 37);
+			idmap.put("PR", 39);
 
 			for (int i = 0; i < strs.length; i++)
 				new CastleList.DefCasList(Data.hex(i), strs[i]);
@@ -494,7 +495,8 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 								}
 
 								break;
-							// Rarity deploy limit
+							// Rarity lineup limit (2) and rarity deploy limit (3)
+							case 2:
 							case 3:
 								if (!parameter.isEmpty()) {
 									int[] deployLimit = new int[parameter.size()];
@@ -532,7 +534,9 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 											stage.lim.stageLimit = new StageLimit();
 										}
 
-										System.arraycopy(deployLimit, 0, stage.lim.stageLimit.rarityDeployLimit, 0, Math.min(stage.lim.stageLimit.rarityDeployLimit.length, deployLimit.length));
+										// Rule 2 limits how many units of a rarity can be in the lineup, rule 3 how many can be on the field at once
+										int[] limitTarget = ruleID == 2 ? stage.lim.stageLimit.rarityLineupLimit : stage.lim.stageLimit.rarityDeployLimit;
+										System.arraycopy(deployLimit, 0, limitTarget, 0, Math.min(limitTarget.length, deployLimit.length));
 									}
 								}
 
@@ -672,7 +676,7 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 									int deployTimes = parameter.get(1).getAsInt();
 									int deployDelay = parameter.get(2).getAsInt();
 
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 6; i++) {
 										if ((bitMask & (1 << i)) != 0) {
 											indices.add(i);
 										}
@@ -761,6 +765,60 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 								}
 
                                 break;
+							case 11:
+								if (!parameter.isEmpty()) {
+									if (parameter.size() < 3) {
+										System.out.printf(
+												"W/MapColc::read - Unexpected parameter size for map %d : Size = %d, Limit ID = 11\n",
+												mapID,
+												parameter.size()
+										);
+									}
+
+									StageLimit.CostIncreaseMode increaseMode = parameter.get(0).getAsInt() == 0 ? StageLimit.CostIncreaseMode.ADD : StageLimit.CostIncreaseMode.MULTIPLY;
+									int increaseValue = parameter.get(1).getAsInt();
+									int increaseMax = parameter.get(2).getAsInt();
+
+									for (Stage stage : map.list) {
+										if (stage.lim == null)
+											stage.lim = new Limit();
+
+										if (stage.lim.stageLimit == null) {
+											stage.lim.stageLimit = new StageLimit();
+										}
+
+										stage.lim.stageLimit.costIncreaseMode = increaseMode;
+										stage.lim.stageLimit.costIncreaseValue = increaseValue;
+										stage.lim.stageLimit.costMaxIncreaseValue = increaseMax;
+									}
+								}
+
+								break;
+							case 12:
+								if (!parameter.isEmpty()) {
+									if (parameter.size() < 3) {
+										System.out.printf(
+												"W/MapColc::read - Unexpected parameter size for map %d : Size = %d, Limit ID = 11\n",
+												mapID,
+												parameter.size()
+										);
+									}
+
+									int feverMaxScore = parameter.get(1).getAsInt();
+									int feverDuration = parameter.get(2).getAsInt();
+
+									for (Stage stage : map.list) {
+										if (stage == null || !(stage.info instanceof DefStageInfo))
+											continue;
+
+										((DefStageInfo) stage.info).feverMaxScore = feverMaxScore;
+										((DefStageInfo) stage.info).feverDuration = feverDuration;
+										// unlike the other dojo stages, enemies of the fever dojo drop money
+										stage.drop = true;
+									}
+								}
+
+								break;
                             default:
                                 System.out.println("W/MapColc::init - Unknown rule ID " + ruleID + " found");
 						}
@@ -1229,6 +1287,120 @@ public abstract class MapColc extends Data implements IndexContainer.SingleIC<St
 							System.out.printf("W/MapColc::read - God mask treasure value out of range : %d, %d\n", j, targetStage.preset.fruit[j]);
 
 							targetStage.preset.gods[j] = 100;
+						}
+					}
+				}
+			}
+
+			// Fever dojo settings
+			VFile pointMapFile = VFile.get("./org/data/PointStageSettings.json");
+			VFile pointRuleFile = VFile.get("./org/data/StagePointRulesMap.json");
+
+			String pointMaps = new String(pointMapFile.getData().getBytes());
+			String pointRules = new String(pointRuleFile.getData().getBytes());
+
+			JsonElement pointMapElement = JsonParser.parseString(pointMaps);
+			JsonElement pointRuleElement = JsonParser.parseString(pointRules);
+
+			if (!(pointMapElement instanceof JsonObject)) {
+				System.out.println("W/MapColc::read - PointStageSettings.json turned out to be not json object");
+			} else {
+				JsonObject pointMapObject = pointMapElement.getAsJsonObject();
+
+				if (!pointMapObject.has("PointID")) {
+					System.out.println("W/MapColc::read - PointStageSettings.json has different format than expected");
+				} else {
+					JsonObject pointIDObject = pointMapObject.getAsJsonObject("PointID");
+
+					for (String pointID : pointIDObject.keySet()) {
+						JsonObject pointIDMap = pointIDObject.getAsJsonObject(pointID);
+
+						if (!pointIDMap.has("MapID") || !(pointIDMap.get("MapID") instanceof JsonArray)) {
+							System.out.println("W/MapColc::read - PointStageSettings has different map data than expected");
+						} else {
+							JsonArray mapArray = pointIDMap.getAsJsonArray("MapID");
+
+							for (int i = 0; i < mapArray.size(); i++) {
+								int mapID = mapArray.get(i).getAsInt();
+
+								StageMap map = getMap(mapID);
+
+								if (map == null)
+									continue;
+
+								if (map.info == null)
+									map.info = new StageMap.StageMapInfo(map);
+
+								map.info.hasFeverBar = true;
+							}
+						}
+					}
+				}
+			}
+
+			if (!(pointRuleElement instanceof JsonObject)) {
+				System.out.println("W/MapColc::read - StagePointRulesMap.json isn't json object");
+			} else {
+				JsonObject pointRuleObject = pointRuleElement.getAsJsonObject();
+
+				if (!pointRuleObject.has("MapID") || !(pointRuleObject.get("MapID") instanceof JsonObject)) {
+					System.out.println("W/MapColc::read - StagePointRulesMap.json doesn't have proper format");
+				} else {
+					JsonObject mapIDObject = pointRuleObject.getAsJsonObject("MapID");
+
+					for (String mapID : mapIDObject.keySet()) {
+						int integerMapID = CommonStatic.safeParseInt(mapID);
+
+						StageMap map = getMap(integerMapID);
+
+						if (map == null)
+							continue;
+
+						JsonObject mapDataObject = mapIDObject.getAsJsonObject(mapID);
+
+						if (!mapDataObject.has("StageIndex")) {
+							System.out.println("W/MapColc::read - StagePointRulesMap.json doesn't have StageIndex object for map ID : " + mapID);
+
+							continue;
+						}
+
+						JsonObject stageIndexObject = mapDataObject.getAsJsonObject("StageIndex");
+
+						for (String stageIndex : stageIndexObject.keySet()) {
+							int integerStageIndex = CommonStatic.safeParseInt(stageIndex);
+
+							if (integerStageIndex < 0 || integerStageIndex >= map.list.size()) {
+								System.out.println("W/MapColc::read - StagePointRulesMap.json has stage index that is out of range -> Map ID : " + integerMapID + ", Stage ID : " + integerStageIndex);
+
+								continue;
+							}
+
+							Stage stage = map.list.get(integerStageIndex);
+
+							if (stage == null || !(stage.info instanceof DefStageInfo))
+								continue;
+
+							JsonObject stageData = stageIndexObject.getAsJsonObject(stageIndex);
+
+							if (stageData.has("RuleType") && stageData.get("RuleType").getAsInt() != 0) {
+								System.out.println("W/MapColc::read - Unknown rule type has been found -> Map ID : " + integerMapID + ", Stage ID : " + integerStageIndex + ", Rule Type : " + stageData.get("RuleType").getAsInt());
+
+								continue;
+							}
+
+							if (!stageData.has("Parameters")) {
+								System.out.println("W/MapColc::read - There's no parameters data -> Map ID : " + integerMapID + ", Stage ID : " + integerStageIndex);
+
+								continue;
+							}
+
+							JsonArray parameterArray = stageData.getAsJsonArray("Parameters");
+
+							int[] feverParameters = new int[parameterArray.size()];
+							for (int i = 0; i < feverParameters.length; i++)
+								feverParameters[i] = parameterArray.get(i).getAsInt();
+
+							((DefStageInfo) stage.info).feverBarMultiplier = DefStageInfo.parseFeverBar(feverParameters);
 						}
 					}
 				}

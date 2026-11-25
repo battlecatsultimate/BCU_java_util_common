@@ -66,7 +66,7 @@ public class PCoin extends Data {
 
 	public PCoin(String[] strs, MaskUnit du) { // leaving reminder that this is unused at least in PC ver.
 		trait = Trait.bitmaskToTrait(CommonStatic.parseIntN(strs[1]));
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 11; i++) {
 			if(talentExist(strs, 2 + i * 14)) {
                 int[] data = new int[14];
 
@@ -93,7 +93,7 @@ public class PCoin extends Data {
 	private PCoin(int[] strs, MaskUnit du) {
 		trait = Trait.talentBitmaskToTrait(strs[1]);
 
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 11; i++) {
 			if (2 + i * 14 >= strs.length) {
 				break;
 			}
@@ -289,6 +289,12 @@ public class PCoin extends Data {
 					tar.set(0, tar.get(0) + modifs[0]);
 					tar.set(1, tar.get(1) + modifs[1]);
 					tar.set(3, tar.get(3) + modifs[2]);
+				} else if (type[1] == P_CDDEC) {
+					tar.set(0, tar.get(0) + modifs[0]);
+
+					// the talent triggers on every 2nd deployment, a unit that already has its own interval keeps it
+					if (tar.get(1) < 1)
+						tar.set(1, 2);
 				} else {
 					for (int j = 0; j < 4; j++) {
 						if (modifs[j] > 0) {
@@ -386,6 +392,9 @@ public class PCoin extends Data {
 	}
 
 	public double getAtkMultiplication(int[] talents) {
+		int atkMultiplier = 0;
+		int atkPlusMultiplier = 100;
+
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
@@ -398,7 +407,7 @@ public class PCoin extends Data {
 			if(type[0] == -1)
 				continue;
 
-			if(type[0] == PC_BASE && type[1] == PC2_ATK) {
+			if(type[0] == PC_BASE && (type[1] == PC2_ATK || type[1] == PC2_ATKP)) {
 				int maxlv = info.get(i)[1];
 				int[] modifs = new int[4];
 				if (maxlv > 1) {
@@ -412,14 +421,20 @@ public class PCoin extends Data {
 					for (int j = 0; j < 4; j++)
 						modifs[j] = info.get(i)[3 + j * 2];
 
-				return 1 + modifs[0] * 0.01;
+				if (type[1] == PC2_ATK)
+					atkMultiplier = modifs[0];
+				else
+					atkPlusMultiplier = 100 + modifs[0];
 			}
 		}
 
-		return 1.0;
+		return (100 + atkMultiplier) * atkPlusMultiplier / 10000.0;
 	}
 
 	public double getHPMultiplication(int[] talents) {
+		int hpMultiplier = 0;
+		int hpPlusMultiplier = 100;
+
 		for(int i = 0; i < info.size(); i++) {
 			if(info.get(i)[0] >= PC_CORRES.length)
 				continue;
@@ -432,7 +447,7 @@ public class PCoin extends Data {
 			if(type[0] == -1)
 				continue;
 
-			if(type[0] == PC_BASE && type[1] == PC2_HP) {
+			if(type[0] == PC_BASE && (type[1] == PC2_HP || type[1] == PC2_HPP)) {
 				int maxlv = info.get(i)[1];
 				int[] modifs = new int[4];
 				if (maxlv > 1) {
@@ -446,11 +461,14 @@ public class PCoin extends Data {
 					for (int j = 0; j < 4; j++)
 						modifs[j] = info.get(i)[3 + j * 2];
 
-				return 1 + modifs[0] * 0.01;
+				if (type[1] == PC2_HP)
+					hpMultiplier = modifs[0];
+				else
+					hpPlusMultiplier = 100 + modifs[0];
 			}
 		}
 
-		return 1.0;
+		return (100 + hpMultiplier) * hpPlusMultiplier / 10000.0;
 	}
 	
 	@OnInjected

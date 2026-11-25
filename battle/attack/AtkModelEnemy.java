@@ -118,6 +118,11 @@ public class AtkModelEnemy extends AtkModelEntity {
 					if (conf.same_health)
 						eu.health = e.health;
 
+					if (proc.tba == -1)
+						eu.setWaitTime(eu.data.getTBA());
+					else if (proc.tba > 0)
+						eu.setWaitTime(proc.tba);
+
 					eu.added(-1, (int) up);
 					b.tempe.add(new EntCont(eu, time));
 					eu.setSummon(conf.anim_type, conf.bond_hp ? e : null);

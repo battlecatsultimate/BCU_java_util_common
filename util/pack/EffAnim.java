@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.io.json.FieldOrder;
 import common.io.json.FieldOrder.Order;
 import common.system.VImg;
+import common.system.files.VFile;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.util.Data;
@@ -304,6 +305,8 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		public EffAnim<DefEff> A_E_DELAY;
 		@Order(84)
 		public EffAnim<DefEff> A_IMUATKCD;
+		@Order(85)
+		public EffAnim<DefEff> A_FEVER;
 
 		public EffAnim<?>[] values() {
 			Field[] fld = FieldOrder.getDeclaredFields(EffAnimStore.class);
@@ -705,6 +708,16 @@ public class EffAnim<T extends Enum<T> & EffAnim.EffType<T>> extends AnimD<EffAn
 		VImg vimucd = new VImg(imucd + ".png");
 		ImgCut icimucd = ImgCut.newIns(imucd + ".imgcut");
 		effas.A_IMUATKCD = new EffAnim<>(imucd, vimucd, icimucd, DefEff.values());
+		readFever();
+	}
+	public static void readFever() {
+		EffAnimStore effas = CommonStatic.getBCAssets().effas;
+		String path = "./org/battle/fever/FeverEffect";
+		effas.A_FEVER = null;
+		for (String ext : new String[] { ".png", ".imgcut", ".mamodel", ".maanim" })
+			if (VFile.get(path + ext) == null)
+				return;
+		effas.A_FEVER = new EffAnim<>(path, new VImg(path + ".png"), ImgCut.newIns(path + ".imgcut"), DefEff.values());
 	}
 
 	private final VImg vimg;

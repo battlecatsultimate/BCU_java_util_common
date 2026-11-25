@@ -1528,10 +1528,11 @@
         "full_name": "Иммунитет/Сопротивление к задержке",
         "tooltip": null,
         "format": [
-            "[(mult!=0&block!=100){[(mult==100){Иммунитет}(mult<100&mult>0){Сопротивление}(mult<0){Уязвимость}] к [(smartImu==0){Задержке/Ускорению}(smartImu>0){Задержке}(smartImu<0){Ускорению}]",
+            "[(mult!=0&block!=100){[(mult==100){Иммунитет}(mult<100&mult>0){Сопротивление}(mult<0){Уязвимость}] к Задержке",
             "[(mult<100&mult>0){ (_left)Уменьшает силу эффекта на (mult)%(_right)}(mult<0){ (_left)Увеличивает силу эффекта на (_abs(mult))%(_right)}]",
-            "[(block!=0&block<100){ и }]}][(block!=0){[(smartImu==0){Задержка/Ускорение}(smartImu>0){Задержка}(smartImu<0){Ускорение}] [(block==100){блокируется}(block<100&block>0){поглощается}(block<0){усиливается}]",
-            "[(block<100&block>0){ (_left)Уменьшает силу эффекта на (block)%(_right)}(block<0){ (_left)Увеличивает силу эффекта на (_abs(block))%(_right)}]}]"
+            "[(block!=0&block<100){ и }]}][(block!=0){Задержка [(block==100){блокируется}(block<100&block>0){поглощается}(block<0){усиливается}]",
+            "[(block<100&block>0){ (_left)Уменьшает силу эффекта на (block)%(_right)}(block<0){ (_left)Увеличивает силу эффекта на (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){. Влияет только на [(smartImu>0){дебаффы}(smartImu<0){баффы}]}]"
         ],
         "class": {
             "mult": {
@@ -1545,6 +1546,22 @@
             "smartImu": {
                 "name": "игнор",
                 "tooltip": "0 = сопротивление и задержке, и ускорению, 1 = только задержке, -1 = только ускорению"
+            }
+        }
+    },
+    "CDDEC" : {
+        "abbr_name": "cd decrease",
+        "full_name": "Cooldown Decrease",
+        "tooltip": "Decreases this unit's cooldown every few deployments",
+        "format": "[(count>2){Decreases cooldown by (mult)% every (count) deployments}(count==2){Decreases cooldown by (mult)% every 2nd deployment}(count<2){Decreases cooldown by (mult)% every deployment}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Percentage of the cooldown that gets removed when triggered"
+            },
+            "count": {
+                "name": "interval",
+                "tooltip": "Triggers on every N-th deployment of this unit. 2 = 2nd, 4th, 6th..."
             }
         }
     }

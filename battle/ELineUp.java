@@ -11,6 +11,7 @@ import java.util.Arrays;
 public class ELineUp extends BattleObj {
 
 	public final int[][] price, cool, maxC, tick, cdDownOrb, priceDownOrb;
+	public final int[][] cdDownAbi, cdDownEvery, cdDownTick; // percent of cd removed, trigger on every N-th deploy, deployment since last trigger
 	private final StageBasis b;
 
 	protected ELineUp(LineUp lu, StageBasis sb) {
@@ -21,7 +22,11 @@ public class ELineUp extends BattleObj {
 		tick = new int[2][5];
 		cdDownOrb = new int[2][5];
 		priceDownOrb = new int[2][5];
+		cdDownAbi = new int[2][5];
+		cdDownEvery = new int[2][5];
+		cdDownTick = new int[2][5];
 		Limit lim = sb.est.lim;
+		boolean[][] overLineupLimit = StageLimit.lineupOverLimit(lim, lu.fs);
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 5; j++) {
 				Form form = lu.fs[i][j];
@@ -29,7 +34,7 @@ public class ELineUp extends BattleObj {
 					price[i][j] = -1;
 					continue;
 				}
-				if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(lu.efs[i][j].du, sb.st.getCont().price)))
+				if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(lu.efs[i][j].du, sb.st.getCont().price) || overLineupLimit[i][j]))
 					price[i][j] = -1;
 				else
 					price[i][j] = 100 * (sb.globalCost() > -1 ? sb.globalCost() : (int) (lu.efs[i][j].getPrice(sb.st.getCont().price)));
@@ -59,6 +64,11 @@ public class ELineUp extends BattleObj {
 				}
 				if (!hasEveryOther)
 					tick[i][j] = -1;
+				Proc unitProc = lu.efs[i][j].du.getProc();
+				if (unitProc != null && unitProc.CDDEC.mult > 0) {
+					cdDownAbi[i][j] = Math.min(100, unitProc.CDDEC.mult);
+					cdDownEvery[i][j] = Math.max(1, unitProc.CDDEC.count);
+				}
 			}
 	}
 
@@ -67,9 +77,29 @@ public class ELineUp extends BattleObj {
 	 */
 	protected void get(int i, int j) {
 		cool[i][j] = maxC[i][j];
-		if (cdDownOrb[i][j] > 0 && tick[i][j] == 0)
-			cool[i][j] -= cool[i][j] * cdDownOrb[i][j] / 100;
+
+		// In the game a unit with the cooldown ability can't equip the cooldown orb, so the ability
+		// always takes priority and the orb is ignored entirely
+		int dec = 0;
+		if (cdDownAbi[i][j] > 0) {
+			if (cdDownTick[i][j] == 0)
+				dec = cdDownAbi[i][j];
+		} else if (cdDownOrb[i][j] > 0 && tick[i][j] == 0)
+			dec = cdDownOrb[i][j];
+		if (dec > 0)
+			cool[i][j] -= cool[i][j] * dec / 100;
+
+		// there is no cooldown while fever mode is running
+		if (b.fever.isActive())
+			cool[i][j] = 0;
+
 		b.cdDelayVisual[i][j] = StageBasis.DELAY_BASE.clone();
+	}
+
+	//advance the CDDEC deployment counter, call once per successful deployment
+	protected void deployed(int i, int j) {
+		if (cdDownEvery[i][j] > 1)
+			cdDownTick[i][j] = (cdDownTick[i][j] + 1) % cdDownEvery[i][j];
 	}
 
 	protected void delay(int i, int j, int[] delay) {

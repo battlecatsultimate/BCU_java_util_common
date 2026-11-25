@@ -793,6 +793,14 @@ public class Data {
 			public int type;
 		}
 
+		@JsonClass(noTag = NoTag.LOAD)
+		public static class MULTCOUNT extends ProcItem {
+			@Order(0)
+			public int mult;
+			@Order(1)
+			public int count;
+		}
+
 		public static Proc blank() {
 			return new Proc();
 		}
@@ -956,6 +964,8 @@ public class Data {
 		public final DELAY DELAY = new DELAY();
 		@Order(65)
 		public final IMUAD IMUDELAY = new IMUAD();
+		@Order(66)
+		public final MULTCOUNT CDDEC = new MULTCOUNT();
 
 		// Talent orbs, shouldn't be given @Order unless allowed as editable fields
 		public final MINIVOLC MINIDEATHSURGE = new MINIVOLC(); // TODO: implement this as a normal ability?
@@ -1098,6 +1108,7 @@ public class Data {
 	public static final short SE_COUNTER_SURGE = 159;
 	public static final short SE_SPIRIT_SUMMON = 162;
 	public static final short SE_DELAY_COOLDOWN = 188;
+	public static final short SE_FEVER = 194;
 
 	public static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 }, { 86 },
 			{ 124 } };
@@ -1346,7 +1357,8 @@ public class Data {
 	public static final int P_IMULETH = 63;
 	public static final int P_DELAY = 64; // Works like Speed
 	public static final int P_IMUDELAY = 65;
-	public static final byte PROC_TOT = 66;
+	public static final int P_CDDEC = 66; // Decreases cooldown
+	public static final byte PROC_TOT = 67;
 	public static final byte PROC_WIDTH = 6;
 
 	public static final int SCORE_WEAK = 0;
@@ -1426,7 +1438,8 @@ public class Data {
 			false, //lethargy
 			true, //imu.lethargy
 			false, //delay
-			true //imu delay
+			true, //imu delay
+			true //cooldown decrease
 	};
 
 	/**
@@ -1457,7 +1470,9 @@ public class Data {
 	public static final byte PC2_CD = 4;
 	public static final byte PC2_HB = 5;
 	public static final byte PC2_TBA = 6;
-	public static final byte PC2_TOT = 7;
+	public static final byte PC2_ATKP = 7;
+	public static final byte PC2_HPP = 8;
+	public static final byte PC2_TOT = 9;
 	// -1 for None
 	// 0 for Proc
 	// 1 for Ability
@@ -1478,11 +1493,11 @@ public class Data {
 			{ 0, P_WARP, 4, -1 }, // 9: warp
 			{ 0, P_STRONG, 2, -1 }, // 10: berserker, reversed health
 			{ 0, P_LETHAL, 1, -1 }, // 11: lethal
-			{ 0, P_ATKBASE, 0, -1 }, // 12: Base Destroyer
+			{ 0, P_ATKBASE, 1, -1 }, // 12: Base Destroyer
 			{ 0, P_CRIT, 1, -1 }, // 13: crit
 			{ 1, AB_ZKILL, 0, -1 }, // 14: zkill
 			{ 0, P_BREAK, 1, -1 }, // 15: break
-			{ 0, P_BOUNTY, 0, -1 }, // 16: 2x income
+			{ 0, P_BOUNTY, 1, -1 }, // 16: 2x income
 			{ 0, P_WAVE, 2, -1 }, // 17: wave
 			{ 0, P_IMUWEAK, 1, -1 }, // 18: res weak
 			{ 0, P_IMUSTOP, 1, -1 }, // 19: res stop
@@ -1535,7 +1550,10 @@ public class Data {
 			{ 1, AB_SKILL, 0, -1 }, //66 : super sage hunter
 			{ 0, P_BLAST, 3, -1 }, //67: baja blast
 			{ 1, AB_CSUR, 0, -1 }, //68: counter surge
-			{ 3, P_IMUBLAST, 0, 69 } // 69: immune to blast todo: when resist blast comes, connect to that talent
+			{ 3, P_IMUBLAST, 0, 69 }, // 69: immune to blast todo: when resist blast comes, connect to that talent
+			{ 2, PC2_ATKP, 1, -1 }, // 70: inc ATK+
+			{ 2, PC2_HPP, 1, -1 }, // 71: inc HP+
+			{ 0, P_CDDEC, 1, -1 }, // 72: cd decrease
 	};
 
 	// foot icon index used in battle

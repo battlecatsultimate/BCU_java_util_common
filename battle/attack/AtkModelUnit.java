@@ -75,6 +75,11 @@ public class AtkModelUnit extends AtkModelEntity {
 					if (conf.same_health)
 						eu.health = e.health;
 
+					if (proc.tba == -1)
+						eu.setWaitTime(eu.data.getTBA());
+					else if (proc.tba > 0)
+						eu.setWaitTime(proc.tba);
+
 					eu.added(-1, (int) up);
 					b.tempe.add(new EntCont(eu, time));
 					eu.setSummon(conf.anim_type, conf.bond_hp ? e : null);
@@ -106,6 +111,10 @@ public class AtkModelUnit extends AtkModelEntity {
 					EEnemy ee = ene.getEntity(b, acs, mult, mula, layer, layer, 0, -1);
 
 					ee.group = allow;
+					if (proc.tba == -1)
+						ee.setWaitTime(ee.data.getTBA());
+					else if (proc.tba > 0)
+						ee.setWaitTime(proc.tba);
 
 					if (ep < ee.data.getWidth())
 						ep = ee.data.getWidth();

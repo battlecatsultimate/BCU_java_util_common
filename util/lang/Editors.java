@@ -768,6 +768,11 @@ public class Editors {
 			t.mult = MathUtil.clip(t.mult, 0, 100);
 		}));
 
+		map().put("CDDEC", new EditControl<>(Proc.MULTCOUNT.class, (t) -> {
+			t.mult = MathUtil.clip(t.mult, 0, 100);
+			t.count = t.mult == 0 ? 0 : (t.count <= 0 ? 2 : t.count);
+		}));
+
 		map().put("BLAST", new EditControl<>(Proc.BLAST.class, (t) -> {
 			t.prob = MathUtil.clip(t.prob, 0, 100);
 		}));
