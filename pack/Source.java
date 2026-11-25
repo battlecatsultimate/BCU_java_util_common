@@ -358,6 +358,7 @@ public abstract class Source {
 				} else {
 					write(SourceAnimLoader.MA_SOUL[0], anim.anims[0]::write);
 				}
+
 				if (anim.getEdi() != null) {
 					write("icon_display.png", anim.getEdi().getImg());
 				}
